@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <include
-        android:id="@+id/baseAppBar"
-        layout="@layout/base_app_bar" />
-
-    <!-- NavHost fragment -->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainer"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.louis.app.cavity.ui.home.FragmentHome" />
+        android:layout_height="match_parent">
 
+        <include
+            android:id="@+id/baseAppBar"
+            layout="@layout/base_app_bar" />
+
+        <!-- NavHost fragment -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/baseAppBar"
+            app:navGraph="@navigation/nav_graph" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

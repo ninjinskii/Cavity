@@ -38,6 +38,8 @@ android {
 }
 
 dependencies {
+    def nav_version = "2.3.0"
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     // Kotlin
@@ -60,5 +62,9 @@ dependencies {
 
     // Fragments
     implementation 'androidx.fragment:fragment-ktx:1.2.5'
+
+    // Navigation component
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
 }
