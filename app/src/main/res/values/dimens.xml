@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="wine_card_image_height">140dp</dimen>
+    <dimen name="wine_color_indicator_width">10dp</dimen>
+    <dimen name="wine_color_indicator_height">25dp</dimen>
+    <dimen name="xsmall_margin">2dp</dimen>
+    <dimen name="small_margin">8dp</dimen>
+    <dimen name="medium_margin">16dp</dimen>
+    <dimen name="large_margin">24dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+</resources>
