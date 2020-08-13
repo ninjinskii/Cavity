@@ -5,9 +5,10 @@
     android:layout_height="wrap_content"
     app:cardElevation="4dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/wineImage"
@@ -20,58 +21,41 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
-            app:layout_constraintTop_toBottomOf="@+id/wineImage">
+            android:layout_margin="@dimen/small_margin">
 
-            <ImageView
-                android:id="@+id/wineColorIndicator"
-                android:layout_width="@dimen/wine_color_indicator_width"
-                android:layout_height="@dimen/wine_color_indicator_height"
-                android:src="@color/colorPrimaryDark"
-                app:layout_constraintBottom_toBottomOf="@+id/wineNaming"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/wineName" />
-
-
-            <TextView
-                android:id="@+id/wineName"
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/wineColorNameNaming"
+                layout="@layout/wine_color_name_naming"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_margin"
-                android:layout_marginBottom="@dimen/xsmall_margin"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="Château la Cour"
-                style="@style/TextAppearance.MaterialComponents.Subtitle2"
-                app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/wineNaming"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_margin"
-                android:layout_marginTop="@dimen/xsmall_margin"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Saint-Emilion"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"
-                app:layout_constraintTop_toBottomOf="@+id/wineName" />
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.85" />
 
             <View
                 android:id="@+id/divider"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginTop="@dimen/small_margin"
-                android:layout_marginBottom="@dimen/small_margin"
                 android:alpha="0.12"
                 android:background="#121212"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/wineNaming" />
+                app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
+                app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
+                app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.15" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -81,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_margin"
             android:scrollbars="none"
-            app:layout_constraintTop_toBottomOf="@+id/group">
+            app:layout_constraintTop_toBottomOf="@+id/divider">
 
             <LinearLayout
                 android:id="@+id/chipsLayout"
@@ -138,5 +122,5 @@
 
             </LinearLayout>
         </HorizontalScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>
