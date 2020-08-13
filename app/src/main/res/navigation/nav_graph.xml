@@ -3,12 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragmentHome">
+    app:startDestination="@id/home_dest">
 
     <fragment
-        android:id="@+id/fragmentHome"
+        android:id="@+id/home_dest"
         android:name="com.louis.app.cavity.ui.home.FragmentHome"
         android:label="FragmentHome"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/showSettings"
+            app:destination="@id/settings_dest" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settings_dest"
+        android:name="com.louis.app.cavity.ui.settings.FragmentSettings"
+        android:label="FragmentSettings"
+        tools:layout="@layout/fragment_settings" />
 
 </navigation>

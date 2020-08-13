@@ -11,9 +11,11 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
 
         val tab = activity?.findViewById<CountyScrollableTab>(R.id.tab)
-        tab?.addTabs(listOf(
-            "Jan 2018", "Feb 2018", "Mar 2018", "Apr 2018", "May 2018", "Jun 2018", "July 2018",
-            "Aug 2018", "Sep 2018", "Oct 2018", "Nov 2018", "Dec 2018"
-        ))
+        tab?.addTabs(
+            listOf(
+                "Alsace", "Beaujolais", "Bourgogne", "Bordeaux", "Italie", "Suisse",
+                "Langudoc-Roussillon", "Jura"
+            )
+        )
     }
 }
