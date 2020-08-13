@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Cavity</string>
+    <string name="switch_view">Changer de vue</string>
+    <string name="consumed">Vidée</string>
+    <string name="drink_date">Bue le: %1$s</string>
+    <string name="home">Acceuil</string>
+    <string name="tasting">Dégustation</string>
+    <string name="search">Rechercher</string>
+    <string name="history">Historique</string>
+    <string name="settings">Paramètres</string>
 </resources>

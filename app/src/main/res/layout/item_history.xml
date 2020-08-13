@@ -36,7 +36,7 @@
         style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bue le: 21/08/18"
+        android:text="@string/drink_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />
 

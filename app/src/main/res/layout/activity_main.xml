@@ -10,5 +10,10 @@
         layout="@layout/base_app_bar" />
 
     <!-- NavHost fragment -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.louis.app.cavity.ui.home.FragmentHome" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
