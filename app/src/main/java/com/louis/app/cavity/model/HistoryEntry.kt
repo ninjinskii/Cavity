@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class HistoryEntry(
-    @Embedded var bottle: Bottle,
-    @ColumnInfo(name = "drink_date") var drinkDate: String
+    @ColumnInfo(name = "drink_date") val drinkDate: String,
+    @ColumnInfo(name = "id_bottle") val idBottle: Long
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_history_entry")
