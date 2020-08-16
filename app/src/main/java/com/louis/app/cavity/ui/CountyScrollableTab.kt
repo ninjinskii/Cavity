@@ -56,6 +56,7 @@ class CountyScrollableTab : RecyclerView {
 
         setOnTouchListener { _, _ ->
             isRVScrolling = true
+            performClick()
             false
         }
         addOnScrollListener(object : OnScrollListener() {

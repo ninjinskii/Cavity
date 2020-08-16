@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#6200ee</color>
+    <color name="colorPrimaryDark">#3700b3</color>
+    <color name="colorAccent">#03dac5</color>
+
+    <color name="cavity_green">#9bff00</color>
+
+
+    <color name="wine_white">#fff176</color>
+    <color name="wine_red">#a60000</color>
+    <color name="wine_sweet">#ffa727</color>
+    <color name="wine_rose">#f48fb1</color>
 </resources>

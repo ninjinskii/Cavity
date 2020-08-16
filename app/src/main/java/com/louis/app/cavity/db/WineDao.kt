@@ -1,9 +1,7 @@
 package com.louis.app.cavity.db
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.lifecycle.LiveData
+import androidx.room.*
 import com.louis.app.cavity.model.Wine
 
 @Dao
@@ -17,4 +15,7 @@ interface WineDao {
 
     @Delete
     fun deleteWine(wine: Wine)
+
+    @Query("SELECT * FROM wine")
+    fun getAllWines(): LiveData<List<Wine>>
 }

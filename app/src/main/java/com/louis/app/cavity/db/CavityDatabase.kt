@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
+import kotlin.concurrent.thread
 
 @Database(entities = [County::class, Wine::class], version = 1, exportSchema = false)
 abstract class CavityDatabase : RoomDatabase() {
@@ -27,7 +29,25 @@ abstract class CavityDatabase : RoomDatabase() {
                 context.applicationContext,
                 CavityDatabase::class.java,
                 "cavity.db"
-            ).build()
+            )
+                .addCallback(roomCallback)
+                .build()
+        }
+
+        private val roomCallback: Callback = object: RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                thread {
+                    val vinDao = instance?.wineDao()
+                    for (x in 0..3) {
+                        vinDao?.insertWine(Wine("Château la cour", "Gewurtztraminer", x, 0, 0))
+                    }
+
+                    for (x in 0..15) {
+                        vinDao?.insertWine(Wine("Château la cour", "Château-neuf du Pape", 1, 0, 1))
+                    }
+                }
+            }
         }
     }
 }
