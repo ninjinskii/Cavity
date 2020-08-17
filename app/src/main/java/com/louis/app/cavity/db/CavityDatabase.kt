@@ -32,18 +32,51 @@ abstract class CavityDatabase : RoomDatabase() {
                 CavityDatabase::class.java,
                 "cavity.db"
             )
+                //.addCallback(roomCallback)
                 .fallbackToDestructiveMigration()
                 .build()
         }
 
-        private val roomCallback: Callback = object: RoomDatabase.Callback() {
+        private val roomCallback: Callback = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 thread {
                     val vinDao = instance?.wineDao()
 
-                    for (x in 0..15) {
-                        vinDao?.insertWine(Wine("Château la cour$x", "Château-neuf du Pape", 1, 0, 1))
+                    for (x in 0..5) {
+                        vinDao?.insertWine(
+                            Wine(
+                                "Château la cour$x",
+                                "Château-neuf du Pape",
+                                1,
+                                0,
+                                1
+                            )
+                        )
+                    }
+
+                    for (x in 6..10) {
+                        vinDao?.insertWine(
+                            Wine(
+                                "Château la cour$x",
+                                "Château-neuf du Pape",
+                                2,
+                                0,
+                                0
+                            )
+                        )
+                    }
+
+                    for (x in 11..15) {
+                        vinDao?.insertWine(
+                            Wine(
+                                "Château la cour$x",
+                                "Château-neuf du Pape",
+                                3,
+                                0,
+                                1
+                            )
+                        )
                     }
                 }
             }
