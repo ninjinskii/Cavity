@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.toBoolean
+import java.net.URL
 
 class WineRecyclerViewAdapter(private val listener: OnVintageClickListener) :
     ListAdapter<Wine, WineRecyclerViewAdapter.WineViewHolder>(WineItemDiffCallback()) {
@@ -60,12 +61,11 @@ class WineRecyclerViewAdapter(private val listener: OnVintageClickListener) :
                 vNaming.text = naming
                 vColor.setColorFilter(colors[color])
                 vBioImage.visibility = if (isBio.toBoolean()) View.VISIBLE else View.GONE
-                vName.setOnClickListener {
-                    listener.onVintageClick(wine)
-                }
 
+                // TODO: remove test image with deprecated image
                 Glide.with(itemView.context)
-                    .load(R.drawable.ic_toast_wine)
+                    .load(URL("https://images.freeimages.com/images/large-previews/adf/sun-burst-1478549.jpg"))
+                    .centerCrop()
                     .into(vImage)
 
                 //wine.childBottlesVintages

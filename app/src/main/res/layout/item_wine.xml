@@ -8,13 +8,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin">
+        android:layout_height="wrap_content">
 
         <!-- android:src="@color/colorAccent", ImageView -->
         <ImageView
             android:id="@+id/wineImage"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="@dimen/wine_card_image_height"
             android:contentDescription=""
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,6 +33,7 @@
             android:id="@+id/bioImage"
             android:layout_width="@dimen/small_icon"
             android:layout_height="@dimen/small_icon"
+            android:layout_marginEnd="@dimen/medium_margin"
             android:src="@drawable/ic_bio"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/wineColorNameNaming"
@@ -68,13 +68,14 @@
             android:id="@+id/chipsScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_margin"
             android:scrollbars="none"
             app:layout_constraintTop_toBottomOf="@+id/divider">
 
             <!-- Sample, remove and add at runtime based on data -->
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroup"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/small_margin"
                 android:layout_marginEnd="@dimen/small_margin"
