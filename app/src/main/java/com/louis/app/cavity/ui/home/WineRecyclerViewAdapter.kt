@@ -1,7 +1,5 @@
 package com.louis.app.cavity.ui.home
 
-import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,24 +8,25 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.chip.ChipGroup
+import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 
-class WineRecyclerViewAdapter(private val listener: OnVintageClickListener, context: Context) :
+class WineRecyclerViewAdapter(private val listener: OnVintageClickListener) :
     ListAdapter<Wine, WineRecyclerViewAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
-    private val colors = listOf(
-        context.getColor(R.color.wine_white),
-        context.getColor(R.color.wine_red),
-        context.getColor(R.color.wine_sweet),
-        context.getColor(R.color.wine_rose),
-        context.getColor(R.color.colorAccent)
-    )
+    private lateinit var colors: List<Int>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
+        colors = listOf(
+            parent.context.getColor(R.color.wine_white),
+            parent.context.getColor(R.color.wine_red),
+            parent.context.getColor(R.color.wine_sweet),
+            parent.context.getColor(R.color.wine_rose),
+            parent.context.getColor(R.color.colorAccent)
+        )
+
         return WineViewHolder(
             LayoutInflater
                 .from(parent.context)
@@ -37,8 +36,7 @@ class WineRecyclerViewAdapter(private val listener: OnVintageClickListener, cont
     }
 
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) =
-        L.v("bind")
-        //holder.bind(getItem(position))
+        holder.bind(getItem(position))
 
     class WineItemDiffCallback : DiffUtil.ItemCallback<Wine>() {
         override fun areItemsTheSame(oldItem: Wine, newItem: Wine): Boolean =
@@ -60,8 +58,17 @@ class WineRecyclerViewAdapter(private val listener: OnVintageClickListener, cont
             with(wine) {
                 vName.text = name
                 vNaming.text = naming
-                //vColor.setColorFilter(colors[color])
+                vColor.setColorFilter(colors[color])
                 vBioImage.visibility = if (isBio.toBoolean()) View.VISIBLE else View.GONE
+                vName.setOnClickListener {
+                    listener.onVintageClick(wine)
+                }
+
+                Glide.with(itemView.context)
+                    .load(R.drawable.ic_toast_wine)
+                    .into(vImage)
+
+                //wine.childBottlesVintages
                 //vVintageLayout.addView()
             }
         }

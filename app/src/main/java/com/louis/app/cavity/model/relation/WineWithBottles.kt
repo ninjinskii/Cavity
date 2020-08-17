@@ -11,5 +11,5 @@ data class WineWithBottles (
         parentColumn = "id_wine",
         entityColumn = "id_bottle"
     )
-    val bottle: List<Bottle>
+    val bottles: List<Bottle>
 )

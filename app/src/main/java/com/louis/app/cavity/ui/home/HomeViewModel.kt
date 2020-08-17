@@ -9,11 +9,19 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Wine
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
-    private val repository = WineRepository(CavityDatabase.getInstance(app).wineDao())
+    private val repository = WineRepository(
+        CavityDatabase.getInstance(app).wineDao(),
+        CavityDatabase.getInstance(app).bottleDao()
+    )
 
-//    private val _wines = MutableLiveData<List<Wine>>()
-//    val wines: LiveData<List<Wine>>
-//        get() = _wines
-
+    // Consider using a transformation to get child vintage with wines
     fun getAllWines() = repository.getAllWines()
+
+//    Transformations.map(repository.getAllWines()) {
+//        it.map { wine ->
+//            wine.childBottlesVintages.addAll(
+//              repository.getWineWithBottles(wine.idWine).bottles.map { bottle -> bottle.vintage }
+//            )
+//            wine
+//        }
 }

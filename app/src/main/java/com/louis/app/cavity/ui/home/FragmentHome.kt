@@ -1,21 +1,16 @@
 package com.louis.app.cavity.ui.home
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.ui.CountyScrollableTab
-import com.louis.app.cavity.util.L
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
@@ -33,9 +28,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     private fun setupRecyclerView() {
         val wineAdapter = WineRecyclerViewAdapter(object : OnVintageClickListener {
             override fun onVintageClick(wine: Wine) {
-                TODO("Not yet implemented")
+                TODO()
             }
-        }, activity as Context)
+        })
         wineAdapter.setHasStableIds(true)
 
         binding.recyclerView.apply {

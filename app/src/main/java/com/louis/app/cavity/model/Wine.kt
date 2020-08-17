@@ -16,7 +16,7 @@ data class Wine(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_wine")
     var idWine: Long = 0
-    @Ignore val childBottlesIds: List<Long> = emptyList()
+    @Ignore var childBottlesVintages: MutableList<Int> = mutableListOf()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

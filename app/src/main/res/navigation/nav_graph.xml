@@ -13,6 +13,9 @@
         <action
             android:id="@+id/showSettings"
             app:destination="@id/settings_dest" />
+        <action
+            android:id="@+id/show_addBottle"
+            app:destination="@id/fragmentAddBottle" />
     </fragment>
 
     <fragment
@@ -20,5 +23,10 @@
         android:name="com.louis.app.cavity.ui.settings.FragmentSettings"
         android:label="FragmentSettings"
         tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/fragmentAddBottle"
+        android:name="com.louis.app.cavity.ui.home.FragmentAddBottle"
+        android:label="FragmentAddBottle" />
 
 </navigation>
