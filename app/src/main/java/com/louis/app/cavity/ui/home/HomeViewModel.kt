@@ -8,7 +8,7 @@ import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Wine
 
-class HomeViewModel(app: Application) :AndroidViewModel(app) {
+class HomeViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository(CavityDatabase.getInstance(app).wineDao())
 
 //    private val _wines = MutableLiveData<List<Wine>>()

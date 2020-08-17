@@ -1,9 +1,11 @@
 package com.louis.app.cavity.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +14,8 @@ import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.CountyScrollableTab
 import com.louis.app.cavity.util.L
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
@@ -31,11 +35,12 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             override fun onVintageClick(wine: Wine) {
                 TODO("Not yet implemented")
             }
-        })
+        }, activity as Context)
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
+            setItemViewCacheSize(10)
             adapter = wineAdapter
 //            addOnScrollListener(object : RecyclerView.OnScrollListener() {
 //                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

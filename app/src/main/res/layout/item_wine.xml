@@ -6,136 +6,114 @@
     android:layout_margin="@dimen/medium_margin"
     app:cardElevation="4dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin">
 
+        <!-- android:src="@color/colorAccent", ImageView -->
         <ImageView
             android:id="@+id/wineImage"
             android:layout_width="match_parent"
             android:layout_height="@dimen/wine_card_image_height"
             android:contentDescription=""
-            android:src="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <include
+            android:id="@+id/wineColorNameNaming"
+            layout="@layout/wine_color_name_naming"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin">
+            app:layout_constraintEnd_toStartOf="@+id/bioImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wineImage" />
 
-            <include
-                android:id="@+id/wineColorNameNaming"
-                layout="@layout/wine_color_name_naming"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/bioImage"
-                app:layout_constraintStart_toStartOf="parent"/>
+        <ImageView
+            android:id="@+id/bioImage"
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:src="@drawable/ic_bio"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/wineColorNameNaming"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/wineColorNameNaming" />
 
-            <ImageView
-                android:id="@+id/bioImage"
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:src="@drawable/ic_bio"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/wineColorNameNaming"
-                app:layout_constraintBottom_toBottomOf="@+id/wineColorNameNaming"/>
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guidelineRight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.85" />
-
-            <include
-                android:id="@+id/divider"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginTop="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
-                app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-                app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guidelineLeft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.15" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <HorizontalScrollView
-            android:id="@+id/chipsScrollView"
-            android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineRight"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
-            app:layout_constraintTop_toBottomOf="@+id/divider">
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.85" />
 
-            <LinearLayout
-                android:id="@+id/chipsLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        <include
+            android:id="@+id/divider"
+            layout="@layout/divider"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/medium_margin"
+            app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
+            app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
+            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />
 
-                <!-- Sample, remove and add at runtime based on data -->
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/small_margin"
-                    android:layout_marginEnd="@dimen/small_margin"
-                    app:singleLine="true">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.15" />
 
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2015" />
+<!--    <HorizontalScrollView-->
+<!--        android:id="@+id/chipsScrollView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:scrollbars="none"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/divider">-->
 
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2015" />
+        <!-- Sample, remove and add at runtime based on data -->
+<!--        <com.google.android.material.chip.ChipGroup-->
+<!--            android:id="@+id/chipGroup"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="@dimen/small_margin"-->
+<!--            android:layout_marginEnd="@dimen/small_margin"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/divider"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:singleLine="true">-->
 
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2015" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="2015" />-->
 
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2015" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="2015" />-->
 
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2017" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="2015" />-->
 
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2017" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="2015" />-->
 
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2017" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="2017" />-->
 
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2018" />
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="2017" />-->
 
-                </com.google.android.material.chip.ChipGroup>
-
-            </LinearLayout>
-        </HorizontalScrollView>
-    </LinearLayout>
+<!--        </com.google.android.material.chip.ChipGroup>-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    </HorizontalScrollView>-->
 </androidx.cardview.widget.CardView>

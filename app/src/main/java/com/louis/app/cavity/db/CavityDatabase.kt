@@ -30,7 +30,7 @@ abstract class CavityDatabase : RoomDatabase() {
                 CavityDatabase::class.java,
                 "cavity.db"
             )
-                .addCallback(roomCallback)
+                //.addCallback(roomCallback)
                 .build()
         }
 

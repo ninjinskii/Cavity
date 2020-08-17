@@ -8,6 +8,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
+import com.louis.app.cavity.util.L
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
