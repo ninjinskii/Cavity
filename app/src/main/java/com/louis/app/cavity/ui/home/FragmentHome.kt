@@ -36,6 +36,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 TODO("Not yet implemented")
             }
         }, activity as Context)
+        wineAdapter.setHasStableIds(true)
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
