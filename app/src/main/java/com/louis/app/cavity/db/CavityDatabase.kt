@@ -42,13 +42,8 @@ abstract class CavityDatabase : RoomDatabase() {
                 thread {
                     val vinDao = instance?.wineDao()
 
-                    vinDao?.insertWine(Wine("Mon vin", "Gewurtztraminer", 2, 0, 0))
-                    for (x in 0..3) {
-                        vinDao?.insertWine(Wine("Château la cour", "Gewurtztraminer", x, 0, 0))
-                    }
-
                     for (x in 0..15) {
-                        vinDao?.insertWine(Wine("Château la cour", "Château-neuf du Pape", 1, 0, 1))
+                        vinDao?.insertWine(Wine("Château la cour$x", "Château-neuf du Pape", 1, 0, 1))
                     }
                 }
             }

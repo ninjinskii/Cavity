@@ -5,15 +5,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.FragmentAddBottleBinding
+import com.louis.app.cavity.databinding.FragmentAddWineBinding
 
-class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
-    private lateinit var binding: FragmentAddBottleBinding
+class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
+    private lateinit var binding: FragmentAddWineBinding
     private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = FragmentAddBottleBinding.bind(view)
+        binding = FragmentAddWineBinding.bind(view)
     }
 }

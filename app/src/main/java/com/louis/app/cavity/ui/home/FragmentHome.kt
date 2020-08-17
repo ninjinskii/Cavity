@@ -1,13 +1,15 @@
 package com.louis.app.cavity.ui.home
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.Wine
@@ -23,6 +25,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
         setupRecyclerView()
         setupScrollableTab()
+        setHasOptionsMenu(true)
     }
 
     private fun setupRecyclerView() {
@@ -38,17 +41,17 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             setHasFixedSize(true)
             setItemViewCacheSize(10)
             adapter = wineAdapter
-//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                    // Show button no matter what if RV can't be scrolled
-//                    if (
-//                        !recyclerView.canScrollVertically(1) &&
-//                        !recyclerView.canScrollVertically(-1)
-//                    ) binding.buttonAdd.extend()
-//                    else if (dy > 0 && binding.buttonAdd.isExtended) binding.buttonAdd.shrink()
-//                    else if (dy < 0 && !binding.buttonAdd.isExtended) binding.buttonAdd.extend()
-//                }
-//            })
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    // Show components no matter what if RV can't be scrolled
+                    if (
+                        !recyclerView.canScrollVertically(1) &&
+                        !recyclerView.canScrollVertically(-1)
+                    ) binding.fab.show()
+                    else if (dy > 0 && binding.fab.isShown) binding.fab.hide()
+                    else if (dy < 0 && !binding.fab.isShown) binding.fab.show()
+                }
+            })
         }
 
         homeViewModel.getAllWines().observe(viewLifecycleOwner) {
@@ -63,5 +66,19 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 "Langudoc-Roussillon", "Jura"
             )
         )
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.toolbar_menu, menu)
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.switchView -> TODO("Change item view type in RecyclerView")
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }
