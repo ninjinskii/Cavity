@@ -8,4 +8,7 @@
     <string name="search">Rechercher</string>
     <string name="history">Historique</string>
     <string name="settings">Paramètres</string>
+    <string name="bio_wine">Le vin est bio</string>
+    <string name="wine_color">Couleur du vin</string>
+    <string name="wine_photo">Photo du vin</string>
 </resources>

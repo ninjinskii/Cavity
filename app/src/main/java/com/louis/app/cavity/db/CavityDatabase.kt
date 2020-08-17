@@ -10,7 +10,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import kotlin.concurrent.thread
 
-@Database(entities = [County::class, Wine::class, Bottle::class], version = 2, exportSchema = false)
+@Database(entities = [County::class, Wine::class, Bottle::class], version = 3, exportSchema = false)
 abstract class CavityDatabase : RoomDatabase() {
 
     abstract fun wineDao(): WineDao
@@ -50,7 +50,8 @@ abstract class CavityDatabase : RoomDatabase() {
                                 "Château-neuf du Pape",
                                 1,
                                 0,
-                                1
+                                1,
+                                ""
                             )
                         )
                     }
@@ -62,7 +63,8 @@ abstract class CavityDatabase : RoomDatabase() {
                                 "Château-neuf du Pape",
                                 2,
                                 0,
-                                0
+                                0,
+                                ""
                             )
                         )
                     }
@@ -74,7 +76,8 @@ abstract class CavityDatabase : RoomDatabase() {
                                 "Château-neuf du Pape",
                                 3,
                                 0,
-                                1
+                                1,
+                                ""
                             )
                         )
                     }

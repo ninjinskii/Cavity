@@ -14,8 +14,10 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         CavityDatabase.getInstance(app).bottleDao()
     )
 
-    // Consider using a transformation to get child vintage with wines
+    // Consider using a transformation to get child vintage with wines, not sure with databinding
     fun getAllWines() = repository.getAllWines()
+
+    fun getWinesWithBottles() = repository.getWineWithBottles()
 
 //    Transformations.map(repository.getAllWines()) {
 //        it.map { wine ->

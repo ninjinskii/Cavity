@@ -6,7 +6,7 @@ import com.louis.app.cavity.model.Bottle
 class WineRepository(private val wineDao: WineDao, private val bottleDao: BottleDao) {
     fun getAllWines() = wineDao.getAllWines()
 
-    fun getWineWithBottles(wineId: Long) = wineDao.getWineWithBottles(wineId)
+    fun getWineWithBottles() = wineDao.getWineWithBottles()
 
     fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
 }

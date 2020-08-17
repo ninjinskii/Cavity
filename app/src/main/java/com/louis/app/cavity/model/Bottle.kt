@@ -18,8 +18,7 @@ data class Bottle(
     @ColumnInfo(name = "buy_location") val buyLocation: String,
     @ColumnInfo(name = "buy_date") val buyDate: String,
     @ColumnInfo(name = "contest_comment") val contestComment: String,
-    @ColumnInfo(name = "pdf_path") val pdfPath: String,
-    @ColumnInfo(name = "img_path") val imgPath: String
+    @ColumnInfo(name = "pdf_path") val pdfPath: String
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_bottle")

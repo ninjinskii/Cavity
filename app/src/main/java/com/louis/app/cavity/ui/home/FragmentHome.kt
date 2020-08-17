@@ -1,10 +1,8 @@
 package com.louis.app.cavity.ui.home
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
@@ -14,18 +12,22 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.Wine
 
-class FragmentHome : Fragment(R.layout.fragment_home) {
+class FragmentHome : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val homeViewModel: HomeViewModel by activityViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding = FragmentHomeBinding.bind(view)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
         setupScrollableTab()
         setHasOptionsMenu(true)
+
+        return binding.root
     }
 
     private fun setupRecyclerView() {
@@ -54,7 +56,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             })
         }
 
-        homeViewModel.getAllWines().observe(viewLifecycleOwner) {
+        homeViewModel.getWinesWithBottles().observe(viewLifecycleOwner) {
             wineAdapter.submitList(it)
         }
     }
@@ -75,7 +77,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.switchView -> TODO("Change item view type in RecyclerView")
         }
 

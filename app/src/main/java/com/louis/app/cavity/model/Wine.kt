@@ -11,7 +11,8 @@ data class Wine(
     val naming: String,
     val color: Int,
     @ColumnInfo(name = "id_county") val idCounty: Long,
-    @ColumnInfo(name = "is_bio") val isBio: Int
+    @ColumnInfo(name = "is_bio") val isBio: Int,
+    @ColumnInfo(name = "img_path") val imgPath: String
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_wine")

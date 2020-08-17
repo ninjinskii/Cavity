@@ -3,19 +3,17 @@ package com.louis.app.cavity.ui.home
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
-import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.util.toBoolean
-import java.net.URL
+import com.louis.app.cavity.databinding.ItemWineBinding
+import com.louis.app.cavity.model.relation.WineWithBottles
 
 class WineRecyclerViewAdapter(private val listener: OnVintageClickListener) :
-    ListAdapter<Wine, WineRecyclerViewAdapter.WineViewHolder>(WineItemDiffCallback()) {
+    ListAdapter<WineWithBottles, WineRecyclerViewAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
     private lateinit var colors: List<Int>
 
@@ -29,9 +27,10 @@ class WineRecyclerViewAdapter(private val listener: OnVintageClickListener) :
         )
 
         return WineViewHolder(
-            LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_wine, parent, false),
+            DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.item_wine, parent, false
+            ),
             listener
         )
     }
@@ -39,37 +38,26 @@ class WineRecyclerViewAdapter(private val listener: OnVintageClickListener) :
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) =
         holder.bind(getItem(position))
 
-    class WineItemDiffCallback : DiffUtil.ItemCallback<Wine>() {
-        override fun areItemsTheSame(oldItem: Wine, newItem: Wine): Boolean =
-            oldItem.idWine == newItem.idWine
+    class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {
+        override fun areItemsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles): Boolean =
+            oldItem.wine.idWine == newItem.wine.idWine
 
-        override fun areContentsTheSame(oldItem: Wine, newItem: Wine) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
+            oldItem.wine == newItem.wine
     }
 
-    inner class WineViewHolder(itemView: View, private val listener: OnVintageClickListener) :
-        RecyclerView.ViewHolder(itemView) {
-        private val vImage: ImageView = itemView.findViewById(R.id.wineImage)
-        private val vName: TextView = itemView.findViewById(R.id.wineName)
-        private val vNaming: TextView = itemView.findViewById(R.id.wineNaming)
-        private val vColor: ImageView = itemView.findViewById(R.id.wineColorIndicator)
-        private val vBioImage: ImageView = itemView.findViewById(R.id.bioImage)
-        //private val vVintageLayout: ChipGroup = itemView.findViewById(R.id.chipGroup)
+    inner class WineViewHolder(
+        private val binding: ItemWineBinding,
+        private val listener: OnVintageClickListener
+    ) : RecyclerView.ViewHolder(binding.root) {
+        // TODO: change destination
+        private fun navigateToBottle(bottleId: Long, view: View) =
+            view.findNavController().navigate(R.id.show_addBottle)
 
-        fun bind(wine: Wine) {
-            with(wine) {
-                vName.text = name
-                vNaming.text = naming
-                vColor.setColorFilter(colors[color])
-                vBioImage.visibility = if (isBio.toBoolean()) View.VISIBLE else View.GONE
-
-                // TODO: remove test image with deprecated image
-                Glide.with(itemView.context)
-                    .load(URL("https://images.freeimages.com/images/large-previews/adf/sun-burst-1478549.jpg"))
-                    .centerCrop()
-                    .into(vImage)
-
-                //wine.childBottlesVintages
-                //vVintageLayout.addView()
+        fun bind(wineWithBottles: WineWithBottles) {
+            with(binding) {
+                model = WineWithBottlesModel(wineWithBottles)
+                executePendingBindings()
             }
         }
     }
