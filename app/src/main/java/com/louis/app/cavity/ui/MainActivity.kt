@@ -21,13 +21,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupDrawer() {
-        setSupportActionBar(binding.main.toolbar)
-
         val navController = findNavController(R.id.navHostFragment)
-        val appBarConfiguration =
-            AppBarConfiguration(navController.graph, binding.drawer)
+        val appBarConfiguration = AppBarConfiguration(navController.graph, binding.drawer)
+
+        binding.main.toolbar.setupWithNavController(navController,  appBarConfiguration)
         binding.navView.setupWithNavController(navController)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        binding.main.toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 }
