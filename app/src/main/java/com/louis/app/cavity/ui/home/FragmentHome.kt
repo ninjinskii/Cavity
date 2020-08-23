@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.home
 
 import android.os.Bundle
 import android.view.*
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
@@ -31,7 +30,7 @@ class FragmentHome : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        val wineAdapter = WineRecyclerViewAdapter(object : OnVintageClickListener {
+        val wineAdapter = WineRecyclerAdapter(object : OnVintageClickListener {
             override fun onVintageClick(wine: Wine) {
                 TODO()
             }
