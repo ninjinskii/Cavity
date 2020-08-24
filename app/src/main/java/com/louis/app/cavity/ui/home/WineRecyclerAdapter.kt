@@ -9,27 +9,18 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.relation.WineWithBottles
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
-import kotlinx.android.synthetic.main.item_wine.view.*
 import java.net.URL
 
-class WineRecyclerAdapter(private val listener: OnVintageClickListener) :
-    ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
-
-    private lateinit var colors: List<Int>
+class WineRecyclerAdapter(
+    private val listener: OnVintageClickListener,
+    private val colors: List<Int>
+) : ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
-//        L.v("Computing colors", "COLORS")
-//        colors = listOf(
-//            parent.context.getColor(R.color.wine_white),
-//            parent.context.getColor(R.color.wine_red),
-//            parent.context.getColor(R.color.wine_sweet),
-//            parent.context.getColor(R.color.wine_rose),
-//            parent.context.getColor(R.color.colorAccent)
-//        )
-
         return WineViewHolder(
             LayoutInflater
                 .from(parent.context)
@@ -41,6 +32,11 @@ class WineRecyclerAdapter(private val listener: OnVintageClickListener) :
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) =
         holder.bind(getItem(position))
 
+    override fun getItemId(position: Int): Long {
+        currentList[position].wine.idWine
+        return super.getItemId(position)
+    }
+
     class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {
         override fun areItemsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
             oldItem.wine.idWine == newItem.wine.idWine
@@ -49,10 +45,12 @@ class WineRecyclerAdapter(private val listener: OnVintageClickListener) :
             oldItem.wine == newItem.wine
     }
 
-    class WineViewHolder(
+    inner class WineViewHolder(
         itemView: View,
         private val listener: OnVintageClickListener
     ) : RecyclerView.ViewHolder(itemView) {
+        private val binding = ItemWineBinding.bind(itemView)
+
         // TODO: change destination
         private fun navigateToBottle(bottleId: Long, view: View) =
             view.findNavController().navigate(R.id.show_addBottle)
@@ -60,11 +58,11 @@ class WineRecyclerAdapter(private val listener: OnVintageClickListener) :
         fun bind(wineWithBottles: WineWithBottles) {
             val (wine, bottles) = wineWithBottles
 
-            with(itemView) {
+            with(binding) {
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
                 bioImage.setVisible(wine.isBio.toBoolean())
-                //wineColorIndicator.setColorFilter(colors[wine.color])
+                wineColorIndicator.setColorFilter(colors[wine.color])
 
                 Glide.with(itemView.context)
                     .load(URL("https://images.freeimages.com/images/large-previews/9c3/sunshine-1408040.jpg"))

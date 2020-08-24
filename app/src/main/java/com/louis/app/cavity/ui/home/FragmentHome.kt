@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
@@ -30,17 +29,25 @@ class FragmentHome : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        val colors = context?.let {
+            listOf(
+                it.getColor(R.color.wine_white),
+                it.getColor(R.color.wine_red),
+                it.getColor(R.color.wine_sweet),
+                it.getColor(R.color.wine_rose),
+                it.getColor(R.color.colorAccent)
+            )
+        }
+
         val wineAdapter = WineRecyclerAdapter(object : OnVintageClickListener {
             override fun onVintageClick(wine: Wine) {
                 TODO()
             }
-        })
-        wineAdapter.setHasStableIds(true)
+        }, colors ?: emptyList())
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
-            setItemViewCacheSize(10)
             adapter = wineAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

@@ -39,23 +39,23 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_margin"
             android:layout_marginBottom="@dimen/xsmall_margin"
+            android:layout_marginTop="@dimen/small_margin"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{model.wineName}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/bioImage"
             app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"
             app:layout_constraintTop_toBottomOf="@id/wineImage" />
 
         <TextView
             android:id="@+id/wineNaming"
             style="@style/TextAppearance.MaterialComponents.Caption"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_margin"
             android:layout_marginTop="@dimen/xsmall_margin"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{model.wineNaming}"
+            app:layout_constraintEnd_toStartOf="@id/bioImage"
             app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"
             app:layout_constraintTop_toBottomOf="@+id/wineName" />
 
@@ -82,6 +82,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/medium_margin"
             android:alpha="0.12"
             android:background="@color/divider_color"
             app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
@@ -99,9 +100,11 @@
             android:id="@+id/chipsScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"
             android:scrollbars="none"
-            app:layout_constraintTop_toBottomOf="@+id/divider">
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <!-- Sample, remove and add at runtime based on data -->
             <com.google.android.material.chip.ChipGroup
