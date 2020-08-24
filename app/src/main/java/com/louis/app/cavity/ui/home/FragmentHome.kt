@@ -71,7 +71,7 @@ class FragmentHome : Fragment() {
         binding.tab.addTabs(
             listOf(
                 "Alsace", "Beaujolais", "Bourgogne", "Bordeaux", "Italie", "Suisse",
-                "Langudoc-Roussillon", "Jura"
+                "Langudoc-Roussillon", "Une autre région très longue", "Jura"
             )
         )
     }

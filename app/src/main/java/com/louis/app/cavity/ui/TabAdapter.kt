@@ -23,19 +23,13 @@ class TabAdapter(
             .inflate(R.layout.item_county, parent, false)
 
         TextViewCompat.setTextAppearance(view.findViewById(R.id.county), style.tabTextStyle)
-        return TabViewHolder(view,listener)
+        return TabViewHolder(view, listener)
     }
 
-    override fun getItemCount(): Int {
-        return tabs.size
-    }
+    override fun getItemCount() = tabs.size
 
-    override fun onBindViewHolder(
-        holder: TabViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: TabViewHolder, position: Int) =
         holder.bind(tabs[position])
-    }
 
     fun addAll(list: List<String>) {
         tabs.clear()
@@ -43,11 +37,11 @@ class TabAdapter(
         notifyDataSetChanged()
     }
 
-    fun onTabClick(listener: ((position: Int) -> Unit)?){
+    fun onTabClick(listener: ((position: Int) -> Unit)?) {
         this.listener = listener
     }
 
-    internal fun listenTabChangeForPager(){}
+    internal fun listenTabChangeForPager() {}
 
 }
 
