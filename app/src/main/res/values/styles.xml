@@ -9,5 +9,4 @@
     <!-- Scrollable tab -->
     <style name="TabTextAppearance" parent="TextAppearance.AppCompat.Button" />
 
-
 </resources>

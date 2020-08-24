@@ -4,9 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Wine
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository(
@@ -14,16 +17,13 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         CavityDatabase.getInstance(app).bottleDao()
     )
 
-    // Consider using a transformation to get child vintage with wines, not sure with databinding
+    fun addWine(wine: Wine) = viewModelScope.launch (IO) {
+        repository.insertWine(wine)
+    }
+
     fun getAllWines() = repository.getAllWines()
 
-    fun getWinesWithBottles() = repository.getWineWithBottles()
+    fun getAllCounties() = repository.getAllCounties()
 
-//    Transformations.map(repository.getAllWines()) {
-//        it.map { wine ->
-//            wine.childBottlesVintages.addAll(
-//              repository.getWineWithBottles(wine.idWine).bottles.map { bottle -> bottle.vintage }
-//            )
-//            wine
-//        }
+    fun getWinesWithBottles() = repository.getWineWithBottles()
 }

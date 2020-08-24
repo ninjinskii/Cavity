@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- android:src="@color/colorAccent", ImageView -->
+        <!-- android:src="@chip_bg_state/colorAccent", ImageView -->
         <ImageView
             android:id="@+id/wineImage"
             android:layout_width="0dp"
@@ -20,7 +20,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- app:tint="@{Color.parseColor(model.color)}" -->
+        <!-- app:tint="@{Color.parseColor(model.chip_bg_state)}" -->
         <ImageView
             android:id="@+id/wineColorIndicator"
             android:layout_width="@dimen/wine_color_indicator_width"
@@ -80,7 +80,7 @@
 
         <View
             android:id="@+id/divider"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="@dimen/divider_height"
             android:layout_marginTop="@dimen/medium_margin"
             android:alpha="0.12"

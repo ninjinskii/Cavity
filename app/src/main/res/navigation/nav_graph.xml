@@ -14,8 +14,8 @@
             android:id="@+id/showSettings"
             app:destination="@id/settings_dest" />
         <action
-            android:id="@+id/show_addBottle"
-            app:destination="@id/fragmentAddBottle" />
+            android:id="@+id/show_addWine"
+            app:destination="@id/fragmentAddWine" />
     </fragment>
 
     <fragment
@@ -25,8 +25,9 @@
         tools:layout="@layout/fragment_settings" />
 
     <fragment
-        android:id="@+id/fragmentAddBottle"
-        android:name="com.louis.app.cavity.ui.home.FragmentAddBottle"
-        android:label="FragmentAddBottle" />
+        android:id="@+id/fragmentAddWine"
+        android:name="com.louis.app.cavity.ui.home.FragmentAddWine"
+        android:label="FragmentAddWine"
+        tools:layout="@layout/fragment_add_wine" />
 
 </navigation>

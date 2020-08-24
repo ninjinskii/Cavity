@@ -2,6 +2,7 @@ package com.louis.app.cavity.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.WineWithBottles
 
@@ -23,4 +24,7 @@ interface WineDao {
     @Transaction
     @Query("SELECT * FROM wine")
     fun getWineWithBottles(): LiveData<List<WineWithBottles>>
+
+    @Query("SELECT * FROM county")
+    fun getAllCounties(): LiveData<List<County>>
 }

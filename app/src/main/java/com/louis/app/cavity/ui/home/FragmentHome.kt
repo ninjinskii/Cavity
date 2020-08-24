@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
@@ -23,6 +24,7 @@ class FragmentHome : Fragment() {
 
         setupRecyclerView()
         setupScrollableTab()
+        setListeners()
         setHasOptionsMenu(true)
 
         return binding.root
@@ -74,6 +76,12 @@ class FragmentHome : Fragment() {
                 "Langudoc-Roussillon", "Une autre région très longue", "Jura"
             )
         )
+    }
+
+    private fun setListeners() {
+        binding.fab.setOnClickListener {
+            findNavController().navigate(R.id.show_addWine)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

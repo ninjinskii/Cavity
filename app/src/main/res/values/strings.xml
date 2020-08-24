@@ -1,4 +1,9 @@
 <resources>
+    <!-- User related -->
+    <string name="submit">Valider</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+
     <string name="app_name">Cavity</string>
     <string name="switch_view">Changer de vue</string>
     <string name="consumed">Vidée</string>
@@ -11,4 +16,19 @@
     <string name="bio_wine">Le vin est bio</string>
     <string name="wine_color">Couleur du vin</string>
     <string name="wine_photo">Photo du vin</string>
+    <string name="naming">Appellation</string>
+    <string name="name">Nom</string>
+    <string name="county">Région</string>
+    <string name="identification">Identification</string>
+    <string name="color">Couleur</string>
+    <string name="organic">Bio</string>
+    <string name="organic_wine">Vin issu de l\'agriculture biologique</string>
+    <string name="add_county">Ajouter une région</string>
+    <string name="wine_color_white">Blanc</string>
+    <string name="wine_color_red">Rouge</string>
+    <string name="wine_color_sweet">Liquoreux</string>
+    <string name="wine_color_rose">Rosé</string>
+
+    <!-- Tags -->
+    <string name="tag_chip_id">com.louis.app.cavity.TAG_CHIP_ID</string>
 </resources>

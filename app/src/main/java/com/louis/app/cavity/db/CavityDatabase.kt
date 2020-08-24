@@ -46,7 +46,7 @@ abstract class CavityDatabase : RoomDatabase() {
                     for (x in 0..5) {
                         vinDao?.insertWine(
                             Wine(
-                                "Château la cour$x",
+                                "Château la cour $x",
                                 "Château-neuf du Pape",
                                 1,
                                 0,
@@ -59,7 +59,7 @@ abstract class CavityDatabase : RoomDatabase() {
                     for (x in 6..10) {
                         vinDao?.insertWine(
                             Wine(
-                                "Château la cour$x",
+                                "Château la cour $x",
                                 "Château-neuf du Pape",
                                 2,
                                 0,
@@ -72,7 +72,7 @@ abstract class CavityDatabase : RoomDatabase() {
                     for (x in 11..15) {
                         vinDao?.insertWine(
                             Wine(
-                                "Château la cour$x",
+                                "Château la cour $x",
                                 "Château-neuf du Pape",
                                 3,
                                 0,

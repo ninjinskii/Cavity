@@ -53,7 +53,7 @@ class WineRecyclerAdapter(
 
         // TODO: change destination
         private fun navigateToBottle(bottleId: Long, view: View) =
-            view.findNavController().navigate(R.id.show_addBottle)
+            view.findNavController().navigate(R.id.show_addWine)
 
         fun bind(wineWithBottles: WineWithBottles) {
             val (wine, bottles) = wineWithBottles
