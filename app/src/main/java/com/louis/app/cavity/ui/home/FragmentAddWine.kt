@@ -10,6 +10,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddCountyBinding
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
+import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toInt
@@ -32,9 +33,15 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     }
 
     private fun loadCounties() {
+        val allCounties = mutableSetOf<County>()
+        val alreadyInflated = mutableSetOf<County>()
+
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
+            allCounties.addAll(it)
+            val toInflate =  allCounties - alreadyInflated
+
             lifecycleScope.launch(Default) {
-                for (county in it) {
+                for (county in toInflate) {
                     val chip: Chip =
                         layoutInflater.inflate(
                             R.layout.chip_choice,
@@ -50,6 +57,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                         binding.countyChipGroup.addView(chip)
                     }
                 }
+
+                alreadyInflated.addAll(toInflate)
             }
         }
     }

@@ -33,8 +33,13 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     fun addCounty(countyName: String) {
         viewModelScope.launch(IO) {
             if (countyName.isNotEmpty()) {
-                val counties = repository.getAllCountiesNotLive()
-                repository.insertCounty(County(countyName, counties.size))
+                val counties = repository.getAllCountiesNotLive().map { it.name }
+
+                if (!counties.contains(countyName)) {
+                    repository.insertCounty(County(countyName, counties.size))
+                } else {
+                    _userFeedback.postOnce(R.string.county_already_exist)
+                }
             } else {
                 _userFeedback.postOnce(R.string.empty_county_name)
             }

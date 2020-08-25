@@ -70,12 +70,9 @@ class FragmentHome : Fragment() {
     }
 
     private fun setupScrollableTab() {
-        binding.tab.addTabs(
-            listOf(
-                "Alsace", "Beaujolais", "Bourgogne", "Bordeaux", "Italie", "Suisse",
-                "Langudoc-Roussillon", "Une autre région très longue", "Jura"
-            )
-        )
+        homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
+            binding.tab.addTabs(it.map { county -> county.name })
+        }
     }
 
     private fun setListeners() {

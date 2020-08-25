@@ -6,6 +6,7 @@
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
+    <string name="county_already_exist">Cette région existe déjà.</string>
 
     <string name="app_name">Cavity</string>
     <string name="switch_view">Changer de vue</string>
