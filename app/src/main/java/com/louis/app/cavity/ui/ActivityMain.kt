@@ -10,7 +10,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
 import com.louis.app.cavity.util.L
 
-class MainActivity : AppCompatActivity() {
+class ActivityMain : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

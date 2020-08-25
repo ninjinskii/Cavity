@@ -24,13 +24,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
+                android:id="@+id/buttonAddCounty"
+                android:layout_width="@dimen/medium_icon"
+                android:layout_height="@dimen/medium_icon"
                 android:layout_margin="@dimen/medium_margin"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/add_county"
                 android:src="@drawable/ic_add"
                 android:tint="?attr/colorOnBackground"
-                android:contentDescription="@string/add_county"
                 app:layout_constraintBottom_toBottomOf="@+id/countyTitle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/countyTitle" />
@@ -141,10 +142,11 @@
 
             <HorizontalScrollView
                 android:id="@+id/colorScrollView"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/colorTitle">
 
                 <com.google.android.material.chip.ChipGroup
@@ -159,6 +161,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/colorWhite"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
@@ -166,18 +169,21 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/colorRed"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="@string/wine_color_red" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/colorSweet"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="@string/wine_color_sweet" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/colorRose"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="@string/wine_color_rose" />
@@ -225,13 +231,16 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <!-- Change ripple color to get a ripple effect -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/submitAddWine"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="@dimen/medium_margin"
         android:gravity="center"
-        android:text="@string/submit" />
+        android:text="@string/submit"
+        app:icon="@drawable/ic_check"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

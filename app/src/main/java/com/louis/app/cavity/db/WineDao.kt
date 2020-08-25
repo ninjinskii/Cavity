@@ -18,6 +18,15 @@ interface WineDao {
     @Delete
     fun deleteWine(wine: Wine)
 
+    @Insert
+    fun insertCounty(county: County)
+
+    @Update
+    fun updateCounty(county: County)
+
+    @Delete
+    fun deleteCounty(county: County)
+
     @Query("SELECT * FROM wine")
     fun getAllWines(): LiveData<List<Wine>>
 
@@ -27,4 +36,7 @@ interface WineDao {
 
     @Query("SELECT * FROM county")
     fun getAllCounties(): LiveData<List<County>>
+
+    @Query("SELECT * FROM county")
+    fun getAllCountiesNotLive(): List<County>
 }

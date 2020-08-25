@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.DialogAddCountyBinding
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.L
@@ -64,6 +66,20 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                     homeViewModel.addWine(it)
                 }
             }
+        }
+
+        binding.buttonAddCounty.setOnClickListener {
+            val dialogBinding = DialogAddCountyBinding.inflate(layoutInflater)
+
+            MaterialAlertDialogBuilder(this.requireContext())
+                .setTitle(resources.getString(R.string.add_county))
+                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
+                }
+                .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
+                    homeViewModel.addCounty(dialogBinding.countyName.text.toString())
+                }
+                .setView(dialogBinding.root)
+                .show()
         }
     }
 

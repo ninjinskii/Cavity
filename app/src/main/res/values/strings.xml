@@ -4,6 +4,9 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
 
+    <!-- Errors -->
+    <string name="empty_county_name">Veuillez saisir un nom de région.</string>
+
     <string name="app_name">Cavity</string>
     <string name="switch_view">Changer de vue</string>
     <string name="consumed">Vidée</string>
