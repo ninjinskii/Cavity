@@ -36,7 +36,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
                 val counties = repository.getAllCountiesNotLive().map { it.name }
 
                 if (!counties.contains(countyName)) {
-                    repository.insertCounty(County(countyName, counties.size))
+                    repository.insertCounty(County(name = countyName, prefOrder = counties.size))
                 } else {
                     _userFeedback.postOnce(R.string.county_already_exist)
                 }
@@ -47,6 +47,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun getAllWines() = repository.getAllWines()
+
+    fun getAllBottles() = repository.getAllBottles()
 
     fun getAllCounties() = repository.getAllCounties()
 

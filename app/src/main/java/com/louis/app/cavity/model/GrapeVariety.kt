@@ -5,8 +5,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "grape_variety")
-data class GrapeVariety (val name: String, val percentage: Int, val bottle_id: Long) {
+data class GrapeVariety(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_grape_variety")
-    var id_grape_variety: Long = 0
-}
+    val id_grape_variety: Long = 0,
+    val name: String,
+    val percentage: Int,
+    val bottle_id: Long
+)

@@ -72,7 +72,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 val isOrganic = organicWine.isChecked.toInt()
                 val color = colorChipGroup.checkedChipId // always -1, need fix
 
-                Wine(name, naming, getWineColor(color), 0, isOrganic, "").also {
+                Wine(0, name, naming, getWineColor(color), 0, isOrganic, "").also {
                     homeViewModel.addWine(it)
                 }
             }

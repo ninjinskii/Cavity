@@ -8,11 +8,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.relation.WineWithBottles
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.net.URL
 
 class WineRecyclerAdapter(
@@ -63,6 +67,22 @@ class WineRecyclerAdapter(
                 wineNaming.text = wine.naming
                 bioImage.setVisible(wine.isBio.toBoolean())
                 wineColorIndicator.setColorFilter(colors[wine.color])
+
+                chipGroup.removeAllViews()
+                for (bottle in bottles) {
+                    val chip: Chip =
+                        LayoutInflater.from(itemView.context).inflate(
+                            R.layout.chip_action,
+                            binding.chipGroup,
+                            false
+                        ) as Chip
+                    chip.apply {
+                        setTag(R.string.tag_chip_id, bottle.vintage)
+                        text = bottle.vintage.toString()
+                    }
+
+                    binding.chipGroup.addView(chip)
+                }
 
                 Glide.with(itemView.context)
                     .load(URL("https://images.freeimages.com/images/large-previews/9c3/sunshine-1408040.jpg"))

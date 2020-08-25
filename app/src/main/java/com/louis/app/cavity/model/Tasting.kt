@@ -5,8 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "tasting")
-data class Tasting(val date: String) {
+data class Tasting(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_tasting")
-    var idTasting: Long = 0
-}
+    val idTasting: Long = 0,
+    val date: String
+)

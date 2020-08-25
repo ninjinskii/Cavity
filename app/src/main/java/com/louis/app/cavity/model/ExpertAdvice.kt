@@ -6,6 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "expert_advice")
 data class ExpertAdvice(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id_expert_advice")
+    val idExpertAdvice: Long = 0,
     @ColumnInfo(name = "contest_name") val contestName: String,
     @ColumnInfo(name = "is_medal") val isMedal: Int,
     @ColumnInfo(name = "is_star") val isStar: Int,
@@ -15,8 +18,4 @@ data class ExpertAdvice(
     val rate: Int,
     val medal: Int,
     @ColumnInfo(name = "id_bottle") val idBottle: Long
-) {
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id_expert_advice")
-    var idExpertAdvice: Long = 0
-}
+)

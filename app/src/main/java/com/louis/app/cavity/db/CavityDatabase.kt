@@ -10,7 +10,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import kotlin.concurrent.thread
 
-@Database(entities = [County::class, Wine::class, Bottle::class], version = 3, exportSchema = false)
+@Database(entities = [County::class, Wine::class, Bottle::class], version = 8, exportSchema = false)
 abstract class CavityDatabase : RoomDatabase() {
 
     abstract fun wineDao(): WineDao
@@ -32,7 +32,7 @@ abstract class CavityDatabase : RoomDatabase() {
                 CavityDatabase::class.java,
                 "cavity.db"
             )
-                //.addCallback(roomCallback)
+                .addCallback(roomCallback)
                 .fallbackToDestructiveMigration()
                 .build()
         }
@@ -41,46 +41,18 @@ abstract class CavityDatabase : RoomDatabase() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 thread {
-                    val vinDao = instance?.wineDao()
+                    val bottleDao = instance?.bottleDao()
+                    val wineDao = instance?.wineDao()
 
-                    for (x in 0..5) {
-                        vinDao?.insertWine(
-                            Wine(
-                                "Château la cour $x",
-                                "Château-neuf du Pape",
-                                1,
-                                0,
-                                1,
-                                ""
-                            )
-                        )
-                    }
+                    wineDao?.insertWine(Wine(1, "a", "a", 1, 0, 0, ""))
+                    wineDao?.insertWine(Wine(2, "a", "a", 1, 0, 0, ""))
+                    wineDao?.insertWine(Wine(3, "a", "a", 1, 0, 0, ""))
 
-                    for (x in 6..10) {
-                        vinDao?.insertWine(
-                            Wine(
-                                "Château la cour $x",
-                                "Château-neuf du Pape",
-                                2,
-                                0,
-                                0,
-                                ""
-                            )
-                        )
-                    }
+                    bottleDao?.insertBottle(Bottle(0,1, 0, 0, 1, 2010, "", 0, "", "", ",", "", "", "", ""))
+                    bottleDao?.insertBottle(Bottle(0,1, 0, 0, 1, 2010, "", 0, "", "", ",", "", "", "", ""))
+                    bottleDao?.insertBottle(Bottle(0,1, 0, 0, 1, 2011, "", 0, "", "", ",", "", "", "", ""))
+                    bottleDao?.insertBottle(Bottle(0,2, 0, 0, 1, 2012, "", 0, "", "", ",", "", "", "", ""))
 
-                    for (x in 11..15) {
-                        vinDao?.insertWine(
-                            Wine(
-                                "Château la cour $x",
-                                "Château-neuf du Pape",
-                                3,
-                                0,
-                                1,
-                                ""
-                            )
-                        )
-                    }
                 }
             }
         }

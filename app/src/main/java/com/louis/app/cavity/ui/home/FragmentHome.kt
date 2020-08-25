@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.util.L
 
 class FragmentHome : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -65,7 +66,12 @@ class FragmentHome : Fragment() {
         }
 
         homeViewModel.getWinesWithBottles().observe(viewLifecycleOwner) {
+            L.v(it.toString())
             wineAdapter.submitList(it)
+        }
+
+        homeViewModel.getAllBottles().observe(viewLifecycleOwner) {
+            L.v(it.toString(), "Bottles")
         }
     }
 
