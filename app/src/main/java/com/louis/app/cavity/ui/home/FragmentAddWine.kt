@@ -13,6 +13,7 @@ import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.showKeyboard
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
@@ -38,7 +39,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
             allCounties.addAll(it)
-            val toInflate =  allCounties - alreadyInflated
+            val toInflate = allCounties - alreadyInflated
 
             lifecycleScope.launch(Default) {
                 for (county in toInflate) {
@@ -89,6 +90,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 }
                 .setView(dialogBinding.root)
                 .show()
+
+            it.postDelayed({ context?.showKeyboard(dialogBinding.countyName) }, 100)
         }
     }
 
