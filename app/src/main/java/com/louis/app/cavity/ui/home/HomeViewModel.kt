@@ -26,6 +26,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback : LiveData<Event<Int>>
         get() = _userFeedback
 
+    val shouldShowFab = MutableLiveData<Boolean>()
+
     fun addWine(wine: Wine) = viewModelScope.launch(IO) {
         repository.insertWine(wine)
     }

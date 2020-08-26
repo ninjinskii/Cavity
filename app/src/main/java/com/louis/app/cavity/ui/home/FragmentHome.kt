@@ -5,12 +5,8 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
-import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.util.L
 
 class FragmentHome : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -23,67 +19,36 @@ class FragmentHome : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        setupRecyclerView()
         setupScrollableTab()
         setListeners()
+        observe()
         setHasOptionsMenu(true)
 
         return binding.root
     }
 
-    private fun setupRecyclerView() {
-        val colors = context?.let {
-            listOf(
-                it.getColor(R.color.wine_white),
-                it.getColor(R.color.wine_red),
-                it.getColor(R.color.wine_sweet),
-                it.getColor(R.color.wine_rose),
-                it.getColor(R.color.colorAccent)
-            )
-        }
-
-        val wineAdapter = WineRecyclerAdapter(object : OnVintageClickListener {
-            override fun onVintageClick(wine: Wine) {
-                TODO()
-            }
-        }, colors ?: emptyList())
-
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(activity)
-            setHasFixedSize(true)
-            adapter = wineAdapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    // Show components no matter what if RV can't be scrolled
-                    if (
-                        !recyclerView.canScrollVertically(1) &&
-                        !recyclerView.canScrollVertically(-1)
-                    ) binding.fab.show()
-                    else if (dy > 0 && binding.fab.isShown) binding.fab.hide()
-                    else if (dy < 0 && !binding.fab.isShown) binding.fab.show()
-                }
-            })
-        }
-
-        homeViewModel.getWinesWithBottles().observe(viewLifecycleOwner) {
-            L.v(it.toString())
-            wineAdapter.submitList(it)
-        }
-
-        homeViewModel.getAllBottles().observe(viewLifecycleOwner) {
-            //L.v(it.toString(), "Bottles")
-        }
-    }
-
     private fun setupScrollableTab() {
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
-            binding.tab.addTabs(it.map { county -> county.name })
+            with(binding) {
+                tab.addTabs(it.map { county -> county.name })
+                activity?.let { activity ->
+                    viewPager.adapter = WinesPagerAdapter(activity.supportFragmentManager, it.size)
+                }
+                tab.setUpWithViewPager(viewPager)
+            }
         }
     }
 
     private fun setListeners() {
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.show_addWine)
+        }
+    }
+
+    private fun observe() {
+        homeViewModel.shouldShowFab.observe(viewLifecycleOwner) {
+            if (it) binding.fab.run { if (!isShown) show() }
+            else binding.fab.run { if (isShown) hide() }
         }
     }
 
