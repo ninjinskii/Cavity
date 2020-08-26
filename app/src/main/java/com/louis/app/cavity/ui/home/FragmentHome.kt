@@ -1,30 +1,41 @@
 package com.louis.app.cavity.ui.home
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
+import com.louis.app.cavity.util.setVisible
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class FragmentHome : Fragment() {
+class FragmentHome : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private var condensedMode = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentHomeBinding.bind(view)
 
+        initToolbar()
         setupScrollableTab()
         setListeners()
         observe()
-        setHasOptionsMenu(true)
+    }
 
-        return binding.root
+    private fun initToolbar() {
+        val activity = activity as AppCompatActivity
+        activity.setSupportActionBar(activity.findViewById(R.id.toolbar))
+        setHasOptionsMenu(true)
     }
 
     private fun setupScrollableTab() {
@@ -52,6 +63,39 @@ class FragmentHome : Fragment() {
         }
     }
 
+    private fun setCondensedMode() {
+        with(binding) {
+            lifecycleScope.launch(Main) {
+                tab.elevation = 0F
+
+                tab.animate()
+                    .scaleX(-100F)
+                    .alpha(0F)
+                    .setDuration(500)
+                    .start()
+
+                delay(500)
+                tab.setVisible(false)
+            }
+        }
+    }
+
+    private fun setDefaultMode() {
+        with(binding) {
+            lifecycleScope.launch(Main) {
+                tab.setVisible(true)
+                tab.animate()
+                    .scaleX(100F)
+                    .alpha(1F)
+                    .setDuration(500)
+                    .start()
+
+                delay(500)
+                tab.elevation = 50F
+            }
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.toolbar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -59,7 +103,10 @@ class FragmentHome : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.switchView -> TODO("Change item view type in RecyclerView")
+            R.id.switchView -> {
+                condensedMode = !condensedMode
+                if (condensedMode) setCondensedMode() else setDefaultMode()
+            }
         }
 
         return super.onOptionsItemSelected(item)
