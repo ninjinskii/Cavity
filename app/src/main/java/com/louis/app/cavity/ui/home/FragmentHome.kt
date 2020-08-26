@@ -71,7 +71,7 @@ class FragmentHome : Fragment() {
         }
 
         homeViewModel.getAllBottles().observe(viewLifecycleOwner) {
-            L.v(it.toString(), "Bottles")
+            //L.v(it.toString(), "Bottles")
         }
     }
 

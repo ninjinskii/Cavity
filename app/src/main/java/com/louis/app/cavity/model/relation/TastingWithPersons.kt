@@ -11,7 +11,7 @@ data class TastingWithPersons(
     @Embedded val tasting: Tasting,
     @Relation(
         parentColumn = "id_tasting",
-        entityColumn = "id_person",
+        entityColumn = "id_tasting",
         associateBy = Junction(TastingPersonXRef::class)
     )
     val persons: List<Person>

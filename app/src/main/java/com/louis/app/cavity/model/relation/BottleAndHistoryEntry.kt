@@ -10,7 +10,7 @@ data class BottleAndHistoryEntry (
     @Embedded val bottle: Bottle,
     @Relation(
         parentColumn = "id_bottle",
-        entityColumn = "id_bottle"
+        entityColumn = "id_history_entry"
     )
     val historyEntry: HistoryEntry
 )

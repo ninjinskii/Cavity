@@ -10,5 +10,5 @@ data class HistoryEntry(
     @ColumnInfo(name = "id_history_entry")
     val idHistoryEntry: Long = 0,
     @ColumnInfo(name = "drink_date") val drinkDate: String,
-    @ColumnInfo(name = "id_bottle") val idBottle: Long
+    //@ColumnInfo(name = "id_bottle") val idBottle: Long
 )

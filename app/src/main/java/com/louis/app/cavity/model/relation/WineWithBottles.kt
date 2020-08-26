@@ -9,7 +9,7 @@ data class WineWithBottles (
     @Embedded val wine: Wine,
     @Relation(
         parentColumn = "id_wine",
-        entityColumn = "id_bottle"
+        entityColumn = "id_wine"
     )
     val bottles: List<Bottle>
 )

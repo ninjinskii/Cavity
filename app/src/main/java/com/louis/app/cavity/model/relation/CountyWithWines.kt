@@ -9,7 +9,7 @@ data class CountyWithWines (
     @Embedded val county: County,
     @Relation(
         parentColumn = "id_county",
-        entityColumn = "id_wine"
+        entityColumn = "id_county"
     )
     val wines: List<Wine>
 )
