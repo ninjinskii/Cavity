@@ -69,7 +69,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
                     withContext(Main) {
                         binding.countyChipGroup.addView(chip)
-                        if (index == 1) chip.isChecked = true
+                        if (index == 0) chip.isChecked = true
                     }
                 }
 
@@ -88,13 +88,17 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                     val naming = naming.text.toString()
                     val isOrganic = organicWine.isChecked.toInt()
                     val color = colorChipGroup.checkedChipId
+                    val checkedChipId = countyChipGroup.checkedChipId
+                    val county = countyChipGroup
+                        .findViewById<Chip>(checkedChipId)
+                        .getTag(R.string.tag_chip_id) as County
 
                     Wine(
                         0,
                         name,
                         naming,
                         getWineColor(color),
-                        0,
+                        county.idCounty,
                         isOrganic,
                         wineImagePath ?: ""
                     ).also {

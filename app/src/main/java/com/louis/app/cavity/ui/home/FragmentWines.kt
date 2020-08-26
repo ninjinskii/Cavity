@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
+import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.L
 
-class FragmentWines : Fragment(R.layout.fragment_wines) {
+class FragmentWines(private val county: County) : Fragment(R.layout.fragment_wines) {
     private lateinit var binding: FragmentWinesBinding
     private val homeViewModel: HomeViewModel by activityViewModels()
 
@@ -57,7 +58,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             })
         }
 
-        homeViewModel.getWinesWithBottles().observe(viewLifecycleOwner) {
+        homeViewModel.getWinesWithBottlesByCounty(county.idCounty).observe(viewLifecycleOwner) {
             wineAdapter.submitList(it)
         }
     }

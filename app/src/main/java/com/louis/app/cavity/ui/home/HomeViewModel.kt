@@ -55,4 +55,6 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     fun getAllCounties() = repository.getAllCounties()
 
     fun getWinesWithBottles() = repository.getWineWithBottles()
+
+    fun getWinesWithBottlesByCounty(countyId: Long) = repository.getWineWithBottlesByCounty(countyId)
 }

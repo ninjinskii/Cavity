@@ -32,7 +32,7 @@ class FragmentHome : Fragment() {
             with(binding) {
                 tab.addTabs(it.map { county -> county.name })
                 activity?.let { activity ->
-                    viewPager.adapter = WinesPagerAdapter(activity.supportFragmentManager, it.size)
+                    viewPager.adapter = WinesPagerAdapter(activity.supportFragmentManager, it)
                 }
                 tab.setUpWithViewPager(viewPager)
             }

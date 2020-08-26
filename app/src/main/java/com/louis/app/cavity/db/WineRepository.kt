@@ -8,6 +8,7 @@ class WineRepository(private val wineDao: WineDao, private val bottleDao: Bottle
     fun getAllWines() = wineDao.getAllWines()
     fun insertWine(wine: Wine) = wineDao.insertWine(wine)
     fun getWineWithBottles() = wineDao.getWineWithBottles()
+    fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
 
     fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
     fun getAllBottles() = bottleDao.getAllBottles()
