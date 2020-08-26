@@ -6,7 +6,10 @@
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
+    <string name="no_county">Aucune région sélectionnée.</string>
     <string name="county_already_exist">Cette région existe déjà.</string>
+    <string name="no_file_explorer">Aucune application d\'exploration de fichier trouvée.</string>
+    <string name="base_error">Une erreur est survenue.</string>
 
     <string name="app_name">Cavity</string>
     <string name="switch_view">Changer de vue</string>
@@ -20,6 +23,7 @@
     <string name="bio_wine">Le vin est bio</string>
     <string name="wine_color">Couleur du vin</string>
     <string name="wine_photo">Photo du vin</string>
+    <string name="add_photo">Ajouter une photo</string>
     <string name="naming">Appellation</string>
     <string name="name">Nom</string>
     <string name="county">Région</string>

@@ -4,7 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.snackbar.Snackbar
 
 fun Int.toBoolean() = this == 1
 
@@ -30,3 +33,12 @@ fun Context.showKeyboard(view: View) {
     inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY)
 }
 
+fun CoordinatorLayout.showSnackbar(
+    @StringRes stringRes: Int,
+    @StringRes actionStringRes: Int? = null,
+    action: (View) -> Unit = { }
+) {
+    Snackbar.make(this, stringRes, Snackbar.LENGTH_LONG).apply {
+        actionStringRes?.let { setAction(it, action).duration = 8000 }
+    }.show()
+}

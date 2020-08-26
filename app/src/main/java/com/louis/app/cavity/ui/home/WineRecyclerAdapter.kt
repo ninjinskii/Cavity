@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.home
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,7 +86,7 @@ class WineRecyclerAdapter(
                 }
 
                 Glide.with(itemView.context)
-                    .load(URL("https://images.freeimages.com/images/large-previews/9c3/sunshine-1408040.jpg"))
+                    .load(Uri.parse(wine.imgPath))
                     .centerCrop()
                     .into(wineImage)
             }
