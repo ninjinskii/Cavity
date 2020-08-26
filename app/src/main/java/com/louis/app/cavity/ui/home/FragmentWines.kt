@@ -13,7 +13,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.L
 
-class FragmentWines(private val county: County) : Fragment(R.layout.fragment_wines) {
+class FragmentWines : Fragment(R.layout.fragment_wines) {
     private lateinit var binding: FragmentWinesBinding
     private val homeViewModel: HomeViewModel by activityViewModels()
 
@@ -58,8 +58,19 @@ class FragmentWines(private val county: County) : Fragment(R.layout.fragment_win
             })
         }
 
-        homeViewModel.getWinesWithBottlesByCounty(county.idCounty).observe(viewLifecycleOwner) {
+        val countyId = arguments?.getLong(COUNTY_ID)
+        homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
             wineAdapter.submitList(it)
+        }
+    }
+
+    companion object {
+        private const val COUNTY_ID = "com.louis.app.cavity.ui.home.FragmentWines.COUNTY_ID"
+
+        fun newInstance(countyId: Long): FragmentWines {
+            return FragmentWines().apply {
+                arguments = Bundle().apply { putLong(COUNTY_ID, countyId) }
+            }
         }
     }
 }
