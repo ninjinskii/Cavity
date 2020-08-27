@@ -1,10 +1,7 @@
 package com.louis.app.cavity.ui.home
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -15,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -28,16 +26,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
 
-        initToolbar()
         setupScrollableTab()
         setListeners()
         observe()
-    }
-
-    private fun initToolbar() {
-        val activity = activity as AppCompatActivity
-        activity.setSupportActionBar(activity.findViewById(R.id.toolbar))
-        setHasOptionsMenu(true)
     }
 
     private fun setupScrollableTab() {
@@ -47,10 +38,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 activity?.let { activity ->
                     viewPager.adapter = WinesPagerAdapter(activity.supportFragmentManager, it)
                 }
-                viewPager.offscreenPageLimit = 0
-                viewPager.setCurrentItem(0, true)
-                tab.smoothScrollToPosition(0)
                 tab.setUpWithViewPager(viewPager)
+                viewPager.offscreenPageLimit = 5
             }
         }
     }

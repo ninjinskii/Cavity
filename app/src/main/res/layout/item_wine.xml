@@ -8,19 +8,25 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="120dp">
 
-        <!-- android:src="@chip_bg_state/colorAccent", ImageView -->
         <ImageView
             android:id="@+id/wineImage"
             android:layout_width="0dp"
-            android:layout_height="@dimen/wine_card_image_height"
+            android:layout_height="0dp"
             android:contentDescription="@string/wine_photo"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- app:tint="@{Color.parseColor(model.chip_bg_state)}" -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.30" />
+
         <ImageView
             android:id="@+id/wineColorIndicator"
             android:layout_width="@dimen/wine_color_indicator_width"
@@ -29,7 +35,7 @@
             android:contentDescription="@string/wine_color"
             android:src="@drawable/color_wine_shape"
             app:layout_constraintBottom_toBottomOf="@+id/wineNaming"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/wineImage"
             app:layout_constraintTop_toTopOf="@+id/wineName" />
 
         <TextView
@@ -44,7 +50,7 @@
             android:maxLines="1"
             app:layout_constraintEnd_toStartOf="@id/bioImage"
             app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"
-            app:layout_constraintTop_toBottomOf="@id/wineImage" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/wineNaming"
@@ -76,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.85" />
+            app:layout_constraintGuide_percent="0.90" />
 
         <View
             android:id="@+id/divider"
@@ -94,15 +100,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.15" />
+            app:layout_constraintGuide_percent="0.40" />
 
         <HorizontalScrollView
             android:id="@+id/chipsScrollView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"
             android:scrollbars="none"
+            app:layout_constraintStart_toEndOf="@id/wineImage"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider"
             app:layout_constraintBottom_toBottomOf="parent">
 
