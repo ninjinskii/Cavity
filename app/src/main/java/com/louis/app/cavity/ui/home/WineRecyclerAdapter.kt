@@ -38,8 +38,7 @@ class WineRecyclerAdapter(
         holder.bind(getItem(position))
 
     override fun getItemId(position: Int): Long {
-        currentList[position].wine.idWine
-        return super.getItemId(position)
+        return currentList[position].wine.idWine
     }
 
     class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {
@@ -57,8 +56,8 @@ class WineRecyclerAdapter(
         private val binding = ItemWineBinding.bind(itemView)
 
         // TODO: change destination
-        private fun navigateToBottle(bottleId: Long, view: View) =
-            view.findNavController().navigate(R.id.show_addWine)
+        //private fun navigateToBottle(bottleId: Long, view: View) =
+            //view.findNavController().navigate(R.id.show_addWine)
 
         fun bind(wineWithBottles: WineWithBottles) {
             val (wine, bottles) = wineWithBottles

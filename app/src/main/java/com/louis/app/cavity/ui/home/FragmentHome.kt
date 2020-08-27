@@ -6,10 +6,13 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.util.setVisible
@@ -20,7 +23,6 @@ import kotlinx.coroutines.launch
 class FragmentHome : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
     private val homeViewModel: HomeViewModel by activityViewModels()
-    private var condensedMode = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,6 +47,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 activity?.let { activity ->
                     viewPager.adapter = WinesPagerAdapter(activity.supportFragmentManager, it)
                 }
+                viewPager.offscreenPageLimit = 0
+                viewPager.setCurrentItem(0, true)
+                tab.smoothScrollToPosition(0)
                 tab.setUpWithViewPager(viewPager)
             }
         }
@@ -52,7 +57,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     private fun setListeners() {
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.show_addWine)
+            findNavController().navigate(R.id.homeToAddWine)
         }
     }
 
@@ -61,54 +66,5 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             if (it) binding.fab.run { if (!isShown) show() }
             else binding.fab.run { if (isShown) hide() }
         }
-    }
-
-    private fun setCondensedMode() {
-        with(binding) {
-            lifecycleScope.launch(Main) {
-                tab.elevation = 0F
-
-                tab.animate()
-                    .scaleX(-100F)
-                    .alpha(0F)
-                    .setDuration(500)
-                    .start()
-
-                delay(500)
-                tab.setVisible(false)
-            }
-        }
-    }
-
-    private fun setDefaultMode() {
-        with(binding) {
-            lifecycleScope.launch(Main) {
-                tab.setVisible(true)
-                tab.animate()
-                    .scaleX(100F)
-                    .alpha(1F)
-                    .setDuration(500)
-                    .start()
-
-                delay(500)
-                tab.elevation = 50F
-            }
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.switchView -> {
-                condensedMode = !condensedMode
-                if (condensedMode) setCondensedMode() else setDefaultMode()
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 }
