@@ -35,11 +35,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
             with(binding) {
                 tab.addTabs(it.map { county -> county.name })
-                activity?.let { activity ->
-                    viewPager.adapter = WinesPagerAdapter(activity.supportFragmentManager, it)
-                }
-                tab.setUpWithViewPager(viewPager)
+                viewPager.adapter = WinesPagerAdapter(this@FragmentHome, it)
                 viewPager.offscreenPageLimit = 5
+                tab.setUpWithViewPager(viewPager)
             }
         }
     }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import kotlin.math.pow
 
@@ -22,7 +23,7 @@ class CountyScrollableTab : RecyclerView {
     private var unSelectedColor = Color.GRAY
     private var tabTextStyle = TabStyle(R.style.TabTextAppearance)
     private val layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-    private var viewPager: ViewPager? = null
+    private var viewPager: ViewPager2? = null
     private var isRVScrolling = true
     private var listener: ((position: Int) -> Unit)? = null
     private var pageChangeListener: ((position: Int) -> Unit)? = null
@@ -136,7 +137,7 @@ class CountyScrollableTab : RecyclerView {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    fun setUpWithViewPager(viewPager: ViewPager) {
+    fun setUpWithViewPager(viewPager: ViewPager2) {
         if (viewPager.adapter == null) throw IllegalStateException(
             "ViewPager does not have pager adapter"
         )
@@ -147,7 +148,7 @@ class CountyScrollableTab : RecyclerView {
             false
         }
 
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {}
 
             override fun onPageScrolled(
