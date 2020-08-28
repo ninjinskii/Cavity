@@ -26,3 +26,4 @@ data class Bottle(
 
 // RV pour sélection du cépage dans la bouteille, pour chaque cépage choisi, ajouter un nouveau slider vertical au rv
 // Préparer un set de couleur clair avec légende pour identifier les cépages dans une jauge dans les infos de bouteille
+// Context getFilesDIr() pour récupérer le stockage privé et mettre les photos dedans
