@@ -13,6 +13,7 @@ data class Wine(
     val name: String,
     val naming: String,
     val color: Int,
+    val cuvee: String,
     @ColumnInfo(name = "id_county") val idCounty: Long,
     @ColumnInfo(name = "is_bio") val isBio: Int,
     @ColumnInfo(name = "img_path") val imgPath: String
@@ -27,6 +28,7 @@ data class Wine(
         if (name != other.name) return false
         if (naming != other.naming) return false
         if (color != other.color) return false
+        if (cuvee != other.cuvee) return false
         if (idCounty != other.idCounty) return false
         if (isBio != other.isBio) return false
         if (imgPath != other.imgPath) return false
@@ -39,6 +41,7 @@ data class Wine(
         result = 31 * result + name.hashCode()
         result = 31 * result + naming.hashCode()
         result = 31 * result + color
+        result = 31 * result + cuvee.hashCode()
         result = 31 * result + idCounty.hashCode()
         result = 31 * result + isBio
         result = 31 * result + imgPath.hashCode()

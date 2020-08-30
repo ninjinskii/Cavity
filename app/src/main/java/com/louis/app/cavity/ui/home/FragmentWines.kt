@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
-import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.util.L
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private lateinit var binding: FragmentWinesBinding
@@ -51,9 +48,9 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                     if (
                         !recyclerView.canScrollVertically(1) &&
                         !recyclerView.canScrollVertically(-1)
-                    ) homeViewModel.shouldShowFab.postValue(true)
-                    else if (dy > 0) homeViewModel.shouldShowFab.postValue(false)
-                    else if (dy < 0) homeViewModel.shouldShowFab.postValue(true)
+                    ) homeViewModel.isScrollingToTop.postValue(true)
+                    else if (dy > 0) homeViewModel.isScrollingToTop.postValue(false)
+                    else if (dy < 0) homeViewModel.isScrollingToTop.postValue(true)
                 }
             })
         }

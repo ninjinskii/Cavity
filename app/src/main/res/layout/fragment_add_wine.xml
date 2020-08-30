@@ -6,13 +6,15 @@
     android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
 
             <TextView
                 android:id="@+id/countyTitle"
@@ -70,6 +72,7 @@
                         android:layout_marginTop="@dimen/medium_margin"
                         android:layout_marginEnd="@dimen/large_margin"
                         android:layout_marginBottom="@dimen/medium_margin"
+                        android:animateLayoutChanges="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/nameLayout"
@@ -152,6 +155,46 @@
                 app:layout_constraintTop_toBottomOf="@id/nameLayout" />
 
             <TextView
+                android:id="@+id/cuveeTitle"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/cuvee"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/cuveeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cuveeTitle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/cuvee"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/cuvee"
+                    android:inputType="textCapSentences" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/divider_height"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/medium_margin"
+                android:alpha="0.12"
+                android:background="?attr/colorOnBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cuveeLayout" />
+
+            <TextView
                 android:id="@+id/colorTitle"
                 style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="wrap_content"
@@ -159,7 +202,7 @@
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/color"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider2" />
+                app:layout_constraintTop_toBottomOf="@id/divider3" />
 
             <HorizontalScrollView
                 android:id="@+id/colorScrollView"
@@ -221,7 +264,7 @@
             </HorizontalScrollView>
 
             <View
-                android:id="@+id/divider3"
+                android:id="@+id/divider4"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
@@ -241,7 +284,7 @@
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/organic"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider3" />
+                app:layout_constraintTop_toBottomOf="@id/divider4" />
 
             <CheckBox
                 android:id="@+id/organicWine"
@@ -254,7 +297,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/organicTitle" />
 
             <View
-                android:id="@+id/divider4"
+                android:id="@+id/divider5"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
@@ -274,24 +317,59 @@
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/wine_photo"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider4" />
+                app:layout_constraintTop_toBottomOf="@id/divider5" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonAddPhoto"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:id="@+id/buttonTakePhoto"
+                android:layout_width="@dimen/large_icon"
+                android:layout_height="@dimen/large_icon"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginEnd="@dimen/medium_margin"
+                android:contentDescription="@string/take_photo"
+                android:src="@drawable/ic_camera"
+                android:tint="?attr/colorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/buttonBrowsePhoto"
+                app:layout_constraintTop_toBottomOf="@+id/imageTitle" />
+
+            <TextView
+                android:id="@+id/textButtonTakePhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="100dp"
+                android:text="@string/take_photo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buttonTakePhoto"
+                app:layout_constraintStart_toStartOf="@id/buttonTakePhoto"
+                app:layout_constraintEnd_toEndOf="@id/buttonTakePhoto" />
+
+            <ImageButton
+                android:id="@+id/buttonBrowsePhoto"
+                android:layout_width="@dimen/large_icon"
+                android:layout_height="@dimen/large_icon"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:contentDescription="@string/take_photo"
+                android:src="@drawable/ic_image_search"
+                android:tint="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/buttonTakePhoto"
+                app:layout_constraintTop_toBottomOf="@+id/imageTitle" />
+
+            <TextView
+                android:id="@+id/textButtonBrowsePhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="100dp"
                 android:text="@string/add_photo"
-                app:icon="@drawable/ic_image_search"
-                app:iconPadding="@dimen/medium_margin"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageTitle"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@id/buttonBrowsePhoto"
+                app:layout_constraintStart_toStartOf="@id/buttonBrowsePhoto"
+                app:layout_constraintEnd_toEndOf="@id/buttonBrowsePhoto" />
 
             <ImageView
                 android:id="@+id/wineMiniImage"

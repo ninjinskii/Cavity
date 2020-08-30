@@ -6,10 +6,12 @@
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
+    <string name="empty_name_or_naming">Veuillez saisir un nom et une appellation.</string>
     <string name="no_county">Aucune région sélectionnée.</string>
     <string name="county_already_exist">Cette région existe déjà.</string>
     <string name="no_file_explorer">Aucune application d\'exploration de fichier trouvée.</string>
     <string name="base_error">Une erreur est survenue.</string>
+    <string name="required_field">Champ requis</string>
 
     <string name="app_name">Cavity</string>
     <string name="switch_view">Changer de vue</string>
@@ -24,11 +26,13 @@
     <string name="wine_color">Couleur du vin</string>
     <string name="wine_photo">Photo du vin</string>
     <string name="add_photo">Ajouter une photo</string>
+    <string name="take_photo">Photographier</string>
     <string name="naming">Appellation</string>
     <string name="name">Nom</string>
     <string name="county">Région</string>
     <string name="identification">Identification</string>
     <string name="color">Couleur</string>
+    <string name="cuvee">Cuvée</string>
     <string name="organic">Bio</string>
     <string name="organic_wine">Vin issu de l\'agriculture biologique</string>
     <string name="add_county">Ajouter une région</string>

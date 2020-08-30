@@ -1,21 +1,14 @@
 package com.louis.app.cavity.ui.home
 
 import android.os.Bundle
-import android.view.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
-import com.louis.app.cavity.util.L
-import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
@@ -33,11 +26,13 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     private fun setupScrollableTab() {
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
-            with(binding) {
-                tab.addTabs(it.map { county -> county.name })
-                viewPager.adapter = WinesPagerAdapter(this@FragmentHome, it)
-                viewPager.offscreenPageLimit = 5
-                tab.setUpWithViewPager(viewPager)
+            lifecycleScope.launch(Main) {
+                with(binding) {
+                    tab.addTabs(it.map { county -> county.name })
+                    viewPager.adapter = WinesPagerAdapter(this@FragmentHome, it)
+                    viewPager.offscreenPageLimit = 5
+                    tab.setUpWithViewPager(viewPager)
+                }
             }
         }
     }
@@ -49,9 +44,11 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     private fun observe() {
-        homeViewModel.shouldShowFab.observe(viewLifecycleOwner) {
-            if (it) binding.fab.run { if (!isShown) show() }
-            else binding.fab.run { if (isShown) hide() }
+        homeViewModel.isScrollingToTop.observe(viewLifecycleOwner) {
+            with(binding) {
+                if (it) fab.run { if (!isShown) show() }
+                else fab.run { if (isShown) hide() }
+            }
         }
     }
 }

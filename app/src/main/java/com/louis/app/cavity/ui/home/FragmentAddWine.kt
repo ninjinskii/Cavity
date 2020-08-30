@@ -81,14 +81,24 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private fun setListeners() {
         binding.submitAddWine.setOnClickListener {
             with(binding) {
+                val name = name.text.toString()
+                val naming = naming.text.toString()
+                val cuvee = cuvee.text.toString()
+                val isOrganic = organicWine.isChecked.toInt()
+                val color = colorChipGroup.checkedChipId
+                val checkedChipId = countyChipGroup.checkedChipId
+
                 if (countyChipGroup.checkedChipId == NO_ID) {
                     coordinator.showSnackbar(R.string.no_county)
+                    nestedScrollView.smoothScrollTo(0, 0)
+                } else if (name.isBlank() || naming.isBlank()) {
+                    coordinator.showSnackbar(R.string.empty_name_or_naming)
+                    if (name.isBlank()) nameLayout.error = getString(R.string.required_field)
+                    if (naming.isBlank()) namingLayout.error = getString(R.string.required_field)
                 } else {
-                    val name = name.text.toString()
-                    val naming = naming.text.toString()
-                    val isOrganic = organicWine.isChecked.toInt()
-                    val color = colorChipGroup.checkedChipId
-                    val checkedChipId = countyChipGroup.checkedChipId
+                    nameLayout.error = null
+                    namingLayout.error = null
+
                     val county = countyChipGroup
                         .findViewById<Chip>(checkedChipId)
                         .getTag(R.string.tag_chip_id) as County
@@ -98,6 +108,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                         name,
                         naming,
                         getWineColor(color),
+                        cuvee,
                         county.idCounty,
                         isOrganic,
                         wineImagePath ?: ""
@@ -116,7 +127,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             showDialog(it)
         }
 
-        binding.buttonAddPhoto.setOnClickListener {
+        binding.buttonBrowsePhoto.setOnClickListener {
             val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             fileChooseIntent.apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
@@ -130,11 +141,18 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             }
         }
 
+        binding.buttonTakePhoto.setOnClickListener {
+            // Start camera activity
+        }
+
         binding.buttonRemoveWineImage.setOnClickListener {
             with(binding) {
                 wineMiniImage.setVisible(false)
                 buttonRemoveWineImage.setVisible(false)
-                buttonAddPhoto.setVisible(true)
+                buttonBrowsePhoto.setVisible(true)
+                buttonTakePhoto.setVisible(true)
+                textButtonTakePhoto.setVisible(true)
+                textButtonBrowsePhoto.setVisible(true)
                 wineImagePath = null
             }
         }
@@ -195,7 +213,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             }
 
             buttonRemoveWineImage.setVisible(true)
-            buttonAddPhoto.setVisible(false)
+            buttonBrowsePhoto.setVisible(false)
+            buttonTakePhoto.setVisible(false)
+            textButtonTakePhoto.setVisible(false)
+            textButtonBrowsePhoto.setVisible(false)
         }
     }
 
