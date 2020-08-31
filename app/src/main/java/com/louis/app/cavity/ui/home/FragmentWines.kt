@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
@@ -32,11 +33,20 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             )
         }
 
-        val wineAdapter = WineRecyclerAdapter(object : OnVintageClickListener {
+        val listener = object : OnVintageClickListener {
             override fun onVintageClick(wine: Wine) {
                 TODO()
             }
-        }, colors ?: emptyList())
+        }
+
+        val listenerLongClick = object : OnLongClickListener {
+            override fun onLongClick(wine: Wine) {
+                homeViewModel.editWine = wine
+                findNavController().navigate(R.id.homeToAddWine)
+            }
+        }
+
+        val wineAdapter = WineRecyclerAdapter(listener, listenerLongClick, colors ?: emptyList())
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)

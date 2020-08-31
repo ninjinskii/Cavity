@@ -39,6 +39,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     private fun setListeners() {
         binding.fab.setOnClickListener {
+            homeViewModel.editWine = null
             findNavController().navigate(R.id.homeToAddWine)
         }
     }

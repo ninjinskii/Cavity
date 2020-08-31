@@ -4,7 +4,6 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,15 +12,12 @@ import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.relation.WineWithBottles
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.net.URL
 
 class WineRecyclerAdapter(
     private val listener: OnVintageClickListener,
+    private val listenerLongCLick: OnLongClickListener,
     private val colors: List<Int>
 ) : ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
@@ -29,8 +25,7 @@ class WineRecyclerAdapter(
         return WineViewHolder(
             LayoutInflater
                 .from(parent.context)
-                .inflate(R.layout.item_wine, parent, false),
-            listener
+                .inflate(R.layout.item_wine, parent, false)
         )
     }
 
@@ -49,15 +44,12 @@ class WineRecyclerAdapter(
             oldItem.wine == newItem.wine
     }
 
-    inner class WineViewHolder(
-        itemView: View,
-        private val listener: OnVintageClickListener
-    ) : RecyclerView.ViewHolder(itemView) {
+    inner class WineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemWineBinding.bind(itemView)
 
         // TODO: change destination
         //private fun navigateToBottle(bottleId: Long, view: View) =
-            //view.findNavController().navigate(R.id.show_addWine)
+        //view.findNavController().navigate(R.id.show_addWine)
 
         fun bind(wineWithBottles: WineWithBottles) {
             val (wine, bottles) = wineWithBottles
@@ -65,7 +57,7 @@ class WineRecyclerAdapter(
             with(binding) {
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
-                bioImage.setVisible(wine.isBio.toBoolean())
+                bioImage.setVisible(wine.isOrganic.toBoolean())
                 wineColorIndicator.setColorFilter(colors[wine.color])
 
                 chipGroup.removeAllViews()
@@ -88,6 +80,11 @@ class WineRecyclerAdapter(
                     .load(Uri.parse(wine.imgPath))
                     .centerCrop()
                     .into(wineImage)
+            }
+
+            itemView.setOnLongClickListener {
+                listenerLongCLick.onLongClick(wine)
+                true
             }
         }
     }

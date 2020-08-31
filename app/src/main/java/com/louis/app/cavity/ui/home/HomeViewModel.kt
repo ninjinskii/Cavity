@@ -27,6 +27,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         get() = _userFeedback
 
     val isScrollingToTop = MutableLiveData<Boolean>()
+    var editWine : Wine? = null
 
     fun addWine(wine: Wine) = viewModelScope.launch(IO) {
         repository.insertWine(wine)
@@ -49,6 +50,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun getAllWines() = repository.getAllWines()
+
+    fun updateWine(wine: Wine) = viewModelScope.launch (IO) { repository.updateWine(wine) }
 
     fun getAllBottles() = repository.getAllBottles()
 

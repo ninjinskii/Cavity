@@ -29,6 +29,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private val homeViewModel: HomeViewModel by activityViewModels()
     private var wineImagePath: String? = null
     private var bottlePdfPath: String? = null
+    private var editMode: Boolean = false
 
     companion object {
         const val PICK_IMAGE_RESULT_CODE = 1
@@ -39,9 +40,11 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentAddWineBinding.bind(view)
+        editMode = homeViewModel.editWine != null
 
         loadCounties()
         setListeners()
+        updateFields()
     }
 
     private fun loadCounties() {
@@ -70,6 +73,13 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                     withContext(Main) {
                         binding.countyChipGroup.addView(chip)
                         if (index == 0) chip.isChecked = true
+
+                        if (
+                            homeViewModel.editWine != null &&
+                            county.idCounty == homeViewModel.editWine!!.idCounty
+                        ) {
+                            chip.isChecked = true
+                        }
                     }
                 }
 
@@ -103,7 +113,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                         .findViewById<Chip>(checkedChipId)
                         .getTag(R.string.tag_chip_id) as County
 
-                    Wine(
+                    val wine = Wine(
                         0,
                         name,
                         naming,
@@ -112,8 +122,13 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                         county.idCounty,
                         isOrganic,
                         wineImagePath ?: ""
-                    ).also {
-                        homeViewModel.addWine(it)
+                    )
+
+                    if (!editMode) {
+                        homeViewModel.addWine(wine)
+                    } else {
+                        wine.apply { idWine = homeViewModel.editWine!!.idWine }
+                            .also { homeViewModel.updateWine(wine) }
                     }
                 }
             }
@@ -146,15 +161,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
 
         binding.buttonRemoveWineImage.setOnClickListener {
-            with(binding) {
-                wineMiniImage.setVisible(false)
-                buttonRemoveWineImage.setVisible(false)
-                buttonBrowsePhoto.setVisible(true)
-                buttonTakePhoto.setVisible(true)
-                textButtonTakePhoto.setVisible(true)
-                textButtonBrowsePhoto.setVisible(true)
-                wineImagePath = null
-            }
+            toggleImageViews(false)
+            wineImagePath = null
         }
     }
 
@@ -171,12 +179,27 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             .setView(dialogBinding.root)
             .show()
 
-        view.postDelayed({ context?.showKeyboard(dialogBinding.countyName) }, 100)
+        view.postDelayed({ context?.showKeyboard(dialogBinding.countyName) }, 200)
+    }
+
+    private fun updateFields() {
+        val wineToEdit = homeViewModel.editWine
+
+        if (editMode && wineToEdit != null) {
+            with(binding) {
+                naming.setText(wineToEdit.naming)
+                name.setText(wineToEdit.name)
+                cuvee.setText(wineToEdit.cuvee)
+                (colorChipGroup.getChildAt(wineToEdit.color) as Chip).isChecked = true
+                organicWine.isChecked = wineToEdit.isOrganic.toBoolean()
+                wineImagePath = wineToEdit.imgPath
+                loadImage(wineToEdit.imgPath)
+            }
+        }
     }
 
     // enum ?
     private fun getWineColor(chipId: Int): Int {
-        L.v(chipId.toString())
         return when (chipId) {
             R.id.colorWhite -> 0
             R.id.colorRed -> 1
@@ -202,28 +225,40 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private fun onImageSelected(data: Intent?) {
         requestMediaPersistentPermission(data)
         wineImagePath = data?.data.toString()
-
-        with(binding) {
-            wineMiniImage.setVisible(true)
-            context?.let {
-                Glide.with(it)
-                    .load(Uri.parse(wineImagePath))
-                    .centerCrop()
-                    .into(wineMiniImage)
-            }
-
-            buttonRemoveWineImage.setVisible(true)
-            buttonBrowsePhoto.setVisible(false)
-            buttonTakePhoto.setVisible(false)
-            textButtonTakePhoto.setVisible(false)
-            textButtonBrowsePhoto.setVisible(false)
-        }
+        binding.wineMiniImage.setVisible(true)
+        loadImage(wineImagePath)
     }
 
     // TODO: Move
     private fun onPdfSelected(data: Intent?) {
         requestMediaPersistentPermission(data)
         bottlePdfPath = data?.data.toString()
+    }
+
+    private fun loadImage(uri: String?) {
+        if (!uri.isNullOrEmpty()) {
+            context?.let {
+                Glide.with(it)
+                    .load(Uri.parse(uri))
+                    .centerCrop()
+                    .into(binding.wineMiniImage)
+            }
+
+            toggleImageViews(true)
+        } else {
+            toggleImageViews(false)
+        }
+    }
+
+    private fun toggleImageViews(hasImage: Boolean) {
+        with(binding) {
+            buttonRemoveWineImage.setVisible(hasImage)
+            wineMiniImage.setVisible(hasImage)
+            buttonBrowsePhoto.setVisible(!hasImage)
+            buttonTakePhoto.setVisible(!hasImage)
+            textButtonTakePhoto.setVisible(!hasImage)
+            textButtonBrowsePhoto.setVisible(!hasImage)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
