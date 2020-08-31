@@ -1,12 +1,9 @@
 package com.louis.app.cavity.ui.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
@@ -44,7 +41,10 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         val listenerLongClick = object : OnLongClickListener {
             override fun onLongClick(wine: Wine) {
                 homeViewModel.editWine = wine
-                findNavController().navigate(R.id.homeToAddWine)
+
+                activity?.supportFragmentManager?.let {
+                    WineOptionsBottomSheet().show(it, getString(R.string.tag_modal_sheet_id))
+                }
             }
         }
 

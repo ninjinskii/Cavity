@@ -3,6 +3,7 @@
     <string name="submit">Valider</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="confirmation_delete">Supprimer le vin et ses bouteilles ?</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
@@ -13,11 +14,15 @@
     <string name="base_error">Une erreur est survenue.</string>
     <string name="required_field">Champ requis</string>
 
+    <!-- App -->
     <string name="app_name">Cavity</string>
     <string name="switch_view">Changer de vue</string>
     <string name="consumed">Vidée</string>
     <string name="drink_date">Bue le: %1$s</string>
     <string name="home">Acceuil</string>
+    <string name="add_wine">Ajouter une bouteille</string>
+    <string name="delete_wine">Supprimer le vin et ses bouteilles</string>
+    <string name="edit_wine">Modifier le vin</string>
     <string name="tasting">Dégustation</string>
     <string name="search">Rechercher</string>
     <string name="history">Historique</string>
@@ -43,5 +48,6 @@
 
     <!-- Tags -->
     <string name="tag_chip_id">com.louis.app.cavity.TAG_CHIP_ID</string>
+    <string name="tag_modal_sheet_id">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
 
 </resources>

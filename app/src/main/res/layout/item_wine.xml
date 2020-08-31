@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="120dp">
 
+        <!-- ShapeableImageView ? -->
         <ImageView
             android:id="@+id/wineImage"
             android:layout_width="0dp"
@@ -87,13 +88,12 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.90" />
 
-        <View
+        <include
             android:id="@+id/divider"
+            layout="@layout/divider"
             android:layout_width="0dp"
             android:layout_height="@dimen/divider_height"
             android:layout_marginTop="@dimen/medium_margin"
-            android:alpha="0.12"
-            android:background="?attr/colorOnBackground"
             app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
             app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
             app:layout_constraintTop_toBottomOf="@id/wineNaming" />

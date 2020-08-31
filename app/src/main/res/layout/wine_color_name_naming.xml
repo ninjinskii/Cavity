@@ -24,7 +24,6 @@
         android:layout_marginBottom="@dimen/xsmall_margin"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="Château la Cour a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u w x y z"
         app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +37,6 @@
         android:layout_marginTop="@dimen/xsmall_margin"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="Saint-Emilion"
         app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"
         app:layout_constraintTop_toBottomOf="@+id/wineName" />
 

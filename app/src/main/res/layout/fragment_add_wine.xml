@@ -83,18 +83,17 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <View
+
+            <include layout="@layout/divider"
                 android:id="@+id/divider1"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/medium_margin"
-                android:alpha="0.12"
-                android:background="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/countyScrollView" />
+                app:layout_constraintTop_toBottomOf="@id/countyScrollView"/>
 
             <TextView
                 android:id="@+id/identificationTitle"
@@ -141,15 +140,13 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <View
+            <include layout="@layout/divider"
                 android:id="@+id/divider2"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/medium_margin"
-                android:alpha="0.12"
-                android:background="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/nameLayout" />
@@ -181,15 +178,13 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <View
+            <include layout="@layout/divider"
                 android:id="@+id/divider3"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/medium_margin"
-                android:alpha="0.12"
-                android:background="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cuveeLayout" />
@@ -263,15 +258,13 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <View
+            <include layout="@layout/divider"
                 android:id="@+id/divider4"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/medium_margin"
-                android:alpha="0.12"
-                android:background="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/colorScrollView" />
@@ -296,15 +289,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/organicTitle" />
 
-            <View
+            <include layout="@layout/divider"
                 android:id="@+id/divider5"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/medium_margin"
-                android:alpha="0.12"
-                android:background="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/organicWine" />

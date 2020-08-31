@@ -53,6 +53,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun updateWine(wine: Wine) = viewModelScope.launch (IO) { repository.updateWine(wine) }
 
+    fun deleteWine(wine: Wine) = viewModelScope.launch (IO) { repository.deleteWine(wine) }
+
     fun getAllBottles() = repository.getAllBottles()
 
     fun getAllCounties() = repository.getAllCounties()

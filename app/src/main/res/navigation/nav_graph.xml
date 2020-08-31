@@ -29,10 +29,6 @@
         android:name="com.louis.app.cavity.ui.home.FragmentAddWine"
         android:label="FragmentAddWine"
         tools:layout="@layout/fragment_add_wine">
-        <argument
-            android:name="idWine"
-            android:defaultValue="0L"
-            app:argType="long" />
     </fragment>
 
 </navigation>
