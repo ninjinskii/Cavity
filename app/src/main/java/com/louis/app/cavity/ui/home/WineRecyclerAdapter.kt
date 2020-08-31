@@ -12,6 +12,7 @@ import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.relation.WineWithBottles
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -59,8 +60,8 @@ class WineRecyclerAdapter(
                 wineNaming.text = wine.naming
                 bioImage.setVisible(wine.isOrganic.toBoolean())
                 wineColorIndicator.setColorFilter(colors[wine.color])
-
                 chipGroup.removeAllViews()
+
                 for (bottle in bottles) {
                     val chip: Chip =
                         LayoutInflater.from(itemView.context).inflate(
