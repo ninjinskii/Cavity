@@ -4,11 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
-import com.louis.app.cavity.util.L
 
 class ActivityMain : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
