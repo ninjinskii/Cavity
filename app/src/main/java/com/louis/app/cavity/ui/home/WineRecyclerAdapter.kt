@@ -76,10 +76,12 @@ class WineRecyclerAdapter(
                     binding.chipGroup.addView(chip)
                 }
 
-                Glide.with(itemView.context)
-                    .load(Uri.parse(wine.imgPath))
-                    .centerCrop()
-                    .into(binding.wineImage)
+                if (wine.imgPath.isNotEmpty()) {
+                    Glide.with(itemView.context)
+                        .load(Uri.parse(wine.imgPath))
+                        .centerCrop()
+                        .into(binding.wineImage)
+                }
             }
 
             itemView.setOnLongClickListener {

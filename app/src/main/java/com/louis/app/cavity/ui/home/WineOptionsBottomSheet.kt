@@ -47,7 +47,8 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
             currentWine.organicImage.setVisible(editWine.isOrganic.toBoolean())
 
             addBottle.setOnClickListener {
-                //findNavController().navigate()
+                dismiss()
+                findNavController().navigate(R.id.homeToAddBottle)
             }
 
             binding.editWine.setOnClickListener {

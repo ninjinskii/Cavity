@@ -13,6 +13,7 @@
 
     <dimen name="xsmall_icon">24dp</dimen>
     <dimen name="small_icon">32dp</dimen>
+    <dimen name="stepper_icon">36dp</dimen>
     <dimen name="medium_icon">48dp</dimen>
     <dimen name="large_icon">64dp</dimen>
 </resources>

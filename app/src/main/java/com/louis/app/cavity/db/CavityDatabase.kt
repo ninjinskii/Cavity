@@ -10,7 +10,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import kotlin.concurrent.thread
 
-@Database(entities = [County::class, Wine::class, Bottle::class], version = 10, exportSchema = false)
+@Database(entities = [County::class, Wine::class, Bottle::class], version = 11, exportSchema = false)
 abstract class CavityDatabase : RoomDatabase() {
 
     abstract fun wineDao(): WineDao
@@ -48,10 +48,10 @@ abstract class CavityDatabase : RoomDatabase() {
                     wineDao?.insertWine(Wine(2, "a", "a", 1, "", 0, 0, ""))
                     wineDao?.insertWine(Wine(3, "a", "a", 1, "", 0, 0, ""))
 
-                    bottleDao?.insertBottle(Bottle(0,1, 0, 0, 1, 2010, "", 0, "", "", ",", "", "", "", ""))
-                    bottleDao?.insertBottle(Bottle(0,1, 0, 0, 1, 2010, "", 0, "", "", ",", "", "", "", ""))
-                    bottleDao?.insertBottle(Bottle(0,1, 0, 0, 1, 2011, "", 0, "", "", ",", "", "", "", ""))
-                    bottleDao?.insertBottle(Bottle(0,2, 0, 0, 1, 2012, "", 0, "", "", ",", "", "", "", ""))
+                    bottleDao?.insertBottle(Bottle(0,1, 0, 0, 1, 2010, "", 0, "", ",", "", "", "", ""))
+                    bottleDao?.insertBottle(Bottle(0,1, 0, 0, 1, 2010, "", 0, "", ",", "", "", "", ""))
+                    bottleDao?.insertBottle(Bottle(0,1, 0, 0, 1, 2011, "", 0, "", ",", "", "", "", ""))
+                    bottleDao?.insertBottle(Bottle(0,2, 0, 0, 1, 2012, "", 0, "", ",", "", "", "", ""))
 
                 }
             }
