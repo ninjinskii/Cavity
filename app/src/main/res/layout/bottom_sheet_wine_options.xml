@@ -9,8 +9,7 @@
         layout="@layout/wine_color_name_naming"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/medium_margin"
-        android:layout_marginTop="@dimen/medium_margin"
+        android:layout_margin="@dimen/medium_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,8 +37,8 @@
 
         <ImageView
             android:id="@+id/icAdd"
-            android:layout_width="@dimen/small_icon"
-            android:layout_height="@dimen/small_icon"
+            android:layout_width="@dimen/xsmall_icon"
+            android:layout_height="@dimen/xsmall_icon"
             android:layout_margin="@dimen/medium_margin"
             android:contentDescription="@string/add_wine"
             android:src="@drawable/ic_add"
@@ -73,8 +72,8 @@
 
         <ImageView
             android:id="@+id/icEdit"
-            android:layout_width="@dimen/small_icon"
-            android:layout_height="@dimen/small_icon"
+            android:layout_width="@dimen/xsmall_icon"
+            android:layout_height="@dimen/xsmall_icon"
             android:layout_margin="@dimen/medium_margin"
             android:contentDescription="@string/add_wine"
             android:src="@drawable/ic_edit"
@@ -108,8 +107,8 @@
 
         <ImageView
             android:id="@+id/icDelete"
-            android:layout_width="@dimen/small_icon"
-            android:layout_height="@dimen/small_icon"
+            android:layout_width="@dimen/xsmall_icon"
+            android:layout_height="@dimen/xsmall_icon"
             android:layout_margin="@dimen/medium_margin"
             android:contentDescription="@string/add_wine"
             android:src="@drawable/ic_delete_all"

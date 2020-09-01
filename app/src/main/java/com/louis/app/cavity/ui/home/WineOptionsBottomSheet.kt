@@ -10,6 +10,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetWineOptionsBinding
+import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.toBoolean
 
 class WineOptionsBottomSheet : BottomSheetDialogFragment() {
     private lateinit var binding: BottomSheetWineOptionsBinding
@@ -42,6 +44,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
             currentWine.wineName.text = editWine.name
             currentWine.wineNaming.text = editWine.naming
             currentWine.wineColorIndicator.setColorFilter(colors[editWine.color])
+            currentWine.organicImage.setVisible(editWine.isOrganic.toBoolean())
 
             addBottle.setOnClickListener {
                 //findNavController().navigate()
