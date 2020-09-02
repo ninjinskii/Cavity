@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.util.L
+import java.lang.Exception
 
 class StepperViewModel(app: Application) : AndroidViewModel(app) {
     val finalStep = 3
@@ -19,12 +20,13 @@ class StepperViewModel(app: Application) : AndroidViewModel(app) {
 
     fun goToNextStep() : Boolean {
         val currentStep = _step.value?.first ?: 0
-        val currentLastValidStep = _lastValidStep.value ?: 0
-
+        val currentLastValidStep = _lastValidStep.value ?: throw Exception("lastValisStep is null")
         return if (currentStep + 1 <= finalStep) {
-            val wasLookingBehind = currentStep + 1 < currentLastValidStep
+            val wasLookingBehind = currentStep < currentLastValidStep
             _step.postValue(currentStep + 1 to wasLookingBehind)
-            _lastValidStep.postValue(currentStep + 1)
+
+            if(!wasLookingBehind) _lastValidStep.postValue(currentStep + 1)
+
             false
         } else {
             true

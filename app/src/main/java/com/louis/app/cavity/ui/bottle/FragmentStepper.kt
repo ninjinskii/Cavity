@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import kotlinx.android.synthetic.main.fragment_stepper.*
 
@@ -42,14 +43,13 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
 
     private fun setListeners() {
         with(binding) {
-            val stepsViews = setOf(step1, step2, step3, step4)
-
-            stepsViews.forEachIndexed { index, imageView ->
+            stepViews.forEachIndexed { index, imageView ->
                 imageView.setOnClickListener { stepperViewModel.goToStep(index) }
             }
 
             buttonNext.setOnClickListener {
                 if (stepperViewModel.goToNextStep()) {
+                    L.v("Stepper end", "STEPPER")
                     animateStepTransition(
                         stepperViewModel.finalStep,
                         stepperViewModel.lastValidStep.value ?: 0
@@ -73,27 +73,11 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
 
     private fun animateStepTransition(step: Int, validSteps: Int, lookBehind: Boolean = false) {
         cursors.forEachIndexed { index, view -> view.setVisible(index == step) }
-
-        if (lookBehind) updateStepsOnLookBehind(step, validSteps)
-        else updateSteps(step)
+        if (!lookBehind) updateSteps(step)
     }
 
     private fun updateSteps(viewedStep: Int) {
-        stepViews.forEachIndexed { index, textView ->
-            if (index < viewedStep)
-                textView.setBackgroundColor(requireContext().getColor(R.color.colorPrimary))
-        }
-
-        progressBar.setProgress(30 * viewedStep, true)
-    }
-
-    private fun updateStepsOnLookBehind(viewedStep: Int, validSteps: Int) {
-        stepViews.forEachIndexed { index, imageView ->
-            if (index != viewedStep && index < validSteps)
-                imageView.setImageResource(R.drawable.ic_check)
-        }
-
-        stepViews[viewedStep].setImageResource(stepIcons[viewedStep])
+        progressBar.setProgress(33 * viewedStep, true)
     }
 
     interface OnStepChange {
