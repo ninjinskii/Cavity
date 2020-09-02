@@ -2,39 +2,30 @@ package com.louis.app.cavity.ui.bottle
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import kotlinx.android.synthetic.main.fragment_stepper.*
 
 class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private lateinit var binding: FragmentStepperBinding
-    private lateinit var stepIcons: List<Int>
     private lateinit var stepViews: List<TextView>
     private lateinit var cursors: List<View>
-    private lateinit var onStepChange: OnStepChange
     private val stepperViewModel: StepperViewModel by activityViewModels()
+    private var viewPager: ViewPager2? = null
+    private var handlingClickButton = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentStepperBinding.bind(view)
 
-        onStepChange = parentFragment as OnStepChange
-
         with(binding) {
             stepViews = listOf(step1, step2, step3, step4)
             cursors = listOf(cursor1, cursor2, cursor3, cursor4)
-            stepIcons = listOf(
-                R.drawable.ic_step_1,
-                R.drawable.ic_step_2,
-                R.drawable.ic_step_3,
-                R.drawable.ic_step_4
-            )
         }
 
         setListeners()
@@ -48,12 +39,11 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
             }
 
             buttonNext.setOnClickListener {
+                handlingClickButton = true
+
                 if (stepperViewModel.goToNextStep()) {
-                    L.v("Stepper end", "STEPPER")
-                    animateStepTransition(
-                        stepperViewModel.finalStep,
-                        stepperViewModel.lastValidStep.value ?: 0
-                    )
+                    // Observers won't be triggered so we tell that we handle the click
+                    handlingClickButton = false
                     // Stepper meets end, callback to parent fragment
                 }
             }
@@ -66,8 +56,9 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
 
     private fun observe() {
         stepperViewModel.step.observe(viewLifecycleOwner) {
-            onStepChange.onStepChange(it.first)
+            viewPager?.let { viewPager -> viewPager.currentItem = it.first }
             animateStepTransition(it.first, stepperViewModel.lastValidStep.value ?: 0, it.second)
+            handlingClickButton = false
         }
     }
 
@@ -80,7 +71,13 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         progressBar.setProgress(33 * viewedStep, true)
     }
 
-    interface OnStepChange {
-        fun onStepChange(step: Int)
+    fun setupWithViewPager(viewPager: ViewPager2) {
+        this.viewPager = viewPager
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                if (!handlingClickButton) stepperViewModel.goToStep(position)
+            }
+        })
     }
 }

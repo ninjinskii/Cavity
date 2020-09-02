@@ -12,6 +12,7 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/stepper"
             android:name="com.louis.app.cavity.ui.bottle.FragmentStepper"
+            android:tag="@string/tag_fragment_stepper"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"

@@ -7,14 +7,18 @@ import androidx.fragment.app.Fragment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 
-class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), FragmentStepper.OnStepChange {
+class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     private lateinit var binding: FragmentAddBottleBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddBottleBinding.bind(view)
 
-        binding.viewPager.adapter = AddBottlesPagerAdapter(this)
+        val stepperFragment = childFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
+
+        binding.viewPager
+            .apply { adapter = AddBottlesPagerAdapter(this@FragmentAddBottle) }
+            .also { stepperFragment.setupWithViewPager(it) }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (binding.viewPager.currentItem != 0) {
@@ -25,9 +29,5 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), FragmentSteppe
             }
         }
 
-    }
-
-    override fun onStepChange(step: Int) {
-        binding.viewPager.currentItem = step
     }
 }
