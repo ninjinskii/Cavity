@@ -10,7 +10,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import kotlin.concurrent.thread
 
-@Database(entities = [County::class, Wine::class, Bottle::class], version = 11, exportSchema = false)
+@Database(entities = [County::class, Wine::class, Bottle::class], version = 12, exportSchema = false)
 abstract class CavityDatabase : RoomDatabase() {
 
     abstract fun wineDao(): WineDao

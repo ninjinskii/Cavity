@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.bottle
+package com.louis.app.cavity.ui.bottle.stepper
 
 import android.os.Bundle
 import android.view.View

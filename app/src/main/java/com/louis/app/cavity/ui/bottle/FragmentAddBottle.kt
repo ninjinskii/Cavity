@@ -6,6 +6,8 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
+import com.louis.app.cavity.ui.bottle.stepper.AddBottlesPagerAdapter
+import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     private lateinit var binding: FragmentAddBottleBinding

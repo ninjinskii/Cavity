@@ -1,8 +1,9 @@
 <resources>
     <!-- User related -->
     <string name="submit">Valider</string>
-    <string name="cancel">Cancel</string>
+    <string name="cancel">Annuler</string>
     <string name="save">Save</string>
+    <string name="delete">Supprimer</string>
     <string name="confirmation_delete">Supprimer le vin et ses bouteilles ?</string>
     <string name="next">Suivant</string>
     <string name="previous">Précédent</string>
@@ -47,6 +48,7 @@
     <string name="wine_color_red">Rouge</string>
     <string name="wine_color_sweet">Liquoreux</string>
     <string name="wine_color_rose">Rosé</string>
+
     <string name="step_1">1</string>
     <string name="step_2">2</string>
     <string name="step_3">3</string>
@@ -56,10 +58,14 @@
     <string name="step_3_text">Avis</string>
     <string name="step_4_text">Divers</string>
     <string name="viewed_step">Étape actuelle</string>
+    <string name="vintage">Millésime</string>
+    <string name="date">Dates</string>
+    <string name="apogee">Apogée</string>
+    <string name="count">Quantité</string>
+    <string name="grape">Cépages</string>
 
     <!-- Tags -->
     <string name="tag_chip_id">com.louis.app.cavity.TAG_CHIP_ID</string>
     <string name="tag_modal_sheet_id">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
-    <string name="tag_fragment_stepper">com.louis.app.cavity.FRAGMENT_STEPPER</string>
 
 </resources>
