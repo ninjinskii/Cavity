@@ -15,11 +15,14 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private lateinit var stepIcons: List<Int>
     private lateinit var stepViews: List<ImageView>
     private lateinit var cursors: List<View>
+    private lateinit var onStepChange: OnStepChange
     private val stepperViewModel: StepperViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentStepperBinding.bind(view)
+
+        onStepChange = parentFragment as OnStepChange
 
         with(binding) {
             stepViews = listOf(step1, step2, step3, step4)
@@ -62,6 +65,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
 
     private fun observe() {
         stepperViewModel.step.observe(viewLifecycleOwner) {
+            onStepChange.onStepChange(it.first)
             animateStepTransition(it.first, stepperViewModel.lastValidStep.value ?: 0, it.second)
         }
     }
@@ -88,5 +92,9 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         }
 
         stepViews[viewedStep].setImageResource(stepIcons[viewedStep])
+    }
+
+    interface OnStepChange {
+        fun onStepChange(step: Int)
     }
 }
