@@ -26,10 +26,10 @@
         android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/viewed_step"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/step1"
         app:layout_constraintEnd_toEndOf="@id/step1"
         app:layout_constraintStart_toStartOf="@id/step1"
-        app:layout_constraintTop_toTopOf="@id/step1"
-        app:layout_constraintBottom_toBottomOf="@id/step1"/>
+        app:layout_constraintTop_toTopOf="@id/step1" />
 
     <TextView
         android:id="@+id/step1"
@@ -45,6 +45,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorOnBackground" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/step_1_text"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/step1"
+        app:layout_constraintStart_toStartOf="@+id/step1"
+        app:layout_constraintTop_toBottomOf="@id/step1" />
+
     <View
         android:id="@+id/cursor2"
         android:layout_width="@dimen/stepper_icon_background"
@@ -53,10 +62,10 @@
         android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/viewed_step"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/step2"
         app:layout_constraintEnd_toEndOf="@id/step2"
         app:layout_constraintStart_toStartOf="@id/step2"
-        app:layout_constraintTop_toTopOf="@id/step2"
-        app:layout_constraintBottom_toBottomOf="@id/step2"/>
+        app:layout_constraintTop_toTopOf="@id/step2" />
 
     <TextView
         android:id="@+id/step2"
@@ -72,6 +81,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorOnBackground" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/step_2_text"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/step2"
+        app:layout_constraintStart_toStartOf="@+id/step2"
+        app:layout_constraintTop_toBottomOf="@id/step2" />
+
     <View
         android:id="@+id/cursor3"
         android:layout_width="@dimen/stepper_icon_background"
@@ -80,10 +98,10 @@
         android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/viewed_step"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/step3"
         app:layout_constraintEnd_toEndOf="@id/step3"
         app:layout_constraintStart_toStartOf="@id/step3"
-        app:layout_constraintTop_toTopOf="@id/step3"
-        app:layout_constraintBottom_toBottomOf="@id/step3"/>
+        app:layout_constraintTop_toTopOf="@id/step3" />
 
     <TextView
         android:id="@+id/step3"
@@ -99,6 +117,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorOnBackground" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/step_3_text"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/step3"
+        app:layout_constraintStart_toStartOf="@+id/step3"
+        app:layout_constraintTop_toBottomOf="@id/step3" />
+
     <View
         android:id="@+id/cursor4"
         android:layout_width="@dimen/stepper_icon_background"
@@ -107,10 +134,10 @@
         android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/viewed_step"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/step4"
         app:layout_constraintEnd_toEndOf="@id/step4"
         app:layout_constraintStart_toStartOf="@id/step4"
-        app:layout_constraintTop_toTopOf="@id/step4"
-        app:layout_constraintBottom_toBottomOf="@id/step4"/>
+        app:layout_constraintTop_toTopOf="@id/step4" />
 
     <TextView
         android:id="@+id/step4"
@@ -127,24 +154,46 @@
         app:tint="?attr/colorOnBackground" />
 
     <TextView
-        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:id="@+id/step4text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/next"
-        app:layout_constraintBottom_toBottomOf="@id/buttonNext"
-        app:layout_constraintEnd_toStartOf="@id/buttonNext"
-        app:layout_constraintTop_toTopOf="@id/buttonNext" />
+        android:text="@string/step_4_text"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/step4"
+        app:layout_constraintStart_toStartOf="@+id/step4"
+        app:layout_constraintTop_toBottomOf="@id/step4" />
 
-    <ImageButton
-        android:id="@+id/buttonNext"
-        android:layout_width="@dimen/stepper_icon"
-        android:layout_height="@dimen/stepper_icon"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/next"
-        android:src="@drawable/ic_next"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/step4"
-        app:tint="?attr/colorOnSurface" />
+        app:layout_constraintTop_toBottomOf="@id/step4text">
+
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/next"
+            app:layout_constraintBottom_toBottomOf="@id/buttonNext"
+            app:layout_constraintEnd_toStartOf="@id/buttonNext"
+            app:layout_constraintTop_toTopOf="@id/buttonNext" />
+
+        <ImageButton
+            android:id="@+id/buttonNext"
+            android:layout_width="@dimen/stepper_icon"
+            android:layout_height="@dimen/stepper_icon"
+            android:contentDescription="@string/next"
+            android:src="@drawable/ic_next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/step4text"
+            app:tint="?attr/colorOnSurface" />
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/buttonPrevious"
@@ -154,7 +203,7 @@
         android:contentDescription="@string/previous"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/step4"
+        app:layout_constraintTop_toBottomOf="@id/step4text"
         app:tint="?attr/colorOnSurface" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

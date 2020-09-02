@@ -51,6 +51,10 @@
     <string name="step_2">2</string>
     <string name="step_3">3</string>
     <string name="step_4">4</string>
+    <string name="step_1_text">Dates et cépages</string>
+    <string name="step_2_text">Achat</string>
+    <string name="step_3_text">Avis</string>
+    <string name="step_4_text">Divers</string>
     <string name="viewed_step">Étape actuelle</string>
 
     <!-- Tags -->
