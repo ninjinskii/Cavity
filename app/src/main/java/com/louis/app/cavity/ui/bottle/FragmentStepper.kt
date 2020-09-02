@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.bottle
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
@@ -13,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_stepper.*
 class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private lateinit var binding: FragmentStepperBinding
     private lateinit var stepIcons: List<Int>
-    private lateinit var stepViews: List<ImageView>
+    private lateinit var stepViews: List<TextView>
     private lateinit var cursors: List<View>
     private lateinit var onStepChange: OnStepChange
     private val stepperViewModel: StepperViewModel by activityViewModels()
@@ -78,8 +79,9 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     }
 
     private fun updateSteps(viewedStep: Int) {
-        stepViews.forEachIndexed { index, imageView ->
-            if (index < viewedStep) imageView.setImageResource(R.drawable.ic_check)
+        stepViews.forEachIndexed { index, textView ->
+            if (index < viewedStep)
+                textView.setBackgroundColor(requireContext().getColor(R.color.colorPrimary))
         }
 
         progressBar.setProgress(30 * viewedStep, true)
