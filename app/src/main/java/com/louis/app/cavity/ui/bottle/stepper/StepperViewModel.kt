@@ -7,25 +7,24 @@ import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.util.L
 
 class StepperViewModel(app: Application) : AndroidViewModel(app) {
-    val finalStep = 3
+    private val finalStep = 3
+
+    private var _lastValidStep = 0
+    val lastValidStep: Int
+        get() = _lastValidStep
 
     private val _step = MutableLiveData(0 to false)
     val step: LiveData<Pair<Int, Boolean>>
         get() = _step
 
-    private val _lastValidStep = MutableLiveData(0)
-    val lastValidStep: LiveData<Int>
-        get() = _lastValidStep
-
-    fun goToNextStep() : Boolean {
+    fun goToNextStep(): Boolean {
         L.v("goToNextStep")
         val currentStep = _step.value?.first ?: 0
-        val currentLastValidStep = _lastValidStep.value ?: 0
         return if (currentStep + 1 <= finalStep) {
-            val wasLookingBehind = currentStep < currentLastValidStep
+            val wasLookingBehind = currentStep < _lastValidStep
             _step.postValue(currentStep + 1 to wasLookingBehind)
 
-            if(!wasLookingBehind) _lastValidStep.postValue(currentStep + 1)
+            if (!wasLookingBehind) _lastValidStep = currentStep + 1
 
             false
         } else {
@@ -34,19 +33,19 @@ class StepperViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun goToPreviousStep() {
-        L.v("goToPreviousStep")
         val currentStep = _step.value?.first ?: 0
-        if (currentStep > 0) _step.postValue( currentStep - 1 to true)
+        if (currentStep > 0) _step.postValue(currentStep - 1 to true)
     }
 
     fun goToStep(step: Int) {
-        L.v("goToStep")
-        val currentLastValidStep = _lastValidStep.value ?: 0
-        val isLookingBehind = currentLastValidStep > step
+        val isLookingBehind = _lastValidStep > step
 
-        if (step in 0..currentLastValidStep) _step.postValue(step to isLookingBehind)
+        if (step in 0.._lastValidStep) _step.postValue(step to isLookingBehind)
         else _step.postValue(step - 1 to isLookingBehind)
     }
 
-    //fun canGoToStep(step: Int) = step <= _lastValidStep.value ?: 0
+    fun reset() {
+        _lastValidStep = 0
+        _step.postValue(0 to false)
+    }
 }

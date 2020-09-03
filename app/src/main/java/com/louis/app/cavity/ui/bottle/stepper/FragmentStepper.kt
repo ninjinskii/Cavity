@@ -22,6 +22,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentStepperBinding.bind(view)
+        stepperViewModel.reset()
 
         with(binding) {
             stepViews = listOf(step1, step2, step3, step4)
@@ -57,7 +58,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private fun observe() {
         stepperViewModel.step.observe(viewLifecycleOwner) {
             viewPager?.let { viewPager -> viewPager.currentItem = it.first }
-            animateStepTransition(it.first, stepperViewModel.lastValidStep.value ?: 0, it.second)
+            animateStepTransition(it.first, stepperViewModel.lastValidStep, it.second)
             handlingClickButton = false
         }
     }
