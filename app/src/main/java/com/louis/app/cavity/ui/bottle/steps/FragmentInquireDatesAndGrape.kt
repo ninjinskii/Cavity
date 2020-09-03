@@ -14,7 +14,7 @@ import com.louis.app.cavity.ui.bottle.GrapeRecyclerAdapter
 class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_and_grape) {
     private lateinit var binding: FragmentInquireDatesAndGrapeBinding
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
-    private val addBottleViewModel : AddBottleViewModel by activityViewModels()
+    private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,18 +25,31 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
     }
 
     private fun initRecyclerView() {
-        grapeAdapter = GrapeRecyclerAdapter()
+        grapeAdapter = GrapeRecyclerAdapter(object : SliderWatcher {
+            override fun isValueAllowed(value: Int): Boolean {
+                return addBottleViewModel.isNewValueAllowed(value)
+            }
+
+            override fun onValueRejected(): Int {
+                return addBottleViewModel.getMaxAvailable()
+            }
+        })
 
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
             adapter = grapeAdapter
+        }
+
+        addBottleViewModel.grapes.observe(viewLifecycleOwner) {
+            grapeAdapter.submitList(it.toMutableList()) // Force submitList to trigger
         }
     }
 
     private fun setListener() {
         binding.buttonAddGrape.setOnClickListener {
-            grapeAdapter.addGrape(Grape(0, "Cabernet-sauvignon", 10, 0))
+            val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
+            addBottleViewModel.addGrape(Grape(0, "Cabernet-sauvignon", defaultPercentage, 0))
         }
     }
 }

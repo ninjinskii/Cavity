@@ -9,11 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeBinding
 import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.ui.bottle.steps.SliderWatcher
 
-class GrapeRecyclerAdapter :
+class GrapeRecyclerAdapter(val watcher: SliderWatcher) :
     ListAdapter<Grape, GrapeRecyclerAdapter.GrapeViewHolder>(GrapeItemDiffCallback()) {
-
-    private val grapes = mutableListOf<Grape>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GrapeViewHolder {
         return GrapeViewHolder(
@@ -38,28 +37,26 @@ class GrapeRecyclerAdapter :
             oldItem == newItem
     }
 
-    fun addGrape(grape: Grape) {
-        grapes.add(grape)
-        submitList(grapes.toMutableList())
-    }
-
-    fun removeGrape(grape: Grape) {
-        grapes.remove(grape)
-        submitList(grapes.toMutableList())
-    }
-
-
-    class GrapeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class GrapeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemGrapeBinding.bind(itemView)
-
-        // TODO: change destination
-        //private fun navigateToBottle(bottleId: Long, view: View) =
-        //view.findNavController().navigate(R.id.show_addGrape)
 
         fun bind(grape: Grape) {
             with(binding) {
+                grapeName.text = grape.name
+                percent.text = grape.percentage.toString() + "%"
+                slider.value = grape.percentage.toFloat()
 
+                slider.addOnChangeListener { _, value, _ ->
+                    if (!watcher.isValueAllowed(value.toInt())) {
+                        val trustedValue = watcher.onValueRejected()
+                        slider.value = trustedValue.toFloat()
+                    }
+                }
+
+                deleteGrape.setOnClickListener {
+                }
             }
+
         }
     }
 }
