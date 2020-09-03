@@ -8,23 +8,19 @@ import com.louis.app.cavity.util.L
 
 class StepperViewModel(app: Application) : AndroidViewModel(app) {
     private val finalStep = 3
-
-    private var _lastValidStep = 0
-    val lastValidStep: Int
-        get() = _lastValidStep
+    private var lastValidStep = 0
 
     private val _step = MutableLiveData(0 to false)
     val step: LiveData<Pair<Int, Boolean>>
         get() = _step
 
     fun goToNextStep(): Boolean {
-        L.v("goToNextStep")
         val currentStep = _step.value?.first ?: 0
         return if (currentStep + 1 <= finalStep) {
-            val wasLookingBehind = currentStep < _lastValidStep
+            val wasLookingBehind = currentStep < lastValidStep
             _step.postValue(currentStep + 1 to wasLookingBehind)
 
-            if (!wasLookingBehind) _lastValidStep = currentStep + 1
+            if (!wasLookingBehind) lastValidStep = currentStep + 1
 
             false
         } else {
@@ -38,14 +34,14 @@ class StepperViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun goToStep(step: Int) {
-        val isLookingBehind = _lastValidStep > step
+        val isLookingBehind = lastValidStep > step
 
-        if (step in 0.._lastValidStep) _step.postValue(step to isLookingBehind)
+        if (step in 0..lastValidStep) _step.postValue(step to isLookingBehind)
         else _step.postValue(step - 1 to isLookingBehind)
     }
 
     fun reset() {
-        _lastValidStep = 0
+        lastValidStep = 0
         _step.postValue(0 to false)
     }
 }

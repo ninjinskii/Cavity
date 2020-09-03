@@ -58,12 +58,12 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private fun observe() {
         stepperViewModel.step.observe(viewLifecycleOwner) {
             viewPager?.let { viewPager -> viewPager.currentItem = it.first }
-            animateStepTransition(it.first, stepperViewModel.lastValidStep, it.second)
+            animateStepTransition(it.first, it.second)
             handlingClickButton = false
         }
     }
 
-    private fun animateStepTransition(step: Int, validSteps: Int, lookBehind: Boolean = false) {
+    private fun animateStepTransition(step: Int, lookBehind: Boolean = false) {
         cursors.forEachIndexed { index, view -> view.setVisible(index == step) }
         if (!lookBehind) updateSteps(step)
     }
