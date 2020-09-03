@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/medium_margin"
@@ -22,7 +23,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_toast_wine" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -30,56 +32,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.30" />
-
-        <!--        <ImageView-->
-        <!--            android:id="@+id/wineColorIndicator"-->
-        <!--            android:layout_width="@dimen/wine_color_indicator_width"-->
-        <!--            android:layout_height="@dimen/wine_color_indicator_height"-->
-        <!--            android:layout_marginStart="@dimen/small_margin"-->
-        <!--            android:contentDescription="@string/wine_color"-->
-        <!--            android:src="@drawable/color_wine_shape"-->
-        <!--            app:layout_constraintBottom_toBottomOf="@+id/wineNaming"-->
-        <!--            app:layout_constraintStart_toEndOf="@id/wineImage"-->
-        <!--            app:layout_constraintTop_toTopOf="@+id/wineName" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/wineName"-->
-        <!--            style="@style/TextAppearance.MaterialComponents.Subtitle2"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginStart="@dimen/small_margin"-->
-        <!--            android:layout_marginTop="@dimen/small_margin"-->
-        <!--            android:layout_marginBottom="@dimen/xsmall_margin"-->
-        <!--            android:ellipsize="end"-->
-        <!--            android:maxLines="1"-->
-        <!--            app:layout_constraintEnd_toStartOf="@id/bioImage"-->
-        <!--            app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/wineNaming"-->
-        <!--            style="@style/TextAppearance.MaterialComponents.Caption"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginStart="@dimen/small_margin"-->
-        <!--            android:layout_marginTop="@dimen/xsmall_margin"-->
-        <!--            android:ellipsize="end"-->
-        <!--            android:maxLines="1"-->
-        <!--            app:layout_constraintEnd_toStartOf="@id/bioImage"-->
-        <!--            app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/wineName" />-->
-
-        <!--        <ImageView-->
-        <!--            android:id="@+id/bioImage"-->
-        <!--            android:layout_width="@dimen/small_icon"-->
-        <!--            android:layout_height="@dimen/small_icon"-->
-        <!--            android:layout_marginEnd="@dimen/medium_margin"-->
-        <!--            android:contentDescription="@string/bio_wine"-->
-        <!--            android:src="@drawable/ic_bio"-->
-        <!--            android:visibility="gone"-->
-        <!--            app:layout_constraintBottom_toBottomOf="@+id/wineNaming"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="@+id/wineName" />-->
 
         <include
             android:id="@+id/wineColorNameNaming"
@@ -103,10 +55,10 @@
             layout="@layout/divider"
             android:layout_width="0dp"
             android:layout_height="@dimen/divider_height"
-            android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
             app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />
+            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming"
+            app:layout_constraintBottom_toBottomOf="@+id/chipsScrollView" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineLeft"
@@ -140,4 +92,4 @@
 
         </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
