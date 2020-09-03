@@ -11,7 +11,7 @@ import com.louis.app.cavity.databinding.ItemGrapeBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.steps.SliderWatcher
 
-class GrapeRecyclerAdapter(val watcher: SliderWatcher) :
+class GrapeRecyclerAdapter() :
     ListAdapter<Grape, GrapeRecyclerAdapter.GrapeViewHolder>(GrapeItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GrapeViewHolder {
@@ -46,11 +46,7 @@ class GrapeRecyclerAdapter(val watcher: SliderWatcher) :
                 percent.text = grape.percentage.toString() + "%"
                 slider.value = grape.percentage.toFloat()
 
-                slider.addOnChangeListener { _, value, _ ->
-                    if (!watcher.isValueAllowed(value.toInt())) {
-                        val trustedValue = watcher.onValueRejected()
-                        slider.value = trustedValue.toFloat()
-                    }
+                slider.addOnChangeListener { slider, value, fromUser ->
                 }
 
                 deleteGrape.setOnClickListener {

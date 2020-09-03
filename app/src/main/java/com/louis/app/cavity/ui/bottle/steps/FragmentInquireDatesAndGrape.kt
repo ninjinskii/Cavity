@@ -25,15 +25,7 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
     }
 
     private fun initRecyclerView() {
-        grapeAdapter = GrapeRecyclerAdapter(object : SliderWatcher {
-            override fun isValueAllowed(value: Int): Boolean {
-                return addBottleViewModel.isNewValueAllowed(value)
-            }
-
-            override fun onValueRejected(): Int {
-                return addBottleViewModel.getMaxAvailable()
-            }
-        })
+        grapeAdapter = GrapeRecyclerAdapter()
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
