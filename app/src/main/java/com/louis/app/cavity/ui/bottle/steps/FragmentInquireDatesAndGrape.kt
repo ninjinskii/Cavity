@@ -11,10 +11,10 @@ import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.GrapeRecyclerAdapter
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
-import com.louis.app.cavity.util.showSnackbar
 import java.util.*
 
-class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_and_grape), FormValidator {
+class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_and_grape),
+    FormValidator {
     private lateinit var binding: FragmentInquireDatesAndGrapeBinding
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
@@ -38,12 +38,11 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
                 val textField = listOf(binding.count)
                 val errorString = resources.getString(R.string.required_field)
 
-                return if (checkAllRequiredFieldsFilled(textField, errorString)) {
-                    true
-                } else {
-                    binding.coordinator.showSnackbar(R.string.no_required_fields_filled)
-                    false
+                if (checkAllRequiredFieldsFilled(textField, errorString, binding.coordinator)) {
+                    return validateFieldsContent()
                 }
+
+                return false
             }
         })
     }
@@ -88,4 +87,6 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
             }
         }
     }
+
+    private fun validateFieldsContent() = binding.count.text.toString().toInt() > 0
 }

@@ -24,6 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
+            app:startIconDrawable="@drawable/ic_price"
             app:layout_constraintEnd_toStartOf="@+id/currencyLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/priceTitle">
@@ -33,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/price"
-                android:inputType="textCapSentences" />
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -42,6 +43,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
+            app:startIconDrawable="@drawable/ic_currency"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/priceLayout"
             app:layout_constraintTop_toBottomOf="@+id/priceTitle">
@@ -60,6 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
+            app:startIconDrawable="@drawable/ic_location"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/priceLayout">
@@ -77,6 +80,7 @@
             android:id="@+id/buyDateLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:startIconDrawable="@drawable/ic_calendar"
             android:layout_margin="@dimen/medium_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,8 +90,7 @@
                 android:id="@+id/buyDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/buying_date"
-                android:inputType="textCapSentences" />
+                android:hint="@string/buying_date" />
 
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

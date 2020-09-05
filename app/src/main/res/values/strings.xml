@@ -71,6 +71,22 @@
     <string name="currency">Monnaie</string>
     <string name="buying_location">Lieu d\'achat</string>
     <string name="buying_date">Date d\'achat</string>
+    <string name="expert_advice">Avis d\'expert</string>
+    <string name="contest_name">Nom du concours</string>
+    <string name="medal">Médaille</string>
+    <string name="mark100">Note sur 100</string>
+    <string name="mark20">Note sur 20</string>
+    <string name="star1">1 étoile</string>
+    <string name="star2">2 étoiles</string>
+    <string name="star3">3 étoiles</string>
+    <string name="mark">Note</string>
+    <string name="bronze">Bronze</string>
+    <string name="silver">Argent</string>
+    <string name="gold">Or</string>
+    <string name="other_info">Autre informations</string>
+    <string name="inquire_add_to_favorites">Ajouter aux coup de cœurs</string>
+    <string name="add_pdf">Associer un fichier PDF</string>
+    <string name="add_grapes">Renseigner les cépages</string>
 
     <!-- Tags -->
     <string name="tag_chip_id">com.louis.app.cavity.TAG_CHIP_ID</string>

@@ -109,13 +109,13 @@
             android:valueFrom="0.0"
             android:valueTo="100.0"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/deleteGrape"
+            app:layout_constraintEnd_toStartOf="@id/deleteExpertAdvice"
             app:layout_constraintStart_toEndOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/grapeName"
             tools:value="55" />
 
         <ImageButton
-            android:id="@+id/deleteGrape"
+            android:id="@+id/deleteExpertAdvice"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
             android:background="?attr/selectableItemBackgroundBorderless"

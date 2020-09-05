@@ -41,7 +41,7 @@
             android:layout_height="@dimen/xsmall_icon"
             android:layout_margin="@dimen/medium_margin"
             android:contentDescription="@string/add_wine"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/ic_bottle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

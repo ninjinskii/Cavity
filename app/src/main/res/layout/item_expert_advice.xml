@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/small_margin">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/contestNameLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            app:layout_constraintEnd_toStartOf="@id/deleteExpertAdvice"
+            app:startIconDrawable="@drawable/ic_grade"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/contestName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/contest_name"
+                android:inputType="textCapSentences" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/deleteExpertAdvice"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/ic_close"
+            android:tint="?attr/colorOnSurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/contestNameLayout"
+            app:layout_constraintTop_toTopOf="@id/contestNameLayout"/>
+
+        <include
+            layout="@layout/divider"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginStart="@dimen/xlarge_margin"
+            android:layout_marginTop="@dimen/large_margin"
+            android:layout_marginEnd="@dimen/xlarge_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contestNameLayout" />
+
+        <RadioGroup
+            android:id="@+id/rbGroupType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider">
+
+            <RadioButton
+                android:id="@+id/rbMedal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/medal" />
+
+            <RadioButton
+                android:id="@+id/rbMark100"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mark100" />
+
+            <RadioButton
+                android:id="@+id/rbMark20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mark20" />
+
+        </RadioGroup>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <RadioGroup
+            android:id="@+id/rbGroupMedal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/divider">
+
+            <RadioButton
+                android:id="@+id/rbBronze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bronze" />
+
+            <RadioButton
+                android:id="@+id/rbSilver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/silver" />
+
+            <RadioButton
+                android:id="@+id/rbGold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gold" />
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/rbGroupStars"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/contestNameLayout">
+
+            <RadioButton
+                android:id="@+id/rbStar1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/star1" />
+
+            <RadioButton
+                android:id="@+id/rbStar2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/star2" />
+
+            <RadioButton
+                android:id="@+id/rbStar3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/star3" />
+
+        </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/markLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/rbGroupType"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="@+id/rbGroupType">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/mark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/mark"
+                android:inputType="textCapSentences" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
