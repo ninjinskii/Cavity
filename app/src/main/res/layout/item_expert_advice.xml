@@ -69,16 +69,22 @@
                 android:text="@string/medal" />
 
             <RadioButton
-                android:id="@+id/rbMark100"
+                android:id="@+id/rbRate100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/mark100" />
+                android:text="@string/rate100" />
 
             <RadioButton
-                android:id="@+id/rbMark20"
+                android:id="@+id/rbRate20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/mark20" />
+                android:text="@string/rate20" />
+
+            <RadioButton
+                android:id="@+id/rbStar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/star" />
 
         </RadioGroup>
 
@@ -151,7 +157,7 @@
         </RadioGroup>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/markLayout"
+            android:id="@+id/rateLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
@@ -162,10 +168,10 @@
             app:layout_constraintTop_toTopOf="@+id/rbGroupType">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/mark"
+                android:id="@+id/rate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/mark"
+                android:hint="@string/rate"
                 android:inputType="textCapSentences" />
 
         </com.google.android.material.textfield.TextInputLayout>

@@ -9,7 +9,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesAndGrapeBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
-import com.louis.app.cavity.ui.bottle.GrapeRecyclerAdapter
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import java.util.*
 
@@ -88,5 +87,12 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
         }
     }
 
-    private fun validateFieldsContent() = binding.count.text.toString().toInt() > 0
+    private fun validateFieldsContent(): Boolean {
+        return if (binding.count.text.toString().toInt() > 0) {
+            true
+        } else {
+            binding.count.error = resources.getString(R.string.zero_bottle)
+            false
+        }
+    }
 }
