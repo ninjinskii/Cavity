@@ -10,6 +10,8 @@ import com.louis.app.cavity.databinding.FragmentInquireDatesAndGrapeBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.GrapeRecyclerAdapter
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_and_grape) {
     private lateinit var binding: FragmentInquireDatesAndGrapeBinding
@@ -25,7 +27,7 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
     }
 
     private fun initRecyclerView() {
-        grapeAdapter = GrapeRecyclerAdapter()
+        grapeAdapter = GrapeRecyclerAdapter ()
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -41,7 +43,7 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
     private fun setListener() {
         binding.buttonAddGrape.setOnClickListener {
             val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
-            addBottleViewModel.addGrape(Grape(0, "Cabernet-sauvignon", defaultPercentage, 0))
+            addBottleViewModel.addGrape(Grape(0, Random.nextInt(1..100000).toString(), defaultPercentage, 0))
         }
     }
 }

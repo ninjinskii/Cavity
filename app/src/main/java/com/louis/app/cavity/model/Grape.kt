@@ -10,7 +10,7 @@ data class Grape(
     @ColumnInfo(name = "id_grape")
     val idGrape: Long = 0,
     val name: String,
-    val percentage: Int,
+    var percentage: Int,
     @ColumnInfo(name = "id_bottle") val idBottle: Long
 ) {
     override fun equals(other: Any?): Boolean {

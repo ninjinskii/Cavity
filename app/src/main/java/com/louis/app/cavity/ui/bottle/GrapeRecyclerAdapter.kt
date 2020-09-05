@@ -6,13 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.slider.Slider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeBinding
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.ui.bottle.steps.SliderWatcher
 
-class GrapeRecyclerAdapter() :
+class GrapeRecyclerAdapter :
     ListAdapter<Grape, GrapeRecyclerAdapter.GrapeViewHolder>(GrapeItemDiffCallback()) {
+
+    private val maxGrapeQty = 100
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GrapeViewHolder {
         return GrapeViewHolder(
@@ -46,13 +48,36 @@ class GrapeRecyclerAdapter() :
                 percent.text = grape.percentage.toString() + "%"
                 slider.value = grape.percentage.toFloat()
 
-                slider.addOnChangeListener { slider, value, fromUser ->
-                }
+                slider.clearOnSliderTouchListeners()
+                slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+                    override fun onStartTrackingTouch(slider: Slider) {
+//
+//                        L.v("______________________")
+//                        L.v("newValue: $newValue, total: $total, max: $max")
+//                        L.v("liste: $currentList")
+
+                    }
+
+                    override fun onStopTrackingTouch(slider: Slider) {
+                        val newValue = slider.value.toInt()
+                        val total = getTotalSlidersExceptModifiedOneValue(grape.name)
+
+                        if (total + newValue > maxGrapeQty) slider.value =
+                            (maxGrapeQty - total).toFloat()
+
+                        val pos = currentList.indexOfFirst { it.name == grape.name }
+                        currentList[pos].percentage = slider.value.toInt()
+                    }
+                })
 
                 deleteGrape.setOnClickListener {
                 }
             }
-
         }
+
+        fun getTotalSlidersExceptModifiedOneValue(modifiedGrapeName: String) = currentList
+            .filter { it.name != modifiedGrapeName }
+            .map { it.percentage }
+            .sum()
     }
 }

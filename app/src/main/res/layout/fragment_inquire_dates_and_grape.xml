@@ -8,84 +8,84 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/dateTitle"
-            style="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/large_margin"
-            android:text="@string/date"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--        <TextView-->
+<!--            android:id="@+id/dateTitle"-->
+<!--            style="@style/TextAppearance.MaterialComponents.Subtitle1"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="@dimen/large_margin"-->
+<!--            android:text="@string/date"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-        <TextView
-            android:id="@+id/vintageText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            android:text="@string/vintage"
-            app:layout_constraintEnd_toEndOf="@id/vintage"
-            app:layout_constraintStart_toStartOf="@id/vintage"
-            app:layout_constraintTop_toBottomOf="@id/dateTitle" />
+<!--        <TextView-->
+<!--            android:id="@+id/vintageText"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="@dimen/medium_margin"-->
+<!--            android:text="@string/vintage"-->
+<!--            app:layout_constraintEnd_toEndOf="@id/vintage"-->
+<!--            app:layout_constraintStart_toStartOf="@id/vintage"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/dateTitle" />-->
 
-        <NumberPicker
-            android:id="@+id/vintage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            app:layout_constraintEnd_toStartOf="@id/apogee"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vintageText" />
+<!--        <NumberPicker-->
+<!--            android:id="@+id/vintage"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="@dimen/medium_margin"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/apogee"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/vintageText" />-->
 
-        <TextView
-            android:id="@+id/apogeeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            android:text="@string/apogee"
-            app:layout_constraintEnd_toEndOf="@id/apogee"
-            app:layout_constraintStart_toStartOf="@id/apogee"
-            app:layout_constraintTop_toBottomOf="@id/dateTitle" />
+<!--        <TextView-->
+<!--            android:id="@+id/apogeeText"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="@dimen/medium_margin"-->
+<!--            android:text="@string/apogee"-->
+<!--            app:layout_constraintEnd_toEndOf="@id/apogee"-->
+<!--            app:layout_constraintStart_toStartOf="@id/apogee"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/dateTitle" />-->
 
-        <NumberPicker
-            android:id="@+id/apogee"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            app:layout_constraintEnd_toStartOf="@id/countLayout"
-            app:layout_constraintStart_toEndOf="@id/vintage"
-            app:layout_constraintTop_toBottomOf="@id/apogeeText" />
+<!--        <NumberPicker-->
+<!--            android:id="@+id/apogee"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="@dimen/medium_margin"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/countLayout"-->
+<!--            app:layout_constraintStart_toEndOf="@id/vintage"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/apogeeText" />-->
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/countLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            app:layout_constraintBottom_toBottomOf="@+id/vintage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/apogee"
-            app:layout_constraintTop_toTopOf="@+id/vintage">
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/countLayout"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="@dimen/medium_margin"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/vintage"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/apogee"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/vintage">-->
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/count"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/count"
-                android:inputType="textCapSentences" />
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/count"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:hint="@string/count"-->
+<!--                android:inputType="textCapSentences" />-->
 
-        </com.google.android.material.textfield.TextInputLayout>
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
-        <include
-            android:id="@+id/divider"
-            layout="@layout/divider"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/divider_height"
-            android:layout_marginStart="@dimen/medium_margin"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:layout_marginBottom="@dimen/medium_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vintage" />
+<!--        <include-->
+<!--            android:id="@+id/divider"-->
+<!--            layout="@layout/divider"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="@dimen/divider_height"-->
+<!--            android:layout_marginStart="@dimen/medium_margin"-->
+<!--            android:layout_marginTop="@dimen/medium_margin"-->
+<!--            android:layout_marginBottom="@dimen/medium_margin"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/vintage" />-->
 
         <TextView
             android:id="@+id/grapeTitle"
