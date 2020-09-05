@@ -8,7 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
         <TextView
             android:id="@+id/expertAdviceTitle"
@@ -20,28 +21,180 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/buttonAddCounty"
-            android:layout_width="@dimen/medium_icon"
-            android:layout_height="@dimen/medium_icon"
-            android:layout_margin="@dimen/medium_margin"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/add_county"
-            android:src="@drawable/ic_add"
-            android:tint="?attr/colorOnBackground"
-            app:layout_constraintBottom_toBottomOf="@+id/expertAdviceTitle"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/contestNameLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/expertAdviceTitle" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/expertAdviceTitle"
+            app:startIconDrawable="@drawable/ic_grade">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/contestName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/contest_name"
+                android:inputType="textCapSentences" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <include
+            layout="@layout/divider"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginStart="@dimen/xlarge_margin"
+            android:layout_marginTop="@dimen/large_margin"
+            android:layout_marginEnd="@dimen/xlarge_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contestNameLayout" />
+
+        <RadioGroup
+            android:id="@+id/rbGroupType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider">
+
+            <RadioButton
+                android:id="@+id/rbMedal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/medal" />
+
+            <RadioButton
+                android:id="@+id/rbRate100"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rate100" />
+
+            <RadioButton
+                android:id="@+id/rbRate20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rate20" />
+
+            <RadioButton
+                android:id="@+id/rbStar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/star" />
+
+        </RadioGroup>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <RadioGroup
+            android:id="@+id/rbGroupMedal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/rbGroupType"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="@+id/rbGroupType">
+
+            <RadioButton
+                android:id="@+id/rbBronze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bronze" />
+
+            <RadioButton
+                android:id="@+id/rbSilver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/silver" />
+
+            <RadioButton
+                android:id="@+id/rbGold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gold" />
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/rbGroupStars"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/rbGroupType"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="@+id/rbGroupType">
+
+            <RadioButton
+                android:id="@+id/rbStar1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/star1" />
+
+            <RadioButton
+                android:id="@+id/rbStar2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/star2" />
+
+            <RadioButton
+                android:id="@+id/rbStar3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/star3" />
+
+        </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/rateLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/rbGroupType"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="@+id/rbGroupType">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/rate"
+                android:inputType="textCapSentences" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonAddExpertAdvice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            app:layout_constraintTop_toBottomOf="@+id/rbGroupType"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/add_expert_advice"/>
 
         <!-- Width match parent to prevent weird recycleview behavior -->
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/expertAdviceTitle"
+            app:layout_constraintTop_toBottomOf="@id/buttonAddExpertAdvice"
             tools:listitem="@layout/item_expert_advice" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

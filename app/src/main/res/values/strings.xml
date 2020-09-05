@@ -18,6 +18,9 @@
     <string name="required_field">Champ requis</string>
     <string name="no_required_fields_filled">Certains champs n\'ont pas étés remplis</string>
     <string name="zero_bottle">Veuillez indiquer un chiffre supérieur à 0</string>
+    <string name="incorrect_price_format">Le prix ne peut pas contenir de caractères</string>
+    <string name="rate_outside_0_to_20">La note doit être comprise entre 0 et 20</string>
+    <string name="rate_outside_0_to_100">La note doit être comprise entre 0 et 100</string>
 
     <!-- App -->
     <string name="app_name">Cavity</string>
@@ -55,9 +58,9 @@
     <string name="step_2">2</string>
     <string name="step_3">3</string>
     <string name="step_4">4</string>
-    <string name="step_1_text">Dates et cépages</string>
-    <string name="step_2_text">Achat</string>
-    <string name="step_3_text">Avis</string>
+    <string name="step_1_text">Dates</string>
+    <string name="step_2_text">Cépages</string>
+    <string name="step_3_text">Concours</string>
     <string name="step_4_text">Divers</string>
     <string name="viewed_step">Étape actuelle</string>
     <string name="vintage">Millésime</string>
@@ -74,6 +77,7 @@
     <string name="buying_date">Date d\'achat</string>
     <string name="expert_advice">Avis d\'expert</string>
     <string name="contest_name">Nom du concours</string>
+    <string name="add_expert_advice">Ajouter un avis</string>
     <string name="medal">Médaille</string>
     <string name="rate100">Note sur 100</string>
     <string name="rate20">Note sur 20</string>
@@ -89,6 +93,7 @@
     <string name="inquire_add_to_favorites">Ajouter aux coup de cœurs</string>
     <string name="add_pdf">Associer un fichier PDF</string>
     <string name="add_grapes">Renseigner les cépages</string>
+    <string name="medal_color">Couleur de la médaille</string>
 
     <!-- Tags -->
     <string name="tag_chip_id">com.louis.app.cavity.TAG_CHIP_ID</string>

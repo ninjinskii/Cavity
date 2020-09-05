@@ -14,6 +14,7 @@ class WineRepository(private val wineDao: WineDao, private val bottleDao: Bottle
 
     fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
     fun getAllBottles() = bottleDao.getAllBottles()
+    fun removeBottleById(bottleId: Long) = bottleDao.removeBottleById(bottleId)
 
     fun insertCounty(county: County) = wineDao.insertCounty(county)
     fun getAllCounties() = wineDao.getAllCounties()

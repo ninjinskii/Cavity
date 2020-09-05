@@ -6,24 +6,21 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.FragmentInquireDatesAndGrapeBinding
+import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
-import java.util.*
 
-class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_and_grape),
-    FormValidator {
-    private lateinit var binding: FragmentInquireDatesAndGrapeBinding
+class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
+    private lateinit var binding: FragmentInquireGrapesBinding
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentInquireDatesAndGrapeBinding.bind(view)
+        binding = FragmentInquireGrapesBinding.bind(view)
 
         registerStepperWatcher()
-        initNumberPickers()
         initRecyclerView()
         setListener()
     }
@@ -34,30 +31,13 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
             override fun onRequestChangePage(): Boolean {
-                val textField = listOf(binding.count)
-                val errorString = resources.getString(R.string.required_field)
-
-                if (checkAllRequiredFieldsFilled(textField, errorString, binding.coordinator)) {
-                    return validateFieldsContent()
-                }
-
-                return false
+//                val textFields = with(binding) { listOf(price, currency, buyDate, buyLocation) }
+//                val errorString = resources.getString(R.string.required_field)
+//
+//                return checkAllRequiredFieldsFilled(textFields, errorString, binding.coordinator)
+                return true
             }
         })
-    }
-
-    private fun initNumberPickers() {
-        val year = Calendar.getInstance().get(Calendar.YEAR)
-
-        with(binding) {
-            vintage.minValue = year - 20
-            vintage.maxValue = year
-            vintage.value = year - 5
-
-            apogee.minValue = year
-            apogee.maxValue = year + 30
-            apogee.value = year + 5
-        }
     }
 
     private fun initRecyclerView() {
@@ -76,6 +56,7 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
         }
     }
 
+    // TODO: Use same idea used by expert advices ?
     private fun setListener() {
         binding.buttonAddGrape.setOnClickListener {
             val grapeName = binding.grapeName.text.toString()
@@ -84,15 +65,6 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
             if (!addBottleViewModel.alreadyContainsGrape(grapeName)) {
                 addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, 0))
             }
-        }
-    }
-
-    private fun validateFieldsContent(): Boolean {
-        return if (binding.count.text.toString().toInt() > 0) {
-            true
-        } else {
-            binding.count.error = resources.getString(R.string.zero_bottle)
-            false
         }
     }
 }

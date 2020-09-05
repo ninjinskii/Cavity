@@ -19,7 +19,7 @@ data class Bottle(
     @ColumnInfo(name = "other_info") val otherInfo: String,
     @ColumnInfo(name = "buy_location") val buyLocation: String,
     @ColumnInfo(name = "buy_date") val buyDate: String,
-    @ColumnInfo(name = "contest_comment") val contestComment: String,
+    @ColumnInfo(name = "taste_comment") val tasteComment: String,
     @ColumnInfo(name = "pdf_path") val pdfPath: String
 )
 

@@ -16,7 +16,7 @@ data class ExpertAdvice(
     @ColumnInfo(name = "is_rate_20") var isRate20: Int,
     @ColumnInfo(name = "is_rate_100") var isRate100: Int,
     val value: Int,
-    @ColumnInfo(name = "id_bottle") val idBottle: Long
+    @ColumnInfo(name = "id_bottle") var idBottle: Long
 ) {
     fun revertType() {
         isMedal = false.toInt()
