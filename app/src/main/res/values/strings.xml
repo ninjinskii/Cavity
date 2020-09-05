@@ -62,8 +62,9 @@
     <string name="date">Dates</string>
     <string name="apogee">Apogée</string>
     <string name="count">Quantité</string>
-    <string name="grape">Cépages</string>
-    <string name="percentage">%i %</string>
+    <string name="grapes">Cépages</string>
+    <string name="grape_name">Nom du cépage</string>
+    <string name="percentage">%i \%</string>
 
     <!-- Tags -->
     <string name="tag_chip_id">com.louis.app.cavity.TAG_CHIP_ID</string>

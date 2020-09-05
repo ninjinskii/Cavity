@@ -44,8 +44,12 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
 
     private fun setListener() {
         binding.buttonAddGrape.setOnClickListener {
+            val grapeName = binding.grapeName.text.toString()
             val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
-            addBottleViewModel.addGrape(Grape(0, Random.nextInt(1..100000).toString(), defaultPercentage, 0))
+
+            if (!addBottleViewModel.alreadyContainsGrape(grapeName)) {
+                addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, 0))
+            }
         }
     }
 }

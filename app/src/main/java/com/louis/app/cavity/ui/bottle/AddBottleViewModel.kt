@@ -21,4 +21,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     fun removeGrape(grape: Grape) {
         _grapes -= grape
     }
+
+    fun alreadyContainsGrape(grapeName: String): Boolean {
+        return grapeName in _grapes.value?.map { it.name } ?: return false
+    }
 }
