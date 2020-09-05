@@ -27,7 +27,9 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
     }
 
     private fun initRecyclerView() {
-        grapeAdapter = GrapeRecyclerAdapter ()
+        grapeAdapter = GrapeRecyclerAdapter {
+            addBottleViewModel.removeGrape(it)
+        }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)

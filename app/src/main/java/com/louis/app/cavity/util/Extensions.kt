@@ -54,7 +54,7 @@ fun <T> MutableLiveData<Event<T>>.postOnce(value: T) {
 
 operator fun <T> MutableLiveData<MutableList<T>>.plusAssign(item: T) {
     val value = this.value ?: mutableListOf()
-    value.add(item)
+    value.add(0, item)
     this.value = value // notify observers
 }
 

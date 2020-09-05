@@ -11,7 +11,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeBinding
 import com.louis.app.cavity.model.Grape
 
-class GrapeRecyclerAdapter :
+class GrapeRecyclerAdapter(val listener: (Grape) -> Unit) :
     ListAdapter<Grape, GrapeRecyclerAdapter.GrapeViewHolder>(GrapeItemDiffCallback()) {
 
     private val maxGrapeQty = 100
@@ -45,17 +45,12 @@ class GrapeRecyclerAdapter :
         fun bind(grape: Grape) {
             with(binding) {
                 grapeName.text = grape.name
-                percent.text = grape.percentage.toString() + "%"
+                percent.text = getFormattedPercentage(grape.percentage)
                 slider.value = grape.percentage.toFloat()
 
                 slider.clearOnSliderTouchListeners()
                 slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
                     override fun onStartTrackingTouch(slider: Slider) {
-//
-//                        L.v("______________________")
-//                        L.v("newValue: $newValue, total: $total, max: $max")
-//                        L.v("liste: $currentList")
-
                     }
 
                     override fun onStopTrackingTouch(slider: Slider) {
@@ -67,10 +62,13 @@ class GrapeRecyclerAdapter :
 
                         val pos = currentList.indexOfFirst { it.name == grape.name }
                         currentList[pos].percentage = slider.value.toInt()
+
+                        binding.percent.text = getFormattedPercentage(slider.value)
                     }
                 })
 
                 deleteGrape.setOnClickListener {
+                    listener(grape)
                 }
             }
         }
@@ -79,5 +77,18 @@ class GrapeRecyclerAdapter :
             .filter { it.name != modifiedGrapeName }
             .map { it.percentage }
             .sum()
+    }
+
+    companion object {
+        fun getFormattedPercentage(value: Number): String {
+            val numeric = when (value) {
+                is Float -> value.toInt().toString()
+                is Int -> value.toString()
+                else ->
+                    throw UnsupportedOperationException("Cannot set value other than Int or Float")
+            }
+
+            return String.format(numeric, R.string.percentage)
+        }
     }
 }
