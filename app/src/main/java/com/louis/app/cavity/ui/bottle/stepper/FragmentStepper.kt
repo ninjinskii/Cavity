@@ -15,6 +15,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private lateinit var binding: FragmentStepperBinding
     private lateinit var stepViews: List<TextView>
     private lateinit var cursors: List<View>
+    private val listeners = mutableListOf<StepperWatcher>()
     private val stepperViewModel: StepperViewModel by activityViewModels()
     private var viewPager: ViewPager2? = null
     private var handlingClickButton = false
@@ -36,16 +37,21 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private fun setListeners() {
         with(binding) {
             stepViews.forEachIndexed { index, imageView ->
-                imageView.setOnClickListener { stepperViewModel.goToStep(index) }
+                imageView.setOnClickListener {
+                    if (allowedToChangePage(index)) stepperViewModel.goToStep(index)
+                }
             }
 
             buttonNext.setOnClickListener {
-                handlingClickButton = true
+                // Dummy index cause we are moving forward
+                if (allowedToChangePage(10)) {
+                    handlingClickButton = true
 
-                if (stepperViewModel.goToNextStep()) {
-                    // Observers won't be triggered so we tell that we handle the click
-                    handlingClickButton = false
-                    // Stepper meets end, callback to parent fragment
+                    if (stepperViewModel.goToNextStep()) {
+                        // Observers won't be triggered so we tell that we handle the click
+                        handlingClickButton = false
+                        // Stepper meets end, callback to parent fragment
+                    }
                 }
             }
 
@@ -80,5 +86,23 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
                 if (!handlingClickButton) stepperViewModel.goToStep(position)
             }
         })
+    }
+
+    private fun allowedToChangePage(index: Int): Boolean {
+        val currentStep = stepperViewModel.step.value?.first ?: 0
+
+        return if (index <= currentStep) true
+        else listeners[currentStep].onRequestChangePage()
+    }
+
+    fun addListener(stepperWatcher: StepperWatcher) = listeners.add(stepperWatcher)
+
+    fun resetState() {
+        listeners.clear()
+        stepperViewModel.reset()
+    }
+
+    interface StepperWatcher {
+        fun onRequestChangePage(): Boolean
     }
 }

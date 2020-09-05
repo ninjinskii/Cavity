@@ -10,10 +10,11 @@ import com.louis.app.cavity.databinding.FragmentInquireDatesAndGrapeBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.GrapeRecyclerAdapter
-import kotlin.random.Random
-import kotlin.random.nextInt
+import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.showSnackbar
+import java.util.*
 
-class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_and_grape) {
+class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_and_grape), FormValidator {
     private lateinit var binding: FragmentInquireDatesAndGrapeBinding
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
@@ -22,8 +23,43 @@ class FragmentInquireDatesAndGrape : Fragment(R.layout.fragment_inquire_dates_an
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentInquireDatesAndGrapeBinding.bind(view)
 
+        registerStepperWatcher()
+        initNumberPickers()
         initRecyclerView()
         setListener()
+    }
+
+    private fun registerStepperWatcher() {
+        val stepperFragment =
+            parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
+
+        stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
+            override fun onRequestChangePage(): Boolean {
+                val textField = listOf(binding.count)
+                val errorString = resources.getString(R.string.required_field)
+
+                return if (checkAllRequiredFieldsFilled(textField, errorString)) {
+                    true
+                } else {
+                    binding.coordinator.showSnackbar(R.string.no_required_fields_filled)
+                    false
+                }
+            }
+        })
+    }
+
+    private fun initNumberPickers() {
+        val year = Calendar.getInstance().get(Calendar.YEAR)
+
+        with(binding) {
+            vintage.minValue = year - 20
+            vintage.maxValue = year
+            vintage.value = year - 5
+
+            apogee.minValue = year
+            apogee.maxValue = year + 30
+            apogee.value = year + 5
+        }
     }
 
     private fun initRecyclerView() {

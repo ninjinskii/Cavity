@@ -108,10 +108,11 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/namingLayout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/identificationTitle">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -163,9 +164,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/cuveeLayout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cuveeTitle">
 
@@ -283,7 +285,7 @@
                 android:id="@+id/organicWine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:text="@string/organic_wine"
                 app:layout_constraintStart_toStartOf="parent"
