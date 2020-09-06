@@ -5,13 +5,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.louis.app.cavity.R
 import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.ExpertAdvice
 import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.minusAssign
 import com.louis.app.cavity.util.plusAssign
+import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -23,24 +26,40 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
     private var bottleId: Long? = null
 
-    private val _grapes = MutableLiveData<MutableList<Grape>>()
-    val grapes: LiveData<MutableList<Grape>>
-        get() = _grapes
+    private val _userFeedback = MutableLiveData<Event<Int>>()
+    val userFeedback: LiveData<Event<Int>>
+        get() = _userFeedback
 
     private val _expertAdvices = MutableLiveData<MutableList<ExpertAdvice>>()
     val expertAdvices: LiveData<MutableList<ExpertAdvice>>
         get() = _expertAdvices
 
     fun addGrape(grape: Grape) {
-        _grapes += grape
+        if (!alreadyContainsGrape(grape.name)) {
+            viewModelScope.launch (IO) {
+                repository.insertGrape(grape)
+            }
+        } else {
+            _userFeedback.postOnce(R.string.grape_already_exist)
+        }
+    }
+
+    fun updateGrape(grape: Grape) {
+        viewModelScope.launch (IO) {
+            repository.updateGrape(grape)
+        }
     }
 
     fun removeGrape(grape: Grape) {
-        _grapes -= grape
+        viewModelScope.launch (IO) {
+            repository.deleteGrape(grape)
+        }
     }
 
-    fun alreadyContainsGrape(grapeName: String): Boolean {
-        return grapeName in _grapes.value?.map { it.name } ?: return false
+    fun getAllGrapes() = repository.getAllGrapes()
+
+    private fun alreadyContainsGrape(grapeName: String): Boolean {
+        return grapeName in getAllGrapes().value?.map { it.name } ?: return false
     }
 
     fun addExpertAdvice(advice: ExpertAdvice) {
@@ -89,7 +108,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     fun removeNotCompletedBottle() {
         bottleId?.let {
             viewModelScope.launch (IO) {
-                repository.removeBottleById(it)
+                repository.deleteBottleById(it)
                 bottleId = null
             }
         }

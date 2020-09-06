@@ -11,7 +11,10 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeBinding
 import com.louis.app.cavity.model.Grape
 
-class GrapeRecyclerAdapter(val listener: (Grape) -> Unit) :
+class GrapeRecyclerAdapter(
+    val onDeleteListener: (Grape) -> Unit,
+    val onValueChangeListener: (Grape) -> Unit
+) :
     ListAdapter<Grape, GrapeRecyclerAdapter.GrapeViewHolder>(GrapeItemDiffCallback()) {
 
     private val maxGrapeQty = 100
@@ -60,15 +63,18 @@ class GrapeRecyclerAdapter(val listener: (Grape) -> Unit) :
                         if (total + newValue > maxGrapeQty) slider.value =
                             (maxGrapeQty - total).toFloat()
 
-                        val pos = currentList.indexOfFirst { it.name == grape.name }
-                        currentList[pos].percentage = slider.value.toInt()
+                        grape.percentage = slider.value.toInt()
+
+                        //val pos = currentList.indexOfFirst { it.name == grape.name }
+                        //currentList[pos].percentage = slider.value.toInt()
 
                         binding.percent.text = getFormattedPercentage(slider.value)
+                        onValueChangeListener(grape)
                     }
                 })
 
                 deleteGrape.setOnClickListener {
-                    listener(grape)
+                    onDeleteListener(grape)
                 }
             }
         }

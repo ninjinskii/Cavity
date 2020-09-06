@@ -10,6 +10,7 @@ import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
@@ -23,6 +24,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
         registerStepperWatcher()
         initRecyclerView()
+        observe()
         setListener()
     }
 
@@ -36,9 +38,10 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     }
 
     private fun initRecyclerView() {
-        grapeAdapter = GrapeRecyclerAdapter {
-            addBottleViewModel.removeGrape(it)
-        }
+        grapeAdapter = GrapeRecyclerAdapter(
+            { addBottleViewModel.removeGrape(it) },
+            { addBottleViewModel.updateGrape(it) }
+        )
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -46,12 +49,19 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             adapter = grapeAdapter
         }
 
-        addBottleViewModel.grapes.observe(viewLifecycleOwner) {
-            grapeAdapter.submitList(it.toMutableList()) // Force submitList to trigger
+        addBottleViewModel.getAllGrapes().observe(viewLifecycleOwner) {
+            grapeAdapter.submitList(it)
         }
     }
 
-    // TODO: Add grapes directly into room
+    private fun observe() {
+        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+    }
+
     private fun setListener() {
         binding.buttonAddGrape.setOnClickListener {
             val grapeName = binding.grapeName.text.toString()
@@ -62,12 +72,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             }
 
             val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
-
-            if (!addBottleViewModel.alreadyContainsGrape(grapeName)) {
-                addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, 0))
-            } else {
-                binding.coordinator.showSnackbar(R.string.grape_already_exist)
-            }
+            addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, 0))
         }
     }
 }

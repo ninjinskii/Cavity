@@ -3,6 +3,7 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.Grape
 
 @Dao
 interface BottleDao {
@@ -16,9 +17,21 @@ interface BottleDao {
     @Delete
     fun deleteBottle(bottle: Bottle)
 
+    @Insert
+    fun insertGrape(grape: Grape)
+
+    @Update
+    fun updateGrape(grape: Grape)
+
+    @Delete
+    fun deleteGrape(grape: Grape)
+
     @Query("SELECT * FROM bottle")
     fun getAllBottles(): LiveData<List<Bottle>>
 
+    @Query("SELECT * FROM grape")
+    fun getAllGrapes(): LiveData<List<Grape>>
+
     @Query("DELETE FROM bottle WHERE id_bottle=:bottleId")
-    fun removeBottleById(bottleId: Long)
+    fun deleteBottleById(bottleId: Long)
 }
