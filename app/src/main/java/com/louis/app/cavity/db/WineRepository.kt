@@ -1,27 +1,36 @@
 package com.louis.app.cavity.db
 
-import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.model.*
 
 class WineRepository(private val wineDao: WineDao, private val bottleDao: BottleDao) {
-    fun getAllWines() = wineDao.getAllWines()
     fun insertWine(wine: Wine) = wineDao.insertWine(wine)
     fun updateWine(wine: Wine) = wineDao.updateWine(wine)
     fun deleteWine(wine: Wine) = wineDao.deleteWine(wine)
+
+    fun insertCounty(county: County) = wineDao.insertCounty(county)
+
+    fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
+
+    fun updateGrape(grape: Grape) = bottleDao.updateGrape(grape)
+    fun deleteGrape(grape: Grape) = bottleDao.deleteGrape(grape)
+    fun insertGrape(grape: Grape) = bottleDao.insertGrape(grape)
+
+    fun updateAdvice(advice: ExpertAdvice) = bottleDao.updateAdvice(advice)
+    fun deleteAdvice(advice: ExpertAdvice) = bottleDao.deleteAdvice(advice)
+    fun insertAdvice(advice: ExpertAdvice) = bottleDao.insertAdvice(advice)
+
+    fun getAllWines() = wineDao.getAllWines()
     fun getWineWithBottles() = wineDao.getWineWithBottles()
     fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
 
-    fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
-    fun getAllBottles() = bottleDao.getAllBottles()
-    fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
-    fun insertGrape(grape: Grape) = bottleDao.insertGrape(grape)
-    fun getAllGrapes() = bottleDao.getAllGrapes()
-    fun updateGrape(grape: Grape) = bottleDao.updateGrape(grape)
-    fun deleteGrape(grape: Grape) = bottleDao.deleteGrape(grape)
-
-    fun insertCounty(county: County) = wineDao.insertCounty(county)
     fun getAllCounties() = wineDao.getAllCounties()
     fun getAllCountiesNotLive() = wineDao.getAllCountiesNotLive()
+
+    fun getAllBottles() = bottleDao.getAllBottles()
+    fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
+
+    fun getAllGrapes() = bottleDao.getAllGrapes()
+
+    fun getAllExpertAdvices() = bottleDao.getAllExpertAdvices()
+
 }

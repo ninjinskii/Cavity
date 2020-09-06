@@ -12,9 +12,8 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.ExpertAdvice
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.minusAssign
-import com.louis.app.cavity.util.plusAssign
 import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -30,13 +29,9 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    private val _expertAdvices = MutableLiveData<MutableList<ExpertAdvice>>()
-    val expertAdvices: LiveData<MutableList<ExpertAdvice>>
-        get() = _expertAdvices
-
     fun addGrape(grape: Grape) {
         if (!alreadyContainsGrape(grape.name)) {
-            viewModelScope.launch (IO) {
+            viewModelScope.launch(IO) {
                 repository.insertGrape(grape)
             }
         } else {
@@ -45,13 +40,13 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun updateGrape(grape: Grape) {
-        viewModelScope.launch (IO) {
+        viewModelScope.launch(IO) {
             repository.updateGrape(grape)
         }
     }
 
     fun removeGrape(grape: Grape) {
-        viewModelScope.launch (IO) {
+        viewModelScope.launch(IO) {
             repository.deleteGrape(grape)
         }
     }
@@ -63,13 +58,28 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun addExpertAdvice(advice: ExpertAdvice) {
-        advice.idBottle = bottleId ?: return
-        _expertAdvices += advice
+        when {
+            advice.isRate100.toBoolean() && advice.value !in 0..100 ->
+                _userFeedback.postOnce(R.string.rate_outside_0_to_100)
+
+            advice.isRate20.toBoolean() && advice.value !in 0..20 ->
+                _userFeedback.postOnce(R.string.rate_outside_0_to_20)
+
+            else -> {
+                viewModelScope.launch(IO) {
+                    repository.insertAdvice(advice)
+                }
+            }
+        }
     }
 
     fun removeExpertAdvice(advice: ExpertAdvice) {
-        _expertAdvices -= advice
+        viewModelScope.launch(IO) {
+            repository.deleteAdvice(advice)
+        }
     }
+
+    fun getAllExpertAdvices() = repository.getAllExpertAdvices()
 
     fun addBottle(
         vintage: Int,
@@ -97,7 +107,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             pdfPath = ""
         )
 
-        viewModelScope.launch (IO) {
+        viewModelScope.launch(IO) {
             bottleId = repository.insertBottle(bottle)
         }
     }
@@ -107,7 +117,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     // If the user cancel the bottle form completion half-way, we should delete the bottle
     fun removeNotCompletedBottle() {
         bottleId?.let {
-            viewModelScope.launch (IO) {
+            viewModelScope.launch(IO) {
                 repository.deleteBottleById(it)
                 bottleId = null
             }

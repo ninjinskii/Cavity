@@ -9,34 +9,24 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireExpertAdviceBinding
 import com.louis.app.cavity.model.ExpertAdvice
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
-import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_advice) {
     private lateinit var binding: FragmentInquireExpertAdviceBinding
-    private lateinit var adviceAdapter: ExpertAdviceRecyclerAdapter
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentInquireExpertAdviceBinding.bind(view)
 
-        registerStepperWatcher()
         initRecyclerView()
-        setListener()
-    }
-
-    private fun registerStepperWatcher() {
-        val stepperFragment =
-            parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
-
-        stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
-            override fun onRequestChangePage() = true
-        })
+        observe()
+        setListeners()
     }
 
     private fun initRecyclerView() {
-        adviceAdapter = ExpertAdviceRecyclerAdapter {
+        val adviceAdapter = ExpertAdviceRecyclerAdapter {
         }
 
         binding.recyclerView.apply {
@@ -45,48 +35,51 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             adapter = adviceAdapter
         }
 
-        addBottleViewModel.expertAdvices.observe(viewLifecycleOwner) {
-            adviceAdapter.submitList(it.toMutableList()) // Force submitList to trigger
+        addBottleViewModel.getAllExpertAdvices().observe(viewLifecycleOwner) {
+            adviceAdapter.submitList(it)
         }
     }
 
-    private fun setListener() {
+    private fun observe() {
+        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+    }
+
+    private fun setListeners() {
         binding.buttonAddExpertAdvice.setOnClickListener {
-            val constestName = binding.contestName.text.toString()
-            val rate = binding.rate.text.toString()
+            val constestName = binding.contestName.text.toString().trim()
+            val rate = binding.rate.text.toString().trim()
+            val advice = makeExpertAdvice(constestName, rate.toInt())
 
-            if (validateFieds()) {
-                val advice = makeExpertAdvice(constestName, rate.toInt())
-                addBottleViewModel.addExpertAdvice(advice)
-            }
+            addBottleViewModel.addExpertAdvice(advice)
         }
+
+        binding.rbGroupType.setOnCheckedChangeListener { _, _ -> revealViews() }
     }
 
-    private fun validateFieds(): Boolean {
+    private fun revealViews() {
         with(binding) {
-            val contestName = binding.contestName.text.toString()
-            val rate = binding.rate.text.toString()
-
-            if (contestName.isEmpty()) return false
-
-            try {
-                if (rbGroupType.checkedRadioButtonId == R.id.rbRate20) {
-                    return rate.toInt() in 0..20
+            when (rbGroupType.checkedRadioButtonId) {
+                R.id.rbMedal -> {
+                    rbGroupMedal.setVisible(true)
+                    rbGroupStars.setVisible(false)
+                    rateLayout.setVisible(false)
                 }
-            } catch (e: NumberFormatException) {
-                coordinator.showSnackbar(R.string.rate_outside_0_to_20)
-            }
-
-            try {
-                if (rbGroupType.checkedRadioButtonId == R.id.rbRate100) {
-                    return rate.toInt() in 0..100
+                R.id.rbRate100 -> {
+                    rateLayout.setVisible(true)
+                    rbGroupMedal.setVisible(false)
+                    rbGroupStars.setVisible(false)
                 }
-            } catch (e: NumberFormatException) {
-                coordinator.showSnackbar(R.string.rate_outside_0_to_100)
+                R.id.rbStar -> {
+                    rbGroupStars.setVisible(true)
+                    rbGroupMedal.setVisible(false)
+                    rateLayout.setVisible(false)
+                }
             }
         }
-
-        return true
     }
 
     private fun makeExpertAdvice(contestName: String, rate: Int): ExpertAdvice {
