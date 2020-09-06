@@ -10,6 +10,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
 import com.louis.app.cavity.util.setVisible
 import kotlinx.android.synthetic.main.fragment_stepper.*
+import java.lang.Exception
+import java.lang.IndexOutOfBoundsException
 
 class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private lateinit var binding: FragmentStepperBinding
@@ -91,8 +93,12 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private fun allowedToChangePage(index: Int): Boolean {
         val currentStep = stepperViewModel.step.value?.first ?: 0
 
-        return if (index <= currentStep) true
-        else listeners[currentStep].onRequestChangePage()
+        try {
+            return if (index <= currentStep) true
+            else listeners[currentStep].onRequestChangePage()
+        } catch (e: IndexOutOfBoundsException) {
+            throw Exception("One or multiple fragments has not been registered to the stepper")
+        }
     }
 
     fun addListener(stepperWatcher: StepperWatcher) = listeners.add(stepperWatcher)

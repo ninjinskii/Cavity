@@ -10,6 +10,7 @@ import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var binding: FragmentInquireGrapesBinding
@@ -30,13 +31,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
-            override fun onRequestChangePage(): Boolean {
-//                val textFields = with(binding) { listOf(price, currency, buyDate, buyLocation) }
-//                val errorString = resources.getString(R.string.required_field)
-//
-//                return checkAllRequiredFieldsFilled(textFields, errorString, binding.coordinator)
-                return true
-            }
+            override fun onRequestChangePage() = true
         })
     }
 
@@ -56,14 +51,22 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         }
     }
 
-    // TODO: Use same idea used by expert advices ?
+    // TODO: Add grapes directly into room
     private fun setListener() {
         binding.buttonAddGrape.setOnClickListener {
             val grapeName = binding.grapeName.text.toString()
+
+            if (grapeName.isEmpty()) {
+                binding.coordinator.showSnackbar(R.string.empty_grape_name)
+                return@setOnClickListener
+            }
+
             val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
 
             if (!addBottleViewModel.alreadyContainsGrape(grapeName)) {
                 addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, 0))
+            } else {
+                binding.coordinator.showSnackbar(R.string.grape_already_exist)
             }
         }
     }
