@@ -18,4 +18,6 @@
     <dimen name="large_icon">64dp</dimen>
     <dimen name="stepper_icon">36dp</dimen>
     <dimen name="stepper_icon_background">42dp</dimen>
+
+    <dimen name="expert_advice_height">96dp</dimen>
 </resources>

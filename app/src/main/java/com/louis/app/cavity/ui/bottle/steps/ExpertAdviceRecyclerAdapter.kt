@@ -3,34 +3,78 @@ package com.louis.app.cavity.ui.bottle.steps
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.ItemExpertAdviceBinding
+import com.louis.app.cavity.databinding.ItemExpertAdviceMedalBinding
+import com.louis.app.cavity.databinding.ItemExpertAdviceRateBinding
+import com.louis.app.cavity.databinding.ItemExpertAdviceStarBinding
 import com.louis.app.cavity.model.ExpertAdvice
-import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
-import com.louis.app.cavity.util.toInt
 
 class ExpertAdviceRecyclerAdapter(val listener: (ExpertAdvice) -> Unit) :
-    ListAdapter<ExpertAdvice, ExpertAdviceRecyclerAdapter.ExpertAdviceViewHolder>(
+    ListAdapter<ExpertAdvice, ExpertAdviceRecyclerAdapter.BaseAdviceViewHolder>(
         ExpertAdviceItemDiffCallback()
     ) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpertAdviceViewHolder {
-        return ExpertAdviceViewHolder(
-            LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_expert_advice, parent, false)
-        )
+    companion object {
+        private const val TYPE_MEDAL = 0
+        private const val TYPE_RATE = 1
+        private const val TYPE_STAR = 2
     }
 
-    override fun onBindViewHolder(holder: ExpertAdviceViewHolder, position: Int) =
-        holder.bind(getItem(position))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseAdviceViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+
+        return when (viewType) {
+            TYPE_MEDAL -> MedalViewHolder(
+                inflater.inflate(
+                    R.layout.item_expert_advice_medal,
+                    parent,
+                    false
+                )
+            )
+            TYPE_RATE -> RateViewHolder(
+                inflater.inflate(
+                    R.layout.item_expert_advice_rate,
+                    parent,
+                    false
+                )
+            )
+            TYPE_STAR -> StarViewHolder(
+                inflater.inflate(
+                    R.layout.item_expert_advice_star,
+                    parent,
+                    false
+                )
+            )
+            else -> throw IllegalStateException("Unknown view type")
+        }
+    }
+
+    override fun onBindViewHolder(holder: BaseAdviceViewHolder, position: Int) {
+        when (holder) {
+            is MedalViewHolder -> holder.bind(currentList[position])
+            is RateViewHolder -> holder.bind(currentList[position])
+            is StarViewHolder -> holder.bind(currentList[position])
+        }
+    }
 
     override fun getItemId(position: Int): Long {
         return currentList[position].idExpertAdvice
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        val advice = currentList[position]
+
+        return when {
+            advice.isMedal.toBoolean() -> TYPE_MEDAL
+            advice.isRate20.toBoolean() or advice.isRate100.toBoolean() -> TYPE_RATE
+            advice.isStar.toBoolean() -> TYPE_STAR
+            else -> throw IllegalArgumentException("Unknown view type")
+        }
     }
 
     class ExpertAdviceItemDiffCallback : DiffUtil.ItemCallback<ExpertAdvice>() {
@@ -41,44 +85,41 @@ class ExpertAdviceRecyclerAdapter(val listener: (ExpertAdvice) -> Unit) :
             oldItem == newItem
     }
 
-    inner class ExpertAdviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = ItemExpertAdviceBinding.bind(itemView)
+    class MedalViewHolder(itemView: View) : BaseAdviceViewHolder(itemView) {
+        private val bindingMedal = ItemExpertAdviceMedalBinding.bind(itemView)
+        private val medalColors = listOf(
+            ContextCompat.getColor(itemView.context, R.color.medal_bronze),
+            ContextCompat.getColor(itemView.context, R.color.medal_silver),
+            ContextCompat.getColor(itemView.context, R.color.medal_gold)
+        )
 
-        fun bind(advice: ExpertAdvice) {
-            with(binding) {
-                contestName.text = advice.contestName
-
-                when {
-                    advice.isMedal.toBoolean() -> {
-                        medalOrStar.setVisible(true)
-                        rate.setVisible(false)
-                        starsNumber.setVisible(false)
-
-                        val color = when(advice.value) {
-                            0 -> R.color.medal_bronze
-                            1 -> R.color.medal_silver
-                            else -> R.color.medal_gold
-                        }
-
-                        medalOrStar.setColorFilter(color)
-                    }
-
-                    advice.isRate20.toBoolean() or advice.isRate100.toBoolean() -> {
-                        rate.setVisible(true)
-                        medalOrStar.setVisible(false)
-                        starsNumber.setVisible(false)
-                        rate.text =
-                            "${advice.value} / ${if (advice.isRate20.toBoolean()) 20 else 100}"
-                    }
-
-                    advice.isStar.toBoolean() -> {
-                        medalOrStar.setVisible(true)
-                        starsNumber.setVisible(true)
-                        rate.setVisible(false)
-                        starsNumber.text = advice.value.toString()
-                    }
-                }
-            }
+        override fun bind(advice: ExpertAdvice) = with(bindingMedal) {
+            contestName.text = advice.contestName
+            medal.setColorFilter(medalColors[advice.value])
         }
+    }
+
+    class RateViewHolder(itemView: View) : BaseAdviceViewHolder(itemView) {
+        private val bindingRate = ItemExpertAdviceRateBinding.bind(itemView)
+
+        override fun bind(advice: ExpertAdvice) = with(bindingRate) {
+            contestName.text = advice.contestName
+            val total = if (advice.isRate20.toBoolean()) 20 else 100
+            rate.text = itemView.context.getString(R.string.item_rate, advice.value, total)
+        }
+    }
+
+    class StarViewHolder(itemView: View) : BaseAdviceViewHolder(itemView) {
+        private val bindingStar = ItemExpertAdviceStarBinding.bind(itemView)
+
+        override fun bind(advice: ExpertAdvice) = with(bindingStar) {
+            contestName.text = advice.contestName
+            star.setImageResource(R.drawable.ic_star)
+            starCount.text = (advice.value + 1).toString()
+        }
+    }
+
+    abstract class BaseAdviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        abstract fun bind(advice: ExpertAdvice)
     }
 }
