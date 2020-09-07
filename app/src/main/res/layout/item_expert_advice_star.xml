@@ -33,15 +33,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:tint="@color/medal_silver" />
+            app:tint="@color/medal_gold" />
 
         <TextView
             android:id="@+id/starCount"
             style="@style/TextAppearance.MaterialComponents.Headline1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="22sp"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/star"
             app:layout_constraintEnd_toEndOf="@id/star"
             app:layout_constraintStart_toStartOf="@id/star"

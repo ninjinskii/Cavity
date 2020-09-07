@@ -114,7 +114,6 @@ class ExpertAdviceRecyclerAdapter(val listener: (ExpertAdvice) -> Unit) :
 
         override fun bind(advice: ExpertAdvice) = with(bindingStar) {
             contestName.text = advice.contestName
-            star.setImageResource(R.drawable.ic_star)
             starCount.text = (advice.value + 1).toString()
         }
     }
