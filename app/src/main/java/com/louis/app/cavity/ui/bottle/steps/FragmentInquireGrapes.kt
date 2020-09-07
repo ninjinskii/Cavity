@@ -10,21 +10,34 @@ import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var binding: FragmentInquireGrapesBinding
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
+    private var totalGrapePercentage: Int? = null
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentInquireGrapesBinding.bind(view)
 
+        registerStepperWatcher()
         initRecyclerView()
         observe()
         setListener()
+    }
+
+    private fun registerStepperWatcher() {
+        val stepperFragment =
+            parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
+
+        stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
+            override fun onRequestChangePage(): Boolean {
+                return validateGrapes()
+            }
+        })
+
     }
 
     private fun initRecyclerView() {
@@ -40,6 +53,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         }
 
         addBottleViewModel.getAllGrapes().observe(viewLifecycleOwner) {
+            totalGrapePercentage = it.map { grape -> grape.percentage }.sum()
             grapeAdapter.submitList(it)
         }
     }
@@ -63,6 +77,15 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
             val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
             addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, 0))
+        }
+    }
+
+    private fun validateGrapes(): Boolean {
+        return if (totalGrapePercentage == grapeAdapter.maxGrapeQty) {
+            true
+        } else {
+            binding.coordinator.showSnackbar(R.string.grape_not_reaching_100)
+            false
         }
     }
 }
