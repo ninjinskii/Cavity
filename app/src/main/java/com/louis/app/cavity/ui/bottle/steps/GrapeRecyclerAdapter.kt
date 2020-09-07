@@ -48,7 +48,7 @@ class GrapeRecyclerAdapter(
         fun bind(grape: Grape) {
             with(binding) {
                 grapeName.text = grape.name
-                percent.text = getFormattedPercentage(grape.percentage)
+                percent.text = itemView.context.getString(R.string.percentage, grape.percentage)
                 slider.value = grape.percentage.toFloat()
 
                 slider.clearOnSliderTouchListeners()
@@ -65,10 +65,8 @@ class GrapeRecyclerAdapter(
 
                         grape.percentage = slider.value.toInt()
 
-                        //val pos = currentList.indexOfFirst { it.name == grape.name }
-                        //currentList[pos].percentage = slider.value.toInt()
-
-                        binding.percent.text = getFormattedPercentage(slider.value)
+                        binding.percent.text =
+                            itemView.context.getString(R.string.percentage, slider.value.toInt())
                         onValueChangeListener(grape)
                     }
                 })
@@ -83,18 +81,5 @@ class GrapeRecyclerAdapter(
             .filter { it.name != modifiedGrapeName }
             .map { it.percentage }
             .sum()
-    }
-
-    companion object {
-        fun getFormattedPercentage(value: Number): String {
-            val numeric = when (value) {
-                is Float -> value.toInt().toString()
-                is Int -> value.toString()
-                else ->
-                    throw UnsupportedOperationException("Cannot set value other than Int or Float")
-            }
-
-            return String.format(numeric, R.string.percentage)
-        }
     }
 }

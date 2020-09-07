@@ -16,9 +16,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
-            app:layout_constraintBottom_toBottomOf="@id/medal"
+            app:layout_constraintBottom_toBottomOf="@id/medalOrStar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/medal"
+            app:layout_constraintTop_toTopOf="@id/medalOrStar"
             tools:text="Concours Parker" />
 
         <TextView
@@ -28,12 +28,12 @@
             android:layout_height="wrap_content"
             android:textSize="24sp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/medal"
-            app:layout_constraintEnd_toStartOf="@id/medal"
-            app:layout_constraintTop_toTopOf="@id/medal" />
+            app:layout_constraintBottom_toBottomOf="@id/medalOrStar"
+            app:layout_constraintEnd_toStartOf="@id/medalOrStar"
+            app:layout_constraintTop_toTopOf="@id/medalOrStar" />
 
         <ImageView
-            android:id="@+id/medal"
+            android:id="@+id/medalOrStar"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
             android:layout_margin="@dimen/small_margin"
@@ -43,6 +43,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/medal_gold" />
+
+        <TextView
+            android:id="@+id/rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -52,7 +52,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
         binding.buttonAddExpertAdvice.setOnClickListener {
             val constestName = binding.contestName.text.toString().trim()
             val rate = binding.rate.text.toString().trim()
-            val advice = makeExpertAdvice(constestName, rate.toInt())
+            val advice = makeExpertAdvice(constestName, rate)
 
             addBottleViewModel.addExpertAdvice(advice)
         }
@@ -82,7 +82,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
         }
     }
 
-    private fun makeExpertAdvice(contestName: String, rate: Int): ExpertAdvice {
+    private fun makeExpertAdvice(contestName: String, rate: String): ExpertAdvice {
         with(binding) {
             return when (rbGroupType.checkedRadioButtonId) {
                 R.id.rbMedal -> {
@@ -100,7 +100,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
                     0,
                     0,
                     1,
-                    rate,
+                    rate.toInt(),
                     0
                 )
                 R.id.rbRate20 -> ExpertAdvice(
@@ -110,7 +110,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
                     0,
                     1,
                     0,
-                    rate,
+                    rate.toInt(),
                     0
                 )
                 else -> {

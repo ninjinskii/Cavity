@@ -73,7 +73,7 @@
     <string name="count">Quantité</string>
     <string name="grapes">Cépages</string>
     <string name="grape_name">Nom du cépage</string>
-    <string name="percentage">%i \%</string>
+    <string name="percentage">%1$d %%</string>
     <string name="buying">Achat</string>
     <string name="price">Prix</string>
     <string name="currency">Monnaie</string>
