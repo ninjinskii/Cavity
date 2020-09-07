@@ -8,20 +8,16 @@ import com.louis.app.cavity.util.L
 
 class StepperViewModel(app: Application) : AndroidViewModel(app) {
     private val finalStep = 3
-    private var lastValidStep = 0
 
-    private val _step = MutableLiveData(0 to false)
-    val step: LiveData<Pair<Int, Boolean>>
+    private val _step = MutableLiveData(0)
+    val step: LiveData<Int>
         get() = _step
 
     fun goToNextStep(): Boolean {
-        val currentStep = _step.value?.first ?: 0
+        val currentStep = _step.value ?: 0
+
         return if (currentStep + 1 <= finalStep) {
-            val wasLookingBehind = currentStep < lastValidStep
-            _step.postValue(currentStep + 1 to wasLookingBehind)
-
-            if (!wasLookingBehind) lastValidStep = currentStep + 1
-
+            _step.postValue(currentStep + 1)
             false
         } else {
             true
@@ -29,19 +25,16 @@ class StepperViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun goToPreviousStep() {
-        val currentStep = _step.value?.first ?: 0
-        if (currentStep > 0) _step.postValue(currentStep - 1 to true)
+        val currentStep = _step.value ?: 0
+        if (currentStep > 0) _step.postValue(currentStep - 1)
     }
 
-    fun goToStep(step: Int) {
-        val isLookingBehind = lastValidStep > step
-
-        if (step in 0..lastValidStep) _step.postValue(step to isLookingBehind)
-        else _step.postValue(step - 1 to isLookingBehind)
+    // Called when the user swipe to the next page and StepperWatcher allows him to do so
+    fun reachedPage(index: Int) {
+        _step.value = index
     }
 
     fun reset() {
-        lastValidStep = 0
-        _step.postValue(0 to false)
+        _step.postValue(0)
     }
 }
