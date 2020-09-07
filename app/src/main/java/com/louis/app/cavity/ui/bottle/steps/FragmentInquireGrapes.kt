@@ -10,6 +10,7 @@ import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
