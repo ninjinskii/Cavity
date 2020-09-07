@@ -83,8 +83,8 @@
     <string name="contest_name">Nom du concours</string>
     <string name="add_expert_advice">Ajouter un avis</string>
     <string name="medal">Médaille</string>
-    <string name="rate100">Note sur 100</string>
-    <string name="rate20">Note sur 20</string>
+    <string name="rate100">100</string>
+    <string name="rate20">20</string>
     <string name="star">Étoiles</string>
     <string name="star1">1 étoile</string>
     <string name="star2">2 étoiles</string>

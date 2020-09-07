@@ -25,7 +25,7 @@
             android:id="@+id/contestNameLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
+            android:layout_margin="@dimen/medium_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/expertAdviceTitle"
@@ -51,109 +51,116 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/contestNameLayout" />
 
-        <RadioGroup
+        <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/rbGroupType"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
-            app:layout_constraintEnd_toStartOf="@id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider">
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-            <RadioButton
+            <Button
                 android:id="@+id/rbMedal"
-                android:layout_width="match_parent"
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/medal" />
+                app:icon="@drawable/ic_grade" />
 
-            <RadioButton
+            <Button
                 android:id="@+id/rbRate100"
-                android:layout_width="match_parent"
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rate100" />
 
-            <RadioButton
+            <Button
                 android:id="@+id/rbRate20"
-                android:layout_width="match_parent"
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rate20" />
 
-            <RadioButton
+            <Button
                 android:id="@+id/rbStar"
-                android:layout_width="match_parent"
+                style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/star" />
+                app:icon="@drawable/ic_star" />
 
-        </RadioGroup>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
-
-        <RadioGroup
+        <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/rbGroupMedal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/rbGroupType"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guideline"
-            app:layout_constraintTop_toTopOf="@+id/rbGroupType">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rbGroupType"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-            <RadioButton
+            <Button
                 android:id="@+id/rbBronze"
-                android:layout_width="match_parent"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bronze" />
 
-            <RadioButton
+            <Button
                 android:id="@+id/rbSilver"
-                android:layout_width="match_parent"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/silver" />
 
-            <RadioButton
+            <Button
                 android:id="@+id/rbGold"
-                android:layout_width="match_parent"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/gold" />
 
-        </RadioGroup>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <RadioGroup
+        <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/rbGroupStars"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@id/rbGroupType"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guideline"
-            app:layout_constraintTop_toTopOf="@+id/rbGroupType">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rbGroupType"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-            <RadioButton
+            <Button
                 android:id="@+id/rbStar1"
-                android:layout_width="match_parent"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/star1" />
 
-            <RadioButton
+            <Button
                 android:id="@+id/rbStar2"
-                android:layout_width="match_parent"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/star2" />
 
-            <RadioButton
+            <Button
                 android:id="@+id/rbStar3"
-                android:layout_width="match_parent"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/star3" />
 
-        </RadioGroup>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/rateLayout"
@@ -180,10 +187,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
-            app:layout_constraintTop_toBottomOf="@+id/rbGroupType"
-            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/add_expert_advice"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="@string/add_expert_advice"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rbGroupType" />
 
         <!-- Width match parent to prevent weird recycleview behavior -->
         <androidx.recyclerview.widget.RecyclerView

@@ -9,6 +9,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireExpertAdviceBinding
 import com.louis.app.cavity.model.ExpertAdvice
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
+import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 
@@ -20,9 +21,19 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentInquireExpertAdviceBinding.bind(view)
 
+        registerStepperWatcher()
         initRecyclerView()
         observe()
         setListeners()
+    }
+
+    private fun registerStepperWatcher() {
+        val stepperFragment =
+            parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
+
+        stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
+            override fun onRequestChangePage() = true
+        })
     }
 
     private fun initRecyclerView() {
@@ -57,12 +68,12 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             addBottleViewModel.addExpertAdvice(advice)
         }
 
-        binding.rbGroupType.setOnCheckedChangeListener { _, _ -> revealViews() }
+        binding.rbGroupType.addOnButtonCheckedListener { _, _, _ -> revealViews() }
     }
 
     private fun revealViews() {
         with(binding) {
-            when (rbGroupType.checkedRadioButtonId) {
+            when (rbGroupType.checkedButtonId) {
                 R.id.rbMedal -> {
                     rbGroupMedal.setVisible(true)
                     rbGroupStars.setVisible(false)
@@ -84,11 +95,11 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
 
     private fun makeExpertAdvice(contestName: String, rate: String): ExpertAdvice {
         with(binding) {
-            return when (rbGroupType.checkedRadioButtonId) {
+            return when (val checked = rbGroupType.checkedButtonId) {
                 R.id.rbMedal -> {
-                    val value = when {
-                        rbBronze.isChecked -> 0
-                        rbSilver.isChecked -> 1
+                    val value = when (checked) {
+                        R.id.rbBronze -> 0
+                        R.id.rbSilver -> 1
                         else -> 2
                     }
                     ExpertAdvice(0, contestName, 1, 0, 0, 0, value, 0)
@@ -114,9 +125,9 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
                     0
                 )
                 else -> {
-                    val value = when {
-                        rbStar1.isChecked -> 0
-                        rbStar2.isChecked -> 1
+                    val value = when (rbGroupType.checkedButtonId) {
+                        R.id.rbStar1 -> 0
+                        R.id.rbStar2 -> 1
                         else -> 2
                     }
                     ExpertAdvice(

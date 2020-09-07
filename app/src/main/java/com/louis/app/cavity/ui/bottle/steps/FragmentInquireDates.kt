@@ -28,9 +28,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
-            override fun onRequestChangePage(): Boolean {
-                return validateFields()
-            }
+            override fun onRequestChangePage() = validateFields()
         })
     }
 
