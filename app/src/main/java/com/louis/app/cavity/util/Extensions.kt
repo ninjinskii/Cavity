@@ -17,8 +17,8 @@ fun Int.toggleBoolean() = if (this == 1) 0 else 1
 fun Boolean.toInt() = if (this) 1 else 0
 
 // View related
-fun View.setVisible(isVisible: Boolean) {
-    visibility = if (isVisible) View.VISIBLE else View.GONE
+fun View.setVisible(isVisible: Boolean, invisible: Boolean = false) {
+    visibility = if (isVisible) View.VISIBLE else if(invisible) View.INVISIBLE else View.GONE
 }
 
 fun Context.hideKeyboard() {

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/step1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/stepNumber1"
+            android:layout_width="@dimen/stepper_icon"
+            android:layout_height="@dimen/stepper_icon"
+            android:layout_margin="@dimen/large_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:background="@drawable/step_shape"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/step_1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnBackground" />
+
+        <TextView
+            android:id="@+id/label1"
+            style="?attr/textAppearanceHeadline5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/step_1_text"
+            android:textColor="?attr/colorOnPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/stepNumber1"
+            app:layout_constraintStart_toEndOf="@+id/stepNumber1"
+            app:layout_constraintTop_toTopOf="@id/stepNumber1" />
+
+        <ProgressBar
+            android:id="@+id/prograssBar1"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            app:layout_constraintBottom_toBottomOf="@id/stepNumber1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/label1"
+            app:layout_constraintTop_toTopOf="@id/stepNumber1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/step2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/xsmall_margin"
+            android:progress="100"
+            app:layout_constraintBottom_toBottomOf="@id/stepNumber2"
+            app:layout_constraintEnd_toStartOf="@id/stepNumber2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/stepNumber2" />
+
+        <TextView
+            android:id="@+id/stepNumber2"
+            android:layout_width="@dimen/stepper_icon"
+            android:layout_height="@dimen/stepper_icon"
+            android:layout_margin="@dimen/large_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:background="@drawable/step_shape"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/step_2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnBackground" />
+
+        <TextView
+            android:id="@+id/label2"
+            style="?attr/textAppearanceHeadline5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/step_2_text"
+            android:textColor="?attr/colorOnPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/stepNumber2"
+            app:layout_constraintStart_toEndOf="@+id/stepNumber2"
+            app:layout_constraintTop_toTopOf="@id/stepNumber2" />
+
+        <ProgressBar
+            android:id="@+id/prograssBar2"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            app:layout_constraintBottom_toBottomOf="@id/stepNumber2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/label2"
+            app:layout_constraintTop_toTopOf="@id/stepNumber2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/step3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/xsmall_margin"
+            android:progress="100"
+            app:layout_constraintBottom_toBottomOf="@id/stepNumber3"
+            app:layout_constraintEnd_toStartOf="@id/stepNumber3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/stepNumber3" />
+
+        <TextView
+            android:id="@+id/stepNumber3"
+            android:layout_width="@dimen/stepper_icon"
+            android:layout_height="@dimen/stepper_icon"
+            android:layout_margin="@dimen/large_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:background="@drawable/step_shape"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/step_3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnBackground"
+            tools:text="@string/step_2" />
+
+        <TextView
+            android:id="@+id/label3"
+            style="?attr/textAppearanceHeadline5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/step_3_text"
+            android:textColor="?attr/colorOnPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/stepNumber3"
+            app:layout_constraintStart_toEndOf="@+id/stepNumber3"
+            app:layout_constraintTop_toTopOf="@id/stepNumber3" />
+
+        <ProgressBar
+            android:id="@+id/prograssBar3"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            app:layout_constraintBottom_toBottomOf="@id/stepNumber3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/label3"
+            app:layout_constraintTop_toTopOf="@id/stepNumber3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/step4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/xsmall_margin"
+            android:progress="100"
+            app:layout_constraintBottom_toBottomOf="@id/stepNumber4"
+            app:layout_constraintEnd_toStartOf="@id/stepNumber4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/stepNumber4" />
+
+        <TextView
+            android:id="@+id/stepNumber4"
+            android:layout_width="@dimen/stepper_icon"
+            android:layout_height="@dimen/stepper_icon"
+            android:layout_margin="@dimen/large_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:background="@drawable/step_shape"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/step_4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnBackground" />
+
+        <TextView
+            android:id="@+id/label4"
+            style="?attr/textAppearanceHeadline5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/step_4_text"
+            android:textColor="?attr/colorOnPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/stepNumber4"
+            app:layout_constraintStart_toEndOf="@+id/stepNumber4"
+            app:layout_constraintTop_toTopOf="@id/stepNumber4" />
+
+        <ProgressBar
+            android:id="@+id/prograssBar4"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            app:layout_constraintBottom_toBottomOf="@id/stepNumber4"
+            app:layout_constraintEnd_toStartOf="@id/endIcon"
+            app:layout_constraintStart_toEndOf="@+id/label4"
+            app:layout_constraintTop_toTopOf="@id/stepNumber4" />
+
+        <ImageView
+            android:id="@+id/endIcon"
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_margin="@dimen/medium_margin"
+            android:contentDescription="@string/submit"
+            android:src="@drawable/ic_check"
+            app:layout_constraintBottom_toBottomOf="@id/stepNumber4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/stepNumber4" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

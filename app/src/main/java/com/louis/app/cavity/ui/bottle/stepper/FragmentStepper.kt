@@ -1,63 +1,108 @@
 package com.louis.app.cavity.ui.bottle.stepper
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
+import android.view.ContextThemeWrapper
 import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
-import kotlinx.android.synthetic.main.fragment_stepper.*
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private lateinit var binding: FragmentStepperBinding
-    private lateinit var cursors: List<View>
+    private lateinit var stepStrings: List<String>
+    private lateinit var stepNumbers: List<String>
     private val listeners = mutableListOf<StepperWatcher>()
     private val stepperViewModel: StepperViewModel by activityViewModels()
     private var viewPager: ViewPager2? = null
+    private var currentPagePos = 0
+    private val forwardAnimations by lazy {
+        AnimationUtils.loadAnimation(activity, R.anim.slide_in_right) to
+                AnimationUtils.loadAnimation(activity, R.anim.slide_out_left)
+    }
+    private val backwardAnimations by lazy {
+        AnimationUtils.loadAnimation(activity, R.anim.slide_in_right) to
+                AnimationUtils.loadAnimation(activity, R.anim.slide_out_right)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentStepperBinding.bind(view)
 
-        with(binding) {
-            cursors = listOf(cursor1, cursor2, cursor3, cursor4)
-        }
+        stepStrings = listOf(
+            resources.getString(R.string.step_1_text),
+            resources.getString(R.string.step_2_text),
+            resources.getString(R.string.step_3_text),
+            resources.getString(R.string.step_4_text)
+        )
 
-        setListeners()
-        observe()
+        stepNumbers = listOf(
+            resources.getString(R.string.step_1),
+            resources.getString(R.string.step_2),
+            resources.getString(R.string.step_3),
+            resources.getString(R.string.step_4)
+        )
+
+        initTextSwitcher()
     }
 
-    private fun setListeners() {
-        with(binding) {
-            buttonNext.setOnClickListener {
-                if (allowedToChangePage(getCurrentStep() + 1)) {
-                    //handlingClickButton = true
+    private fun initTextSwitcher() {
+        binding.switcher.setFactory {
+            TextView(ContextThemeWrapper(activity, R.style.AppTheme), null, 0).apply {
+                setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline5)
+                setTextColor(resources.getColor(R.color.colorSecondary, context.theme))
+            }
+        }
+    }
 
-                    if (stepperViewModel.goToNextStep()) {
-                        // Stepper meets end, callback to parent fragment
-                    }
+    private fun animateForward(newStep: Int) {
+        binding.switcher.apply {
+            inAnimation = forwardAnimations.first
+            outAnimation = forwardAnimations.second
+        }
+
+        lifecycleScope.launch(Main) {
+            with(binding) {
+                prograssBarMain.setProgress(100, true)
+                delay(200)
+                progressBarStart.setProgress(0, true)
+                switcher.setText(stepStrings[newStep])
+                delay(200)
+                prograssBarMain.setProgress(0, true)
+                progressBarStart.apply {
+                    setVisible(true)
+                    setProgress(100, true)
                 }
             }
+        }
+    }
 
-            buttonPrevious.setOnClickListener {
-                stepperViewModel.goToPreviousStep()
+    private fun animateBackward(newStep: Int) {
+        binding.switcher.apply {
+            inAnimation = backwardAnimations.first
+            outAnimation = backwardAnimations.second
+        }
+
+        lifecycleScope.launch(Main) {
+            with(binding) {
+                progressBarStart.setProgress(0, true)
+                delay(200)
+                switcher.setText(stepStrings[newStep])
+                delay(200)
+                progressBarStart.setProgress(100, true)
+                if (newStep == 0) progressBarStart.setVisible(false)
             }
         }
-    }
-
-    private fun observe() {
-        stepperViewModel.step.observe(viewLifecycleOwner) {
-            viewPager?.let { viewPager -> viewPager.currentItem = it }
-            animateStepTransition(it)
-        }
-    }
-
-    private fun animateStepTransition(step: Int) {
-        cursors.forEachIndexed { index, view -> view.setVisible(index == step) }
-        progressBar.setProgress(33 * step, true)
     }
 
     fun setupWithViewPager(viewPager: ViewPager2) {
@@ -66,23 +111,25 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 when {
-                    position < getCurrentStep() -> stepperViewModel.goToPreviousStep()
-                    allowedToChangePage(position) -> {
-                        stepperViewModel.reachedPage(position)
-                        animateStepTransition(position)
+                    position < currentPagePos -> {
+                        animateBackward(position)
+                        currentPagePos = position
                     }
-                    else -> viewPager.currentItem = getCurrentStep()
+                    allowedToChangePage(position) && position > currentPagePos -> {
+                        animateForward(position)
+                        currentPagePos = position
+                    }
+                    else -> viewPager.currentItem = currentPagePos
                 }
             }
         })
     }
 
     private fun allowedToChangePage(index: Int): Boolean {
-        val currentStep = getCurrentStep()
 
         return try {
-            if (index <= currentStep) true
-            else listeners[currentStep].onRequestChangePage()
+            if (index <= currentPagePos) true
+            else listeners[currentPagePos].onRequestChangePage()
         } catch (e: IndexOutOfBoundsException) {
             throw IllegalStateException(
                 "One or multiple fragments has not been registered to the stepper"
@@ -96,8 +143,6 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         listeners.clear()
         stepperViewModel.reset()
     }
-
-    private fun getCurrentStep() = stepperViewModel.step.value ?: 0
 
     interface StepperWatcher {
         fun onRequestChangePage(): Boolean

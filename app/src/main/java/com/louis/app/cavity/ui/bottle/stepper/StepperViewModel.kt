@@ -30,9 +30,9 @@ class StepperViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     // Called when the user swipe to the next page and StepperWatcher allows him to do so
-    fun reachedPage(index: Int) {
-        _step.value = index
-    }
+//    fun reachedPage(index: Int) {
+//        _step.value = index
+//    }
 
     fun reset() {
         _step.postValue(0)
