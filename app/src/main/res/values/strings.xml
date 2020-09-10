@@ -17,7 +17,7 @@
     <string name="base_error">Une erreur est survenue.</string>
     <string name="required_field">Champ requis.</string>
     <string name="empty_required_field">Certains champs n\'ont pas étés remplis.</string>
-    <string name="zero_bottle">Veuillez indiquer un chiffre supérieur à 0.</string>
+    <string name="zero_bottle">Indiquez un nombre de bouteille.</string>
     <string name="empty_contest_name">Indiquez un nom de concours</string>
     <string name="empty_grape_name">Indiquez un nom de cépage.</string>
     <string name="grape_already_exist">Ce cépage est déjà dans la liste.</string>

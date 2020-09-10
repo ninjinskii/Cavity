@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.bottle
 
 import android.app.Application
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -84,21 +85,35 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     fun addBottle(
         vintage: Int,
         apogee: Int,
-        count: Int,
-        price: Int,
+        count: String,
+        price: String,
         currency: String,
         location: String,
         date: String
-    ) {
+    ): Boolean {
+        var formattedPrice = price
+
+        if (count.isEmpty() || !count.isDigitsOnly() || count.toInt() <= 0) {
+            _userFeedback.postOnce(R.string.zero_bottle)
+            return false
+        }
+
+        if (formattedPrice.isEmpty()) formattedPrice = "0"
+
+        if (!price.isDigitsOnly()) {
+            _userFeedback.postOnce(R.string.incorrect_price_format)
+            return false
+        }
+
         val bottle = Bottle(
             idBottle = bottleId ?: 0,
             idWine = 0,
             vintage,
             apogee,
             isFavorite = 0,
-            count,
+            count = count.toInt(),
             comment = "",
-            price,
+            price = formattedPrice.toInt(),
             currency,
             otherInfo = "",
             location,
@@ -110,6 +125,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             bottleId = repository.insertBottle(bottle)
         }
+
+        return true
     }
 
     // One bottle is added when user has complete step 1, then we get the id given by room to their bottle

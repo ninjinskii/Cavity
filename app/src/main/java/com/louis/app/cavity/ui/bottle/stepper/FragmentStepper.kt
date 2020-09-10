@@ -1,19 +1,19 @@
 package com.louis.app.cavity.ui.bottle.stepper
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -56,7 +56,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     }
 
     private fun initTextSwitcher() {
-        with (binding) {
+        with(binding) {
             switcher.setFactory {
                 TextView(ContextThemeWrapper(activity, R.style.AppTheme), null, 0).apply {
                     setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline5)
@@ -89,7 +89,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
                     setProgress(100, true)
                 }
 
-                if(newStep == 3) endIcon.setVisible(true)
+                if (newStep == 3) endIcon.setVisible(true)
                 else endIcon.setVisible(false)
             }
         }
@@ -115,6 +115,17 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         }
     }
 
+    private fun allowedToChangePage(index: Int): Boolean {
+        return try {
+            if (index <= currentPagePos) true
+            else listeners[currentPagePos].onRequestChangePage()
+        } catch (e: IndexOutOfBoundsException) {
+            throw IllegalStateException(
+                "One or multiple fragments has not been registered to the stepper"
+            )
+        }
+    }
+
     fun setupWithViewPager(viewPager: ViewPager2) {
         this.viewPager = viewPager
 
@@ -135,19 +146,11 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         })
     }
 
-    private fun allowedToChangePage(index: Int): Boolean {
-
-        return try {
-            if (index <= currentPagePos) true
-            else listeners[currentPagePos].onRequestChangePage()
-        } catch (e: IndexOutOfBoundsException) {
-            throw IllegalStateException(
-                "One or multiple fragments has not been registered to the stepper"
-            )
-        }
-    }
-
     fun addListener(stepperWatcher: StepperWatcher) = listeners.add(stepperWatcher)
+
+    fun requireNextPage() {
+        if (allowedToChangePage(currentPagePos + 1)) viewPager?.currentItem = currentPagePos + 1
+    }
 
     interface StepperWatcher {
         fun onRequestChangePage(): Boolean
