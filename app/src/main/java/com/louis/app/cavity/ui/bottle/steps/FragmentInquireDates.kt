@@ -1,14 +1,17 @@
 package com.louis.app.cavity.ui.bottle.steps
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 import java.util.*
 
@@ -60,6 +63,25 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private fun setListener() {
         binding.buttonNext.setOnClickListener {
             stepperFragment.requireNextPage()
+        }
+
+        binding.buyDate.apply {
+            inputType = InputType.TYPE_NULL
+            val datePicker = MaterialDatePicker.Builder
+                .datePicker()
+                .setTitleText(R.string.buying_date)
+                .build()
+
+            datePicker.addOnPositiveButtonClickListener {
+                L.v(datePicker.headerText)
+                setText(datePicker.headerText.toString())
+            }
+
+            setOnClickListener { datePicker.show(childFragmentManager, "CALENDAR") }
+
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) datePicker.show(childFragmentManager, "CALENDAR")
+            }
         }
     }
 
