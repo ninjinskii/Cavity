@@ -19,7 +19,6 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
         binding = FragmentAddBottleBinding.bind(view)
 
         val stepperFragment = childFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
-        stepperFragment.resetState()
 
         binding.viewPager
             .apply { adapter = AddBottlesPagerAdapter(this@FragmentAddBottle) }

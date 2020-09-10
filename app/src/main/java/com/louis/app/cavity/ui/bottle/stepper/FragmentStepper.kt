@@ -23,7 +23,6 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private lateinit var stepStrings: List<String>
     private lateinit var stepNumbers: List<String>
     private val listeners = mutableListOf<StepperWatcher>()
-    private val stepperViewModel: StepperViewModel by activityViewModels()
     private var viewPager: ViewPager2? = null
     private var currentPagePos = 0
     private val forwardAnimations by lazy {
@@ -57,11 +56,16 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     }
 
     private fun initTextSwitcher() {
-        binding.switcher.setFactory {
-            TextView(ContextThemeWrapper(activity, R.style.AppTheme), null, 0).apply {
-                setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline5)
-                setTextColor(resources.getColor(R.color.colorSecondary, context.theme))
+        with (binding) {
+            switcher.setFactory {
+                TextView(ContextThemeWrapper(activity, R.style.AppTheme), null, 0).apply {
+                    setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline5)
+                    setTextColor(resources.getColor(R.color.colorSecondary, context.theme))
+                }
             }
+
+            switcher.setText(stepStrings[0])
+            stepNumber.text = stepNumbers[0]
         }
     }
 
@@ -78,11 +82,15 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
                 progressBarStart.setProgress(0, true)
                 switcher.setText(stepStrings[newStep])
                 delay(200)
+                stepNumber.text = (newStep + 1).toString()
                 prograssBarMain.setProgress(0, true)
                 progressBarStart.apply {
                     setVisible(true)
                     setProgress(100, true)
                 }
+
+                if(newStep == 3) endIcon.setVisible(true)
+                else endIcon.setVisible(false)
             }
         }
     }
@@ -95,10 +103,12 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
 
         lifecycleScope.launch(Main) {
             with(binding) {
+                endIcon.setVisible(false)
                 progressBarStart.setProgress(0, true)
                 delay(200)
                 switcher.setText(stepStrings[newStep])
                 delay(200)
+                stepNumber.text = (newStep + 1).toString()
                 progressBarStart.setProgress(100, true)
                 if (newStep == 0) progressBarStart.setVisible(false)
             }
@@ -138,11 +148,6 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     }
 
     fun addListener(stepperWatcher: StepperWatcher) = listeners.add(stepperWatcher)
-
-    fun resetState() {
-        listeners.clear()
-        stepperViewModel.reset()
-    }
 
     interface StepperWatcher {
         fun onRequestChangePage(): Boolean
