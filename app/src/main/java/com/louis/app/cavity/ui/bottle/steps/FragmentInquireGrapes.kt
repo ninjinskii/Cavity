@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.bottle.steps
 
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +26,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         registerStepperWatcher()
         initRecyclerView()
         observe()
-        setListener()
+        setListeners()
     }
 
     private fun registerStepperWatcher() {
@@ -64,34 +65,52 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         }
     }
 
-    private fun setListener() {
+    private fun setListeners() {
+        binding.grapeName.setOnEditorActionListener { textView, i, _ ->
+            val query = textView.text.toString()
+
+            if (i == EditorInfo.IME_ACTION_DONE && query.isNotEmpty()) {
+                val grapeName = binding.grapeName.text.toString()
+                addGrape(grapeName)
+                textView.text = ""
+            }
+
+            true
+        }
+
         binding.buttonAddGrape.setOnClickListener {
             val grapeName = binding.grapeName.text.toString()
-
-            if (grapeName.isEmpty()) {
-                binding.coordinator.showSnackbar(R.string.empty_grape_name)
-                return@setOnClickListener
-            }
-
-            if (grapeName == resources.getString(R.string.grape_other)) {
-                binding.coordinator.showSnackbar(R.string.reserved_name)
-                return@setOnClickListener
-            }
-
-            val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
-            addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, 0))
+            addGrape(grapeName)
+            binding.grapeName.setText("")
         }
     }
 
-    private fun validateGrapes(): Boolean {
-        totalGrapePercentage?.let {
-            val otherQty = 100 - it
-            val otherName = resources.getString(R.string.grape_other)
-
-            if (otherQty > 0) addBottleViewModel.addGrape(Grape(0, otherName, otherQty, 0))
-            else if (otherQty < 0) return false
+    private fun addGrape(grapeName: String) {
+        if (grapeName.isEmpty()) {
+            binding.coordinator.showSnackbar(R.string.empty_grape_name)
+            return
         }
 
-        return true
+        if (grapeName == resources.getString(R.string.grape_other)) {
+            binding.coordinator.showSnackbar(R.string.reserved_name)
+            return
+        }
+
+        if (grapeAdapter.currentList.map { it.name }.any { it == grapeName }) {
+            binding.coordinator.showSnackbar(R.string.grape_already_exist)
+            return
+        }
+
+        val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
+        addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, 0))
+    }
+
+    private fun validateGrapes(): Boolean {
+        return if (grapeAdapter.currentList.any { it.percentage == 0 }) {
+            binding.coordinator.showSnackbar(R.string.empty_grape_percent)
+            false
+        } else {
+            true
+        }
     }
 }

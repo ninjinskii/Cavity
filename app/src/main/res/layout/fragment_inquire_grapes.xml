@@ -49,6 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/grape_name"
+                android:imeOptions="actionDone"
                 android:inputType="textCapSentences" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -56,14 +57,14 @@
         <!-- Match parent width required to get correct behavior when changing sliders value /!\ -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            tools:listitem="@layout/item_grape"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/grapeNameLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/grapeNameLayout"
+            tools:listitem="@layout/item_grape" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

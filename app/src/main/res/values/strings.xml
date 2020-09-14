@@ -20,6 +20,7 @@
     <string name="zero_bottle">Indiquez un nombre de bouteille.</string>
     <string name="empty_contest_name">Indiquez un nom de concours</string>
     <string name="empty_grape_name">Indiquez un nom de cépage.</string>
+    <string name="empty_grape_percent">Un cépage vaut 0%.</string>
     <string name="grape_already_exist">Ce cépage est déjà dans la liste.</string>
     <string name="incorrect_price_format">Le prix ne peut pas contenir de caractères.</string>
     <string name="rate_outside_0_to_20">La note doit être comprise entre 0 et 20.</string>
