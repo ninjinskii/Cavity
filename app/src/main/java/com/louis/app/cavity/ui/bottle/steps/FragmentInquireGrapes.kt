@@ -11,6 +11,8 @@ import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.hideKeyboard
+import com.louis.app.cavity.util.showKeyboard
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
@@ -66,16 +68,18 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     }
 
     private fun setListeners() {
-        binding.grapeName.setOnEditorActionListener { textView, i, _ ->
-            val query = textView.text.toString()
+        binding.grapeName.apply {
+            setOnEditorActionListener { textView, i, _ ->
+                val query = textView.text.toString()
 
-            if (i == EditorInfo.IME_ACTION_DONE && query.isNotEmpty()) {
-                val grapeName = binding.grapeName.text.toString()
-                addGrape(grapeName)
-                textView.text = ""
+                if (i == EditorInfo.IME_ACTION_DONE && query.isNotEmpty()) {
+                    val grapeName = binding.grapeName.text.toString()
+                    addGrape(grapeName)
+                    textView.text = ""
+                }
+
+                true
             }
-
-            true
         }
 
         binding.buttonAddGrape.setOnClickListener {

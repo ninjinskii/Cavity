@@ -12,6 +12,7 @@ import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showSnackbar
 import java.util.*
 
@@ -42,14 +43,16 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private fun initNumberPickers() {
         val year = Calendar.getInstance().get(Calendar.YEAR)
 
-        with(binding) {
-            vintage.minValue = year - 20
-            vintage.maxValue = year
-            vintage.value = year - 5
+        binding.vintage.apply {
+            minValue = year - 20
+            maxValue = year
+            value = year - 5
+        }
 
-            apogee.minValue = year
-            apogee.maxValue = year + 30
-            apogee.value = year + 5
+        binding.apogee.apply {
+            minValue = year
+            maxValue = year + 30
+            value = year + 5
         }
     }
 
@@ -73,7 +76,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 .build()
 
             datePicker.addOnPositiveButtonClickListener {
-                L.v(datePicker.headerText)
                 setText(datePicker.headerText.toString())
             }
 
@@ -82,6 +84,10 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) datePicker.show(childFragmentManager, "CALENDAR")
             }
+        }
+
+        binding.count.setOnFocusChangeListener { view, hasFocus ->
+            if (!hasFocus) view.hideKeyboard()
         }
     }
 

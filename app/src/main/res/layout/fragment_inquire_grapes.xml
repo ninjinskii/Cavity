@@ -48,6 +48,8 @@
                 android:id="@+id/grapeName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:clickable="true"
                 android:hint="@string/grape_name"
                 android:imeOptions="actionDone"
                 android:inputType="textCapSentences" />
@@ -59,22 +61,12 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginVertical="@dimen/medium_margin"
-            app:layout_constraintBottom_toTopOf="@id/buttonNext"
+            android:layout_marginTop="@dimen/medium_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/grapeNameLayout"
             tools:listitem="@layout/item_grape" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonNext"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            android:text="@string/next"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

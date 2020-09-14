@@ -21,6 +21,7 @@ import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -135,11 +136,11 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
 
         binding.buttonAddCounty.setOnClickListener {
-            showDialog(it)
+            showDialog()
         }
 
         binding.buttonAddCountyIfEmpty.setOnClickListener {
-            showDialog(it)
+            showDialog()
         }
 
         binding.buttonBrowsePhoto.setOnClickListener {
@@ -166,10 +167,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
     }
 
-    private fun showDialog(view: View) {
+    private fun showDialog() {
         val dialogBinding = DialogAddCountyBinding.inflate(layoutInflater)
 
-        MaterialAlertDialogBuilder(this.requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.add_county))
             .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
             }
@@ -179,7 +180,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             .setView(dialogBinding.root)
             .show()
 
-        view.postDelayed({ context?.showKeyboard(dialogBinding.countyName) }, 200)
+        lifecycleScope.launch(Main) {
+            delay(300)
+            dialogBinding.countyName.showKeyboard()
+        }
     }
 
     private fun updateFields() {

@@ -21,20 +21,14 @@ fun View.setVisible(isVisible: Boolean, invisible: Boolean = false) {
     visibility = if (isVisible) View.VISIBLE else if(invisible) View.INVISIBLE else View.GONE
 }
 
-fun Context.hideKeyboard() {
-    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.toggleSoftInput(
-        InputMethodManager.SHOW_IMPLICIT,
-        InputMethodManager.HIDE_IMPLICIT_ONLY
-    )
+fun View.hideKeyboard() {
+    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
+        ?.hideSoftInputFromWindow(windowToken, 0)
 }
 
-fun Context.showKeyboard(view: View) {
-    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.toggleSoftInput(
-        InputMethodManager.SHOW_IMPLICIT,
-        InputMethodManager.HIDE_IMPLICIT_ONLY
-    )
+fun View.showKeyboard() {
+    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
+        ?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
 }
 
 fun CoordinatorLayout.showSnackbar(
