@@ -73,20 +73,25 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
                 return@setOnClickListener
             }
 
+            if (grapeName == resources.getString(R.string.grape_other)) {
+                binding.coordinator.showSnackbar(R.string.reserved_name)
+                return@setOnClickListener
+            }
+
             val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
             addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, 0))
         }
     }
 
     private fun validateGrapes(): Boolean {
-        return if (
-            totalGrapePercentage == grapeAdapter.maxGrapeQty ||
-            grapeAdapter.currentList.isEmpty()
-        ) {
-            true
-        } else {
-            binding.coordinator.showSnackbar(R.string.grape_not_reaching_100)
-            false
+        totalGrapePercentage?.let {
+            val otherQty = 100 - it
+            val otherName = resources.getString(R.string.grape_other)
+
+            if (otherQty > 0) addBottleViewModel.addGrape(Grape(0, otherName, otherQty, 0))
+            else if (otherQty < 0) return false
         }
+
+        return true
     }
 }
