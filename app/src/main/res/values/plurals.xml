@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="expert_advices">
+        <item quantity="one">Avis (%d) :</item>
+        <item quantity="other">Avis (%d) :</item>
+    </plurals>
+</resources>

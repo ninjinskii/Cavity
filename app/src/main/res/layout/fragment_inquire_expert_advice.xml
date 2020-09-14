@@ -132,7 +132,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
-            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rbGroupType"
@@ -170,8 +169,8 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/rbGroupType"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/guideline"
-            app:layout_constraintTop_toTopOf="@+id/rbGroupType">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rbGroupType">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/rate"
@@ -186,22 +185,71 @@
             android:id="@+id/buttonAddExpertAdvice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
+            android:layout_margin="@dimen/medium_margin"
             android:text="@string/add_expert_advice"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rbGroupStars" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Bottom Sheet -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:background="?attr/colorSecondary"
+        android:elevation="4dp"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:layout_insetEdge="bottom">
+
+        <ImageView
+            android:layout_width="@dimen/large_margin"
+            android:layout_height="@dimen/large_margin"
+            android:layout_marginStart="@dimen/large_margin"
+            android:contentDescription="@string/expert_advice"
+            android:src="@drawable/ic_grade"
+            app:layout_constraintBottom_toBottomOf="@id/dynamicListHint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dynamicListHint"
+            app:tint="?attr/colorOnPrimary" />
+
+        <TextView
+            android:id="@+id/dynamicListHint"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center"
+            android:textColor="?attr/colorOnPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rbGroupType" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Avis (3) : " />
+
+        <ImageButton
+            android:id="@+id/buttonShowBottomSheet"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/show_bottom_sheet"
+            android:src="@drawable/ic_up"
+            android:tint="?attr/colorOnPrimary"
+            app:layout_constraintBottom_toBottomOf="@id/dynamicListHint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/dynamicListHint"
+            app:layout_constraintTop_toTopOf="@id/dynamicListHint" />
 
         <!-- Width match parent to prevent weird recycleview behavior -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/medium_margin"
+            android:background="?attr/colorSurface"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonAddExpertAdvice"
+            app:layout_constraintTop_toBottomOf="@id/buttonShowBottomSheet"
             tools:listitem="@layout/item_expert_advice_medal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

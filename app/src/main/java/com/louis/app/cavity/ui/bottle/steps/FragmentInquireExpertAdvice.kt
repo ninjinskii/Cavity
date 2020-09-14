@@ -1,10 +1,13 @@
 package com.louis.app.cavity.ui.bottle.steps
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireExpertAdviceBinding
 import com.louis.app.cavity.model.ExpertAdvice
@@ -15,11 +18,15 @@ import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_advice) {
     private lateinit var binding: FragmentInquireExpertAdviceBinding
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentInquireExpertAdviceBinding.bind(view)
+
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
+        bottomSheetBehavior.isHideable = false
 
         registerStepperWatcher()
         initRecyclerView()
@@ -47,6 +54,12 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
         }
 
         addBottleViewModel.getAllExpertAdvices().observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                peekBottomSheet()
+            }
+
+            binding.dynamicListHint.text =
+                resources.getQuantityString(R.plurals.expert_advices, it.size, it.size)
             adviceAdapter.submitList(it)
         }
     }
@@ -69,6 +82,31 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
         }
 
         binding.rbGroupType.addOnButtonCheckedListener { _, _, _ -> revealViews() }
+
+        binding.buttonShowBottomSheet.setOnClickListener {
+            with(bottomSheetBehavior) {
+                if (state == BottomSheetBehavior.STATE_EXPANDED) {
+                    state = BottomSheetBehavior.STATE_COLLAPSED
+                } else if (state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    binding.buttonShowBottomSheet.setImageResource(R.drawable.ic_down)
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    binding.buttonShowBottomSheet.setImageResource(R.drawable.ic_up)
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
+
     }
 
     private fun revealViews() {
@@ -76,13 +114,13 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             when (rbGroupType.checkedButtonId) {
                 R.id.rbMedal -> {
                     rbGroupMedal.setVisible(true)
-                    rbGroupStars.setVisible(false)
+                    rbGroupStars.setVisible(false, invisible = true)
                     rateLayout.setVisible(false)
                 }
                 R.id.rbRate100 -> {
                     rateLayout.setVisible(true)
                     rbGroupMedal.setVisible(false)
-                    rbGroupStars.setVisible(false)
+                    rbGroupStars.setVisible(false, invisible = true)
                 }
                 R.id.rbStar -> {
                     rbGroupStars.setVisible(true)
@@ -92,6 +130,27 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             }
         }
     }
+
+    private fun peekBottomSheet() {
+        val tv = TypedValue()
+
+        context?.let {
+            if (it.theme.resolveAttribute(
+                    android.R.attr.actionBarSize,
+                    tv,
+                    true
+                )
+            ) {
+                bottomSheetBehavior.setPeekHeight(
+                    TypedValue.complexToDimensionPixelSize(
+                        tv.data,
+                        resources.displayMetrics
+                    ), true
+                )
+            }
+        }
+    }
+
 
     private fun makeExpertAdvice(contestName: String, rate: String): ExpertAdvice {
         with(binding) {
