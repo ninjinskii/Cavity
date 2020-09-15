@@ -101,6 +101,7 @@
     <string name="add_pdf">Associer un fichier PDF</string>
     <string name="add_grapes">Renseigner les cépages</string>
     <string name="medal_color">Couleur de la médaille</string>
+    <string name="remove_pdf">Retirer le PDF</string>
 
     <!-- Search -->
     <string name="show_filters">Voir les filtres</string>

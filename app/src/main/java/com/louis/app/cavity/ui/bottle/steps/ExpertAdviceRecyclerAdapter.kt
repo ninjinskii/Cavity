@@ -12,9 +12,10 @@ import com.louis.app.cavity.databinding.ItemExpertAdviceMedalBinding
 import com.louis.app.cavity.databinding.ItemExpertAdviceRateBinding
 import com.louis.app.cavity.databinding.ItemExpertAdviceStarBinding
 import com.louis.app.cavity.model.ExpertAdvice
+import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.util.toBoolean
 
-class ExpertAdviceRecyclerAdapter(val listener: (ExpertAdvice) -> Unit) :
+class ExpertAdviceRecyclerAdapter(val onDeleteListener: (ExpertAdvice) -> Unit) :
     ListAdapter<ExpertAdvice, ExpertAdviceRecyclerAdapter.BaseAdviceViewHolder>(
         ExpertAdviceItemDiffCallback()
     ) {
@@ -85,7 +86,7 @@ class ExpertAdviceRecyclerAdapter(val listener: (ExpertAdvice) -> Unit) :
             oldItem == newItem
     }
 
-    class MedalViewHolder(itemView: View) : BaseAdviceViewHolder(itemView) {
+    inner class MedalViewHolder(itemView: View) : BaseAdviceViewHolder(itemView) {
         private val bindingMedal = ItemExpertAdviceMedalBinding.bind(itemView)
         private val medalColors = listOf(
             ContextCompat.getColor(itemView.context, R.color.medal_bronze),
@@ -96,25 +97,34 @@ class ExpertAdviceRecyclerAdapter(val listener: (ExpertAdvice) -> Unit) :
         override fun bind(advice: ExpertAdvice) = with(bindingMedal) {
             contestName.text = advice.contestName
             medal.setColorFilter(medalColors[advice.value])
+            deleteAdvice.setOnClickListener {
+                onDeleteListener(advice)
+            }
         }
     }
 
-    class RateViewHolder(itemView: View) : BaseAdviceViewHolder(itemView) {
+    inner class RateViewHolder(itemView: View) : BaseAdviceViewHolder(itemView) {
         private val bindingRate = ItemExpertAdviceRateBinding.bind(itemView)
 
         override fun bind(advice: ExpertAdvice) = with(bindingRate) {
             contestName.text = advice.contestName
             val total = if (advice.isRate20.toBoolean()) 20 else 100
             rate.text = itemView.context.getString(R.string.item_rate, advice.value, total)
+            deleteAdvice.setOnClickListener {
+                onDeleteListener(advice)
+            }
         }
     }
 
-    class StarViewHolder(itemView: View) : BaseAdviceViewHolder(itemView) {
+    inner class StarViewHolder(itemView: View) : BaseAdviceViewHolder(itemView) {
         private val bindingStar = ItemExpertAdviceStarBinding.bind(itemView)
 
         override fun bind(advice: ExpertAdvice) = with(bindingStar) {
             contestName.text = advice.contestName
             starCount.text = (advice.value + 1).toString()
+            deleteAdvice.setOnClickListener {
+                onDeleteListener(advice)
+            }
         }
     }
 

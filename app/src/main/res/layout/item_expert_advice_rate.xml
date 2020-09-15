@@ -19,8 +19,8 @@
             android:layout_margin="@dimen/small_margin"
             android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/rate"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/deleteAdvice"
+            app:layout_constraintStart_toEndOf="@id/rate"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Concours Parker" />
 
@@ -31,9 +31,21 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="86 / 100" />
+
+        <ImageButton
+            android:id="@+id/deleteAdvice"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/ic_close"
+            android:tint="?attr/colorError"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

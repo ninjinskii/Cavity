@@ -13,6 +13,7 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.ExpertAdvice
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.IO
@@ -82,6 +83,20 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllExpertAdvices() = repository.getAllExpertAdvices()
 
+    fun validateBottle(count: String, price: String): Boolean {
+        if (count.isEmpty() || !count.isDigitsOnly() || count.toInt() <= 0) {
+            _userFeedback.postOnce(R.string.zero_bottle)
+            return false
+        }
+
+        if (!price.isDigitsOnly()) {
+            _userFeedback.postOnce(R.string.incorrect_price_format)
+            return false
+        }
+
+        return true
+    }
+
     fun addBottle(
         vintage: Int,
         apogee: Int,
@@ -90,21 +105,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         currency: String,
         location: String,
         date: String
-    ): Boolean {
-        var formattedPrice = price
-
-        if (count.isEmpty() || !count.isDigitsOnly() || count.toInt() <= 0) {
-            _userFeedback.postOnce(R.string.zero_bottle)
-            return false
-        }
-
-        if (formattedPrice.isEmpty()) formattedPrice = "0"
-
-        if (!price.isDigitsOnly()) {
-            _userFeedback.postOnce(R.string.incorrect_price_format)
-            return false
-        }
-
+    ) {
+        val formattedPrice = if (price.isEmpty()) "-1" else price
         val bottle = Bottle(
             idBottle = bottleId ?: 0,
             idWine = 0,
@@ -125,8 +127,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             bottleId = repository.insertBottle(bottle)
         }
-
-        return true
     }
 
     // One bottle is added when user has complete step 1, then we get the id given by room to their bottle

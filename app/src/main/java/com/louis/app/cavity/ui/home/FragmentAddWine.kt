@@ -28,12 +28,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     private lateinit var binding: FragmentAddWineBinding
     private val homeViewModel: HomeViewModel by activityViewModels()
     private var wineImagePath: String? = null
-    private var bottlePdfPath: String? = null
     private var editMode: Boolean = false
 
     companion object {
         const val PICK_IMAGE_RESULT_CODE = 1
-        const val PICK_PDF_RESULT_CODE = 2
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -212,12 +210,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         loadImage(wineImagePath)
     }
 
-    // TODO: Move
-    private fun onPdfSelected(data: Intent?) {
-        requestMediaPersistentPermission(data)
-        bottlePdfPath = data?.data.toString()
-    }
-
     private fun loadImage(uri: String?) {
         if (!uri.isNullOrEmpty()) {
             context?.let {
@@ -248,10 +240,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                PICK_IMAGE_RESULT_CODE -> onImageSelected(data)
-                PICK_PDF_RESULT_CODE -> onPdfSelected(data) // TODO: Move
-            }
+            if (requestCode == PICK_IMAGE_RESULT_CODE) onImageSelected(data)
         }
     }
 }

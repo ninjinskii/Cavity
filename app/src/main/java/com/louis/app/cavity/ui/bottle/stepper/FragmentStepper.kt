@@ -137,6 +137,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
                         currentPagePos = position
                     }
                     allowedToChangePage(position) && position > currentPagePos -> {
+                        listeners[currentPagePos].onPageRequestAccepted()
                         animateForward(position)
                         currentPagePos = position
                     }
@@ -154,5 +155,6 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
 
     interface StepperWatcher {
         fun onRequestChangePage(): Boolean
+        fun onPageRequestAccepted()
     }
 }

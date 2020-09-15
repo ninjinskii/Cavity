@@ -13,6 +13,7 @@ import com.louis.app.cavity.util.L
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     private lateinit var binding: FragmentAddBottleBinding
+    private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,5 +33,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
                 requireActivity().onBackPressed()
             }
         }
+    }
+
+    override fun onDestroy() {
+        addBottleViewModel.removeNotCompletedBottle()
+        super.onDestroy()
     }
 }

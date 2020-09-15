@@ -40,11 +40,14 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
             override fun onRequestChangePage() = true
+            override fun onPageRequestAccepted() {
+            }
         })
     }
 
     private fun initRecyclerView() {
         val adviceAdapter = ExpertAdviceRecyclerAdapter {
+            addBottleViewModel.removeExpertAdvice(it)
         }
 
         binding.recyclerView.apply {
@@ -78,6 +81,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             val rate = binding.rate.text.toString().trim()
             val advice = makeExpertAdvice(constestName, rate)
 
+            binding.contestName.setText("")
             addBottleViewModel.addExpertAdvice(advice)
         }
 
@@ -114,18 +118,23 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             when (rbGroupType.checkedButtonId) {
                 R.id.rbMedal -> {
                     rbGroupMedal.setVisible(true)
-                    rbGroupStars.setVisible(false, invisible = true)
-                    rateLayout.setVisible(false)
+                    rbGroupStars.setVisible(false)
+                    rateLayout.setVisible(false, invisible = true)
                 }
                 R.id.rbRate100 -> {
                     rateLayout.setVisible(true)
                     rbGroupMedal.setVisible(false)
-                    rbGroupStars.setVisible(false, invisible = true)
+                    rbGroupStars.setVisible(false)
+                }
+                R.id.rbRate20 -> {
+                    rateLayout.setVisible(true)
+                    rbGroupMedal.setVisible(false)
+                    rbGroupStars.setVisible(false)
                 }
                 R.id.rbStar -> {
                     rbGroupStars.setVisible(true)
                     rbGroupMedal.setVisible(false)
-                    rateLayout.setVisible(false)
+                    rateLayout.setVisible(false, invisible = true)
                 }
             }
         }

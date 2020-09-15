@@ -55,17 +55,8 @@
             android:text="@string/add_pdf"
             app:icon="@drawable/ic_pdf"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/addToFavorite" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonAddGrapes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            android:text="@string/add_grapes"
-            app:icon="@drawable/ic_grape"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonAddPdf" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

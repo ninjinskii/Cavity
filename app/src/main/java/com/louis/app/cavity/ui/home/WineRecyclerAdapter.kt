@@ -18,8 +18,8 @@ import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class WineRecyclerAdapter(
-    private val listener: (Bottle) -> Unit,
-    private val listenerLongCLick: (Wine) -> Unit,
+    private val onVintageClickListener: (Bottle) -> Unit,
+    private val onShowOptionsListener: (Wine) -> Unit,
     private val colors: List<Int>
 ) : ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
@@ -87,7 +87,7 @@ class WineRecyclerAdapter(
             }
 
             itemView.setOnLongClickListener {
-                listenerLongCLick(wine)
+                onShowOptionsListener(wine)
                 true
             }
         }

@@ -37,6 +37,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
             override fun onRequestChangePage() = validateGrapes()
+            override fun onPageRequestAccepted() {
+            }
         })
 
     }
