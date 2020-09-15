@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui
 
+import android.animation.AnimatorInflater
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -7,9 +8,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
+import com.louis.app.cavity.util.L
 
 class ActivityMain : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private var isToolbarShadowShown = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +29,17 @@ class ActivityMain : AppCompatActivity() {
         binding.navView.setupWithNavController(navController)
     }
 
-    fun dropToolbarShadow() {
-        binding.main.toolbarLayout.outlineProvider = null
-    }
+    fun setToolbarShadow(setVisible: Boolean) {
+        val toolbar = binding.main.toolbarLayout
 
-    fun liftOnScroll() {
-        binding.main.toolbarLayout.isLiftOnScroll = true
+        if (setVisible && !isToolbarShadowShown) {
+            toolbar.stateListAnimator =
+                AnimatorInflater.loadStateListAnimator(this, R.animator.show_elevation)
+            isToolbarShadowShown = true
+        } else {
+            toolbar.stateListAnimator =
+                AnimatorInflater.loadStateListAnimator(this, R.animator.hide_elevation)
+            isToolbarShadowShown = false
+        }
     }
 }

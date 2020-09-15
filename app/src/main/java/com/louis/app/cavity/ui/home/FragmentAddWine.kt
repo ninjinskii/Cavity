@@ -18,14 +18,13 @@ import com.louis.app.cavity.databinding.DialogAddCountyBinding
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.util.*
-import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
+class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     private lateinit var binding: FragmentAddWineBinding
     private val homeViewModel: HomeViewModel by activityViewModels()
     private var wineImagePath: String? = null
@@ -43,12 +42,12 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         binding = FragmentAddWineBinding.bind(view)
         editMode = homeViewModel.editWine != null
 
-        loadCounties()
+        inflateChips()
         setListeners()
         updateFields()
     }
 
-    private fun loadCounties() {
+    private fun inflateChips() {
         val allCounties = mutableSetOf<County>()
         val alreadyInflated = mutableSetOf<County>()
 
@@ -57,35 +56,15 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
             allCounties.addAll(it)
             val toInflate = allCounties - alreadyInflated
+            alreadyInflated.addAll(toInflate)
 
-            lifecycleScope.launch(Default) {
-                for ((index, county) in toInflate.withIndex()) {
-                    val chip: Chip =
-                        layoutInflater.inflate(
-                            R.layout.chip_choice,
-                            binding.countyChipGroup,
-                            false
-                        ) as Chip
-                    chip.apply {
-                        setTag(R.string.tag_chip_id, county)
-                        text = county.name
-                    }
-
-                    withContext(Main) {
-                        binding.countyChipGroup.addView(chip)
-                        if (index == 0) chip.isChecked = true
-
-                        if (
-                            homeViewModel.editWine != null &&
-                            county.idCounty == homeViewModel.editWine!!.idCounty
-                        ) {
-                            chip.isChecked = true
-                        }
-                    }
-                }
-
-                alreadyInflated.addAll(toInflate)
-            }
+            loadCounties(
+                lifecycleScope,
+                layoutInflater,
+                binding.countyChipGroup,
+                toInflate,
+                homeViewModel.editWine
+            )
         }
     }
 

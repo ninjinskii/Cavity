@@ -54,6 +54,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
             adapter = wineAdapter
+
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     // Show components no matter what if RV can't be scrolled

@@ -20,4 +20,6 @@
     <dimen name="stepper_icon_background">42dp</dimen>
 
     <dimen name="expert_advice_height">96dp</dimen>
+
+    <dimen name="app_bar_elevation">4dp</dimen>
 </resources>
