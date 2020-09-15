@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
-import com.louis.app.cavity.model.Wine
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private lateinit var binding: FragmentWinesBinding
@@ -32,23 +31,13 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             )
         }
 
-        val listener = object : OnVintageClickListener {
-            override fun onVintageClick(wine: Wine) {
-                TODO()
+        val wineAdapter = WineRecyclerAdapter({}, { wine ->
+            homeViewModel.editWine = wine
+
+            activity?.supportFragmentManager?.let {
+                WineOptionsBottomSheet().show(it, getString(R.string.tag_modal_sheet_id))
             }
-        }
-
-        val listenerLongClick = object : OnLongClickListener {
-            override fun onLongClick(wine: Wine) {
-                homeViewModel.editWine = wine
-
-                activity?.supportFragmentManager?.let {
-                    WineOptionsBottomSheet().show(it, getString(R.string.tag_modal_sheet_id))
-                }
-            }
-        }
-
-        val wineAdapter = WineRecyclerAdapter(listener, listenerLongClick, colors ?: emptyList())
+        }, colors ?: emptyList())
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)

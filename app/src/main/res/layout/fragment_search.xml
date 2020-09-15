@@ -69,8 +69,8 @@
                 layout="@layout/divider_on_primary"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginVertical="@dimen/medium_margin"
+                android:layout_marginStart="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toggleShowBefore" />
@@ -95,20 +95,26 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/countyTitle">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/countyChipGroup"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/medium_margin"
-                    android:layout_marginTop="@dimen/medium_margin"
-                    android:layout_marginEnd="@dimen/large_margin"
-                    android:layout_marginBottom="@dimen/medium_margin"
-                    android:animateLayoutChanges="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                    app:singleLine="true" />
+                    android:layout_marginEnd="@dimen/large_margin">
 
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/countyChipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/medium_margin"
+                        android:layout_marginTop="@dimen/medium_margin"
+                        android:layout_marginEnd="@dimen/large_margin"
+                        android:layout_marginBottom="@dimen/medium_margin"
+                        android:animateLayoutChanges="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
+                        app:singleLine="true" />
+
+                </LinearLayout>
             </HorizontalScrollView>
 
             <include
@@ -116,8 +122,8 @@
                 layout="@layout/divider_on_primary"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginVertical="@dimen/medium_margin"
+                android:layout_marginStart="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/countyScrollView" />
@@ -139,6 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/xlarge_margin"
                 android:scrollbars="none"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/otherTitle">
@@ -197,6 +204,7 @@
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/large_margin"
                         android:text="@string/organic" />
 
                 </com.google.android.material.chip.ChipGroup>
@@ -218,8 +226,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/backdropHeader"
             android:layout_width="0dp"
-            android:background="@android:color/white"
             android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -259,7 +267,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/backdropHeader"
-            tools:listitem="@layout/item_bottle" />
+            tools:listitem="@layout/item_wine" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -11,13 +11,15 @@ import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
+import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.WineWithBottles
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class WineRecyclerAdapter(
-    private val listener: OnVintageClickListener,
-    private val listenerLongCLick: OnLongClickListener,
+    private val listener: (Bottle) -> Unit,
+    private val listenerLongCLick: (Wine) -> Unit,
     private val colors: List<Int>
 ) : ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
@@ -85,7 +87,7 @@ class WineRecyclerAdapter(
             }
 
             itemView.setOnLongClickListener {
-                listenerLongCLick.onLongClick(wine)
+                listenerLongCLick(wine)
                 true
             }
         }

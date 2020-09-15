@@ -14,12 +14,13 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.ui.home.WineRecyclerAdapter
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private lateinit var binding: FragmentSearchBinding
-    private lateinit var bottlesAdapter: BottleRecyclerAdapter
+    private lateinit var bottlesAdapter: WineRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val searchViewModel: SearchViewModel by activityViewModels()
     private var isHeaderShadowShown = false
@@ -31,13 +32,24 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         bottomSheetBehavior.isHideable = false
 
+
         initRecyclerView()
         inflateChips()
         setListeners()
     }
 
     private fun initRecyclerView() {
-        bottlesAdapter = BottleRecyclerAdapter()
+        val colors = context?.let {
+            listOf(
+                it.getColor(R.color.wine_white),
+                it.getColor(R.color.wine_red),
+                it.getColor(R.color.wine_sweet),
+                it.getColor(R.color.wine_rose),
+                it.getColor(R.color.colorAccent)
+            )
+        }
+
+        bottlesAdapter = WineRecyclerAdapter({}, {}, colors ?: emptyList())
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -55,7 +67,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             })
         }
 
-        searchViewModel.getAllBottles().observe(viewLifecycleOwner) {
+        searchViewModel.getWineWithBottles().observe(viewLifecycleOwner) {
             bottlesAdapter.submitList(it)
         }
     }
@@ -63,7 +75,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun inflateChips() {
         lifecycleScope.launch(IO) {
             val counties = searchViewModel.getAllCountiesNotLive().toSet()
-            loadCounties(lifecycleScope, layoutInflater, binding.countyChipGroup, counties)
+            loadCounties(lifecycleScope, layoutInflater, binding.countyChipGroup,  counties)
         }
     }
 

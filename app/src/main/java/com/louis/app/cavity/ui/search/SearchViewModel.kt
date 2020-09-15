@@ -13,5 +13,5 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllCountiesNotLive() = repository.getAllCountiesNotLive()
 
-    fun getAllBottles() = repository.getAllBottles()
+    fun getWineWithBottles() = repository.getWineWithBottles()
 }
