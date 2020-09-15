@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:background="?attr/colorSurface"
         app:behavior_peekHeight="?attr/actionBarSize"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:layout_behavior="@string/bottom_sheet_behavior"
         app:layout_insetEdge="bottom">
 
         <!-- Nested layout for bottom sheet header -->

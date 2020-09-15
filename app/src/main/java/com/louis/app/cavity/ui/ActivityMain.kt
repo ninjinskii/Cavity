@@ -29,4 +29,8 @@ class ActivityMain : AppCompatActivity() {
     fun dropToolbarShadow() {
         binding.main.toolbarLayout.outlineProvider = null
     }
+
+    fun liftOnScroll() {
+        binding.main.toolbarLayout.isLiftOnScroll = true
+    }
 }

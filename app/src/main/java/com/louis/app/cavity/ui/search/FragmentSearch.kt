@@ -21,5 +21,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         bottomSheetBehavior.isHideable = false
 
         (activity as ActivityMain).dropToolbarShadow()
+        (activity as ActivityMain).liftOnScroll()
     }
 }
