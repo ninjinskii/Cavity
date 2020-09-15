@@ -25,4 +25,8 @@ class ActivityMain : AppCompatActivity() {
         binding.main.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
     }
+
+    fun dropToolbarShadow() {
+        binding.main.toolbarLayout.outlineProvider = null
+    }
 }

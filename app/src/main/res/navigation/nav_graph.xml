@@ -19,6 +19,9 @@
         <action
             android:id="@+id/homeToAddBottle"
             app:destination="@id/add_bottle_dest" />
+        <action
+            android:id="@+id/homeToSearch"
+            app:destination="@id/search_dest" />
     </fragment>
 
     <fragment
@@ -38,5 +41,10 @@
         android:name="com.louis.app.cavity.ui.bottle.FragmentAddBottle"
         android:label="FragmentAddBottle"
         tools:layout="@layout/fragment_add_bottle" />
+    <fragment
+        android:id="@+id/search_dest"
+        android:name="com.louis.app.cavity.ui.search.FragmentSearch"
+        android:label="FragmentSearch"
+        tools:layout="@layout/fragment_search" />
 
 </navigation>
