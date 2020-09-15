@@ -53,6 +53,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         )
 
         initTextSwitcher()
+        setListener()
     }
 
     private fun initTextSwitcher() {
@@ -66,6 +67,17 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
 
             switcher.setText(stepStrings[0])
             stepNumber.text = stepNumbers[0]
+        }
+    }
+
+    private fun setListener() {
+        binding.endIcon.setOnClickListener {
+            animateEnd()
+
+            lifecycleScope.launch(Main) {
+                delay(200)
+                listeners[currentPagePos].onFinalStepAccomplished()
+            }
         }
     }
 
@@ -115,6 +127,15 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         }
     }
 
+    private fun animateEnd() {
+        lifecycleScope.launch(Main) {
+            binding.prograssBarMain.setProgress(100, true)
+            delay(100)
+            //animate endIcon
+            delay(100)
+        }
+    }
+
     private fun allowedToChangePage(index: Int): Boolean {
         return try {
             if (index <= currentPagePos) true
@@ -156,5 +177,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     interface StepperWatcher {
         fun onRequestChangePage(): Boolean
         fun onPageRequestAccepted()
+        fun onFinalStepAccomplished() {
+        }
     }
 }

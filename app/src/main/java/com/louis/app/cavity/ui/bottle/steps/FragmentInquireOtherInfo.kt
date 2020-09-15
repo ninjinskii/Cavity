@@ -11,10 +11,11 @@ import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
+import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {
-    private lateinit var binding : FragmentInquireOtherInfoBinding
+    private lateinit var binding: FragmentInquireOtherInfoBinding
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private var bottlePdfPath: String? = null
 
@@ -26,7 +27,25 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentInquireOtherInfoBinding.bind(view)
 
+        registerStepperWatcher()
         setListeners()
+    }
+
+    private fun registerStepperWatcher() {
+        val stepperFragment =
+            parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
+
+        stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
+            override fun onRequestChangePage() = true
+
+            override fun onPageRequestAccepted() {
+            }
+
+            override fun onFinalStepAccomplished() {
+                //addBottleViewModel.updateBottle()
+                // finish
+            }
+        })
     }
 
     private fun setListeners() {
