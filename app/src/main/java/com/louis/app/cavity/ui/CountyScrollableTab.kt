@@ -136,7 +136,6 @@ class CountyScrollableTab : RecyclerView {
         this.pageChangeListener = pageChangeListener
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     fun setUpWithViewPager(viewPager: ViewPager2) {
         if (viewPager.adapter == null) throw IllegalStateException(
             "ViewPager does not have pager adapter"

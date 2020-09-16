@@ -14,6 +14,111 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <HorizontalScrollView
+                android:id="@+id/countyScrollView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/countyChipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/medium_margin"
+                        android:animateLayoutChanges="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
+                        app:singleLine="true">
+
+                        <!-- Fake chip to avoid layout animation (heigth: 0 to chip height) when inflating chips -->
+                        <com.google.android.material.chip.Chip
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:visibility="invisible" />
+
+                    </com.google.android.material.chip.ChipGroup>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <HorizontalScrollView
+                android:id="@+id/otherScrollView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/countyScrollView">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/otherChipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/medium_margin"
+                        android:animateLayoutChanges="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
+                        app:singleLine="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipReadyToDrink"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_marginStart="8dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ready_to_drink" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipRed"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/wine_color_red" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipWhite"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/wine_color_white" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSweet"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/wine_color_sweet" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipRose"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/wine_color_rose" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipOrganic"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/organic" />
+
+                    </com.google.android.material.chip.ChipGroup>
+                </LinearLayout>
+            </HorizontalScrollView>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dateLayout"
                 android:layout_width="0dp"
@@ -21,7 +126,7 @@
                 android:layout_margin="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/otherScrollView"
                 app:startIconDrawable="@drawable/ic_calendar">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -44,107 +149,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dateLayout" />
 
-            <HorizontalScrollView
-                android:id="@+id/countyScrollView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toggleShowBefore">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/large_margin">
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/countyChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/medium_margin"
-                        android:layout_marginTop="@dimen/medium_margin"
-                        android:layout_marginEnd="@dimen/large_margin"
-                        android:layout_marginBottom="@dimen/medium_margin"
-                        android:animateLayoutChanges="true"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                        app:singleLine="true" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <HorizontalScrollView
-                android:id="@+id/otherScrollView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/xlarge_margin"
-                android:scrollbars="none"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/countyScrollView">
-
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/otherChipGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/medium_margin"
-                    android:layout_marginTop="@dimen/medium_margin"
-                    android:layout_marginEnd="@dimen/large_margin"
-                    android:layout_marginBottom="@dimen/medium_margin"
-                    android:animateLayoutChanges="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                    app:singleLine="true">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipReadyToDrink"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ready_to_drink" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipRed"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/wine_color_red" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipWhite"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/wine_color_white" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipSweet"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/wine_color_sweet" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipRose"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/wine_color_rose" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipOrganic"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/large_margin"
-                        android:text="@string/organic" />
-
-                </com.google.android.material.chip.ChipGroup>
-            </HorizontalScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -201,8 +205,10 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/backdropHeader"
+            app:layout_constraintVertical_bias="0.0"
             tools:listitem="@layout/item_wine" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
