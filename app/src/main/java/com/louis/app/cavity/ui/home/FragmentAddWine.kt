@@ -148,10 +148,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         val dialogBinding = DialogAddCountyBinding.inflate(layoutInflater)
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(resources.getString(R.string.add_county))
-            .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
+            .setTitle(R.string.add_county)
+            .setNegativeButton(R.string.cancel) { _, _ ->
             }
-            .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
+            .setPositiveButton(R.string.submit) { _, _ ->
                 homeViewModel.addCounty(dialogBinding.countyName.text.toString())
             }
             .setView(dialogBinding.root)

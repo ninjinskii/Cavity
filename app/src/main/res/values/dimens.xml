@@ -12,6 +12,8 @@
 
     <dimen name="divider_height">1dp</dimen>
 
+    <dimen name="county_tab_height">18dp</dimen>
+
     <dimen name="xsmall_icon">24dp</dimen>
     <dimen name="small_icon">32dp</dimen>
     <dimen name="medium_icon">48dp</dimen>
