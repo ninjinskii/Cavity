@@ -2,7 +2,11 @@ package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -32,6 +36,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         bottomSheetBehavior.isHideable = false
 
+        setHasOptionsMenu(true)
 
         initRecyclerView()
         inflateChips()
@@ -75,7 +80,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun inflateChips() {
         lifecycleScope.launch(IO) {
             val counties = searchViewModel.getAllCountiesNotLive().toSet()
-            loadCounties(lifecycleScope, layoutInflater, binding.countyChipGroup,  counties)
+            loadCounties(lifecycleScope, layoutInflater, binding.countyChipGroup, counties)
         }
     }
 
@@ -99,6 +104,16 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         }
     }
 
+    private fun toggleBackdrop() {
+        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            // morph icon animation
+        } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            // morph icon animation
+        }
+    }
+
     override fun onResume() {
         (activity as ActivityMain).setToolbarShadow(false)
         super.onResume()
@@ -107,5 +122,19 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     override fun onPause() {
         (activity as ActivityMain).setToolbarShadow(true)
         super.onPause()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.toggleBackdrop -> {
+                toggleBackdrop()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

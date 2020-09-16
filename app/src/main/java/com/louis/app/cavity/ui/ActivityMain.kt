@@ -2,6 +2,10 @@ package com.louis.app.cavity.ui
 
 import android.animation.AnimatorInflater
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -22,6 +26,8 @@ class ActivityMain : AppCompatActivity() {
     }
 
     private fun setupDrawer() {
+        setSupportActionBar(binding.main.toolbar)
+
         val navController = findNavController(R.id.navHostFragment)
         val appBarConfiguration = AppBarConfiguration(navController.graph, binding.drawer)
 

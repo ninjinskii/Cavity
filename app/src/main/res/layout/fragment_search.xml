@@ -15,33 +15,13 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/searchLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:startIconDrawable="@drawable/ic_search">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/search"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/search_wine_hint"
-                    android:imeOptions="actionDone"
-                    android:inputType="textCapSentences" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dateLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/searchLayout"
+                app:layout_constraintTop_toTopOf="parent"
                 app:startIconDrawable="@drawable/ic_calendar">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -64,28 +44,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dateLayout" />
 
-            <include
-                android:id="@+id/divider1"
-                layout="@layout/divider_on_primary"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginVertical="@dimen/medium_margin"
-                android:layout_marginStart="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toggleShowBefore" />
-
-            <TextView
-                android:id="@+id/countyTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:text="@string/county"
-                android:textColor="?attr/colorOnPrimary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider1" />
-
             <HorizontalScrollView
                 android:id="@+id/countyScrollView"
                 android:layout_width="0dp"
@@ -93,7 +51,7 @@
                 android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/countyTitle">
+                app:layout_constraintTop_toBottomOf="@+id/toggleShowBefore">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -117,28 +75,6 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <include
-                android:id="@+id/divider2"
-                layout="@layout/divider_on_primary"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginVertical="@dimen/medium_margin"
-                android:layout_marginStart="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/countyScrollView" />
-
-            <TextView
-                android:id="@+id/otherTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:text="@string/miscellaneous"
-                android:textColor="?attr/colorOnPrimary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider2" />
-
             <HorizontalScrollView
                 android:id="@+id/otherScrollView"
                 android:layout_width="0dp"
@@ -148,7 +84,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/otherTitle">
+                app:layout_constraintTop_toBottomOf="@+id/countyScrollView">
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/otherChipGroup"
