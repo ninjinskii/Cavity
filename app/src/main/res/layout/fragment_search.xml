@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/xsmall_margin"
-                android:text="Show before ?  "
+                android:text="@string/show_before"
                 android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dateLayout" />
