@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
 
     <TextView
         android:id="@+id/county"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
         android:ellipsize="end"
-        android:focusable="true"
         android:gravity="center"
         android:maxLines="1"
-        android:paddingVertical="@dimen/county_tab_height"
         android:paddingHorizontal="@dimen/small_margin"
+        android:paddingVertical="@dimen/county_tab_height"
         android:textColor="#fff"
         android:textStyle="bold"
         tools:text="Alsace" />

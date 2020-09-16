@@ -11,13 +11,11 @@ import androidx.annotation.StyleRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import kotlin.math.pow
 
 class CountyScrollableTab : RecyclerView {
-
     private val tabAdapter by lazy { TabAdapter(style = tabTextStyle) }
     private var selectedColor = Color.WHITE
     private var unSelectedColor = Color.GRAY
@@ -43,6 +41,8 @@ class CountyScrollableTab : RecyclerView {
         init(attrs)
     }
 
+    // We want to use touch listener as an indicator that the recyclerview might be scrolled
+    @SuppressLint("ClickableViewAccessibility")
     private fun init(set: AttributeSet?) {
         initAttributes(set)
 
@@ -57,9 +57,9 @@ class CountyScrollableTab : RecyclerView {
 
         setOnTouchListener { _, _ ->
             isRVScrolling = true
-            performClick()
             false
         }
+
         addOnScrollListener(object : OnScrollListener() {
             override fun onScrolled(
                 recyclerView: RecyclerView,
@@ -143,13 +143,10 @@ class CountyScrollableTab : RecyclerView {
         )
         this.viewPager = viewPager
 
-        viewPager.setOnTouchListener { _, _ ->
-            isRVScrolling = false
-            false
-        }
-
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrollStateChanged(state: Int) {
+                if (state == ViewPager2.SCROLL_STATE_DRAGGING) isRVScrolling = false
+            }
 
             override fun onPageScrolled(
                 position: Int,

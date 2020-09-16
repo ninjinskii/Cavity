@@ -3,10 +3,12 @@ package com.louis.app.cavity.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.L
 
 class TabAdapter(
     private val tabs: MutableList<String> = mutableListOf(),
@@ -50,7 +52,7 @@ class TabViewHolder(
     private val listener: ((position: Int) -> Unit)?
 ) : RecyclerView.ViewHolder(view) {
 
-    private val tab: TextView = view.findViewById(R.id.county)
+    private val textView: TextView = view.findViewById(R.id.county)
 
     init {
         view.setOnClickListener {
@@ -59,6 +61,6 @@ class TabViewHolder(
     }
 
     fun bind(model: String) {
-        tab.text = model
+        textView.text = model
     }
 }
