@@ -155,11 +155,12 @@
     <!-- Backdrop Bottom Sheet-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheet"
+        style="@style/Widget.MaterialComponents.BottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorSurface"
         app:behavior_peekHeight="?attr/actionBarSize"
-        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:layout_behavior=".ui.search.LockedBottomSheetBehavior"
         app:layout_insetEdge="bottom">
 
         <!-- Nested layout for bottom sheet header -->

@@ -194,6 +194,8 @@ fun getGaussianScale(
 ): Float {
     val recyclerCenterX = (left + right) / 2
     return (Math.E.pow(
-        -(childCenterX - recyclerCenterX.toDouble()).pow(2.toDouble()) / (2 * spreadFactor.pow(2.toDouble()))
+        -(childCenterX - recyclerCenterX.toDouble()).pow(2.toDouble()) / (2 * spreadFactor.pow(
+            2.toDouble()
+        ))
     ) * scaleFactor + minScaleOffest).toFloat()
 }

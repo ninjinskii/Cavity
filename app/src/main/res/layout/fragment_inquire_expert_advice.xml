@@ -69,28 +69,28 @@
 
                 <Button
                     android:id="@+id/rbMedal"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/ic_grade" />
 
                 <Button
                     android:id="@+id/rbRate100"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rate100" />
 
                 <Button
                     android:id="@+id/rbRate20"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rate20" />
 
                 <Button
                     android:id="@+id/rbStar"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/ic_star" />

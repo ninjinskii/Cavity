@@ -5,15 +5,12 @@ import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
-import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -59,7 +56,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private fun initTextSwitcher() {
         with(binding) {
             switcher.setFactory {
-                TextView(ContextThemeWrapper(activity, R.style.AppTheme), null, 0).apply {
+                TextView(ContextThemeWrapper(activity, R.style.CavityTheme), null, 0).apply {
                     setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline5)
                     setTextColor(resources.getColor(R.color.colorSecondary, context.theme))
                 }
