@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -83,9 +83,9 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-
-            <include layout="@layout/divider"
+            <include
                 android:id="@+id/divider1"
+                layout="@layout/divider"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
@@ -93,7 +93,7 @@
                 android:layout_marginBottom="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/countyScrollView"/>
+                app:layout_constraintTop_toBottomOf="@id/countyScrollView" />
 
             <TextView
                 android:id="@+id/identificationTitle"
@@ -111,8 +111,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/identificationTitle">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -141,8 +141,9 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <include layout="@layout/divider"
+            <include
                 android:id="@+id/divider2"
+                layout="@layout/divider"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
@@ -180,8 +181,9 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <include layout="@layout/divider"
+            <include
                 android:id="@+id/divider3"
+                layout="@layout/divider"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
@@ -260,8 +262,9 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <include layout="@layout/divider"
+            <include
                 android:id="@+id/divider4"
+                layout="@layout/divider"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
@@ -291,8 +294,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/organicTitle" />
 
-            <include layout="@layout/divider"
+            <include
                 android:id="@+id/divider5"
+                layout="@layout/divider"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/divider_height"
                 android:layout_marginStart="@dimen/medium_margin"
@@ -316,15 +320,15 @@
                 android:id="@+id/buttonTakePhoto"
                 android:layout_width="@dimen/large_icon"
                 android:layout_height="@dimen/large_icon"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginEnd="@dimen/medium_margin"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/take_photo"
                 android:src="@drawable/ic_camera"
                 android:tint="?attr/colorPrimary"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/buttonBrowsePhoto"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageTitle" />
 
             <TextView
@@ -334,18 +338,18 @@
                 android:layout_marginBottom="100dp"
                 android:text="@string/take_photo"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonTakePhoto"
+                app:layout_constraintEnd_toEndOf="@id/buttonTakePhoto"
                 app:layout_constraintStart_toStartOf="@id/buttonTakePhoto"
-                app:layout_constraintEnd_toEndOf="@id/buttonTakePhoto" />
+                app:layout_constraintTop_toBottomOf="@id/buttonTakePhoto" />
 
             <ImageButton
                 android:id="@+id/buttonBrowsePhoto"
                 android:layout_width="@dimen/large_icon"
                 android:layout_height="@dimen/large_icon"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginEnd="@dimen/medium_margin"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/take_photo"
                 android:src="@drawable/ic_image_search"
                 android:tint="?attr/colorPrimary"
@@ -360,9 +364,9 @@
                 android:layout_marginBottom="100dp"
                 android:text="@string/add_photo"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonBrowsePhoto"
+                app:layout_constraintEnd_toEndOf="@id/buttonBrowsePhoto"
                 app:layout_constraintStart_toStartOf="@id/buttonBrowsePhoto"
-                app:layout_constraintEnd_toEndOf="@id/buttonBrowsePhoto" />
+                app:layout_constraintTop_toBottomOf="@id/buttonBrowsePhoto" />
 
             <ImageView
                 android:id="@+id/wineMiniImage"
@@ -375,8 +379,8 @@
                 android:contentDescription="@string/wine_photo"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageTitle"
                 app:layout_constraintVertical_bias="0.0" />
 
@@ -395,7 +399,7 @@
                 app:layout_constraintTop_toTopOf="@id/wineMiniImage" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
     <!-- Change ripple color to get a ripple effect -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

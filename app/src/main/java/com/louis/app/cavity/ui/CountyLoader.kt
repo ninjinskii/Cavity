@@ -18,7 +18,8 @@ interface CountyLoader {
         layoutInflater: LayoutInflater,
         chipGroup: ChipGroup,
         counties: Set<County>,
-        editWine: Wine? = null
+        editWine: Wine? = null,
+        selectionRequired: Boolean = true
     ) {
         scope.launch(Default) {
             for ((index, county) in counties.withIndex()) {
@@ -35,7 +36,7 @@ interface CountyLoader {
 
                 withContext(Main) {
                     chipGroup.addView(chip)
-                    if (index == 0) chip.isChecked = true
+                    if (index == 0 && selectionRequired) chip.isChecked = true
 
                     if (editWine != null && county.idCounty == editWine.idCounty) {
                         chip.isChecked = true
