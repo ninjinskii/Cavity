@@ -100,19 +100,16 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun placeBottomSheet() {
         lifecycleScope.launch(Main) {
             delay(300)
-
-            val display = activity?.windowManager?.defaultDisplay
-            val size = Point()
-            display?.getSize(size)
-            val screenHeight = size.y
+            val display = activity?.window?.decorView?.height
             val location = IntArray(2)
 
-            // Bottom-most view in back layer
-            binding.toggleShowBefore.getLocationOnScreen(location)
-            bottomSheetBehavior.setPeekHeight(
-                screenHeight - location[1] - binding.toggleShowBefore.height,
-                true
-            )
+            display?.let {
+                binding.toggleShowBefore.getLocationInWindow(location)
+                bottomSheetBehavior.setPeekHeight(
+                    (display ?: 0) - location[1] - binding.toggleShowBefore.height,
+                    true
+                )
+            }
         }
     }
 
