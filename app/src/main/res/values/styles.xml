@@ -20,10 +20,12 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
+    <!-- Shape -->
     <!-- Backdrop front layer shape -->
-    <style name="ShapeAppearanceOverlay.Cavity.Backdrop" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
+    <style name="Cavity.Backdrop" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/Cavity.ShapeOverlay.BottomSheet</item>
     </style>
 
+    <style name="Cavity.ShapeOverlay.BottomSheet" parent="">
+    </style>
 </resources>

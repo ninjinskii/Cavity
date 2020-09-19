@@ -2,8 +2,12 @@ package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
 import android.graphics.Point
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -26,6 +30,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var bottlesAdapter: WineRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var menu: Menu
     private val searchViewModel: SearchViewModel by activityViewModels()
     private var isHeaderShadowShown = false
 
@@ -33,15 +38,17 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSearchBinding.bind(view)
 
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-        bottomSheetBehavior.isHideable = false
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
+            state = BottomSheetBehavior.STATE_EXPANDED
+            isHideable = false
+        }
 
         setHasOptionsMenu(true)
 
         initRecyclerView()
         inflateChips()
         setListeners()
-        placeBottomSheet()
+        setBottomSheetPeekHeight()
     }
 
     private fun initRecyclerView() {
@@ -92,12 +99,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun setListeners() {
-        binding.buttonShowFilters.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
     }
 
-    private fun placeBottomSheet() {
+    // Needed for split screen
+    private fun setBottomSheetPeekHeight() {
         lifecycleScope.launch(Main) {
             delay(300)
 
@@ -131,13 +136,17 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun toggleBackdrop() {
+        val item = menu.getItem(1)
+
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            item.setIcon(R.drawable.anim_close_filter)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            // morph icon animation
         } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            // morph icon animation
+            menu.getItem(1).setIcon(R.drawable.anim_filter_close)
         }
+
+        (item.icon as AnimatedVectorDrawable).start()
     }
 
     override fun onResume() {
@@ -152,6 +161,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_menu, menu)
+        this.menu = menu
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -41,6 +41,7 @@
                         <!-- Fake chip to avoid layout animation (heigth: 0 to chip height) when inflating chips -->
                         <com.google.android.material.chip.Chip
                             android:layout_width="0dp"
+                            android:text="@string/county"
                             android:layout_height="wrap_content"
                             android:visibility="invisible" />
 
@@ -155,11 +156,10 @@
     <!-- Backdrop Bottom Sheet-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheet"
-        style="@style/Widget.MaterialComponents.BottomSheet"
+        style="@style/Cavity.Backdrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorSurface"
-        app:behavior_peekHeight="?attr/actionBarSize"
         app:layout_behavior=".ui.search.LockedBottomSheetBehavior"
         app:layout_insetEdge="bottom">
 
@@ -182,21 +182,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="12 vins" />
-
-            <ImageView
-                android:id="@+id/buttonShowFilters"
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:layout_margin="@dimen/small_margin"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:contentDescription="@string/show_filters"
-                android:focusable="true"
-                android:src="@drawable/ic_filter"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorOnBackground" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

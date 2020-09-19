@@ -1,0 +1,45 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <group
+                android:name="group"
+                android:pivotX="12"
+                android:pivotY="12">
+                <path
+                    android:name="path_1"
+                    android:fillColor="#000000"
+                    android:pathData="M 10 18 L 14 18 L 14 16 L 10 16 L 10 18 Z M 3 6 L 3 8 L 21 8 L 21 6 L 3 6 Z M 6 13 L 18 13 L 18 11 L 6 11 L 6 13 Z" />
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="path_1">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="300"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="pathData"
+                android:repeatMode="reverse"
+                android:valueFrom="M 6.41 19 L 7.209 18.201 L 8.007 17.403 L 8.806 16.604 L 9.604 15.806 L 10.403 15.007 L 11.201 14.209 L 12 13.41 L 11.295 12.705 L 10.59 12 L 7.795 14.795 L 5 17.59 L 6.41 19 M 13.41 12 L 16.205 9.205 L 19 6.41 L 17.59 5 L 12 10.59 L 13.41 12 M 10.59 12 L 5 6.41 L 6.41 5 L 12 10.59 L 13.41 12 L 16.205 14.795 L 19 17.59 L 17.59 19 L 12 13.41 L 11.956 13.366 L 11.912 13.322 L 11.868 13.278 L 11.824 13.234 L 11.736 13.146 L 11.648 13.057 L 11.471 12.881 L 11.295 12.705 L 11.119 12.529 L 10.943 12.352 L 10.59 12"
+                android:valueTo="M 10 18 L 10 18 L 12 18 L 14 18 L 14 17 L 14 16 L 13.333 16 L 12.667 16 L 12 16 L 11.333 16 L 10.667 16 L 10 16 L 10 18 M 3 6 L 3 8 L 21 8 L 21 6 L 3 6 L 3 6 M 11.963 11 L 11.975 11 L 11.988 11 L 12 11 L 13 11 L 14 11 L 18 11 L 18 13 L 12 13 L 6 13 L 6 13 L 6 11 L 10 11 L 11 11 L 11.333 11 L 11.667 11 L 11.778 11 L 11.889 11 L 11.926 11 L 11.963 11"
+                android:valueType="pathType" />
+        </aapt:attr>
+    </target>
+    <target android:name="group">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="300"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="rotation"
+                android:repeatMode="reverse"
+                android:valueFrom="180"
+                android:valueTo="0"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+</animated-vector>
