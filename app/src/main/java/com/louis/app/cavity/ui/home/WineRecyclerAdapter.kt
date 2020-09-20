@@ -73,6 +73,9 @@ class WineRecyclerAdapter(
                     chip.apply {
                         setTag(R.string.tag_chip_id, bottle.vintage)
                         text = bottle.vintage.toString()
+
+                        // add date comparison
+                        //chipIcon = R.drawable.ic_glass
                     }
 
                     binding.chipGroup.addView(chip)

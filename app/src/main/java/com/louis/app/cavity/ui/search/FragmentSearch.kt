@@ -4,6 +4,7 @@ import android.animation.AnimatorInflater
 import android.graphics.Point
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
+import android.text.InputType
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -15,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.ui.ActivityMain
@@ -25,14 +27,15 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private lateinit var binding: FragmentSearchBinding
+    private lateinit var datePicker: MaterialDatePicker<Long>
     private lateinit var bottlesAdapter: WineRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var menu: Menu
     private val searchViewModel: SearchViewModel by activityViewModels()
-    private var isHeaderShadowShown = false
+    private var isDatePickerDisplayed = false
+    private var isHeaderShadowDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,6 +49,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         setHasOptionsMenu(true)
 
         initRecyclerView()
+        initDatePicker()
         inflateChips()
         setListeners()
         setBottomSheetPeekHeight()
@@ -81,7 +85,27 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         }
 
         searchViewModel.getWineWithBottles().observe(viewLifecycleOwner) {
+            binding.matchingWines.text =
+                resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter.submitList(it)
+        }
+    }
+
+    private fun initDatePicker() {
+        val builder = MaterialDatePicker.Builder.datePicker()
+        builder.setTitleText(R.string.buying_date)
+
+        datePicker = builder.build()
+
+        datePicker.apply {
+            addOnDismissListener {
+                binding.date.clearFocus()
+                isDatePickerDisplayed = false
+            }
+
+            addOnPositiveButtonClickListener {
+                binding.date.setText(headerText)
+            }
         }
     }
 
@@ -99,6 +123,22 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun setListeners() {
+        binding.date.apply {
+            inputType = InputType.TYPE_NULL
+
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    if (!isDatePickerDisplayed) {
+                        isDatePickerDisplayed = true
+
+                        datePicker.show(
+                            childFragmentManager,
+                            resources.getString(R.string.tag_date_picker)
+                        )
+                    }
+                }
+            }
+        }
     }
 
     // Needed for split screen
@@ -124,14 +164,14 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun setHeaderShadow(setVisible: Boolean) {
         val header = binding.backdropHeader
 
-        if (setVisible && !isHeaderShadowShown) {
+        if (setVisible && !isHeaderShadowDisplayed) {
             header.stateListAnimator =
                 AnimatorInflater.loadStateListAnimator(context, R.animator.show_elevation)
-            isHeaderShadowShown = true
-        } else if (!setVisible && isHeaderShadowShown) {
+            isHeaderShadowDisplayed = true
+        } else if (!setVisible && isHeaderShadowDisplayed) {
             header.stateListAnimator =
                 AnimatorInflater.loadStateListAnimator(context, R.animator.hide_elevation)
-            isHeaderShadowShown = false
+            isHeaderShadowDisplayed = false
         }
     }
 
