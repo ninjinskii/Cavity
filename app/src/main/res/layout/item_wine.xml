@@ -55,10 +55,10 @@
             layout="@layout/divider"
             android:layout_width="0dp"
             android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
             app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming"
-            app:layout_constraintBottom_toBottomOf="@+id/chipsScrollView" />
+            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineLeft"
@@ -71,7 +71,7 @@
             android:id="@+id/chipsScrollView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginTop="@dimen/medium_margin"
             android:layout_marginBottom="@dimen/small_margin"
             android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
