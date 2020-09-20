@@ -42,7 +42,13 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
             }
 
             override fun onFinalStepAccomplished() {
-                //addBottleViewModel.updateBottle()
+                with(binding) {
+                    addBottleViewModel.updateBottle(
+                        otherInfo.text.toString(),
+                        addToFavorite.isChecked,
+                        bottlePdfPath ?: ""
+                    )
+                }
                 // finish
             }
         })

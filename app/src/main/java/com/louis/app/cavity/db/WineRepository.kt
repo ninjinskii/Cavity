@@ -27,6 +27,8 @@ class WineRepository(private val wineDao: WineDao, private val bottleDao: Bottle
     fun getAllCountiesNotLive() = wineDao.getAllCountiesNotLive()
 
     fun getAllBottles() = bottleDao.getAllBottles()
+    fun getBottleByIdNotLive(bottleId: Long) = bottleDao.getBottleByIdNotLive(bottleId)
+    fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
     fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
 
     fun getAllGrapes() = bottleDao.getAllGrapes()

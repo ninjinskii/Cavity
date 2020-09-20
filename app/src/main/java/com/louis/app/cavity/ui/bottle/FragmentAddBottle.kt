@@ -9,6 +9,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 import com.louis.app.cavity.ui.bottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.ui.home.WineOptionsBottomSheet.Companion.ARG_WINE_ID
 import com.louis.app.cavity.util.L
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
@@ -18,6 +19,8 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddBottleBinding.bind(view)
+
+        addBottleViewModel.wineId = arguments?.getLong(ARG_WINE_ID)
 
         val stepperFragment = childFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
 

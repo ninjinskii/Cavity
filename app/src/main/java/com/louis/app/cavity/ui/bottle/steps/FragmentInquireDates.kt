@@ -11,7 +11,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showSnackbar
 import java.util.*
@@ -128,6 +127,5 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 date
             )
         }
-
     }
 }

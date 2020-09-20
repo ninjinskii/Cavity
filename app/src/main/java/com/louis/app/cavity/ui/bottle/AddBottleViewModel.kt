@@ -13,9 +13,9 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.ExpertAdvice
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
+import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -25,7 +25,10 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         CavityDatabase.getInstance(app).bottleDao()
     )
 
-    private var bottleId: Long? = null
+    var wineId: Long? = null
+
+    var bottleId: Long? = null
+        private set
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
@@ -106,10 +109,14 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         location: String,
         date: String
     ) {
+        if (wineId == null) {
+            _userFeedback.postOnce(R.string.base_error)
+        }
+
         val formattedPrice = if (price.isEmpty()) "-1" else price
         val bottle = Bottle(
             idBottle = bottleId ?: 0,
-            idWine = 0,
+            idWine = wineId!!,
             vintage,
             apogee,
             isFavorite = 0,
@@ -126,6 +133,17 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             bottleId = repository.insertBottle(bottle)
+        }
+    }
+
+    fun updateBottle(otherInfo: String, isFavorite: Boolean, pdfPath: String) {
+        viewModelScope.launch(IO) {
+            val bottle = repository.getBottleByIdNotLive(bottleId ?: return@launch)
+            bottle.otherInfo = otherInfo
+            bottle.isFavorite = isFavorite.toInt()
+            bottle.pdfPath = pdfPath
+
+            repository.updateBottle(bottle)
         }
     }
 

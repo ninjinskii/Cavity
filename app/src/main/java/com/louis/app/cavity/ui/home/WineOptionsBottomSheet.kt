@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -48,7 +49,10 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
 
             addBottle.setOnClickListener {
                 dismiss()
-                findNavController().navigate(R.id.homeToAddBottle)
+                findNavController().navigate(
+                    R.id.homeToAddBottle,
+                    bundleOf(ARG_WINE_ID to homeViewModel.editWine?.idWine)
+                )
             }
 
             binding.editWine.setOnClickListener {
@@ -71,5 +75,9 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+
+    companion object {
+        const val ARG_WINE_ID = "com.louis.app.cavity.ui.home.FragmentWines.ARG_WINE_ID"
     }
 }

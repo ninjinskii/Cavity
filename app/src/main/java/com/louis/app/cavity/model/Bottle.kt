@@ -11,16 +11,16 @@ data class Bottle(
     @ColumnInfo(name = "id_wine") val idWine: Long,
     val vintage: Int,
     val apogee: Int,
-    @ColumnInfo(name = "is_favorite") val isFavorite: Int,
+    @ColumnInfo(name = "is_favorite") var isFavorite: Int,
     val count: Int,
     val comment: String,
     val price: Int,
     val currency: String,
-    @ColumnInfo(name = "other_info") val otherInfo: String,
+    @ColumnInfo(name = "other_info") var otherInfo: String,
     @ColumnInfo(name = "buy_location") val buyLocation: String,
     @ColumnInfo(name = "buy_date") val buyDate: String,
     @ColumnInfo(name = "taste_comment") val tasteComment: String,
-    @ColumnInfo(name = "pdf_path") val pdfPath: String
+    @ColumnInfo(name = "pdf_path") var pdfPath: String
 )
 
 // RV pour sélection du cépage dans la bouteille, pour chaque cépage choisi, ajouter un nouveau slider vertical au rv
