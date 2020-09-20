@@ -4,6 +4,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Cavtiy.LargeComponent
+        </item>
     </style>
 
     <!-- Scrollable tab -->
@@ -21,11 +24,14 @@
     </style>
 
     <!-- Shape -->
-    <!-- Backdrop front layer shape -->
-    <style name="Cavity.Backdrop" parent="Widget.MaterialComponents.BottomSheet">
-        <item name="shapeAppearanceOverlay">@style/Cavity.ShapeOverlay.BottomSheet</item>
+    <style name="ShapeAppearance.Cavtiy.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">0dp</item>
     </style>
 
-    <style name="Cavity.ShapeOverlay.BottomSheet" parent="">
+    <!-- Backdrop front layer shape -->
+    <style name="ShapeAppearenceOverlay.Cavity.Backdrop" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">16dp</item>
     </style>
 </resources>

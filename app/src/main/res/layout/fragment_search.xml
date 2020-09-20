@@ -32,6 +32,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/medium_margin"
+                        android:layout_marginTop="@dimen/small_margin"
                         android:animateLayoutChanges="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -156,10 +157,8 @@
     <!-- Backdrop Bottom Sheet-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheet"
-        style="@style/Cavity.Backdrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorSurface"
         app:layout_behavior=".ui.search.LockedBottomSheetBehavior"
         app:layout_insetEdge="bottom">
 
@@ -168,7 +167,7 @@
             android:id="@+id/backdropHeader"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/white"
+            android:background="@drawable/shape_backdrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -189,6 +188,7 @@
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="?attr/colorSurface"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
