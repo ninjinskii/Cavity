@@ -144,6 +144,9 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             bottle.pdfPath = pdfPath
 
             repository.updateBottle(bottle)
+
+            bottleId = null
+            wineId = null
         }
     }
 
