@@ -69,12 +69,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
 
     private fun setListener() {
         binding.endIcon.setOnClickListener {
-            animateEnd()
-
-            lifecycleScope.launch(Main) {
-                delay(200)
-                listeners[currentPagePos].onFinalStepAccomplished()
-            }
+            accomplished()
         }
     }
 
@@ -169,6 +164,15 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
 
     fun requireNextPage() {
         if (allowedToChangePage(currentPagePos + 1)) viewPager?.currentItem = currentPagePos + 1
+    }
+
+    fun accomplished() {
+        animateEnd()
+
+        lifecycleScope.launch(Main) {
+            delay(200)
+            listeners[currentPagePos].onFinalStepAccomplished()
+        }
     }
 
     interface StepperWatcher {

@@ -16,6 +16,7 @@ import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {
     private lateinit var binding: FragmentInquireOtherInfoBinding
+    private lateinit var stepperFragment: FragmentStepper
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private var bottlePdfPath: String? = null
 
@@ -32,8 +33,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     }
 
     private fun registerStepperWatcher() {
-        val stepperFragment =
-            parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
+        stepperFragment = parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
             override fun onRequestChangePage() = true
@@ -70,6 +70,10 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
             } else {
                 onPdfRemoved()
             }
+        }
+
+        binding.submitAddBottle.setOnClickListener {
+            stepperFragment.accomplished()
         }
     }
 
