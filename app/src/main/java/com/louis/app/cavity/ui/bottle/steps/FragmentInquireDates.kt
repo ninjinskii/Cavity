@@ -89,10 +89,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 if (hasFocus) datePicker.show(childFragmentManager, "CALENDAR")
             }
         }
-
-        binding.count.setOnFocusChangeListener { view, hasFocus ->
-            if (!hasFocus) view.hideKeyboard()
-        }
     }
 
     private fun observe() {

@@ -63,7 +63,9 @@ class WineRecyclerAdapter(
                 wineColorIndicator.setColorFilter(colors[wine.color])
                 binding.chipGroup.removeAllViews()
 
-                for (bottle in bottles) {
+                val bottlesByVintage = bottles.groupBy { it.vintage }
+
+                for (bottlesWithVintage in bottlesByVintage) {
                     val chip: Chip =
                         LayoutInflater.from(itemView.context).inflate(
                             R.layout.chip_action,
@@ -71,9 +73,12 @@ class WineRecyclerAdapter(
                             false
                         ) as Chip
                     chip.apply {
-                        setTag(R.string.tag_chip_id, bottle.vintage)
-                        text = bottle.vintage.toString()
-                        // add bottle count at end (x3...)
+                        setTag(R.string.tag_chip_id, bottlesWithVintage.key)
+                        text = String.format(
+                            resources.getString(R.string.vintage_and_count),
+                            bottlesWithVintage.key,
+                            bottlesWithVintage.value.size
+                        )
 
                         // add date comparison
                         //chipIcon = R.drawable.ic_glass

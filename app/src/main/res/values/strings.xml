@@ -58,6 +58,7 @@
     <string name="wine_color_red">Rouge</string>
     <string name="wine_color_sweet">Liquoreux</string>
     <string name="wine_color_rose">Rosé</string>
+    <string name="vintage_and_count">%d (%d)</string>
 
     <string name="step_1">1</string>
     <string name="step_2">2</string>

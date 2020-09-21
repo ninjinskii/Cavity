@@ -179,6 +179,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                     it.bottleId = bottleId!!
                     repository.insertGrape(it)
                 }
+
+                bottleId = null // Important: removeNotCompletedBottle() will be triggred after this
             }
         } else {
             _userFeedback.postOnce(R.string.base_error)
