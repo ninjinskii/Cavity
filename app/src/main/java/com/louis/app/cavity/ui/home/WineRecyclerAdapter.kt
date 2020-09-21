@@ -4,6 +4,7 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -63,25 +64,24 @@ class WineRecyclerAdapter(
                 wineColorIndicator.setColorFilter(colors[wine.color])
                 binding.chipGroup.removeAllViews()
 
-                val bottlesByVintage = bottles.groupBy { it.vintage }
-
-                for (bottlesWithVintage in bottlesByVintage) {
+                for (bottle in bottles) {
                     val chip: Chip =
                         LayoutInflater.from(itemView.context).inflate(
                             R.layout.chip_action,
                             binding.chipGroup,
                             false
                         ) as Chip
+                    
                     chip.apply {
-                        setTag(R.string.tag_chip_id, bottlesWithVintage.key)
+                        setTag(R.string.tag_chip_id, bottle.vintage)
                         text = String.format(
                             resources.getString(R.string.vintage_and_count),
-                            bottlesWithVintage.key,
-                            bottlesWithVintage.value.size
+                            bottle.vintage,
+                            bottle.count
                         )
 
-                        // add date comparison
-                        //chipIcon = R.drawable.ic_glass
+                        if (bottle.isReadyToDrink())
+                            chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
                     }
 
                     binding.chipGroup.addView(chip)

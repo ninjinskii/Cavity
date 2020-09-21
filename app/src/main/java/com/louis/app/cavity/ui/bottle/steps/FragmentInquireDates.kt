@@ -13,14 +13,15 @@ import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showSnackbar
+import java.text.SimpleDateFormat
 import java.util.*
 
 class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private lateinit var binding: FragmentInquireDatesBinding
     private lateinit var stepperFragment: FragmentStepper
     private lateinit var feedBackObserver: Observer<Event<Int>>
+    private var buyDate = ""
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,7 +81,12 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 .build()
 
             datePicker.addOnPositiveButtonClickListener {
+                val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.FRENCH)
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = datePicker.selection
+                    ?: return@addOnPositiveButtonClickListener
                 setText(datePicker.headerText.toString())
+                buyDate = formatter.format(calendar.time)
             }
 
             setOnClickListener { datePicker.show(childFragmentManager, "CALENDAR") }
@@ -116,7 +122,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             val price = price.text.toString().trim()
             val currency = currency.text.toString()
             val location = buyLocation.text.toString().trim()
-            val date = buyDate.text.toString()
 
             addBottleViewModel.addPartialBottle(
                 vintage.value,
@@ -125,7 +130,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 price,
                 currency,
                 location,
-                date
+                this@FragmentInquireDates.buyDate
             )
         }
     }

@@ -1,7 +1,11 @@
 package com.louis.app.cavity.model
 
-import androidx.room.*
-import androidx.room.ForeignKey.CASCADE
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.louis.app.cavity.util.L
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Entity(tableName = "bottle")
 data class Bottle(
@@ -20,8 +24,12 @@ data class Bottle(
     @ColumnInfo(name = "buy_date") val buyDate: String,
     @ColumnInfo(name = "taste_comment") val tasteComment: String,
     @ColumnInfo(name = "pdf_path") var pdfPath: String
-)
+) {
+    fun isReadyToDrink(): Boolean {
+        val year = Calendar.getInstance().get(Calendar.YEAR)
+        return year >= apogee
+    }
+}
 
-// RV pour sélection du cépage dans la bouteille, pour chaque cépage choisi, ajouter un nouveau slider vertical au rv
 // Préparer un set de couleur clair avec légende pour identifier les cépages dans une jauge dans les infos de bouteille
 // Context getFilesDIr() pour récupérer le stockage privé et mettre les photos dedans
