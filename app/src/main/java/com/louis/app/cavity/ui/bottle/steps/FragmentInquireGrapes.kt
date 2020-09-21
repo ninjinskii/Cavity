@@ -5,19 +5,20 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
-import com.louis.app.cavity.util.hideKeyboard
-import com.louis.app.cavity.util.showKeyboard
+import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var binding: FragmentInquireGrapesBinding
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
+    private lateinit var feedBackObserver: Observer<Event<Int>>
     private var totalGrapePercentage: Int? = null
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
@@ -55,18 +56,22 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             adapter = grapeAdapter
         }
 
-        addBottleViewModel.getAllGrapes().observe(viewLifecycleOwner) {
+        addBottleViewModel.grapes.observe(viewLifecycleOwner) {
             totalGrapePercentage = it.map { grape -> grape.percentage }.sum()
-            grapeAdapter.submitList(it)
+
+            // Using toMutableList() to change the list reference, otherwise our call submitList will be ignored
+            grapeAdapter.submitList(it.toMutableList())
         }
     }
 
     private fun observe() {
-        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+        feedBackObserver = Observer {
             it.getContentIfNotHandled()?.let { stringRes ->
                 binding.coordinator.showSnackbar(stringRes)
             }
         }
+
+        addBottleViewModel.userFeedback.observe(viewLifecycleOwner, feedBackObserver)
     }
 
     private fun setListeners() {
@@ -101,20 +106,9 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             binding.coordinator.showSnackbar(R.string.reserved_name)
             return
         }
+        val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
 
-        if (grapeAdapter.currentList.map { it.name }.any { it == grapeName }) {
-            binding.coordinator.showSnackbar(R.string.grape_already_exist)
-            return
-        }
-
-        val bottleId = addBottleViewModel.bottleId
-
-        if (bottleId != null) {
-            val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
-            addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, bottleId))
-        } else {
-            binding.coordinator.showSnackbar(R.string.base_error)
-        }
+        addBottleViewModel.addGrape(grapeName, defaultPercentage)
     }
 
     private fun validateGrapes(): Boolean {
@@ -124,5 +118,10 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         } else {
             true
         }
+    }
+
+    override fun onPause() {
+        addBottleViewModel.userFeedback.removeObserver(feedBackObserver)
+        super.onPause()
     }
 }

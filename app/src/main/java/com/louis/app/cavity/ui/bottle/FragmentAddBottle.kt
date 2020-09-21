@@ -10,7 +10,6 @@ import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 import com.louis.app.cavity.ui.bottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheet.Companion.ARG_WINE_ID
-import com.louis.app.cavity.util.L
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     private lateinit var binding: FragmentAddBottleBinding
@@ -36,5 +35,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
                 requireActivity().onBackPressed()
             }
         }
+    }
+
+    override fun onDestroy() {
+        addBottleViewModel.removeNotCompletedBottle()
+        super.onDestroy()
     }
 }

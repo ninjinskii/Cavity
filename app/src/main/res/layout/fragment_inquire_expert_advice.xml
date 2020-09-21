@@ -8,7 +8,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -189,7 +190,9 @@
                 android:id="@+id/buttonAddExpertAdvice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginHorizontal="@dimen/medium_margin"
+                android:layout_marginBottom="100dp"
                 android:text="@string/add_expert_advice"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

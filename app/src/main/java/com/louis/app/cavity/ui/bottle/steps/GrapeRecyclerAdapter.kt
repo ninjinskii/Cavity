@@ -31,12 +31,12 @@ class GrapeRecyclerAdapter(
         holder.bind(getItem(position))
 
     override fun getItemId(position: Int): Long {
-        return currentList[position].idGrape
+        return currentList[position].name.hashCode().toLong()
     }
 
     class GrapeItemDiffCallback : DiffUtil.ItemCallback<Grape>() {
         override fun areItemsTheSame(oldItem: Grape, newItem: Grape) =
-            oldItem.idGrape == newItem.idGrape
+            oldItem.name == newItem.name
 
         override fun areContentsTheSame(oldItem: Grape, newItem: Grape) =
             oldItem == newItem

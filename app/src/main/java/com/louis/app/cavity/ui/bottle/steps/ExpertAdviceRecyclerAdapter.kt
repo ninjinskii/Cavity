@@ -64,7 +64,7 @@ class ExpertAdviceRecyclerAdapter(val onDeleteListener: (ExpertAdvice) -> Unit) 
     }
 
     override fun getItemId(position: Int): Long {
-        return currentList[position].idExpertAdvice
+        return currentList[position].contestName.hashCode().toLong()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -80,7 +80,7 @@ class ExpertAdviceRecyclerAdapter(val onDeleteListener: (ExpertAdvice) -> Unit) 
 
     class ExpertAdviceItemDiffCallback : DiffUtil.ItemCallback<ExpertAdvice>() {
         override fun areItemsTheSame(oldItem: ExpertAdvice, newItem: ExpertAdvice) =
-            oldItem.idExpertAdvice == newItem.idExpertAdvice
+            oldItem.contestName == newItem.contestName
 
         override fun areContentsTheSame(oldItem: ExpertAdvice, newItem: ExpertAdvice) =
             oldItem == newItem

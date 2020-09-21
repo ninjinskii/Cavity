@@ -6,19 +6,19 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireExpertAdviceBinding
-import com.louis.app.cavity.model.ExpertAdvice
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
-import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.*
 
 class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_advice) {
     private lateinit var binding: FragmentInquireExpertAdviceBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var feedBackObserver: Observer<Event<Int>>
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,38 +56,31 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             adapter = adviceAdapter
         }
 
-        addBottleViewModel.getAllExpertAdvices().observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                peekBottomSheet()
-            }
+        addBottleViewModel.expertAdvices.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) peekBottomSheet()
+            else hideBottomSheet()
 
             binding.dynamicListHint.text =
                 resources.getQuantityString(R.plurals.expert_advices, it.size, it.size)
-            adviceAdapter.submitList(it)
+
+            // Using toMutableList() to change the list reference, otherwise our call submitList will be ignored
+            adviceAdapter.submitList(it.toMutableList())
         }
     }
 
     private fun observe() {
-        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+        feedBackObserver = Observer {
             it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
+                binding.coordinator.showSnackbar(stringRes, null, binding.bottomSheet)
             }
         }
+
+        addBottleViewModel.userFeedback.observe(viewLifecycleOwner, feedBackObserver)
     }
 
     private fun setListeners() {
         binding.buttonAddExpertAdvice.setOnClickListener {
-            val constestName = binding.contestName.text.toString().trim()
-            val rate = binding.rate.text.toString().trim()
-
-            try {
-                val advice = makeExpertAdvice(constestName, rate)
-                addBottleViewModel.addExpertAdvice(advice)
-            } catch (e: IllegalStateException) {
-                binding.coordinator.showSnackbar(R.string.base_error)
-            }
-
-            binding.contestName.setText("")
+            makeExpertAdvice()
         }
 
         binding.rbGroupType.addOnButtonCheckedListener { _, _, _ -> revealViews() }
@@ -165,58 +158,45 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
         }
     }
 
-    private fun makeExpertAdvice(contestName: String, rate: String): ExpertAdvice {
-        val bottleId = addBottleViewModel.bottleId
-            ?: throw IllegalStateException("bottleId is null")
+    private fun hideBottomSheet() {
+        bottomSheetBehavior.setPeekHeight(0, true)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
 
+    private fun makeExpertAdvice() {
         with(binding) {
-            return when (val checked = rbGroupType.checkedButtonId) {
+            val constestName = contestName.text.toString().trim()
+            val rate = rate.text.toString().trim()
+            val type = when (rbGroupType.checkedButtonId) {
+                R.id.rbRate20 -> AdviceType.RATE_20 to rate.toInt()
+                R.id.rbRate100 -> AdviceType.RATE_100 to rate.toInt()
                 R.id.rbMedal -> {
-                    val value = when (checked) {
-                        R.id.rbBronze -> 0
-                        R.id.rbSilver -> 1
-                        else -> 2
+                    val medal: Int = when (rbGroupMedal.checkedButtonId) {
+                        R.id.rbBronze -> MedalColor.BRONZE.ordinal
+                        R.id.rbSilver -> MedalColor.SILVER.ordinal
+                        else -> MedalColor.GOLD.ordinal
                     }
-                    ExpertAdvice(0, contestName, 1, 0, 0, 0, value, bottleId)
+
+                    AdviceType.MEDAL to medal
                 }
-                R.id.rbRate100 -> ExpertAdvice(
-                    0,
-                    contestName,
-                    0,
-                    0,
-                    0,
-                    1,
-                    rate.toInt(),
-                    bottleId
-                )
-                R.id.rbRate20 -> ExpertAdvice(
-                    0,
-                    contestName,
-                    0,
-                    0,
-                    1,
-                    0,
-                    rate.toInt(),
-                    bottleId
-                )
                 else -> {
-                    val value = when (rbGroupType.checkedButtonId) {
-                        R.id.rbStar1 -> 0
-                        R.id.rbStar2 -> 1
-                        else -> 2
+                    val starsNumber: Int = when (rbGroupStars.checkedButtonId) {
+                        R.id.rbStar1 -> Stars.STAR_1.ordinal
+                        R.id.rbStar2 -> Stars.STAR_2.ordinal
+                        else -> Stars.STAR_3.ordinal
                     }
-                    ExpertAdvice(
-                        0,
-                        contestName,
-                        0,
-                        1,
-                        0,
-                        0,
-                        value,
-                        bottleId
-                    )
+
+                    AdviceType.STARS to starsNumber
                 }
             }
+
+            addBottleViewModel.addExpertAdvice(constestName, type)
+            contestName.setText("")
         }
+    }
+
+    override fun onPause() {
+        addBottleViewModel.userFeedback.removeObserver(feedBackObserver)
+        super.onPause()
     }
 }

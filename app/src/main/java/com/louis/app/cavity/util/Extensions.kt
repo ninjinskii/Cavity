@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.snackbar.Snackbar
+import com.louis.app.cavity.model.Grape
 
 // Boolean and Int helpers for database compatibility
 fun Int.toBoolean() = this == 1
@@ -34,11 +35,14 @@ fun View.showKeyboard() {
 fun CoordinatorLayout.showSnackbar(
     @StringRes stringRes: Int,
     @StringRes actionStringRes: Int? = null,
+    anchorView: View? = null,
     action: (View) -> Unit = { }
 ) {
     Snackbar.make(this, stringRes, Snackbar.LENGTH_LONG).apply {
         actionStringRes?.let { setAction(it, action).duration = 8000 }
-    }.show()
+        anchorView?.let { this.anchorView = anchorView }
+        show()
+    }
 }
 
 // LiveData
@@ -48,7 +52,7 @@ fun <T> MutableLiveData<Event<T>>.postOnce(value: T) {
 
 operator fun <T> MutableLiveData<MutableList<T>>.plusAssign(item: T) {
     val value = this.value ?: mutableListOf()
-    value.add(0, item)
+    value.add(value.size, item)
     this.value = value // notify observers
 }
 
