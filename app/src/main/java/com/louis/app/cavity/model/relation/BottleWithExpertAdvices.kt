@@ -8,8 +8,8 @@ import com.louis.app.cavity.model.ExpertAdvice
 data class BottleWithExpertAdvices(
     @Embedded val bottle: Bottle,
     @Relation(
-        parentColumn = "id_bottle",
-        entityColumn = "id_expert_advice"
+        parentColumn = "bottle_id",
+        entityColumn = "expert_advice_id"
     )
     val expertAdvices: List<ExpertAdvice>
 )

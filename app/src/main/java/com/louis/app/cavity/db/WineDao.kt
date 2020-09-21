@@ -35,7 +35,7 @@ interface WineDao {
     fun getWineWithBottles(): LiveData<List<WineWithBottles>>
 
     @Transaction
-    @Query("SELECT * FROM wine WHERE id_county =:countyId")
+    @Query("SELECT * FROM wine WHERE county_id =:countyId")
     fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
 
     @Query("SELECT * FROM county ORDER BY pref_order")

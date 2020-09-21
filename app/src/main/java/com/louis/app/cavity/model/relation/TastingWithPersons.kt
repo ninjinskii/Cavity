@@ -10,8 +10,8 @@ import com.louis.app.cavity.model.Tasting
 data class TastingWithPersons(
     @Embedded val tasting: Tasting,
     @Relation(
-        parentColumn = "id_tasting",
-        entityColumn = "id_tasting",
+        parentColumn = "tasting_id",
+        entityColumn = "tasting_id",
         associateBy = Junction(TastingPersonXRef::class)
     )
     val persons: List<Person>

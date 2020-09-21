@@ -9,8 +9,8 @@ import com.louis.app.cavity.model.Person
 data class HistoryEntryWithPersons(
     @Embedded val historyEntry: HistoryEntry,
     @Relation(
-        parentColumn = "id_history_entry",
-        entityColumn = "id_person",
+        parentColumn = "history_entry_id",
+        entityColumn = "person_id",
         associateBy = Junction(PersonHistoryEntryXRef::class)
     )
     val persons: List<Person>

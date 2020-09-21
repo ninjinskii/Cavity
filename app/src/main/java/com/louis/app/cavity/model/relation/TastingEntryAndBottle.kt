@@ -9,8 +9,8 @@ import com.louis.app.cavity.model.TastingEntry
 data class TastingEntryAndBottle (
     @Embedded val tastingEntry: TastingEntry,
     @Relation(
-        parentColumn = "id_tasting_entry",
-        entityColumn = "id_bottle"
+        parentColumn = "tasting_entry_id",
+        entityColumn = "bottle_id"
     )
     val bottle: Bottle
 )

@@ -138,8 +138,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     ) {
         val formattedPrice = if (price.isEmpty()) "-1" else price
         val bottle = Bottle(
-            idBottle = bottleId ?: 0,
-            idWine = wineId!!,
+            bottleId = bottleId ?: 0,
+            wineId = wineId!!,
             vintage,
             apogee,
             isFavorite = 0,
@@ -171,12 +171,12 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 repository.updateBottle(bottle)
 
                 _expertAdvices.value?.forEach {
-                    it.idBottle = bottleId!!
+                    it.bottleId = bottleId!!
                     repository.insertAdvice(it)
                 }
 
                 _grapes.value?.forEach {
-                    it.idBottle = bottleId!!
+                    it.bottleId = bottleId!!
                     repository.insertGrape(it)
                 }
             }

@@ -3,8 +3,8 @@ package com.louis.app.cavity.model.relation
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
-@Entity(primaryKeys = ["id_tasting", "id_person"])
+@Entity(primaryKeys = ["tasting_id", "person_id"])
 data class TastingPersonXRef(
-    @ColumnInfo(name = "id_tasting") val idTasting: Long,
-    @ColumnInfo(name = "id_person") val idPerson: Long
+    @ColumnInfo(name = "tasting_id") val idTasting: Long,
+    @ColumnInfo(name = "person_id") val idPerson: Long
 )

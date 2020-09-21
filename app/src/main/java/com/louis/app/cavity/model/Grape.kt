@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "grape")
 data class Grape(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id_grape")
-    val idGrape: Long = 0,
+    @ColumnInfo(name = "grape_id")
+    val grapeId: Long = 0,
     val name: String,
     var percentage: Int,
-    @ColumnInfo(name = "id_bottle") var idBottle: Long
+    @ColumnInfo(name = "bottle_id") var bottleId: Long
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -19,19 +19,19 @@ data class Grape(
 
         other as Grape
 
-        if (idGrape != other.idGrape) return false
+        if (grapeId != other.grapeId) return false
         if (name != other.name) return false
         if (percentage != other.percentage) return false
-        if (idBottle != other.idBottle) return false
+        if (bottleId != other.bottleId) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = idGrape.hashCode()
+        var result = grapeId.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + percentage
-        result = 31 * result + idBottle.hashCode()
+        result = 31 * result + bottleId.hashCode()
         return result
     }
 }

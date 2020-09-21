@@ -10,7 +10,7 @@ import kotlin.concurrent.thread
 
 @Database(
     entities = [County::class, Wine::class, Bottle::class, Grape::class, ExpertAdvice::class],
-    version = 16,
+    version = 17,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {

@@ -22,10 +22,10 @@ interface BottleDao {
     @Query("SELECT * FROM bottle")
     fun getAllBottles(): LiveData<List<Bottle>>
 
-    @Query("SELECT * FROM bottle WHERE id_bottle=:bottleId")
+    @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
     fun getBottleByIdNotLive(bottleId: Long): Bottle
 
-    @Query("DELETE FROM bottle WHERE id_bottle=:bottleId")
+    @Query("DELETE FROM bottle WHERE bottle_id=:bottleId")
     fun deleteBottleById(bottleId: Long)
 
     // ---------------Grape---------------

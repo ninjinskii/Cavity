@@ -97,7 +97,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
                         naming,
                         getWineColor(color),
                         cuvee,
-                        county.idCounty,
+                        county.countyId,
                         isOrganic,
                         wineImagePath ?: ""
                     )
@@ -105,7 +105,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
                     if (!editMode) {
                         homeViewModel.addWine(wine)
                     } else {
-                        wine.apply { idWine = homeViewModel.editWine!!.idWine }
+                        wine.apply { wineId = homeViewModel.editWine!!.wineId }
                             .also { homeViewModel.updateWine(wine) }
                     }
                 }

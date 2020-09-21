@@ -6,9 +6,9 @@ import androidx.room.ForeignKey.CASCADE
 @Entity(tableName = "bottle")
 data class Bottle(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id_bottle")
-    val idBottle: Long = 0,
-    @ColumnInfo(name = "id_wine") val idWine: Long,
+    @ColumnInfo(name = "bottle_id")
+    val bottleId: Long = 0,
+    @ColumnInfo(name = "wine_id") val wineId: Long,
     val vintage: Int,
     val apogee: Int,
     @ColumnInfo(name = "is_favorite") var isFavorite: Int,

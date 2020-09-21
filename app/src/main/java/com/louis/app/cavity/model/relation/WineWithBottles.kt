@@ -8,8 +8,8 @@ import com.louis.app.cavity.model.Wine
 data class WineWithBottles (
     @Embedded val wine: Wine,
     @Relation(
-        parentColumn = "id_wine",
-        entityColumn = "id_wine"
+        parentColumn = "wine_id",
+        entityColumn = "wine_id"
     )
     val bottles: List<Bottle>
 )

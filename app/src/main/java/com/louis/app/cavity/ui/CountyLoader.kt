@@ -38,7 +38,7 @@ interface CountyLoader {
                     chipGroup.addView(chip)
                     if (index == 0 && selectionRequired) chip.isChecked = true
 
-                    if (editWine != null && county.idCounty == editWine.idCounty) {
+                    if (editWine != null && county.countyId == editWine.countyId) {
                         chip.isChecked = true
                     }
                 }

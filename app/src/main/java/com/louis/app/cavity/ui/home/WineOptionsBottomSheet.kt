@@ -51,7 +51,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
                 dismiss()
                 findNavController().navigate(
                     R.id.homeToAddBottle,
-                    bundleOf(ARG_WINE_ID to homeViewModel.editWine?.idWine)
+                    bundleOf(ARG_WINE_ID to homeViewModel.editWine?.wineId)
                 )
             }
 

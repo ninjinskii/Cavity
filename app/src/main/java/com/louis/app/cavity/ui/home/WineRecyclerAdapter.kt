@@ -35,12 +35,12 @@ class WineRecyclerAdapter(
         holder.bind(getItem(position))
 
     override fun getItemId(position: Int): Long {
-        return currentList[position].wine.idWine
+        return currentList[position].wine.wineId
     }
 
     class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {
         override fun areItemsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
-            oldItem.wine.idWine == newItem.wine.idWine
+            oldItem.wine.wineId == newItem.wine.wineId
 
         override fun areContentsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
             oldItem.wine == newItem.wine
