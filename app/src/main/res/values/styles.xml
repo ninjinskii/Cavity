@@ -4,6 +4,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Cavtiy.LargeComponent
+        </item>
     </style>
 
     <!-- Scrollable tab -->
@@ -20,10 +23,15 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
-    <!-- Backdrop front layer shape -->
-    <style name="ShapeAppearanceOverlay.Cavity.Backdrop" parent="">
+    <!-- Shape -->
+    <style name="ShapeAppearance.Cavtiy.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
+        <item name="cornerSize">0dp</item>
     </style>
 
+    <!-- Backdrop front layer shape -->
+    <style name="ShapeAppearenceOverlay.Cavity.Backdrop" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
 </resources>

@@ -79,10 +79,15 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
         binding.buttonAddExpertAdvice.setOnClickListener {
             val constestName = binding.contestName.text.toString().trim()
             val rate = binding.rate.text.toString().trim()
-            val advice = makeExpertAdvice(constestName, rate)
+
+            try {
+                val advice = makeExpertAdvice(constestName, rate)
+                addBottleViewModel.addExpertAdvice(advice)
+            } catch (e: IllegalStateException) {
+                binding.coordinator.showSnackbar(R.string.base_error)
+            }
 
             binding.contestName.setText("")
-            addBottleViewModel.addExpertAdvice(advice)
         }
 
         binding.rbGroupType.addOnButtonCheckedListener { _, _, _ -> revealViews() }
@@ -160,8 +165,10 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
         }
     }
 
-
     private fun makeExpertAdvice(contestName: String, rate: String): ExpertAdvice {
+        val bottleId = addBottleViewModel.bottleId
+            ?: throw IllegalStateException("bottleId is null")
+
         with(binding) {
             return when (val checked = rbGroupType.checkedButtonId) {
                 R.id.rbMedal -> {
@@ -170,7 +177,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
                         R.id.rbSilver -> 1
                         else -> 2
                     }
-                    ExpertAdvice(0, contestName, 1, 0, 0, 0, value, 0)
+                    ExpertAdvice(0, contestName, 1, 0, 0, 0, value, bottleId)
                 }
                 R.id.rbRate100 -> ExpertAdvice(
                     0,
@@ -180,7 +187,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
                     0,
                     1,
                     rate.toInt(),
-                    0
+                    bottleId
                 )
                 R.id.rbRate20 -> ExpertAdvice(
                     0,
@@ -190,7 +197,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
                     1,
                     0,
                     rate.toInt(),
-                    0
+                    bottleId
                 )
                 else -> {
                     val value = when (rbGroupType.checkedButtonId) {
@@ -206,7 +213,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
                         0,
                         0,
                         value,
-                        0
+                        bottleId
                     )
                 }
             }

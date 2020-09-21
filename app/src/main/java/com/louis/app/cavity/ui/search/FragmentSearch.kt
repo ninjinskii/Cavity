@@ -2,8 +2,13 @@ package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
 import android.graphics.Point
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
-import android.view.*
+import android.text.InputType
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -11,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.ui.ActivityMain
@@ -21,27 +27,32 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private lateinit var binding: FragmentSearchBinding
+    private lateinit var datePicker: MaterialDatePicker<Long>
     private lateinit var bottlesAdapter: WineRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var menu: Menu
     private val searchViewModel: SearchViewModel by activityViewModels()
-    private var isHeaderShadowShown = false
+    private var isDatePickerDisplayed = false
+    private var isHeaderShadowDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSearchBinding.bind(view)
 
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-        bottomSheetBehavior.isHideable = false
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
+            state = BottomSheetBehavior.STATE_EXPANDED
+            isHideable = false
+        }
 
         setHasOptionsMenu(true)
 
         initRecyclerView()
+        initDatePicker()
         inflateChips()
         setListeners()
-        placeBottomSheet()
+        setBottomSheetPeekHeight()
     }
 
     private fun initRecyclerView() {
@@ -74,7 +85,27 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         }
 
         searchViewModel.getWineWithBottles().observe(viewLifecycleOwner) {
+            binding.matchingWines.text =
+                resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter.submitList(it)
+        }
+    }
+
+    private fun initDatePicker() {
+        val builder = MaterialDatePicker.Builder.datePicker()
+        builder.setTitleText(R.string.buying_date)
+
+        datePicker = builder.build()
+
+        datePicker.apply {
+            addOnDismissListener {
+                binding.date.clearFocus()
+                isDatePickerDisplayed = false
+            }
+
+            addOnPositiveButtonClickListener {
+                binding.date.setText(headerText)
+            }
         }
     }
 
@@ -92,12 +123,26 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun setListeners() {
-        binding.buttonShowFilters.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        binding.date.apply {
+            inputType = InputType.TYPE_NULL
+
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    if (!isDatePickerDisplayed) {
+                        isDatePickerDisplayed = true
+
+                        datePicker.show(
+                            childFragmentManager,
+                            resources.getString(R.string.tag_date_picker)
+                        )
+                    }
+                }
+            }
         }
     }
 
-    private fun placeBottomSheet() {
+    // Needed for split screen
+    private fun setBottomSheetPeekHeight() {
         lifecycleScope.launch(Main) {
             delay(300)
             val display = activity?.window?.decorView?.height
@@ -116,25 +161,29 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun setHeaderShadow(setVisible: Boolean) {
         val header = binding.backdropHeader
 
-        if (setVisible && !isHeaderShadowShown) {
+        if (setVisible && !isHeaderShadowDisplayed) {
             header.stateListAnimator =
                 AnimatorInflater.loadStateListAnimator(context, R.animator.show_elevation)
-            isHeaderShadowShown = true
-        } else if (!setVisible && isHeaderShadowShown) {
+            isHeaderShadowDisplayed = true
+        } else if (!setVisible && isHeaderShadowDisplayed) {
             header.stateListAnimator =
                 AnimatorInflater.loadStateListAnimator(context, R.animator.hide_elevation)
-            isHeaderShadowShown = false
+            isHeaderShadowDisplayed = false
         }
     }
 
     private fun toggleBackdrop() {
+        val item = menu.getItem(1)
+
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            item.setIcon(R.drawable.anim_close_filter)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            // morph icon animation
         } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            // morph icon animation
+            menu.getItem(1).setIcon(R.drawable.anim_filter_close)
         }
+
+        (item.icon as AnimatedVectorDrawable).start()
     }
 
     override fun onResume() {
@@ -149,6 +198,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_menu, menu)
+        this.menu = menu
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

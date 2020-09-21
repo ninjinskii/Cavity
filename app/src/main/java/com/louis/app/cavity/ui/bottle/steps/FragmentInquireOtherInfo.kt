@@ -8,10 +8,12 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {
@@ -42,8 +44,13 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
             }
 
             override fun onFinalStepAccomplished() {
-                //addBottleViewModel.updateBottle()
-                // finish
+                with(binding) {
+                    addBottleViewModel.updateBottle(
+                        otherInfo.text.toString(),
+                        addToFavorite.isChecked,
+                        bottlePdfPath ?: ""
+                    )
+                }
             }
         })
     }

@@ -32,19 +32,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/medium_margin"
+                        android:layout_marginTop="@dimen/small_margin"
                         android:animateLayoutChanges="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                        app:singleLine="true">
+                        app:singleLine="true"/>
 
-                        <!-- Fake chip to avoid layout animation (heigth: 0 to chip height) when inflating chips -->
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:visibility="invisible" />
-
-                    </com.google.android.material.chip.ChipGroup>
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -75,7 +69,6 @@
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipReadyToDrink"
                             style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_marginStart="8dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/ready_to_drink" />
@@ -155,11 +148,8 @@
     <!-- Backdrop Bottom Sheet-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheet"
-        style="@style/Widget.MaterialComponents.BottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorSurface"
-        app:behavior_peekHeight="?attr/actionBarSize"
         app:layout_behavior=".ui.search.LockedBottomSheetBehavior"
         app:layout_insetEdge="bottom">
 
@@ -168,7 +158,7 @@
             android:id="@+id/backdropHeader"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/white"
+            android:background="@drawable/shape_backdrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -183,27 +173,13 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="12 vins" />
 
-            <ImageView
-                android:id="@+id/buttonShowFilters"
-                android:layout_width="@dimen/small_icon"
-                android:layout_height="@dimen/small_icon"
-                android:layout_margin="@dimen/small_margin"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:contentDescription="@string/show_filters"
-                android:focusable="true"
-                android:src="@drawable/ic_filter"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorOnBackground" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="?attr/colorSurface"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"

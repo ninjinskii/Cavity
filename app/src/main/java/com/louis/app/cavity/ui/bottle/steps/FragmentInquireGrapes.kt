@@ -107,8 +107,14 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             return
         }
 
-        val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
-        addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, 0))
+        val bottleId = addBottleViewModel.bottleId
+
+        if (bottleId != null) {
+            val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
+            addBottleViewModel.addGrape(Grape(0, grapeName, defaultPercentage, bottleId))
+        } else {
+            binding.coordinator.showSnackbar(R.string.base_error)
+        }
     }
 
     private fun validateGrapes(): Boolean {
