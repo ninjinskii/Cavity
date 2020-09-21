@@ -25,42 +25,30 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         CavityDatabase.getInstance(app).bottleDao()
     )
 
-    var wineId: Long? = null
+    val expertAdvices = mutableListOf<ExpertAdvice>()
+    val grapes = mutableListOf<Grape>()
 
-    var bottleId: Long? = null
-        private set
+    private var step1Bottle: Step1Bottle? = null
+    var wineId: Long? = null
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
     fun addGrape(grape: Grape) {
-        if (!alreadyContainsGrape(grape.name)) {
-            viewModelScope.launch(IO) {
-                repository.insertGrape(grape)
-            }
-        } else {
+        if (!alreadyContainsGrape(grape.name))
+            grapes.add(grape)
+        else
             _userFeedback.postOnce(R.string.grape_already_exist)
-        }
     }
 
     fun updateGrape(grape: Grape) {
-        viewModelScope.launch(IO) {
-            repository.updateGrape(grape)
-        }
+        grapes.first { it.name == grape.name }.percentage = grape.percentage
     }
 
-    fun removeGrape(grape: Grape) {
-        viewModelScope.launch(IO) {
-            repository.deleteGrape(grape)
-        }
-    }
+    fun removeGrape(grape: Grape) = grapes.removeAt(grapes.indexOf(grape))
 
-    fun getAllGrapes() = repository.getAllGrapes()
-
-    private fun alreadyContainsGrape(grapeName: String): Boolean {
-        return grapeName in getAllGrapes().value?.map { it.name } ?: return false
-    }
+    private fun alreadyContainsGrape(grapeName: String) = grapeName in grapes.map { it.name }
 
     fun addExpertAdvice(advice: ExpertAdvice) {
         when {
@@ -70,21 +58,14 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             advice.isRate20.toBoolean() && advice.value !in 0..20 ->
                 _userFeedback.postOnce(R.string.rate_outside_0_to_20)
 
-            else -> {
-                viewModelScope.launch(IO) {
-                    repository.insertAdvice(advice)
-                }
-            }
+            else ->
+                expertAdvices.add(advice)
         }
     }
 
     fun removeExpertAdvice(advice: ExpertAdvice) {
-        viewModelScope.launch(IO) {
-            repository.deleteAdvice(advice)
-        }
+        expertAdvices.removeAt(expertAdvices.indexOf(advice))
     }
-
-    fun getAllExpertAdvices() = repository.getAllExpertAdvices()
 
     fun validateBottle(count: String, price: String): Boolean {
         if (count.isEmpty() || !count.isDigitsOnly() || count.toInt() <= 0) {
@@ -100,65 +81,47 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         return true
     }
 
-    fun addBottle(
-        vintage: Int,
-        apogee: Int,
-        count: String,
-        price: String,
-        currency: String,
-        location: String,
-        date: String
-    ) {
-        if (wineId == null) {
-            _userFeedback.postOnce(R.string.base_error)
-        }
-
-        val formattedPrice = if (price.isEmpty()) "-1" else price
-        val bottle = Bottle(
-            idBottle = bottleId ?: 0,
-            idWine = wineId!!,
-            vintage,
-            apogee,
-            isFavorite = 0,
-            count = count.toInt(),
-            comment = "",
-            price = formattedPrice.toInt(),
-            currency,
-            otherInfo = "",
-            location,
-            date,
-            tasteComment = "",
-            pdfPath = ""
-        )
-
-        viewModelScope.launch(IO) {
-            bottleId = repository.insertBottle(bottle)
-        }
+    fun saveStep1Bottle(partialBottle: Step1Bottle) {
+        step1Bottle = partialBottle
     }
 
-    fun updateBottle(otherInfo: String, isFavorite: Boolean, pdfPath: String) {
-        viewModelScope.launch(IO) {
-            val bottle = repository.getBottleByIdNotLive(bottleId ?: return@launch)
-            bottle.otherInfo = otherInfo
-            bottle.isFavorite = isFavorite.toInt()
-            bottle.pdfPath = pdfPath
+    fun addBottle(otherInfo: String, isFavorite: Boolean, pdfPath: String) {
+        if (step1Bottle != null) {
+            with(step1Bottle ?: return) {
+                val formattedPrice = if (price.isEmpty()) "-1" else price
+                val bottle = Bottle(
+                    idBottle = 0,
+                    idWine = wineId!!,
+                    vintage,
+                    apogee,
+                    isFavorite = isFavorite.toInt(),
+                    count = count.toInt(),
+                    price = formattedPrice.toInt(),
+                    currency,
+                    otherInfo,
+                    location,
+                    date,
+                    tasteComment = "",
+                    pdfPath
+                )
 
-            repository.updateBottle(bottle)
-
-            bottleId = null
-            wineId = null
-        }
-    }
-
-    // One bottle is added when user has complete step 1, then we get the id given by room to their bottle
-    // and use it to add grapes, expert advices and other into later steps
-    // If the user cancel the bottle form completion half-way, we should delete the bottle
-    fun removeNotCompletedBottle() {
-        bottleId?.let {
-            viewModelScope.launch(IO) {
-                repository.deleteBottleById(it)
-                bottleId = null
+                viewModelScope.launch(IO) {
+                    repository.insertBottle(bottle)
+                }
             }
+        } else {
+            _userFeedback.postOnce(R.string.base_error)
+            return
         }
     }
+
+    data class Step1Bottle(
+        val vintage: Int,
+        val apogee: Int,
+        val count: String,
+        val price: String,
+        val currency: String,
+        val location: String,
+        val date: String
+    )
 }

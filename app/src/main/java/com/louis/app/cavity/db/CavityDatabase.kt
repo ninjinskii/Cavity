@@ -10,7 +10,7 @@ import kotlin.concurrent.thread
 
 @Database(
     entities = [County::class, Wine::class, Bottle::class, Grape::class, ExpertAdvice::class],
-    version = 15,
+    version = 16,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -34,97 +34,8 @@ abstract class CavityDatabase : RoomDatabase() {
                 CavityDatabase::class.java,
                 "cavity.db"
             )
-                .addCallback(roomCallback)
                 .fallbackToDestructiveMigration()
                 .build()
-        }
-
-        private val roomCallback: Callback = object : RoomDatabase.Callback() {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-                thread {
-                    val bottleDao = instance?.bottleDao()
-                    val wineDao = instance?.wineDao()
-
-                    wineDao?.insertWine(Wine(1, "a", "a", 1, "", 0, 0, ""))
-                    wineDao?.insertWine(Wine(2, "a", "a", 1, "", 0, 0, ""))
-                    wineDao?.insertWine(Wine(3, "a", "a", 1, "", 0, 0, ""))
-
-                    bottleDao?.insertBottle(
-                        Bottle(
-                            0,
-                            1,
-                            0,
-                            0,
-                            1,
-                            2010,
-                            "",
-                            0,
-                            "",
-                            ",",
-                            "",
-                            "",
-                            "",
-                            ""
-                        )
-                    )
-                    bottleDao?.insertBottle(
-                        Bottle(
-                            0,
-                            1,
-                            0,
-                            0,
-                            1,
-                            2010,
-                            "",
-                            0,
-                            "",
-                            ",",
-                            "",
-                            "",
-                            "",
-                            ""
-                        )
-                    )
-                    bottleDao?.insertBottle(
-                        Bottle(
-                            0,
-                            1,
-                            0,
-                            0,
-                            1,
-                            2011,
-                            "",
-                            0,
-                            "",
-                            ",",
-                            "",
-                            "",
-                            "",
-                            ""
-                        )
-                    )
-                    bottleDao?.insertBottle(
-                        Bottle(
-                            0,
-                            2,
-                            0,
-                            0,
-                            1,
-                            2012,
-                            "",
-                            0,
-                            "",
-                            ",",
-                            "",
-                            "",
-                            "",
-                            ""
-                        )
-                    )
-
-                }
-            }
         }
     }
 }

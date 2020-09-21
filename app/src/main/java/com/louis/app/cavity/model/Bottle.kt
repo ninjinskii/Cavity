@@ -13,7 +13,6 @@ data class Bottle(
     val apogee: Int,
     @ColumnInfo(name = "is_favorite") var isFavorite: Int,
     val count: Int,
-    val comment: String,
     val price: Int,
     val currency: String,
     @ColumnInfo(name = "other_info") var otherInfo: String,

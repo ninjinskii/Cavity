@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
-import android.graphics.Point
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.text.InputType
@@ -151,7 +150,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             display?.let {
                 binding.toggleShowBefore.getLocationInWindow(location)
                 bottomSheetBehavior.setPeekHeight(
-                    (display ?: 0) - location[1] - binding.toggleShowBefore.height,
+                    it - location[1] - binding.toggleShowBefore.height,
                     true
                 )
             }

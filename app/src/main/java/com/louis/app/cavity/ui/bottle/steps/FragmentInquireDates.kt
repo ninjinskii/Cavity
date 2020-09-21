@@ -37,7 +37,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
             override fun onRequestChangePage() = validateFields()
 
-            override fun onPageRequestAccepted() = addBottle()
+            override fun onPageRequestAccepted() = saveStep1Bottle()
         })
     }
 
@@ -109,7 +109,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         }
     }
 
-    private fun addBottle() {
+    private fun saveStep1Bottle() {
         with(binding) {
             val count = count.text.toString().trim()
             val price = price.text.toString().trim()
@@ -117,14 +117,16 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             val location = buyLocation.text.toString().trim()
             val date = buyDate.text.toString()
 
-            addBottleViewModel.addBottle(
-                vintage.value,
-                apogee.value,
-                count,
-                price,
-                currency,
-                location,
-                date
+            addBottleViewModel.saveStep1Bottle(
+                AddBottleViewModel.Step1Bottle(
+                    vintage.value,
+                    apogee.value,
+                    count,
+                    price,
+                    currency,
+                    location,
+                    date
+                )
             )
         }
     }

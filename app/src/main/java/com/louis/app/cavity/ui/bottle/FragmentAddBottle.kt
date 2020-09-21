@@ -37,9 +37,4 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
             }
         }
     }
-
-    override fun onDestroy() {
-        addBottleViewModel.removeNotCompletedBottle()
-        super.onDestroy()
-    }
 }

@@ -45,7 +45,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
             override fun onFinalStepAccomplished() {
                 with(binding) {
-                    addBottleViewModel.updateBottle(
+                    addBottleViewModel.addBottle(
                         otherInfo.text.toString(),
                         addToFavorite.isChecked,
                         bottlePdfPath ?: ""
@@ -73,10 +73,6 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
                 onPdfRemoved()
             }
         }
-    }
-
-    private fun onBottleAdditionalInfoSubmited() {
-
     }
 
     private fun requestMediaPersistentPermission(fileBrowserIntent: Intent?) {
