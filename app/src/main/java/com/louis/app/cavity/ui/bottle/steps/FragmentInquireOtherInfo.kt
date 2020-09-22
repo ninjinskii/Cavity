@@ -10,9 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
+import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.toBoolean
 
 class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {
     private lateinit var binding: FragmentInquireOtherInfoBinding
@@ -30,6 +32,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
         registerStepperWatcher()
         setListeners()
+        observe()
     }
 
     private fun registerStepperWatcher() {
@@ -43,7 +46,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
             override fun onFinalStepAccomplished() {
                 with(binding) {
-                    addBottleViewModel.triggerFinalBottleSave(
+                    addBottleViewModel.addBottle(
                         otherInfo.text.toString(),
                         addToFavorite.isChecked,
                         bottlePdfPath ?: ""
@@ -74,6 +77,20 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
         binding.submitAddBottle.setOnClickListener {
             stepperFragment.accomplished()
+        }
+    }
+
+    private fun observe() {
+        addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
+            if (it != null) updateFields(it)
+        }
+    }
+
+    private fun updateFields(editedBottle: Bottle) {
+        with(binding) {
+            otherInfo.setText(editedBottle.otherInfo)
+            addToFavorite.isChecked = editedBottle.isFavorite.toBoolean()
+            bottlePdfPath = editedBottle.pdfPath
         }
     }
 

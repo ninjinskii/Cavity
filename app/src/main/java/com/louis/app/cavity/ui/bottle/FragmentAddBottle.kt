@@ -19,7 +19,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddBottleBinding.bind(view)
 
-        addBottleViewModel.wineId = arguments?.getLong(ARG_WINE_ID)
+        arguments?.getLong(ARG_WINE_ID)?.let { addBottleViewModel.setWineId(it) }
+        val editWineId = arguments?.getLong("ARG_EDIT_BOTTLE_ID", -1) ?: -1
+
+        if (editWineId != -1L) addBottleViewModel.triggerEditMode(editWineId)
 
         val stepperFragment = childFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
 
@@ -35,10 +38,5 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
                 requireActivity().onBackPressed()
             }
         }
-    }
-
-    override fun onDestroy() {
-        addBottleViewModel.removeNotCompletedBottle()
-        super.onDestroy()
     }
 }

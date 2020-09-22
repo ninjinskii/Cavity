@@ -22,8 +22,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         CavityDatabase.getInstance(app).bottleDao()
     )
 
-    private var bottleId: Long? = null
-    var wineId: Long? = null
+    private var wineId: Long? = null
+    private var partialBottle: PartialBottle? = null
 
     private val _expertAdvices = MutableLiveData<MutableList<ExpertAdvice>>()
     val expertAdvices: LiveData<MutableList<ExpertAdvice>>
@@ -33,19 +33,21 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val grapes: LiveData<MutableList<Grape>>
         get() = _grapes
 
+    private val _editedBottle = MutableLiveData<Bottle>()
+    val editedBottle: LiveData<Bottle>
+        get() = _editedBottle
+
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
     fun addGrape(grapeName: String, defaultPercentage: Int) {
-        bottleId?.let {
-            val grape = Grape(0, grapeName, defaultPercentage, it)
+        val grape = Grape(0, grapeName, defaultPercentage, -1)
 
-            if (!alreadyContainsGrape(grape.name))
-                _grapes += grape
-            else
-                _userFeedback.postOnce(R.string.grape_already_exist)
-        }
+        if (!alreadyContainsGrape(grape.name))
+            _grapes += grape
+        else
+            _userFeedback.postOnce(R.string.grape_already_exist)
     }
 
     fun updateGrape(grape: Grape) {
@@ -72,26 +74,24 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             return
         }
 
-        bottleId?.let {
-            val advice: ExpertAdvice? = when (typeToVal.first) {
-                AdviceType.RATE_20 -> {
-                    if (checkRateInBounds(typeToVal.second, 20))
-                        ExpertAdvice(0, contestName, 0, 0, 1, 0, typeToVal.second, it)
-                    else
-                        null
-                }
-                AdviceType.RATE_100 -> {
-                    if (checkRateInBounds(typeToVal.second, 100))
-                        ExpertAdvice(0, contestName, 0, 0, 0, 1, typeToVal.second, it)
-                    else
-                        null
-                }
-                AdviceType.MEDAL -> ExpertAdvice(0, contestName, 1, 0, 0, 0, typeToVal.second, it)
-                else -> ExpertAdvice(0, contestName, 0, 1, 0, 0, typeToVal.second, it)
+        val advice: ExpertAdvice? = when (typeToVal.first) {
+            AdviceType.RATE_20 -> {
+                if (checkRateInBounds(typeToVal.second, 20))
+                    ExpertAdvice(0, contestName, 0, 0, 1, 0, typeToVal.second, -1)
+                else
+                    null
             }
-
-            advice?.let { adv -> _expertAdvices += adv }
+            AdviceType.RATE_100 -> {
+                if (checkRateInBounds(typeToVal.second, 100))
+                    ExpertAdvice(0, contestName, 0, 0, 0, 1, typeToVal.second, -1)
+                else
+                    null
+            }
+            AdviceType.MEDAL -> ExpertAdvice(0, contestName, 1, 0, 0, 0, typeToVal.second, -1)
+            else -> ExpertAdvice(0, contestName, 0, 1, 0, 0, typeToVal.second, -1)
         }
+
+        advice?.let { adv -> _expertAdvices += adv }
     }
 
     private fun checkRateInBounds(rate: Int, max: Int): Boolean {
@@ -126,8 +126,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         return true
     }
 
-    // Add partial bottle with base informations, and retrieve the id given by Room, which will be used to associate grapes and expert advices
-    fun addPartialBottle(
+    fun setPartialBottle(
         vintage: Int,
         apogee: Int,
         count: String,
@@ -136,74 +135,88 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         location: String,
         date: String
     ) {
-        val formattedPrice = if (price.isEmpty()) "-1" else price
-        val bottle = Bottle(
-            bottleId = bottleId ?: 0,
-            wineId = wineId!!,
-            vintage,
-            apogee,
-            isFavorite = 0,
-            count = count.toInt(),
-            price = formattedPrice.toInt(),
-            currency,
-            otherInfo = "",
-            location,
-            date,
-            tasteComment = "",
-            pdfPath = ""
-        )
+        val editBottleId = _editedBottle.value?.bottleId
 
-        viewModelScope.launch(IO) {
-            bottleId = repository.insertBottle(bottle)
-        }
+        partialBottle =
+            PartialBottle(
+                editBottleId ?: 0,
+                vintage,
+                apogee,
+                count,
+                price,
+                currency,
+                location,
+                date
+            )
     }
 
-    fun triggerFinalBottleSave(otherInfo: String, addToFavorite: Boolean, pdfPath: String) {
-        if (bottleId != null) {
+    fun addBottle(otherInfo: String, addToFavorite: Boolean, pdfPath: String) {
+        if (wineId == null) _userFeedback.postOnce(R.string.base_error)
+
+        partialBottle?.let {
+            val bottle = Bottle(
+                it.bottleId,
+                wineId!!,
+                it.vintage,
+                it.apogee,
+                addToFavorite.toInt(),
+                it.count.toInt(),
+                it.price.toInt(),
+                it.currency,
+                otherInfo,
+                it.location,
+                it.date,
+                "",
+                pdfPath
+            )
+
             viewModelScope.launch(IO) {
-                val bottle = repository.getBottleByIdNotLive(bottleId!!)
-                bottle.apply {
-                    this.otherInfo = otherInfo
-                    isFavorite = addToFavorite.toInt()
-                    this.pdfPath = pdfPath
+                val insertedBottleId = repository.insertBottle(bottle)
+
+                _expertAdvices.value?.forEach { advice ->
+                    advice.bottleId = insertedBottleId
+                    repository.insertAdvice(advice)
                 }
 
-                repository.updateBottle(bottle)
-
-                _expertAdvices.value?.forEach {
-                    it.bottleId = bottleId!!
-                    repository.insertAdvice(it)
+                _grapes.value?.forEach { grape ->
+                    grape.bottleId = insertedBottleId
+                    repository.insertGrape(grape)
                 }
 
-                _grapes.value?.forEach {
-                    it.bottleId = bottleId!!
-                    repository.insertGrape(it)
-                }
-
-                bottleId = null // Important: removeNotCompletedBottle() will be triggred after this
+                wineId = null
+                partialBottle = null
+                _editedBottle.postValue(null)
             }
-        } else {
-            _userFeedback.postOnce(R.string.base_error)
-            return
         }
     }
 
-    // Called when the user exits add bottle process before validating the process
-    fun removeNotCompletedBottle() {
+    fun setWineId(id: Long) {
+        wineId = id
+    }
+
+    fun triggerEditMode(bottleId: Long) {
         viewModelScope.launch(IO) {
-            repository.deleteBottleById(bottleId ?: -1)
-            bottleId = null
-            wineId = null
+            val editedBottle = repository.getBottleById(bottleId)
+            _editedBottle.postValue(editedBottle)
+
+            val grapesWithBottle = repository.getBottleWithGrapesById(bottleId)
+            _grapes.postValue(grapesWithBottle.grapes as MutableList<Grape>)
+
+            val expertAdviceWithBottle = repository.getBottleWithExpertAdviceById(bottleId)
+            _expertAdvices.postValue(
+                expertAdviceWithBottle.expertAdvices as MutableList<ExpertAdvice>
+            )
         }
     }
 
-    fun isEditMode() = bottleId != null
-
-    suspend fun getEditedBottle(): Bottle? {
-        bottleId?.let {
-            return repository.getBottleByIdNotLive(it)
-        }
-
-        return null
-    }
+    data class PartialBottle(
+        val bottleId: Long,
+        val vintage: Int,
+        val apogee: Int,
+        val count: String,
+        val price: String,
+        val currency: String,
+        val location: String,
+        val date: String
+    )
 }

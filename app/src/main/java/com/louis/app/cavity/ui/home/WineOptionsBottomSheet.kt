@@ -49,10 +49,9 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
 
             addBottle.setOnClickListener {
                 dismiss()
-                findNavController().navigate(
-                    R.id.homeToAddBottle,
-                    bundleOf(ARG_WINE_ID to homeViewModel.editWine?.wineId)
-                )
+
+                val bundle = bundleOf(ARG_WINE_ID to homeViewModel.editWine?.wineId)
+                findNavController().navigate(R.id.homeToAddBottle, bundle)
             }
 
             binding.editWine.setOnClickListener {

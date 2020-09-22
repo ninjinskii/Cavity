@@ -47,7 +47,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
 
     private fun initRecyclerView() {
         val adviceAdapter = ExpertAdviceRecyclerAdapter {
-            addBottleViewModel.removeExpertAdvice(it)
+             addBottleViewModel.removeExpertAdvice(it)
         }
 
         binding.recyclerView.apply {
@@ -63,7 +63,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             binding.dynamicListHint.text =
                 resources.getQuantityString(R.plurals.expert_advices, it.size, it.size)
 
-            // Using toMutableList() to change the list reference, otherwise our call submitList will be ignored
+            // Using toMutableList() to change the list reference, otherwise our call to submitList will be ignored
             adviceAdapter.submitList(it.toMutableList())
         }
     }

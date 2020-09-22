@@ -7,16 +7,14 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
+import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.showSnackbar
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,10 +35,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         initCurrencyDropdown()
         setListeners()
         observe()
-
-        if (addBottleViewModel.isEditMode()) {
-            updateUI()
-        }
     }
 
     private fun registerStepperWatcher() {
@@ -109,6 +103,23 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         }
 
         addBottleViewModel.userFeedback.observe(viewLifecycleOwner, feedBackObserver)
+
+        addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
+            if (it != null) updateFields(it)
+        }
+    }
+
+    private fun updateFields(editedBottle: Bottle) {
+        with(binding) {
+            vintage.value = editedBottle.vintage
+            apogee.value = editedBottle.apogee
+            count.setText(editedBottle.count)
+            price.setText(editedBottle.price)
+            currency.setSelection(0) // TODO: get actual selection
+            buyLocation.setText(editedBottle.buyLocation)
+            buyDate.setText(editedBottle.buyDate)
+            formatDate()
+        }
     }
 
     private fun validateFields(): Boolean {
@@ -127,7 +138,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             val currency = currency.text.toString()
             val location = buyLocation.text.toString().trim()
 
-            addBottleViewModel.addPartialBottle(
+            addBottleViewModel.setPartialBottle(
                 vintage.value,
                 apogee.value,
                 count,
@@ -144,24 +155,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = datePicker.selection ?: return
         buyDate = formatter.format(calendar.time)
-    }
-
-    private fun updateUI() {
-        lifecycleScope.launch(IO) {
-            val bottle = addBottleViewModel.getEditedBottle()
-            bottle?.let {
-                with(binding) {
-                    vintage.value = it.vintage
-                    apogee.value = it.apogee
-                    count.setText(it.count)
-                    price.setText(it.price)
-                    currency.setSelection(0) // TODO: get actual selection
-                    buyLocation.setText(it.buyLocation)
-                    buyDate.setText(it.buyDate)
-                    formatDate()
-                }
-            }
-        }
     }
 
     override fun onPause() {

@@ -5,6 +5,8 @@ import androidx.room.*
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.ExpertAdvice
 import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.relation.BottleWithExpertAdvices
+import com.louis.app.cavity.model.relation.BottleWithGrapes
 
 @Dao
 interface BottleDao {
@@ -23,10 +25,17 @@ interface BottleDao {
     fun getAllBottles(): LiveData<List<Bottle>>
 
     @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
-    fun getBottleByIdNotLive(bottleId: Long): Bottle
+    fun getBottleWithGrapesById(bottleId: Long): BottleWithGrapes
+
+    @Query("SELECT * FROM expert_advice WHERE bottle_id=:bottleId")
+    fun getBottleWithExpertAdvicesById(bottleId: Long): BottleWithExpertAdvices
+
+    @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
+    fun getBottleById(bottleId: Long): Bottle
 
     @Query("DELETE FROM bottle WHERE bottle_id=:bottleId")
     fun deleteBottleById(bottleId: Long)
+
 
     // ---------------Grape---------------
     @Insert
