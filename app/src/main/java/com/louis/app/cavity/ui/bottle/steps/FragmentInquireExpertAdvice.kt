@@ -25,8 +25,9 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentInquireExpertAdviceBinding.bind(view)
 
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-        bottomSheetBehavior.isHideable = false
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
+            isHideable = false
+        }
 
         registerStepperWatcher()
         initRecyclerView()

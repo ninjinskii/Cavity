@@ -1,6 +1,7 @@
 <resources>
     <!-- Base application theme. -->
     <style name="CavityTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -9,8 +10,9 @@
         </item>
 
         <item name="searchViewStyle">@style/Cavity.SearchView</item>
-        <item name="android:editTextColor">?attr/colorOnPrimary</item>
-        <item name="android:textColorHint">@color/search_view_hint</item>
+        <!-- Customize searchview text, problem: applies to other compoenent (number pickers) -->
+        <!--<item name="android:editTextColor">?attr/colorOnPrimary</item>-->
+        <!--<item name="android:textColorHint">@color/search_view_hint</item>-->
     </style>
 
     <!-- Scrollable tab -->
@@ -40,7 +42,7 @@
     </style>
 
     <!-- SearchView -->
-    <style name="Cavity.SearchView" parent="Widget.AppCompat.SearchView.ActionBar">
+    <style name="Cavity.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="queryBackground">@drawable/search_view_background</item>
         <item name="searchHintIcon">@null</item>
         <item name="queryHint">@string/search_wine_hint</item>
