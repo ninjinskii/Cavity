@@ -24,10 +24,12 @@ interface BottleDao {
     @Query("SELECT * FROM bottle")
     fun getAllBottles(): LiveData<List<Bottle>>
 
+    @Transaction
     @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
     fun getBottleWithGrapesById(bottleId: Long): BottleWithGrapes
 
-    @Query("SELECT * FROM expert_advice WHERE bottle_id=:bottleId")
+    @Transaction
+    @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
     fun getBottleWithExpertAdvicesById(bottleId: Long): BottleWithExpertAdvices
 
     @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")

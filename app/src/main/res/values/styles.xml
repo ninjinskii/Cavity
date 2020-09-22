@@ -7,6 +7,10 @@
 
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Cavtiy.LargeComponent
         </item>
+
+        <item name="searchViewStyle">@style/Cavity.SearchView</item>
+        <item name="android:editTextColor">?attr/colorOnPrimary</item>
+        <item name="android:textColorHint">@color/search_view_hint</item>
     </style>
 
     <!-- Scrollable tab -->
@@ -33,5 +37,13 @@
     <style name="ShapeAppearenceOverlay.Cavity.Backdrop" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerRadius">16dp</item>
+    </style>
+
+    <!-- SearchView -->
+    <style name="Cavity.SearchView" parent="Widget.AppCompat.SearchView.ActionBar">
+        <item name="queryBackground">@drawable/search_view_background</item>
+        <item name="searchHintIcon">@null</item>
+        <item name="queryHint">@string/search_wine_hint</item>
+        <item name="closeIcon">@drawable/ic_search_close</item>
     </style>
 </resources>
