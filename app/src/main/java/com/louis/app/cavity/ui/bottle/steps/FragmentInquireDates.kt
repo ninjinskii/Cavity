@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
@@ -14,6 +15,8 @@ import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.showSnackbar
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -21,6 +24,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private lateinit var binding: FragmentInquireDatesBinding
     private lateinit var stepperFragment: FragmentStepper
     private lateinit var feedBackObserver: Observer<Event<Int>>
+    private lateinit var datePicker: MaterialDatePicker<Long>
     private var buyDate = ""
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
@@ -33,6 +37,10 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         initCurrencyDropdown()
         setListeners()
         observe()
+
+        if (addBottleViewModel.isEditMode()) {
+            updateUI()
+        }
     }
 
     private fun registerStepperWatcher() {
@@ -75,18 +83,14 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
 
         binding.buyDate.apply {
             inputType = InputType.TYPE_NULL
-            val datePicker = MaterialDatePicker.Builder
+            datePicker = MaterialDatePicker.Builder
                 .datePicker()
                 .setTitleText(R.string.buying_date)
                 .build()
 
             datePicker.addOnPositiveButtonClickListener {
-                val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.FRENCH)
-                val calendar = Calendar.getInstance()
-                calendar.timeInMillis = datePicker.selection
-                    ?: return@addOnPositiveButtonClickListener
+                formatDate()
                 setText(datePicker.headerText.toString())
-                buyDate = formatter.format(calendar.time)
             }
 
             setOnClickListener { datePicker.show(childFragmentManager, "CALENDAR") }
@@ -132,6 +136,31 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 location,
                 this@FragmentInquireDates.buyDate
             )
+        }
+    }
+
+    private fun formatDate() {
+        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.FRENCH)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = datePicker.selection ?: return
+        buyDate = formatter.format(calendar.time)
+    }
+
+    private fun updateUI() {
+        lifecycleScope.launch(IO) {
+            val bottle = addBottleViewModel.getEditedBottle()
+            bottle?.let {
+                with(binding) {
+                    vintage.value = it.vintage
+                    apogee.value = it.apogee
+                    count.setText(it.count)
+                    price.setText(it.price)
+                    currency.setSelection(0) // TODO: get actual selection
+                    buyLocation.setText(it.buyLocation)
+                    buyDate.setText(it.buyDate)
+                    formatDate()
+                }
+            }
         }
     }
 

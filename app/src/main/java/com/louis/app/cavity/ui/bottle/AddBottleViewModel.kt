@@ -196,4 +196,14 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             wineId = null
         }
     }
+
+    fun isEditMode() = bottleId != null
+
+    suspend fun getEditedBottle(): Bottle? {
+        bottleId?.let {
+            return repository.getBottleByIdNotLive(it)
+        }
+
+        return null
+    }
 }
