@@ -17,12 +17,7 @@ import com.louis.app.cavity.model.County
 import kotlin.math.pow
 
 class CountyScrollableTab : RecyclerView {
-    private val tabAdapter by lazy {
-        TabAdapter(
-            style = tabTextStyle
-
-        )
-    }
+    private val tabAdapter by lazy { TabAdapter(style = tabTextStyle) }
     private var selectedColor = Color.WHITE
     private var unSelectedColor = Color.GRAY
     private var tabTextStyle = TabStyle(R.style.TabTextAppearance)
@@ -132,6 +127,10 @@ class CountyScrollableTab : RecyclerView {
 
     fun addTabs(list: List<County>) {
         tabAdapter.addAll(list)
+    }
+
+    fun addOnLongClickListener(longClickListener: (county: County) -> Unit) {
+        tabAdapter.onLongTabClick(longClickListener)
     }
 
     fun addOnTabListener(listener: (position: Int) -> Unit) {

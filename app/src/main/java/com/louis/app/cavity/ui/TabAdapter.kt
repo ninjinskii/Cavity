@@ -4,19 +4,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.widget.TooltipCompat
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.County
 
 class TabAdapter(
-    private val onLongClickListener: ((county: County) -> Unit) = {},
     private val tabs: MutableList<County> = mutableListOf(),
     private val style: TabStyle
 ) : RecyclerView.Adapter<TabAdapter.TabViewHolder>() {
 
     private var onClickListener: ((position: Int) -> Unit)? = null
+    private var onLongClickListener: ((county: County) -> Unit) = {}
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -42,6 +41,10 @@ class TabAdapter(
 
     fun onTabClick(listener: ((position: Int) -> Unit)?) {
         this.onClickListener = listener
+    }
+
+    fun onLongTabClick(longClickListener: ((county: County) -> Unit)) {
+        this.onLongClickListener = longClickListener
     }
 
     //internal fun listenTabChangeForPager() {}

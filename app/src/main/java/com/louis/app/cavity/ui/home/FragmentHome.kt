@@ -25,6 +25,10 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupScrollableTab() {
+        binding.tab.addOnLongClickListener {
+            // show dialog info for county
+        }
+
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
             lifecycleScope.launch(Main) {
                 with(binding) {
