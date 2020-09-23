@@ -2,9 +2,9 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:focusableInTouchMode="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -34,11 +34,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/medium_margin"
                         android:layout_marginTop="@dimen/small_margin"
-                        android:animateLayoutChanges="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                        app:singleLine="true"/>
+                        app:selectionRequired="false"
+                        app:singleLine="true"
+                        app:singleSelection="false" />
 
                 </LinearLayout>
             </HorizontalScrollView>
@@ -61,7 +62,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/medium_margin"
-                        android:animateLayoutChanges="true"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/nameLayout"
@@ -72,6 +72,9 @@
                             style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:text="@string/ready_to_drink" />
 
                         <com.google.android.material.chip.Chip
@@ -79,6 +82,9 @@
                             style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:text="@string/wine_color_red" />
 
                         <com.google.android.material.chip.Chip
@@ -86,6 +92,9 @@
                             style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:text="@string/wine_color_white" />
 
                         <com.google.android.material.chip.Chip
@@ -93,6 +102,9 @@
                             style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:text="@string/wine_color_sweet" />
 
                         <com.google.android.material.chip.Chip
@@ -100,6 +112,9 @@
                             style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:text="@string/wine_color_rose" />
 
                         <com.google.android.material.chip.Chip
@@ -107,6 +122,9 @@
                             style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:text="@string/organic" />
 
                     </com.google.android.material.chip.ChipGroup>
@@ -126,8 +144,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/date"
                     android:layout_width="match_parent"
-                    android:focusableInTouchMode="true"
                     android:layout_height="wrap_content"
+                    android:focusableInTouchMode="true"
                     android:hint="@string/buying_date"
                     android:inputType="text" />
 

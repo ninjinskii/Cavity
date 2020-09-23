@@ -8,22 +8,22 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
+import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.ui.home.WineRecyclerAdapter
+import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -35,6 +35,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private lateinit var bottlesAdapter: WineRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var menu: Menu
+    private val constraintsChipCheckedState = mutableMapOf<Int, Boolean>()
     private val searchViewModel: SearchViewModel by activityViewModels()
     private var isDatePickerDisplayed = false
     private var isHeaderShadowDisplayed = false
@@ -50,11 +51,33 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
         setHasOptionsMenu(true)
 
+        initOtherChips()
         initRecyclerView()
         initDatePicker()
         inflateChips()
         setListeners()
         setBottomSheetPeekHeight()
+    }
+
+    private fun initOtherChips() {
+        binding.otherChipGroup.clearCheck()
+
+        constraintsChipCheckedState.putAll(
+            mapOf(
+                R.id.chipReadyToDrink to false,
+                R.id.chipRed to false,
+                R.id.chipWhite to false,
+                R.id.chipSweet to false,
+                R.id.chipRose to false,
+                R.id.chipOrganic to false
+            )
+        )
+
+        constraintsChipCheckedState.keys.forEach {
+            binding.root.findViewById<Chip>(it).setOnCheckedChangeListener { _, _ ->
+                updateCheckedIds()
+            }
+        }
     }
 
     private fun initRecyclerView() {
@@ -86,7 +109,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             })
         }
 
-        searchViewModel.getWineWithBottles().observe(viewLifecycleOwner) {
+        searchViewModel.results.observe(viewLifecycleOwner) {
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter.submitList(it)
@@ -119,8 +142,25 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
                 layoutInflater,
                 binding.countyChipGroup,
                 counties,
-                selectionRequired = false
+                selectionRequired = false,
+                onCheckedChangeListener = { _, _ -> updateCheckedIds() }
             )
+        }
+    }
+
+    // Material does not trigger listeners on mutli-select, we have to listen on every chip ans maintain a state
+    private fun updateCheckedIds() {
+        binding.countyChipGroup.run {
+            val counties = checkedChipIds.map {
+                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as County
+            }
+
+            searchViewModel.submitCounties(counties)
+        }
+
+        binding.otherChipGroup.run {
+            constraintsChipCheckedState.putAll(checkedChipIds.map { it to true })
+            searchViewModel.submitFilterConstraint(constraintsChipCheckedState)
         }
     }
 

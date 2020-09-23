@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui
 
 import android.view.LayoutInflater
+import android.widget.CompoundButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.louis.app.cavity.R
@@ -19,7 +20,8 @@ interface CountyLoader {
         chipGroup: ChipGroup,
         counties: Set<County>,
         editWine: Wine? = null,
-        selectionRequired: Boolean = true
+        selectionRequired: Boolean = true,
+        onCheckedChangeListener: ((btn: CompoundButton, isChecked: Boolean) -> Unit)? = null
     ) {
         scope.launch(Default) {
             for ((index, county) in counties.withIndex()) {
@@ -32,6 +34,7 @@ interface CountyLoader {
                 chip.apply {
                     setTag(R.string.tag_chip_id, county)
                     text = county.name
+                    onCheckedChangeListener?.let { setOnCheckedChangeListener(it) }
                 }
 
                 withContext(Main) {

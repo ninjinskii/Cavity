@@ -185,10 +185,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     // enum ?
     private fun getWineColor(chipId: Int): Int {
         return when (chipId) {
-            R.id.colorWhite -> 0
-            R.id.colorRed -> 1
-            R.id.colorSweet -> 2
-            else -> 3
+            R.id.colorWhite -> WineColor.COLOR_WHITE.colorInt
+            R.id.colorRed -> WineColor.COLOR_RED.colorInt
+            R.id.colorSweet -> WineColor.COLOR_SWEET.colorInt
+            else -> WineColor.COLOR_ROSE.colorInt
         }
     }
 

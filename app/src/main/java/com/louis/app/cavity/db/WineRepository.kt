@@ -25,6 +25,7 @@ class WineRepository(database: CavityDatabase) {
 
     fun getAllWines() = wineDao.getAllWines()
     fun getWineWithBottles() = wineDao.getWineWithBottles()
+    fun getWineWithBottlesNotLive() = wineDao.getWineWithBottlesNotLive()
     fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
 
     fun getAllCounties() = countyDao.getAllCounties()
