@@ -2,12 +2,16 @@ package com.louis.app.cavity.db
 
 import com.louis.app.cavity.model.*
 
-class WineRepository(private val wineDao: WineDao, private val bottleDao: BottleDao) {
+class WineRepository(database: CavityDatabase) {
+    val wineDao = database.wineDao()
+    val bottleDao = database.bottleDao()
+    val countyDao = database.countyDao()
+
     fun insertWine(wine: Wine) = wineDao.insertWine(wine)
     fun updateWine(wine: Wine) = wineDao.updateWine(wine)
     fun deleteWine(wine: Wine) = wineDao.deleteWine(wine)
 
-    fun insertCounty(county: County) = wineDao.insertCounty(county)
+    fun insertCounty(county: County) = countyDao.insertCounty(county)
 
     fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
 
@@ -23,8 +27,8 @@ class WineRepository(private val wineDao: WineDao, private val bottleDao: Bottle
     fun getWineWithBottles() = wineDao.getWineWithBottles()
     fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
 
-    fun getAllCounties() = wineDao.getAllCounties()
-    fun getAllCountiesNotLive() = wineDao.getAllCountiesNotLive()
+    fun getAllCounties() = countyDao.getAllCounties()
+    fun getAllCountiesNotLive() = countyDao.getAllCountiesNotLive()
 
     fun getAllBottles() = bottleDao.getAllBottles()
     fun getBottleById(bottleId: Long) = bottleDao.getBottleById(bottleId)
@@ -37,5 +41,7 @@ class WineRepository(private val wineDao: WineDao, private val bottleDao: Bottle
     fun getAllGrapes() = bottleDao.getAllGrapes()
 
     fun getAllExpertAdvices() = bottleDao.getAllExpertAdvices()
+
+    fun getCountiesWithWinesNotLive() = countyDao.getCountiesWithWinesNotLive()
 
 }

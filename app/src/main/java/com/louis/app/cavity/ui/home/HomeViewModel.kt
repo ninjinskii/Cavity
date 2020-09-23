@@ -17,10 +17,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
-    private val repository = WineRepository(
-        CavityDatabase.getInstance(app).wineDao(),
-        CavityDatabase.getInstance(app).bottleDao()
-    )
+    private val repository = WineRepository(CavityDatabase.getInstance(app))
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback : LiveData<Event<Int>>
@@ -38,7 +35,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
             if (countyName.isNotEmpty()) {
                 val counties = repository.getAllCountiesNotLive().map { it.name }
 
-                if (!counties.contains(countyName)) {
+                if (countyName !in counties) {
                     repository.insertCounty(County(name = countyName, prefOrder = counties.size))
                 } else {
                     _userFeedback.postOnce(R.string.county_already_exist)
@@ -47,6 +44,17 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
                 _userFeedback.postOnce(R.string.empty_county_name)
             }
         }
+    }
+
+    fun computeBottleCountByCounty() {
+//        val counties = repository.getAllCountiesNotLive()
+//
+//        for (county in counties) {
+//            val winesWithBottles = repository.getWineWithBottlesByCounty(county.countyId)
+//            var count = 0
+//
+//            winesWithBottles.value?.forEach { count += it.bottles.size }
+//        }
     }
 
     fun getAllWines() = repository.getAllWines()

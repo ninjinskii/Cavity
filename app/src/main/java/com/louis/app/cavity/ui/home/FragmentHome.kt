@@ -28,7 +28,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
             lifecycleScope.launch(Main) {
                 with(binding) {
-                    tab.addTabs(it.map { county -> county.name })
+                    tab.addTabs(it)
                     viewPager.adapter = WinesPagerAdapter(this@FragmentHome, it)
                     viewPager.offscreenPageLimit = 5
                     tab.setUpWithViewPager(viewPager)

@@ -38,7 +38,6 @@ interface BottleDao {
     @Query("DELETE FROM bottle WHERE bottle_id=:bottleId")
     fun deleteBottleById(bottleId: Long)
 
-
     // ---------------Grape---------------
     @Insert
     fun insertGrape(grape: Grape)

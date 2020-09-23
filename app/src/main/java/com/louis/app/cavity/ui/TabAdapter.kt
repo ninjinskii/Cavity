@@ -3,19 +3,20 @@ package com.louis.app.cavity.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
-import com.louis.app.cavity.util.L
+import com.louis.app.cavity.model.County
 
 class TabAdapter(
-    private val tabs: MutableList<String> = mutableListOf(),
+    private val onLongClickListener: ((county: County) -> Unit) = {},
+    private val tabs: MutableList<County> = mutableListOf(),
     private val style: TabStyle
-) : RecyclerView.Adapter<TabViewHolder>() {
+) : RecyclerView.Adapter<TabAdapter.TabViewHolder>() {
 
-    private var listener: ((position: Int) -> Unit)? = null
+    private var onClickListener: ((position: Int) -> Unit)? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,7 +26,7 @@ class TabAdapter(
             .inflate(R.layout.item_county, parent, false)
 
         TextViewCompat.setTextAppearance(view.findViewById(R.id.county), style.tabTextStyle)
-        return TabViewHolder(view, listener)
+        return TabViewHolder(view)
     }
 
     override fun getItemCount() = tabs.size
@@ -33,34 +34,35 @@ class TabAdapter(
     override fun onBindViewHolder(holder: TabViewHolder, position: Int) =
         holder.bind(tabs[position])
 
-    fun addAll(list: List<String>) {
+    fun addAll(list: List<County>) {
         tabs.clear()
         tabs.addAll(list)
         notifyDataSetChanged()
     }
 
     fun onTabClick(listener: ((position: Int) -> Unit)?) {
-        this.listener = listener
+        this.onClickListener = listener
     }
 
-    internal fun listenTabChangeForPager() {}
+    //internal fun listenTabChangeForPager() {}
 
-}
+    inner class TabViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        private val textView: TextView = view.findViewById(R.id.county)
 
-class TabViewHolder(
-    view: View,
-    private val listener: ((position: Int) -> Unit)?
-) : RecyclerView.ViewHolder(view) {
+        init {
+            view.setOnClickListener {
+                onClickListener?.invoke(adapterPosition)
+            }
+        }
 
-    private val textView: TextView = view.findViewById(R.id.county)
+        fun bind(county: County) {
+            textView.text = county.name
 
-    init {
-        view.setOnClickListener {
-            listener?.invoke(adapterPosition)
+            view.setOnLongClickListener {
+                onLongClickListener(county)
+                true
+            }
         }
     }
-
-    fun bind(model: String) {
-        textView.text = model
-    }
 }
+

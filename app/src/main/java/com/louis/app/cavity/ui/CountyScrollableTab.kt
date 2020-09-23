@@ -13,10 +13,16 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
+import com.louis.app.cavity.model.County
 import kotlin.math.pow
 
 class CountyScrollableTab : RecyclerView {
-    private val tabAdapter by lazy { TabAdapter(style = tabTextStyle) }
+    private val tabAdapter by lazy {
+        TabAdapter(
+            style = tabTextStyle
+
+        )
+    }
     private var selectedColor = Color.WHITE
     private var unSelectedColor = Color.GRAY
     private var tabTextStyle = TabStyle(R.style.TabTextAppearance)
@@ -124,7 +130,7 @@ class CountyScrollableTab : RecyclerView {
         setPadding(padding, 0, padding, 0)
     }
 
-    fun addTabs(list: List<String>) {
+    fun addTabs(list: List<County>) {
         tabAdapter.addAll(list)
     }
 

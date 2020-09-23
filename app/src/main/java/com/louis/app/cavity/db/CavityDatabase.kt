@@ -10,13 +10,14 @@ import kotlin.concurrent.thread
 
 @Database(
     entities = [County::class, Wine::class, Bottle::class, Grape::class, ExpertAdvice::class],
-    version = 17,
+    version = 18,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
 
     abstract fun wineDao(): WineDao
     abstract fun bottleDao(): BottleDao
+    abstract fun countyDao(): CountyDao
 
     companion object {
         @Volatile

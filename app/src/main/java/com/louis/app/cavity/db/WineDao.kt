@@ -2,7 +2,6 @@ package com.louis.app.cavity.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.WineWithBottles
 
@@ -18,15 +17,6 @@ interface WineDao {
     @Delete
     fun deleteWine(wine: Wine)
 
-    @Insert
-    fun insertCounty(county: County)
-
-    @Update
-    fun updateCounty(county: County)
-
-    @Delete
-    fun deleteCounty(county: County)
-
     @Query("SELECT * FROM wine")
     fun getAllWines(): LiveData<List<Wine>>
 
@@ -37,10 +27,4 @@ interface WineDao {
     @Transaction
     @Query("SELECT * FROM wine WHERE county_id =:countyId")
     fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
-
-    @Query("SELECT * FROM county ORDER BY pref_order")
-    fun getAllCounties(): LiveData<List<County>>
-
-    @Query("SELECT * FROM county")
-    fun getAllCountiesNotLive(): List<County>
 }
