@@ -10,6 +10,7 @@ import android.view.View.NO_ID
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -108,6 +109,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
                         wine.apply { wineId = homeViewModel.editWine!!.wineId }
                             .also { homeViewModel.updateWine(wine) }
                     }
+
+                    //findNavController().popBackStack()
                 }
             }
         }

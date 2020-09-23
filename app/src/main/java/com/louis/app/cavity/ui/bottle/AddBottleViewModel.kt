@@ -151,6 +151,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         if (wineId == null) _userFeedback.postOnce(R.string.base_error)
 
         partialBottle?.let {
+            val formattedPrice = if (it.price.isEmpty()) -1 else it.price.toInt()
+
             val bottle = Bottle(
                 it.bottleId,
                 wineId!!,
@@ -158,7 +160,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 it.apogee,
                 addToFavorite.toInt(),
                 it.count.toInt(),
-                it.price.toInt(),
+                formattedPrice,
                 it.currency,
                 otherInfo,
                 it.location,
