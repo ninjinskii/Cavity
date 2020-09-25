@@ -53,15 +53,17 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         if (R.id.chipRose in checkedChipIds) otherFilters.add(FilterRose())
         if (R.id.chipOrganic in checkedChipIds) otherFilters.add(FilterOrganic())
 
-        var combinedCountyFilters: WineFilter = NoFilter()
-        var combinedOtherFilters: WineFilter = NoFilter()
+        var combinedCounty: WineFilter = NoFilter()
+//        var combinedOther: WineFilter = NoFilter()
 
         filteredCounties.forEach {
-            combinedCountyFilters = combinedCountyFilters.orCombine(FilterCounty(it.countyId))
+            combinedCounty = combinedCounty.orCombine(FilterCounty(it.countyId))
         }
 
-        otherFilters.forEach { combinedOtherFilters = combinedOtherFilters.andCombine(it) }
 
-        return combinedCountyFilters to combinedOtherFilters
+        val combinedOther = if (otherFilters.isNotEmpty()) otherFilters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) } else NoFilter()
+        //otherFilters.forEach { combinedOther = combinedOther.andCombine(it) }
+
+        return combinedCounty to combinedOther
     }
 }
