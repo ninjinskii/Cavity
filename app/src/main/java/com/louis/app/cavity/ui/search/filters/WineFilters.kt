@@ -39,3 +39,15 @@ class FilterOrganic : WineFilter {
         return wines.filter { it.wine.isOrganic.toBoolean() }
     }
 }
+
+class FilterCounty(private val countyId: Long) : WineFilter {
+    override fun meetFilters(wines: List<WineWithBottles>): List<WineWithBottles> {
+        return wines.filter { it.wine.countyId == countyId }
+    }
+}
+
+class NoFilter : WineFilter {
+    override fun meetFilters(wines: List<WineWithBottles>): List<WineWithBottles> {
+        return wines
+    }
+}

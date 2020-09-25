@@ -10,16 +10,10 @@ import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.WineWithBottles
-import com.louis.app.cavity.ui.search.filters.And
-import com.louis.app.cavity.ui.search.filters.FilterRed
-import com.louis.app.cavity.ui.search.filters.FilterWhite
-import com.louis.app.cavity.ui.search.filters.Or
+import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.util.L
-import com.louis.app.cavity.util.toBoolean
-import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository(CavityDatabase.getInstance(app))
@@ -34,49 +28,66 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private var filteredCounties = mutableListOf<County>()
-    private var filterConstraint = FilterConstraint()
-
     fun getAllCountiesNotLive() = repository.getAllCountiesNotLive()
 
-    fun submitCounties(counties: List<County>) {
-        L.v("submitCounties")
-        filteredCounties.clear()
-        filteredCounties.addAll(counties)
-        filter()
-    }
+    fun filter(filteredCounties: List<County>, checkedChipIds: List<Int>) {
+        val otherFilters = prepareOtherFilter(checkedChipIds)
 
-    fun submitFilterConstraint(chipCheckedState: Map<Int, Boolean>) {
-        L.v(chipCheckedState.toString())
-
-        filterConstraint = FilterConstraint(
-            chipCheckedState[R.id.chipReadyToDrink] ?: false,
-            chipCheckedState[R.id.chipRed] ?: false,
-            chipCheckedState[R.id.chipWhite] ?: false,
-            chipCheckedState[R.id.chipSweet] ?: false,
-            chipCheckedState[R.id.chipRose] ?: false,
-            chipCheckedState[R.id.chipOrganic] ?: false
-        )
-
-        filter()
-    }
-
-    private fun filter() {
         viewModelScope.launch(IO) {
             val winesWithBottles = repository.getWineWithBottlesNotLive()
+            var filterCounty: WineFilter = NoFilter()
+            var filterOther: WineFilter = NoFilter()
 
-            val filter = Or(FilterRed(), FilterWhite())
+            filteredCounties.forEach {
+                filterCounty = filterCounty add FilterCounty(it.countyId)
+            }
 
-            _results.postValue(filter.meetFilters(winesWithBottles))
+            otherFilters.forEach { filterOther = filterOther and it }
+
+            _results.postValue(And(filterCounty, filterOther).meetFilters(winesWithBottles))
+        }
+
+    }
+
+    private fun prepareOtherFilter(checkedChipIds: List<Int>): List<WineFilter> {
+        val filters = mutableListOf<WineFilter>()
+
+        if (R.id.chipReadyToDrink in checkedChipIds) filters.add(FilterReadyToDrink())
+        if (R.id.chipRed in checkedChipIds) filters.add(FilterRed())
+        if (R.id.chipWhite in checkedChipIds) filters.add(FilterWhite())
+        if (R.id.chipSweet in checkedChipIds) filters.add(FilterSweet())
+        if (R.id.chipRose in checkedChipIds) filters.add(FilterRose())
+        if (R.id.chipOrganic in checkedChipIds) filters.add(FilterOrganic())
+
+        return filters
+    }
+
+    private infix fun WineFilter.add(filter: WineFilter): WineFilter {
+        return if (this is NoFilter) {
+            L.v("addedFilter : ${filter.javaClass.name}", "FILTER")
+            filter
+        } else {
+            L.v("addedFilter : ${filter.javaClass.name}", "FILTER")
+            Or(this, filter)
+        }
+    }
+
+    private infix fun WineFilter.and(filter: WineFilter): WineFilter {
+        return if (this is NoFilter) {
+            L.v("addedFilter : ${filter.javaClass.name}", "FILTER")
+            filter
+        } else {
+            L.v("addedFilter : ${filter.javaClass.name}", "FILTER")
+            And(this, filter)
         }
     }
 
     data class FilterConstraint(
-        val isReadyToDrink: Boolean = false,
-        val isRed: Boolean = false,
-        val isWhite: Boolean = false,
-        val isSweet: Boolean = false,
-        val isRose: Boolean = false,
-        val isOrganic: Boolean = false
+        val isReadyToDrink: FilterReadyToDrink? = null,
+        val isRed: FilterRed? = null,
+        val isWhite: FilterWhite? = null,
+        val isSweet: FilterSweet? = null,
+        val isRose: FilterRose? = null,
+        val isOrganic: FilterOrganic? = null
     )
 }
