@@ -158,15 +158,30 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/priceSlider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/otherScrollView"
+                app:values="@array/initial_slider_values"
+                android:valueFrom="0.0"
+                android:valueTo="200.0"
+                android:stepSize="10.0"/>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dateLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
+                android:layout_marginHorizontal="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/small_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/otherScrollView"
+                app:layout_constraintTop_toBottomOf="@id/priceSlider"
                 app:startIconDrawable="@drawable/ic_calendar">
 
                 <com.google.android.material.textfield.TextInputEditText
