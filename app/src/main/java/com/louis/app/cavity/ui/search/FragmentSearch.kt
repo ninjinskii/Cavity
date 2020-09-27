@@ -29,8 +29,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private lateinit var binding: FragmentSearchBinding
@@ -41,8 +39,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private val rvDisabler = RecyclerViewDisabler()
     private val searchViewModel: SearchViewModel by activityViewModels()
     private val backdropHeaderHeight by lazy { binding.backdropHeader.height }
-    private val toggleShowBeforeHeight by lazy { binding.toggleShowBefore.height }
-    private var dateFilter = ""
+    private val dateLayoutHeight by lazy {
+        binding.dateLayout.height + resources.getDimension(R.dimen.small_margin).toInt()
+    }
+    private var dateFilter = -1L
     private var isDatePickerDisplayed = false
     private var isHeaderShadowDisplayed = false
 
@@ -75,7 +75,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
                 binding.countyChipGroup,
                 counties,
                 selectionRequired = false,
-                onCheckedChangeListener = { _, _ -> updateCheckedIds() }
+                onCheckedChangeListener = { _, _ -> triggerFilter() }
             )
         }
     }
@@ -84,7 +84,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         binding.colorChipGroup.apply {
             clearCheck()
             children.forEach {
-                (it as Chip).setOnCheckedChangeListener { _, _ -> updateCheckedIds() }
+                (it as Chip).setOnCheckedChangeListener { _, _ -> triggerFilter() }
             }
         }
     }
@@ -93,7 +93,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         binding.otherChipGroup.apply {
             clearCheck()
             children.forEach {
-                (it as Chip).setOnCheckedChangeListener { _, _ -> updateCheckedIds() }
+                (it as Chip).setOnCheckedChangeListener { _, _ -> triggerFilter() }
             }
         }
     }
@@ -138,6 +138,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         val builder = MaterialDatePicker.Builder.datePicker()
         builder.setTitleText(R.string.buying_date)
 
+        binding.dateLayout.setEndIconOnClickListener {
+            binding.date.setText("")
+            binding.toggleShowBefore.isEnabled = false
+            dateFilter = -1L
+            triggerFilter()
+        }
+
         datePicker = builder.build()
 
         datePicker.apply {
@@ -147,22 +154,33 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             }
 
             addOnPositiveButtonClickListener {
-                formatDate()
                 binding.date.setText(headerText)
+                binding.toggleShowBefore.isEnabled = true
+                dateFilter = selection ?: -1L
+                triggerFilter()
             }
         }
     }
 
     // Material does not trigger listeners on mutli-select, we have to listen on every chip and maintain a state
-    private fun updateCheckedIds() {
-        binding.countyChipGroup.run {
-            val colorFilterCheckedChipIds = binding.colorChipGroup.checkedChipIds
-            val otherFilterCheckedChipIds = binding.otherChipGroup.checkedChipIds
-            val counties = checkedChipIds.map {
-                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as County
+    private fun triggerFilter() {
+        with(binding) {
+            val countyFilterCheckedChipIds = countyChipGroup.checkedChipIds
+            val colorFilterCheckedChipIds = colorChipGroup.checkedChipIds
+            val otherFilterCheckedChipIds = otherChipGroup.checkedChipIds
+            val counties = countyFilterCheckedChipIds.map {
+                binding.countyChipGroup.findViewById<Chip>(it)
+                    .getTag(R.string.tag_chip_id) as County
             }
 
-            searchViewModel.filter(counties, colorFilterCheckedChipIds , otherFilterCheckedChipIds)
+            L.v(toggleShowBefore.isChecked.toString())
+
+            searchViewModel.filter(
+                counties,
+                colorFilterCheckedChipIds,
+                otherFilterCheckedChipIds,
+                dateFilter to toggleShowBefore.isChecked
+            )
         }
     }
 
@@ -183,6 +201,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
                 }
             }
         }
+
+        binding.toggleShowBefore.setOnCheckedChangeListener { _, _ -> triggerFilter() }
     }
 
     // Needed for split screen
@@ -193,18 +213,15 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             val location = IntArray(2)
 
             display?.let {
-                binding.toggleShowBefore.getLocationInWindow(location)
+                binding.dateLayout.getLocationInWindow(location)
 
                 val peekHeight =
-                    if (it - location[1] - toggleShowBeforeHeight < backdropHeaderHeight)
+                    if (it - location[1] - dateLayoutHeight < backdropHeaderHeight)
                         backdropHeaderHeight
                     else
-                        it - location[1] - binding.toggleShowBefore.height
+                        it - location[1] - dateLayoutHeight
 
-                bottomSheetBehavior.setPeekHeight(
-                    peekHeight,
-                    true
-                )
+                bottomSheetBehavior.setPeekHeight(peekHeight, true)
             }
         }
     }
@@ -239,13 +256,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         }
 
         (item.icon as AnimatedVectorDrawable).start()
-    }
-
-    private fun formatDate() {
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.FRENCH)
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = datePicker.selection ?: return
-        dateFilter = formatter.format(calendar.time)
     }
 
     override fun onResume() {

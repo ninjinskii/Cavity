@@ -130,7 +130,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         price: String,
         currency: String,
         location: String,
-        date: String
+        date: Long
     ) {
         val editBottleId = _editedBottle.value?.bottleId
 
@@ -170,6 +170,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             )
 
             viewModelScope.launch(IO) {
+                L.v("bottle date: ${bottle.buyDate}")
                 val insertedBottleId = repository.insertBottle(bottle)
 
                 _expertAdvices.value?.forEach { advice ->
@@ -216,6 +217,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         val price: String,
         val currency: String,
         val location: String,
-        val date: String
+        val date: Long
     )
 }

@@ -25,7 +25,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private lateinit var datePicker: MaterialDatePicker<Long>
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private var isDatePickerDisplayed = false
-    private var buyDate = ""
+    private var buyDateTimestamp = -1L
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -76,6 +76,11 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             stepperFragment.requireNextPage()
         }
 
+        binding.buyDateLayout.setEndIconOnClickListener {
+            binding.buyDate.setText("")
+            buyDateTimestamp = -1L
+        }
+
         binding.buyDate.apply {
             inputType = InputType.TYPE_NULL
             datePicker = MaterialDatePicker.Builder
@@ -89,7 +94,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             }
 
             datePicker.addOnPositiveButtonClickListener {
-                formatDate()
+                buyDateTimestamp = datePicker.selection ?: -1L
                 setText(datePicker.headerText.toString())
             }
 
@@ -137,8 +142,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             price.setText(editedBottle.price)
             currency.setSelection(0) // TODO: get actual selection
             buyLocation.setText(editedBottle.buyLocation)
-            buyDate.setText(editedBottle.buyDate)
-            formatDate()
+            buyDate.setText(formatDate(editedBottle.buyDate))
         }
     }
 
@@ -165,16 +169,18 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 price,
                 currency,
                 location,
-                this@FragmentInquireDates.buyDate
+                this@FragmentInquireDates.buyDateTimestamp
             )
         }
     }
 
-    private fun formatDate() {
+    private fun formatDate(timeStamp: Long): String {
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.FRENCH)
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = datePicker.selection ?: return
-        buyDate = formatter.format(calendar.time)
+
+        calendar.timeInMillis = timeStamp
+
+        return formatter.format(calendar.time)
     }
 
     override fun onPause() {

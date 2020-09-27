@@ -21,7 +21,7 @@ data class Bottle(
     val currency: String,
     @ColumnInfo(name = "other_info") var otherInfo: String,
     @ColumnInfo(name = "buy_location") val buyLocation: String,
-    @ColumnInfo(name = "buy_date") val buyDate: String,
+    @ColumnInfo(name = "buy_date") val buyDate: Long,
     @ColumnInfo(name = "taste_comment") val tasteComment: String,
     @ColumnInfo(name = "pdf_path") var pdfPath: String
 ) {

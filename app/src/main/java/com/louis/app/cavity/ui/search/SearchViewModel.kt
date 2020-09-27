@@ -11,8 +11,10 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.WineWithBottles
 import com.louis.app.cavity.ui.search.filters.*
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository(CavityDatabase.getInstance(app))
@@ -32,18 +34,30 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     fun filter(
         filteredCounties: List<County>,
         colorCheckedChipIds: List<Int>,
-        otherCheckedChipIds: List<Int>
+        otherCheckedChipIds: List<Int>,
+        filteredDate: Pair<Long, Boolean>
     ) {
-        val filters = prepareFilters(filteredCounties, colorCheckedChipIds, otherCheckedChipIds)
+        val filters = prepareChipFilters(filteredCounties, colorCheckedChipIds, otherCheckedChipIds)
+        val dateFilter =
+            if (filteredDate.first != -1L)
+                FilterDate(filteredDate.first, filteredDate.second)
+            else NoFilter()
 
         viewModelScope.launch(IO) {
             val winesWithBottles = repository.getWineWithBottlesNotLive()
-            val combinedFilters = filters.first.andCombine(filters.second).andCombine(filters.third)
-            _results.postValue(combinedFilters.meetFilters(winesWithBottles))
+
+            withContext(Default) {
+                val combinedFilters = filters.first
+                    .andCombine(filters.second)
+                    .andCombine(filters.third)
+                    .andCombine(dateFilter)
+
+                _results.postValue(combinedFilters.meetFilters(winesWithBottles))
+            }
         }
     }
 
-    private fun prepareFilters(
+    private fun prepareChipFilters(
         filteredCounties: List<County>,
         colorCheckedChipIds: List<Int>,
         otherCheckedChipIds: List<Int>
