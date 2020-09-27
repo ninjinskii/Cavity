@@ -11,7 +11,6 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.WineWithBottles
 import com.louis.app.cavity.ui.search.filters.*
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -45,6 +44,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         checkedChipIds: List<Int>
     ): Pair<WineFilter, WineFilter> {
         val otherFilters = mutableListOf<WineFilter>()
+        val countiesFilters: List<WineFilter> = filteredCounties.map { FilterCounty(it.countyId) }
 
         if (R.id.chipReadyToDrink in checkedChipIds) otherFilters.add(FilterReadyToDrink())
         if (R.id.chipRed in checkedChipIds) otherFilters.add(FilterRed())
@@ -53,16 +53,14 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         if (R.id.chipRose in checkedChipIds) otherFilters.add(FilterRose())
         if (R.id.chipOrganic in checkedChipIds) otherFilters.add(FilterOrganic())
 
-        var combinedCounty: WineFilter = NoFilter()
-//        var combinedOther: WineFilter = NoFilter()
+        val combinedCounty = if (countiesFilters.isNotEmpty())
+            countiesFilters.reduce { acc, filterCounty -> acc.orCombine(filterCounty) }
+        else NoFilter()
 
-        filteredCounties.forEach {
-            combinedCounty = combinedCounty.orCombine(FilterCounty(it.countyId))
-        }
-
-
-        val combinedOther = if (otherFilters.isNotEmpty()) otherFilters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) } else NoFilter()
-        //otherFilters.forEach { combinedOther = combinedOther.andCombine(it) }
+        val combinedOther =
+            if (otherFilters.isNotEmpty())
+                otherFilters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
+            else NoFilter()
 
         return combinedCounty to combinedOther
     }
