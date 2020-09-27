@@ -12,7 +12,7 @@ import com.louis.app.cavity.model.relation.BottleWithGrapes
 interface BottleDao {
 
     // ---------------Bottle---------------
-    @Insert(onConflict =  OnConflictStrategy.REPLACE)
+    @Insert
     fun insertBottle(bottle: Bottle): Long
 
     @Update

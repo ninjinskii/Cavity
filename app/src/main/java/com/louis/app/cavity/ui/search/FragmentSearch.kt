@@ -24,10 +24,13 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.ui.home.WineRecyclerAdapter
+import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private lateinit var binding: FragmentSearchBinding
@@ -39,6 +42,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private val searchViewModel: SearchViewModel by activityViewModels()
     private val backdropHeaderHeight by lazy { binding.backdropHeader.height }
     private val toggleShowBeforeHeight by lazy { binding.toggleShowBefore.height }
+    private var dateFilter = ""
     private var isDatePickerDisplayed = false
     private var isHeaderShadowDisplayed = false
 
@@ -105,7 +109,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             )
         }
 
-        bottlesAdapter = WineRecyclerAdapter({}, {}, colors ?: emptyList())
+        bottlesAdapter = WineRecyclerAdapter({}, {}, colors ?: return)
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -143,6 +147,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             }
 
             addOnPositiveButtonClickListener {
+                formatDate()
                 binding.date.setText(headerText)
             }
         }
@@ -234,6 +239,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         }
 
         (item.icon as AnimatedVectorDrawable).start()
+    }
+
+    private fun formatDate() {
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.FRENCH)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = datePicker.selection ?: return
+        dateFilter = formatter.format(calendar.time)
     }
 
     override fun onResume() {

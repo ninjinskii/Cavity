@@ -2,6 +2,7 @@ package com.louis.app.cavity.db
 
 import com.louis.app.cavity.model.*
 
+// TODO: convert to singleton
 class WineRepository(database: CavityDatabase) {
     val wineDao = database.wineDao()
     val bottleDao = database.bottleDao()

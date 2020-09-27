@@ -38,7 +38,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             activity?.supportFragmentManager?.let {
                 WineOptionsBottomSheet().show(it, getString(R.string.tag_modal_sheet_id))
             }
-        }, colors ?: emptyList())
+        }, colors ?: return)
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)

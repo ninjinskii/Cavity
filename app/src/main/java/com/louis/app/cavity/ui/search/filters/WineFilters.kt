@@ -3,6 +3,8 @@ package com.louis.app.cavity.ui.search.filters
 import com.louis.app.cavity.model.relation.WineWithBottles
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.util.toBoolean
+import java.time.LocalDate
+import java.util.*
 
 class FilterReadyToDrink : WineFilter {
     override fun meetFilters(wines: List<WineWithBottles>): List<WineWithBottles> {
@@ -45,6 +47,12 @@ class FilterCounty(private val countyId: Long) : WineFilter {
         return wines.filter { it.wine.countyId == countyId }
     }
 }
+
+//class FilterDate(private val date: Date, private val searchBefore: Boolean) : WineFilter {
+//    override fun meetFilters(wines: List<WineWithBottles>): List<WineWithBottles> {
+//        return wines.filter { it.bottles.any { bottle -> LocalDate.parse(bottle.buyDate).after(date) } }
+//    }
+//}
 
 class NoFilter : WineFilter {
     override fun meetFilters(wines: List<WineWithBottles>): List<WineWithBottles> {

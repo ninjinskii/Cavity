@@ -23,8 +23,9 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private lateinit var stepperFragment: FragmentStepper
     private lateinit var feedBackObserver: Observer<Event<Int>>
     private lateinit var datePicker: MaterialDatePicker<Long>
-    private var buyDate = ""
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
+    private var isDatePickerDisplayed = false
+    private var buyDate = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,15 +83,34 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 .setTitleText(R.string.buying_date)
                 .build()
 
+            datePicker.addOnDismissListener {
+                clearFocus()
+                isDatePickerDisplayed = false
+            }
+
             datePicker.addOnPositiveButtonClickListener {
                 formatDate()
                 setText(datePicker.headerText.toString())
             }
 
-            setOnClickListener { datePicker.show(childFragmentManager, "CALENDAR") }
+            setOnClickListener {
+                datePicker.show(
+                    childFragmentManager,
+                    resources.getString(R.string.tag_date_picker)
+                )
+            }
 
             setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) datePicker.show(childFragmentManager, "CALENDAR")
+                if (hasFocus) {
+                    if (!isDatePickerDisplayed) {
+                        isDatePickerDisplayed = true
+
+                        datePicker.show(
+                            childFragmentManager,
+                            resources.getString(R.string.tag_date_picker)
+                        )
+                    }
+                }
             }
         }
     }
@@ -151,7 +171,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     }
 
     private fun formatDate() {
-        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.FRENCH)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.FRENCH)
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = datePicker.selection ?: return
         buyDate = formatter.format(calendar.time)
