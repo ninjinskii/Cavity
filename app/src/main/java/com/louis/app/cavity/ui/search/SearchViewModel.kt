@@ -19,13 +19,14 @@ import kotlinx.coroutines.withContext
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository(CavityDatabase.getInstance(app))
 
-    private val _results = MutableLiveData<List<WineWithBottles>>()
-    val results: LiveData<List<WineWithBottles>>
+    private val _results = MutableLiveData<List<BottleAndWine>>()
+    val results: LiveData<List<BottleAndWine>>
         get() = _results
 
     init {
         viewModelScope.launch(IO) {
-            _results.postValue(repository.getWineWithBottlesNotLive())
+            val winesWithBottles = repository.getWineWithBottlesNotLive()
+            _results.postValue(convertWineWithBottlesToBottlesAndWine(winesWithBottles))
         }
     }
 
@@ -52,7 +53,10 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                     .andCombine(filters.third)
                     .andCombine(dateFilter)
 
-                _results.postValue(combinedFilters.meetFilters(winesWithBottles))
+                // TODO: Change wine filters parameter type to BottleAndWine to avoid repetitive conversion
+                val filtered = combinedFilters.meetFilters(winesWithBottles)
+                val bottles = convertWineWithBottlesToBottlesAndWine(filtered)
+                _results.postValue(bottles)
             }
         }
     }
@@ -90,5 +94,19 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             else NoFilter()
 
         return Triple(combinedCounty, combinedColor, combinedOther)
+    }
+
+    private suspend fun convertWineWithBottlesToBottlesAndWine(
+        wineWithBottles: List<WineWithBottles>
+    ) = withContext(Default) {
+        val result = mutableListOf<BottleAndWine>()
+
+        wineWithBottles.forEach {
+            it.bottles.forEach { bottle ->
+                result.add(BottleAndWine(bottle, it.wine))
+            }
+        }
+
+        result
     }
 }

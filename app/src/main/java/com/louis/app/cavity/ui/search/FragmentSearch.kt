@@ -23,7 +23,6 @@ import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
-import com.louis.app.cavity.ui.home.WineRecyclerAdapter
 import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -33,7 +32,7 @@ import kotlinx.coroutines.launch
 class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var datePicker: MaterialDatePicker<Long>
-    private lateinit var bottlesAdapter: WineRecyclerAdapter
+    private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var menu: Menu
     private val rvDisabler = RecyclerViewDisabler()
@@ -109,7 +108,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             )
         }
 
-        bottlesAdapter = WineRecyclerAdapter({}, {}, colors ?: return)
+        bottlesAdapter = BottleRecyclerAdapter({}, colors ?: return)
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
