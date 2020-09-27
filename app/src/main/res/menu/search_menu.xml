@@ -7,6 +7,7 @@
         android:icon="@drawable/ic_search"
         android:title="@string/search_wine_hint"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:actionLayout="@layout/chip_choice"
         app:iconTint="?attr/colorOnPrimarySurface"
         app:showAsAction="always|collapseActionView" />
 

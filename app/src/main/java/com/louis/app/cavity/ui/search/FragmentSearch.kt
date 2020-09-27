@@ -35,6 +35,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private lateinit var bottlesAdapter: WineRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var menu: Menu
+    private val rvDisabler = RecyclerViewDisabler()
     private val searchViewModel: SearchViewModel by activityViewModels()
     private val backdropHeaderHeight by lazy { binding.backdropHeader.height }
     private val toggleShowBeforeHeight by lazy { binding.toggleShowBefore.height }
@@ -223,9 +224,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
             item.setIcon(R.drawable.anim_close_filter)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            binding.scrim.alpha = 0.76F
+            binding.recyclerView.addOnItemTouchListener(rvDisabler)
         } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+            item.setIcon(R.drawable.anim_filter_close)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            menu.getItem(1).setIcon(R.drawable.anim_filter_close)
+            binding.scrim.alpha = 0F
+            binding.recyclerView.removeOnItemTouchListener(rvDisabler)
         }
 
         (item.icon as AnimatedVectorDrawable).start()
