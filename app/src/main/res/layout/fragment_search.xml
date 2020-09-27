@@ -45,7 +45,7 @@
             </HorizontalScrollView>
 
             <HorizontalScrollView
-                android:id="@+id/otherScrollView"
+                android:id="@+id/colorScrollView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content">
 
                     <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/otherChipGroup"
+                        android:id="@+id/colorChipGroup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/medium_margin"
@@ -66,16 +66,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/nameLayout"
                         app:singleLine="true">
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipReadyToDrink"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/ready_to_drink" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipRed"
@@ -117,6 +107,43 @@
                             android:focusable="true"
                             android:text="@string/wine_color_rose" />
 
+                    </com.google.android.material.chip.ChipGroup>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <HorizontalScrollView
+                android:id="@+id/otherScrollView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/colorScrollView">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/otherChipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/medium_margin"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
+                        app:singleLine="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipReadyToDrink"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/ready_to_drink" />
+
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipOrganic"
                             style="@style/Widget.MaterialComponents.Chip.Choice"
@@ -157,8 +184,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/xsmall_margin"
+                android:layout_marginBottom="?attr/actionBarSize"
                 android:text="@string/show_before"
                 android:textColor="?attr/colorOnPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dateLayout" />
 

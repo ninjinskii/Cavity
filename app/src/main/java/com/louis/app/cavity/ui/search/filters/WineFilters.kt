@@ -28,7 +28,7 @@ class FilterSweet : WineFilter {
     }
 }
 
-class FilterRose : WineFilter {
+class FilterRose : WineFilter{
     override fun meetFilters(wines: List<WineWithBottles>): List<WineWithBottles> {
         return wines.filter { it.wine.color == WineColor.COLOR_ROSE.colorInt }
     }

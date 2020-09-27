@@ -36,6 +36,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var menu: Menu
     private val searchViewModel: SearchViewModel by activityViewModels()
+    private val backdropHeaderHeight by lazy { binding.backdropHeader.height }
+    private val toggleShowBeforeHeight by lazy { binding.toggleShowBefore.height }
     private var isDatePickerDisplayed = false
     private var isHeaderShadowDisplayed = false
 
@@ -51,6 +53,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         setHasOptionsMenu(true)
 
         initCountyChips()
+        initColorChips()
         initOtherChips()
         initRecyclerView()
         initDatePicker()
@@ -69,6 +72,15 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
                 selectionRequired = false,
                 onCheckedChangeListener = { _, _ -> updateCheckedIds() }
             )
+        }
+    }
+
+    private fun initColorChips() {
+        binding.colorChipGroup.apply {
+            clearCheck()
+            children.forEach {
+                (it as Chip).setOnCheckedChangeListener { _, _ -> updateCheckedIds() }
+            }
         }
     }
 
@@ -138,12 +150,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     // Material does not trigger listeners on mutli-select, we have to listen on every chip and maintain a state
     private fun updateCheckedIds() {
         binding.countyChipGroup.run {
+            val colorFilterCheckedChipIds = binding.colorChipGroup.checkedChipIds
             val otherFilterCheckedChipIds = binding.otherChipGroup.checkedChipIds
             val counties = checkedChipIds.map {
                 findViewById<Chip>(it).getTag(R.string.tag_chip_id) as County
             }
 
-            searchViewModel.filter(counties, otherFilterCheckedChipIds)
+            searchViewModel.filter(counties, colorFilterCheckedChipIds , otherFilterCheckedChipIds)
         }
     }
 
@@ -175,8 +188,15 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
             display?.let {
                 binding.toggleShowBefore.getLocationInWindow(location)
+
+                val peekHeight =
+                    if (it - location[1] - toggleShowBeforeHeight < backdropHeaderHeight)
+                        backdropHeaderHeight
+                    else
+                        it - location[1] - binding.toggleShowBefore.height
+
                 bottomSheetBehavior.setPeekHeight(
-                    it - location[1] - binding.toggleShowBefore.height,
+                    peekHeight,
                     true
                 )
             }
