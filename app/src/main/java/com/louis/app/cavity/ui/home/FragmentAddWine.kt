@@ -155,7 +155,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->
-                homeViewModel.addCounty(dialogBinding.countyName.text.toString())
+                homeViewModel.addCounty(dialogBinding.countyName.text.toString().trim())
             }
             .setView(dialogBinding.root)
             .show()

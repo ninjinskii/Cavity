@@ -37,13 +37,19 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         filteredCounties: List<County>,
         colorCheckedChipIds: List<Int>,
         otherCheckedChipIds: List<Int>,
-        filteredDate: Pair<Long, Boolean>
+        filteredDate: Pair<Long, Boolean>,
+        filteredQuery: String
     ) {
         val filters = prepareChipFilters(filteredCounties, colorCheckedChipIds, otherCheckedChipIds)
         val dateFilter =
             if (filteredDate.first != -1L)
                 FilterDate(filteredDate.first, filteredDate.second)
             else NoFilter()
+        val queryFilter =
+            if (filteredQuery.isNotEmpty())
+                FilterText(filteredQuery)
+            else NoFilter()
+
 
         viewModelScope.launch(IO) {
             val bottlesAndWine = repository.getBottlesAndWineNotLive()
@@ -53,6 +59,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                     .andCombine(filters.second)
                     .andCombine(filters.third)
                     .andCombine(dateFilter)
+                    .andCombine(queryFilter)
 
                 val filtered = combinedFilters.meetFilters(bottlesAndWine)
                 _results.postValue(filtered)

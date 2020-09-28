@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
@@ -23,7 +24,6 @@ import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -42,6 +42,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         binding.dateLayout.height + resources.getDimension(R.dimen.small_margin).toInt()
     }
     private var dateFilter = -1L
+    private var query = ""
     private var isDatePickerDisplayed = false
     private var isHeaderShadowDisplayed = false
 
@@ -172,13 +173,12 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
                     .getTag(R.string.tag_chip_id) as County
             }
 
-            L.v(toggleShowBefore.isChecked.toString())
-
             searchViewModel.filter(
-                counties,
-                colorFilterCheckedChipIds,
-                otherFilterCheckedChipIds,
-                dateFilter to toggleShowBefore.isChecked
+                filteredCounties = counties,
+                colorCheckedChipIds = colorFilterCheckedChipIds,
+                otherCheckedChipIds = otherFilterCheckedChipIds,
+                filteredDate = dateFilter to toggleShowBefore.isChecked,
+                filteredQuery = query
             )
         }
     }
@@ -257,6 +257,20 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         (item.icon as AnimatedVectorDrawable).start()
     }
 
+    private fun initSearchView(searchView: SearchView) {
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                query = newText.orEmpty()
+                triggerFilter()
+                return true
+            }
+        })
+    }
+
     override fun onResume() {
         (activity as ActivityMain).setToolbarShadow(false)
         super.onResume()
@@ -269,6 +283,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_menu, menu)
+        initSearchView(menu.findItem(R.id.searchBar).actionView as SearchView)
         this.menu = menu
     }
 

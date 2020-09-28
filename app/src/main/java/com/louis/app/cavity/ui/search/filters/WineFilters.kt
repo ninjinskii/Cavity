@@ -56,6 +56,16 @@ class FilterDate(private val date: Long, private val searchBefore: Boolean) : Wi
     }
 }
 
+class FilterText(private val query: String) : WineFilter {
+    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
+        return bottlesAndWine.filter {
+            val slug =
+                it.name + it.naming + it.cuvee + it.buyLocation + it.otherInfo + it.tasteComment
+            return@filter slug.contains(query, ignoreCase = true)
+        }
+    }
+}
+
 class NoFilter : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
         return bottlesAndWine
