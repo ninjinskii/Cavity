@@ -11,6 +11,7 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.ui.search.filters.*
+import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -38,7 +39,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         colorCheckedChipIds: List<Int>,
         otherCheckedChipIds: List<Int>,
         filteredDate: Pair<Long, Boolean>,
-        filteredQuery: String
+        filteredQuery: String,
+        filteredPrice: List<Float>
     ) {
         val filters = prepareChipFilters(filteredCounties, colorCheckedChipIds, otherCheckedChipIds)
         val dateFilter =
@@ -49,6 +51,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             if (filteredQuery.isNotEmpty())
                 FilterText(filteredQuery)
             else NoFilter()
+        L.v(filteredPrice.toString())
+        val priceFilter = FilterPrice(filteredPrice[0].toInt(), filteredPrice[1].toInt())
 
 
         viewModelScope.launch(IO) {
@@ -60,6 +64,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                     .andCombine(filters.third)
                     .andCombine(dateFilter)
                     .andCombine(queryFilter)
+                    .andCombine(priceFilter)
 
                 val filtered = combinedFilters.meetFilters(bottlesAndWine)
                 _results.postValue(filtered)

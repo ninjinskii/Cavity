@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
@@ -62,6 +63,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         initOtherChips()
         initRecyclerView()
         initDatePicker()
+        initSlider()
         setListeners()
         setBottomSheetPeekHeight()
     }
@@ -162,12 +164,24 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         }
     }
 
+    private fun initSlider() {
+        binding.priceSlider.addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+            override fun onStopTrackingTouch(slider: RangeSlider) {
+                triggerFilter()
+            }
+
+            override fun onStartTrackingTouch(slider: RangeSlider) {
+            }
+        })
+    }
+
     // Material does not trigger listeners on mutli-select, we have to listen on every chip and maintain a state
     private fun triggerFilter() {
         with(binding) {
             val countyFilterCheckedChipIds = countyChipGroup.checkedChipIds
             val colorFilterCheckedChipIds = colorChipGroup.checkedChipIds
             val otherFilterCheckedChipIds = otherChipGroup.checkedChipIds
+            val price = priceSlider.values
             val counties = countyFilterCheckedChipIds.map {
                 binding.countyChipGroup.findViewById<Chip>(it)
                     .getTag(R.string.tag_chip_id) as County
@@ -178,7 +192,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
                 colorCheckedChipIds = colorFilterCheckedChipIds,
                 otherCheckedChipIds = otherFilterCheckedChipIds,
                 filteredDate = dateFilter to toggleShowBefore.isChecked,
-                filteredQuery = query
+                filteredQuery = query,
+                filteredPrice = price
             )
         }
     }
@@ -258,7 +273,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun initSearchView(searchView: SearchView) {
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
