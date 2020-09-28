@@ -4,9 +4,9 @@ import com.louis.app.cavity.model.*
 
 // TODO: convert to singleton
 class WineRepository(database: CavityDatabase) {
-    val wineDao = database.wineDao()
-    val bottleDao = database.bottleDao()
-    val countyDao = database.countyDao()
+    private val wineDao = database.wineDao()
+    private val bottleDao = database.bottleDao()
+    private val countyDao = database.countyDao()
 
     fun insertWine(wine: Wine) = wineDao.insertWine(wine)
     fun updateWine(wine: Wine) = wineDao.updateWine(wine)
@@ -39,6 +39,7 @@ class WineRepository(database: CavityDatabase) {
         bottleDao.getBottleWithExpertAdvicesById(bottleId)
     fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
     fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
+    fun getBottlesAndWineNotLive() = bottleDao.getBottlesAndWineNotLive()
 
     fun getAllGrapes() = bottleDao.getAllGrapes()
 

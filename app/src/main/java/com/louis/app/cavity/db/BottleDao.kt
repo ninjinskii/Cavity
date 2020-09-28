@@ -7,6 +7,7 @@ import com.louis.app.cavity.model.ExpertAdvice
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.BottleWithExpertAdvices
 import com.louis.app.cavity.model.relation.BottleWithGrapes
+import com.louis.app.cavity.model.relation.BottleAndWine
 
 @Dao
 interface BottleDao {
@@ -37,6 +38,9 @@ interface BottleDao {
 
     @Query("DELETE FROM bottle WHERE bottle_id=:bottleId")
     fun deleteBottleById(bottleId: Long)
+
+    @Query("SELECT bottle_id, name, naming, cuvee, color, is_organic, vintage, apogee, is_favorite, count, price, currency, other_info, buy_location, buy_date, taste_comment, county_id FROM wine, bottle WHERE wine.wine_id = bottle.wine_id")
+    fun getBottlesAndWineNotLive(): List<BottleAndWine>
 
     // ---------------Grape---------------
     @Insert

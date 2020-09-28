@@ -9,7 +9,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.relation.WineWithBottles
+import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.ui.search.filters.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
@@ -18,6 +18,7 @@ import kotlinx.coroutines.withContext
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository(CavityDatabase.getInstance(app))
+    private val bottlesAndWine = mutableListOf<BottleAndWine>()
 
     private val _results = MutableLiveData<List<BottleAndWine>>()
     val results: LiveData<List<BottleAndWine>>
@@ -25,8 +26,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         viewModelScope.launch(IO) {
-            val winesWithBottles = repository.getWineWithBottlesNotLive()
-            _results.postValue(convertWineWithBottlesToBottlesAndWine(winesWithBottles))
+            bottlesAndWine.addAll(repository.getBottlesAndWineNotLive())
+            _results.postValue(bottlesAndWine)
         }
     }
 
@@ -45,7 +46,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             else NoFilter()
 
         viewModelScope.launch(IO) {
-            val winesWithBottles = repository.getWineWithBottlesNotLive()
+            val bottlesAndWine = repository.getBottlesAndWineNotLive()
 
             withContext(Default) {
                 val combinedFilters = filters.first
@@ -53,10 +54,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                     .andCombine(filters.third)
                     .andCombine(dateFilter)
 
-                // TODO: Change wine filters parameter type to BottleAndWine to avoid repetitive conversion
-                val filtered = combinedFilters.meetFilters(winesWithBottles)
-                val bottles = convertWineWithBottlesToBottlesAndWine(filtered)
-                _results.postValue(bottles)
+                val filtered = combinedFilters.meetFilters(bottlesAndWine)
+                _results.postValue(filtered)
             }
         }
     }
@@ -94,19 +93,5 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             else NoFilter()
 
         return Triple(combinedCounty, combinedColor, combinedOther)
-    }
-
-    private suspend fun convertWineWithBottlesToBottlesAndWine(
-        wineWithBottles: List<WineWithBottles>
-    ) = withContext(Default) {
-        val result = mutableListOf<BottleAndWine>()
-
-        wineWithBottles.forEach {
-            it.bottles.forEach { bottle ->
-                result.add(BottleAndWine(bottle, it.wine))
-            }
-        }
-
-        result
     }
 }
