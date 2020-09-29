@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.search.filters
 
+import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.util.L
@@ -11,29 +12,43 @@ class FilterReadyToDrink : WineFilter {
     }
 }
 
-class FilterRed : WineFilter {
+class ColorFilter(private val colorInt: Int) : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-        return bottlesAndWine.filter { it.color == WineColor.COLOR_RED.colorInt }
+        return bottlesAndWine.filter { it.color == Wine.getWineColor(colorInt) }
+    }
+
+    // Using orCombine if we combine two color fiter
+    override fun andCombine(filter: WineFilter): WineFilter {
+        return if (filter is ColorFilter) super.orCombine(filter)
+        else super.andCombine(filter)
     }
 }
 
-class FilterWhite : WineFilter {
-    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-        return bottlesAndWine.filter { it.color == WineColor.COLOR_WHITE.colorInt }
-    }
-}
-
-class FilterSweet : WineFilter {
-    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-        return bottlesAndWine.filter { it.color == WineColor.COLOR_SWEET.colorInt }
-    }
-}
-
-class FilterRose : WineFilter {
-    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-        return bottlesAndWine.filter { it.color == WineColor.COLOR_ROSE.colorInt }
-    }
-}
+//class FilterRed : WineFilter, ColorFilter {
+//    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
+//        return bottlesAndWine.filter { it.color == WineColor.COLOR_RED.colorInt }
+//    }
+//
+//
+//}
+//
+//class FilterWhite : WineFilter, ColorFilter {
+//    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
+//        return bottlesAndWine.filter { it.color == WineColor.COLOR_WHITE.colorInt }
+//    }
+//}
+//
+//class FilterSweet : WineFilter, ColorFilter {
+//    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
+//        return bottlesAndWine.filter { it.color == WineColor.COLOR_SWEET.colorInt }
+//    }
+//}
+//
+//class FilterRose : WineFilter, ColorFilter {
+//    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
+//        return bottlesAndWine.filter { it.color == WineColor.COLOR_ROSE.colorInt }
+//    }
+//}
 
 class FilterOrganic : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
@@ -67,7 +82,7 @@ class FilterText(private val query: String) : WineFilter {
     }
 }
 
-class FilterPrice(private val minPrice: Int, private val maxPrice: Int): WineFilter {
+class FilterPrice(private val minPrice: Int, private val maxPrice: Int) : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
         L.v(bottlesAndWine.map { it.price.toString() }.toString())
         return bottlesAndWine.filter { it.price in minPrice..maxPrice }

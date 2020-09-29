@@ -3,6 +3,8 @@ package com.louis.app.cavity.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.louis.app.cavity.R
+import com.louis.app.cavity.ui.home.WineColor
 
 @Entity(tableName = "wine")
 data class Wine(
@@ -17,33 +19,23 @@ data class Wine(
     @ColumnInfo(name = "is_organic") val isOrganic: Int,
     @ColumnInfo(name = "img_path") val imgPath: String
 ) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    companion object {
+        fun getWineColorNumber(color: WineColor): Int {
+            return when (color) {
+                WineColor.COLOR_WHITE -> 0
+                WineColor.COLOR_RED -> 1
+                WineColor.COLOR_SWEET -> 2
+                else -> 3
+            }
+        }
 
-        other as Wine
-
-        if (wineId != other.wineId) return false
-        if (name != other.name) return false
-        if (naming != other.naming) return false
-        if (color != other.color) return false
-        if (cuvee != other.cuvee) return false
-        if (countyId != other.countyId) return false
-        if (isOrganic != other.isOrganic) return false
-        if (imgPath != other.imgPath) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = wineId.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + naming.hashCode()
-        result = 31 * result + color
-        result = 31 * result + cuvee.hashCode()
-        result = 31 * result + countyId.hashCode()
-        result = 31 * result + isOrganic
-        result = 31 * result + imgPath.hashCode()
-        return result
+        fun getWineColor(colorInt: Int) : WineColor {
+            return when (colorInt) {
+                0 -> WineColor.COLOR_WHITE
+                1 -> WineColor.COLOR_RED
+                2 -> WineColor.COLOR_SWEET
+                else -> WineColor.COLOR_ROSE
+            }
+        }
     }
 }

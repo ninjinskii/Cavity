@@ -96,7 +96,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
                         0,
                         name,
                         naming,
-                        getWineColor(color),
+                        Wine.getWineColorNumber(getWineColor(color)),
                         cuvee,
                         county.countyId,
                         isOrganic,
@@ -182,13 +182,12 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         }
     }
 
-    // enum ?
-    private fun getWineColor(chipId: Int): Int {
+    private fun getWineColor(chipId: Int): WineColor {
         return when (chipId) {
-            R.id.colorWhite -> WineColor.COLOR_WHITE.colorInt
-            R.id.colorRed -> WineColor.COLOR_RED.colorInt
-            R.id.colorSweet -> WineColor.COLOR_SWEET.colorInt
-            else -> WineColor.COLOR_ROSE.colorInt
+            R.id.colorWhite -> WineColor.COLOR_WHITE
+            R.id.colorRed -> WineColor.COLOR_RED
+            R.id.colorSweet -> WineColor.COLOR_SWEET
+            else -> WineColor.COLOR_ROSE
         }
     }
 

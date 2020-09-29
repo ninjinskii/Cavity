@@ -10,6 +10,7 @@ import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.BottleAndWine
+import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.Default
@@ -83,10 +84,14 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         if (R.id.chipReadyToDrink in otherCheckedChipIds) otherFilters.add(FilterReadyToDrink())
         if (R.id.chipOrganic in otherCheckedChipIds) otherFilters.add(FilterOrganic())
 
-        if (R.id.chipRed in colorCheckedChipIds) colorFilters.add(FilterRed())
-        if (R.id.chipWhite in colorCheckedChipIds) colorFilters.add(FilterWhite())
-        if (R.id.chipSweet in colorCheckedChipIds) colorFilters.add(FilterSweet())
-        if (R.id.chipRose in colorCheckedChipIds) colorFilters.add(FilterRose())
+        if (R.id.chipRed in colorCheckedChipIds)
+            colorFilters.add(ColorFilter(WineColor.COLOR_RED.colorInt))
+        if (R.id.chipWhite in colorCheckedChipIds)
+            colorFilters.add(ColorFilter(WineColor.COLOR_WHITE.colorInt))
+        if (R.id.chipSweet in colorCheckedChipIds)
+            colorFilters.add(ColorFilter(WineColor.COLOR_SWEET.colorInt))
+        if (R.id.chipRose in colorCheckedChipIds)
+            ColorFilter(WineColor.COLOR_ROSE.colorInt)
 
         val combinedCounty =
             if (countiesFilters.isNotEmpty())
