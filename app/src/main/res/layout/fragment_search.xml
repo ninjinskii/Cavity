@@ -34,9 +34,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/medium_margin"
                         android:layout_marginTop="@dimen/small_margin"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
                         app:selectionRequired="false"
                         app:singleLine="true"
                         app:singleSelection="false" />
@@ -154,61 +151,51 @@
                             android:focusable="true"
                             android:text="@string/organic" />
 
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipFavorite"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/favorite" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipPdf"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:text="@string/pdf" />
+
                     </com.google.android.material.chip.ChipGroup>
                 </LinearLayout>
             </HorizontalScrollView>
 
             <com.google.android.material.slider.RangeSlider
-                android:id="@+id/priceSlider"
+                android:id="@+id/vintageSlider"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/small_margin"
-                android:stepSize="10.0"
-                android:valueFrom="0.0"
-                android:valueTo="200.0"
+                android:stepSize="4.0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/otherScrollView"
-                app:values="@array/initial_slider_values" />
+                app:layout_constraintTop_toBottomOf="@id/otherScrollView" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/dateLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/small_margin"
-                android:layout_marginBottom="?attr/actionBarSize"
-                app:endIconMode="clear_text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/toggleShowBefore"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/priceSlider"
-                app:startIconDrawable="@drawable/ic_calendar">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/date"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusableInTouchMode="true"
-                    android:hint="@string/buying_date"
-                    android:inputType="text" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/toggleShowBefore"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonMoreFilters"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/medium_margin"
-                android:enabled="false"
-                android:text="@string/show_before"
-                android:textColor="?attr/colorOnPrimary"
-                app:layout_constraintBottom_toBottomOf="@id/dateLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/dateLayout" />
+                android:textColor="?attr/colorSecondary"
+                android:text="@string/more_filters"
+                app:layout_constraintTop_toBottomOf="@id/vintageSlider"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
@@ -239,7 +226,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="12 vins" />
+                tools:text="12 résultats" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -100,7 +100,9 @@
     <string name="item_rate">%1$d / %2$d</string>
     <string name="other_info">Autre informations</string>
     <string name="inquire_add_to_favorites">Ajouter aux coup de cœurs</string>
+    <string name="favorite">Coup de cœurs</string>
     <string name="add_pdf">Associer un fichier PDF</string>
+    <string name="pdf">PDF</string>
     <string name="add_grapes">Renseigner les cépages</string>
     <string name="medal_color">Couleur de la médaille</string>
     <string name="remove_pdf">Retirer le PDF</string>
@@ -112,6 +114,10 @@
     <string name="ready_to_drink">Prêt à boire</string>
     <string name="show_before">Antérieur ?</string>
     <string name="show_bottom_sheet">Dérouler le panneau</string>
+    <string name="stock">Stock</string>
+    <string name="more_filters">Plus de filtres</string>
+    <string name="results">Résultat(s)</string>
+    <string name="no_price_no_results">Les bouteilles n\'ayant pas de prix renseigné ne seront pas affichées.</string>
 <!--    <string name="search_wine">Recherche</string>-->
 
     <!-- Tags -->

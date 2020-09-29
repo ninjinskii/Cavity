@@ -53,6 +53,7 @@ class WineRepository private constructor (app: Application) {
     fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
     fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
     fun getBottlesAndWineNotLive() = bottleDao.getBottlesAndWineNotLive()
+    fun getBottleWithGrapesNotLive() = bottleDao.getBottleWithGrapesNotLive()
 
     fun getAllGrapes() = bottleDao.getAllGrapes()
 

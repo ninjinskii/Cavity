@@ -39,8 +39,12 @@ interface BottleDao {
     @Query("DELETE FROM bottle WHERE bottle_id=:bottleId")
     fun deleteBottleById(bottleId: Long)
 
-    @Query("SELECT bottle_id, name, naming, cuvee, color, is_organic, vintage, apogee, is_favorite, count, price, currency, other_info, buy_location, buy_date, taste_comment, county_id FROM wine, bottle WHERE wine.wine_id = bottle.wine_id")
+    @Query("SELECT bottle_id, name, naming, cuvee, color, is_organic, vintage, apogee, is_favorite, count, price, currency, other_info, buy_location, buy_date, taste_comment, pdf_path, county_id FROM wine, bottle WHERE wine.wine_id = bottle.wine_id")
     fun getBottlesAndWineNotLive(): List<BottleAndWine>
+
+    @Transaction
+    @Query("SELECT * FROM bottle")
+    fun getBottleWithGrapesNotLive() : List<BottleWithGrapes>
 
     // ---------------Grape---------------
     @Insert

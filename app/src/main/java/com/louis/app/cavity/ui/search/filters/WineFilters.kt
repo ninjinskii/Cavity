@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.search.filters
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.ui.home.WineColor
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 
 class FilterReadyToDrink : WineFilter {
@@ -52,8 +51,31 @@ class FilterText(private val query: String) : WineFilter {
 
 class FilterPrice(private val minPrice: Int, private val maxPrice: Int) : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-        L.v(bottlesAndWine.map { it.price.toString() }.toString())
         return bottlesAndWine.filter { it.price in minPrice..maxPrice }
+    }
+}
+
+class FilterFavorite : WineFilter {
+    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
+        return bottlesAndWine.filter { it.isFavorite.toBoolean() }
+    }
+}
+
+class FilterPdf : WineFilter {
+    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
+        return bottlesAndWine.filter { it.pdfPath.isNotEmpty() }
+    }
+}
+
+class FilterStock(private val minStock: Int, private val maxStock: Int) : WineFilter {
+    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
+        return bottlesAndWine.filter { it.count in minStock..maxStock }
+    }
+}
+
+class FilterVintage(private val minYear: Int, private val maxYear: Int) : WineFilter {
+    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
+        return bottlesAndWine.filter { it.vintage in minYear..maxYear }
     }
 }
 
@@ -62,3 +84,5 @@ class NoFilter : WineFilter {
         return bottlesAndWine
     }
 }
+
+interface MinMaxFilter

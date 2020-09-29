@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="initial_slider_values">
+    <array name="initial_slider_values_price">
         <item>0.0</item>
         <item>200.0</item>
+    </array>
+
+    <array name="initial_slider_values_stock">
+        <item>0.0</item>
+        <item>30.0</item>
     </array>
 </resources>

@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.search
 import android.animation.AnimatorInflater
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
-import android.text.InputType
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -14,14 +13,13 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
@@ -30,23 +28,20 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
 class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-    private lateinit var datePicker: MaterialDatePicker<Long>
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var menu: Menu
     private val rvDisabler = RecyclerViewDisabler()
     private val searchViewModel: SearchViewModel by activityViewModels()
     private val backdropHeaderHeight by lazy { binding.backdropHeader.height }
-    private val dateLayoutHeight by lazy {
-        binding.dateLayout.height + resources.getDimension(R.dimen.small_margin).toInt()
+    private val bottomSheetUpperBound by lazy {
+        binding.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
     }
-    private var dateFilter = -1L
-    private var query = ""
-    private var isDatePickerDisplayed = false
     private var isHeaderShadowDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,9 +59,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         initColorChips()
         initOtherChips()
         initRecyclerView()
-        initDatePicker()
         initSlider()
-        setListeners()
+        setListener()
         setBottomSheetPeekHeight()
     }
 
@@ -79,7 +73,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
                 binding.countyChipGroup,
                 counties,
                 selectionRequired = false,
-                onCheckedChangeListener = { _, _ -> triggerFilter() }
+                onCheckedChangeListener = { _, _ -> prepareCountyFilters() }
             )
         }
     }
@@ -88,7 +82,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         binding.colorChipGroup.apply {
             clearCheck()
             children.forEach {
-                (it as Chip).setOnCheckedChangeListener { _, _ -> triggerFilter() }
+                (it as Chip).setOnCheckedChangeListener { _, _ ->
+                    searchViewModel.setColorFilters(checkedChipIds)
+                }
             }
         }
     }
@@ -97,7 +93,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         binding.otherChipGroup.apply {
             clearCheck()
             children.forEach {
-                (it as Chip).setOnCheckedChangeListener { _, _ -> triggerFilter() }
+                (it as Chip).setOnCheckedChangeListener { _, _ ->
+                    searchViewModel.setOtherFilters(checkedChipIds)
+                }
             }
         }
     }
@@ -138,87 +136,41 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         }
     }
 
-    private fun initDatePicker() {
-        val builder = MaterialDatePicker.Builder.datePicker()
-        builder.setTitleText(R.string.buying_date)
-
-        binding.dateLayout.setEndIconOnClickListener {
-            binding.date.setText("")
-            binding.toggleShowBefore.isEnabled = false
-            dateFilter = -1L
-            triggerFilter()
-        }
-
-        datePicker = builder.build()
-
-        datePicker.apply {
-            addOnDismissListener {
-                binding.date.clearFocus()
-                isDatePickerDisplayed = false
-            }
-
-            addOnPositiveButtonClickListener {
-                binding.date.setText(headerText)
-                binding.toggleShowBefore.isEnabled = true
-                dateFilter = selection ?: -1L
-                triggerFilter()
-            }
-        }
-    }
-
     private fun initSlider() {
-        binding.priceSlider.addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
-            override fun onStopTrackingTouch(slider: RangeSlider) {
-                triggerFilter()
-            }
+        binding.vintageSlider.apply {
+            val year = Calendar.getInstance().get(Calendar.YEAR).toFloat()
+            valueFrom = year - 40F
+            valueTo = year
+            values = listOf(valueFrom, valueTo)
 
-            override fun onStartTrackingTouch(slider: RangeSlider) {
-            }
-        })
-    }
-
-    // Material does not trigger listeners on mutli-select, we have to listen on every chip and maintain a state
-    private fun triggerFilter() {
-        with(binding) {
-            val countyFilterCheckedChipIds = countyChipGroup.checkedChipIds
-            val colorFilterCheckedChipIds = colorChipGroup.checkedChipIds
-            val otherFilterCheckedChipIds = otherChipGroup.checkedChipIds
-            val price = priceSlider.values
-            val counties = countyFilterCheckedChipIds.map {
-                binding.countyChipGroup.findViewById<Chip>(it)
-                    .getTag(R.string.tag_chip_id) as County
-            }
-
-            searchViewModel.filter(
-                filteredCounties = counties,
-                colorCheckedChipIds = colorFilterCheckedChipIds,
-                otherCheckedChipIds = otherFilterCheckedChipIds,
-                filteredDate = dateFilter to toggleShowBefore.isChecked,
-                filteredQuery = query,
-                filteredPrice = price
-            )
-        }
-    }
-
-    private fun setListeners() {
-        binding.date.apply {
-            inputType = InputType.TYPE_NULL
-
-            setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    if (!isDatePickerDisplayed) {
-                        isDatePickerDisplayed = true
-
-                        datePicker.show(
-                            childFragmentManager,
-                            resources.getString(R.string.tag_date_picker)
-                        )
-                    }
+            addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+                override fun onStopTrackingTouch(slider: RangeSlider) {
+                    searchViewModel.setVintageFilter(
+                        slider.values[0].toInt(),
+                        slider.values[1].toInt()
+                    )
                 }
-            }
-        }
 
-        binding.toggleShowBefore.setOnCheckedChangeListener { _, _ -> triggerFilter() }
+                override fun onStartTrackingTouch(slider: RangeSlider) {
+                }
+            })
+        }
+    }
+
+    private fun prepareCountyFilters() {
+        binding.countyChipGroup.apply {
+            val counties = checkedChipIds.map {
+                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as County
+            }
+
+            searchViewModel.setCountiesFilters(counties)
+        }
+    }
+
+    private fun setListener() {
+        binding.buttonMoreFilters.setOnClickListener {
+            findNavController().navigate(R.id.searchToMoreFilters)
+        }
     }
 
     // Needed for split screen
@@ -229,13 +181,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             val location = IntArray(2)
 
             display?.let {
-                binding.dateLayout.getLocationInWindow(location)
+                binding.buttonMoreFilters.getLocationInWindow(location)
 
                 val peekHeight =
-                    if (it - location[1] - dateLayoutHeight < backdropHeaderHeight)
+                    if (it - location[1] - bottomSheetUpperBound < backdropHeaderHeight)
                         backdropHeaderHeight
                     else
-                        it - location[1] - dateLayoutHeight
+                        it - location[1] - bottomSheetUpperBound
 
                 bottomSheetBehavior.setPeekHeight(peekHeight, true)
             }
@@ -281,8 +233,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                query = newText.orEmpty()
-                triggerFilter()
+                newText?.let { searchViewModel.setTextFilter(it) }
+
                 return true
             }
         })

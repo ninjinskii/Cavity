@@ -6,21 +6,31 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.ui.search.filters.*
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlin.properties.Delegates
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
     private val bottlesAndWine = mutableListOf<BottleAndWine>()
+
+    // These filters are located in FragmentSearch
+    private var countyFilter: WineFilter by Delegates.observable(NoFilter()) { _, _, _ -> filter() }
+    private var colorFilter: WineFilter by Delegates.observable(NoFilter()) { _, _, _ -> filter() }
+    private var otherFilter: WineFilter by Delegates.observable(NoFilter()) { _, _, _ -> filter() }
+    private var vintageFilter: WineFilter by Delegates.observable(NoFilter()) { _, _, _ -> filter() }
+    private var textFilter: WineFilter by Delegates.observable(NoFilter()) { _, _, _ -> filter() }
+
+    // These filters are located in FragmentMoreFilters
+    private var priceFilter: WineFilter by Delegates.observable(NoFilter()) { _, _, _ -> filter() }
+    private var dateFilter: WineFilter by Delegates.observable(NoFilter()) { _, _, _ -> filter() }
+    private var stockFilter: WineFilter by Delegates.observable(NoFilter()) { _, _, _ -> filter() }
 
     private val _results = MutableLiveData<List<BottleAndWine>>()
     val results: LiveData<List<BottleAndWine>>
@@ -35,54 +45,33 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllCountiesNotLive() = repository.getAllCountiesNotLive()
 
-    fun filter(
-        filteredCounties: List<County>,
-        colorCheckedChipIds: List<Int>,
-        otherCheckedChipIds: List<Int>,
-        filteredDate: Pair<Long, Boolean>,
-        filteredQuery: String,
-        filteredPrice: List<Float>
-    ) {
-        val filters = prepareChipFilters(filteredCounties, colorCheckedChipIds, otherCheckedChipIds)
-        val dateFilter =
-            if (filteredDate.first != -1L)
-                FilterDate(filteredDate.first, filteredDate.second)
-            else NoFilter()
-        val queryFilter =
-            if (filteredQuery.isNotEmpty())
-                FilterText(filteredQuery)
-            else NoFilter()
-        val priceFilter = FilterPrice(filteredPrice[0].toInt(), filteredPrice[1].toInt())
+    private fun filter() {
+        viewModelScope.launch(Default) {
+            val combinedFilters = countyFilter
+                .andCombine(colorFilter)
+                .andCombine(otherFilter)
+                .andCombine(vintageFilter)
+                .andCombine(textFilter)
+                .andCombine(priceFilter)
+                .andCombine(dateFilter)
+                .andCombine(stockFilter)
 
-
-        viewModelScope.launch(IO) {
-            val bottlesAndWine = repository.getBottlesAndWineNotLive()
-
-            withContext(Default) {
-                val combinedFilters = filters.first
-                    .andCombine(filters.second)
-                    .andCombine(filters.third)
-                    .andCombine(dateFilter)
-                    .andCombine(queryFilter)
-                    //.andCombine(priceFilter)
-
-                val filtered = combinedFilters.meetFilters(bottlesAndWine)
-                _results.postValue(filtered)
-            }
+            val filtered = combinedFilters.meetFilters(bottlesAndWine)
+            _results.postValue(filtered)
         }
     }
 
-    private fun prepareChipFilters(
-        filteredCounties: List<County>,
-        colorCheckedChipIds: List<Int>,
-        otherCheckedChipIds: List<Int>
-    ): Triple<WineFilter, WineFilter, WineFilter> {
-        val colorFilters = mutableListOf<WineFilter>()
-        val otherFilters = mutableListOf<WineFilter>()
-        val countiesFilters: List<WineFilter> = filteredCounties.map { FilterCounty(it.countyId) }
+    fun setCountiesFilters(filteredCounties: List<County>) {
+        val countyFilters: List<WineFilter> = filteredCounties.map { FilterCounty(it.countyId) }
 
-        if (R.id.chipReadyToDrink in otherCheckedChipIds) otherFilters.add(FilterReadyToDrink())
-        if (R.id.chipOrganic in otherCheckedChipIds) otherFilters.add(FilterOrganic())
+        countyFilter =
+            if (countyFilters.isNotEmpty())
+                countyFilters.reduce { acc, filterCounty -> acc.orCombine(filterCounty) }
+            else NoFilter()
+    }
+
+    fun setColorFilters(colorCheckedChipIds: List<Int>) {
+        val colorFilters = mutableListOf<WineFilter>()
 
         if (R.id.chipRed in colorCheckedChipIds)
             colorFilters.add(ColorFilter(WineColor.COLOR_RED))
@@ -93,21 +82,43 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         if (R.id.chipRose in colorCheckedChipIds)
             colorFilters.add(ColorFilter(WineColor.COLOR_ROSE))
 
-        val combinedCounty =
-            if (countiesFilters.isNotEmpty())
-                countiesFilters.reduce { acc, filterCounty -> acc.orCombine(filterCounty) }
-            else NoFilter()
-
-        val combinedColor =
+        colorFilter =
             if (colorFilters.isNotEmpty())
                 colorFilters.reduce { acc, wineFilter -> acc.orCombine(wineFilter) }
             else NoFilter()
+    }
 
-        val combinedOther =
+    fun setOtherFilters(otherCheckedChipIds: List<Int>) {
+        val otherFilters = mutableListOf<WineFilter>()
+
+        if (R.id.chipReadyToDrink in otherCheckedChipIds) otherFilters.add(FilterReadyToDrink())
+        if (R.id.chipOrganic in otherCheckedChipIds) otherFilters.add(FilterOrganic())
+        if (R.id.chipFavorite in otherCheckedChipIds) otherFilters.add(FilterFavorite())
+        if (R.id.chipPdf in otherCheckedChipIds) otherFilters.add(FilterPdf())
+
+        otherFilter =
             if (otherFilters.isNotEmpty())
                 otherFilters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
             else NoFilter()
+    }
 
-        return Triple(combinedCounty, combinedColor, combinedOther)
+    fun setVintageFilter(minValue: Int, maxValue: Int) {
+        vintageFilter = FilterVintage(minValue, maxValue)
+    }
+
+    fun setTextFilter(query: String) {
+        textFilter = if (query.isNotEmpty()) FilterText(query) else NoFilter()
+    }
+
+    fun setPriceFilter(minValue: Int, maxValue: Int) {
+        priceFilter = if (minValue == -1) NoFilter() else FilterPrice(minValue, maxValue)
+    }
+
+    fun setDateFilter(date: Long, searchBefore: Boolean) {
+        dateFilter = if (date == -1L) NoFilter() else FilterDate(date, searchBefore)
+    }
+
+    fun setStockFilter(minValue: Int, maxValue: Int) {
+        stockFilter = FilterStock(minValue, maxValue)
     }
 }

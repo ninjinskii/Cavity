@@ -41,10 +41,21 @@
         android:name="com.louis.app.cavity.ui.bottle.FragmentAddBottle"
         android:label="FragmentAddBottle"
         tools:layout="@layout/fragment_add_bottle" />
+
     <fragment
         android:id="@+id/search_dest"
         android:name="com.louis.app.cavity.ui.search.FragmentSearch"
         android:label="FragmentSearch"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/searchToMoreFilters"
+            app:destination="@id/more_filters_dest" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/more_filters_dest"
+        android:name="com.louis.app.cavity.ui.search.FragmentMoreFilters"
+        android:label="FragmentMoreFilters"
+        tools:layout="@layout/fragment_more_filters" />
 
 </navigation>

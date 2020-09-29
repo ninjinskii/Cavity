@@ -20,6 +20,7 @@ data class BottleAndWine(
     @ColumnInfo(name = "buy_location") val buyLocation: String,
     @ColumnInfo(name = "buy_date") val buyDate: Long,
     @ColumnInfo(name = "taste_comment") val tasteComment: String,
+    @ColumnInfo(name = "pdf_path") val pdfPath: String,
     @ColumnInfo(name = "county_id") val countyId: Long
 ) {
     fun isReadyToDrink() : Boolean {
