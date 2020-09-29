@@ -1,12 +1,10 @@
 package com.louis.app.cavity.ui.search
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemBottleBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.relation.BottleAndWine
@@ -19,11 +17,9 @@ class BottleRecyclerAdapter(
 ) : ListAdapter<BottleAndWine, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottleViewHolder {
-        return BottleViewHolder(
-            LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_bottle, parent, false)
-        )
+        val binding = ItemBottleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        return BottleViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: BottleViewHolder, position: Int) =
@@ -41,8 +37,8 @@ class BottleRecyclerAdapter(
             oldItem == newItem
     }
 
-    inner class BottleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = ItemBottleBinding.bind(itemView)
+    inner class BottleViewHolder(private val binding: ItemBottleBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(bottleAndWine: BottleAndWine) {
             with(binding.wineColorNameNaming) {

@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.home
 
 import android.net.Uri
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -25,11 +24,9 @@ class WineRecyclerAdapter(
 ) : ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
-        return WineViewHolder(
-            LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_wine, parent, false)
-        )
+        val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        return WineViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) =
@@ -47,8 +44,8 @@ class WineRecyclerAdapter(
             oldItem.wine == newItem.wine
     }
 
-    inner class WineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = ItemWineBinding.bind(itemView)
+    inner class WineViewHolder(private val binding: ItemWineBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         // TODO: change destination
         //private fun navigateToBottle(bottleId: Long, view: View) =
@@ -71,7 +68,7 @@ class WineRecyclerAdapter(
                             binding.chipGroup,
                             false
                         ) as Chip
-                    
+
                     chip.apply {
                         setTag(R.string.tag_chip_id, bottle.vintage)
                         text = String.format(

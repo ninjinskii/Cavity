@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.bottle.steps
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -20,11 +19,9 @@ class GrapeRecyclerAdapter(
     val maxGrapeQty = 100
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GrapeViewHolder {
-        return GrapeViewHolder(
-            LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_grape, parent, false)
-        )
+        val binding = ItemGrapeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        return GrapeViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: GrapeViewHolder, position: Int) =
@@ -42,8 +39,8 @@ class GrapeRecyclerAdapter(
             oldItem == newItem
     }
 
-    inner class GrapeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = ItemGrapeBinding.bind(itemView)
+    inner class GrapeViewHolder(private val binding: ItemGrapeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(grape: Grape) {
             with(binding) {
