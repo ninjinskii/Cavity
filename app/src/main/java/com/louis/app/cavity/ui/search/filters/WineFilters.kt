@@ -12,43 +12,11 @@ class FilterReadyToDrink : WineFilter {
     }
 }
 
-class ColorFilter(private val colorInt: Int) : WineFilter {
+class ColorFilter(private val color: WineColor) : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-        return bottlesAndWine.filter { it.color == Wine.getWineColor(colorInt) }
-    }
-
-    // Using orCombine if we combine two color fiter
-    override fun andCombine(filter: WineFilter): WineFilter {
-        return if (filter is ColorFilter) super.orCombine(filter)
-        else super.andCombine(filter)
+        return bottlesAndWine.filter { it.color == Wine.getWineColorNumber(color) }
     }
 }
-
-//class FilterRed : WineFilter, ColorFilter {
-//    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-//        return bottlesAndWine.filter { it.color == WineColor.COLOR_RED.colorInt }
-//    }
-//
-//
-//}
-//
-//class FilterWhite : WineFilter, ColorFilter {
-//    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-//        return bottlesAndWine.filter { it.color == WineColor.COLOR_WHITE.colorInt }
-//    }
-//}
-//
-//class FilterSweet : WineFilter, ColorFilter {
-//    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-//        return bottlesAndWine.filter { it.color == WineColor.COLOR_SWEET.colorInt }
-//    }
-//}
-//
-//class FilterRose : WineFilter, ColorFilter {
-//    override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-//        return bottlesAndWine.filter { it.color == WineColor.COLOR_ROSE.colorInt }
-//    }
-//}
 
 class FilterOrganic : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {

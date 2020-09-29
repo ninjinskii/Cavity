@@ -85,13 +85,13 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         if (R.id.chipOrganic in otherCheckedChipIds) otherFilters.add(FilterOrganic())
 
         if (R.id.chipRed in colorCheckedChipIds)
-            colorFilters.add(ColorFilter(WineColor.COLOR_RED.colorInt))
+            colorFilters.add(ColorFilter(WineColor.COLOR_RED))
         if (R.id.chipWhite in colorCheckedChipIds)
-            colorFilters.add(ColorFilter(WineColor.COLOR_WHITE.colorInt))
+            colorFilters.add(ColorFilter(WineColor.COLOR_WHITE))
         if (R.id.chipSweet in colorCheckedChipIds)
-            colorFilters.add(ColorFilter(WineColor.COLOR_SWEET.colorInt))
+            colorFilters.add(ColorFilter(WineColor.COLOR_SWEET))
         if (R.id.chipRose in colorCheckedChipIds)
-            ColorFilter(WineColor.COLOR_ROSE.colorInt)
+            ColorFilter(WineColor.COLOR_ROSE)
 
         val combinedCounty =
             if (countiesFilters.isNotEmpty())
