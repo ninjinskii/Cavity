@@ -16,7 +16,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FragmentStepper : Fragment(R.layout.fragment_stepper) {
-    private lateinit var binding: FragmentStepperBinding
+    private var _binding: FragmentStepperBinding? = null
+    private val binding get() = _binding!!
     private lateinit var stepStrings: List<String>
     private lateinit var stepNumbers: List<String>
     private val listeners = mutableListOf<StepperWatcher>()
@@ -33,7 +34,7 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentStepperBinding.bind(view)
+        _binding = FragmentStepperBinding.bind(view)
 
         stepStrings = listOf(
             resources.getString(R.string.step_1_text),
@@ -180,5 +181,10 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         fun onPageRequestAccepted()
         fun onFinalStepAccomplished() {
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

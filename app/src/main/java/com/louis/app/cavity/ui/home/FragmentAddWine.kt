@@ -25,7 +25,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
-    private lateinit var binding: FragmentAddWineBinding
+    private var _binding: FragmentAddWineBinding? = null
+    private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
     private var wineImagePath: String? = null
     private var editMode: Boolean = false
@@ -37,7 +38,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = FragmentAddWineBinding.bind(view)
+        _binding = FragmentAddWineBinding.bind(view)
         editMode = homeViewModel.editWine != null
 
         inflateChips()
@@ -243,5 +244,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == PICK_IMAGE_RESULT_CODE) onImageSelected(data)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

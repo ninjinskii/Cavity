@@ -10,12 +10,13 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
-    private lateinit var binding: FragmentWinesBinding
+    private var _binding: FragmentWinesBinding? = null
+    private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentWinesBinding.bind(view)
+        _binding = FragmentWinesBinding.bind(view)
 
         initRecyclerView()
     }
@@ -61,6 +62,11 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
             wineAdapter.submitList(it)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
@@ -16,7 +17,8 @@ import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
-    private lateinit var binding: FragmentInquireGrapesBinding
+    private var _binding: FragmentInquireGrapesBinding? = null
+    private val binding get() = _binding!!
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
     private lateinit var feedBackObserver: Observer<Event<Int>>
     private var totalGrapePercentage: Int? = null
@@ -24,7 +26,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentInquireGrapesBinding.bind(view)
+        _binding = FragmentInquireGrapesBinding.bind(view)
 
         registerStepperWatcher()
         initRecyclerView()
@@ -123,5 +125,10 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     override fun onPause() {
         addBottleViewModel.userFeedback.removeObserver(feedBackObserver)
         super.onPause()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

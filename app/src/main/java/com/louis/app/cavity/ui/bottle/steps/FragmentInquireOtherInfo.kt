@@ -18,7 +18,8 @@ import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
 
 class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {
-    private lateinit var binding: FragmentInquireOtherInfoBinding
+    private var _binding: FragmentInquireOtherInfoBinding? = null
+    private val binding get() = _binding!!
     private lateinit var stepperFragment: FragmentStepper
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private var bottlePdfPath: String? = null
@@ -29,7 +30,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentInquireOtherInfoBinding.bind(view)
+        _binding = FragmentInquireOtherInfoBinding.bind(view)
 
         registerStepperWatcher()
         setListeners()
@@ -130,5 +131,10 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == PICK_PDF_RESULT_CODE) onPdfSelected(data)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

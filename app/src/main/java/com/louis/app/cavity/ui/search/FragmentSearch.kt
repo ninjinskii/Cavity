@@ -21,6 +21,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
@@ -31,7 +32,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
-    private lateinit var binding: FragmentSearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
     private lateinit var datePicker: MaterialDatePicker<Long>
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -49,7 +51,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentSearchBinding.bind(view)
+        _binding = FragmentSearchBinding.bind(view)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_EXPANDED
@@ -310,5 +312,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

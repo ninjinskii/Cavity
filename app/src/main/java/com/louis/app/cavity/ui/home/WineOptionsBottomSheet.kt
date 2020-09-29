@@ -15,7 +15,8 @@ import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class WineOptionsBottomSheet : BottomSheetDialogFragment() {
-    private lateinit var binding: BottomSheetWineOptionsBinding
+    private var _binding: BottomSheetWineOptionsBinding? = null
+    private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -23,7 +24,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = BottomSheetWineOptionsBinding.inflate(inflater)
+        _binding = BottomSheetWineOptionsBinding.inflate(inflater)
         return binding.root
     }
 
@@ -74,6 +75,11 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

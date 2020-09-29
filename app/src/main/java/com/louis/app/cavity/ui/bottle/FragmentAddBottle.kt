@@ -7,17 +7,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
+import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.ui.bottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheet.Companion.ARG_WINE_ID
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
-    private lateinit var binding: FragmentAddBottleBinding
+    private var _binding: FragmentAddBottleBinding? = null
+    private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentAddBottleBinding.bind(view)
+        _binding = FragmentAddBottleBinding.bind(view)
 
         arguments?.getLong(ARG_WINE_ID)?.let { addBottleViewModel.setWineId(it) }
         val editWineId = arguments?.getLong("ARG_EDIT_BOTTLE_ID", -1) ?: -1
@@ -38,5 +40,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
                 requireActivity().onBackPressed()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -19,7 +19,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
-    private lateinit var binding: FragmentInquireDatesBinding
+    private var _binding: FragmentInquireDatesBinding? = null
+    private val binding get() = _binding!!
     private lateinit var stepperFragment: FragmentStepper
     private lateinit var feedBackObserver: Observer<Event<Int>>
     private lateinit var datePicker: MaterialDatePicker<Long>
@@ -29,7 +30,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentInquireDatesBinding.bind(view)
+        _binding = FragmentInquireDatesBinding.bind(view)
 
         registerStepperWatcher()
         initNumberPickers()
@@ -186,5 +187,10 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     override fun onPause() {
         addBottleViewModel.userFeedback.removeObserver(feedBackObserver)
         super.onPause()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

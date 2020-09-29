@@ -16,14 +16,15 @@ import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.*
 
 class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_advice) {
-    private lateinit var binding: FragmentInquireExpertAdviceBinding
+    private var _binding: FragmentInquireExpertAdviceBinding? = null
+    private val binding get() = _binding!!
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var feedBackObserver: Observer<Event<Int>>
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentInquireExpertAdviceBinding.bind(view)
+        _binding = FragmentInquireExpertAdviceBinding.bind(view)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             isHideable = false
@@ -48,7 +49,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
 
     private fun initRecyclerView() {
         val adviceAdapter = ExpertAdviceRecyclerAdapter {
-             addBottleViewModel.removeExpertAdvice(it)
+            addBottleViewModel.removeExpertAdvice(it)
         }
 
         binding.recyclerView.apply {
@@ -199,5 +200,10 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
     override fun onPause() {
         addBottleViewModel.userFeedback.removeObserver(feedBackObserver)
         super.onPause()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
