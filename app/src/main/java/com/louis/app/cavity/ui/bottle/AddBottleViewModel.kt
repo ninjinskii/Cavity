@@ -17,7 +17,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
-    private val repository = WineRepository(CavityDatabase.getInstance(app))
+    private val repository = WineRepository.getInstance(app)
 
     private var wineId: Long? = null
     private var partialBottle: PartialBottle? = null

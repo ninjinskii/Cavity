@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
-    private val repository = WineRepository(CavityDatabase.getInstance(app))
+    private val repository = WineRepository.getInstance(app)
     private val bottlesAndWine = mutableListOf<BottleAndWine>()
 
     private val _results = MutableLiveData<List<BottleAndWine>>()

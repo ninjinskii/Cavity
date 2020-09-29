@@ -1,9 +1,22 @@
 package com.louis.app.cavity.db
 
+import android.app.Application
 import com.louis.app.cavity.model.*
 
-// TODO: convert to singleton
-class WineRepository(database: CavityDatabase) {
+class WineRepository private constructor (app: Application) {
+
+    companion object {
+        @Volatile
+        var instance : WineRepository? = null
+
+        fun getInstance(app: Application) =
+            instance ?: synchronized(this) {
+                instance ?: WineRepository(app).also { instance = it }
+            }
+    }
+
+    private val database = CavityDatabase.getInstance(app)
+
     private val wineDao = database.wineDao()
     private val bottleDao = database.bottleDao()
     private val countyDao = database.countyDao()

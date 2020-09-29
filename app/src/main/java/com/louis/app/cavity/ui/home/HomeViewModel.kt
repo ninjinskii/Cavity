@@ -17,7 +17,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
-    private val repository = WineRepository(CavityDatabase.getInstance(app))
+    private val repository = WineRepository.getInstance(app)
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback : LiveData<Event<Int>>
