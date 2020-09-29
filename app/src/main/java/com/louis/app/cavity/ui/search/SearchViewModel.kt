@@ -51,7 +51,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             if (filteredQuery.isNotEmpty())
                 FilterText(filteredQuery)
             else NoFilter()
-        L.v(filteredPrice.toString())
         val priceFilter = FilterPrice(filteredPrice[0].toInt(), filteredPrice[1].toInt())
 
 

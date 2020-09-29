@@ -69,6 +69,7 @@
     <string name="step_3_text">Concours</string>
     <string name="step_4_text">Divers</string>
     <string name="viewed_step">Étape actuelle</string>
+    <string name="default_bottle_quantity">1</string>
     <string name="vintage">Millésime</string>
     <string name="date">Dates</string>
     <string name="apogee">Apogée</string>

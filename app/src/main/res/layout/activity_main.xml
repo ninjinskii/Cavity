@@ -8,11 +8,11 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.ActivityMain">
 
-    <!-- NavHost fragment -->
     <include
         android:id="@+id/main"
         layout="@layout/app_bar_main" />
 
+    <!-- NavHost fragment -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"
         android:layout_width="wrap_content"
