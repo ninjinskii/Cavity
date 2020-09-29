@@ -64,7 +64,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                     .andCombine(filters.third)
                     .andCombine(dateFilter)
                     .andCombine(queryFilter)
-                    .andCombine(priceFilter)
+                    //.andCombine(priceFilter)
 
                 val filtered = combinedFilters.meetFilters(bottlesAndWine)
                 _results.postValue(filtered)
@@ -91,7 +91,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         if (R.id.chipSweet in colorCheckedChipIds)
             colorFilters.add(ColorFilter(WineColor.COLOR_SWEET))
         if (R.id.chipRose in colorCheckedChipIds)
-            ColorFilter(WineColor.COLOR_ROSE)
+            colorFilters.add(ColorFilter(WineColor.COLOR_ROSE))
 
         val combinedCounty =
             if (countiesFilters.isNotEmpty())

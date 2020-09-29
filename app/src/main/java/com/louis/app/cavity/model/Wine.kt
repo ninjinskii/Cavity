@@ -20,7 +20,7 @@ data class Wine(
     @ColumnInfo(name = "img_path") val imgPath: String
 ) {
     companion object {
-        fun getWineColorNumber(color: WineColor): Int {
+        fun wineColorToColorNumber(color: WineColor): Int {
             return when (color) {
                 WineColor.COLOR_WHITE -> 0
                 WineColor.COLOR_RED -> 1
@@ -29,7 +29,7 @@ data class Wine(
             }
         }
 
-        fun getWineColor(colorInt: Int) : WineColor {
+        fun colorNumberToWineColor(colorInt: Int) : WineColor {
             return when (colorInt) {
                 0 -> WineColor.COLOR_WHITE
                 1 -> WineColor.COLOR_RED
