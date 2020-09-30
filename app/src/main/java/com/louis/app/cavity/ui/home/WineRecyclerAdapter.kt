@@ -71,11 +71,12 @@ class WineRecyclerAdapter(
 
                     chip.apply {
                         setTag(R.string.tag_chip_id, bottle.vintage)
-                        text = String.format(
-                            resources.getString(R.string.vintage_and_count),
-                            bottle.vintage,
-                            bottle.count
-                        )
+                        text = bottle.vintage.toString()
+//                        text = String.format(
+//                            resources.getString(R.string.vintage_and_count),
+//                            bottle.vintage,
+//                            bottle.count
+//                        )
 
                         if (bottle.isReadyToDrink())
                             chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
