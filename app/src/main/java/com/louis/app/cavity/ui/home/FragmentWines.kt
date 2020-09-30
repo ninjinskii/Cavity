@@ -32,7 +32,9 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             )
         }
 
-        val wineAdapter = WineRecyclerAdapter({}, { wine ->
+        val wineAdapter = WineRecyclerAdapter({
+
+        }, { wine ->
             homeViewModel.editWine = wine
 
             activity?.supportFragmentManager?.let {

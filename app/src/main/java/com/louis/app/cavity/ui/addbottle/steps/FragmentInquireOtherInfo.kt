@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.bottle.steps
+package com.louis.app.cavity.ui.addbottle.steps
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -12,9 +12,8 @@ import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.ui.bottle.AddBottleViewModel
-import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
-import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.toBoolean
 
 class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {

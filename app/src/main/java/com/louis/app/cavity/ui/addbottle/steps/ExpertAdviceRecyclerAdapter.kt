@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.bottle.steps
+package com.louis.app.cavity.ui.addbottle.steps
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +12,6 @@ import com.louis.app.cavity.databinding.ItemExpertAdviceMedalBinding
 import com.louis.app.cavity.databinding.ItemExpertAdviceRateBinding
 import com.louis.app.cavity.databinding.ItemExpertAdviceStarBinding
 import com.louis.app.cavity.model.ExpertAdvice
-import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.util.toBoolean
 
 class ExpertAdviceRecyclerAdapter(val onDeleteListener: (ExpertAdvice) -> Unit) :

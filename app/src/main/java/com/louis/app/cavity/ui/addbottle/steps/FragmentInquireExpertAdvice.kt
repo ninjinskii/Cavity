@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.bottle.steps
+package com.louis.app.cavity.ui.addbottle.steps
 
 import android.os.Bundle
 import android.util.TypedValue
@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireExpertAdviceBinding
-import com.louis.app.cavity.ui.bottle.AddBottleViewModel
-import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.*
 
 class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_advice) {

@@ -1,8 +1,7 @@
-package com.louis.app.cavity.ui.bottle
+package com.louis.app.cavity.ui.addbottle
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.ProgressBar
 import com.google.android.material.slider.Slider
 
 class VerticalSlider @JvmOverloads constructor(

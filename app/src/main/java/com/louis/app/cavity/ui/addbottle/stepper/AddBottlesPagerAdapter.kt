@@ -1,11 +1,11 @@
-package com.louis.app.cavity.ui.bottle.stepper
+package com.louis.app.cavity.ui.addbottle.stepper
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.louis.app.cavity.ui.bottle.steps.FragmentInquireGrapes
-import com.louis.app.cavity.ui.bottle.steps.FragmentInquireDates
-import com.louis.app.cavity.ui.bottle.steps.FragmentInquireExpertAdvice
-import com.louis.app.cavity.ui.bottle.steps.FragmentInquireOtherInfo
+import com.louis.app.cavity.ui.addbottle.steps.FragmentInquireGrapes
+import com.louis.app.cavity.ui.addbottle.steps.FragmentInquireDates
+import com.louis.app.cavity.ui.addbottle.steps.FragmentInquireExpertAdvice
+import com.louis.app.cavity.ui.addbottle.steps.FragmentInquireOtherInfo
 
 class AddBottlesPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount() = 4

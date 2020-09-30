@@ -38,7 +38,7 @@
 
     <fragment
         android:id="@+id/add_bottle_dest"
-        android:name="com.louis.app.cavity.ui.bottle.FragmentAddBottle"
+        android:name="com.louis.app.cavity.ui.addbottle.FragmentAddBottle"
         android:label="FragmentAddBottle"
         tools:layout="@layout/fragment_add_bottle" />
 

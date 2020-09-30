@@ -76,6 +76,8 @@ class WineRecyclerAdapter(
 
                         if (bottle.isReadyToDrink())
                             chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
+
+                        setOnClickListener { onVintageClickListener(bottle) }
                     }
 
                     binding.chipGroup.addView(chip)

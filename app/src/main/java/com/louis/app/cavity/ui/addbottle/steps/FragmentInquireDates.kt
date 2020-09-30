@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.bottle.steps
+package com.louis.app.cavity.ui.addbottle.steps
 
 import android.os.Bundle
 import android.text.InputType
@@ -11,12 +11,9 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.ui.bottle.AddBottleViewModel
-import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
-import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.showSnackbar
-import java.text.SimpleDateFormat
 import java.util.*
 
 class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {

@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.bottle
+package com.louis.app.cavity.ui.addbottle
 
 import android.os.Bundle
 import android.view.View
@@ -7,9 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
-import com.louis.app.cavity.databinding.FragmentAddWineBinding
-import com.louis.app.cavity.ui.bottle.stepper.AddBottlesPagerAdapter
-import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
+import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheet.Companion.ARG_WINE_ID
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {

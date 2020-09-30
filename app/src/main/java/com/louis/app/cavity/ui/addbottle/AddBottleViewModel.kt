@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.bottle
+package com.louis.app.cavity.ui.addbottle
 
 import android.app.Application
 import androidx.core.text.isDigitsOnly
@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.ExpertAdvice
@@ -170,7 +169,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             )
 
             viewModelScope.launch(IO) {
-                L.v("bottle date: ${bottle.buyDate}, wineId: ${bottle.wineId}")
                 val insertedBottleId = repository.insertBottle(bottle)
 
                 _expertAdvices.value?.forEach { advice ->
@@ -185,6 +183,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
                 wineId = null
                 partialBottle = null
+                _grapes.postValue(mutableListOf())
+                _expertAdvices.postValue(mutableListOf())
                 _editedBottle.postValue(null)
             }
         }
