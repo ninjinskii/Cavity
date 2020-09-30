@@ -121,7 +121,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setTextFilter(query: String) {
-        state.text = if (query.isNotEmpty()) query else null
         textFilter = if (query.isNotEmpty()) FilterText(query) else NoFilter()
         filter()
     }
@@ -149,7 +148,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         var colors: List<Int>? = null,
         var others: List<Int>? = null,
         var vintage: Pair<Int, Int>? = null,
-        var text: String? = null,
         var price: Pair<Int, Int>? = null,
         var date: Pair<Long, Boolean>? = null,
         var stock: Pair<Int, Int>? = null

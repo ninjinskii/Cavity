@@ -170,7 +170,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             )
 
             viewModelScope.launch(IO) {
-                L.v("bottle date: ${bottle.buyDate}")
+                L.v("bottle date: ${bottle.buyDate}, wineId: ${bottle.wineId}")
                 val insertedBottleId = repository.insertBottle(bottle)
 
                 _expertAdvices.value?.forEach { advice ->
