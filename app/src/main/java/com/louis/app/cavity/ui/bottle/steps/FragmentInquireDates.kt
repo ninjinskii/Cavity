@@ -13,6 +13,7 @@ import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.AddBottleViewModel
 import com.louis.app.cavity.ui.bottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.showSnackbar
 import java.text.SimpleDateFormat
@@ -143,7 +144,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             price.setText(editedBottle.price)
             currency.setSelection(0) // TODO: get actual selection
             buyLocation.setText(editedBottle.buyLocation)
-            buyDate.setText(formatDate(editedBottle.buyDate))
+            buyDate.setText(DateFormatter.formatDate(editedBottle.buyDate))
         }
     }
 
@@ -173,15 +174,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 this@FragmentInquireDates.buyDateTimestamp
             )
         }
-    }
-
-    private fun formatDate(timeStamp: Long): String {
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.FRENCH)
-        val calendar = Calendar.getInstance()
-
-        calendar.timeInMillis = timeStamp
-
-        return formatter.format(calendar.time)
     }
 
     override fun onPause() {

@@ -62,6 +62,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         initSlider()
         setListener()
         setBottomSheetPeekHeight()
+        restoreState()
     }
 
     private fun initCountyChips() {
@@ -238,6 +239,29 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
                 return true
             }
         })
+    }
+
+    private fun restoreState() {
+        with(searchViewModel.state) {
+            counties?.let { selectedCounties ->
+                binding.countyChipGroup.children.forEach {
+                    if (((it.getTag(R.string.tag_chip_id)) as County).countyId in selectedCounties)
+                        (it as Chip).isChecked = true
+                }
+            }
+
+            colors?.let { selectedChipIds ->
+                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
+            }
+
+            others?.let { selectedChipIds ->
+                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
+            }
+
+            vintage?.let {
+                binding.vintageSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
+            }
+        }
     }
 
     override fun onResume() {

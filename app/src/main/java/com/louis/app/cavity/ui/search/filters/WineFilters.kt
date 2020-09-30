@@ -11,7 +11,7 @@ class FilterReadyToDrink : WineFilter {
     }
 }
 
-class ColorFilter(private val color: WineColor) : WineFilter {
+class FilterColor(private val color: WineColor) : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
         return bottlesAndWine.filter { it.color == Wine.wineColorToColorNumber(color) }
     }
@@ -83,5 +83,3 @@ class NoFilter : WineFilter {
         return bottlesAndWine
     }
 }
-
-interface MinMaxFilter

@@ -12,6 +12,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentMoreFiltersBinding
+import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.L
 
 class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
     private lateinit var datePicker: MaterialDatePicker<Long>
@@ -28,6 +30,7 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
         initSliders()
         initTextSwitcher()
         observe()
+        restoreState()
         setListeners()
     }
 
@@ -50,7 +53,7 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
             }
 
             addOnPositiveButtonClickListener {
-                binding.date.setText(headerText)
+                binding.date.setText(DateFormatter.formatDate(selection ?: 0))
                 binding.toggleShowBefore.isEnabled = true
                 selection?.let {
                     searchViewModel.setDateFilter(it, binding.toggleShowBefore.isChecked)
@@ -106,6 +109,33 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
             if (previousValue != it.size) {
                 binding.resultsSwitcher.setText(it.size.toString())
                 previousValue = it.size
+            }
+        }
+    }
+
+    private fun restoreState() {
+        with(searchViewModel.state) {
+            price?.let {
+                with(binding) {
+                    togglePrice.isChecked = true
+                    priceSlider.isEnabled = true
+                    L.v("${it.first}, ${it.second}")
+                    priceSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
+                }
+            }
+
+            date?.let {
+                val dateString = DateFormatter.formatDate(it.first)
+
+                with(binding) {
+                    date.setText(dateString)
+                    toggleShowBefore.isChecked = it.second
+                    toggleShowBefore.isEnabled = true
+                }
+            }
+
+            stock?.let {
+                binding.stockSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
             }
         }
     }
