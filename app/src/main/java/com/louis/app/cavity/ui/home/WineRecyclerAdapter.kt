@@ -52,7 +52,8 @@ class WineRecyclerAdapter(
         //view.findNavController().navigate(R.id.show_addWine)
 
         fun bind(wineWithBottles: WineWithBottles) {
-            val (wine, bottles) = wineWithBottles
+            val wine = wineWithBottles.wine
+            val bottles = wineWithBottles.bottles.sortedBy { it.vintage }
 
             with(binding.wineColorNameNaming) {
                 wineName.text = wine.name
@@ -72,11 +73,6 @@ class WineRecyclerAdapter(
                     chip.apply {
                         setTag(R.string.tag_chip_id, bottle.vintage)
                         text = bottle.vintage.toString()
-//                        text = String.format(
-//                            resources.getString(R.string.vintage_and_count),
-//                            bottle.vintage,
-//                            bottle.count
-//                        )
 
                         if (bottle.isReadyToDrink())
                             chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
