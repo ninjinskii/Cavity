@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/add_wine_dest"
-        android:name="com.louis.app.cavity.ui.home.FragmentAddWine"
+        android:name="com.louis.app.cavity.ui.addwine.FragmentAddWine"
         android:label="FragmentAddWine"
         tools:layout="@layout/fragment_add_wine" />
 

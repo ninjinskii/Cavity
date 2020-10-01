@@ -24,38 +24,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         get() = _userFeedback
 
     val isScrollingToTop = MutableLiveData<Boolean>()
-    var editWine : Wine? = null
 
-    fun addWine(wine: Wine) = viewModelScope.launch(IO) {
-        repository.insertWine(wine)
-    }
-
-    fun addCounty(countyName: String) {
-        viewModelScope.launch(IO) {
-            if (countyName.isNotEmpty()) {
-                val counties = repository.getAllCountiesNotLive().map { it.name }
-
-                if (countyName !in counties) {
-                    repository.insertCounty(County(name = countyName, prefOrder = counties.size))
-                } else {
-                    _userFeedback.postOnce(R.string.county_already_exist)
-                }
-            } else {
-                _userFeedback.postOnce(R.string.empty_county_name)
-            }
-        }
-    }
-
-    fun computeBottleCountByCounty() {
-//        val counties = repository.getAllCountiesNotLive()
-//
-//        for (county in counties) {
-//            val winesWithBottles = repository.getWineWithBottlesByCounty(county.countyId)
-//            var count = 0
-//
-//            winesWithBottles.value?.forEach { count += it.bottles.size }
-//        }
-    }
+    var modalSheetWine: Wine? = null
 
     fun getAllWines() = repository.getAllWines()
 
