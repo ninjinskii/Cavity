@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.home
+package com.louis.app.cavity.ui.addwine
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -6,9 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.view.View.NO_ID
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
@@ -17,8 +16,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddCountyBinding
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.ui.home.WineOptionsBottomSheet.Companion.ARG_WINE_ID
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -27,9 +26,8 @@ import kotlinx.coroutines.launch
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val addWineViewModel: AddWineViewModel by viewModels()
     private var wineImagePath: String? = null
-    private var editMode: Boolean = false
 
     companion object {
         const val PICK_IMAGE_RESULT_CODE = 1
@@ -39,18 +37,23 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentAddWineBinding.bind(view)
-        editMode = homeViewModel.editWine != null
+
+        arguments?.let {
+            val wineId = it.getLong(ARG_WINE_ID)
+            L.v("has argument, is wineId null when not providing arguments ?")
+            addWineViewModel.startEditMode(wineId)
+        }
 
         inflateChips()
         setListeners()
-        updateFields()
+        observe()
     }
 
     private fun inflateChips() {
         val allCounties = mutableSetOf<County>()
         val alreadyInflated = mutableSetOf<County>()
 
-        homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
+        addWineViewModel.getAllCounties().observe(viewLifecycleOwner) {
             binding.buttonAddCountyIfEmpty.setVisible(it.isEmpty())
 
             allCounties.addAll(it)
@@ -62,7 +65,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
                 layoutInflater,
                 binding.countyChipGroup,
                 toInflate,
-                homeViewModel.editWine
             )
         }
     }
@@ -76,42 +78,11 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
                 val isOrganic = organicWine.isChecked.toInt()
                 val color = colorChipGroup.checkedChipId
                 val checkedChipId = countyChipGroup.checkedChipId
+                val county = countyChipGroup
+                    .findViewById<Chip>(checkedChipId)
+                    .getTag(R.string.tag_chip_id) as County
 
-                if (countyChipGroup.checkedChipId == NO_ID) {
-                    coordinator.showSnackbar(R.string.no_county)
-                    nestedScrollView.smoothScrollTo(0, 0)
-                } else if (name.isBlank() || naming.isBlank()) {
-                    coordinator.showSnackbar(R.string.empty_name_or_naming)
-                    if (name.isBlank()) nameLayout.error = getString(R.string.required_field)
-                    if (naming.isBlank()) namingLayout.error = getString(R.string.required_field)
-                } else {
-                    nameLayout.error = null
-                    namingLayout.error = null
-
-                    val county = countyChipGroup
-                        .findViewById<Chip>(checkedChipId)
-                        .getTag(R.string.tag_chip_id) as County
-
-                    val wine = Wine(
-                        0,
-                        name,
-                        naming,
-                        Wine.wineColorToColorNumber(getWineColor(color)),
-                        cuvee,
-                        county.countyId,
-                        isOrganic,
-                        wineImagePath ?: ""
-                    )
-
-                    if (!editMode) {
-                        homeViewModel.addWine(wine)
-                    } else {
-                        wine.apply { wineId = homeViewModel.editWine!!.wineId }
-                            .also { homeViewModel.updateWine(wine) }
-                    }
-
-                    //findNavController().popBackStack()
-                }
+                addWineViewModel.saveWine(name, naming, cuvee, isOrganic, color, county)
             }
         }
 
@@ -155,7 +126,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->
-                homeViewModel.addCounty(dialogBinding.countyName.text.toString().trim())
+                addWineViewModel.addCounty(dialogBinding.countyName.text.toString().trim())
             }
             .setView(dialogBinding.root)
             .show()
@@ -166,28 +137,17 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         }
     }
 
-    private fun updateFields() {
-        val wineToEdit = homeViewModel.editWine
-
-        if (editMode && wineToEdit != null) {
+    private fun observe() {
+        addWineViewModel.updatedWine.observe(viewLifecycleOwner) {
             with(binding) {
-                naming.setText(wineToEdit.naming)
-                name.setText(wineToEdit.name)
-                cuvee.setText(wineToEdit.cuvee)
-                (colorChipGroup.getChildAt(wineToEdit.color) as Chip).isChecked = true
-                organicWine.isChecked = wineToEdit.isOrganic.toBoolean()
-                wineImagePath = wineToEdit.imgPath
-                loadImage(wineToEdit.imgPath)
+                naming.setText(it.naming)
+                name.setText(it.name)
+                cuvee.setText(it.cuvee)
+                (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
+                organicWine.isChecked = it.isOrganic.toBoolean()
+                wineImagePath = it.imgPath
+                loadImage(it.imgPath)
             }
-        }
-    }
-
-    private fun getWineColor(chipId: Int): WineColor {
-        return when (chipId) {
-            R.id.colorWhite -> WineColor.COLOR_WHITE
-            R.id.colorRed -> WineColor.COLOR_RED
-            R.id.colorSweet -> WineColor.COLOR_SWEET
-            else -> WineColor.COLOR_ROSE
         }
     }
 
