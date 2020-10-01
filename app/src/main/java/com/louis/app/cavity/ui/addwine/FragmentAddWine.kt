@@ -171,8 +171,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
 
         addWineViewModel.wineUpdatedEvent.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                findNavController().popBackStack()
                 snackbarProvider.onShowSnackbarRequested(stringRes)
+                findNavController().popBackStack()
+            }
+        }
+
+        addWineViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
             }
         }
     }
