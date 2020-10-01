@@ -33,8 +33,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         }
 
         val wineAdapter = WineRecyclerAdapter({}, { wine ->
-            homeViewModel.modalSheetWine = wine
-
             activity?.supportFragmentManager?.let {
                 WineOptionsBottomSheet(wine).show(it, getString(R.string.tag_modal_sheet_id))
             }

@@ -25,19 +25,9 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     val isScrollingToTop = MutableLiveData<Boolean>()
 
-    var modalSheetWine: Wine? = null
-
-    fun getAllWines() = repository.getAllWines()
-
-    fun updateWine(wine: Wine) = viewModelScope.launch (IO) { repository.updateWine(wine) }
-
     fun deleteWine(wine: Wine) = viewModelScope.launch (IO) { repository.deleteWine(wine) }
 
-    fun getAllBottles() = repository.getAllBottles()
-
     fun getAllCounties() = repository.getAllCounties()
-
-    fun getWinesWithBottles() = repository.getWineWithBottles()
 
     fun getWinesWithBottlesByCounty(countyId: Long) = repository.getWineWithBottlesByCounty(countyId)
 }

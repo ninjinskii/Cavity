@@ -72,8 +72,6 @@ class WineOptionsBottomSheet() : BottomSheetDialogFragment() {
             }
 
             deleteWine.setOnClickListener {
-                dismiss()
-
                 context?.let { context ->
                     MaterialAlertDialogBuilder(context)
                         .setMessage(resources.getString(R.string.confirmation_delete))
@@ -81,6 +79,7 @@ class WineOptionsBottomSheet() : BottomSheetDialogFragment() {
                         }
                         .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
                             wine?.let { homeViewModel.deleteWine(it) }
+                            dismiss()
                         }
                         .show()
                 }
