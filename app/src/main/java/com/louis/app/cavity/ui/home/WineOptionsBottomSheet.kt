@@ -15,7 +15,13 @@ import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
-class WineOptionsBottomSheet(private val wine: Wine) : BottomSheetDialogFragment() {
+class WineOptionsBottomSheet() : BottomSheetDialogFragment() {
+    var wine : Wine? = null
+
+    constructor(wine: Wine) : this() {
+        this.wine = wine
+    }
+
     private var _binding: BottomSheetWineOptionsBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -25,6 +31,7 @@ class WineOptionsBottomSheet(private val wine: Wine) : BottomSheetDialogFragment
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        if (wine == null) dismiss()
         _binding = BottomSheetWineOptionsBinding.inflate(inflater)
         return binding.root
     }
@@ -45,22 +52,22 @@ class WineOptionsBottomSheet(private val wine: Wine) : BottomSheetDialogFragment
         //val wine = homeViewModel.modalSheetWine ?: return
 
         with(binding) {
-            currentWine.wineName.text = wine.name
-            currentWine.wineNaming.text = wine.naming
-            currentWine.wineColorIndicator.setColorFilter(colors[wine.color])
-            currentWine.organicImage.setVisible(wine.isOrganic.toBoolean())
+            currentWine.wineName.text = wine?.name
+            currentWine.wineNaming.text = wine?.naming
+            currentWine.wineColorIndicator.setColorFilter(colors[wine?.color ?: 0])
+            currentWine.organicImage.setVisible(wine?.isOrganic?.toBoolean() ?: false)
 
             addBottle.setOnClickListener {
                 dismiss()
 
-                val bundle = bundleOf(ARG_WINE_ID to wine.wineId)
+                val bundle = bundleOf(ARG_WINE_ID to wine?.wineId)
                 findNavController().navigate(R.id.homeToAddBottle, bundle)
             }
 
             binding.editWine.setOnClickListener {
                 dismiss()
 
-                val bundle = bundleOf(ARG_WINE_ID to wine.wineId)
+                val bundle = bundleOf(ARG_WINE_ID to wine?.wineId)
                 findNavController().navigate(R.id.homeToAddWine, bundle)
             }
 
@@ -73,7 +80,7 @@ class WineOptionsBottomSheet(private val wine: Wine) : BottomSheetDialogFragment
                         .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                         }
                         .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
-                            homeViewModel.deleteWine(wine)
+                            wine?.let { homeViewModel.deleteWine(it) }
                         }
                         .show()
                 }

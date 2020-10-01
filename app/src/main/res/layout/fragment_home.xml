@@ -27,12 +27,12 @@
             android:background="?attr/colorSurface"
             android:elevation="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:listitem="@layout/item_county"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:selectedColor="@color/colorAccent"
             app:tabTextAppearance="?attr/textAppearanceButton"
-            app:unSelectedColor="@color/colorPrimaryDark" />
+            app:unSelectedColor="@color/colorPrimaryDark"
+            tools:listitem="@layout/item_county" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"

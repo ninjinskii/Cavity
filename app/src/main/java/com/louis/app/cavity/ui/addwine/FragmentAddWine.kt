@@ -9,6 +9,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -17,6 +18,7 @@ import com.louis.app.cavity.databinding.DialogAddCountyBinding
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheet.Companion.ARG_WINE_ID
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.Main
@@ -24,6 +26,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
+    private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
     private val addWineViewModel: AddWineViewModel by viewModels()
@@ -37,10 +40,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentAddWineBinding.bind(view)
+        snackbarProvider = activity as SnackbarProvider
 
         arguments?.let {
             val wineId = it.getLong(ARG_WINE_ID)
-            L.v("has argument, is wineId null when not providing arguments ?")
             addWineViewModel.startEditMode(wineId)
         }
 
@@ -72,17 +75,31 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     private fun setListeners() {
         binding.submitAddWine.setOnClickListener {
             with(binding) {
-                val name = name.text.toString()
-                val naming = naming.text.toString()
-                val cuvee = cuvee.text.toString()
+                val name = name.text.toString().trim()
+                val naming = naming.text.toString().trim()
+                val cuvee = cuvee.text.toString().trim()
                 val isOrganic = organicWine.isChecked.toInt()
                 val color = colorChipGroup.checkedChipId
                 val checkedChipId = countyChipGroup.checkedChipId
+
+                if (countyChipGroup.checkedChipId == View.NO_ID) {
+                    coordinator.showSnackbar(R.string.no_county)
+                    nestedScrollView.smoothScrollTo(0, 0)
+                }
+
                 val county = countyChipGroup
                     .findViewById<Chip>(checkedChipId)
                     .getTag(R.string.tag_chip_id) as County
 
-                addWineViewModel.saveWine(name, naming, cuvee, isOrganic, color, county)
+                addWineViewModel.saveWine(
+                    name,
+                    naming,
+                    cuvee,
+                    isOrganic,
+                    color,
+                    county,
+                    wineImagePath
+                )
             }
         }
 
@@ -139,14 +156,23 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
 
     private fun observe() {
         addWineViewModel.updatedWine.observe(viewLifecycleOwner) {
-            with(binding) {
-                naming.setText(it.naming)
-                name.setText(it.name)
-                cuvee.setText(it.cuvee)
-                (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
-                organicWine.isChecked = it.isOrganic.toBoolean()
-                wineImagePath = it.imgPath
-                loadImage(it.imgPath)
+            if (it != null) {
+                with(binding) {
+                    naming.setText(it.naming)
+                    name.setText(it.name)
+                    cuvee.setText(it.cuvee)
+                    (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
+                    organicWine.isChecked = it.isOrganic.toBoolean()
+                    wineImagePath = it.imgPath
+                    loadImage(it.imgPath)
+                }
+            }
+        }
+
+        addWineViewModel.wineUpdatedEvent.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                findNavController().popBackStack()
+                snackbarProvider.onShowSnackbarRequested(stringRes)
             }
         }
     }

@@ -14,6 +14,7 @@ import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
 
 class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {

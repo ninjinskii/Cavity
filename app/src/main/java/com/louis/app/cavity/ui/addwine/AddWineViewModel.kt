@@ -1,21 +1,17 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.app.Application
-import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.home.WineColor
-import com.louis.app.cavity.ui.search.filters.FilterOrganic
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
-import com.louis.app.cavity.util.showSnackbar
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -26,13 +22,16 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    private val _wineUpdatedEvent = MutableLiveData<Event<Unit>>()
-    val wineUpdatedEvent: LiveData<Event<Unit>>
+    private val _wineUpdatedEvent = MutableLiveData<Event<Int>>()
+    val wineUpdatedEvent: LiveData<Event<Int>>
         get() = _wineUpdatedEvent
 
-    private val _updatedWine = MutableLiveData<Wine>()
-    val updatedWine: LiveData<Wine>
+    private val _updatedWine = MutableLiveData<Wine?>()
+    val updatedWine: LiveData<Wine?>
         get() = _updatedWine
+
+    private val isEditMode: Boolean
+        get() = _updatedWine.value != null
 
     fun startEditMode(wineId: Long) {
         viewModelScope.launch(IO) {
@@ -47,47 +46,45 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         cuvee: String,
         isOrganic: Int,
         color: Int,
-        checkedCounty: County,
+        county: County,
+        imagePath: String?
     ) {
-//        if (countyChipGroup.checkedChipId == View.NO_ID) {
-//            coordinator.showSnackbar(R.string.no_county)
-//            nestedScrollView.smoothScrollTo(0, 0)
-//        } else if (name.isBlank() || naming.isBlank()) {
-//            coordinator.showSnackbar(R.string.empty_name_or_naming)
-//            if (name.isBlank()) nameLayout.error = getString(R.string.required_field)
-//            if (naming.isBlank()) namingLayout.error = getString(R.string.required_field)
-//        } else {
-//            nameLayout.error = null
-//            namingLayout.error = null
-//
-//            val county = countyChipGroup
-//                .findViewById<Chip>(checkedChipId)
-//                .getTag(R.string.tag_chip_id) as County
-//
-//            val wine = Wine(
-//                0,
-//                name,
-//                naming,
-//                Wine.wineColorToColorNumber(getWineColor(color)),
-//                cuvee,
-//                county.countyId,
-//                isOrganic,
-//                wineImagePath ?: ""
-//            )
-//
-//            if (!editMode) {
-//                addWineViewModel.addWine(wine)
-//            } else {
-//                wine.apply { wineId = addWineViewModel.editWine!!.wineId }
-//                    .also { addWineViewModel.updateWine(wine) }
-//            }
+        if (name.isBlank() || naming.isBlank()) {
+            _userFeedback.postOnce(R.string.empty_name_or_naming)
+            return
+        }
 
-        //findNavController().popBackStack()
-        //}
-    }
+        val colorNumber =  when (color) {
+            R.id.colorWhite -> WineColor.COLOR_WHITE
+            R.id.colorRed -> WineColor.COLOR_RED
+            R.id.colorSweet -> WineColor.COLOR_SWEET
+            else -> WineColor.COLOR_ROSE
+        }
 
-    fun addWine(wine: Wine) = viewModelScope.launch(IO) {
-        repository.insertWine(wine)
+        val wine = Wine(
+            0,
+            name,
+            naming,
+            Wine.wineColorToColorNumber(colorNumber),
+            cuvee,
+            county.countyId,
+            isOrganic,
+            imagePath ?: ""
+        )
+
+        viewModelScope.launch(IO) {
+            if (isEditMode) {
+                wine.wineId = _updatedWine.value!!.wineId // isEditMode checks for nullability
+                repository.updateWine(wine)
+
+                _updatedWine.postValue(null)
+                _wineUpdatedEvent.postOnce(R.string.wine_updated)
+            } else {
+                repository.insertWine(wine)
+                _wineUpdatedEvent.postOnce(R.string.wine_added)
+            }
+        }
+
     }
 
     fun addCounty(countyName: String) {

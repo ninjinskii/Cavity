@@ -3,11 +3,14 @@ package com.louis.app.cavity.ui.addbottle.stepper
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.TextView
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
+import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

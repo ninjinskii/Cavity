@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.Slider
+import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeBinding
 import com.louis.app.cavity.model.Grape
 

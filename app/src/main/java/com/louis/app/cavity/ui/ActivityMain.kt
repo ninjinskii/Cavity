@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -13,8 +14,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
 import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.showSnackbar
 
-class ActivityMain : AppCompatActivity() {
+class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private lateinit var binding: ActivityMainBinding
     private var isToolbarShadowShown = true
 
@@ -47,5 +49,9 @@ class ActivityMain : AppCompatActivity() {
                 AnimatorInflater.loadStateListAnimator(this, R.animator.hide_elevation)
             isToolbarShadowShown = false
         }
+    }
+
+    override fun onShowSnackbarRequested(stringRes: Int) {
+        binding.main.coordinator.showSnackbar(stringRes, anchorView = binding.main.snackbarAnchor)
     }
 }
