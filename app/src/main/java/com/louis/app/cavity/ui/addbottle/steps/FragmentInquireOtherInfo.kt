@@ -85,7 +85,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     }
 
     private fun observe() {
-        addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
+        addBottleViewModel.updatedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
         }
     }

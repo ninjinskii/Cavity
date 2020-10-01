@@ -34,7 +34,7 @@ interface BottleDao {
     fun getBottleWithExpertAdvicesById(bottleId: Long): BottleWithExpertAdvices
 
     @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
-    fun getBottleById(bottleId: Long): Bottle
+    fun getBottleByIdNotLive(bottleId: Long): Bottle
 
     @Query("DELETE FROM bottle WHERE bottle_id=:bottleId")
     fun deleteBottleById(bottleId: Long)

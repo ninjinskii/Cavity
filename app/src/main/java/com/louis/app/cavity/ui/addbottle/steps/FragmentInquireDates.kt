@@ -130,7 +130,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
 
         addBottleViewModel.userFeedback.observe(viewLifecycleOwner, feedBackObserver)
 
-        addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
+        addBottleViewModel.updatedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
         }
     }

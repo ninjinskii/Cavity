@@ -29,9 +29,9 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val grapes: LiveData<MutableList<Grape>>
         get() = _grapes
 
-    private val _editedBottle = MutableLiveData<Bottle>()
-    val editedBottle: LiveData<Bottle>
-        get() = _editedBottle
+    private val _updatedBottle = MutableLiveData<Bottle>()
+    val updatedBottle: LiveData<Bottle>
+        get() = _updatedBottle
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
@@ -131,7 +131,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         location: String,
         date: Long
     ) {
-        val editBottleId = _editedBottle.value?.bottleId
+        val editBottleId = _updatedBottle.value?.bottleId
 
         partialBottle =
             PartialBottle(
@@ -185,7 +185,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 partialBottle = null
                 _grapes.postValue(mutableListOf())
                 _expertAdvices.postValue(mutableListOf())
-                _editedBottle.postValue(null)
+                _updatedBottle.postValue(null)
             }
         }
     }
@@ -196,8 +196,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
     fun triggerEditMode(bottleId: Long) {
         viewModelScope.launch(IO) {
-            val editedBottle = repository.getBottleById(bottleId)
-            _editedBottle.postValue(editedBottle)
+            val editedBottle = repository.getBottleByIdNotLive(bottleId)
+            _updatedBottle.postValue(editedBottle)
 
             val grapesWithBottle = repository.getBottleWithGrapesById(bottleId)
             _grapes.postValue(grapesWithBottle.grapes as MutableList<Grape>)
