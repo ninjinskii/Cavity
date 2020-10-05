@@ -14,11 +14,12 @@ import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.showSnackbar
 
+// TODO: use material dialogs instead of text fields, same for expert advices
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
-    private var _binding: FragmentInquireGrapesBinding? = null
-    private val binding get() = _binding!!
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
     private lateinit var feedBackObserver: Observer<Event<Int>>
+    private var _binding: FragmentInquireGrapesBinding? = null
+    private val binding get() = _binding!!
     private var totalGrapePercentage: Int? = null
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
