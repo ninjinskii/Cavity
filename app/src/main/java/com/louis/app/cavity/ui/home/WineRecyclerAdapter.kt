@@ -4,6 +4,7 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,9 +19,9 @@ import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class WineRecyclerAdapter(
+    private val colors: List<Int>,
     private val onVintageClickListener: (Bottle) -> Unit,
     private val onShowOptionsListener: (Wine) -> Unit,
-    private val colors: List<Int>
 ) : ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
@@ -46,10 +47,6 @@ class WineRecyclerAdapter(
 
     inner class WineViewHolder(private val binding: ItemWineBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-        // TODO: change destination
-        //private fun navigateToBottle(bottleId: Long, view: View) =
-        //view.findNavController().navigate(R.id.show_addWine)
 
         fun bind(wineWithBottles: WineWithBottles) {
             val wine = wineWithBottles.wine

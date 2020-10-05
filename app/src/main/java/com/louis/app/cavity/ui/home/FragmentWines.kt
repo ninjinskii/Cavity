@@ -2,12 +2,15 @@ package com.louis.app.cavity.ui.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
+import com.louis.app.cavity.model.Bottle
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
@@ -32,11 +35,16 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             )
         }
 
-        val wineAdapter = WineRecyclerAdapter({}, { wine ->
+        val onVintageClick = { bottle: Bottle ->
+            val bundle = bundleOf(BOTTLE_ID to bottle.bottleId)
+            findNavController().navigate(R.id.homeToBottleDetails, bundle)
+        }
+
+        val wineAdapter = WineRecyclerAdapter(colors ?: return, onVintageClick) { wine ->
             activity?.supportFragmentManager?.let {
                 WineOptionsBottomSheet(wine).show(it, getString(R.string.tag_modal_sheet_id))
             }
-        }, colors ?: return)
+        }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -69,6 +77,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     companion object {
         private const val COUNTY_ID = "com.louis.app.cavity.ui.home.FragmentWines.COUNTY_ID"
+        private const val BOTTLE_ID = "com.louis.app.cavity.ui.home.FragmentWines.BOTTLE_ID"
 
         fun newInstance(countyId: Long): FragmentWines {
             return FragmentWines().apply {
