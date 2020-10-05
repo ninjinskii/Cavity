@@ -26,12 +26,12 @@ interface BottleDao {
     fun getAllBottles(): LiveData<List<Bottle>>
 
     @Transaction
-    @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
-    fun getBottleWithGrapesById(bottleId: Long): BottleWithGrapes
+    @Query("SELECT * FROM grape WHERE bottle_id=:bottleId")
+    fun getGrapesForBottleNotLive(bottleId: Long): List<Grape>
 
     @Transaction
-    @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
-    fun getBottleWithExpertAdvicesById(bottleId: Long): BottleWithExpertAdvices
+    @Query("SELECT * FROM expert_advice WHERE bottle_id=:bottleId")
+    fun getExpertAdvicesForBottleNotLive(bottleId: Long): List<ExpertAdvice>
 
     @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
     fun getBottleByIdNotLive(bottleId: Long): Bottle
@@ -47,7 +47,7 @@ interface BottleDao {
     fun getBottleWithGrapesNotLive() : List<BottleWithGrapes>
 
     // ---------------Grape---------------
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGrape(grape: Grape)
 
     @Update
@@ -60,7 +60,7 @@ interface BottleDao {
     fun getAllGrapes(): LiveData<List<Grape>>
 
     // ---------------ExpertAdvice---------------
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAdvice(advice: ExpertAdvice)
 
     @Update

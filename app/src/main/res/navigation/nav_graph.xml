@@ -9,7 +9,7 @@
         android:id="@+id/home_dest"
         android:name="com.louis.app.cavity.ui.home.FragmentHome"
         android:label="FragmentHome"
-        tools:layout="@layout/fragment_home">
+        tools:layout="@layout/fragment_wines">
         <action
             android:id="@+id/homeToSettings"
             app:destination="@id/settings_dest" />
@@ -43,7 +43,7 @@
         android:id="@+id/add_bottle_dest"
         android:name="com.louis.app.cavity.ui.addbottle.FragmentAddBottle"
         android:label="FragmentAddBottle"
-        tools:layout="@layout/fragment_add_bottle" />
+        tools:layout="@layout/fragment_inquire_dates" />
 
     <fragment
         android:id="@+id/search_dest"
@@ -65,6 +65,10 @@
         android:id="@+id/fragmentBottleDetails"
         android:name="com.louis.app.cavity.ui.bottle.FragmentBottleDetails"
         android:label="FragmentBottleDetails"
-        tools:layout="@layout/fragment_bottle_details" />
+        tools:layout="@layout/fragment_bottle_details" >
+        <action
+            android:id="@+id/bottleDetailsToAddBottle"
+            app:destination="@id/add_bottle_dest" />
+    </fragment>
 
 </navigation>

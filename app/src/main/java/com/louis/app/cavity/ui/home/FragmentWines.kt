@@ -35,8 +35,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             )
         }
 
-        val onVintageClick = { bottle: Bottle ->
-            val bundle = bundleOf(BOTTLE_ID to bottle.bottleId)
+        val onVintageClick = { wineId: Long, bottle: Bottle ->
+            val bundle = bundleOf(WINE_ID to wineId, BOTTLE_ID to bottle.bottleId)
             findNavController().navigate(R.id.homeToBottleDetails, bundle)
         }
 
@@ -77,7 +77,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     companion object {
         private const val COUNTY_ID = "com.louis.app.cavity.ui.home.FragmentWines.COUNTY_ID"
-        private const val BOTTLE_ID = "com.louis.app.cavity.ui.home.FragmentWines.BOTTLE_ID"
+        const val BOTTLE_ID = "com.louis.app.cavity.ui.home.FragmentWines.BOTTLE_ID"
+        const val WINE_ID = "com.louis.app.cavity.ui.home.FragmentWines.WINE_ID"
 
         fun newInstance(countyId: Long): FragmentWines {
             return FragmentWines().apply {

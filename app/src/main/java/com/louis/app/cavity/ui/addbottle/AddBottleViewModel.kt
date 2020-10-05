@@ -20,6 +20,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
     private var wineId: Long? = null
     private var partialBottle: PartialBottle? = null
+    private val isEditMode: Boolean
+        get() = _updatedBottle.value != null
 
     private val _expertAdvices = MutableLiveData<MutableList<ExpertAdvice>>()
     val expertAdvices: LiveData<MutableList<ExpertAdvice>>
@@ -36,6 +38,16 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
+
+    fun start(bottleWineId: Long, editedBottleId: Long?) {
+        L.v("bottleWineIdFirt: $bottleWineId")
+        wineId = bottleWineId
+
+        if (editedBottleId != null)
+            triggerEditMode(editedBottleId)
+        else
+            _updatedBottle.postValue(null)
+    }
 
     fun addGrape(grapeName: String, defaultPercentage: Int) {
         val grape = Grape(0, grapeName, defaultPercentage, -1)
@@ -146,7 +158,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             )
     }
 
-    fun addBottle(otherInfo: String, addToFavorite: Boolean, pdfPath: String) {
+    fun saveBottle(otherInfo: String, addToFavorite: Boolean, pdfPath: String) {
         if (wineId == null) _userFeedback.postOnce(R.string.base_error)
 
         partialBottle?.let {
@@ -169,7 +181,13 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             )
 
             viewModelScope.launch(IO) {
-                val insertedBottleId = repository.insertBottle(bottle)
+                val insertedBottleId =
+                    if (isEditMode) {
+                        repository.updateBottle(bottle)
+                        bottle.bottleId
+                    } else {
+                        repository.insertBottle(bottle)
+                    }
 
                 _expertAdvices.value?.forEach { advice ->
                     advice.bottleId = insertedBottleId
@@ -190,22 +208,30 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun setWineId(id: Long) {
-        wineId = id
-    }
-
-    fun triggerEditMode(bottleId: Long) {
+    private fun triggerEditMode(bottleId: Long) {
         viewModelScope.launch(IO) {
             val editedBottle = repository.getBottleByIdNotLive(bottleId)
+//            with(editedBottle) {
+//                setPartialBottle(
+//                    vintage,
+//                    apogee,
+//                    count.toString(),
+//                    price.toString(),
+//                    currency,
+//                    buyLocation,
+//                    buyDate
+//                )
+//            }
+
+            L.v("editedWineId: $wineId")
+            L.v("editedBottle: $editedBottle")
             _updatedBottle.postValue(editedBottle)
 
-            val grapesWithBottle = repository.getBottleWithGrapesById(bottleId)
-            _grapes.postValue(grapesWithBottle.grapes as MutableList<Grape>)
+            val grapesForBottle = repository.getGrapesForBottleNotLive(bottleId)
+            _grapes.postValue(grapesForBottle as MutableList<Grape>)
 
-            val expertAdviceWithBottle = repository.getBottleWithExpertAdviceById(bottleId)
-            _expertAdvices.postValue(
-                expertAdviceWithBottle.expertAdvices as MutableList<ExpertAdvice>
-            )
+            val expertAdviceForBottle = repository.getExpertAdvicesForBottleNotLive(bottleId)
+            _expertAdvices.postValue(expertAdviceForBottle as MutableList<ExpertAdvice>)
         }
     }
 

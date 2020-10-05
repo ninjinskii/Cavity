@@ -139,8 +139,8 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         with(binding) {
             vintage.value = editedBottle.vintage
             apogee.value = editedBottle.apogee
-            count.setText(editedBottle.count)
-            price.setText(editedBottle.price)
+            count.setText(editedBottle.count.toString())
+            price.setText(editedBottle.price.toString())
             currency.setSelection(0) // TODO: get actual selection
             buyLocation.setText(editedBottle.buyLocation)
             buyDate.setText(DateFormatter.formatDate(editedBottle.buyDate))

@@ -12,6 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetWineOptionsBinding
 import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.ui.home.FragmentWines.Companion.WINE_ID
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -49,8 +50,6 @@ class WineOptionsBottomSheet() : BottomSheetDialogFragment() {
             )
         } ?: return
 
-        //val wine = homeViewModel.modalSheetWine ?: return
-
         with(binding) {
             currentWine.wineName.text = wine?.name
             currentWine.wineNaming.text = wine?.naming
@@ -60,14 +59,14 @@ class WineOptionsBottomSheet() : BottomSheetDialogFragment() {
             addBottle.setOnClickListener {
                 dismiss()
 
-                val bundle = bundleOf(ARG_WINE_ID to wine?.wineId)
+                val bundle = bundleOf(WINE_ID to wine?.wineId)
                 findNavController().navigate(R.id.homeToAddBottle, bundle)
             }
 
             binding.editWine.setOnClickListener {
                 dismiss()
 
-                val bundle = bundleOf(ARG_WINE_ID to wine?.wineId)
+                val bundle = bundleOf(WINE_ID to wine?.wineId)
                 findNavController().navigate(R.id.homeToAddWine, bundle)
             }
 
@@ -90,9 +89,5 @@ class WineOptionsBottomSheet() : BottomSheetDialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        const val ARG_WINE_ID = "com.louis.app.cavity.ui.home.FragmentWines.ARG_WINE_ID"
     }
 }

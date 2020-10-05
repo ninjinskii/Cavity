@@ -20,7 +20,7 @@ import com.louis.app.cavity.util.toBoolean
 
 class WineRecyclerAdapter(
     private val colors: List<Int>,
-    private val onVintageClickListener: (Bottle) -> Unit,
+    private val onVintageClickListener: (Long, Bottle) -> Unit,
     private val onShowOptionsListener: (Wine) -> Unit,
 ) : ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
@@ -74,7 +74,7 @@ class WineRecyclerAdapter(
                         if (bottle.isReadyToDrink())
                             chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
 
-                        setOnClickListener { onVintageClickListener(bottle) }
+                        setOnClickListener { onVintageClickListener(wine.wineId, bottle) }
                     }
 
                     binding.chipGroup.addView(chip)

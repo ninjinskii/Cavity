@@ -5,13 +5,17 @@ import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
+import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
-import com.louis.app.cavity.ui.home.WineOptionsBottomSheet.Companion.ARG_WINE_ID
+import com.louis.app.cavity.ui.home.FragmentWines.Companion.WINE_ID
+import com.louis.app.cavity.util.L
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
+    private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentAddBottleBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
@@ -20,10 +24,18 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAddBottleBinding.bind(view)
 
-        arguments?.getLong(ARG_WINE_ID)?.let { addBottleViewModel.setWineId(it) }
-        val editWineId = arguments?.getLong("ARG_EDIT_BOTTLE_ID", -1) ?: -1
+        snackbarProvider = activity as SnackbarProvider
 
-        if (editWineId != -1L) addBottleViewModel.triggerEditMode(editWineId)
+        if (arguments?.getLong(WINE_ID) == null) {
+            snackbarProvider.onShowSnackbarRequested(R.string.base_error)
+            findNavController().popBackStack()
+            return
+        }
+
+        arguments?.let {
+            L.v("Start viewModel")
+            addBottleViewModel.start(it.getLong(WINE_ID), it.getLong(EDIT_BOTTLE_ID))
+        }
 
         val stepperFragment = childFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
 
@@ -44,5 +56,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val EDIT_BOTTLE_ID =
+            "com.louis.app.cavity.ui.addbottle.FragmentAddBottle.ARG_EDIT_BOTTLE_ID"
     }
 }
