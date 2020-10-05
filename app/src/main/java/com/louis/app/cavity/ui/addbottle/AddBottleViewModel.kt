@@ -63,6 +63,11 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun removeGrape(grape: Grape) {
+        // Deleted grape might already be in database, need to remove it
+        if (isEditMode) viewModelScope.launch(IO) {
+            repository.deleteGrape(grape)
+        }
+
         _grapes -= grape
     }
 
@@ -112,6 +117,11 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun removeExpertAdvice(advice: ExpertAdvice) {
+        // Deleted expert advice might already be in database, need to remove it
+        if (isEditMode) viewModelScope.launch(IO) {
+            repository.deleteAdvice(advice)
+        }
+
         _expertAdvices -= advice
     }
 
