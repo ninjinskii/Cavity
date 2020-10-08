@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui
+package com.louis.app.cavity.ui.home
 
 import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
