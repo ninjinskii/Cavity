@@ -50,8 +50,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         inflateChips()
         setListeners()
         observe()
-
-        binding.namingLayout.setValidationRule { it.isNotBlank() }
     }
 
     private fun inflateChips() {
@@ -107,7 +105,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
 
         binding.buttonAddCounty.setOnClickListener {
             showDialog()
-            binding.namingLayout.validate()
         }
 
         binding.buttonAddCountyIfEmpty.setOnClickListener {

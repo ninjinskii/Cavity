@@ -81,23 +81,47 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Should serve as a placeholder waiting for ProgressBarsInjector to complete its work -->
             <ProgressBar
                 android:id="@+id/progressBar1"
                 style="?android:attr/progressBarStyleHorizontal"
+                android:progressTint="@color/medal_bronze"
+                android:progress="100"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@+id/progressBar2"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/label" />
 
             <ProgressBar
                 android:id="@+id/progressBar2"
                 style="?android:attr/progressBarStyleHorizontal"
+                android:progressTint="@color/cavity_green"
+                android:progress="80"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/progressBar1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label" />
+
+            <ProgressBar
+                android:id="@+id/progressBar3"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressTint="@color/wine_red"
+                android:progress="40"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label" />
+
+            <ProgressBar
+                android:id="@+id/progressBar4"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progress="10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/label" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
