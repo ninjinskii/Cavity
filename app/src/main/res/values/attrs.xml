@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CountyScrollableTab">
-        <attr name="selectedColor" format="color"/>
-        <attr name="unSelectedColor" format="color"/>
-        <attr name="tabTextAppearance" format="reference"/>
+        <attr name="selectedColor" format="color" />
+        <attr name="unSelectedColor" format="color" />
+        <attr name="tabTextAppearance" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="GrapeBar">
+        <attr name="textRotation" format="integer" />
     </declare-styleable>
 </resources>
