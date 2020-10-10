@@ -68,38 +68,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/wineImage">
 
-        <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-        <!--            android:id="@+id/vintageBarLayout"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent">-->
-
-        <!--            <TextView-->
-        <!--                android:id="@+id/label"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:text="Grapes test:"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-        <!--            <ProgressBar-->
-        <!--                android:id="@+id/progressBar1"-->
-        <!--                style="?android:attr/progressBarStyleHorizontal"-->
-        <!--                android:progressTint="@color/medal_bronze"-->
-        <!--                android:progress="100"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toBottomOf="@id/label" />-->
-
-        <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
         <com.louis.app.cavity.ui.bottle.GrapeBar
             android:id="@+id/grapeBar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:textRotation="310" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.card.MaterialCardView>
 

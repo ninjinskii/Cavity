@@ -20,22 +20,31 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
 
-//        binding.grapeBar.addAllGrapes(
-//            Grape(0, "Cabernet-Sauvignon", 40, 0),
-//            Grape(0, "Syrah", 20, 0)
-//        )
+        binding.grapeBar.addAllGrapes(
+            listOf(
+                Grape(0, "Cabernet-Sauvignon", 90, 0),
+                Grape(0, "Cabernet-Sauvignon", 85, 0),
+                Grape(0, "Syrah", 80, 0),
+                Grape(0, "Syrah", 50, 0),
+                Grape(0, "Syrah", 20, 0),
+            )
+        )
+
+        binding.grapeBar.triggerAnimation()
 
         setListener()
     }
 
     private fun setListener() {
         binding.buttonEditBottle.setOnClickListener {
-            val wineId = arguments?.getLong(WINE_ID)
-            val bottleId = arguments?.getLong(BOTTLE_ID)
-            bottleId?.let {
-                val bundle = bundleOf(WINE_ID to wineId, EDIT_BOTTLE_ID to it)
-                findNavController().navigate(R.id.bottleDetailsToAddBottle, bundle)
-            }
+//            val wineId = arguments?.getLong(WINE_ID)
+//            val bottleId = arguments?.getLong(BOTTLE_ID)
+//            bottleId?.let {
+//                val bundle = bundleOf(WINE_ID to wineId, EDIT_BOTTLE_ID to it)
+//                findNavController().navigate(R.id.bottleDetailsToAddBottle, bundle)
+//            }
+
+            binding.grapeBar.triggerAnimation()
         }
     }
 

@@ -5,8 +5,4 @@
         <attr name="unSelectedColor" format="color" />
         <attr name="tabTextAppearance" format="reference" />
     </declare-styleable>
-
-    <declare-styleable name="GrapeBar">
-        <attr name="textRotation" format="integer" />
-    </declare-styleable>
 </resources>
