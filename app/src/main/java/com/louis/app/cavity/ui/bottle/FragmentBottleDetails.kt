@@ -22,11 +22,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         binding.grapeBar.addAllGrapes(
             listOf(
-                Grape(0, "Cabernet-Sauvignon", 90, 0),
-                Grape(0, "Cabernet-Sauvignon", 85, 0),
-                Grape(0, "Syrah", 80, 0),
-                Grape(0, "Syrah", 50, 0),
+                Grape(0, "Merlot", 30, 0),
                 Grape(0, "Syrah", 20, 0),
+                Grape(0, "Grenache", 5, 0),
             )
         )
 
