@@ -6,8 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
+import com.google.android.material.navigation.NavigationView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
+import com.louis.app.cavity.ui.ActivityMain
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
@@ -20,14 +23,29 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
+        setupParentToolbar()
         setupScrollableTab()
         setListeners()
         observe()
     }
 
+    private fun setupParentToolbar() {
+        val activity = activity as ActivityMain
+        val navigationView = activity.findViewById<NavigationView>(R.id.navView)
+
+        activity.setSupportActionBar(binding.appBarDefault.toolbar)
+        val appBarConfiguration = activity.appBarConfiguration
+        NavigationUI.setupActionBarWithNavController(
+            activity,
+            findNavController(),
+            appBarConfiguration
+        )
+        NavigationUI.setupWithNavController(navigationView, findNavController())
+    }
+
     private fun setupScrollableTab() {
         binding.tab.addOnLongClickListener {
-            // show dialog info for county
+            // TODO: show dialog info for county
         }
 
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {

@@ -8,14 +8,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
-import com.louis.app.cavity.ui.SnackbarProvider
+import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.ui.home.FragmentWines.Companion.WINE_ID
 import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.setupDefaultToolbar
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
-    private lateinit var snackbarProvider: SnackbarProvider
+    private lateinit var activity: ActivityMain
     private var _binding: FragmentAddBottleBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
@@ -24,10 +25,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAddBottleBinding.bind(view)
 
-        snackbarProvider = activity as SnackbarProvider
+        setupDefaultToolbar(activity, binding.appBarDefault.toolbar)
 
         if (arguments?.getLong(WINE_ID) == null) {
-            snackbarProvider.onShowSnackbarRequested(R.string.base_error)
+            activity.onShowSnackbarRequested(R.string.base_error)
             findNavController().popBackStack()
             return
         }
@@ -43,12 +44,12 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
             .apply { adapter = AddBottlesPagerAdapter(this@FragmentAddBottle) }
             .also { stepperFragment.setupWithViewPager(it) }
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+        activity.onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (binding.viewPager.currentItem != 0) {
                 binding.viewPager.currentItem = binding.viewPager.currentItem - 1
             } else {
                 remove()
-                requireActivity().onBackPressed()
+                activity.onBackPressed()
             }
         }
     }

@@ -10,6 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include
+            android:id="@+id/appBarDefault"
+            layout="@layout/app_bar_default"/>
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/stepper"
             android:name="com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper"
@@ -17,7 +21,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarDefault"
             tools:layout="@layout/fragment_stepper" />
 
         <androidx.viewpager2.widget.ViewPager2

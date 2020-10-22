@@ -1,8 +1,6 @@
 package com.louis.app.cavity.ui
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.AttributeSet
 import com.google.android.material.textfield.TextInputLayout
 import com.louis.app.cavity.util.L

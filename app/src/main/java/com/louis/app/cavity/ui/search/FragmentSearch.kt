@@ -21,9 +21,11 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
+import com.louis.app.cavity.databinding.SearchContentBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.util.setupDefaultToolbar
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -33,28 +35,32 @@ import java.util.*
 class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+    private var _content: SearchContentBinding? = null
+    private val content get() = _content!!
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var menu: Menu
     private val rvDisabler = RecyclerViewDisabler()
     private val searchViewModel: SearchViewModel by activityViewModels()
-    private val backdropHeaderHeight by lazy { binding.backdropHeader.height }
+
+    // TODO: remove lazy
+    private val backdropHeaderHeight by lazy { content.backdropHeader.height }
     private val bottomSheetUpperBound by lazy {
-        binding.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
+        content.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
     }
     private var isHeaderShadowDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
+        _content = SearchContentBinding.bind(binding.content.root)
 
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
+        bottomSheetBehavior = BottomSheetBehavior.from(content.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_EXPANDED
             isHideable = false
         }
 
-        setHasOptionsMenu(true)
-
+        setupToolbar()
         initCountyChips()
         initColorChips()
         initOtherChips()
@@ -65,13 +71,18 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         restoreState()
     }
 
+    private fun setupToolbar() {
+        setHasOptionsMenu(true)
+        setupDefaultToolbar(activity as ActivityMain, binding.appBarDefault.toolbar)
+    }
+
     private fun initCountyChips() {
         lifecycleScope.launch(IO) {
             val counties = searchViewModel.getAllCountiesNotLive().toSet()
             loadCounties(
                 lifecycleScope,
                 layoutInflater,
-                binding.countyChipGroup,
+                content.countyChipGroup,
                 counties,
                 selectionRequired = false,
                 onCheckedChangeListener = { _, _ -> prepareCountyFilters() }
@@ -80,7 +91,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun initColorChips() {
-        binding.colorChipGroup.apply {
+        content.colorChipGroup.apply {
             clearCheck()
             children.forEach {
                 (it as Chip).setOnCheckedChangeListener { _, _ ->
@@ -91,7 +102,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun initOtherChips() {
-        binding.otherChipGroup.apply {
+        content.otherChipGroup.apply {
             clearCheck()
             children.forEach {
                 (it as Chip).setOnCheckedChangeListener { _, _ ->
@@ -114,7 +125,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
         bottlesAdapter = BottleRecyclerAdapter({}, colors ?: return)
 
-        binding.recyclerView.apply {
+        content.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
             adapter = bottlesAdapter
@@ -131,14 +142,14 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         }
 
         searchViewModel.results.observe(viewLifecycleOwner) {
-            binding.matchingWines.text =
+            content.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter.submitList(it)
         }
     }
 
     private fun initSlider() {
-        binding.vintageSlider.apply {
+        content.vintageSlider.apply {
             val year = Calendar.getInstance().get(Calendar.YEAR).toFloat()
             valueFrom = year - 40F
             valueTo = year
@@ -159,7 +170,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun prepareCountyFilters() {
-        binding.countyChipGroup.apply {
+        content.countyChipGroup.apply {
             val counties = checkedChipIds.map {
                 findViewById<Chip>(it).getTag(R.string.tag_chip_id) as County
             }
@@ -169,7 +180,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun setListener() {
-        binding.buttonMoreFilters.setOnClickListener {
+        content.buttonMoreFilters.setOnClickListener {
             findNavController().navigate(R.id.searchToMoreFilters)
         }
     }
@@ -182,7 +193,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             val location = IntArray(2)
 
             display?.let {
-                binding.buttonMoreFilters.getLocationInWindow(location)
+                content.buttonMoreFilters.getLocationInWindow(location)
 
                 val peekHeight =
                     if (it - location[1] - bottomSheetUpperBound < backdropHeaderHeight)
@@ -196,7 +207,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun setHeaderShadow(setVisible: Boolean) {
-        val header = binding.backdropHeader
+        val header = content.backdropHeader
 
         if (setVisible && !isHeaderShadowDisplayed) {
             header.stateListAnimator =
@@ -215,13 +226,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
             item.setIcon(R.drawable.anim_close_filter)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            binding.scrim.alpha = 0.76F
-            binding.recyclerView.addOnItemTouchListener(rvDisabler)
+            content.scrim.alpha = 0.76F
+            content.recyclerView.addOnItemTouchListener(rvDisabler)
         } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
             item.setIcon(R.drawable.anim_filter_close)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            binding.scrim.alpha = 0F
-            binding.recyclerView.removeOnItemTouchListener(rvDisabler)
+            content.scrim.alpha = 0F
+            content.recyclerView.removeOnItemTouchListener(rvDisabler)
         }
 
         (item.icon as AnimatedVectorDrawable).start()
@@ -244,22 +255,22 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun restoreState() {
         with(searchViewModel.state) {
             counties?.let { selectedCounties ->
-                binding.countyChipGroup.children.forEach {
+                content.countyChipGroup.children.forEach {
                     if (((it.getTag(R.string.tag_chip_id)) as County).countyId in selectedCounties)
                         (it as Chip).isChecked = true
                 }
             }
 
             colors?.let { selectedChipIds ->
-                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
+                selectedChipIds.forEach { content.root.findViewById<Chip>(it).isChecked = true }
             }
 
             others?.let { selectedChipIds ->
-                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
+                selectedChipIds.forEach { content.root.findViewById<Chip>(it).isChecked = true }
             }
 
             vintage?.let {
-                binding.vintageSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
+                content.vintageSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
             }
         }
     }
@@ -293,5 +304,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        _content = null
     }
 }

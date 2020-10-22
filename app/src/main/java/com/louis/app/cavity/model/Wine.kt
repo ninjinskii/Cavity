@@ -3,7 +3,6 @@ package com.louis.app.cavity.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.home.WineColor
 
 @Entity(tableName = "wine")
@@ -29,7 +28,7 @@ data class Wine(
             }
         }
 
-        fun colorNumberToWineColor(colorInt: Int) : WineColor {
+        fun colorNumberToWineColor(colorInt: Int): WineColor {
             return when (colorInt) {
                 0 -> WineColor.COLOR_WHITE
                 1 -> WineColor.COLOR_RED

@@ -2,15 +2,12 @@ package com.louis.app.cavity.ui.bottle
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.ui.addbottle.FragmentAddBottle.Companion.EDIT_BOTTLE_ID
-import com.louis.app.cavity.ui.home.FragmentWines.Companion.BOTTLE_ID
-import com.louis.app.cavity.ui.home.FragmentWines.Companion.WINE_ID
+import com.louis.app.cavity.ui.ActivityMain
+import com.louis.app.cavity.util.setupDefaultToolbar
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -30,6 +27,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         binding.grapeBar.triggerAnimation()
 
+        setupDefaultToolbar(activity as ActivityMain, binding.appBarDefault.toolbar)
         setListener()
     }
 

@@ -6,7 +6,7 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.HistoryEntry
 
 
-data class BottleAndHistoryEntry (
+data class BottleAndHistoryEntry(
     @Embedded val bottle: Bottle,
     @Relation(
         parentColumn = "bottle_id",
