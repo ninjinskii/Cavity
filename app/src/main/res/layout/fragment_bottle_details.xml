@@ -7,6 +7,7 @@
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="500dp">
 
@@ -14,16 +15,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="@color/cardview_dark_background"
+            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="enterAlways|scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/bottlePicture"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_back"
+                android:src="@drawable/ic_toast_wine"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.7" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:text="2016" />
 
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
@@ -31,7 +38,6 @@
                 app:layout_collapseMode="pin" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -151,4 +157,12 @@
                 app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/curve"
+        app:layout_anchor="@id/appBarLayout"
+        app:layout_anchorGravity="bottom"
+        android:layout_gravity="top"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
