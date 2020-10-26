@@ -3,6 +3,8 @@ package com.louis.app.cavity.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.louis.app.cavity.util.L
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity(tableName = "bottle")

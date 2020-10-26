@@ -3,11 +3,11 @@ package com.louis.app.cavity.db
 import android.app.Application
 import com.louis.app.cavity.model.*
 
-class WineRepository private constructor(app: Application) {
+class WineRepository private constructor (app: Application) {
 
     companion object {
         @Volatile
-        var instance: WineRepository? = null
+        var instance : WineRepository? = null
 
         fun getInstance(app: Application) =
             instance ?: synchronized(this) {
@@ -51,7 +51,6 @@ class WineRepository private constructor(app: Application) {
     fun getGrapesForBottleNotLive(bottleId: Long) = bottleDao.getGrapesForBottleNotLive(bottleId)
     fun getExpertAdvicesForBottleNotLive(bottleId: Long) =
         bottleDao.getExpertAdvicesForBottleNotLive(bottleId)
-
     fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
     fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
     fun getBottlesAndWineNotLive() = bottleDao.getBottlesAndWineNotLive()

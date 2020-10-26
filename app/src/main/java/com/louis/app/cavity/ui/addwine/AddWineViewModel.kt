@@ -54,7 +54,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
             return
         }
 
-        val colorNumber = when (color) {
+        val colorNumber =  when (color) {
             R.id.colorWhite -> WineColor.COLOR_WHITE
             R.id.colorRed -> WineColor.COLOR_RED
             R.id.colorSweet -> WineColor.COLOR_SWEET

@@ -2,9 +2,9 @@ package com.louis.app.cavity.ui.search
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import android.view.MotionEvent
 import android.view.View
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class LockedBottomSheetBehavior<V : View> : BottomSheetBehavior<V> {

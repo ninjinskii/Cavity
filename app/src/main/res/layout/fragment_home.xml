@@ -10,10 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/appBarDefault"
-            layout="@layout/app_bar_default" />
-
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
             android:layout_width="0dp"
@@ -21,7 +17,7 @@
             app:layout_constraintBottom_toTopOf="@+id/tab"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appBarDefault" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.louis.app.cavity.ui.home.CountyScrollableTab
             android:id="@+id/tab"

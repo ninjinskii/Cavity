@@ -12,10 +12,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentMoreFiltersBinding
-import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.L
-import com.louis.app.cavity.util.setupDefaultToolbar
 
 class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
     private lateinit var datePicker: MaterialDatePicker<Long>
@@ -28,7 +26,6 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentMoreFiltersBinding.bind(view)
 
-        setupDefaultToolbar(activity as ActivityMain, binding.appBarDefault.toolbar)
         initDatePicker()
         initSliders()
         initTextSwitcher()

@@ -17,7 +17,7 @@ import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class WineOptionsBottomSheet() : BottomSheetDialogFragment() {
-    var wine: Wine? = null
+    var wine : Wine? = null
 
     constructor(wine: Wine) : this() {
         this.wine = wine

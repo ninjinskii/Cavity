@@ -1,17 +1,14 @@
 package com.louis.app.cavity.util
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
-import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
-import com.louis.app.cavity.ui.ActivityMain
+import com.louis.app.cavity.model.Grape
 
 // Boolean and Int helpers for database compatibility
 fun Int.toBoolean() = this == 1
@@ -22,7 +19,7 @@ fun Boolean.toInt() = if (this) 1 else 0
 
 // View related
 fun View.setVisible(isVisible: Boolean, invisible: Boolean = false) {
-    visibility = if (isVisible) View.VISIBLE else if (invisible) View.INVISIBLE else View.GONE
+    visibility = if (isVisible) View.VISIBLE else if(invisible) View.INVISIBLE else View.GONE
 }
 
 fun View.hideKeyboard() {
@@ -70,10 +67,3 @@ fun <T> MutableLiveData<MutableList<T>>.clearList() {
     this.value = mutableListOf()
 }
 
-fun Fragment.setupDefaultToolbar(activity: ActivityMain, toolbar: Toolbar) {
-    val navigationView = activity.navigationView
-
-    activity.setSupportActionBar(toolbar)
-    NavigationUI.setupActionBarWithNavController(activity, findNavController())
-    NavigationUI.setupWithNavController(navigationView, findNavController())
-}
