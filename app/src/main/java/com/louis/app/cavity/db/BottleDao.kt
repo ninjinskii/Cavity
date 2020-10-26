@@ -5,9 +5,8 @@ import androidx.room.*
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.ExpertAdvice
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.BottleWithExpertAdvices
-import com.louis.app.cavity.model.relation.BottleWithGrapes
 import com.louis.app.cavity.model.relation.BottleAndWine
+import com.louis.app.cavity.model.relation.BottleWithGrapes
 
 @Dao
 interface BottleDao {
@@ -44,7 +43,7 @@ interface BottleDao {
 
     @Transaction
     @Query("SELECT * FROM bottle")
-    fun getBottleWithGrapesNotLive() : List<BottleWithGrapes>
+    fun getBottleWithGrapesNotLive(): List<BottleWithGrapes>
 
     // ---------------Grape---------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)

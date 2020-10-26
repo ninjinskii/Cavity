@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import java.util.*
 
 data class BottleAndWine(
-    @ColumnInfo(name = "bottle_id") val bottleId : Long,
+    @ColumnInfo(name = "bottle_id") val bottleId: Long,
     val name: String,
     val naming: String,
     val cuvee: String,
@@ -23,7 +23,7 @@ data class BottleAndWine(
     @ColumnInfo(name = "pdf_path") val pdfPath: String,
     @ColumnInfo(name = "county_id") val countyId: Long
 ) {
-    fun isReadyToDrink() : Boolean {
+    fun isReadyToDrink(): Boolean {
         val year = Calendar.getInstance().get(Calendar.YEAR)
         return year >= apogee
     }

@@ -2,18 +2,12 @@ package com.louis.app.cavity.ui
 
 import android.animation.AnimatorInflater
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider {

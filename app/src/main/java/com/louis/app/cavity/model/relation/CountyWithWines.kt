@@ -5,7 +5,7 @@ import androidx.room.Relation
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 
-data class CountyWithWines (
+data class CountyWithWines(
     @Embedded val county: County,
     @Relation(
         parentColumn = "county_id",

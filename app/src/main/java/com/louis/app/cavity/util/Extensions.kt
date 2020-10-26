@@ -1,6 +1,5 @@
 package com.louis.app.cavity.util
 
-import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -8,7 +7,6 @@ import androidx.annotation.StringRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.snackbar.Snackbar
-import com.louis.app.cavity.model.Grape
 
 // Boolean and Int helpers for database compatibility
 fun Int.toBoolean() = this == 1
@@ -19,7 +17,7 @@ fun Boolean.toInt() = if (this) 1 else 0
 
 // View related
 fun View.setVisible(isVisible: Boolean, invisible: Boolean = false) {
-    visibility = if (isVisible) View.VISIBLE else if(invisible) View.INVISIBLE else View.GONE
+    visibility = if (isVisible) View.VISIBLE else if (invisible) View.INVISIBLE else View.GONE
 }
 
 fun View.hideKeyboard() {

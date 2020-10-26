@@ -43,7 +43,7 @@ class GrapeBar @JvmOverloads constructor(
 
     fun triggerAnimation() {
         var progress = 0
-        
+
         bars.reverse()
         bars.forEach {
             ObjectAnimator.ofInt(it.first, "progress", 0, (it.second + progress) * 10).apply {
