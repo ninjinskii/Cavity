@@ -8,6 +8,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
@@ -44,6 +45,10 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
             isToolbarShadowShown = false
         }
     }
+
+    fun hideToolbar() = binding.main.toolbarLayout.setVisible(false)
+
+    fun showToolbar() = binding.main.toolbarLayout.setVisible(true)
 
     override fun onShowSnackbarRequested(stringRes: Int) {
         binding.main.coordinator.showSnackbar(stringRes, anchorView = binding.main.snackbarAnchor)

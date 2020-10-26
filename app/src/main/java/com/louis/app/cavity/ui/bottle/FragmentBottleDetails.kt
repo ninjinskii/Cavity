@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.ui.ActivityMain
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -42,6 +43,16 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun observe() {
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as ActivityMain).hideToolbar()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as ActivityMain).showToolbar()
     }
 
     override fun onDestroyView() {
