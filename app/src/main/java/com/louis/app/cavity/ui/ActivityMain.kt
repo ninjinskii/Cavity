@@ -14,6 +14,7 @@ import com.louis.app.cavity.util.showSnackbar
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private lateinit var binding: ActivityMainBinding
     private var isToolbarShadowShown = true
+    private var hasCustomToolbar = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

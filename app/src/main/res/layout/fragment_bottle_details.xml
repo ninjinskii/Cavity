@@ -9,14 +9,15 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="500dp">
+        android:layout_height="400dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="enterAlways|scroll|exitUntilCollapsed"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             tools:title="Domaine F. Engel">
 
             <ImageView
@@ -34,6 +35,7 @@
                 android:text="2016" />
 
             <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin" />
@@ -173,7 +175,7 @@
         android:id="@+id/shaper"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@drawable/curve"
+        android:background="@drawable/shape_curve"
         app:layout_anchor="@id/appBarLayout"
         app:layout_anchorGravity="bottom"
         android:layout_gravity="top"/>
