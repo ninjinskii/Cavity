@@ -50,5 +50,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0" />
+        <Constraint
+            android:id="@id/fabEditBottle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:translationX="400dp"
+            android:translationY="-100dp" />
     </ConstraintSet>
 </MotionScene>

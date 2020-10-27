@@ -1,15 +1,14 @@
 package com.louis.app.cavity.ui.bottle
 
-import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
-import com.google.android.material.appbar.AppBarLayout
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.ActivityMain
-import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.L
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -33,15 +32,20 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun setupCollapsingToolbar() {
-//        val toolbarLayoutHeight by lazy { binding.collapsingToolbar.height }
-//        val trigger by lazy { binding.collapsingToolbar.scrimVisibleHeightTrigger }
+//        binding.collapsingToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
+//            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+//            }
 //
-//        binding.appBarLayout.addOnOffsetChangedListener(
-//            AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-//                val showComponents = toolbarLayoutHeight + verticalOffset > trigger
-//                binding.shaper.setVisible(showComponents, invisible = true)
-//                binding.fabEditBottle.run { if (showComponents) show() else hide() }
-//            })
+//            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
+//                binding.fabEditBottle.run { if (p3 > 0.6) hide() else show() }
+//            }
+//
+//            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
+//            }
+//
+//            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
+//            }
+//        })
     }
 
     private fun setListener() {
