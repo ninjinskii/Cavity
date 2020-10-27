@@ -3,44 +3,70 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="400dp">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
+        <com.louis.app.cavity.ui.bottle.CollapsibleToolbar
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:layoutDescription="@xml/motion_collapsible_toolbar"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             tools:title="Domaine F. Engel">
+
+            <View
+                android:id="@+id/centerHelper"
+                android:layout_width="0dp"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <ImageView
                 android:id="@+id/bottlePicture"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@color/colorAccent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/pine_branch"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.7" />
 
             <TextView
+                android:id="@+id/bottleName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:text="2016" />
+                android:layout_marginTop="@dimen/small_margin"
+                android:paddingBottom="@dimen/small_margin"
+                android:text="Domaine F. Engel"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="?attr/colorOnPrimary"
+                android:transformPivotX="0dp"
+                android:transformPivotY="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/backButton" />
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+            <TextView
+                android:id="@+id/bottleVintage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2016"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <FrameLayout
+                android:id="@+id/shaper"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin" />
+                android:layout_height="30dp"
+                android:layout_gravity="top"
+                android:background="@drawable/shape_curve"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.louis.app.cavity.ui.bottle.CollapsibleToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -171,12 +197,16 @@
         app:layout_anchor="@id/shaper"
         app:layout_anchorGravity="top|end" />
 
-    <FrameLayout
-        android:id="@+id/shaper"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@drawable/shape_curve"
-        app:layout_anchor="@id/appBarLayout"
-        app:layout_anchorGravity="bottom"
-        android:layout_gravity="top"/>
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="32dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="10dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_arrow_back"
+        android:translationZ="8dp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

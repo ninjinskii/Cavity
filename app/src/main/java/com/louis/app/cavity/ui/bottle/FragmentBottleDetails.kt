@@ -33,15 +33,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun setupCollapsingToolbar() {
-        val toolbarLayoutHeight by lazy { binding.collapsingToolbar.height }
-        val trigger by lazy { binding.collapsingToolbar.scrimVisibleHeightTrigger }
-
-        binding.appBarLayout.addOnOffsetChangedListener(
-            AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-                val showComponents = toolbarLayoutHeight + verticalOffset > trigger
-                binding.shaper.setVisible(showComponents, invisible = true)
-                binding.fabEditBottle.run { if (showComponents) show() else hide() }
-            })
+//        val toolbarLayoutHeight by lazy { binding.collapsingToolbar.height }
+//        val trigger by lazy { binding.collapsingToolbar.scrimVisibleHeightTrigger }
+//
+//        binding.appBarLayout.addOnOffsetChangedListener(
+//            AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+//                val showComponents = toolbarLayoutHeight + verticalOffset > trigger
+//                binding.shaper.setVisible(showComponents, invisible = true)
+//                binding.fabEditBottle.run { if (showComponents) show() else hide() }
+//            })
     }
 
     private fun setListener() {
