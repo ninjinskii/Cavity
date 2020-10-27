@@ -17,8 +17,9 @@
             android:id="@id/bottleName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/small_margin"
             android:rotation="-90.0"
-            motion:layout_constraintBottom_toBottomOf="@id/bottlePicture"
+            motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
     </ConstraintSet>
 
@@ -41,7 +42,12 @@
         <Constraint
             android:id="@id/shaper"
             android:layout_width="match_parent"
-            android:layout_height="-100dp"
+            android:layout_height="-70dp"
             motion:layout_constraintBottom_toBottomOf="parent" />
+        <Constraint
+            android:id="@id/bottleVintage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0" />
     </ConstraintSet>
 </MotionScene>
