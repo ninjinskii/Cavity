@@ -35,7 +35,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 with(binding) {
                     tab.addTabs(it)
                     viewPager.adapter = WinesPagerAdapter(this@FragmentHome, it)
-                    viewPager.offscreenPageLimit = 5
+                    viewPager.offscreenPageLimit = 1 // was 5
                     tab.setUpWithViewPager(viewPager)
                 }
             }

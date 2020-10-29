@@ -197,15 +197,25 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <ImageButton
-        android:id="@+id/backButton"
-        android:layout_width="32dp"
-        android:layout_height="?attr/actionBarSize"
+    <FrameLayout
+        android:id="@+id/searchback_container"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
         android:layout_gravity="top|start"
-        android:layout_marginStart="10dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_arrow_back"
-        android:translationZ="8dp" />
+        android:background="@android:color/transparent"
+        android:paddingStart="2dp"
+        android:translationZ="8dp">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="32dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="top|start"
+            android:layout_marginStart="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_arrow_back"
+            android:translationZ="8dp" />
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
