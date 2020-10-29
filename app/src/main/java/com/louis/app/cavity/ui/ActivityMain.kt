@@ -47,9 +47,9 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         }
     }
 
-    fun hideToolbar() = binding.main.toolbarLayout.setVisible(false)
+    fun hideMainToolbar() = binding.main.toolbarLayout.setVisible(false)
 
-    fun showToolbar() = binding.main.toolbarLayout.setVisible(true)
+    fun showMainToolbar() = binding.main.toolbarLayout.setVisible(true)
 
     override fun onShowSnackbarRequested(stringRes: Int) {
         binding.main.coordinator.showSnackbar(stringRes, anchorView = binding.main.snackbarAnchor)

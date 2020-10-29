@@ -15,6 +15,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.constraintlayout.motion.widget.MotionLayout
+                android:id="@+id/motionToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layoutDescription="@xml/motion_search_toolbar"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/scndToolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:navigationIcon="@drawable/ic_arrow_back"
+                    app:title="SearchFragment"/>
+
+                <ImageButton
+                    android:id="@+id/toggleBackdrop"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="0dp"
+                    android:src="@drawable/anim_filter_close"
+                    android:background="?attr/actionBarItemBackground"
+                    android:tint="?attr/colorOnPrimary"/>
+
+                <ImageButton
+                    android:id="@+id/searchButton"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="0dp"
+                    android:paddingEnd="@dimen/small_margin"
+                    android:src="@drawable/anim_close_filter"
+                    android:background="@android:color/transparent"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:tint="?attr/colorOnPrimary"/>
+
+                <ImageButton
+                    android:id="@+id/backButton"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="0dp"
+                    android:paddingStart="8dp"
+                    android:src="@drawable/ic_arrow_back"
+                    android:background="@android:color/transparent"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:tint="?attr/colorOnPrimary"/>
+
+            </androidx.constraintlayout.motion.widget.MotionLayout>
+
             <HorizontalScrollView
                 android:id="@+id/countyScrollView"
                 android:layout_width="0dp"
@@ -22,7 +66,7 @@
                 android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/motionToolbar">
 
                 <LinearLayout
                     android:layout_width="wrap_content"

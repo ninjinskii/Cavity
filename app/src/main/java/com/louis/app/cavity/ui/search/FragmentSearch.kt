@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.Menu
@@ -49,7 +50,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         _binding = FragmentSearchBinding.bind(view)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
-            state = BottomSheetBehavior.STATE_EXPANDED
+            state = BottomSheetBehavior.STATE_COLLAPSED // Expanded
             isHideable = false
         }
 
@@ -63,6 +64,11 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         setListener()
         setBottomSheetPeekHeight()
         restoreState()
+
+        binding.searchButton.setOnClickListener {
+            binding.motionToolbar.transitionToEnd()
+            (binding.searchButton.drawable as Animatable).start()
+        }
     }
 
     private fun initCountyChips() {
@@ -265,12 +271,14 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     override fun onResume() {
-        (activity as ActivityMain).setToolbarShadow(false)
+        //(activity as ActivityMain).setToolbarShadow(false)
+        //(activity as ActivityMain).hideMainToolbar()
         super.onResume()
     }
 
     override fun onPause() {
-        (activity as ActivityMain).setToolbarShadow(true)
+        //(activity as ActivityMain).setToolbarShadow(true)
+        //(activity as ActivityMain).showMainToolbar()
         super.onPause()
     }
 
