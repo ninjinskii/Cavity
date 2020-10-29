@@ -47,9 +47,8 @@
 
             <TextView
                 android:id="@+id/bottleVintage"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:text="2016"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="?attr/colorOnPrimary"
@@ -74,7 +73,7 @@
                 android:layout_marginBottom="@dimen/small_margin"
                 android:src="@drawable/ic_edit"
                 app:layout_constraintBottom_toBottomOf="@id/shaper"
-                app:layout_constraintEnd_toEndOf="@id/bottleVintage" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </com.louis.app.cavity.ui.bottle.CollapsibleToolbar>
     </com.google.android.material.appbar.AppBarLayout>
