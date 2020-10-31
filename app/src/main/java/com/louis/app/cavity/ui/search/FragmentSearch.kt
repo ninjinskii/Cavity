@@ -2,7 +2,9 @@ package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
 import android.graphics.drawable.Animatable
+import android.graphics.drawable.Animatable2
 import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -25,6 +27,7 @@ import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -54,21 +57,17 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             isHideable = false
         }
 
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(true) // TODO: remove
 
         initCountyChips()
         initColorChips()
         initOtherChips()
         initRecyclerView()
         initSlider()
+        setupMenu()
         setListener()
         setBottomSheetPeekHeight()
         restoreState()
-
-        binding.searchButton.setOnClickListener {
-            binding.motionToolbar.transitionToEnd()
-            (binding.searchButton.drawable as Animatable).start()
-        }
     }
 
     private fun initCountyChips() {
@@ -174,6 +173,19 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         }
     }
 
+    private fun setupMenu() {
+//        (binding.toggleBackdrop.drawable as AnimatedVectorDrawable).registerAnimationCallback(object: Animatable2.AnimationCallback() {
+//            override fun onAnimationEnd(drawable: Drawable?) {
+//                L.v("animation end")
+//                binding.toggleBackdrop.setImageDrawable(resources.getDrawable(R.drawable.anim_close_filter))
+//            }
+//        })
+        binding.searchButton.setOnClickListener {
+            binding.motionToolbar.transitionToEnd()
+            (binding.searchButton.drawable as Animatable).start()
+        }
+    }
+
     private fun setListener() {
         binding.buttonMoreFilters.setOnClickListener {
             findNavController().navigate(R.id.searchToMoreFilters)
@@ -272,13 +284,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
     override fun onResume() {
         //(activity as ActivityMain).setToolbarShadow(false)
-        //(activity as ActivityMain).hideMainToolbar()
+        (activity as ActivityMain).hideMainToolbar()
         super.onResume()
     }
 
     override fun onPause() {
         //(activity as ActivityMain).setToolbarShadow(true)
-        //(activity as ActivityMain).showMainToolbar()
+        (activity as ActivityMain).showMainToolbar()
         super.onPause()
     }
 

@@ -8,7 +8,7 @@
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Cavtiy.LargeComponent
         </item>
 
-        <item name="searchViewStyle">@style/Cavity.SearchView</item>
+        <item name="searchViewStyle">@style/Widget.Cavity.SearchView</item>
         <!-- Customize searchview text, problem: applies to other compoenent (number pickers) -->
         <!--<item name="android:editTextColor">?attr/colorOnPrimary</item>-->
         <!--<item name="android:textColorHint">@color/search_view_hint</item>-->
@@ -41,10 +41,13 @@
     </style>
 
     <!-- SearchView -->
-    <style name="Cavity.SearchView" parent="Widget.AppCompat.SearchView">
-        <item name="queryBackground">@drawable/search_view_background</item>
-        <item name="searchHintIcon">@null</item>
-        <item name="queryHint">@string/search_wine_hint</item>
-        <item name="closeIcon">@drawable/ic_search_close</item>
+    <style name="Widget.Cavity.SearchView" parent="android:style/Widget.Material.SearchView">
+        <item name="colorControlActivated">?android:colorAccent</item>
+        <item name="android:searchIcon">@android:color/transparent</item>
+        <item name="android:searchHintIcon">@android:color/transparent</item>
+        <item name="android:closeIcon">@android:color/transparent</item>
+        <item name="android:queryBackground">@android:color/transparent</item>
+        <item name="android:submitBackground">@android:color/transparent</item>
     </style>
+
 </resources>

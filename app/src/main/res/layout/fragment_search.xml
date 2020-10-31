@@ -22,40 +22,49 @@
                 app:layoutDescription="@xml/motion_search_toolbar"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <!-- Using a toolbar here to get correct title and nav icon positioning -->
                 <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/scndToolbar"
+                    android:id="@+id/fakeToolbar"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:navigationIcon="@drawable/ic_arrow_back"
+                    app:title="SearchFragment" />
+
+                <!-- TODO: check if padding is correct on tablet. Also, fix lack of padding when using custon ImageButton-->
+                <com.louis.app.cavity.ui.search.AnimatedImageButton
+                    android:id="@+id/toggleBackdrop"
+                    android:layout_width="@dimen/medium_icon"
+                    android:layout_height="0dp"
+                    android:background="?attr/actionBarItemBackground"
+                    android:scaleType="centerInside"
+                    android:tint="?attr/colorOnPrimary"
+                    app:initialAvd="@drawable/anim_filter_close"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:otherAvd="@drawable/anim_close_filter" />
+
+                <com.louis.app.cavity.ui.search.AnimatedImageButton
+                    android:id="@+id/searchButton"
+                    android:layout_width="@dimen/medium_icon"
+                    android:layout_height="0dp"
+                    android:background="?attr/actionBarItemBackground"
+                    android:scaleType="centerInside"
+                    android:tint="?attr/colorOnPrimary"
+                    app:initialAvd="@drawable/anim_search_close"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:otherAvd="@drawable/anim_close_search" />
+
+                <SearchView
+                    android:id="@+id/searchView"
+                    style="@style/Widget.Cavity.SearchView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:navigationIcon="@drawable/ic_arrow_back"
-                    app:title="SearchFragment"/>
-
-                <ImageButton
-                    android:id="@+id/toggleBackdrop"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="0dp"
-                    android:src="@drawable/anim_filter_close"
-                    android:background="?attr/actionBarItemBackground"
-                    android:tint="?attr/colorOnPrimary"/>
-
-                <ImageButton
-                    android:id="@+id/searchButton"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="0dp"
-                    android:paddingEnd="@dimen/small_margin"
-                    android:src="@drawable/anim_close_filter"
-                    android:background="@android:color/transparent"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:tint="?attr/colorOnPrimary"/>
-
-                <ImageButton
-                    android:id="@+id/backButton"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="0dp"
-                    android:paddingStart="8dp"
-                    android:src="@drawable/ic_arrow_back"
-                    android:background="@android:color/transparent"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:tint="?attr/colorOnPrimary"/>
+                    android:layout_marginEnd="@dimen/medium_margin"
+                    android:iconifiedByDefault="false"
+                    android:visibility="gone" />
 
             </androidx.constraintlayout.motion.widget.MotionLayout>
 
@@ -236,13 +245,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="?attr/actionBarSize"
-                android:textColor="?attr/colorSecondary"
                 android:text="@string/more_filters"
-                app:layout_constraintVertical_bias="0.0"
+                android:textColor="?attr/colorSecondary"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vintageSlider"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/vintageSlider"
+                app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
@@ -252,6 +261,7 @@
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         app:layout_behavior=".ui.search.LockedBottomSheetBehavior"
         app:layout_insetEdge="bottom">
 

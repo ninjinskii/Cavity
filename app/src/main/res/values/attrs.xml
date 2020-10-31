@@ -5,4 +5,9 @@
         <attr name="unSelectedColor" format="color" />
         <attr name="tabTextAppearance" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="AnimatedImageButton">
+        <attr name="initialAvd" format="reference" />
+        <attr name="otherAvd" format="reference" />
+    </declare-styleable>
 </resources>
