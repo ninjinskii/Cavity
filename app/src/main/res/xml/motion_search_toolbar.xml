@@ -58,8 +58,8 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:alpha="0"
+            android:translationX="100dp"
             motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
         <Constraint
             android:id="@id/searchButton"
@@ -75,6 +75,9 @@
             android:layout_height="wrap_content"
             android:alpha="1"
             android:visibility="visible"
+            android:background="@android:color/transparent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="@id/fakeToolbar"
             motion:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
             motion:layout_constraintStart_toEndOf="@id/searchButton" />
     </ConstraintSet>

@@ -226,6 +226,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun setBottomSheetPeekHeight() {
         lifecycleScope.launch(Main) {
             delay(300)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             val display = activity?.window?.decorView?.height
             val location = IntArray(2)
 
@@ -311,13 +312,11 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun isToolbarAnimRunning() = binding.motionToolbar.progress !in listOf(0F, 1F)
 
     override fun onResume() {
-        //(activity as ActivityMain).setToolbarShadow(false)
         (activity as ActivityMain).hideMainToolbar()
         super.onResume()
     }
 
     override fun onPause() {
-        //(activity as ActivityMain).setToolbarShadow(true)
         (activity as ActivityMain).showMainToolbar()
         super.onPause()
     }
