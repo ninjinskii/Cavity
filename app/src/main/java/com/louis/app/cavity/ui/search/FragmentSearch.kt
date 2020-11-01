@@ -204,10 +204,12 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             })
 
             searchButton.setOnClickListener {
-                if (isSearchMode()) motionToolbar.transitionToStart()
-                else motionToolbar.transitionToEnd()
+                if (!isToolbarAnimRunning()) {
+                    if (isSearchMode()) motionToolbar.transitionToStart()
+                    else motionToolbar.transitionToEnd()
 
-                searchButton.triggerAnimation()
+                    searchButton.triggerAnimation()
+                }
             }
         }
     }
@@ -309,6 +311,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun isSearchMode() = binding.motionToolbar.progress == 1F
+
+    private fun isToolbarAnimRunning() = binding.motionToolbar.progress !in listOf(0F, 1F)
 
     override fun onResume() {
         //(activity as ActivityMain).setToolbarShadow(false)
