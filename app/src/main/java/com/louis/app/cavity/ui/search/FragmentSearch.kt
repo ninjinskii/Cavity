@@ -16,6 +16,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
+import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -181,14 +182,22 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
                 override fun onTransitionStarted(motionLayout: MotionLayout?, p1: Int, p2: Int) {
                     // When this callback is trigerred, the progress is already lower than 1, forcing us to check for a lower magic value.
-                    if (motionLayout?.progress ?: 0F > 0.5F) searchView.hideKeyboard()
+                    if (motionLayout?.progress ?: 0F > 0.5F) {
+                        searchView.hideKeyboard()
+                        toggleBackdrop.postDelayed(500) { toggleBackdrop.performClick() }
+                    }
                 }
 
                 override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
                 }
 
                 override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
-                    if (isSearchMode()) searchView.showKeyboard()
+                    if (isSearchMode()) {
+                        searchView.showKeyboard()
+
+                        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED)
+                            toggleBackdrop.performClick()
+                    }
                 }
 
                 override fun onTransitionTrigger(

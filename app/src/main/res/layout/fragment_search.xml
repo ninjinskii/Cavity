@@ -32,11 +32,11 @@
             android:background="?attr/actionBarItemBackground"
             android:scaleType="centerInside"
             android:tint="?attr/colorOnPrimary"
-            app:initialAvd="@drawable/anim_filter_close"
+            app:initialAvd="@drawable/anim_close_filter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:otherAvd="@drawable/anim_close_filter" />
+            app:otherAvd="@drawable/anim_filter_close" />
 
         <com.louis.app.cavity.ui.search.AnimatedImageButton
             android:id="@+id/searchButton"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/medium_margin"
             android:hint="@string/search_wine_hint"
-            android:inputType="text"
+            android:inputType="textCapSentences"
             android:visibility="invisible"
             android:background="@android:color/transparent"
             android:textColor="?attr/colorOnPrimary"
