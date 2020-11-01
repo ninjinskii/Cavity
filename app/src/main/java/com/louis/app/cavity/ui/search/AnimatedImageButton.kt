@@ -65,7 +65,10 @@ class AnimatedImageButton @JvmOverloads constructor(
     // TODO: check memory impact
     fun triggerAnimation() {
         if (!initialDrawable.isRunning && !otherDrawable.isRunning) {
-            val avd = if (state == 0) initialDrawable.constantState?.newDrawable() else otherDrawable.constantState?.newDrawable()
+            val avd =
+                if (state == 0) initialDrawable.constantState?.newDrawable()
+                else otherDrawable.constantState?.newDrawable()
+
             setImageDrawable(avd)
             (drawable as AnimatedVectorDrawable).start()
             toggleState()

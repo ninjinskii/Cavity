@@ -28,6 +28,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.util.L
+import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -174,9 +175,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun setupMenu() {
-        binding.searchButton.setOnClickListener {
-            binding.searchButton.triggerAnimation()
-            binding.motionToolbar.transitionToEnd()
+        with(binding) {
+            searchButton.setOnClickListener {
+                if (motionToolbar.progress == 1F) motionToolbar.transitionToStart()
+                else motionToolbar.transitionToEnd()
+
+                searchButton.triggerAnimation()
+            }
         }
     }
 
