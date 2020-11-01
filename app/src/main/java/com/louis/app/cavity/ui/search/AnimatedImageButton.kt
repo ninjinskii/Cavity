@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Animatable2
 import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -17,6 +18,10 @@ import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import com.louis.app.cavity.R
 import com.louis.app.cavity.util.L
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.security.InvalidParameterException
 
 class AnimatedImageButton @JvmOverloads constructor(
@@ -25,7 +30,9 @@ class AnimatedImageButton @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : AppCompatImageButton(context, attrs, defStyleAttr) {
 
-    private var state = 0
+    var state = 0
+        private set
+
     private val initialDrawable: AnimatedVectorDrawable
     private val otherDrawable: AnimatedVectorDrawable
 
@@ -45,7 +52,6 @@ class AnimatedImageButton @JvmOverloads constructor(
                 ) as AnimatedVectorDrawable
 
                 setImageDrawable(initialDrawable)
-                setOnClickListener { triggerAnimation() }
             } catch (e: ClassCastException) {
                 throw IllegalArgumentException("Cannot convert the given drawables into AnimatedVectorDrawable")
             } catch (e: Resources.NotFoundException) {
@@ -56,11 +62,14 @@ class AnimatedImageButton @JvmOverloads constructor(
         }
     }
 
-    private fun triggerAnimation() {
-        val avd = if (state == 1) initialDrawable else otherDrawable
-        setImageDrawable(avd)
-        (drawable as AnimatedVectorDrawable).start()
-        toggleState()
+    // TODO: check memory impact
+    fun triggerAnimation() {
+        if (!initialDrawable.isRunning && !otherDrawable.isRunning) {
+            val avd = if (state == 0) initialDrawable.constantState?.newDrawable() else otherDrawable.constantState?.newDrawable()
+            setImageDrawable(avd)
+            (drawable as AnimatedVectorDrawable).start()
+            toggleState()
+        }
     }
 
     private fun toggleState() {

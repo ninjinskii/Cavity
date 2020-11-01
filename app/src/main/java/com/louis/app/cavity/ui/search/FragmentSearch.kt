@@ -174,15 +174,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun setupMenu() {
-//        (binding.toggleBackdrop.drawable as AnimatedVectorDrawable).registerAnimationCallback(object: Animatable2.AnimationCallback() {
-//            override fun onAnimationEnd(drawable: Drawable?) {
-//                L.v("animation end")
-//                binding.toggleBackdrop.setImageDrawable(resources.getDrawable(R.drawable.anim_close_filter))
-//            }
-//        })
         binding.searchButton.setOnClickListener {
+            binding.searchButton.triggerAnimation()
             binding.motionToolbar.transitionToEnd()
-            (binding.searchButton.drawable as Animatable).start()
         }
     }
 
