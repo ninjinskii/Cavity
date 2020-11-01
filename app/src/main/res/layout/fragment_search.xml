@@ -57,14 +57,17 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:otherAvd="@drawable/anim_close_search" />
 
-                <SearchView
+                <EditText
                     android:id="@+id/searchView"
-                    style="@style/Widget.Cavity.SearchView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/medium_margin"
-                    android:iconifiedByDefault="false"
-                    android:visibility="gone" />
+                    android:hint="Rechercher une région, appellation..."
+                    android:inputType="text"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.motion.widget.MotionLayout>
 

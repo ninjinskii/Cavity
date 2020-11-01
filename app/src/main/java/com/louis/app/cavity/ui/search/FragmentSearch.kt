@@ -6,11 +6,14 @@ import android.graphics.drawable.Animatable2
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.transition.Transition
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
@@ -28,6 +31,8 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.hideKeyboard
+import com.louis.app.cavity.util.showKeyboard
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -176,8 +181,30 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
     private fun setupMenu() {
         with(binding) {
+            motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
+                override fun onTransitionStarted(motionLayout: MotionLayout?, p1: Int, p2: Int) {
+                    // When this callback is trigerred, the progress is already lower than 1, forcing us to check for a lower magic value.
+                    if (motionLayout?.progress ?: 0F > 0.5F) searchView.hideKeyboard()
+                }
+
+                override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
+                }
+
+                override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
+                    if (isSearchMode()) searchView.showKeyboard()
+                }
+
+                override fun onTransitionTrigger(
+                    p0: MotionLayout?,
+                    p1: Int,
+                    p2: Boolean,
+                    p3: Float
+                ) {
+                }
+            })
+
             searchButton.setOnClickListener {
-                if (motionToolbar.progress == 1F) motionToolbar.transitionToStart()
+                if (isSearchMode()) motionToolbar.transitionToStart()
                 else motionToolbar.transitionToEnd()
 
                 searchButton.triggerAnimation()
@@ -280,6 +307,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             }
         }
     }
+
+    private fun isSearchMode() = binding.motionToolbar.progress == 1F
 
     override fun onResume() {
         //(activity as ActivityMain).setToolbarShadow(false)

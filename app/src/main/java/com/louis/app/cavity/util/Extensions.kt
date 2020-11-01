@@ -26,6 +26,8 @@ fun View.hideKeyboard() {
 }
 
 fun View.showKeyboard() {
+    requestFocus()
+
     (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
         ?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
 }
