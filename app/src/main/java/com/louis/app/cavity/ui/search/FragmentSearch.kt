@@ -70,6 +70,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         initSlider()
         setupMenu()
         setListener()
+        initSearchView()
         setBottomSheetPeekHeight()
         restoreState()
     }
@@ -279,8 +280,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         }
     }
 
-    private fun initSearchView(searchView: SearchView) {
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+    private fun initSearchView() {
+        binding.searchView.(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
