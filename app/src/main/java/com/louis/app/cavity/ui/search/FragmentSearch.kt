@@ -45,7 +45,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private val binding get() = _binding!!
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private lateinit var menu: Menu
     private val rvDisabler = RecyclerViewDisabler()
     private val searchViewModel: SearchViewModel by activityViewModels()
     private val backdropHeaderHeight by lazy { binding.backdropHeader.height }
@@ -59,11 +58,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         _binding = FragmentSearchBinding.bind(view)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
-            state = BottomSheetBehavior.STATE_COLLAPSED // Expanded
+            state = BottomSheetBehavior.STATE_EXPANDED
             isHideable = false
         }
-
-        setHasOptionsMenu(true) // TODO: remove
 
         initCountyChips()
         initColorChips()
@@ -211,6 +208,11 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
                     searchButton.triggerAnimation()
                 }
             }
+
+            toggleBackdrop.setOnClickListener {
+                toggleBackdrop()
+                toggleBackdrop.triggerAnimation()
+            }
         }
     }
 
@@ -256,21 +258,15 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun toggleBackdrop() {
-        val item = menu.getItem(1)
-
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-            item.setIcon(R.drawable.anim_close_filter)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             binding.scrim.alpha = 0.76F
             binding.recyclerView.addOnItemTouchListener(rvDisabler)
         } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
-            item.setIcon(R.drawable.anim_filter_close)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             binding.scrim.alpha = 0F
             binding.recyclerView.removeOnItemTouchListener(rvDisabler)
         }
-
-        (item.icon as AnimatedVectorDrawable).start()
     }
 
     private fun initSearchView(searchView: SearchView) {
@@ -324,22 +320,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
         //(activity as ActivityMain).setToolbarShadow(true)
         (activity as ActivityMain).showMainToolbar()
         super.onPause()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_menu, menu)
-        initSearchView(menu.findItem(R.id.searchBar).actionView as SearchView)
-        this.menu = menu
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.toggleBackdrop -> {
-                toggleBackdrop()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     override fun onDestroyView() {
