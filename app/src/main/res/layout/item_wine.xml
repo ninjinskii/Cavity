@@ -54,9 +54,9 @@
             android:id="@+id/divider"
             android:layout_width="0dp"
             android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/medium_margin"
             android:alpha="0.12"
             android:background="?attr/colorOnBackground"
-            android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
             app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
             app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />

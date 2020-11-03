@@ -211,10 +211,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             }
         }
 
-        binding.toggleBackdrop.setOnClickListener {
-            toggleBackdrop()
-            binding.toggleBackdrop.triggerAnimation()
-        }
+        binding.toggleBackdrop.setOnClickListener { toggleBackdrop() }
     }
 
     private fun setListener() {
@@ -260,15 +257,17 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun toggleBackdrop() {
-        bottomSheetBehavior.toggleState()
-
         if (bottomSheetBehavior.isExpanded()) {
+            bottomSheetBehavior.toggleState()
+
             with(binding) {
                 scrim.alpha = 0.76F
                 recyclerView.addOnItemTouchListener(rvDisabler)
                 toggleBackdrop.triggerAnimation()
             }
         } else if (bottomSheetBehavior.isCollapsed()) {
+            bottomSheetBehavior.toggleState()
+
             with(binding) {
                 scrim.alpha = 0F
                 recyclerView.removeOnItemTouchListener(rvDisabler)
