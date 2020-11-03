@@ -221,7 +221,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
             toggleBackdrop.setOnClickListener {
                 toggleBackdrop()
-                toggleBackdrop.triggerAnimation()
             }
         }
     }
@@ -273,25 +272,27 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             binding.scrim.alpha = 0.76F
             binding.recyclerView.addOnItemTouchListener(rvDisabler)
+            binding.toggleBackdrop.triggerAnimation()
         } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             binding.scrim.alpha = 0F
             binding.recyclerView.removeOnItemTouchListener(rvDisabler)
+            binding.toggleBackdrop.triggerAnimation()
         }
     }
 
     private fun initSearchView() {
-        binding.searchView.(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let { searchViewModel.setTextFilter(it) }
-
-                return true
-            }
-        })
+//        binding.searchView.(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                newText?.let { searchViewModel.setTextFilter(it) }
+//
+//                return true
+//            }
+//        })
     }
 
     private fun restoreState() {
