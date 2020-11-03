@@ -1,22 +1,13 @@
 package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
-import android.graphics.drawable.Animatable
-import android.graphics.drawable.Animatable2
-import android.graphics.drawable.AnimatedVectorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.transition.Transition
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.postDelayed
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -31,10 +22,9 @@ import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.hideKeyboard
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard
-import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -179,49 +169,52 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun setupMenu() {
-        with(binding) {
-            motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
-                override fun onTransitionStarted(motionLayout: MotionLayout?, p1: Int, p2: Int) {
-                    // When this callback is trigerred, the progress is already lower than 1, forcing us to check for a lower magic value.
-                    if (motionLayout?.progress ?: 0F > 0.5F) {
+        binding.motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
+            override fun onTransitionStarted(motionLayout: MotionLayout?, p1: Int, p2: Int) {
+                // When this callback is trigerred, the progress is already lower than 1, forcing us to check for a lower magic value.
+                if (motionLayout?.progress ?: 0F > 0.5F) {
+                    with(binding) {
+                        currentQuery.setVisible(true)
                         searchView.hideKeyboard()
                         toggleBackdrop.postDelayed(500) { toggleBackdrop.performClick() }
                     }
-                }
-
-                override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
-                }
-
-                override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
-                    if (isSearchMode()) {
-                        searchView.showKeyboard()
-
-                        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED)
-                            toggleBackdrop.performClick()
-                    }
-                }
-
-                override fun onTransitionTrigger(
-                    p0: MotionLayout?,
-                    p1: Int,
-                    p2: Boolean,
-                    p3: Float
-                ) {
-                }
-            })
-
-            searchButton.setOnClickListener {
-                if (!isToolbarAnimRunning()) {
-                    if (isSearchMode()) motionToolbar.transitionToStart()
-                    else motionToolbar.transitionToEnd()
-
-                    searchButton.triggerAnimation()
+                } else {
+                    binding.currentQuery.setVisible(false)
                 }
             }
 
-            toggleBackdrop.setOnClickListener {
-                toggleBackdrop()
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
             }
+
+            override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
+                if (isSearchMode()) {
+                    binding.searchView.showKeyboard()
+
+                    if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED)
+                        binding.toggleBackdrop.performClick()
+                }
+            }
+
+            override fun onTransitionTrigger(
+                p0: MotionLayout?,
+                p1: Int,
+                p2: Boolean,
+                p3: Float
+            ) {
+            }
+        })
+
+        binding.searchButton.setOnClickListener {
+            if (!isToolbarAnimRunning()) {
+                if (isSearchMode()) binding.motionToolbar.transitionToStart()
+                else binding.motionToolbar.transitionToEnd()
+
+                binding.searchButton.triggerAnimation()
+            }
+        }
+
+        binding.toggleBackdrop.setOnClickListener {
+            toggleBackdrop()
         }
     }
 
@@ -270,29 +263,32 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun toggleBackdrop() {
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            binding.scrim.alpha = 0.76F
-            binding.recyclerView.addOnItemTouchListener(rvDisabler)
-            binding.toggleBackdrop.triggerAnimation()
+
+            with(binding) {
+                scrim.alpha = 0.76F
+                recyclerView.addOnItemTouchListener(rvDisabler)
+                toggleBackdrop.triggerAnimation()
+            }
         } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            binding.scrim.alpha = 0F
-            binding.recyclerView.removeOnItemTouchListener(rvDisabler)
-            binding.toggleBackdrop.triggerAnimation()
+
+            with(binding) {
+                scrim.alpha = 0F
+                recyclerView.removeOnItemTouchListener(rvDisabler)
+                toggleBackdrop.triggerAnimation()
+            }
         }
     }
 
     private fun initSearchView() {
-//        binding.searchView.(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                newText?.let { searchViewModel.setTextFilter(it) }
-//
-//                return true
-//            }
-//        })
+        binding.searchView.doAfterTextChanged { newText ->
+            if (newText != null && newText.isNotEmpty()) {
+                searchViewModel.setTextFilter(newText.toString())
+                binding.currentQuery.text = newText
+            } else {
+                binding.currentQuery.text = ""
+            }
+        }
     }
 
     private fun restoreState() {

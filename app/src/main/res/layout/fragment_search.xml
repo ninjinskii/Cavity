@@ -21,9 +21,9 @@
             android:id="@+id/fakeToolbar"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:title="SearchFragment" />
+            app:title="SearchFragment"
+            app:titleTextColor="?attr/colorOnPrimary" />
 
         <!-- TODO: check if padding is correct on tablet. -->
         <com.louis.app.cavity.ui.search.AnimatedImageButton
@@ -57,11 +57,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/medium_margin"
+            android:background="@android:color/transparent"
             android:hint="@string/search_wine_hint"
             android:inputType="textCapSentences"
-            android:visibility="invisible"
-            android:background="@android:color/transparent"
             android:textColor="?attr/colorOnPrimary"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/fakeToolbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -284,6 +284,7 @@
                 android:id="@+id/backdropHeader"
                 android:layout_width="0dp"
                 android:layout_height="?attr/actionBarSize"
+                android:animateLayoutChanges="true"
                 android:background="@drawable/shape_backdrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -298,6 +299,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="12 résultats" />
+
+                <TextView
+                    android:id="@+id/currentQuery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:ellipsize="end"
+                    android:maxWidth="100dp"
+                    android:maxLines="1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="'Barolo'" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
