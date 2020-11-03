@@ -22,9 +22,7 @@ import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
-import com.louis.app.cavity.util.hideKeyboard
-import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.showKeyboard
+import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -190,7 +188,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
                 if (isSearchMode()) {
                     binding.searchView.showKeyboard()
 
-                    if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED)
+                    if (bottomSheetBehavior.isCollapsed())
                         binding.toggleBackdrop.performClick()
                 }
             }
@@ -215,6 +213,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
 
         binding.toggleBackdrop.setOnClickListener {
             toggleBackdrop()
+            binding.toggleBackdrop.triggerAnimation()
         }
     }
 
@@ -228,7 +227,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun setBottomSheetPeekHeight() {
         lifecycleScope.launch(Main) {
             delay(300)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            bottomSheetBehavior.isExpanded()
             val display = activity?.window?.decorView?.height
             val location = IntArray(2)
 
@@ -261,17 +260,15 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     }
 
     private fun toggleBackdrop() {
-        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior.toggleState()
 
+        if (bottomSheetBehavior.isExpanded()) {
             with(binding) {
                 scrim.alpha = 0.76F
                 recyclerView.addOnItemTouchListener(rvDisabler)
                 toggleBackdrop.triggerAnimation()
             }
-        } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-
+        } else if (bottomSheetBehavior.isCollapsed()) {
             with(binding) {
                 scrim.alpha = 0F
                 recyclerView.removeOnItemTouchListener(rvDisabler)

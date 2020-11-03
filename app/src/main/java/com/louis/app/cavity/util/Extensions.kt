@@ -2,10 +2,13 @@ package com.louis.app.cavity.util
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 
 // Boolean and Int helpers for database compatibility
@@ -65,5 +68,19 @@ operator fun <T> MutableLiveData<MutableList<T>>.minusAssign(item: T) {
 
 fun <T> MutableLiveData<MutableList<T>>.clearList() {
     this.value = mutableListOf()
+}
+
+// BottomSheet
+fun BottomSheetBehavior<ConstraintLayout>.isCollapsed() =
+    state == BottomSheetBehavior.STATE_COLLAPSED
+
+fun BottomSheetBehavior<ConstraintLayout>.isExpanded() = state == BottomSheetBehavior.STATE_EXPANDED
+
+fun BottomSheetBehavior<ConstraintLayout>.toggleState() {
+    state =
+        if (isExpanded())
+            BottomSheetBehavior.STATE_COLLAPSED
+        else
+            BottomSheetBehavior.STATE_EXPANDED
 }
 
