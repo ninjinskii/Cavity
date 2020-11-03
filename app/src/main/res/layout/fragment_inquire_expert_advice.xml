@@ -46,12 +46,10 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <include
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
+            <View
+                android:id="@+id/divider"
+                style="@style/Widget.Cavity.Divider"
                 android:layout_marginStart="@dimen/xlarge_margin"
-                android:layout_marginTop="@dimen/large_margin"
                 android:layout_marginEnd="@dimen/xlarge_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

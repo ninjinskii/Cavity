@@ -54,14 +54,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/priceSlider" />
 
-        <include
+        <View
             android:id="@+id/divider1"
-            layout="@layout/divider"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/divider_height"
-            android:layout_marginVertical="@dimen/medium_margin"
-            android:layout_marginStart="@dimen/medium_margin"
-            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.Cavity.Divider.Start"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/warning" />
 
@@ -111,14 +106,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/dateLayout" />
 
-        <include
+        <View
             android:id="@+id/divider2"
-            layout="@layout/divider"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/divider_height"
-            android:layout_marginVertical="@dimen/medium_margin"
-            android:layout_marginStart="@dimen/medium_margin"
-            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.Cavity.Divider.Start"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dateLayout" />
 

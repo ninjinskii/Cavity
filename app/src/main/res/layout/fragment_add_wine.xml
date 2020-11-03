@@ -83,15 +83,9 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <include
+            <View
                 android:id="@+id/divider1"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Widget.Cavity.Divider.Start"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/countyScrollView" />
 
@@ -141,15 +135,9 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <include
+            <View
                 android:id="@+id/divider2"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Widget.Cavity.Divider.Start"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/nameLayout" />
 
@@ -181,15 +169,9 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <include
+            <View
                 android:id="@+id/divider3"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Widget.Cavity.Divider.Start"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cuveeLayout" />
 
@@ -262,15 +244,9 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <include
+            <View
                 android:id="@+id/divider4"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Widget.Cavity.Divider.Start"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/colorScrollView" />
 
@@ -294,15 +270,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/organicTitle" />
 
-            <include
+            <View
                 android:id="@+id/divider5"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Widget.Cavity.Divider.Start"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/organicWine" />
 

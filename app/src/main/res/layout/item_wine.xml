@@ -50,11 +50,12 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.90" />
 
-        <include
+        <View
             android:id="@+id/divider"
-            layout="@layout/divider"
             android:layout_width="0dp"
             android:layout_height="@dimen/divider_height"
+            android:alpha="0.12"
+            android:background="?attr/colorOnBackground"
             android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
             app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
