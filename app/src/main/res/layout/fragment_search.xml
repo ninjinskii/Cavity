@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!-- We need an nested layout to get correct behavior for BottomSheet -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -24,7 +25,7 @@
             app:navigationIcon="@drawable/ic_arrow_back"
             app:title="SearchFragment" />
 
-        <!-- TODO: check if padding is correct on tablet. Also, fix lack of padding when using custon ImageButton-->
+        <!-- TODO: check if padding is correct on tablet. -->
         <com.louis.app.cavity.ui.search.AnimatedImageButton
             android:id="@+id/toggleBackdrop"
             android:layout_width="@dimen/medium_icon"
@@ -70,8 +71,7 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:focusableInTouchMode="true">
+        android:layout_height="match_parent">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -274,6 +274,8 @@
             android:id="@+id/bottomSheet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_behavior=".ui.search.LockedBottomSheetBehavior"
             app:layout_insetEdge="bottom">
 
