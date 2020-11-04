@@ -136,7 +136,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         if (!price.isDigitsOnly()) {
-            _userFeedback.postOnce(R.string.incorrect_price_format)
+            _userFeedback.postOnce(R.string.falsy_price)
             return false
         }
 

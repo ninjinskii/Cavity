@@ -31,7 +31,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     private val binding get() = _binding!!
     private val addWineViewModel: AddWineViewModel by viewModels()
     private val args: FragmentAddWineArgs by navArgs()
-    private var wineImagePath: String? = null
 
     companion object {
         const val PICK_IMAGE_RESULT_CODE = 1
