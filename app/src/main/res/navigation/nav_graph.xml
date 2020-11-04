@@ -15,17 +15,58 @@
             app:destination="@id/settings_dest" />
         <action
             android:id="@+id/homeToAddWine"
-            app:destination="@id/add_wine_dest" />
-        <action
-            android:id="@+id/homeToAddBottle"
-            app:destination="@id/add_bottle_dest" />
+            app:destination="@id/add_wine_dest">
+            <argument
+                android:name="editedWineId"
+                android:defaultValue="-1L"
+                app:argType="long" />
+        </action>
         <action
             android:id="@+id/homeToSearch"
             app:destination="@id/search_dest" />
         <action
             android:id="@+id/homeToBottleDetails"
             app:destination="@id/fragmentBottleDetails" />
+        <action
+            android:id="@+id/homeToWineOptions"
+            app:destination="@id/wine_options_dialog" />
     </fragment>
+
+    <dialog
+        android:id="@+id/wine_options_dialog"
+        android:name="com.louis.app.cavity.ui.home.WineOptionsBottomSheet"
+        tools:layout="@layout/bottom_sheet_wine_options">
+        <argument
+            android:name="wineId"
+            app:argType="long" />
+        <argument
+            android:name="wineName"
+            app:argType="string" />
+        <argument
+            android:name="wineNaming"
+            app:argType="string" />
+        <argument
+            android:name="isOrganic"
+            app:argType="boolean" />
+        <argument
+            android:name="color"
+            app:argType="integer" />
+        <action
+            android:id="@+id/wineOptionsToEditWine"
+            app:destination="@+id/add_wine_dest">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+        </action>
+        <action
+            android:id="@+id/wineOptionsToAddBottle"
+            app:destination="@id/add_bottle_dest">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+        </action>
+    </dialog>
+
 
     <fragment
         android:id="@+id/settings_dest"
@@ -49,7 +90,7 @@
         android:id="@+id/search_dest"
         android:name="com.louis.app.cavity.ui.search.FragmentSearch"
         android:label="FragmentSearch"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/searchToMoreFilters"
             app:destination="@id/more_filters_dest" />
@@ -65,7 +106,7 @@
         android:id="@+id/fragmentBottleDetails"
         android:name="com.louis.app.cavity.ui.bottle.FragmentBottleDetails"
         android:label="FragmentBottleDetails"
-        tools:layout="@layout/fragment_bottle_details" >
+        tools:layout="@layout/fragment_bottle_details">
         <action
             android:id="@+id/bottleDetailsToAddBottle"
             app:destination="@id/add_bottle_dest" />

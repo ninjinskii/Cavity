@@ -17,6 +17,9 @@ interface WineDao {
     @Delete
     fun deleteWine(wine: Wine)
 
+    @Query("DELETE FROM wine WHERE wine_id =:wineId")
+    fun deleteWineById(wineId: Long)
+
     @Query("SELECT * FROM wine")
     fun getAllWines(): LiveData<List<Wine>>
 

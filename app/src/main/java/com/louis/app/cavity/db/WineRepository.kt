@@ -24,6 +24,7 @@ class WineRepository private constructor(app: Application) {
     fun insertWine(wine: Wine) = wineDao.insertWine(wine)
     fun updateWine(wine: Wine) = wineDao.updateWine(wine)
     fun deleteWine(wine: Wine) = wineDao.deleteWine(wine)
+    fun deleteWineById(wineId: Long) = wineDao.deleteWineById(wineId)
 
     fun insertCounty(county: County) = countyDao.insertCounty(county)
 

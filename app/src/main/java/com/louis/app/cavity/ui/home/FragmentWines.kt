@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.util.toBoolean
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
@@ -42,7 +43,15 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         val wineAdapter = WineRecyclerAdapter(colors ?: return, onVintageClick) { wine ->
             activity?.supportFragmentManager?.let {
-                WineOptionsBottomSheet(wine).show(it, getString(R.string.tag_modal_sheet_id))
+                val action = FragmentHomeDirections.homeToWineOptions(
+                    wine.wineId,
+                    wine.name,
+                    wine.naming,
+                    wine.isOrganic.toBoolean(),
+                    wine.color
+                )
+                findNavController().navigate(action)
+//                WineOptionsBottomSheet(wine).show(it, getString(R.string.tag_modal_sheet_id))
             }
         }
 

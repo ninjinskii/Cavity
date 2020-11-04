@@ -44,7 +44,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     private fun setListeners() {
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.homeToAddWine)
+            val action = FragmentHomeDirections.homeToAddWine()
+            findNavController().navigate(action)
         }
     }
 
