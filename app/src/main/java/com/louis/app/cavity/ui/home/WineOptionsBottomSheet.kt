@@ -13,7 +13,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetWineOptionsBinding
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.ui.home.FragmentWines.Companion.WINE_ID
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 

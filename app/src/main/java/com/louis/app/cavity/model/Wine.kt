@@ -9,7 +9,7 @@ import com.louis.app.cavity.ui.home.WineColor
 data class Wine(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "wine_id")
-    var wineId: Long = 0,
+    val wineId: Long = 0,
     val name: String,
     val naming: String,
     val color: Int,

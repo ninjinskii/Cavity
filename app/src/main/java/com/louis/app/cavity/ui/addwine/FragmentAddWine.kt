@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -29,6 +30,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
     private val addWineViewModel: AddWineViewModel by viewModels()
+    private val args: FragmentAddWineArgs by navArgs()
     private var wineImagePath: String? = null
 
     companion object {
@@ -41,11 +43,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         _binding = FragmentAddWineBinding.bind(view)
         snackbarProvider = activity as SnackbarProvider
 
-        arguments?.let {
-//            val wineId = it.getLong(WINE_ID)
-            val wineId = -1L
-            addWineViewModel.startEditMode(wineId)
-        }
+        addWineViewModel.start(args.editedWineId)
 
         inflateChips()
         setListeners()
@@ -156,16 +154,13 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
 
     private fun observe() {
         addWineViewModel.updatedWine.observe(viewLifecycleOwner) {
-            if (it != null) {
-                with(binding) {
-                    naming.setText(it.naming)
-                    name.setText(it.name)
-                    cuvee.setText(it.cuvee)
-                    (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
-                    organicWine.isChecked = it.isOrganic.toBoolean()
-                    wineImagePath = it.imgPath
-                    loadImage(it.imgPath)
-                }
+            with(binding) {
+                naming.setText(it.naming)
+                name.setText(it.name)
+                cuvee.setText(it.cuvee)
+                (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
+                organicWine.isChecked = it.isOrganic.toBoolean()
+                loadImage(it.imgPath)
             }
         }
 
@@ -198,10 +193,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     }
 
     private fun onImageSelected(data: Intent?) {
-        requestMediaPersistentPermission(data)
-        wineImagePath = data?.data.toString()
-        binding.wineMiniImage.setVisible(true)
-        loadImage(wineImagePath)
+        if (data != null) {
+            requestMediaPersistentPermission(data)
+            addWineViewModel.setImage(data.data.toString())
+            loadImage(wineImagePath)
+            binding.wineMiniImage.setVisible(true)
+        } else {
+            snackbarProvider.onShowSnackbarRequested(R.string.base_error)
+        }
     }
 
     private fun loadImage(uri: String?) {
