@@ -15,18 +15,20 @@
             app:destination="@id/settings_dest" />
         <action
             android:id="@+id/homeToAddWine"
-            app:destination="@id/add_wine_dest">
-            <argument
-                android:name="editedWineId"
-                android:defaultValue="-1L"
-                app:argType="long" />
-        </action>
+            app:destination="@id/add_wine_dest" />
         <action
             android:id="@+id/homeToSearch"
             app:destination="@id/search_dest" />
         <action
             android:id="@+id/homeToBottleDetails"
-            app:destination="@id/fragmentBottleDetails" />
+            app:destination="@id/fragmentBottleDetails">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
         <action
             android:id="@+id/homeToWineOptions"
             app:destination="@id/wine_options_dialog" />
@@ -84,7 +86,15 @@
         android:id="@+id/add_bottle_dest"
         android:name="com.louis.app.cavity.ui.addbottle.FragmentAddBottle"
         android:label="FragmentAddBottle"
-        tools:layout="@layout/fragment_inquire_dates" />
+        tools:layout="@layout/fragment_inquire_dates">
+        <argument
+            android:name="wineId"
+            app:argType="long" />
+        <argument
+            android:name="editedBottleId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+    </fragment>
 
     <fragment
         android:id="@+id/search_dest"

@@ -19,7 +19,6 @@ import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.ui.SnackbarProvider
-import com.louis.app.cavity.ui.home.FragmentWines.Companion.WINE_ID
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -43,7 +42,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         snackbarProvider = activity as SnackbarProvider
 
         arguments?.let {
-            val wineId = it.getLong(WINE_ID)
+//            val wineId = it.getLong(WINE_ID)
+            val wineId = -1L
             addWineViewModel.startEditMode(wineId)
         }
 

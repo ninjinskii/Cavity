@@ -39,11 +39,10 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    fun start(bottleWineId: Long, editedBottleId: Long?) {
-        L.v("bottleWineIdFirt: $bottleWineId")
+    fun start(bottleWineId: Long, editedBottleId: Long) {
         wineId = bottleWineId
 
-        if (editedBottleId != null)
+        if (editedBottleId != -1L)
             triggerEditMode(editedBottleId)
         else
             _updatedBottle.postValue(null)

@@ -6,12 +6,12 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
-import com.louis.app.cavity.ui.home.FragmentWines.Companion.WINE_ID
 import com.louis.app.cavity.util.L
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
@@ -19,6 +19,7 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     private var _binding: FragmentAddBottleBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
+    private val args: FragmentAddBottleArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -26,23 +27,22 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
 
         snackbarProvider = activity as SnackbarProvider
 
-        if (arguments?.getLong(WINE_ID) == null) {
-            snackbarProvider.onShowSnackbarRequested(R.string.base_error)
-            findNavController().popBackStack()
-            return
-        }
+        // editedBottleId is equal to -1 if user is not editing a bottle, but adding a new one
+        addBottleViewModel.start(args.wineId, args.editedBottleId)
 
-        arguments?.let {
-            L.v("Start viewModel")
-            addBottleViewModel.start(it.getLong(WINE_ID), it.getLong(EDIT_BOTTLE_ID))
-        }
+        initStepper()
+        setupCustomBackNav()
+    }
 
+    private fun initStepper() {
         val stepperFragment = childFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
 
         binding.viewPager
             .apply { adapter = AddBottlesPagerAdapter(this@FragmentAddBottle) }
             .also { stepperFragment.setupWithViewPager(it) }
+    }
 
+    private fun setupCustomBackNav() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (binding.viewPager.currentItem != 0) {
                 binding.viewPager.currentItem = binding.viewPager.currentItem - 1
@@ -56,10 +56,5 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        const val EDIT_BOTTLE_ID =
-            "com.louis.app.cavity.ui.addbottle.FragmentAddBottle.ARG_EDIT_BOTTLE_ID"
     }
 }
