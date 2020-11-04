@@ -39,7 +39,6 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
 
     fun start(wineId: Long) {
         this.wineId = wineId
-        L.v(wineId.toString())
 
         if (wineId != -1L) {
             viewModelScope.launch(IO) {
@@ -57,7 +56,6 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         isOrganic: Int,
         color: Int,
         county: County,
-        imagePath: String?
     ) {
         if (name.isBlank() || naming.isBlank()) {
             _userFeedback.postOnce(R.string.empty_name_or_naming)
@@ -79,7 +77,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
             cuvee,
             county.countyId,
             isOrganic,
-            imagePath.orEmpty()
+            image
         )
 
         viewModelScope.launch(IO) {

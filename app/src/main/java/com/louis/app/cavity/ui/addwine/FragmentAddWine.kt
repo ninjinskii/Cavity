@@ -95,8 +95,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
                     cuvee,
                     isOrganic,
                     color,
-                    county,
-                    wineImagePath
+                    county
                 )
             }
         }
@@ -129,7 +128,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
 
         binding.buttonRemoveWineImage.setOnClickListener {
             toggleImageViews(false)
-            wineImagePath = null
+            addWineViewModel.setImage("")
         }
     }
 
@@ -194,9 +193,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
 
     private fun onImageSelected(data: Intent?) {
         if (data != null) {
+            val imagePath = data.data.toString()
             requestMediaPersistentPermission(data)
-            addWineViewModel.setImage(data.data.toString())
-            loadImage(wineImagePath)
+            addWineViewModel.setImage(imagePath)
+            loadImage(imagePath)
             binding.wineMiniImage.setVisible(true)
         } else {
             snackbarProvider.onShowSnackbarRequested(R.string.base_error)
