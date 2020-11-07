@@ -14,9 +14,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.County
+import org.xml.sax.helpers.AttributesImpl
 import kotlin.math.pow
 
-class CountyScrollableTab : RecyclerView {
+class CountyScrollableTab @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    private val defStyleAttr: Int = 0
+) : RecyclerView(context, attrs, defStyleAttr) {
+
     private val tabAdapter by lazy { TabAdapter(style = tabTextStyle) }
     private var selectedColor = Color.WHITE
     private var unSelectedColor = Color.GRAY
@@ -27,25 +33,8 @@ class CountyScrollableTab : RecyclerView {
     private var listener: ((position: Int) -> Unit)? = null
     private var pageChangeListener: ((position: Int) -> Unit)? = null
 
-    constructor(
-        context: Context,
-        attrs: AttributeSet?
-    ) : super(context, attrs) {
-        init(attrs)
-    }
-
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyle: Int
-    ) : super(context, attrs, defStyle) {
-        init(attrs)
-    }
-
-    // We want to use touch listener as an indicator that the recyclerview might be scrolled
-    @SuppressLint("ClickableViewAccessibility")
-    private fun init(set: AttributeSet?) {
-        initAttributes(set)
+    init {
+        initAttributes(attrs)
 
         setLayoutManager(layoutManager)
         setHasFixedSize(true)
@@ -55,11 +44,7 @@ class CountyScrollableTab : RecyclerView {
         snapHelper.attachToRecyclerView(this)
 
         createPagerStyle()
-
-        setOnTouchListener { _, _ ->
-            isRVScrolling = true
-            false
-        }
+        swallowTouchEvents()
 
         addOnScrollListener(object : OnScrollListener() {
             override fun onScrolled(
@@ -125,6 +110,15 @@ class CountyScrollableTab : RecyclerView {
         setPadding(padding, 0, padding, 0)
     }
 
+    // We want to use touch listener as an indicator that the recyclerview might be scrolled
+    @SuppressLint("ClickableViewAccessibility")
+    private fun swallowTouchEvents() {
+        setOnTouchListener { _, _ ->
+            isRVScrolling = true
+            false
+        }
+    }
+
     fun addTabs(list: List<County>) {
         tabAdapter.addAll(list)
     }
@@ -183,8 +177,6 @@ class CountyScrollableTab : RecyclerView {
         tabAdapter.onTabClick(null)
         viewPager = null
     }
-
-
 }
 
 data class TabStyle(@StyleRes val tabTextStyle: Int)

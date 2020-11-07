@@ -9,7 +9,7 @@ import com.louis.app.cavity.R
 class RuledTextInputLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
+    defStyleAttr: Int = 0
 ) : TextInputLayout(context, attrs, defStyleAttr) {
 
     private val rules = mutableSetOf<Rule>()
