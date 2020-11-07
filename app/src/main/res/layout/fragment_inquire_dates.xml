@@ -61,7 +61,7 @@
                 app:layout_constraintStart_toEndOf="@id/vintage"
                 app:layout_constraintTop_toBottomOf="@id/apogeeText" />
 
-            <com.louis.app.cavity.ui.RuledTextInputLayout
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/countLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="0dp"
@@ -83,7 +83,7 @@
                     android:nextFocusDown="@id/price"
                     android:text="@string/default_bottle_quantity" />
 
-            </com.louis.app.cavity.ui.RuledTextInputLayout>
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
             <View
                 android:id="@+id/divider"
@@ -101,7 +101,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider" />
 
-            <com.louis.app.cavity.ui.RuledTextInputLayout
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/priceLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="0dp"
@@ -122,7 +122,7 @@
                     android:nextFocusDown="@id/buyLocation"
                     app:errorEnabled="true" />
 
-            </com.louis.app.cavity.ui.RuledTextInputLayout>
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/currencyLayout"

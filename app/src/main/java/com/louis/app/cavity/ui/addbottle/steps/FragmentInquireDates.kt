@@ -6,18 +6,15 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.ui.Rule
+import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.showSnackbar
 import java.util.*
 
 class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {

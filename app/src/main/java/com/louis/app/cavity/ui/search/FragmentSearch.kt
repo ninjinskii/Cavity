@@ -22,6 +22,7 @@ import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -29,7 +30,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
-class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
+class FragmentSearch : Fragment(R.layout.fragment_search) {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
@@ -66,7 +67,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search), CountyLoader {
     private fun initCountyChips() {
         lifecycleScope.launch(IO) {
             val counties = searchViewModel.getAllCountiesNotLive().toSet()
-            loadCounties(
+            CountyLoader().loadCounties(
                 lifecycleScope,
                 layoutInflater,
                 binding.countyChipGroup,

@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui
+package com.louis.app.cavity.ui.widget
 
 import android.content.Context
 import android.util.AttributeSet

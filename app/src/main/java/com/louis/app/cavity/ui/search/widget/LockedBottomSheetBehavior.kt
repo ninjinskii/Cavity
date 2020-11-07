@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.search
+package com.louis.app.cavity.ui.search.widget
 
 import android.content.Context
 import android.util.AttributeSet

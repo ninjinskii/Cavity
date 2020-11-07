@@ -25,7 +25,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
+class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
@@ -60,7 +60,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
             val toInflate = allCounties - alreadyInflated
             alreadyInflated.addAll(toInflate)
 
-            loadCounties(
+            CountyLoader().loadCounties(
                 lifecycleScope,
                 layoutInflater,
                 binding.countyChipGroup,

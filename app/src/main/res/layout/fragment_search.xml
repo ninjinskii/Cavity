@@ -26,7 +26,7 @@
             app:titleTextColor="?attr/colorOnPrimary" />
 
         <!-- TODO: check if padding is correct on tablet. -->
-        <com.louis.app.cavity.ui.search.AnimatedImageButton
+        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
             android:id="@+id/toggleBackdrop"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="0dp"
@@ -39,7 +39,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:otherAvd="@drawable/anim_filter_close" />
 
-        <com.louis.app.cavity.ui.search.AnimatedImageButton
+        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
             android:id="@+id/searchButton"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="0dp"
@@ -276,7 +276,7 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:focusable="true"
-            app:layout_behavior=".ui.search.LockedBottomSheetBehavior"
+            app:layout_behavior=".ui.search.widget.LockedBottomSheetBehavior"
             app:layout_insetEdge="bottom">
 
             <!-- Nested layout for bottom sheet header -->

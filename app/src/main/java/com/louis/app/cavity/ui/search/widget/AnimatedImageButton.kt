@@ -1,28 +1,12 @@
-package com.louis.app.cavity.ui.search
+package com.louis.app.cavity.ui.search.widget
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.drawable.Animatable
-import android.graphics.drawable.Animatable2
 import android.graphics.drawable.AnimatedVectorDrawable
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.view.MotionEvent
-import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import androidx.annotation.DrawableRes
-import androidx.annotation.IdRes
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.res.getDrawableOrThrow
-import androidx.core.content.res.getResourceIdOrThrow
 import com.louis.app.cavity.R
-import com.louis.app.cavity.util.L
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.security.InvalidParameterException
 
 class AnimatedImageButton @JvmOverloads constructor(
     context: Context,
