@@ -16,7 +16,7 @@ class GrapeRecyclerAdapter(
 ) :
     ListAdapter<Grape, GrapeRecyclerAdapter.GrapeViewHolder>(GrapeItemDiffCallback()) {
 
-    val maxGrapeQty = 100
+    private val maxGrapeQty = 100
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GrapeViewHolder {
         val binding = ItemGrapeBinding.inflate(LayoutInflater.from(parent.context), parent, false)

@@ -10,4 +10,13 @@
         <attr name="initialAvd" format="reference" />
         <attr name="otherAvd" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="RuledTextInputLayout">
+        <attr name="rule" format="enum">
+            <enum name="absent" value="0" />
+            <enum name="required" value="1" />
+            <enum name="integer" value="2" />
+            <enum name="floatz" value="3" />
+        </attr>
+    </declare-styleable>
 </resources>

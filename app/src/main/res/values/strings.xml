@@ -26,7 +26,9 @@
     <string name="falsy_price">Le prix ne peut pas contenir de caractères.</string>
     <string name="rate_out_of_bounds">La note n\'est pas correcte.</string>
     <string name="reserved_name">Nom réservé.</string>
-    <string name="falsy_count">Veuilez choisir un nombre entier supérieur à 0</string>
+    <string name="falsy_number">Chiffres uniquement.</string>
+    <string name="no_float">Nombre entier seulement.</string>
+    <string name="no_negative">Veuilez choisir un nombre entier supérieur à 0</string>
 
     <!-- App -->
     <string name="app_name">Cavity</string>

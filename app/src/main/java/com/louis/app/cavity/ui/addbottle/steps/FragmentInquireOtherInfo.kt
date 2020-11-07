@@ -22,7 +22,6 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     private val binding get() = _binding!!
     private lateinit var stepperFragment: FragmentStepper
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
-    private var bottlePdfPath: String? = null
 
     companion object {
         const val PICK_PDF_RESULT_CODE = 2
@@ -50,8 +49,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
                 with(binding) {
                     addBottleViewModel.saveBottle(
                         otherInfo.text.toString(),
-                        addToFavorite.isChecked,
-                        bottlePdfPath ?: ""
+                        addToFavorite.isChecked
                     )
                 }
 
@@ -62,7 +60,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
     private fun setListeners() {
         binding.buttonAddPdf.setOnClickListener {
-            if (bottlePdfPath == null) {
+            if (addBottleViewModel.hasPdf) {
                 val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                 fileChooseIntent.apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
@@ -94,7 +92,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         with(binding) {
             otherInfo.setText(editedBottle.otherInfo)
             addToFavorite.isChecked = editedBottle.isFavorite.toBoolean()
-            bottlePdfPath = editedBottle.pdfPath
+            addBottleViewModel.setPdfPath(editedBottle.pdfPath)
         }
     }
 
@@ -113,16 +111,22 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     }
 
     private fun onPdfRemoved() {
-        bottlePdfPath = null
+        addBottleViewModel.setPdfPath("")
         binding.buttonAddPdf.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pdf)
         binding.buttonAddPdf.text = resources.getString(R.string.add_pdf)
     }
 
-    private fun onPdfSelected(data: Intent?) {
-        requestMediaPersistentPermission(data)
-        bottlePdfPath = data?.data.toString()
-        binding.buttonAddPdf.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
-        binding.buttonAddPdf.text = resources.getString(R.string.remove_pdf)
+    private fun onPdfSelected(intent: Intent?) {
+        requestMediaPersistentPermission(intent)
+
+        if (intent != null) {
+            addBottleViewModel.setPdfPath(intent.data.toString())
+            binding.buttonAddPdf.icon =
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
+            binding.buttonAddPdf.text = resources.getString(R.string.remove_pdf)
+        } else {
+            binding.coordinator.showSnackbar(R.string.base_error)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

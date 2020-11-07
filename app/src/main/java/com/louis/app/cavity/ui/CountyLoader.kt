@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// TODO: interface -> object or class
 interface CountyLoader {
     fun loadCounties(
         scope: CoroutineScope,

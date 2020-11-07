@@ -31,12 +31,21 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
 
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
+            // Remove coroutine
             lifecycleScope.launch(Main) {
                 with(binding) {
                     tab.addTabs(it)
                     viewPager.adapter = WinesPagerAdapter(this@FragmentHome, it)
-                    viewPager.offscreenPageLimit = 1 // was 5
+                    viewPager.offscreenPageLimit = 1
                     tab.setUpWithViewPager(viewPager)
+
+                    // Here it seems possible to delay the coroutine a couple of seconds
+                    // and then set a higher offscreenPageLimit
+                    // This doesnt feel great, but does not create a memory overhead also.
+                    /* tab.setUpWithViewPager(viewPager)
+                    delay(2000)
+                    viewPager.offscreenPageLimit = 10 // was 5
+                    tab.setUpWithViewPager(viewPager) */
                 }
             }
         }

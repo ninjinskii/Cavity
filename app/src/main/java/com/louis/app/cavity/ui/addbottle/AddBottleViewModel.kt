@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.addbottle
 
 import android.app.Application
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,11 +17,6 @@ import kotlinx.coroutines.launch
 class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
-    private var wineId: Long? = null
-    private var partialBottle: PartialBottle? = null
-    private val isEditMode: Boolean
-        get() = _updatedBottle.value != null
-
     private val _expertAdvices = MutableLiveData<MutableList<ExpertAdvice>>()
     val expertAdvices: LiveData<MutableList<ExpertAdvice>>
         get() = _expertAdvices
@@ -38,6 +32,15 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
+
+    private var wineId: Long? = null
+    private var partialBottle: PartialBottle? = null
+    private var buyDateTimestamp = -1L
+    private var pdfPath: String = ""
+    private val isEditMode: Boolean
+        get() = _updatedBottle.value != null
+    val hasPdf: Boolean
+        get() = pdfPath.isNotBlank()
 
     fun start(bottleWineId: Long, editedBottleId: Long) {
         wineId = bottleWineId
@@ -62,7 +65,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun removeGrape(grape: Grape) {
-        // Deleted grape might already be in database, need to remove it
+        // Deleted grape might already be in database, we need to remove it
         if (isEditMode) viewModelScope.launch(IO) {
             repository.deleteGrape(grape)
         }
@@ -129,28 +132,21 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         return contestName in advicesName
     }
 
-    fun validateBottle(count: String, price: String): Boolean {
-        if (count.isEmpty() || !count.isDigitsOnly() || count.toInt() <= 0) {
-            _userFeedback.postOnce(R.string.zero_bottle)
-            return false
-        }
+    fun setTimestamp(timestamp: Long) {
+        buyDateTimestamp = timestamp
+    }
 
-        if (!price.isDigitsOnly()) {
-            _userFeedback.postOnce(R.string.falsy_price)
-            return false
-        }
-
-        return true
+    fun setPdfPath(path: String) {
+        pdfPath = path
     }
 
     fun setPartialBottle(
         vintage: Int,
         apogee: Int,
-        count: String,
-        price: String,
+        count: Int,
+        price: Float,
         currency: String,
-        location: String,
-        date: Long
+        location: String
     ) {
         val editBottleId = _updatedBottle.value?.bottleId
 
@@ -163,24 +159,22 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 price,
                 currency,
                 location,
-                date
+                buyDateTimestamp
             )
     }
 
-    fun saveBottle(otherInfo: String, addToFavorite: Boolean, pdfPath: String) {
+    fun saveBottle(otherInfo: String, addToFavorite: Boolean) {
         if (wineId == null) _userFeedback.postOnce(R.string.base_error)
 
         partialBottle?.let {
-            val formattedPrice = if (it.price.isEmpty()) -1 else it.price.toInt()
-
             val bottle = Bottle(
                 it.bottleId,
                 wineId!!,
                 it.vintage,
                 it.apogee,
                 addToFavorite.toInt(),
-                it.count.toInt(),
-                formattedPrice,
+                it.count,
+                it.price,
                 it.currency,
                 otherInfo,
                 it.location,
@@ -248,8 +242,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         val bottleId: Long,
         val vintage: Int,
         val apogee: Int,
-        val count: String,
-        val price: String,
+        val count: Int,
+        val price: Float,
         val currency: String,
         val location: String,
         val date: Long

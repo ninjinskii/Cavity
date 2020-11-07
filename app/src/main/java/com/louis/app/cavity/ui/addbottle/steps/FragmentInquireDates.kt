@@ -26,7 +26,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private lateinit var datePicker: MaterialDatePicker<Long>
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private var isDatePickerDisplayed = false
-    private var buyDateTimestamp = -1L
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,7 +42,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         stepperFragment = parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
-            override fun onRequestChangePage() = validateFields()
+            override fun onRequestChangePage() = binding.count.text.toString().isNotBlank()
 
             override fun onPageRequestAccepted() = savePartialBottle()
         })
@@ -79,7 +78,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
 
         binding.buyDateLayout.setEndIconOnClickListener {
             binding.buyDate.setText("")
-            buyDateTimestamp = -1L
+            addBottleViewModel.setTimestamp(-1L)
         }
 
         binding.buyDate.apply {
@@ -95,7 +94,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             }
 
             datePicker.addOnPositiveButtonClickListener {
-                buyDateTimestamp = datePicker.selection ?: -1L
+                addBottleViewModel.setTimestamp(datePicker.selection ?: -1L)
                 setText(datePicker.headerText.toString())
             }
 
@@ -147,19 +146,11 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         }
     }
 
-    private fun validateFields(): Boolean {
-        with(binding) {
-            val count = count.text.toString().trim()
-            val price = price.text.toString().trim()
-
-            return addBottleViewModel.validateBottle(count, price)
-        }
-    }
-
     private fun savePartialBottle() {
         with(binding) {
-            val count = count.text.toString().trim()
+            val count = count.text.toString().trim().toInt()
             val price = price.text.toString().trim()
+            val formattedPrice = if (price.isEmpty()) -1F else price.toFloat()
             val currency = currency.text.toString()
             val location = buyLocation.text.toString().trim()
 
@@ -167,10 +158,9 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 vintage.value,
                 apogee.value,
                 count,
-                price,
+                formattedPrice,
                 currency,
                 location,
-                this@FragmentInquireDates.buyDateTimestamp
             )
         }
     }
