@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
+import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.Event
@@ -17,7 +18,7 @@ import com.louis.app.cavity.util.showSnackbar
 // TODO: use material dialogs instead of text fields, same for expert advices
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
-    private lateinit var feedBackObserver: Observer<Event<Int>>
+    private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
     private var totalGrapePercentage: Int? = null
@@ -26,6 +27,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireGrapesBinding.bind(view)
+
+        snackbarProvider = parentFragment as SnackbarProvider
 
         registerStepperWatcher()
         initRecyclerView()
@@ -39,6 +42,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
             override fun onRequestChangePage() = validateGrapes()
+
             override fun onPageRequestAccepted() {
             }
         })
@@ -66,13 +70,11 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     }
 
     private fun observe() {
-        feedBackObserver = Observer {
+        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
+                snackbarProvider.onShowSnackbarRequested(stringRes)
             }
         }
-
-        addBottleViewModel.userFeedback.observe(viewLifecycleOwner, feedBackObserver)
     }
 
     private fun setListeners() {
@@ -119,11 +121,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         } else {
             true
         }
-    }
-
-    override fun onPause() {
-        addBottleViewModel.userFeedback.removeObserver(feedBackObserver)
-        super.onPause()
     }
 
     override fun onDestroyView() {

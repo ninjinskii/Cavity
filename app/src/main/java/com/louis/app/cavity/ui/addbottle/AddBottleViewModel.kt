@@ -109,15 +109,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         advice?.let { adv -> _expertAdvices += adv }
     }
 
-    private fun checkRateInBounds(rate: Int, max: Int): Boolean {
-        return if (rate in 0..max) {
-            true
-        } else {
-            _userFeedback.postOnce(R.string.rate_out_of_bounds)
-            false
-        }
-    }
-
     fun removeExpertAdvice(advice: ExpertAdvice) {
         // Deleted expert advice might already be in database, need to remove it
         if (isEditMode) viewModelScope.launch(IO) {
@@ -127,10 +118,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         _expertAdvices -= advice
     }
 
-    private fun alreadyContainsAdvice(contestName: String): Boolean {
-        val advicesName = _expertAdvices.value?.map { it.contestName } ?: return false
-        return contestName in advicesName
-    }
 
     fun setTimestamp(timestamp: Long) {
         buyDateTimestamp = timestamp
@@ -236,6 +223,20 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             val expertAdviceForBottle = repository.getExpertAdvicesForBottleNotLive(bottleId)
             _expertAdvices.postValue(expertAdviceForBottle as MutableList<ExpertAdvice>)
         }
+    }
+
+    private fun checkRateInBounds(rate: Int, max: Int): Boolean {
+        return if (rate in 0..max) {
+            true
+        } else {
+            _userFeedback.postOnce(R.string.rate_out_of_bounds)
+            false
+        }
+    }
+
+    private fun alreadyContainsAdvice(contestName: String): Boolean {
+        val advicesName = _expertAdvices.value?.map { it.contestName } ?: return false
+        return contestName in advicesName
     }
 
     data class PartialBottle(

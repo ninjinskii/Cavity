@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireExpertAdviceBinding
+import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.*
@@ -19,12 +20,14 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
     private var _binding: FragmentInquireExpertAdviceBinding? = null
     private val binding get() = _binding!!
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private lateinit var feedBackObserver: Observer<Event<Int>>
+    private lateinit var snackbarProvider: SnackbarProvider
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireExpertAdviceBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+
+        snackbarProvider = parentFragment as SnackbarProvider
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             isHideable = false
@@ -42,6 +45,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
             override fun onRequestChangePage() = true
+
             override fun onPageRequestAccepted() {
             }
         })
@@ -71,13 +75,11 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
     }
 
     private fun observe() {
-        feedBackObserver = Observer {
+        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes, null, binding.bottomSheet)
+                snackbarProvider.onShowSnackbarRequested(stringRes)
             }
         }
-
-        addBottleViewModel.userFeedback.observe(viewLifecycleOwner, feedBackObserver)
     }
 
     private fun setListeners() {
@@ -195,11 +197,6 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             addBottleViewModel.addExpertAdvice(constestName, type)
             contestName.setText("")
         }
-    }
-
-    override fun onPause() {
-        addBottleViewModel.userFeedback.removeObserver(feedBackObserver)
-        super.onPause()
     }
 
     override fun onDestroyView() {

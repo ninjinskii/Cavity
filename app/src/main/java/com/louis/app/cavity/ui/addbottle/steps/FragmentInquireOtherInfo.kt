@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.showSnackbar
@@ -21,6 +22,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     private var _binding: FragmentInquireOtherInfoBinding? = null
     private val binding get() = _binding!!
     private lateinit var stepperFragment: FragmentStepper
+    private lateinit var snackbarProvider: SnackbarProvider
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     companion object {
@@ -30,6 +32,8 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireOtherInfoBinding.bind(view)
+
+        snackbarProvider = parentFragment as SnackbarProvider
 
         registerStepperWatcher()
         setListeners()
@@ -83,6 +87,12 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     }
 
     private fun observe() {
+        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                snackbarProvider.onShowSnackbarRequested(stringRes)
+            }
+        }
+
         addBottleViewModel.updatedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
         }

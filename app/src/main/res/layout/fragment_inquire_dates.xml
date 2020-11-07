@@ -61,11 +61,13 @@
                 app:layout_constraintStart_toEndOf="@id/vintage"
                 app:layout_constraintTop_toBottomOf="@id/apogeeText" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.louis.app.cavity.ui.RuledTextInputLayout
                 android:id="@+id/countLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toBottomOf="@+id/vintage"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/apogee"
@@ -76,11 +78,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/count"
-                    android:text="@string/default_bottle_quantity"
                     android:inputType="number"
-                    android:nextFocusDown="@id/price" />
+                    android:maxLength="5"
+                    android:nextFocusDown="@id/price"
+                    android:text="@string/default_bottle_quantity" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </com.louis.app.cavity.ui.RuledTextInputLayout>
 
             <View
                 android:id="@+id/divider"
@@ -98,8 +101,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.louis.app.cavity.ui.RuledTextInputLayout
                 android:id="@+id/priceLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -113,10 +117,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/price"
-                    android:inputType="number"
-                    android:nextFocusDown="@id/buyLocation" />
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"
+                    android:nextFocusDown="@id/buyLocation"
+                    app:errorEnabled="true" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </com.louis.app.cavity.ui.RuledTextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/currencyLayout"

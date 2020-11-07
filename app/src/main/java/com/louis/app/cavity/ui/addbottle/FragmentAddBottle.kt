@@ -13,8 +13,9 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.showSnackbar
 
-class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
+class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), SnackbarProvider {
     private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentAddBottleBinding? = null
     private val binding get() = _binding!!
@@ -51,6 +52,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
                 requireActivity().onBackPressed()
             }
         }
+    }
+
+    override fun onShowSnackbarRequested(stringRes: Int) {
+        binding.coordinator.showSnackbar(stringRes)
     }
 
     override fun onDestroyView() {

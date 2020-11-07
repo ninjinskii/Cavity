@@ -11,6 +11,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.ui.Rule
+import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.DateFormatter
@@ -22,8 +24,8 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private var _binding: FragmentInquireDatesBinding? = null
     private val binding get() = _binding!!
     private lateinit var stepperFragment: FragmentStepper
-    private lateinit var feedBackObserver: Observer<Event<Int>>
     private lateinit var datePicker: MaterialDatePicker<Long>
+    private lateinit var snackbarProvider: SnackbarProvider
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private var isDatePickerDisplayed = false
 
@@ -31,10 +33,13 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireDatesBinding.bind(view)
 
+        snackbarProvider = parentFragment as SnackbarProvider
+
         registerStepperWatcher()
         initNumberPickers()
         initCurrencyDropdown()
         setListeners()
+        setRules()
         observe()
     }
 
@@ -42,7 +47,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         stepperFragment = parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
-            override fun onRequestChangePage() = binding.count.text.toString().isNotBlank()
+            override fun onRequestChangePage() = validateFields()
 
             override fun onPageRequestAccepted() = savePartialBottle()
         })
@@ -120,14 +125,19 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         }
     }
 
+    private fun setRules() {
+        val noNegative = Rule(R.string.no_negative) { input -> input.toFloat() > 0 }
+
+        binding.countLayout.addRules(noNegative)
+        binding.priceLayout.addRules(noNegative)
+    }
+
     private fun observe() {
-        feedBackObserver = Observer {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
+        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { strigRes ->
+                snackbarProvider.onShowSnackbarRequested(strigRes)
             }
         }
-
-        addBottleViewModel.userFeedback.observe(viewLifecycleOwner, feedBackObserver)
 
         addBottleViewModel.updatedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
@@ -146,6 +156,10 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         }
     }
 
+    private fun validateFields() =
+        binding.countLayout.validate(required = true) &&
+                binding.priceLayout.validate(required = false)
+
     private fun savePartialBottle() {
         with(binding) {
             val count = count.text.toString().trim().toInt()
@@ -163,11 +177,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
                 location,
             )
         }
-    }
-
-    override fun onPause() {
-        addBottleViewModel.userFeedback.removeObserver(feedBackObserver)
-        super.onPause()
     }
 
     override fun onDestroyView() {

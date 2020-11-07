@@ -27,8 +27,8 @@
     <string name="rate_out_of_bounds">La note n\'est pas correcte.</string>
     <string name="reserved_name">Nom réservé.</string>
     <string name="falsy_number">Chiffres uniquement.</string>
-    <string name="no_float">Nombre entier seulement.</string>
-    <string name="no_negative">Veuilez choisir un nombre entier supérieur à 0</string>
+    <string name="no_negative">Entrez un nombre supérieur à 0.</string>
+    <string name="too_much">Ça fait vraiment beaucoup là.</string>
 
     <!-- App -->
     <string name="app_name">Cavity</string>
