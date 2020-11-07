@@ -19,7 +19,7 @@ class CountyLoader {
         layoutInflater: LayoutInflater,
         chipGroup: ChipGroup,
         counties: Set<County>,
-        editWine: Wine? = null,
+        preselect: Long? = null,
         selectionRequired: Boolean = true,
         onCheckedChangeListener: ((btn: CompoundButton, isChecked: Boolean) -> Unit)? = null
     ) {
@@ -41,7 +41,7 @@ class CountyLoader {
                     chipGroup.addView(chip)
                     if (index == 0 && selectionRequired) chip.isChecked = true
 
-                    if (editWine != null && county.countyId == editWine.countyId) {
+                    if (preselect != null && county.countyId == preselect) {
                         chip.isChecked = true
                     }
                 }

@@ -45,6 +45,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             activity?.supportFragmentManager?.let {
                 val action = FragmentHomeDirections.homeToWineOptions(
                     wine.wineId,
+                    wine.countyId,
                     wine.name,
                     wine.naming,
                     wine.isOrganic.toBoolean(),

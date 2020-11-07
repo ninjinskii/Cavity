@@ -54,13 +54,18 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
                 dismiss()
 
                 val action = WineOptionsBottomSheetDirections.wineOptionsToAddBottle(args.wineId)
+
                 findNavController().navigate(action)
             }
 
             binding.editWine.setOnClickListener {
                 dismiss()
 
-                val action = WineOptionsBottomSheetDirections.wineOptionsToEditWine(args.wineId)
+                val action = WineOptionsBottomSheetDirections.wineOptionsToEditWine(
+                    args.wineId,
+                    args.countyId
+                )
+
                 findNavController().navigate(action)
             }
 

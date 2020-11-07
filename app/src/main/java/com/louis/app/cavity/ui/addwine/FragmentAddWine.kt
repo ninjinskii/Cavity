@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -65,6 +66,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 layoutInflater,
                 binding.countyChipGroup,
                 toInflate,
+                args.countyId
             )
         }
     }
@@ -171,7 +173,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
         addWineViewModel.userFeedback.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
+                snackbarProvider.onShowSnackbarRequested(stringRes)
             }
         }
     }
