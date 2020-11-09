@@ -6,14 +6,22 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.DialogAddCountyGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.showKeyboard
 import com.louis.app.cavity.util.showSnackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 // TODO: use material dialogs instead of text fields, same for expert advices
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
@@ -32,8 +40,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
         registerStepperWatcher()
         initRecyclerView()
+        setListener()
         observe()
-        setListeners()
     }
 
     private fun registerStepperWatcher() {
@@ -51,8 +59,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
     private fun initRecyclerView() {
         grapeAdapter = GrapeRecyclerAdapter(
-            { addBottleViewModel.removeGrape(it) },
-            { addBottleViewModel.updateGrape(it) }
+            onDeleteListener = { addBottleViewModel.removeGrape(it) },
+            onValueChangeListener = { addBottleViewModel.updateGrape(it) }
         )
 
         binding.recyclerView.apply {
@@ -68,34 +76,15 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             grapeAdapter.submitList(it.toMutableList())
         }
     }
+    private fun setListener() {
+        binding.buttonAddGrape.setOnClickListener { showDialog() }
+    }
 
     private fun observe() {
         addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
                 snackbarProvider.onShowSnackbarRequested(stringRes)
             }
-        }
-    }
-
-    private fun setListeners() {
-        binding.grapeName.apply {
-            setOnEditorActionListener { textView, i, _ ->
-                val query = textView.text.toString()
-
-                if (i == EditorInfo.IME_ACTION_DONE && query.isNotEmpty()) {
-                    val grapeName = binding.grapeName.text.toString()
-                    addGrape(grapeName)
-                    textView.text = ""
-                }
-
-                true
-            }
-        }
-
-        binding.buttonAddGrape.setOnClickListener {
-            val grapeName = binding.grapeName.text.toString()
-            addGrape(grapeName)
-            binding.grapeName.setText("")
         }
     }
 
@@ -120,6 +109,25 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             false
         } else {
             true
+        }
+    }
+
+    private fun showDialog() {
+        val dialogBinding = DialogAddCountyGrapeBinding.inflate(layoutInflater)
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.add_grapes)
+            .setNegativeButton(R.string.cancel) { _, _ ->
+            }
+            .setPositiveButton(R.string.submit) { _, _ ->
+                addGrape(dialogBinding.countyName.text.toString())
+            }
+            .setView(dialogBinding.root)
+            .show()
+
+        lifecycleScope.launch(Main) {
+            delay(300)
+            dialogBinding.countyName.showKeyboard()
         }
     }
 

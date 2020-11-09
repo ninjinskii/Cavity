@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/searchBar"
-        android:actionLayout="@layout/dialog_add_county"
+        android:actionLayout="@layout/dialog_add_county_grape"
         android:icon="@drawable/ic_search"
         android:title="@string/search_wine_hint"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
