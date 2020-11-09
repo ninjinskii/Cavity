@@ -13,6 +13,7 @@ import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showKeyboard
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -62,7 +63,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             adapter = grapeAdapter
         }
 
-        addBottleViewModel.grapeManager.grapes.observe(viewLifecycleOwner) {
+        addBottleViewModel.grapes.observe(viewLifecycleOwner) {
+            L.v(it.toString())
             // Using toMutableList() to change the list reference, otherwise our call submitList will be ignored
             grapeAdapter.submitList(it.toMutableList())
         }

@@ -37,6 +37,9 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val hasPdf: Boolean
         get() = pdfPath.isNotBlank()
 
+    val grapes: LiveData<MutableList<Grape>>
+        get() = grapeManager.grapes.liveData
+
     fun start(bottleWineId: Long, editedBottleId: Long) {
         wineId = bottleWineId
 
@@ -111,7 +114,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                     repository.insertAdvice(advice)
                 }
 
-                grapeManager.grapes.value?.forEach { grape ->
+                grapeManager.grapes.content.forEach { grape ->
                     grape.bottleId = insertedBottleId
                     repository.insertGrape(grape)
                 }
@@ -145,7 +148,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             _updatedBottle.postValue(editedBottle)
 
             val grapesForBottle = repository.getGrapesForBottleNotLive(bottleId)
-            grapeManager.postValue(grapesForBottle as MutableList<Grape>)
+            grapeManager.postValue(grapesForBottle)
 
             val expertAdviceForBottle = repository.getExpertAdvicesForBottleNotLive(bottleId)
             expertAdviceManager.postValue(expertAdviceForBottle as MutableList<ExpertAdvice>)

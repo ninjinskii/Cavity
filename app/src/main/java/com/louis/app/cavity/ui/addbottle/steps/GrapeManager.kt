@@ -6,8 +6,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.minusAssign
-import com.louis.app.cavity.util.plusAssign
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,12 +16,11 @@ class GrapeManager(
     private val _userFeedback: MutableLiveData<Event<Int>>,
     private val viewModelScope: CoroutineScope
 ) {
-    private val _grapes = MutableLiveData<MutableList<Grape>>()
-    val grapes: LiveData<MutableList<Grape>>
-        get() = _grapes
+
+    val grapes = GrapeList()
 
     private val defaultPercentage: Int
-        get() = if (_grapes.value?.isEmpty() == true) 25 else 0
+        get() = if (grapes.isEmpty()) 25 else 0
 
     fun addGrape(grapeName: String) {
         if (grapeName.isEmpty()) {
@@ -31,17 +28,17 @@ class GrapeManager(
             return
         }
 
-        // bottleId will be replaced in saveBottle if we're in editeMode
+        // bottleId will be replaced in saveBottle if we're in editMode
         val grape = Grape(0, grapeName, defaultPercentage, -1)
 
-        if (!alreadyContainsGrape(grape.name))
-            _grapes += grape
-        else
+        if (!alreadyContainsGrape(grape.name)) {
+            grapes.add(grape)
+        } else
             _userFeedback.postOnce(R.string.grape_already_exist)
     }
 
     fun updateGrape(grape: Grape) {
-        grapes.value?.first { it.name == grape.name }?.percentage = grape.percentage
+        grapes.updateGrapePercentage(grape)
     }
 
     fun removeGrape(grape: Grape) {
@@ -50,11 +47,11 @@ class GrapeManager(
             repository.deleteGrape(grape)
         }
 
-        _grapes -= grape
+        grapes.remove(grape)
     }
 
     fun validateGrapes(): Boolean {
-        return if (_grapes.value?.any { it.percentage == 0 } == true) {
+        return if (grapes.any { it.percentage == 0 }) {
             _userFeedback.postOnce(R.string.empty_grape_percent)
             false
         } else {
@@ -62,16 +59,17 @@ class GrapeManager(
         }
     }
 
-    fun postValue(value: MutableList<Grape>) {
-        _grapes.postValue(value)
+    fun postValue(value: List<Grape>) {
+        grapes.clear()
+        grapes.addAll(value)
     }
 
     fun reset() {
-        _grapes.postValue(mutableListOf())
+        grapes.clear()
     }
 
     private fun alreadyContainsGrape(grapeName: String): Boolean {
-        val grapeNames = _grapes.value?.map { it.name } ?: return false
+        val grapeNames = grapes.map { it.name }
         return grapeName in grapeNames
     }
 
