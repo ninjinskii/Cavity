@@ -2,10 +2,8 @@ package com.louis.app.cavity.ui.addbottle.steps
 
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -15,21 +13,16 @@ import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
-import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.showKeyboard
-import com.louis.app.cavity.util.showSnackbar
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-// TODO: use material dialogs instead of text fields, same for expert advices
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
     private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
-    private var totalGrapePercentage: Int? = null
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,7 +42,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
 
         stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
-            override fun onRequestChangePage() = validateGrapes()
+            override fun onRequestChangePage() = addBottleViewModel.grapeManager.validateGrapes()
 
             override fun onPageRequestAccepted() {
             }
@@ -59,8 +52,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
     private fun initRecyclerView() {
         grapeAdapter = GrapeRecyclerAdapter(
-            onDeleteListener = { addBottleViewModel.removeGrape(it) },
-            onValueChangeListener = { addBottleViewModel.updateGrape(it) }
+            onDeleteListener = { addBottleViewModel.grapeManager.removeGrape(it) },
+            onValueChangeListener = { addBottleViewModel.grapeManager.updateGrape(it) }
         )
 
         binding.recyclerView.apply {
@@ -69,9 +62,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             adapter = grapeAdapter
         }
 
-        addBottleViewModel.grapes.observe(viewLifecycleOwner) {
-            totalGrapePercentage = it.map { grape -> grape.percentage }.sum()
-
+        addBottleViewModel.grapeManager.grapes.observe(viewLifecycleOwner) {
             // Using toMutableList() to change the list reference, otherwise our call submitList will be ignored
             grapeAdapter.submitList(it.toMutableList())
         }
@@ -89,33 +80,19 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     }
 
     private fun addGrape(grapeName: String) {
-        if (grapeName.isEmpty()) {
-            binding.coordinator.showSnackbar(R.string.empty_grape_name)
-            return
-        }
-
         if (grapeName == resources.getString(R.string.grape_other)) {
-            binding.coordinator.showSnackbar(R.string.reserved_name)
+            snackbarProvider.onShowSnackbarRequested(R.string.reserved_name)
             return
         }
-        val defaultPercentage = if (grapeAdapter.currentList.size >= 1) 0 else 25
 
-        addBottleViewModel.addGrape(grapeName, defaultPercentage)
-    }
-
-    private fun validateGrapes(): Boolean {
-        return if (grapeAdapter.currentList.any { it.percentage == 0 }) {
-            binding.coordinator.showSnackbar(R.string.empty_grape_percent)
-            false
-        } else {
-            true
-        }
+        addBottleViewModel.grapeManager.addGrape(grapeName)
     }
 
     private fun showDialog() {
         val dialogBinding = DialogAddCountyGrapeBinding.inflate(layoutInflater)
 
         MaterialAlertDialogBuilder(requireContext())
+            .setCancelable(false)
             .setTitle(R.string.add_grapes)
             .setNegativeButton(R.string.cancel) { _, _ ->
             }

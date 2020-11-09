@@ -16,6 +16,7 @@ import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.*
 
+// TODO: use material dialogs instead of text fields
 class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_advice) {
     private var _binding: FragmentInquireExpertAdviceBinding? = null
     private val binding get() = _binding!!
@@ -53,7 +54,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
 
     private fun initRecyclerView() {
         val adviceAdapter = ExpertAdviceRecyclerAdapter {
-            addBottleViewModel.removeExpertAdvice(it)
+            addBottleViewModel.expertAdviceManager.removeExpertAdvice(it)
         }
 
         binding.recyclerView.apply {
@@ -62,7 +63,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             adapter = adviceAdapter
         }
 
-        addBottleViewModel.expertAdvices.observe(viewLifecycleOwner) {
+        addBottleViewModel.expertAdviceManager.expertAdvices.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) peekBottomSheet()
             else hideBottomSheet()
 
@@ -194,7 +195,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
                 }
             }
 
-            addBottleViewModel.addExpertAdvice(constestName, type)
+            addBottleViewModel.expertAdviceManager.addExpertAdvice(constestName, type)
             contestName.setText("")
         }
     }
