@@ -8,19 +8,20 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StyleRes
+import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.County
-import org.xml.sax.helpers.AttributesImpl
+import com.louis.app.cavity.util.L
 import kotlin.math.pow
 
 class CountyScrollableTab @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    private val defStyleAttr: Int = 0
+    defStyleAttr: Int = 0
 ) : RecyclerView(context, attrs, defStyleAttr) {
 
     private val tabAdapter by lazy { TabAdapter(style = tabTextStyle) }
@@ -54,12 +55,11 @@ class CountyScrollableTab @JvmOverloads constructor(
             ) {
                 super.onScrolled(recyclerView, dx, dy)
                 post {
-                    (0 until childCount).forEach {
-                        val child = getChildAt(it)
-                        val childCenterX = (child.left + child.right) / 2
+                    children.forEach {
+                        val childCenterX = (it.left + it.right) / 2
                         val scaleValue =
                             getGaussianScale(childCenterX, 1f, 1f, 150.toDouble(), left, right)
-                        colorView(child, scaleValue)
+                        colorView(it, scaleValue)
                     }
                 }
             }
@@ -162,10 +162,7 @@ class CountyScrollableTab @JvmOverloads constructor(
         })
     }
 
-    private fun colorView(
-        child: View,
-        scaleValue: Float
-    ) {
+    private fun colorView(child: View, scaleValue: Float) {
         val percent = (scaleValue - 1) / 1f
         val color = ArgbEvaluator().evaluate(percent, unSelectedColor, selectedColor) as Int
         child.findViewById<TextView>(R.id.county)
