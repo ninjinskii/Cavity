@@ -117,10 +117,11 @@
     <string name="search_wine_hint">Nom du vin, appellation…</string>
     <string name="miscellaneous">Divers</string>
     <string name="ready_to_drink">Prêt à boire</string>
-    <string name="show_before">Antérieur ?</string>
     <string name="show_bottom_sheet">Dérouler le panneau</string>
     <string name="stock">Stock</string>
     <string name="more_filters">Plus de filtres</string>
+    <string name="buying_date_beyond">Achetée après le</string>
+    <string name="buying_date_until">Achetée avant le</string>
     <string name="results">Résultat(s)</string>
     <string name="no_price_no_results">Les bouteilles n\'ayant pas de prix renseigné ne seront pas affichées.</string>
 <!--    <string name="search_wine">Recherche</string>-->

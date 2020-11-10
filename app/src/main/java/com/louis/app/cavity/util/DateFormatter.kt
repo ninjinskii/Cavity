@@ -4,12 +4,16 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object DateFormatter {
-    fun formatDate(timestamp: Long): String {
-        val formatter = SimpleDateFormat("dd MMM yyyy", Locale.FRENCH)
-        val calendar = Calendar.getInstance()
+    fun formatDate(timestamp: Long?): String {
+        return if (timestamp != null) {
+            val formatter = SimpleDateFormat("dd MMM yyyy", Locale.FRENCH)
+            val calendar = Calendar.getInstance()
 
-        calendar.timeInMillis = timestamp
+            calendar.timeInMillis = timestamp
 
-        return formatter.format(calendar.time)
+            formatter.format(calendar.time)
+        } else {
+            ""
+        }
     }
 }

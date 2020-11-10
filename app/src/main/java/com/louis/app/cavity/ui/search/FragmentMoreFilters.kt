@@ -13,10 +13,10 @@ import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentMoreFiltersBinding
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.L
 
 class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
-    private lateinit var datePicker: MaterialDatePicker<Long>
+    private lateinit var beyondDatePicker: MaterialDatePicker<Long>
+    private lateinit var untilDatePicker: MaterialDatePicker<Long>
     private var _binding: FragmentMoreFiltersBinding? = null
     private val binding get() = _binding!!
     private val searchViewModel: SearchViewModel by activityViewModels()
@@ -26,7 +26,7 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentMoreFiltersBinding.bind(view)
 
-        initDatePicker()
+        initDatePickers()
         initSliders()
         initTextSwitcher()
         observe()
@@ -34,29 +34,49 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
         setListeners()
     }
 
-    private fun initDatePicker() {
-        val builder = MaterialDatePicker.Builder.datePicker()
-        builder.setTitleText(R.string.buying_date)
+    private fun initDatePickers() {
+        beyondDatePicker = MaterialDatePicker.Builder.datePicker().apply {
+            setTitleText(R.string.buying_date_beyond)
+        }.build()
 
-        binding.dateLayout.setEndIconOnClickListener {
-            binding.date.setText("")
-            binding.toggleShowBefore.isEnabled = false
-            searchViewModel.setDateFilter(-1, searchBefore = false)
+        untilDatePicker = MaterialDatePicker.Builder.datePicker().apply {
+            setTitleText(R.string.buying_date_until)
+        }.build()
+
+        binding.beyondLayout.setEndIconOnClickListener {
+            binding.beyond.setText("")
+            searchViewModel.setBeyondFilter(null)
         }
 
-        datePicker = builder.build()
+        binding.untilLayout.setEndIconOnClickListener {
+            binding.until.setText("")
+            searchViewModel.setUntilFilter(null)
+        }
 
-        datePicker.apply {
+        beyondDatePicker.apply {
             addOnDismissListener {
-                binding.date.clearFocus()
+                binding.beyond.clearFocus()
                 isDatePickerDisplayed = false
             }
 
             addOnPositiveButtonClickListener {
-                binding.date.setText(DateFormatter.formatDate(selection ?: 0))
-                binding.toggleShowBefore.isEnabled = true
+                binding.beyond.setText(DateFormatter.formatDate(selection ?: 0))
                 selection?.let {
-                    searchViewModel.setDateFilter(it, binding.toggleShowBefore.isChecked)
+                    searchViewModel.setBeyondFilter(it)
+                }
+            }
+        }
+
+        untilDatePicker.apply {
+            addOnDismissListener {
+                binding.until.clearFocus()
+                isDatePickerDisplayed = false
+            }
+
+            addOnPositiveButtonClickListener {
+                binding.until.setText(DateFormatter.formatDate(selection ?: 0))
+                selection?.let {
+                    searchViewModel.setUntilFilter(it)
                 }
             }
         }
@@ -119,18 +139,17 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
                 with(binding) {
                     togglePrice.isChecked = true
                     priceSlider.isEnabled = true
-                    L.v("${it.first}, ${it.second}")
                     priceSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
                 }
             }
 
             date?.let {
-                val dateString = DateFormatter.formatDate(it.first)
+                val beyondString = DateFormatter.formatDate(it.first)
+                val untilString = DateFormatter.formatDate(it.second)
 
                 with(binding) {
-                    date.setText(dateString)
-                    toggleShowBefore.isChecked = it.second
-                    toggleShowBefore.isEnabled = true
+                    beyond.setText(beyondString)
+                    until.setText(untilString)
                 }
             }
 
@@ -141,14 +160,14 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
     }
 
     private fun setListeners() {
-        binding.date.apply {
+        binding.beyond.apply {
             inputType = InputType.TYPE_NULL
 
             setOnClickListener {
                 if (!isDatePickerDisplayed) {
                     isDatePickerDisplayed = true
 
-                    datePicker.show(
+                    beyondDatePicker.show(
                         childFragmentManager,
                         resources.getString(R.string.tag_date_picker)
                     )
@@ -156,9 +175,18 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
             }
         }
 
-        binding.toggleShowBefore.setOnCheckedChangeListener { _, isChecked ->
-            datePicker.selection?.let {
-                searchViewModel.setDateFilter(it, isChecked)
+        binding.until.apply {
+            inputType = InputType.TYPE_NULL
+
+            setOnClickListener {
+                if (!isDatePickerDisplayed) {
+                    isDatePickerDisplayed = true
+
+                    untilDatePicker.show(
+                        childFragmentManager,
+                        resources.getString(R.string.tag_date_picker)
+                    )
+                }
             }
         }
 

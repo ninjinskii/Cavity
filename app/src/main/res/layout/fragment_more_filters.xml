@@ -71,7 +71,7 @@
             app:layout_constraintTop_toBottomOf="@id/divider1" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/dateLayout"
+            android:id="@+id/beyondLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -79,38 +79,50 @@
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginBottom="?attr/actionBarSize"
             app:endIconMode="clear_text"
-            app:layout_constraintEnd_toStartOf="@id/toggleShowBefore"
+            app:layout_constraintEnd_toStartOf="@id/untilLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dateTitle"
-            app:startIconDrawable="@drawable/ic_calendar">
+            app:layout_constraintTop_toBottomOf="@id/dateTitle">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/date"
+                android:id="@+id/beyond"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="false"
-                android:hint="@string/buying_date"
+                android:hint="@string/buying_date_beyond"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/toggleShowBefore"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/untilLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/medium_margin"
-            android:enabled="false"
-            android:text="@string/show_before"
-            app:layout_constraintBottom_toBottomOf="@id/dateLayout"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginBottom="?attr/actionBarSize"
+            app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/dateLayout" />
+            app:layout_constraintStart_toEndOf="@id/beyondLayout"
+            app:layout_constraintTop_toBottomOf="@id/dateTitle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/until"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
+                android:hint="@string/buying_date_until"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <View
             android:id="@+id/divider2"
             style="@style/Widget.Cavity.Divider.Start"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dateLayout" />
+            app:layout_constraintTop_toBottomOf="@id/beyondLayout" />
 
         <TextView
             android:id="@+id/stockTitle"

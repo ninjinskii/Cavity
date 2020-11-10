@@ -131,9 +131,27 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         filter()
     }
 
-    fun setDateFilter(date: Long, searchBefore: Boolean) {
-        state.date = if (date != -1L) date to searchBefore else null
-        dateFilter = if (date != -1L) FilterDate(date, searchBefore) else NoFilter()
+    fun setBeyondFilter(beyond: Long?) {
+        val currentUntilDate = state.date?.second
+        state.date = beyond to currentUntilDate
+        dateFilter =
+            if (beyond == null && currentUntilDate == null)
+                NoFilter()
+            else
+                FilterDate(beyond, currentUntilDate)
+
+        filter()
+    }
+
+    fun setUntilFilter(until: Long?) {
+        val currentBeyondDate = state.date?.first
+        state.date = currentBeyondDate to until
+        dateFilter =
+            if (until == null && currentBeyondDate == null)
+                NoFilter()
+            else
+                FilterDate(currentBeyondDate, until)
+
         filter()
     }
 
@@ -149,7 +167,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         var others: List<Int>? = null,
         var vintage: Pair<Int, Int>? = null,
         var price: Pair<Int, Int>? = null,
-        var date: Pair<Long, Boolean>? = null,
+        var date: Pair<Long?, Long?>? = null,
         var stock: Pair<Int, Int>? = null
     )
 }
