@@ -100,8 +100,9 @@
                 app:layout_constraintTop_toBottomOf="@id/divider1" />
 
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/namingLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -116,10 +117,11 @@
                     android:hint="@string/naming"
                     android:inputType="textCapSentences" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/nameLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -133,7 +135,7 @@
                     android:hint="@string/name"
                     android:inputType="textCapSentences" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
             <View
                 android:id="@+id/divider2"
@@ -307,11 +309,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="100dp"
                 android:text="@string/take_photo"
-                app:layout_constraintVertical_bias="0.0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/buttonTakePhoto"
                 app:layout_constraintStart_toStartOf="@id/buttonTakePhoto"
-                app:layout_constraintTop_toBottomOf="@id/buttonTakePhoto" />
+                app:layout_constraintTop_toBottomOf="@id/buttonTakePhoto"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageButton
                 android:id="@+id/buttonBrowsePhoto"
@@ -369,19 +371,17 @@
                 app:layout_constraintStart_toEndOf="@id/wineMiniImage"
                 app:layout_constraintTop_toTopOf="@id/wineMiniImage" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/submitAddWine"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/submit"
+                app:icon="@drawable/ic_check"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <!-- Change ripple color to get a ripple effect -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/submitAddWine"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="@dimen/medium_margin"
-        android:gravity="center"
-        android:text="@string/submit"
-        app:icon="@drawable/ic_check" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

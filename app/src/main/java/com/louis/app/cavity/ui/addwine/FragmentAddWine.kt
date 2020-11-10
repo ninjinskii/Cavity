@@ -20,6 +20,7 @@ import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.ui.SnackbarProvider
+import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
@@ -73,30 +74,35 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private fun setListeners() {
         binding.submitAddWine.setOnClickListener {
             with(binding) {
-                val name = name.text.toString().trim()
-                val naming = naming.text.toString().trim()
-                val cuvee = cuvee.text.toString().trim()
-                val isOrganic = organicWine.isChecked.toInt()
-                val color = colorChipGroup.checkedChipId
-                val checkedChipId = countyChipGroup.checkedChipId
+                val valid =
+                    nameLayout.validate(required = true) and namingLayout.validate(required = true)
 
-                if (countyChipGroup.checkedChipId == View.NO_ID) {
-                    coordinator.showSnackbar(R.string.no_county)
-                    nestedScrollView.smoothScrollTo(0, 0)
+                if (valid) {
+                    val name = name.text.toString().trim()
+                    val naming = naming.text.toString().trim()
+                    val cuvee = cuvee.text.toString().trim()
+                    val isOrganic = organicWine.isChecked.toInt()
+                    val color = colorChipGroup.checkedChipId
+                    val checkedChipId = countyChipGroup.checkedChipId
+
+                    if (countyChipGroup.checkedChipId == View.NO_ID) {
+                        coordinator.showSnackbar(R.string.no_county)
+                        nestedScrollView.smoothScrollTo(0, 0)
+                    }
+
+                    val county = countyChipGroup
+                        .findViewById<Chip>(checkedChipId)
+                        .getTag(R.string.tag_chip_id) as County
+
+                    addWineViewModel.saveWine(
+                        name,
+                        naming,
+                        cuvee,
+                        isOrganic,
+                        color,
+                        county
+                    )
                 }
-
-                val county = countyChipGroup
-                    .findViewById<Chip>(checkedChipId)
-                    .getTag(R.string.tag_chip_id) as County
-
-                addWineViewModel.saveWine(
-                    name,
-                    naming,
-                    cuvee,
-                    isOrganic,
-                    color,
-                    county
-                )
             }
         }
 

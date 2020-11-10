@@ -57,11 +57,6 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         color: Int,
         county: County,
     ) {
-        if (name.isBlank() || naming.isBlank()) {
-            _userFeedback.postOnce(R.string.empty_name_or_naming)
-            return
-        }
-
         val colorNumber = when (color) {
             R.id.colorWhite -> WineColor.COLOR_WHITE
             R.id.colorRed -> WineColor.COLOR_RED
