@@ -74,6 +74,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private fun setListeners() {
         binding.submitAddWine.setOnClickListener {
             with(binding) {
+                root.hideKeyboard()
+
                 val valid =
                     nameLayout.validate(required = true) and namingLayout.validate(required = true)
 

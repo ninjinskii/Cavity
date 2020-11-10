@@ -32,15 +32,15 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         get() = _updatedWine
 
     private val isEditMode: Boolean
-        get() = wineId != -1L
+        get() = wineId != 0L
 
-    private var wineId = -1L
+    private var wineId = 0L
     private var image = ""
 
     fun start(wineId: Long) {
         this.wineId = wineId
 
-        if (wineId != -1L) {
+        if (wineId != 0L) {
             viewModelScope.launch(IO) {
                 val wine = repository.getWineByIdNotLive(wineId)
                 image = wine.imgPath

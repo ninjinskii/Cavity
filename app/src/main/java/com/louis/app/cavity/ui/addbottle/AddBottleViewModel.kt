@@ -43,7 +43,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     fun start(bottleWineId: Long, editedBottleId: Long) {
         wineId = bottleWineId
 
-        if (editedBottleId != -1L)
+        if (editedBottleId != 0L)
             triggerEditMode(editedBottleId)
         else
             _updatedBottle.postValue(null)

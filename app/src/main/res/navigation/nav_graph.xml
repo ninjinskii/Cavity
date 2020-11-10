@@ -71,7 +71,7 @@
         tools:layout="@layout/fragment_add_wine">
         <argument
             android:name="editedWineId"
-            android:defaultValue="-1L"
+            android:defaultValue="0L"
             app:argType="long" />
         <argument
             android:name="countyId"
@@ -89,7 +89,7 @@
             app:argType="long" />
         <argument
             android:name="editedBottleId"
-            android:defaultValue="-1L"
+            android:defaultValue="0L"
             app:argType="long" />
     </fragment>
 

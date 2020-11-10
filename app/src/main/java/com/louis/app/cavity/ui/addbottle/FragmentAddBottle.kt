@@ -28,7 +28,7 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), SnackbarProvid
 
         snackbarProvider = activity as SnackbarProvider
 
-        // editedBottleId is equal to -1 if user is not editing a bottle, but adding a new one
+        // editedBottleId is equal to 0 if user is not editing a bottle, but adding a new one
         addBottleViewModel.start(args.wineId, args.editedBottleId)
 
         initStepper()
