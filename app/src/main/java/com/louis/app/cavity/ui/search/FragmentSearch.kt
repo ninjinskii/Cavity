@@ -19,6 +19,7 @@ import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
@@ -314,12 +315,12 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         binding.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
 
     override fun onResume() {
-        //(activity as ActivityMain).hideMainToolbar()
+        (activity as ActivityMain).hideMainToolbar()
         super.onResume()
     }
 
     override fun onPause() {
-        //(activity as ActivityMain).showMainToolbar()
+        (activity as ActivityMain).showMainToolbar()
         super.onPause()
     }
 

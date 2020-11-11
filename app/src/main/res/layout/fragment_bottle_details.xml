@@ -8,7 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="wrap_content">
 
         <com.louis.app.cavity.ui.bottle.CollapsibleToolbar
             android:id="@+id/collapsingToolbar"
@@ -27,8 +27,8 @@
 
             <ImageView
                 android:id="@+id/bottlePicture"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/pine_branch" />
 

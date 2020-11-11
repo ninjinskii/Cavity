@@ -9,10 +9,13 @@
     <ConstraintSet android:id="@+id/start">
         <Constraint
             android:id="@id/bottlePicture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:alpha="1.0"
-            motion:layout_constraintBottom_toBottomOf="parent" />
+            motion:layout_constraintDimensionRatio="1:1"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
         <Constraint
             android:id="@id/bottleName"
             android:layout_width="wrap_content"
@@ -26,11 +29,14 @@
     <ConstraintSet android:id="@+id/end">
         <Constraint
             android:id="@id/bottlePicture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:alpha="0.2"
-            android:translationY="200dp"
-            motion:layout_constraintBottom_toBottomOf="parent" />
+            android:translationY="140dp"
+            motion:layout_constraintDimensionRatio="1:1"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
         <Constraint
             android:id="@id/bottleName"
             android:layout_width="wrap_content"
@@ -49,8 +55,8 @@
             android:id="@id/bottleVintage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:translationY="20dp"
-            android:alpha="0" />
+            android:alpha="0"
+            android:translationY="20dp" />
         <Constraint
             android:id="@id/fabEditBottle"
             android:layout_width="wrap_content"
