@@ -5,7 +5,14 @@
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@+id/start"
-        motion:duration="1000" />
+        motion:duration="1000">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="90"
+                motion:motionTarget="@id/searchView"/>
+        </KeyFrameSet>
+    </Transition>
 
     <!-- TODO: check icon size with higher toolbars (tablet) -->
     <ConstraintSet android:id="@+id/start">
@@ -38,9 +45,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:alpha="0"
-            android:visibility="gone"
+            motion:layout_constraintBottom_toBottomOf="@id/fakeToolbar"
             motion:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
-            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintStart_toEndOf="@id/searchButton"
             motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 
@@ -74,11 +81,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:alpha="1"
-            android:visibility="visible"
             android:background="@android:color/transparent"
-            motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintBottom_toBottomOf="@id/fakeToolbar"
             motion:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
-            motion:layout_constraintStart_toEndOf="@id/searchButton" />
+            motion:layout_constraintStart_toEndOf="@id/searchButton"
+            motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 </MotionScene>
