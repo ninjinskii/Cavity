@@ -39,12 +39,12 @@ class GrapeBar @JvmOverloads constructor(
         val mutGrapes = grapes.toMutableList()
         mutGrapes.sortBy { it.percentage }
         mutGrapes.forEachIndexed { index, grape -> prepareBar(index, grape) }
+        bars.reverse()
     }
 
     fun triggerAnimation() {
         var progress = 0
 
-        bars.reverse()
         bars.forEach {
             ObjectAnimator.ofInt(it.first, "progress", 0, (it.second + progress) * 10).apply {
                 duration = 800
