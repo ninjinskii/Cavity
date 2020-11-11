@@ -15,7 +15,7 @@
     </style>
 
     <!-- Scrollable tab -->
-    <style name="TabTextAppearance" parent="TextAppearance.AppCompat.Button" />
+    <style name="TabTextAppearance" parent="TextAppearance.MaterialComponents.Button" />
 
     <!-- Grouped button -->
     <style name="Widget.Cavity.Button.OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">

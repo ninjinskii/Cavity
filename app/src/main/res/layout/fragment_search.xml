@@ -342,7 +342,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:alpha="0"
-                android:background="#ffffff"
+                android:background="?attr/colorSurface"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
