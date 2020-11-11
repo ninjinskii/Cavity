@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
+import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 

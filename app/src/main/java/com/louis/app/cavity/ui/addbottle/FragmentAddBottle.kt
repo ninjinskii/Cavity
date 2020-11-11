@@ -15,8 +15,8 @@ import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 
-class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), SnackbarProvider {
-    private lateinit var snackbarProvider: SnackbarProvider
+class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
+    lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentAddBottleBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
@@ -33,6 +33,7 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), SnackbarProvid
 
         initStepper()
         setupCustomBackNav()
+        observe()
     }
 
     private fun initStepper() {
@@ -54,8 +55,19 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), SnackbarProvid
         }
     }
 
-    override fun onShowSnackbarRequested(stringRes: Int) {
-        binding.coordinator.showSnackbar(stringRes)
+    private fun observe() {
+        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+
+        addBottleViewModel.bottleUpdatedEvent.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                snackbarProvider.onShowSnackbarRequested(stringRes)
+                findNavController().popBackStack()
+            }
+        }
     }
 
     override fun onDestroyView() {

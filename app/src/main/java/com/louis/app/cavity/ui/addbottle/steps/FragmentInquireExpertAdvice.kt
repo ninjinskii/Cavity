@@ -21,14 +21,11 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
     private var _binding: FragmentInquireExpertAdviceBinding? = null
     private val binding get() = _binding!!
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private lateinit var snackbarProvider: SnackbarProvider
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentInquireExpertAdviceBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
-
-        snackbarProvider = parentFragment as SnackbarProvider
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             isHideable = false
@@ -36,7 +33,6 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
 
         registerStepperWatcher()
         initRecyclerView()
-        observe()
         setListeners()
     }
 
@@ -72,14 +68,6 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
 
             // Using toMutableList() to change the list reference, otherwise our call to submitList will be ignored
             adviceAdapter.submitList(it.toMutableList())
-        }
-    }
-
-    private fun observe() {
-        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes)
-            }
         }
     }
 

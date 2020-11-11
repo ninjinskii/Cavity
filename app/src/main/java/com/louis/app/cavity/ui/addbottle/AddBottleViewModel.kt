@@ -16,6 +16,10 @@ import kotlinx.coroutines.launch
 class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
+    private val _bottleUpdatedEvent = MutableLiveData<Event<Int>>()
+    val bottleUpdatedEvent: LiveData<Event<Int>>
+        get() = _bottleUpdatedEvent
+
     private val _updatedBottle = MutableLiveData<Bottle>()
     val updatedBottle: LiveData<Bottle>
         get() = _updatedBottle
@@ -124,6 +128,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 grapeManager.reset()
                 expertAdviceManager.reset()
                 _updatedBottle.postValue(null)
+                _bottleUpdatedEvent.postOnce(R.string.bottle_added)
             }
         }
     }

@@ -15,13 +15,13 @@ import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showKeyboard
+import com.louis.app.cavity.util.showSnackbar
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
-    private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
@@ -30,12 +30,9 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireGrapesBinding.bind(view)
 
-        snackbarProvider = parentFragment as SnackbarProvider
-
         registerStepperWatcher()
         initRecyclerView()
         setListener()
-        observe()
     }
 
     private fun registerStepperWatcher() {
@@ -73,17 +70,9 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         binding.buttonAddGrape.setOnClickListener { showDialog() }
     }
 
-    private fun observe() {
-        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes)
-            }
-        }
-    }
-
     private fun addGrape(grapeName: String) {
         if (grapeName == resources.getString(R.string.grape_other)) {
-            snackbarProvider.onShowSnackbarRequested(R.string.reserved_name)
+            binding.coordinator.showSnackbar(R.string.reserved_name)
             return
         }
 

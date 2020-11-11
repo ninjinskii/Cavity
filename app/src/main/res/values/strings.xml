@@ -110,6 +110,7 @@
     <string name="add_grapes">Renseigner les cépages</string>
     <string name="medal_color">Couleur de la médaille</string>
     <string name="remove_pdf">Retirer le PDF</string>
+    <string name="bottle_added">La bouteille a été ajoutée.</string>
 
     <!-- Search -->
     <string name="show_filters">Voir les filtres</string>

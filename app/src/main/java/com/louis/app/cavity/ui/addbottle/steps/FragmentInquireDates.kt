@@ -22,15 +22,12 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private val binding get() = _binding!!
     private lateinit var stepperFragment: FragmentStepper
     private lateinit var datePicker: MaterialDatePicker<Long>
-    private lateinit var snackbarProvider: SnackbarProvider
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private var isDatePickerDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireDatesBinding.bind(view)
-
-        snackbarProvider = parentFragment as SnackbarProvider
 
         registerStepperWatcher()
         initNumberPickers()
@@ -130,12 +127,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     }
 
     private fun observe() {
-        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { strigRes ->
-                snackbarProvider.onShowSnackbarRequested(strigRes)
-            }
-        }
-
         addBottleViewModel.updatedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
         }
