@@ -102,7 +102,15 @@
                             android:layout_marginTop="@dimen/small_margin"
                             app:selectionRequired="false"
                             app:singleLine="true"
-                            app:singleSelection="false" />
+                            app:singleSelection="false">
+
+                            <!-- This is a stub, to avoid 2 layout passes -->
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:visibility="invisible" />
+
+                        </com.google.android.material.chip.ChipGroup>
 
                     </LinearLayout>
                 </HorizontalScrollView>
@@ -258,6 +266,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="?attr/actionBarSize"
+                    android:foreground="@android:color/black"
                     android:text="@string/more_filters"
                     android:textColor="?attr/colorSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -5,8 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.children
-import androidx.core.view.postDelayed
+import androidx.core.view.*
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,13 +19,10 @@ import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -37,10 +33,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val rvDisabler = RecyclerViewDisabler()
     private val searchViewModel: SearchViewModel by activityViewModels()
-    private val backdropHeaderHeight by lazy { binding.backdropHeader.height }
-    private val bottomSheetUpperBound by lazy {
-        binding.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
-    }
+    private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
+    private val upperBoundHeight by lazy { fetchUpperBoundHeight() }
     private var isHeaderShadowDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -223,22 +217,21 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     // Needed for split screen
     private fun setBottomSheetPeekHeight() {
-        lifecycleScope.launch(Main) {
-            delay(300)
-            bottomSheetBehavior.isExpanded()
+        binding.buttonMoreFilters.doOnLayout { upperBound ->
             val display = activity?.window?.decorView?.height
             val location = IntArray(2)
 
             display?.let {
-                binding.buttonMoreFilters.getLocationInWindow(location)
+                upperBound.getLocationInWindow(location)
 
+                L.v(location[1].toString())
                 val peekHeight =
-                    if (it - location[1] - bottomSheetUpperBound < backdropHeaderHeight)
+                    if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
                         backdropHeaderHeight
                     else
-                        it - location[1] - bottomSheetUpperBound
+                        it - location[1] - upperBoundHeight
 
-                bottomSheetBehavior.setPeekHeight(peekHeight, true)
+                bottomSheetBehavior.peekHeight = peekHeight
             }
         }
     }
@@ -315,13 +308,18 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun isToolbarAnimRunning() = binding.motionToolbar.progress !in listOf(0F, 1F)
 
+    private fun fetchBackdropHeaderHeight() = binding.backdropHeader.height
+
+    private fun fetchUpperBoundHeight() =
+        binding.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
+
     override fun onResume() {
-        (activity as ActivityMain).hideMainToolbar()
+        //(activity as ActivityMain).hideMainToolbar()
         super.onResume()
     }
 
     override fun onPause() {
-        (activity as ActivityMain).showMainToolbar()
+        //(activity as ActivityMain).showMainToolbar()
         super.onPause()
     }
 
