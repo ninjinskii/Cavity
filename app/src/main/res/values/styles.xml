@@ -34,6 +34,11 @@
     <!--        <item name="cornerSize">0dp</item>-->
     <!--    </style>-->
 
+    <style name="ShapeAppearance.Cavtiy.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">70dp</item>
+    </style>
+
     <!--    &lt;!&ndash; Backdrop front layer shape &ndash;&gt;-->
     <!--    <style name="ShapeAppearenceOverlay.Cavity.Backdrop" parent="">-->
     <!--        <item name="cornerFamily">rounded</item>-->
