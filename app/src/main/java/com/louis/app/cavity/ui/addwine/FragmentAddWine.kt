@@ -6,6 +6,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.doOnLayout
+import androidx.core.view.doOnNextLayout
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -151,12 +154,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 addWineViewModel.addCounty(dialogBinding.countyName.text.toString().trim())
             }
             .setView(dialogBinding.root)
+            .setOnDismissListener { dialogBinding.root.hideKeyboard() }
             .show()
 
-        lifecycleScope.launch(Main) {
-            delay(300)
-            dialogBinding.countyName.showKeyboard()
-        }
+        dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
     }
 
     private fun observe() {

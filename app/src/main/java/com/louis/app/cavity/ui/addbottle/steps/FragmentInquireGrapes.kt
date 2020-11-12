@@ -14,6 +14,7 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showKeyboard
 import com.louis.app.cavity.util.showSnackbar
 import kotlinx.coroutines.Dispatchers.Main
@@ -66,6 +67,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             grapeAdapter.submitList(it.toMutableList())
         }
     }
+
     private fun setListener() {
         binding.buttonAddGrape.setOnClickListener { showDialog() }
     }
@@ -91,12 +93,10 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
                 addGrape(dialogBinding.countyName.text.toString())
             }
             .setView(dialogBinding.root)
+            .setOnDismissListener { dialogBinding.root.hideKeyboard() }
             .show()
 
-        lifecycleScope.launch(Main) {
-            delay(300)
-            dialogBinding.countyName.showKeyboard()
-        }
+        dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
     }
 
     override fun onDestroyView() {
