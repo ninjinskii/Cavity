@@ -14,6 +14,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,8 +44,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         _binding = FragmentAddWineBinding.bind(view)
+
+        setupNavigation(binding.appBar.toolbar)
         snackbarProvider = activity as SnackbarProvider
 
         addWineViewModel.start(args.editedWineId)
@@ -175,7 +178,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         addWineViewModel.wineUpdatedEvent.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
                 snackbarProvider.onShowSnackbarRequested(stringRes)
-                findNavController().popBackStack()
+                findNavController().navigateUp()
             }
         }
 

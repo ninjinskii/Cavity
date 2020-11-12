@@ -47,6 +47,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             isHideable = false
         }
 
+        binding.fakeToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+
         initCountyChips()
         initColorChips()
         initOtherChips()
@@ -313,16 +315,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun fetchUpperBoundHeight() =
         binding.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
-
-    override fun onResume() {
-        (activity as ActivityMain).hideMainToolbar()
-        super.onResume()
-    }
-
-    override fun onPause() {
-        (activity as ActivityMain).showMainToolbar()
-        super.onPause()
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

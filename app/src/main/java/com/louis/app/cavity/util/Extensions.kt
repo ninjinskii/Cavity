@@ -5,11 +5,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import com.louis.app.cavity.ui.ActivityMain
 
 // Boolean and Int helpers for database compatibility
 fun Int.toBoolean() = this == 1
@@ -82,5 +89,18 @@ fun BottomSheetBehavior<ConstraintLayout>.toggleState() {
             BottomSheetBehavior.STATE_COLLAPSED
         else
             BottomSheetBehavior.STATE_EXPANDED
+}
+
+// Navigation
+fun Fragment.setupNavigation(toolbar: Toolbar) {
+    val act = activity as ActivityMain
+
+    act.setSupportActionBar(toolbar)
+
+    val navController = findNavController()
+    val appBarConfiguration = AppBarConfiguration(navController.graph, act.drawer)
+
+    toolbar.setupWithNavController(navController, appBarConfiguration)
+    act.navView.setupWithNavController(navController)
 }
 

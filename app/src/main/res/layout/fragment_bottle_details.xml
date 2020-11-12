@@ -10,7 +10,8 @@
         android:id="@+id/motionLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/cavity_purple"
+        android:elevation="4dp"
+        android:background="?attr/colorSurface"
         app:layoutDescription="@xml/motion_collapsible_toolbar_header">
 
         <ImageView
@@ -20,12 +21,26 @@
             android:scaleType="centerCrop"
             android:src="@drawable/pine_branch" />
 
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:tint="?attr/colorControlNormal"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/shape_step"
+            android:backgroundTint="#20000000"
+            android:foreground="?attr/actionBarItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_arrow_back" />
+
         <View
             android:id="@+id/centerHelper"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintBottom_toBottomOf="parent" />
-
 
         <TextView
             android:id="@+id/bottleName"
@@ -155,26 +170,4 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <FrameLayout
-        android:id="@+id/searchback_container"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_gravity="top|start"
-        android:background="@android:color/transparent"
-        android:paddingStart="2dp"
-        android:translationZ="8dp">
-
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="32dp"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="top|start"
-            android:layout_marginStart="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_arrow_back"
-            android:translationZ="8dp" />
-    </FrameLayout>
 </androidx.constraintlayout.motion.widget.MotionLayout>

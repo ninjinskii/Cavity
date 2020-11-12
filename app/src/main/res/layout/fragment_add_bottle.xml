@@ -18,7 +18,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout="@layout/fragment_stepper" />
+            tools:layout="@layout/fragment_inquire_dates" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"

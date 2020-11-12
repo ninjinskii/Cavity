@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.bottle
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Grape
@@ -58,19 +59,13 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
             binding.grapeBar.triggerAnimation()
         }
+
+        binding.backButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun observe() {
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (activity as ActivityMain).hideMainToolbar()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        (activity as ActivityMain).showMainToolbar()
     }
 
     override fun onDestroyView() {

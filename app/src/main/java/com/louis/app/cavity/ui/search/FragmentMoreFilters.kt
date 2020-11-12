@@ -13,6 +13,7 @@ import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentMoreFiltersBinding
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.setupNavigation
 
 class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
     private lateinit var beyondDatePicker: MaterialDatePicker<Long>
@@ -25,6 +26,8 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentMoreFiltersBinding.bind(view)
+
+        setupNavigation(binding.appBar.toolbar)
 
         initDatePickers()
         initSliders()

@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
+import com.louis.app.cavity.util.setupNavigation
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
@@ -20,6 +21,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
+
+        setupNavigation(binding.appBar.toolbar)
 
         setupScrollableTab()
         setListeners()

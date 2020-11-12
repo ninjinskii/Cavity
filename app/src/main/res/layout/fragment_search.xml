@@ -16,14 +16,16 @@
         app:layoutDescription="@xml/motion_search_toolbar"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!-- TODO: replace all android:white with colorOnPrimary -->
         <!-- Using a toolbar here to get correct title and nav icon positioning -->
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/fakeToolbar"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconColor="@android:color/white"
             app:title="SearchFragment"
-            app:titleTextColor="?attr/colorOnPrimary" />
+            app:titleTextColor="@android:color/white" />
 
         <!-- TODO: check if padding is correct on tablet. -->
         <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
@@ -32,7 +34,7 @@
             android:layout_height="0dp"
             android:background="?attr/actionBarItemBackground"
             android:scaleType="centerInside"
-            android:tint="?attr/colorOnPrimary"
+            android:tint="@android:color/white"
             app:initialAvd="@drawable/anim_close_filter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +47,7 @@
             android:layout_height="0dp"
             android:background="?attr/actionBarItemBackground"
             android:scaleType="centerInside"
-            android:tint="?attr/colorOnPrimary"
+            android:tint="@android:color/white"
             app:initialAvd="@drawable/anim_search_close"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
@@ -266,7 +268,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="?attr/actionBarSize"
-                    android:foreground="@android:color/black"
                     android:text="@string/more_filters"
                     android:textColor="?attr/colorSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"

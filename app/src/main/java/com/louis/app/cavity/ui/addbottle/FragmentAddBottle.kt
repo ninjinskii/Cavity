@@ -13,6 +13,7 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
 import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
@@ -65,7 +66,7 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
         addBottleViewModel.bottleUpdatedEvent.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
                 snackbarProvider.onShowSnackbarRequested(stringRes)
-                findNavController().popBackStack()
+                findNavController().navigateUp()
             }
         }
     }

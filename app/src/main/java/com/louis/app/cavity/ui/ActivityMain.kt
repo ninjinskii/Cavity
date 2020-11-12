@@ -3,10 +3,12 @@ package com.louis.app.cavity.ui
 import android.animation.AnimatorInflater
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.navigation.NavigationView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
@@ -14,6 +16,8 @@ import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
+    lateinit var navView: NavigationView
+    lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivityMainBinding
     private var isToolbarShadowShown = true
     private var hasCustomToolbar = true
@@ -22,36 +26,13 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
-        setupDrawer()
+        exposeNavigationStuff()
     }
 
-    private fun setupDrawer() {
-        setSupportActionBar(binding.main.toolbar)
-
-        val navController = findNavController(R.id.navHostFragment)
-        val appBarConfiguration = AppBarConfiguration(navController.graph, binding.drawer)
-
-        binding.main.toolbar.setupWithNavController(navController, appBarConfiguration)
-        binding.navView.setupWithNavController(navController)
+    private fun exposeNavigationStuff() {
+        navView = binding.navView
+        drawer = binding.drawer
     }
-
-    fun setToolbarShadow(setVisible: Boolean) {
-        val toolbar = binding.main.toolbarLayout
-
-        if (setVisible && !isToolbarShadowShown) {
-            toolbar.stateListAnimator =
-                AnimatorInflater.loadStateListAnimator(this, R.animator.show_elevation)
-            isToolbarShadowShown = true
-        } else {
-            toolbar.stateListAnimator =
-                AnimatorInflater.loadStateListAnimator(this, R.animator.hide_elevation)
-            isToolbarShadowShown = false
-        }
-    }
-
-    fun hideMainToolbar() = binding.main.toolbarLayout.setVisible(false)
-
-    fun showMainToolbar() = binding.main.toolbarLayout.setVisible(true)
 
     override fun onShowSnackbarRequested(stringRes: Int) {
         binding.main.coordinator.showSnackbar(stringRes, anchorView = binding.main.snackbarAnchor)

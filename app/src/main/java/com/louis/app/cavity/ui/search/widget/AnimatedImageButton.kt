@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDrawableOrThrow
 import com.louis.app.cavity.R
 
