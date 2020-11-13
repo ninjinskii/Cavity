@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.util.L
@@ -54,13 +55,12 @@ class CountyScrollableTab @JvmOverloads constructor(
                 dy: Int
             ) {
                 super.onScrolled(recyclerView, dx, dy)
-                post {
-                    children.forEach {
-                        val childCenterX = (it.left + it.right) / 2
-                        val scaleValue =
-                            getGaussianScale(childCenterX, 1f, 1f, 150.toDouble(), left, right)
-                        colorView(it, scaleValue)
-                    }
+
+                children.forEach {
+                    val childCenterX = (it.left + it.right) / 2
+                    val scaleValue =
+                        getGaussianScale(childCenterX, 1f, 1f, 150.toDouble(), left, right)
+                    colorView(it, scaleValue)
                 }
             }
 
@@ -143,7 +143,8 @@ class CountyScrollableTab @JvmOverloads constructor(
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
-                if (state == ViewPager2.SCROLL_STATE_DRAGGING) isRVScrolling = false
+                if (state == ViewPager2.SCROLL_STATE_DRAGGING)
+                    isRVScrolling = false
             }
 
             override fun onPageScrolled(
@@ -169,27 +170,28 @@ class CountyScrollableTab @JvmOverloads constructor(
             .setTextColor(color)
     }
 
+    fun getGaussianScale(
+        childCenterX: Int,
+        minScaleOffest: Float,
+        scaleFactor: Float,
+        spreadFactor: Double,
+        left: Int,
+        right: Int
+    ): Float {
+        val recyclerCenterX = (left + right) / 2
+        return (Math.E.pow(
+            -(childCenterX - recyclerCenterX.toDouble()).pow(2.toDouble()) / (2 * spreadFactor.pow(
+                2.toDouble()
+            ))
+        ) * scaleFactor + minScaleOffest).toFloat()
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         tabAdapter.onTabClick(null)
+        tabAdapter.onLongTabClick(null)
         viewPager = null
     }
 }
 
 data class TabStyle(@StyleRes val tabTextStyle: Int)
-
-fun getGaussianScale(
-    childCenterX: Int,
-    minScaleOffest: Float,
-    scaleFactor: Float,
-    spreadFactor: Double,
-    left: Int,
-    right: Int
-): Float {
-    val recyclerCenterX = (left + right) / 2
-    return (Math.E.pow(
-        -(childCenterX - recyclerCenterX.toDouble()).pow(2.toDouble()) / (2 * spreadFactor.pow(
-            2.toDouble()
-        ))
-    ) * scaleFactor + minScaleOffest).toFloat()
-}

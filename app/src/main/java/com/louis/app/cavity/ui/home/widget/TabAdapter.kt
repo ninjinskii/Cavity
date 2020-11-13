@@ -15,7 +15,7 @@ class TabAdapter(
 ) : RecyclerView.Adapter<TabAdapter.TabViewHolder>() {
 
     private var onClickListener: ((position: Int) -> Unit)? = null
-    private var onLongClickListener: ((county: County) -> Unit) = {}
+    private var onLongClickListener: ((county: County) -> Unit)? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -43,7 +43,7 @@ class TabAdapter(
         this.onClickListener = listener
     }
 
-    fun onLongTabClick(longClickListener: ((county: County) -> Unit)) {
+    fun onLongTabClick(longClickListener: ((county: County) -> Unit)?) {
         this.onLongClickListener = longClickListener
     }
 
@@ -62,7 +62,7 @@ class TabAdapter(
             textView.text = county.name
 
             view.setOnLongClickListener {
-                onLongClickListener(county)
+                onLongClickListener?.let { it1 -> it1(county) }
                 true
             }
         }
