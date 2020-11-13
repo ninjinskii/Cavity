@@ -88,19 +88,30 @@ class CountyScrollableTab @JvmOverloads constructor(
         }
     }
 
-    private fun initAttributes(set: AttributeSet?) {
-        val ta = context.obtainStyledAttributes(set, R.styleable.CountyScrollableTab)
-        selectedColor = ta.getColor(R.styleable.CountyScrollableTab_selectedColor, Color.WHITE)
-        unSelectedColor = ta.getColor(R.styleable.CountyScrollableTab_unSelectedColor, Color.GRAY)
-        tabTextStyle =
-            TabStyle(
-                ta.getResourceId(
-                    R.styleable.CountyScrollableTab_tabTextAppearance,
-                    R.style.TabTextAppearance
-                )
-            )
-        ta.recycle()
+    override fun setElevation(elevation: Float) {
+        super.setElevation(elevation)
+        val bg = background
+        if (bg is MaterialShapeDrawable) bg.z = z
+    }
 
+    private fun initAttributes(set: AttributeSet?) {
+        context.obtainStyledAttributes(set, R.styleable.CountyScrollableTab).apply {
+            try {
+                background = MaterialShapeDrawable.createWithElevationOverlay(context, elevation)
+                selectedColor = getColor(R.styleable.CountyScrollableTab_selectedColor, Color.WHITE)
+                unSelectedColor =
+                    getColor(R.styleable.CountyScrollableTab_unSelectedColor, Color.GRAY)
+                tabTextStyle =
+                    TabStyle(
+                        getResourceId(
+                            R.styleable.CountyScrollableTab_tabTextAppearance,
+                            R.style.TabTextAppearance
+                        )
+                    )
+            } finally {
+                recycle()
+            }
+        }
     }
 
     private fun createPagerStyle() {
