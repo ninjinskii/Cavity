@@ -72,7 +72,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 layoutInflater,
                 binding.countyChipGroup,
                 toInflate,
-                args.countyId
+                preselect = listOf(args.countyId)
             )
         }
     }

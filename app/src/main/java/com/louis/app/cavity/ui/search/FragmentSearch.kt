@@ -19,7 +19,6 @@ import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
@@ -64,11 +63,14 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun initCountyChips() {
         lifecycleScope.launch(IO) {
             val counties = searchViewModel.getAllCountiesNotLive().toSet()
+            val preselect = searchViewModel.state.counties.orEmpty()
+
             CountyLoader().loadCounties(
                 lifecycleScope,
                 layoutInflater,
                 binding.countyChipGroup,
                 counties,
+                preselect,
                 selectionRequired = false,
                 onCheckedChangeListener = { _, _ -> prepareCountyFilters() }
             )
@@ -285,14 +287,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun restoreState() {
+        // See initCountyChip for selected couties restoration
         with(searchViewModel.state) {
-            counties?.let { selectedCounties ->
-                binding.countyChipGroup.children.forEach {
-                    if (((it.getTag(R.string.tag_chip_id)) as County).countyId in selectedCounties)
-                        (it as Chip).isChecked = true
-                }
-            }
-
             colors?.let { selectedChipIds ->
                 selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
             }
