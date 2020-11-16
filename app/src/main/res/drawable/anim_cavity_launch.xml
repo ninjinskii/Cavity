@@ -38,7 +38,7 @@
                     android:valueFrom="50"
                     android:valueTo="365"
                     android:valueType="floatType"
-                    android:interpolator="@android:anim/accelerate_interpolator"/>
+                    android:interpolator="@android:anim/linear_interpolator"/>
             </set>
         </aapt:attr>
     </target>
