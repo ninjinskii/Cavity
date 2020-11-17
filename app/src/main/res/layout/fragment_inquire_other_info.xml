@@ -9,69 +9,138 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <View
+            android:id="@+id/lineStart"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="?attr/colorSecondary"
+            app:layout_constraintBottom_toBottomOf="@id/step"
+            app:layout_constraintEnd_toStartOf="@id/step"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/step" />
+
+        <View
+            android:id="@+id/lineEnd"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="?attr/colorSecondary"
+            app:layout_constraintBottom_toBottomOf="@id/step"
+            app:layout_constraintEnd_toStartOf="@id/endIcon"
+            app:layout_constraintStart_toEndOf="@id/step"
+            app:layout_constraintTop_toTopOf="@id/step" />
+
         <TextView
-            android:id="@+id/otherInfoTitle"
-            style="?attr/textAppearanceSubtitle1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            android:text="@string/other_info"
+            android:id="@+id/step"
+            android:layout_width="@dimen/stepper_icon"
+            android:layout_height="@dimen/stepper_icon"
+            android:layout_marginVertical="@dimen/small_margin"
+            android:layout_marginLeft="@dimen/medium_margin"
+            android:layout_marginRight="@dimen/medium_margin"
+            android:background="@drawable/shape_step"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/step_4"
+            android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/otherInfoLayout"
+        <ImageView
+            android:id="@+id/endIcon"
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_margin="@dimen/medium_margin"
+            android:contentDescription="@string/submit"
+            android:src="@drawable/ic_check"
+            app:layout_constraintBottom_toBottomOf="@id/step"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/line"
+            app:layout_constraintTop_toTopOf="@id/step"
+            app:tint="?attr/colorSecondary" />
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/otherInfoTitle">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/otherInfo"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/other_info"
-                android:inputType="textCapSentences" />
+                android:layout_height="match_parent">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <View
+                    android:id="@+id/marginHelper"
+                    android:layout_width="0dp"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <CheckBox
-            android:id="@+id/addToFavorite"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            android:text="@string/inquire_add_to_favorites"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/otherInfoLayout" />
+                <TextView
+                    android:id="@+id/otherInfoTitle"
+                    style="?attr/textAppearanceSubtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/other_info"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/marginHelper" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonAddPdf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            android:text="@string/add_pdf"
-            app:icon="@drawable/ic_pdf"
-            android:layout_marginBottom="100dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addToFavorite" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/otherInfoLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/otherInfoTitle">
 
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/otherInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/other_info"
+                        android:inputType="textCapSentences" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <CheckBox
+                    android:id="@+id/addToFavorite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/inquire_add_to_favorites"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/otherInfoLayout" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonAddPdf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:layout_marginBottom="100dp"
+                    android:text="@string/add_pdf"
+                    app:icon="@drawable/ic_pdf"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/addToFavorite"
+                    app:layout_constraintVertical_bias="0.0" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/submitAddBottle"
-            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_margin="@dimen/medium_margin"
-            android:gravity="center"
-            android:text="@string/submit"
-            app:icon="@drawable/ic_check" />
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/submitAddBottle"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/medium_margin"
+        android:gravity="center"
+        android:text="@string/submit"
+        app:icon="@drawable/ic_check" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

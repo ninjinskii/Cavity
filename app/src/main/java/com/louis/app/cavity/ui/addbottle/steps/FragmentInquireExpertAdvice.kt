@@ -31,21 +31,8 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             isHideable = false
         }
 
-        registerStepperWatcher()
         initRecyclerView()
         setListeners()
-    }
-
-    private fun registerStepperWatcher() {
-        val stepperFragment =
-            parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
-
-        stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
-            override fun onRequestChangePage() = true
-
-            override fun onPageRequestAccepted() {
-            }
-        })
     }
 
     private fun initRecyclerView() {

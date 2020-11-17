@@ -31,29 +31,8 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireOtherInfoBinding.bind(view)
 
-        registerStepperWatcher()
         setListeners()
         observe()
-    }
-
-    private fun registerStepperWatcher() {
-        stepperFragment = parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
-
-        stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
-            override fun onRequestChangePage() = true
-
-            override fun onPageRequestAccepted() {
-            }
-
-            override fun onFinalStepAccomplished() {
-                with(binding) {
-                    addBottleViewModel.saveBottle(
-                        otherInfo.text.toString(),
-                        addToFavorite.isChecked
-                    )
-                }
-            }
-        })
     }
 
     private fun setListeners() {

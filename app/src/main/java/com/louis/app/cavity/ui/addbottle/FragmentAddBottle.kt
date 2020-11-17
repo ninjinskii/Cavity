@@ -38,11 +38,7 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     }
 
     private fun initStepper() {
-        val stepperFragment = childFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
-
-        binding.viewPager
-            .apply { adapter = AddBottlesPagerAdapter(this@FragmentAddBottle) }
-            .also { stepperFragment.setupWithViewPager(it) }
+        binding.viewPager.adapter = AddBottlesPagerAdapter(this@FragmentAddBottle)
     }
 
     private fun setupCustomBackNav() {

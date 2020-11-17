@@ -29,22 +29,11 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireDatesBinding.bind(view)
 
-        registerStepperWatcher()
         initNumberPickers()
         initCurrencyDropdown()
         setListeners()
         setRules()
         observe()
-    }
-
-    private fun registerStepperWatcher() {
-        stepperFragment = parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
-
-        stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
-            override fun onRequestChangePage() = validateFields()
-
-            override fun onPageRequestAccepted() = savePartialBottle()
-        })
     }
 
     private fun initNumberPickers() {
@@ -71,10 +60,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     }
 
     private fun setListeners() {
-        binding.buttonNext.setOnClickListener {
-            stepperFragment.requireNextPage()
-        }
-
         binding.buyDateLayout.setEndIconOnClickListener {
             binding.buyDate.setText("")
             addBottleViewModel.setTimestamp(-1L)

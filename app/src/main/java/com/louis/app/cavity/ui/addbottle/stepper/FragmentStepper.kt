@@ -23,14 +23,6 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     private val listeners = mutableListOf<StepperWatcher>()
     private var viewPager: ViewPager2? = null
     private var currentPagePos = 0
-    private val forwardAnimations by lazy {
-        AnimationUtils.loadAnimation(activity, R.anim.slide_in_right) to
-                AnimationUtils.loadAnimation(activity, R.anim.slide_out_left)
-    }
-    private val backwardAnimations by lazy {
-        AnimationUtils.loadAnimation(activity, R.anim.slide_in_right) to
-                AnimationUtils.loadAnimation(activity, R.anim.slide_out_right)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,82 +42,12 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
             resources.getString(R.string.step_4)
         )
 
-        initTextSwitcher()
         setListener()
-    }
-
-    private fun initTextSwitcher() {
-        with(binding) {
-            switcher.setFactory {
-                TextView(ContextThemeWrapper(activity, R.style.CavityTheme), null, 0).apply {
-                    setTextAppearance(R.style.TextAppearance_MaterialComponents_Headline5)
-                    setTextColor(resources.getColor(R.color.colorSecondary, context.theme))
-                }
-            }
-
-            switcher.setText(stepStrings[0])
-            stepNumber.text = stepNumbers[0]
-        }
     }
 
     private fun setListener() {
         binding.endIcon.setOnClickListener {
             accomplished()
-        }
-    }
-
-    private fun animateForward(newStep: Int) {
-        binding.switcher.apply {
-            inAnimation = forwardAnimations.first
-            outAnimation = forwardAnimations.second
-        }
-
-        lifecycleScope.launch(Main) {
-            with(binding) {
-                prograssBarMain.setProgress(100, true)
-                delay(200)
-                progressBarStart.setProgress(0, true)
-                switcher.setText(stepStrings[newStep])
-                delay(200)
-                stepNumber.text = (newStep + 1).toString()
-                prograssBarMain.setProgress(0, true)
-                progressBarStart.apply {
-                    setVisible(true)
-                    setProgress(100, true)
-                }
-
-                if (newStep == 3) endIcon.setVisible(true)
-                else endIcon.setVisible(false)
-            }
-        }
-    }
-
-    private fun animateBackward(newStep: Int) {
-        binding.switcher.apply {
-            inAnimation = backwardAnimations.first
-            outAnimation = backwardAnimations.second
-        }
-
-        lifecycleScope.launch(Main) {
-            with(binding) {
-                endIcon.setVisible(false)
-                progressBarStart.setProgress(0, true)
-                delay(200)
-                switcher.setText(stepStrings[newStep])
-                delay(200)
-                stepNumber.text = (newStep + 1).toString()
-                progressBarStart.setProgress(100, true)
-                if (newStep == 0) progressBarStart.setVisible(false)
-            }
-        }
-    }
-
-    private fun animateEnd() {
-        lifecycleScope.launch(Main) {
-            binding.prograssBarMain.setProgress(100, true)
-            delay(100)
-            //animate endIcon
-            delay(100)
         }
     }
 
@@ -146,13 +68,9 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 when {
-                    position < currentPagePos -> {
-                        animateBackward(position)
-                        currentPagePos = position
-                    }
+                    position < currentPagePos -> currentPagePos = position
                     allowedToChangePage(position) && position > currentPagePos -> {
                         listeners[currentPagePos].onPageRequestAccepted()
-                        animateForward(position)
                         currentPagePos = position
                     }
                     else -> viewPager.currentItem = currentPagePos
@@ -164,16 +82,12 @@ class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     fun addListener(stepperWatcher: StepperWatcher) = listeners.add(stepperWatcher)
 
     fun requireNextPage() {
-        if (allowedToChangePage(currentPagePos + 1)) viewPager?.currentItem = currentPagePos + 1
+        if (allowedToChangePage(currentPagePos + 1))
+            viewPager?.currentItem = currentPagePos + 1
     }
 
     fun accomplished() {
-        animateEnd()
-
-        lifecycleScope.launch(Main) {
-            delay(200)
-            listeners[currentPagePos].onFinalStepAccomplished()
-        }
+        listeners[currentPagePos].onFinalStepAccomplished()
     }
 
     interface StepperWatcher {

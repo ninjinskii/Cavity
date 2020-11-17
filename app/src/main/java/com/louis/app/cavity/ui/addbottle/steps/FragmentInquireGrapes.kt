@@ -31,22 +31,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireGrapesBinding.bind(view)
 
-        registerStepperWatcher()
         initRecyclerView()
         setListener()
-    }
-
-    private fun registerStepperWatcher() {
-        val stepperFragment =
-            parentFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
-
-        stepperFragment.addListener(object : FragmentStepper.StepperWatcher {
-            override fun onRequestChangePage() = addBottleViewModel.grapeManager.validateGrapes()
-
-            override fun onPageRequestAccepted() {
-            }
-        })
-
     }
 
     private fun initRecyclerView() {
