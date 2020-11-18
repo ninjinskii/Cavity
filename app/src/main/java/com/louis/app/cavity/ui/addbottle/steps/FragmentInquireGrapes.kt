@@ -4,24 +4,19 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddCountyGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
-import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
-import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
+import com.louis.app.cavity.ui.addbottle.stepper.Step
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showKeyboard
 import com.louis.app.cavity.util.showSnackbar
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
-class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
+class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
@@ -84,6 +79,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
         dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
     }
+
+    override fun validate() = true
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -28,8 +28,13 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
+    private val _step = MutableLiveData(0)
+    val step: LiveData<Int>
+        get() = _step
+
     val grapeManager = GrapeManager(repository, _userFeedback, viewModelScope)
     val expertAdviceManager = ExpertAdviceManager(repository, _userFeedback, viewModelScope)
+
     private var wineId: Long? = null
     private var partialBottle: PartialBottle? = null
     private var buyDateTimestamp = -1L
@@ -159,8 +164,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             expertAdviceManager.postValue(expertAdviceForBottle as MutableList<ExpertAdvice>)
         }
     }
-
-
 
     data class PartialBottle(
         val bottleId: Long,

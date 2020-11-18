@@ -6,6 +6,8 @@ import androidx.annotation.StringRes
 import com.google.android.material.textfield.TextInputLayout
 import com.louis.app.cavity.R
 
+
+// TODO: add a required prop
 class RuledTextInputLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

@@ -11,16 +11,14 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.widget.Rule
-import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
-import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
+import com.louis.app.cavity.ui.addbottle.stepper.Step
 import com.louis.app.cavity.util.DateFormatter
 import java.util.*
 
-class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
+class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates), Step {
     private var _binding: FragmentInquireDatesBinding? = null
     private val binding get() = _binding!!
-    private lateinit var stepperFragment: FragmentStepper
     private lateinit var datePicker: MaterialDatePicker<Long>
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private var isDatePickerDisplayed = false
@@ -151,6 +149,8 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             )
         }
     }
+
+    override fun validate() = validateFields()
 
     override fun onDestroyView() {
         super.onDestroyView()

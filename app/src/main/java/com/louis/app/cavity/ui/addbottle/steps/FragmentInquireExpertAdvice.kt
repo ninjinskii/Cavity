@@ -6,18 +6,16 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireExpertAdviceBinding
-import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
-import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
+import com.louis.app.cavity.ui.addbottle.stepper.Step
 import com.louis.app.cavity.util.*
 
 // TODO: use material dialogs instead of text fields
-class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_advice) {
+class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_advice), Step {
     private var _binding: FragmentInquireExpertAdviceBinding? = null
     private val binding get() = _binding!!
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -174,6 +172,8 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
             contestName.setText("")
         }
     }
+
+    override fun validate() = true
 
     override fun onDestroyView() {
         super.onDestroyView()

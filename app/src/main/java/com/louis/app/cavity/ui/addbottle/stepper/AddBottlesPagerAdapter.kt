@@ -10,7 +10,7 @@ import com.louis.app.cavity.ui.addbottle.steps.FragmentInquireOtherInfo
 class AddBottlesPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount() = 4
 
-    override fun createFragment(position: Int) = when (position) {
+    override fun createFragment(position: Int): Fragment = when (position) {
         0 -> FragmentInquireDates()
         1 -> FragmentInquireGrapes()
         2 -> FragmentInquireExpertAdvice()

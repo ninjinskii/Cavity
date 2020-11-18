@@ -7,13 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
-import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
+import com.louis.app.cavity.ui.addbottle.stepper.Step
 import com.louis.app.cavity.util.L
-import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
@@ -38,7 +38,17 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     }
 
     private fun initStepper() {
-        binding.viewPager.adapter = AddBottlesPagerAdapter(this@FragmentAddBottle)
+        binding.viewPager.adapter = AddBottlesPagerAdapter(this)
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                val stepToCheck = childFragmentManager.findFragmentByTag("f$position") as? Step
+                if (stepToCheck?.validate() != true) binding.viewPager.currentItem = position
+            }
+        })
     }
 
     private fun setupCustomBackNav() {
