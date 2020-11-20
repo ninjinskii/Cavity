@@ -12,11 +12,12 @@
     </declare-styleable>
 
     <declare-styleable name="RuledTextInputLayout">
-        <attr name="rule" format="enum">
-            <enum name="absent" value="0" />
-            <enum name="required" value="1" />
-            <enum name="integer" value="2" />
-            <enum name="floatz" value="3" />
+        <attr name="rule">
+            <flag name="absent" value="0" />
+            <flag name="required" value="1" />
+            <flag name="integer" value="2" />
+            <flag name="floating" value="4" />
+            <flag name="positive" value="8" />
         </attr>
     </declare-styleable>
 </resources>

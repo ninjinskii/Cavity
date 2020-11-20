@@ -10,7 +10,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.Step
 import com.louis.app.cavity.util.DateFormatter
@@ -30,7 +29,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates), Step {
         initNumberPickers()
         initCurrencyDropdown()
         setListeners()
-        setRules()
         observe()
     }
 
@@ -102,13 +100,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates), Step {
         }
     }
 
-    private fun setRules() {
-        val noNegative = Rule(R.string.no_negative) { input -> input.toFloat() > 0 }
-
-        binding.countLayout.addRules(noNegative)
-        binding.priceLayout.addRules(noNegative)
-    }
-
     private fun observe() {
         addBottleViewModel.updatedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
@@ -127,9 +118,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates), Step {
         }
     }
 
-    private fun validateFields() =
-        binding.countLayout.validate(required = true) &&
-                binding.priceLayout.validate(required = false)
+    private fun validateFields() = binding.countLayout.validate() && binding.priceLayout.validate()
 
     private fun savePartialBottle() {
         with(binding) {

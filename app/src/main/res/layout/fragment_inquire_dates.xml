@@ -111,7 +111,8 @@
                     app:layout_constraintBottom_toBottomOf="@+id/vintage"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/apogee"
-                    app:layout_constraintTop_toTopOf="@+id/vintage">
+                    app:layout_constraintTop_toTopOf="@+id/vintage"
+                    app:rule="required|integer|positive">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/count"
@@ -150,6 +151,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/currencyLayout"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/priceTitle"
+                    app:rule="floating|positive"
                     app:startIconDrawable="@drawable/ic_price">
 
                     <com.google.android.material.textfield.TextInputEditText

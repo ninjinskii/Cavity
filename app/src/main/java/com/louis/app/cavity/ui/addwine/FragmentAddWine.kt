@@ -82,8 +82,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             with(binding) {
                 root.hideKeyboard()
 
-                val valid =
-                    nameLayout.validate(required = true) and namingLayout.validate(required = true)
+                val valid = nameLayout.validate() and namingLayout.validate()
 
                 if (valid) {
                     val name = name.text.toString().trim()

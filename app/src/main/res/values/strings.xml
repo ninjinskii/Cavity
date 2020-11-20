@@ -15,6 +15,8 @@
     <string name="no_file_explorer">Aucune application d\'exploration de fichier trouvée.</string>
     <string name="base_error">Une erreur est survenue.</string>
     <string name="required_field">Champ requis.</string>
+    <string name="require_integer">Nombre entier uniquement.</string>
+    <string name="require_float">Valeurs numériques uniquement.</string>
     <string name="empty_required_field">Certains champs n\'ont pas étés remplis.</string>
     <string name="zero_bottle">Indiquez un nombre de bouteille.</string>
     <string name="empty_contest_name">Indiquez un nom de concours.</string>

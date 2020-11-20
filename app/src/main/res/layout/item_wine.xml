@@ -55,7 +55,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/divider_height"
             android:layout_marginTop="@dimen/medium_margin"
-            android:alpha="0.12"
+            android:alpha="0.20"
             android:background="?attr/colorOnBackground"
             app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
             app:layout_constraintStart_toStartOf="@+id/guidelineLeft"

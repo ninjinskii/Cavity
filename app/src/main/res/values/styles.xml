@@ -61,7 +61,7 @@
         <item name="android:layout_marginTop">@dimen/medium_margin</item>
         <item name="android:layout_marginBottom">@dimen/medium_margin</item>
         <item name="android:background">?attr/colorOnBackground</item>
-        <item name="android:alpha">0.12</item>
+        <item name="android:alpha">0.20</item>
     </style>
 
     <style name="Widget.Cavity.Divider.Start">
