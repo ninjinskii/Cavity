@@ -48,6 +48,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
         binding.fakeToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
+        setBottomSheetPeekHeight()
         initCountyChips()
         initColorChips()
         initOtherChips()
@@ -56,8 +57,34 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         setupMenu()
         setListener()
         initSearchView()
-        setBottomSheetPeekHeight()
         restoreState()
+    }
+
+    // Needed for split screen
+    private fun setBottomSheetPeekHeight() {
+        binding.buttonMoreFilters.doOnLayout { upperBound ->
+            val display = activity?.window?.decorView?.height
+            val location = IntArray(2)
+
+            display?.let {
+                upperBound.getLocationInWindow(location)
+
+                L.v(location[1].toString())
+                val peekHeight =
+                    if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
+                        backdropHeaderHeight
+                    else
+                        it - location[1] - upperBoundHeight
+
+                bottomSheetBehavior.peekHeight = peekHeight
+            }
+
+            removeStubChip()
+        }
+    }
+
+    private fun removeStubChip() {
+        binding.countyChipGroup.removeAllViews()
     }
 
     private fun initCountyChips() {
@@ -217,27 +244,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun setListener() {
         binding.buttonMoreFilters.setOnClickListener {
             findNavController().navigate(R.id.searchToMoreFilters)
-        }
-    }
-
-    // Needed for split screen
-    private fun setBottomSheetPeekHeight() {
-        binding.buttonMoreFilters.doOnLayout { upperBound ->
-            val display = activity?.window?.decorView?.height
-            val location = IntArray(2)
-
-            display?.let {
-                upperBound.getLocationInWindow(location)
-
-                L.v(location[1].toString())
-                val peekHeight =
-                    if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
-                        backdropHeaderHeight
-                    else
-                        it - location[1] - upperBoundHeight
-
-                bottomSheetBehavior.peekHeight = peekHeight
-            }
         }
     }
 
