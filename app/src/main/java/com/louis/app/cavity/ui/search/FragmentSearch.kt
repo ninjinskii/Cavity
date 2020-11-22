@@ -69,7 +69,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             display?.let {
                 upperBound.getLocationInWindow(location)
 
-                L.v(location[1].toString())
                 val peekHeight =
                     if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
                         backdropHeaderHeight
@@ -201,7 +200,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                     with(binding) {
                         currentQuery.setVisible(true)
                         searchView.hideKeyboard()
-                        toggleBackdrop.postDelayed(500) { toggleBackdrop.performClick() }
                     }
                 } else {
                     binding.currentQuery.setVisible(false)
@@ -214,9 +212,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
                 if (isSearchMode()) {
                     binding.searchView.showKeyboard()
-
-                    if (bottomSheetBehavior.isCollapsed())
-                        binding.toggleBackdrop.performClick()
                 }
             }
 

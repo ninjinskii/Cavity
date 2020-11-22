@@ -10,7 +10,7 @@
             <KeyAttribute
                 android:alpha="0"
                 motion:framePosition="90"
-                motion:motionTarget="@id/searchView"/>
+                motion:motionTarget="@id/searchView" />
         </KeyFrameSet>
     </Transition>
 
@@ -45,7 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:alpha="0"
-            motion:layout_constraintBottom_toBottomOf="@id/fakeToolbar"
+            motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
             motion:layout_constraintStart_toEndOf="@id/searchButton"
             motion:layout_constraintTop_toTopOf="parent" />
@@ -82,8 +82,8 @@
             android:layout_height="wrap_content"
             android:alpha="1"
             android:background="@android:color/transparent"
-            motion:layout_constraintBottom_toBottomOf="@id/fakeToolbar"
-            motion:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toEndOf="@id/searchButton"
             motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>

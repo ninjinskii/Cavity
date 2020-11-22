@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200ee</color>
+    <color name="colorPrimary">#a37e2c</color>
     <color name="colorPrimaryDark">#3700b3</color>
-    <color name="colorAccent">#03dac5</color>
-    <color name="colorSecondary">#0dfc5f</color>
+    <color name="colorAccent">@color/colorPrimary</color>
+    <color name="colorSecondary">@color/colorPrimary</color>
 
     <color name="cavity_green">#81c784</color>
     <color name="cavity_light_green">#aed581</color>
