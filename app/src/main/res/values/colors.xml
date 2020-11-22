@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#a37e2c</color>
-    <color name="colorPrimaryDark">#3700b3</color>
-    <color name="colorAccent">@color/colorPrimary</color>
-    <color name="colorSecondary">@color/colorPrimary</color>
+    <color name="colorTest">#972940</color>
 
+    <color name="cavity_gold">#a37e2c</color>
     <color name="cavity_green">#81c784</color>
     <color name="cavity_light_green">#aed581</color>
     <color name="cavity_red">#e57373</color>
@@ -18,6 +16,8 @@
     <color name="wine_red">#a60000</color>
     <color name="wine_sweet">#ffa727</color>
     <color name="wine_rose">#f48fb1</color>
+
+    <color name="unselected_tab">#5c4209</color>
 
     <color name="medal_bronze">#614e1a</color>
     <color name="medal_silver">#aaa9ad</color>

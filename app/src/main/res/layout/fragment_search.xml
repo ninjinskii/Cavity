@@ -58,13 +58,13 @@
 
         <EditText
             android:id="@+id/searchView"
+            style="@style/Widget.Cavity.SearchView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/medium_margin"
             android:background="@android:color/transparent"
             android:hint="@string/search_wine_hint"
             android:inputType="textCapSentences"
-            android:textColor="?attr/colorOnPrimary"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

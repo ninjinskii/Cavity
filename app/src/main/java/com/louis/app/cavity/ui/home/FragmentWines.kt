@@ -32,7 +32,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 it.getColor(R.color.wine_red),
                 it.getColor(R.color.wine_sweet),
                 it.getColor(R.color.wine_rose),
-                it.getColor(R.color.colorAccent)
+                it.getColor(R.color.cavity_gold)
             )
         }
 

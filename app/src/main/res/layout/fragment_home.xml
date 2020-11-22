@@ -32,9 +32,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:selectedColor="@color/colorAccent"
+            app:selectedColor="?attr/colorPrimary"
             app:tabTextAppearance="?attr/textAppearanceButton"
-            app:unSelectedColor="@color/colorPrimaryDark"
+            app:unSelectedColor="@color/unselected_tab"
             tools:listitem="@layout/item_county" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
