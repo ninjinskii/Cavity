@@ -59,7 +59,9 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
 
             val filtered = combinedFilters.meetFilters(bottlesAndWine)
-            _results.postValue(filtered)
+            // Deleting 'toList()' seems to introduce a bug sometimes, where the observer is not
+            // aware that the data has been changed, the first time you access FragmentSearch
+            _results.postValue(filtered.toList())
         }
     }
 
