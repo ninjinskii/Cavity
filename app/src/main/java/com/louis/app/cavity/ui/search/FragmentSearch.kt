@@ -15,17 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
-import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.CountyLoader
-import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -34,10 +30,11 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private val binding get() = _binding!!
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private val rvDisabler = RecyclerViewDisabler()
     private val searchViewModel: SearchViewModel by activityViewModels()
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
     private val upperBoundHeight by lazy { fetchUpperBoundHeight() }
+    private val revealShadowAnim by lazy { loadRevealShadowAnim() }
+    private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -249,41 +246,26 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         val header = binding.backdropHeader
 
         if (setVisible && !isHeaderShadowDisplayed) {
-            header.stateListAnimator =
-                AnimatorInflater.loadStateListAnimator(context, R.animator.show_elevation)
+            header.stateListAnimator = revealShadowAnim
             isHeaderShadowDisplayed = true
         } else if (!setVisible && isHeaderShadowDisplayed) {
-            header.stateListAnimator =
-                AnimatorInflater.loadStateListAnimator(context, R.animator.hide_elevation)
+            header.stateListAnimator = hideShadowAnim
             isHeaderShadowDisplayed = false
         }
     }
 
     private fun toggleBackdrop() {
-        if (bottomSheetBehavior.isExpanded()) {
+        if (bottomSheetBehavior.isExpanded() || bottomSheetBehavior.isCollapsed()) {
             bottomSheetBehavior.toggleState()
-
-            with(binding) {
-                scrim.alpha = 0.76F
-                recyclerView.addOnItemTouchListener(rvDisabler)
-                toggleBackdrop.triggerAnimation()
-            }
-        } else if (bottomSheetBehavior.isCollapsed()) {
-            bottomSheetBehavior.toggleState()
-
-            with(binding) {
-                scrim.alpha = 0F
-                recyclerView.removeOnItemTouchListener(rvDisabler)
-                toggleBackdrop.triggerAnimation()
-            }
+            binding.toggleBackdrop.triggerAnimation()
         }
     }
 
     private fun initSearchView() {
         binding.searchView.doAfterTextChanged { newText ->
-            if (newText != null && newText.isNotEmpty()) {
+            if (newText != null) {
                 searchViewModel.setTextFilter(newText.toString())
-                binding.currentQuery.text = newText
+                binding.currentQuery.text = "'$newText'"
             } else {
                 binding.currentQuery.text = ""
             }
@@ -315,6 +297,12 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun fetchUpperBoundHeight() =
         binding.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
+
+    private fun loadRevealShadowAnim() =
+        AnimatorInflater.loadStateListAnimator(context, R.animator.show_elevation)
+
+    private fun loadHideShadowAnim() =
+        AnimatorInflater.loadStateListAnimator(context, R.animator.hide_elevation)
 
     override fun onDestroyView() {
         super.onDestroyView()

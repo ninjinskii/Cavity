@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="surface_elevation_1dp">#1e1e1e</color>
+    <color name="surface_elevation_4dp">#282828</color>
 </resources>
