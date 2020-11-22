@@ -2,6 +2,7 @@
 <com.google.android.material.appbar.AppBarLayout android:id="@+id/toolbarLayout"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
+    android:elevation="@dimen/app_bar_elevation"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 

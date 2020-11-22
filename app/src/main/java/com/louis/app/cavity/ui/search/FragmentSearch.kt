@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
@@ -23,6 +24,8 @@ import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 

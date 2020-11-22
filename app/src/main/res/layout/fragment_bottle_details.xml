@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     app:layoutDescription="@xml/motion_collapsible_toolbar">
 
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/motionLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="4dp"
         android:background="?attr/colorSurface"
+        android:elevation="4dp"
         app:layoutDescription="@xml/motion_collapsible_toolbar_header">
 
         <ImageView
@@ -25,16 +25,16 @@
             android:id="@+id/backButton"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:tint="?attr/colorControlNormal"
             android:layout_marginTop="4dp"
             android:background="@drawable/shape_step"
             android:backgroundTint="#20000000"
-            android:foreground="?attr/actionBarItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/ic_arrow_back" />
+            android:foreground="?attr/actionBarItemBackground"
+            android:src="@drawable/ic_arrow_back"
+            android:tint="?attr/colorControlNormal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/centerHelper"
@@ -46,26 +46,26 @@
             android:id="@+id/bottleName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Domaine F. Engel"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:textColor="?attr/colorOnPrimary"
             android:transformPivotX="0dp"
             android:transformPivotY="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Domaine F. Engel" />
 
         <TextView
             android:id="@+id/bottleVintage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="2016"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="2016" />
 
         <FrameLayout
             android:id="@+id/shaper"
@@ -100,14 +100,34 @@
                 android:layout_width="140dp"
                 android:layout_height="190dp"
                 android:layout_margin="@dimen/small_margin"
+                android:background="?attr/colorSurface"
+                app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <!-- ShapeableImageView ? -->
-                <ImageView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@color/cavity_green" />
+                    android:background="?attr/colorSurface"
+                    android:src="@color/cavity_green"
+                    app:cardElevation="4dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/medium_margin"
+                        android:background="?attr/colorSurface"
+                        app:cardElevation="4dp">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="@dimen/medium_margin"
+                            android:background="?attr/colorSurface"
+                            app:cardElevation="0dp" />
+
+                    </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
 
             </com.google.android.material.card.MaterialCardView>
 

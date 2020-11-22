@@ -5,10 +5,7 @@
         <item name="colorAccent">@color/cavity_gold</item>
         <item name="colorSecondary">@color/cavity_gold</item>
 
-        <!--        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Cavtiy.LargeComponent-->
-        <!--        </item>-->
-
-        <item name="statusBarBackground">?attr/colorSurface</item>
+        <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
     </style>
 
     <!-- Scrollable tab -->
@@ -24,23 +21,6 @@
         <item name="android:minWidth">48dp</item>
         <item name="android:minHeight">48dp</item>
     </style>
-
-    <!--    &lt;!&ndash; Shape TODO: move into another file shape.xml &ndash;&gt;-->
-    <!--    <style name="ShapeAppearance.Cavtiy.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">-->
-    <!--        <item name="cornerFamily">rounded</item>-->
-    <!--        <item name="cornerSize">0dp</item>-->
-    <!--    </style>-->
-
-    <style name="ShapeAppearance.Cavtiy.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
-        <item name="cornerFamily">cut</item>
-        <item name="cornerSize">70dp</item>
-    </style>
-
-    <!--    &lt;!&ndash; Backdrop front layer shape &ndash;&gt;-->
-    <!--    <style name="ShapeAppearenceOverlay.Cavity.Backdrop" parent="">-->
-    <!--        <item name="cornerFamily">rounded</item>-->
-    <!--        <item name="cornerRadius">16dp</item>-->
-    <!--    </style>-->
 
     <!-- SearchView -->
     <style name="Widget.Cavity.SearchView" parent="android:style/Widget.Material.SearchView">
