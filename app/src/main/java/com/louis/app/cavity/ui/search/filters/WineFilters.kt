@@ -79,7 +79,7 @@ class FilterVintage(private val minYear: Int, private val maxYear: Int) : WineFi
     }
 }
 
-class NoFilter : WineFilter {
+object NoFilter : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
         return bottlesAndWine
     }

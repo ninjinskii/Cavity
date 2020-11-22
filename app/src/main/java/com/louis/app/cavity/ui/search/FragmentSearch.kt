@@ -3,6 +3,9 @@ package com.louis.app.cavity.ui.search
 import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.*
@@ -46,7 +49,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             isHideable = false
         }
 
-        binding.fakeToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        binding.fakeToolbar.setNavigationOnClickListener {
+            searchViewModel.reset()
+            findNavController().navigateUp()
+        }
 
         setBottomSheetPeekHeight()
         initCountyChips()
@@ -55,8 +61,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         initRecyclerView()
         initSlider()
         setupMenu()
-        setListener()
+        setListeners()
         initSearchView()
+        setupCustomBackNav()
         restoreState()
     }
 
@@ -164,7 +171,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun initSlider() {
         binding.vintageSlider.apply {
             val year = Calendar.getInstance().get(Calendar.YEAR).toFloat()
-            valueFrom = year - 40F
+            valueFrom = year - 20F
             valueTo = year
             values = listOf(valueFrom, valueTo)
 
@@ -236,9 +243,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         binding.toggleBackdrop.setOnClickListener { toggleBackdrop() }
     }
 
-    private fun setListener() {
+    private fun setListeners() {
         binding.buttonMoreFilters.setOnClickListener {
             findNavController().navigate(R.id.searchToMoreFilters)
+        }
+
+        binding.currentQuery.setOnClickListener {
+            binding.searchButton.performClick()
         }
     }
 
@@ -262,12 +273,36 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initSearchView() {
-        binding.searchView.doAfterTextChanged { newText ->
-            if (newText != null) {
+        binding.searchView.apply {
+            doAfterTextChanged { newText ->
+                if (newText != null && newText.isNotEmpty()) {
+                    binding.currentQuery.text =
+                        context?.getString(R.string.query_feedback, newText).orEmpty()
+                } else {
+                    binding.currentQuery.text = ""
+                }
+
                 searchViewModel.setTextFilter(newText.toString())
-                binding.currentQuery.text = "'$newText'"
+            }
+
+            setOnEditorActionListener { _, i, _ ->
+                if (i == EditorInfo.IME_ACTION_DONE) {
+                    binding.searchButton.performClick()
+                }
+
+                true
+            }
+        }
+    }
+
+    private fun setupCustomBackNav() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (isSearchMode()) {
+                binding.searchButton.performClick()
             } else {
-                binding.currentQuery.text = ""
+                searchViewModel.reset()
+                remove()
+                requireActivity().onBackPressed()
             }
         }
     }

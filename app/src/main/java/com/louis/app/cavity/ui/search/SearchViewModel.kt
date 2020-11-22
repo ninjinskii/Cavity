@@ -6,11 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
+import com.louis.app.cavity.ui.search.filters.NoFilter
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.ui.search.filters.*
+import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -20,16 +22,16 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val bottlesAndWine = mutableListOf<BottleAndWine>()
 
     // These filters are located in FragmentSearch
-    private var countyFilter: WineFilter = NoFilter()
-    private var colorFilter: WineFilter = NoFilter()
-    private var otherFilter: WineFilter = NoFilter()
-    private var vintageFilter: WineFilter = NoFilter()
-    private var textFilter: WineFilter = NoFilter()
+    private var countyFilter: WineFilter = NoFilter
+    private var colorFilter: WineFilter = NoFilter
+    private var otherFilter: WineFilter = NoFilter
+    private var vintageFilter: WineFilter = NoFilter
+    private var textFilter: WineFilter = NoFilter
 
     // These filters are located in FragmentMoreFilters
-    private var priceFilter: WineFilter = NoFilter()
-    private var dateFilter: WineFilter = NoFilter()
-    private var stockFilter: WineFilter = NoFilter()
+    private var priceFilter: WineFilter = NoFilter
+    private var dateFilter: WineFilter = NoFilter
+    private var stockFilter: WineFilter = NoFilter
 
     private val _results = MutableLiveData<List<BottleAndWine>>()
     val results: LiveData<List<BottleAndWine>>
@@ -69,7 +71,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         countyFilter =
             if (countyFilters.isNotEmpty())
                 countyFilters.reduce { acc, filterCounty -> acc.orCombine(filterCounty) }
-            else NoFilter()
+            else NoFilter
 
         filter()
     }
@@ -91,7 +93,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         colorFilter =
             if (colorFilters.isNotEmpty())
                 colorFilters.reduce { acc, wineFilter -> acc.orCombine(wineFilter) }
-            else NoFilter()
+            else NoFilter
 
         filter()
     }
@@ -109,7 +111,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         otherFilter =
             if (otherFilters.isNotEmpty())
                 otherFilters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
-            else NoFilter()
+            else NoFilter
 
         filter()
     }
@@ -121,13 +123,13 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setTextFilter(query: String) {
-        textFilter = if (query.isNotEmpty()) FilterText(query) else NoFilter()
+        textFilter = if (query.isNotEmpty()) FilterText(query) else NoFilter
         filter()
     }
 
     fun setPriceFilter(minValue: Int, maxValue: Int) {
         state.price = if (minValue != -1) minValue to maxValue else null
-        priceFilter = if (minValue != -1) FilterPrice(minValue, maxValue) else NoFilter()
+        priceFilter = if (minValue != -1) FilterPrice(minValue, maxValue) else NoFilter
         filter()
     }
 
@@ -136,7 +138,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         state.date = beyond to currentUntilDate
         dateFilter =
             if (beyond == null && currentUntilDate == null)
-                NoFilter()
+                NoFilter
             else
                 FilterDate(beyond, currentUntilDate)
 
@@ -148,7 +150,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         state.date = currentBeyondDate to until
         dateFilter =
             if (until == null && currentBeyondDate == null)
-                NoFilter()
+                NoFilter
             else
                 FilterDate(currentBeyondDate, until)
 
@@ -158,6 +160,21 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     fun setStockFilter(minValue: Int, maxValue: Int) {
         state.stock = minValue to maxValue
         stockFilter = FilterStock(minValue, maxValue)
+        filter()
+    }
+
+    fun reset() {
+        countyFilter = NoFilter
+        colorFilter = NoFilter
+        otherFilter = NoFilter
+        vintageFilter = NoFilter
+        textFilter = NoFilter
+        priceFilter = NoFilter
+        dateFilter = NoFilter
+        stockFilter = NoFilter
+
+        state = SearchState()
+
         filter()
     }
 
