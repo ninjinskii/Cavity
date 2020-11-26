@@ -50,6 +50,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         get() = grapeManager.grapes.liveData
 
     fun start(bottleWineId: Long, editedBottleId: Long) {
+        L.v("$bottleWineId, $editedBottleId")
         wineId = bottleWineId
 
         if (editedBottleId != 0L)
@@ -110,6 +111,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             )
 
             viewModelScope.launch(IO) {
+                L.v("$isEditMode")
                 val insertedBottleId =
                     if (isEditMode) {
                         repository.updateBottle(bottle)

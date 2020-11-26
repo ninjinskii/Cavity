@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
@@ -75,6 +76,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         val countyId = arguments?.getLong(COUNTY_ID)
         homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
+            L.v("obserevrs trigerred")
             wineAdapter.submitList(it)
         }
     }

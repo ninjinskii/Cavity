@@ -122,8 +122,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
 
         binding.buttonBrowsePhoto.setOnClickListener {
-            val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-            fileChooseIntent.apply {
+            val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 type = "image/*"
             }

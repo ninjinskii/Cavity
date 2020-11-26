@@ -119,6 +119,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates), Step {
     }
 
     private fun validateFields() = binding.countLayout.validate() && binding.priceLayout.validate()
+        .also { if (it) savePartialBottle() }
 
     private fun savePartialBottle() {
         with(binding) {

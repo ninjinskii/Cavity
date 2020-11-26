@@ -60,8 +60,6 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info),
                     addToFavorite.isChecked,
                 )
             }
-
-            findNavController().navigateUp()
         }
     }
 
