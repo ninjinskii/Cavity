@@ -5,9 +5,9 @@ import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.ExpertAdvice
+import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.ui.addbottle.steps.ExpertAdviceManager
+import com.louis.app.cavity.ui.addbottle.steps.ReviewManager
 import com.louis.app.cavity.ui.addbottle.steps.GrapeManager
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -33,7 +33,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         get() = _step
 
     val grapeManager = GrapeManager(repository, _userFeedback, viewModelScope)
-    val expertAdviceManager = ExpertAdviceManager(repository, _userFeedback, viewModelScope)
+    val reviewManager = ReviewManager(repository, _userFeedback, viewModelScope)
 
     private var wineId: Long? = null
     private var partialBottle: PartialBottle? = null
@@ -120,9 +120,9 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                         repository.insertBottle(bottle)
                     }
 
-                expertAdviceManager.expertAdvices.value?.forEach { advice ->
-                    advice.bottleId = insertedBottleId
-                    repository.insertAdvice(advice)
+                reviewManager.reviews.value?.forEach { review ->
+                    review.bottleId = insertedBottleId
+                    repository.insertReview(review)
                 }
 
                 grapeManager.grapes.content.forEach { grape ->
@@ -133,7 +133,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 wineId = null
                 partialBottle = null
                 grapeManager.reset()
-                expertAdviceManager.reset()
+                reviewManager.reset()
                 _updatedBottle.postValue(null)
                 _bottleUpdatedEvent.postOnce(R.string.bottle_added)
             }
@@ -162,8 +162,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             val grapesForBottle = repository.getGrapesForBottleNotLive(bottleId)
             grapeManager.postValue(grapesForBottle)
 
-            val expertAdviceForBottle = repository.getExpertAdvicesForBottleNotLive(bottleId)
-            expertAdviceManager.postValue(expertAdviceForBottle as MutableList<ExpertAdvice>)
+            val reviewForBottle = repository.getReviewsForBottleNotLive(bottleId)
+            reviewManager.postValue(reviewForBottle as MutableList<Review>)
         }
     }
 

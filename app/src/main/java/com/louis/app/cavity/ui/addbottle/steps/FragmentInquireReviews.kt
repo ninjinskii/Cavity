@@ -9,20 +9,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.FragmentInquireExpertAdviceBinding
+import com.louis.app.cavity.databinding.FragmentInquireReviewBinding
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.Step
 import com.louis.app.cavity.util.*
 
 // TODO: use material dialogs instead of text fields
-class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_advice), Step {
-    private var _binding: FragmentInquireExpertAdviceBinding? = null
+class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review), Step {
+    private var _binding: FragmentInquireReviewBinding? = null
     private val binding get() = _binding!!
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _binding = FragmentInquireExpertAdviceBinding.bind(view)
+        _binding = FragmentInquireReviewBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
@@ -34,31 +34,31 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
     }
 
     private fun initRecyclerView() {
-        val adviceAdapter = ExpertAdviceRecyclerAdapter {
-            addBottleViewModel.expertAdviceManager.removeExpertAdvice(it)
+        val reviewAdapter = ReviewRecyclerAdapter {
+            addBottleViewModel.reviewManager.removeReview(it)
         }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
-            adapter = adviceAdapter
+            adapter = reviewAdapter
         }
 
-        addBottleViewModel.expertAdviceManager.expertAdvices.observe(viewLifecycleOwner) {
+        addBottleViewModel.reviewManager.reviews.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) peekBottomSheet()
             else hideBottomSheet()
 
             binding.dynamicListHint.text =
-                resources.getQuantityString(R.plurals.expert_advices, it.size, it.size)
+                resources.getQuantityString(R.plurals.reviews, it.size, it.size)
 
             // Using toMutableList() to change the list reference, otherwise our call to submitList will be ignored
-            adviceAdapter.submitList(it.toMutableList())
+            reviewAdapter.submitList(it.toMutableList())
         }
     }
 
     private fun setListeners() {
-        binding.buttonAddExpertAdvice.setOnClickListener {
-            makeExpertAdvice()
+        binding.buttonAddReview.setOnClickListener {
+            makeReview()
         }
 
         binding.rbGroupType.addOnButtonCheckedListener { _, _, _ -> revealViews() }
@@ -141,13 +141,13 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
-    private fun makeExpertAdvice() {
+    private fun makeReview() {
         with(binding) {
             val constestName = contestName.text.toString().trim()
             val rate = rate.text.toString().trim()
             val type = when (rbGroupType.checkedButtonId) {
-                R.id.rbRate20 -> AdviceType.RATE_20 to rate.toInt()
-                R.id.rbRate100 -> AdviceType.RATE_100 to rate.toInt()
+                R.id.rbRate20 -> ReviewType.RATE_20 to rate.toInt()
+                R.id.rbRate100 -> ReviewType.RATE_100 to rate.toInt()
                 R.id.rbMedal -> {
                     val medal: Int = when (rbGroupMedal.checkedButtonId) {
                         R.id.rbBronze -> MedalColor.BRONZE.ordinal
@@ -155,7 +155,7 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
                         else -> MedalColor.GOLD.ordinal
                     }
 
-                    AdviceType.MEDAL to medal
+                    ReviewType.MEDAL to medal
                 }
                 else -> {
                     val starsNumber: Int = when (rbGroupStars.checkedButtonId) {
@@ -164,11 +164,11 @@ class FragmentInquireExpertAdvice : Fragment(R.layout.fragment_inquire_expert_ad
                         else -> Stars.STAR_3.ordinal
                     }
 
-                    AdviceType.STARS to starsNumber
+                    ReviewType.STARS to starsNumber
                 }
             }
 
-            addBottleViewModel.expertAdviceManager.addExpertAdvice(constestName, type)
+            addBottleViewModel.reviewManager.addReview(constestName, type)
             contestName.setText("")
         }
     }

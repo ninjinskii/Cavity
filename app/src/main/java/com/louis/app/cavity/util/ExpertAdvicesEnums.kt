@@ -1,6 +1,6 @@
 package com.louis.app.cavity.util
 
-enum class AdviceType {
+enum class ReviewType {
     MEDAL,
     RATE_20,
     RATE_100,

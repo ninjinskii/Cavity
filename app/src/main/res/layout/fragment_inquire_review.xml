@@ -60,12 +60,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/expertAdviceTitle"
+                android:id="@+id/reviewTitle"
                 style="?attr/textAppearanceSubtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
-                android:text="@string/expert_advice"
+                android:text="@string/review"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/marginHelper" />
 
@@ -76,7 +76,7 @@
                 android:layout_margin="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/expertAdviceTitle"
+                app:layout_constraintTop_toBottomOf="@id/reviewTitle"
                 app:startIconDrawable="@drawable/ic_grade">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -228,13 +228,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonAddExpertAdvice"
+                android:id="@+id/buttonAddReview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginBottom="100dp"
-                android:text="@string/add_expert_advice"
+                android:text="@string/add_review"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rateLayout" />
@@ -258,7 +258,7 @@
             android:layout_width="@dimen/large_margin"
             android:layout_height="@dimen/large_margin"
             android:layout_marginStart="@dimen/large_margin"
-            android:contentDescription="@string/expert_advice"
+            android:contentDescription="@string/review"
             android:src="@drawable/ic_grade"
             app:layout_constraintBottom_toBottomOf="@id/dynamicListHint"
             app:layout_constraintStart_toStartOf="parent"
@@ -300,7 +300,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/buttonShowBottomSheet"
-            tools:listitem="@layout/item_expert_advice_medal" />
+            tools:listitem="@layout/item_review_medal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

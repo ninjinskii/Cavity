@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/expert_advice_height"
+    android:layout_height="@dimen/review_height"
     android:layout_margin="@dimen/small_margin"
     app:cardElevation="4dp">
 
@@ -19,7 +19,7 @@
             android:layout_margin="@dimen/small_margin"
             android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/deleteAdvice"
+            app:layout_constraintEnd_toStartOf="@id/deleteReview"
             app:layout_constraintStart_toEndOf="@id/medal"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Concours Parker" />
@@ -37,7 +37,7 @@
             tools:tint="@color/medal_gold" />
 
         <ImageButton
-            android:id="@+id/deleteAdvice"
+            android:id="@+id/deleteReview"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
             android:background="?attr/selectableItemBackgroundBorderless"

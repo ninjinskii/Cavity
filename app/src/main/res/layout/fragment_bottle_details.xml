@@ -155,7 +155,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/expertAdviceCardView"
+                android:id="@+id/reviewCardView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/medium_margin"
@@ -164,7 +164,7 @@
                 app:layout_constraintTop_toBottomOf="@id/globalCardView">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/expertAdviceRecyclerView"
+                    android:id="@+id/reviewRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -178,7 +178,7 @@
                 android:layout_marginVertical="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/expertAdviceCardView">
+                app:layout_constraintTop_toBottomOf="@id/reviewCardView">
 
             </com.google.android.material.card.MaterialCardView>
 

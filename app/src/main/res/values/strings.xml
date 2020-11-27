@@ -89,9 +89,9 @@
     <string name="currency">Monnaie</string>
     <string name="buying_location">Lieu d\'achat</string>
     <string name="buying_date">Date d\'achat</string>
-    <string name="expert_advice">Avis d\'expert</string>
+    <string name="review">Avis d\'expert</string>
     <string name="contest_name">Nom du concours</string>
-    <string name="add_expert_advice">Ajouter un avis</string>
+    <string name="add_review">Ajouter un avis</string>
     <string name="medal">Médaille</string>
     <string name="rate100">100</string>
     <string name="rate20">20</string>

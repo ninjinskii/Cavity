@@ -3,7 +3,7 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.ExpertAdvice
+import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.model.relation.BottleWithGrapes
@@ -29,8 +29,8 @@ interface BottleDao {
     fun getGrapesForBottleNotLive(bottleId: Long): List<Grape>
 
     @Transaction
-    @Query("SELECT * FROM expert_advice WHERE bottle_id=:bottleId")
-    fun getExpertAdvicesForBottleNotLive(bottleId: Long): List<ExpertAdvice>
+    @Query("SELECT * FROM review WHERE bottle_id=:bottleId")
+    fun getReviewsForBottleNotLive(bottleId: Long): List<Review>
 
     @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
     fun getBottleByIdNotLive(bottleId: Long): Bottle
@@ -58,17 +58,17 @@ interface BottleDao {
     @Query("SELECT * FROM grape")
     fun getAllGrapes(): LiveData<List<Grape>>
 
-    // ---------------ExpertAdvice---------------
+    // ---------------Review---------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAdvice(advice: ExpertAdvice)
+    fun insertReview(review: Review)
 
     @Update
-    fun updateAdvice(advice: ExpertAdvice)
+    fun updateReview(review: Review)
 
     @Delete
-    fun deleteAdvice(advice: ExpertAdvice)
+    fun deleteReview(review: Review)
 
-    @Query("SELECT * FROM expert_advice")
-    fun getAllExpertAdvices(): LiveData<List<ExpertAdvice>>
+    @Query("SELECT * FROM review")
+    fun getAllReviews(): LiveData<List<Review>>
 
 }

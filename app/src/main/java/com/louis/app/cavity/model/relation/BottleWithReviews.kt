@@ -3,13 +3,13 @@ package com.louis.app.cavity.model.relation
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.ExpertAdvice
+import com.louis.app.cavity.model.Review
 
-data class BottleWithExpertAdvices(
+data class BottleWithReviews(
     @Embedded val bottle: Bottle,
     @Relation(
         parentColumn = "bottle_id",
-        entityColumn = "expert_advice_id"
+        entityColumn = "review_id"
     )
-    val expertAdvices: List<ExpertAdvice>
+    val reviews: List<Review>
 )

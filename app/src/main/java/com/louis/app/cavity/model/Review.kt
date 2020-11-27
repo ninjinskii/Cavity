@@ -5,11 +5,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.louis.app.cavity.util.toInt
 
-@Entity(tableName = "expert_advice")
-data class ExpertAdvice(
+@Entity(tableName = "review")
+data class Review(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "expert_advice_id")
-    val expertAdviceId: Long = 0,
+    @ColumnInfo(name = "review_id")
+    val reviewId: Long = 0,
     @ColumnInfo(name = "contest_name") val contestName: String,
     @ColumnInfo(name = "is_medal") var isMedal: Int,
     @ColumnInfo(name = "is_star") var isStar: Int,
