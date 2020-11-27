@@ -9,7 +9,15 @@ import com.louis.app.cavity.model.*
 import kotlin.concurrent.thread
 
 @Database(
-    entities = [County::class, Wine::class, Bottle::class, Grape::class, Review::class],
+    entities = [
+        County::class,
+        Wine::class,
+        Bottle::class,
+        Grape::class,
+        BaseGrape::class,
+        Review::class,
+        BaseReview::class
+    ],
     version = 21,
     exportSchema = false
 )
