@@ -70,7 +70,7 @@
             android:layout_margin="@dimen/medium_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/add_county"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/ic_edit"
             android:tint="?attr/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="@id/grapeTitle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -87,6 +87,99 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/grapeTitle"
             tools:listitem="@layout/item_grape" />
+
+        <ImageView
+            android:id="@+id/grapeIconEmpty"
+            android:layout_width="@dimen/large_icon"
+            android:layout_height="@dimen/large_icon"
+            android:src="@drawable/ic_grape"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/explanation"
+            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintTop_toTopOf="@id/recyclerView"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/explanation"
+            style="?attr/textAppearanceBody1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:justificationMode="inter_word"
+            android:text="@string/grape_explanation"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/buttonAddGrapeSecondary"
+            app:layout_constraintEnd_toEndOf="@id/buttonAddGrapeSecondary"
+            app:layout_constraintStart_toStartOf="@id/buttonAddGrapeSecondary"
+            app:layout_constraintTop_toBottomOf="@id/grapeIconEmpty"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonAddGrapeSecondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/small_margin"
+            android:text="@string/add_grapes"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/recyclerView"
+            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintTop_toBottomOf="@id/explanation"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_backdrop"
+        android:elevation="4dp"
+        app:behavior_peekHeight="?attr/actionBarSize"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:layout_insetEdge="bottom">
+
+        <TextView
+            android:id="@+id/newGrapeTitle"
+            style="?attr/textAppearanceHeadline4"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center"
+            android:text="@string/new_grape"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+            android:id="@+id/grapeNameLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/newGrapeTitle"
+            app:startIconDrawable="@drawable/ic_grape">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/grapeName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:hint="@string/grape_name"
+                android:inputType="textCapSentences" />
+
+        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/submit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/grapeNameLayout" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

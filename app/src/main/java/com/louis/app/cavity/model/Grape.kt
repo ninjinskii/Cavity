@@ -9,7 +9,5 @@ data class Grape(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "grape_id")
     val grapeId: Long = 0,
-    @ColumnInfo(name = "base_grape_id") val baseGrapeId: Long,
-    var percentage: Int,
-    @ColumnInfo(name = "bottle_id") var bottleId: Long
+    val name: String
 )

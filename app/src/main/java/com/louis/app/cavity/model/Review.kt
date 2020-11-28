@@ -10,8 +10,10 @@ data class Review(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "review_id")
     val reviewId: Long = 0,
-    @ColumnInfo(name = "base_review_id") val baseReviewId: Long,
     @ColumnInfo(name = "contest_name") val contestName: String,
-    val value: Int,
-    @ColumnInfo(name = "bottle_id") var bottleId: Long
+    @ColumnInfo(name = "bottle_id") var bottleId: Long,
+    @ColumnInfo(name = "is_medal") var isMedal: Int,
+    @ColumnInfo(name = "is_star") var isStar: Int,
+    @ColumnInfo(name = "is_rate_20") var isRate20: Int,
+    @ColumnInfo(name = "is_rate_100") var isRate100: Int
 )

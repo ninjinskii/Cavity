@@ -11,10 +11,7 @@ import com.louis.app.cavity.databinding.DialogAddCountyGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.Step
-import com.louis.app.cavity.util.L
-import com.louis.app.cavity.util.hideKeyboard
-import com.louis.app.cavity.util.showKeyboard
-import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.*
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
     private lateinit var grapeAdapter: GrapeRecyclerAdapter
@@ -43,7 +40,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
         }
 
         addBottleViewModel.grapes.observe(viewLifecycleOwner) {
-            L.v(it.toString())
+            toggleRvPlaceholder(it.isEmpty())
             // Using toMutableList() to change the list reference, otherwise our call submitList will be ignored
             grapeAdapter.submitList(it.toMutableList())
         }
@@ -60,6 +57,14 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
         }
 
         addBottleViewModel.grapeManager.addGrape(grapeName)
+    }
+
+    private fun toggleRvPlaceholder(toggle: Boolean) {
+        with(binding) {
+            grapeIconEmpty.setVisible(toggle)
+            explanation.setVisible(toggle)
+            buttonAddGrapeSecondary.setVisible(toggle)
+        }
     }
 
     private fun showDialog() {

@@ -82,6 +82,8 @@
     <string name="count">Quantité</string>
     <string name="grapes">Cépages</string>
     <string name="grape_name">Nom du cépage</string>
+    <string name="new_grape">Créer un cépage</string>
+    <string name="grape_explanation">Choisissez les cépages contenus dans cette bouteille, ou créez en des nouveaux s\'ils sont manquants</string>
     <string name="grape_other">Autre</string>
     <string name="percentage">%1$d %%</string>
     <string name="buying">Achat</string>

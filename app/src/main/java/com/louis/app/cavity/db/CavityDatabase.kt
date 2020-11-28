@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.model.*
+import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
 import kotlin.concurrent.thread
 
 @Database(
@@ -14,9 +15,8 @@ import kotlin.concurrent.thread
         Wine::class,
         Bottle::class,
         Grape::class,
-        BaseGrape::class,
         Review::class,
-        BaseReview::class
+        QuantifiedBottleGrapeXRef::class
     ],
     version = 21,
     exportSchema = false
