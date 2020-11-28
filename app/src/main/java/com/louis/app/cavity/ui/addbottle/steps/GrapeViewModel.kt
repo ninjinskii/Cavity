@@ -17,6 +17,8 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllGrapes() = repository.getAllGrapes()
 
+    fun getAllGrapesNotLive() = repository.getAllGrapesNotLive()
+
     fun getQGrapesForBottle(bottleId: Long) = repository.getQGrapesForBottle(bottleId)
 
     fun start(bottleId: Long?) {
@@ -27,16 +29,16 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun addQuantifiedGrape(bottleId: Long, grapeId: Long) {
         val checkedQGrape = qGrapeManager.requestAddQGrape(bottleId, grapeId)
-        repository.insertQuantifiedGrape(checkedQGrape)
+        viewModelScope.launch(IO) { repository.insertQuantifiedGrape(checkedQGrape) }
     }
 
     fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef, newValue: Int) {
         val checkedQGrape = qGrapeManager.requestUpdateQGrape(qGrape, newValue)
-        repository.updateQuantifiedGrape(checkedQGrape)
+        viewModelScope.launch(IO) { repository.updateQuantifiedGrape(checkedQGrape) }
     }
 
     fun removeQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) {
         qGrapeManager.requestRemoveQGrape(qGrape)
-        repository.deleteQuantifiedGrape(qGrape)
+        viewModelScope.launch(IO) {repository.deleteQuantifiedGrape(qGrape) }
     }
 }

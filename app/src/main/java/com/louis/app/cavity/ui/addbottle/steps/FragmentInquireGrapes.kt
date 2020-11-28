@@ -26,7 +26,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private val grapeViewModel: GrapeViewModel by viewModels()
-    private var grapes = emptyList<Grape>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,7 +33,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
 
         initRecyclerView()
         setListeners()
-        observe()
     }
 
     private fun initRecyclerView() {
@@ -74,12 +72,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
         }
     }
 
-    private fun observe() {
-        grapeViewModel.getAllGrapes().observe(viewLifecycleOwner) {
-            grapes = it
-        }
-    }
-
     private fun addGrape(grapeName: String) {
         if (grapeName == resources.getString(R.string.grape_other)) {
             binding.coordinator.showSnackbar(R.string.reserved_name)
@@ -99,22 +91,33 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
 
     private fun showDialog() {
         val dialogBinding = DialogAddCountyGrapeBinding.inflate(layoutInflater)
-        val grapes = grapes.map { it.name }.toTypedArray()
-        val checked: BooleanArray = booleanArrayOf(false, false, false, false, false, false, false, false, false, false)
 
-        MaterialAlertDialogBuilder(requireContext())
-            .setCancelable(false)
-            .setTitle(R.string.add_grapes)
-            .setMultiChoiceItems(grapes, checked) { a, b, c ->
-                L.v("callbakc called")
-                L.v("$a, $b, $c")
+        lifecycleScope.launch(IO) {
+            val grapes = grapeViewModel.getAllGrapesNotLive()
+            val grapesName = grapes.map { it.name }.toTypedArray()
+            val checked = grapes.map { false }.toBooleanArray()
+
+            withContext(Main) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setCancelable(false)
+                    .setTitle(R.string.add_grapes)
+                    .setMultiChoiceItems(grapesName, checked) { a, pos, checked ->
+                        if (checked) {
+                            grapeViewModel.addQuantifiedGrape(1, grapes[pos].grapeId)
+                        } else {
+                            //grapeViewModel.removeQuantifiedGrape()
+                        }
+                    }
+                    .setNegativeButton(R.string.cancel) { _, _ ->
+                    }
+                    .setPositiveButton(R.string.submit) { _, _ ->
+                        addGrape(dialogBinding.countyName.text.toString())
+                    }
+                    .show()
             }
-            .setNegativeButton(R.string.cancel) { _, _ ->
-            }
-            .setPositiveButton(R.string.submit) { _, _ ->
-                addGrape(dialogBinding.countyName.text.toString())
-            }
-            .show()
+
+        }
+
     }
 
     override fun validate() = true

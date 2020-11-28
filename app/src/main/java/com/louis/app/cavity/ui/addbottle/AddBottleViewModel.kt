@@ -43,7 +43,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         get() = pdfPath.isNotBlank()
 
     fun start(bottleWineId: Long, editedBottleId: Long) {
-        L.v("$bottleWineId, $editedBottleId")
         wineId = bottleWineId
 
         if (editedBottleId != 0L)
