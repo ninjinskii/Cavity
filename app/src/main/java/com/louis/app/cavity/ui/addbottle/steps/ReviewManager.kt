@@ -33,7 +33,7 @@ class ReviewManager (
         val review: Review? = when (typeToVal.first) {
             ReviewType.RATE_20 -> {
                 if (checkRateInBounds(typeToVal.second, 20)) {
-                    Review(0, contestName, 0, 0, 1, 0, typeToVal.second, -1)
+                    Review(0, contestName, 0, 0, 1, 0)
                 } else {
                     _userFeedback.postOnce(R.string.rate_out_of_bounds)
                     null
@@ -41,14 +41,14 @@ class ReviewManager (
             }
             ReviewType.RATE_100 -> {
                 if (checkRateInBounds(typeToVal.second, 100)) {
-                    Review(0, contestName, 0, 0, 0, 1, typeToVal.second, -1)
+                    Review(0, contestName, 0, 0, 0, 1)
                 } else {
                     _userFeedback.postOnce(R.string.rate_out_of_bounds)
                     null
                 }
             }
-            ReviewType.MEDAL -> Review(0, contestName, 1, 0, 0, 0, typeToVal.second, -1)
-            else -> Review(0, contestName, 0, 1, 0, 0, typeToVal.second, -1)
+            ReviewType.MEDAL -> Review(0, contestName, 1, 0, 0, 0)
+            else -> Review(0, contestName, 0, 1, 0, 0)
         }
 
         review?.let { adv -> _reviews += adv }

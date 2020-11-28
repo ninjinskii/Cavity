@@ -95,7 +95,7 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
 
         override fun bind(review: Review) = with(bindingMedal) {
             contestName.text = review.contestName
-            medal.setColorFilter(medalColors[review.value])
+            //medal.setColorFilter(medalColors[review.value])
             deleteReview.setOnClickListener {
                 onDeleteListener(review)
             }
@@ -108,7 +108,7 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
         override fun bind(review: Review) = with(bindingRate) {
             contestName.text = review.contestName
             val total = if (review.isRate20.toBoolean()) 20 else 100
-            rate.text = itemView.context.getString(R.string.item_rate, review.value, total)
+            //rate.text = itemView.context.getString(R.string.item_rate, review.value, total)
             deleteReview.setOnClickListener {
                 onDeleteListener(review)
             }
@@ -120,7 +120,7 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
 
         override fun bind(review: Review) = with(bindingStar) {
             contestName.text = review.contestName
-            starCount.text = (review.value + 1).toString()
+            //starCount.text = (review.value + 1).toString()
             deleteReview.setOnClickListener {
                 onDeleteListener(review)
             }

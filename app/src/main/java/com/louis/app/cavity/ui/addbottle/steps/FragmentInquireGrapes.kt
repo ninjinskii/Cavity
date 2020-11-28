@@ -4,50 +4,80 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddCountyGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
+import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.Step
 import com.louis.app.cavity.util.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
-    private lateinit var grapeAdapter: GrapeRecyclerAdapter
+    private lateinit var quantifiedGrapeAdapter: QuantifiedGrapeRecyclerAdapter
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
+    private val grapeViewModel: GrapeViewModel by viewModels()
+    private var grapes = emptyList<Grape>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireGrapesBinding.bind(view)
 
         initRecyclerView()
-        setListener()
+        setListeners()
+        observe()
     }
 
     private fun initRecyclerView() {
-        grapeAdapter = GrapeRecyclerAdapter(
-            onDeleteListener = { addBottleViewModel.grapeManager.removeGrape(it) },
-            onValueChangeListener = { addBottleViewModel.grapeManager.updateGrape(it) }
-        )
+        lifecycleScope.launch(IO) {
+            quantifiedGrapeAdapter = QuantifiedGrapeRecyclerAdapter(
+                onDeleteListener = { grapeViewModel.removeQuantifiedGrape(it) },
+                onValueChangeListener = { qGrape, newValue ->
+                    grapeViewModel.updateQuantifiedGrape(qGrape, newValue)
+                },
+            )
 
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(activity)
-            setHasFixedSize(true)
-            adapter = grapeAdapter
+            withContext(Main) {
+                binding.recyclerView.apply {
+                    layoutManager = LinearLayoutManager(activity)
+                    setHasFixedSize(true)
+                    adapter = quantifiedGrapeAdapter
+                }
+            }
         }
 
-        addBottleViewModel.grapes.observe(viewLifecycleOwner) {
+
+        grapeViewModel.getQGrapesForBottle(0).observe(viewLifecycleOwner) {
             toggleRvPlaceholder(it.isEmpty())
-            // Using toMutableList() to change the list reference, otherwise our call submitList will be ignored
-            grapeAdapter.submitList(it.toMutableList())
+            quantifiedGrapeAdapter.submitList(it)
+        }
+
+        grapeViewModel.getAllGrapes().observe(viewLifecycleOwner) {
+            quantifiedGrapeAdapter.grapes = it
         }
     }
 
-    private fun setListener() {
+    private fun setListeners() {
         binding.buttonAddGrape.setOnClickListener { showDialog() }
+
+        binding.buttonCreateGrape.setOnClickListener {
+            grapeViewModel.addGrape(Grape(grapeId = 0, name = binding.grapeName.text.toString()))
+        }
+    }
+
+    private fun observe() {
+        grapeViewModel.getAllGrapes().observe(viewLifecycleOwner) {
+            grapes = it
+        }
     }
 
     private fun addGrape(grapeName: String) {
@@ -56,7 +86,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
             return
         }
 
-        addBottleViewModel.grapeManager.addGrape(grapeName)
+        grapeViewModel.addGrape(Grape(0, grapeName))
     }
 
     private fun toggleRvPlaceholder(toggle: Boolean) {
@@ -69,20 +99,22 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
 
     private fun showDialog() {
         val dialogBinding = DialogAddCountyGrapeBinding.inflate(layoutInflater)
+        val grapes = grapes.map { it.name }.toTypedArray()
+        val checked: BooleanArray = booleanArrayOf(false, false, false, false, false, false, false, false, false, false)
 
         MaterialAlertDialogBuilder(requireContext())
             .setCancelable(false)
             .setTitle(R.string.add_grapes)
+            .setMultiChoiceItems(grapes, checked) { a, b, c ->
+                L.v("callbakc called")
+                L.v("$a, $b, $c")
+            }
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->
                 addGrape(dialogBinding.countyName.text.toString())
             }
-            .setView(dialogBinding.root)
-            .setOnDismissListener { dialogBinding.root.hideKeyboard() }
             .show()
-
-        dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
     }
 
     override fun validate() = true

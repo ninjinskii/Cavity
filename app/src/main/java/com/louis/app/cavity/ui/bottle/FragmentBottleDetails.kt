@@ -17,14 +17,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
 
-        binding.grapeBar.addAllGrapes(
-            listOf(
-                Grape(0, "Merlot", 30, 0),
-                Grape(0, "Syrah", 20, 0),
-                Grape(0, "Grenache", 5, 0),
-                Grape(0, "Bruh", 15, 0),
-            )
-        )
+        //binding.grapeBar.addAllGrapes()
 
         binding.grapeBar.triggerAnimation()
         setupCollapsingToolbar()

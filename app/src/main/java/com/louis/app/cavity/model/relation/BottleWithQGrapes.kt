@@ -5,11 +5,11 @@ import androidx.room.Relation
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Grape
 
-data class BottleWithGrapes(
+data class BottleWithQGrapes(
     @Embedded val bottle: Bottle,
     @Relation(
         parentColumn = "bottle_id",
         entityColumn = "bottle_id"
     )
-    val grapes: List<Grape>
+    val grapes: List<QuantifiedBottleGrapeXRef>
 )

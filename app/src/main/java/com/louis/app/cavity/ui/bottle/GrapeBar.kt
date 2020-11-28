@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.GrapeBarBinding
 import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
 import java.util.ArrayList
 
 class GrapeBar @JvmOverloads constructor(
@@ -38,7 +39,7 @@ class GrapeBar @JvmOverloads constructor(
         binding = GrapeBarBinding.bind(view)
     }
 
-    fun addAllGrapes(grapes: List<Grape>) {
+    fun addAllGrapes(grapes: List<QuantifiedBottleGrapeXRef>) {
         val mutGrapes = grapes.toMutableList()
         mutGrapes.sortBy { it.percentage }
         mutGrapes.forEachIndexed { index, grape -> prepareBar(index, grape) }
@@ -62,7 +63,7 @@ class GrapeBar @JvmOverloads constructor(
         }
     }
 
-    private fun prepareBar(index: Int, grape: Grape) {
+    private fun prepareBar(index: Int, grape: QuantifiedBottleGrapeXRef) {
         val set = ConstraintSet()
         val progressBar = ProgressBar(
             ContextThemeWrapper(

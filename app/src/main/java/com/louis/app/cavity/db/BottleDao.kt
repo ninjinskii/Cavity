@@ -6,7 +6,8 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.BottleAndWine
-import com.louis.app.cavity.model.relation.BottleWithGrapes
+import com.louis.app.cavity.model.relation.BottleWithQGrapes
+import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
 
 @Dao
 interface BottleDao {
@@ -24,13 +25,8 @@ interface BottleDao {
     @Query("SELECT * FROM bottle")
     fun getAllBottles(): LiveData<List<Bottle>>
 
-    @Transaction
-    @Query("SELECT * FROM grape WHERE bottle_id=:bottleId")
-    fun getGrapesForBottleNotLive(bottleId: Long): List<Grape>
-
-    @Transaction
-    @Query("SELECT * FROM review WHERE bottle_id=:bottleId")
-    fun getReviewsForBottleNotLive(bottleId: Long): List<Review>
+    @Query("SELECT * FROM grape")
+    fun getAllGrapesNotLive(): List<Grape>
 
     @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
     fun getBottleByIdNotLive(bottleId: Long): Bottle
@@ -43,10 +39,10 @@ interface BottleDao {
 
     @Transaction
     @Query("SELECT * FROM bottle")
-    fun getBottleWithGrapesNotLive(): List<BottleWithGrapes>
+    fun getBottleWithQGrapesNotLive(): List<BottleWithQGrapes>
 
     // ---------------Grape---------------
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun insertGrape(grape: Grape)
 
     @Update
@@ -58,8 +54,21 @@ interface BottleDao {
     @Query("SELECT * FROM grape")
     fun getAllGrapes(): LiveData<List<Grape>>
 
+    // ----------Quantified Grape---------
+    @Insert
+    fun insertQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
+
+    @Update
+    fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
+
+    @Delete
+    fun deleteQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
+
+    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
+    fun getQGrapesForBottle(bottleId: Long) : LiveData<List<QuantifiedBottleGrapeXRef>>
+
     // ---------------Review---------------
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun insertReview(review: Review)
 
     @Update

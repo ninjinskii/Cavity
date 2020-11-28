@@ -5,11 +5,11 @@ import androidx.room.Relation
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Review
 
-data class BottleWithReviews(
+data class BottleWithFReviews(
     @Embedded val bottle: Bottle,
     @Relation(
         parentColumn = "bottle_id",
-        entityColumn = "review_id"
+        entityColumn = "bottle_id"
     )
-    val reviews: List<Review>
+    val reviews: List<Review> // TODO: change to FilledBottleReviewXRef
 )

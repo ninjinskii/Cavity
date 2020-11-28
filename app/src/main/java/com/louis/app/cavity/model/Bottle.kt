@@ -29,5 +29,4 @@ data class Bottle(
     }
 }
 
-// Préparer un set de couleur clair avec légende pour identifier les cépages dans une jauge dans les infos de bouteille
 // Context getFilesDIr() pour récupérer le stockage privé et mettre les photos dedans

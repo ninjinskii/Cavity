@@ -5,10 +5,7 @@ import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.addbottle.steps.ReviewManager
-import com.louis.app.cavity.ui.addbottle.steps.GrapeManager
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -32,7 +29,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val step: LiveData<Int>
         get() = _step
 
-    val grapeManager = GrapeManager(repository, _userFeedback, viewModelScope)
     val reviewManager = ReviewManager(repository, _userFeedback, viewModelScope)
 
     private var wineId: Long? = null
@@ -45,9 +41,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
     val hasPdf: Boolean
         get() = pdfPath.isNotBlank()
-
-    val grapes: LiveData<MutableList<Grape>>
-        get() = grapeManager.grapes.liveData
 
     fun start(bottleWineId: Long, editedBottleId: Long) {
         L.v("$bottleWineId, $editedBottleId")
@@ -75,11 +68,11 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         currency: String,
         location: String
     ) {
-        val editBottleId = _updatedBottle.value?.bottleId
+        val bottleId = _updatedBottle.value?.bottleId
 
         partialBottle =
             PartialBottle(
-                editBottleId ?: 0,
+                bottleId ?: 0,
                 vintage,
                 apogee,
                 count,
@@ -88,6 +81,30 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 location,
                 buyDateTimestamp
             )
+
+        if (bottleId == null) {
+            viewModelScope.launch(IO) {
+                val id = repository.insertBottle(Bottle(
+                    0,
+                    wineId!!,
+                    vintage,
+                    apogee,
+                    0,
+                    count,
+                    0F,
+                    "",
+                    "",
+                    "",
+                    0L,
+                    "",
+                    "",
+                ))
+
+                // Not really in edit mode, but we have to insert a bottle to get an id
+                triggerEditMode(id)
+            }
+
+        }
     }
 
     fun saveBottle(otherInfo: String, addToFavorite: Boolean) {
@@ -120,19 +137,10 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                         repository.insertBottle(bottle)
                     }
 
-                reviewManager.reviews.value?.forEach { review ->
-                    review.bottleId = insertedBottleId
-                    repository.insertReview(review)
-                }
-
-                grapeManager.grapes.content.forEach { grape ->
-                    grape.bottleId = insertedBottleId
-                    repository.insertGrape(grape)
-                }
+                // Review
 
                 wineId = null
                 partialBottle = null
-                grapeManager.reset()
                 reviewManager.reset()
                 _updatedBottle.postValue(null)
                 _bottleUpdatedEvent.postOnce(R.string.bottle_added)
@@ -159,11 +167,9 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             L.v("editedBottle: $editedBottle")
             _updatedBottle.postValue(editedBottle)
 
-            val grapesForBottle = repository.getGrapesForBottleNotLive(bottleId)
-            grapeManager.postValue(grapesForBottle)
+            // grape
 
-            val reviewForBottle = repository.getReviewsForBottleNotLive(bottleId)
-            reviewManager.postValue(reviewForBottle as MutableList<Review>)
+            // reviews
         }
     }
 

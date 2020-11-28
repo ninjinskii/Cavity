@@ -2,6 +2,8 @@ package com.louis.app.cavity.db
 
 import android.app.Application
 import com.louis.app.cavity.model.*
+import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.util.L
 
 class WineRepository private constructor(app: Application) {
 
@@ -32,7 +34,16 @@ class WineRepository private constructor(app: Application) {
 
     fun updateGrape(grape: Grape) = bottleDao.updateGrape(grape)
     fun deleteGrape(grape: Grape) = bottleDao.deleteGrape(grape)
-    fun insertGrape(grape: Grape) = bottleDao.insertGrape(grape)
+    fun insertGrape(grape: Grape) = bottleDao.insertGrape(grape).also { L.v("héééhéhé") }
+
+    fun insertQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
+        bottleDao.insertQuantifiedGrape(qGrape)
+    fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
+        bottleDao.updateQuantifiedGrape(qGrape)
+    fun deleteQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
+        bottleDao.deleteQuantifiedGrape(qGrape)
+
+    fun getQGrapesForBottle(bottleId: Long) = bottleDao.getQGrapesForBottle(bottleId)
 
     fun updateReview(review: Review) = bottleDao.updateReview(review)
     fun deleteReview(review: Review) = bottleDao.deleteReview(review)
@@ -49,14 +60,12 @@ class WineRepository private constructor(app: Application) {
 
     fun getAllBottles() = bottleDao.getAllBottles()
     fun getBottleByIdNotLive(bottleId: Long) = bottleDao.getBottleByIdNotLive(bottleId)
-    fun getGrapesForBottleNotLive(bottleId: Long) = bottleDao.getGrapesForBottleNotLive(bottleId)
-    fun getReviewsForBottleNotLive(bottleId: Long) =
-        bottleDao.getReviewsForBottleNotLive(bottleId)
+    fun getAllGrapesNotLive() = bottleDao.getAllGrapesNotLive()
 
     fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
     fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
     fun getBottlesAndWineNotLive() = bottleDao.getBottlesAndWineNotLive()
-    fun getBottleWithGrapesNotLive() = bottleDao.getBottleWithGrapesNotLive()
+    fun getBottleWithQGrapesNotLive() = bottleDao.getBottleWithQGrapesNotLive()
 
     fun getAllGrapes() = bottleDao.getAllGrapes()
 
