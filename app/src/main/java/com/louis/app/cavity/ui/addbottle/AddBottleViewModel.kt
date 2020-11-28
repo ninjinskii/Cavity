@@ -70,6 +70,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         currency: String,
         location: String
     ) {
+
+        L.v("$bottleId")
         val partialBottle = Bottle(
             bottleId ?: 0,
             wineId ?: return,
@@ -87,7 +89,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         )
 
         viewModelScope.launch(IO) {
-            if (!isEditMode)
+            if (bottleId == null)
                 repository.insertBottle(partialBottle).also { bottleId = it }
             else
                 repository.updateBottle(partialBottle)

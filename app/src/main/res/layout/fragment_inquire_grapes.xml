@@ -10,48 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/lineStart"
+        <include
+            android:id="@+id/stepper"
+            layout="@layout/stepper"
             android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="?attr/colorSecondary"
-            app:layout_constraintBottom_toBottomOf="@id/step"
-            app:layout_constraintEnd_toStartOf="@id/step"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/step" />
-
-        <View
-            android:id="@+id/lineEnd"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="?attr/colorSecondary"
-            app:layout_constraintBottom_toBottomOf="@id/step"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/step"
-            app:layout_constraintTop_toTopOf="@id/step" />
-
-        <TextView
-            android:id="@+id/step"
-            android:layout_width="@dimen/stepper_icon"
-            android:layout_height="@dimen/stepper_icon"
-            android:layout_marginVertical="@dimen/small_margin"
-            android:layout_marginLeft="@dimen/medium_margin"
-            android:layout_marginRight="@dimen/medium_margin"
-            android:background="@drawable/shape_step"
-            android:gravity="center"
-            android:padding="4dp"
-            android:text="@string/step_2"
-            android:textColor="?attr/colorSecondary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/marginHelper"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/grapeTitle"
@@ -61,7 +26,7 @@
             android:layout_margin="@dimen/medium_margin"
             android:text="@string/grapes"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/marginHelper" />
+            app:layout_constraintTop_toBottomOf="@id/stepper" />
 
         <ImageButton
             android:id="@+id/buttonAddGrape"
@@ -90,24 +55,27 @@
 
         <ImageView
             android:id="@+id/grapeIconEmpty"
-            android:layout_width="@dimen/large_icon"
-            android:layout_height="@dimen/large_icon"
+            android:layout_width="196dp"
+            android:layout_height="196dp"
             android:src="@drawable/ic_grape"
             android:visibility="gone"
+            android:layout_margin="@dimen/large_margin"
             app:layout_constraintBottom_toTopOf="@id/explanation"
             app:layout_constraintEnd_toEndOf="@id/recyclerView"
             app:layout_constraintStart_toStartOf="@id/recyclerView"
             app:layout_constraintTop_toTopOf="@id/recyclerView"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="packed"
+            app:tint="?attr/colorOnSurface" />
 
         <TextView
             android:id="@+id/explanation"
             style="?attr/textAppearanceBody1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:justificationMode="inter_word"
             android:text="@string/grape_explanation"
             android:visibility="gone"
+            android:gravity="center"
+            android:layout_marginVertical="@dimen/large_margin"
             app:layout_constraintBottom_toTopOf="@+id/buttonAddGrapeSecondary"
             app:layout_constraintEnd_toEndOf="@id/buttonAddGrapeSecondary"
             app:layout_constraintStart_toStartOf="@id/buttonAddGrapeSecondary"
@@ -118,7 +86,7 @@
             android:id="@+id/buttonAddGrapeSecondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/small_margin"
+            android:layout_marginVertical="@dimen/medium_margin"
             android:text="@string/add_grapes"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/recyclerView"

@@ -9,18 +9,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.DialogAddCountyGrapeBinding
+import com.louis.app.cavity.databinding.DialogAddGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
-import com.louis.app.cavity.ui.addbottle.stepper.Step
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
+class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes){
     private lateinit var quantifiedGrapeAdapter: QuantifiedGrapeRecyclerAdapter
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
@@ -90,7 +89,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
     }
 
     private fun showDialog() {
-        val dialogBinding = DialogAddCountyGrapeBinding.inflate(layoutInflater)
+        val dialogBinding = DialogAddGrapeBinding.inflate(layoutInflater)
 
         lifecycleScope.launch(IO) {
             val grapes = grapeViewModel.getAllGrapesNotLive()
@@ -111,7 +110,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
                     .setNegativeButton(R.string.cancel) { _, _ ->
                     }
                     .setPositiveButton(R.string.submit) { _, _ ->
-                        addGrape(dialogBinding.countyName.text.toString())
+                        addGrape(dialogBinding.grapeName.text.toString())
                     }
                     .show()
             }
@@ -119,8 +118,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes), Step {
         }
 
     }
-
-    override fun validate() = true
 
     override fun onDestroyView() {
         super.onDestroyView()

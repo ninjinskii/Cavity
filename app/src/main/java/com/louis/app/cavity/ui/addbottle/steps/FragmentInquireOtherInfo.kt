@@ -13,11 +13,10 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
-import com.louis.app.cavity.ui.addbottle.stepper.Step
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
 
-class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info), Step {
+class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {
     private var _binding: FragmentInquireOtherInfoBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
@@ -109,8 +108,6 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info),
             binding.coordinator.showSnackbar(R.string.base_error)
         }
     }
-
-    override fun validate() = true
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

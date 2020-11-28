@@ -53,7 +53,6 @@
             android:src="@drawable/ic_check"
             app:layout_constraintBottom_toBottomOf="@id/step"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/line"
             app:layout_constraintTop_toTopOf="@id/step"
             app:tint="?attr/colorSecondary" />
 

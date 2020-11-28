@@ -12,11 +12,11 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
-import com.louis.app.cavity.ui.addbottle.stepper.Step
+import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 
-class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
+class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
     lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentAddBottleBinding? = null
     private val binding get() = _binding!!
@@ -38,17 +38,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
     }
 
     private fun initStepper() {
-        binding.viewPager.adapter = AddBottlesPagerAdapter(this)
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                val stepToCheck = childFragmentManager.findFragmentByTag("f$position") as? Step
-                if (stepToCheck?.validate() != true) binding.viewPager.currentItem = position
-            }
-        })
+        binding.viewPager.apply {
+            adapter = AddBottlesPagerAdapter(this@FragmentAddBottle)
+            isUserInputEnabled = false
+        }
     }
 
     private fun setupCustomBackNav() {
@@ -75,6 +68,14 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
                 findNavController().navigateUp()
             }
         }
+    }
+
+    override fun requestNextPage() {
+        binding.viewPager.currentItem++
+    }
+
+    override fun requestPreviousPage() {
+        binding.viewPager.currentItem--
     }
 
     override fun onDestroyView() {

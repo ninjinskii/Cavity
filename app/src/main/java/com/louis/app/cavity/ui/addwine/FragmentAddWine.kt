@@ -20,7 +20,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.DialogAddCountyGrapeBinding
+import com.louis.app.cavity.databinding.DialogAddCountyBinding
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.CountyLoader
@@ -145,7 +145,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     }
 
     private fun showDialog() {
-        val dialogBinding = DialogAddCountyGrapeBinding.inflate(layoutInflater)
+        val dialogBinding = DialogAddCountyBinding.inflate(layoutInflater)
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.add_county)

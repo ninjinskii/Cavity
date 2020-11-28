@@ -11,11 +11,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireReviewBinding
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
-import com.louis.app.cavity.ui.addbottle.stepper.Step
 import com.louis.app.cavity.util.*
 
 // TODO: use material dialogs instead of text fields
-class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review), Step {
+class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review){
     private var _binding: FragmentInquireReviewBinding? = null
     private val binding get() = _binding!!
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -172,8 +171,6 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review), Step 
             contestName.setText("")
         }
     }
-
-    override fun validate() = true
 
     override fun onDestroyView() {
         super.onDestroyView()

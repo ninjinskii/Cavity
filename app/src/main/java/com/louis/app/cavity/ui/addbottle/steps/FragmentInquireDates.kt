@@ -11,20 +11,24 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
-import com.louis.app.cavity.ui.addbottle.stepper.Step
+import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.L
 import java.util.*
 
-class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates), Step {
+class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private var _binding: FragmentInquireDatesBinding? = null
     private val binding get() = _binding!!
     private lateinit var datePicker: MaterialDatePicker<Long>
+    private lateinit var stepper: Stepper
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private var isDatePickerDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireDatesBinding.bind(view)
+
+        stepper = parentFragment as Stepper
 
         initNumberPickers()
         initCurrencyDropdown()
@@ -98,6 +102,10 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates), Step {
                 }
             }
         }
+
+        binding.stepper.next.setOnClickListener { validateFields() }
+
+        binding.stepper.previous.setOnClickListener { stepper.requestPreviousPage() }
     }
 
     private fun observe() {
@@ -119,7 +127,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates), Step {
     }
 
     private fun validateFields() = binding.countLayout.validate() && binding.priceLayout.validate()
-        .also { if (it) savePartialBottle() }
+        .also { if (it) { savePartialBottle(); stepper.requestNextPage() } }
 
     private fun savePartialBottle() {
         with(binding) {
@@ -139,8 +147,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates), Step {
             )
         }
     }
-
-    override fun validate() = validateFields()
 
     override fun onDestroyView() {
         super.onDestroyView()
