@@ -129,7 +129,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates), Step {
             val currency = currency.text.toString()
             val location = buyLocation.text.toString().trim()
 
-            addBottleViewModel.setPartialBottle(
+            addBottleViewModel.saveStep1(
                 vintage.value,
                 apogee.value,
                 count,

@@ -9,6 +9,7 @@ import com.louis.app.cavity.ui.addbottle.steps.ReviewManager
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
@@ -32,7 +33,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val reviewManager = ReviewManager(repository, _userFeedback, viewModelScope)
 
     private var wineId: Long? = null
-    private var partialBottle: PartialBottle? = null
+    private var bottleId: Long? = null
     private var buyDateTimestamp = -1L
     private var pdfPath: String = ""
 
@@ -45,10 +46,12 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     fun start(bottleWineId: Long, editedBottleId: Long) {
         wineId = bottleWineId
 
-        if (editedBottleId != 0L)
+        if (editedBottleId != 0L) {
+            bottleId = editedBottleId
             triggerEditMode(editedBottleId)
-        else
+        } else {
             _updatedBottle.postValue(null)
+        }
     }
 
     fun setTimestamp(timestamp: Long) {
@@ -59,7 +62,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         pdfPath = path
     }
 
-    fun setPartialBottle(
+    fun saveStep1(
         vintage: Int,
         apogee: Int,
         count: Int,
@@ -67,103 +70,54 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         currency: String,
         location: String
     ) {
-        val bottleId = _updatedBottle.value?.bottleId
+        val partialBottle = Bottle(
+            bottleId ?: 0,
+            wineId ?: return,
+            vintage,
+            apogee,
+            0,
+            count,
+            price,
+            currency,
+            "",
+            location,
+            buyDateTimestamp,
+            "",
+            ""
+        )
 
-        partialBottle =
-            PartialBottle(
-                bottleId ?: 0,
-                vintage,
-                apogee,
-                count,
-                price,
-                currency,
-                location,
-                buyDateTimestamp
-            )
-
-        if (bottleId == null) {
-            viewModelScope.launch(IO) {
-                val id = repository.insertBottle(Bottle(
-                    0,
-                    wineId!!,
-                    vintage,
-                    apogee,
-                    0,
-                    count,
-                    0F,
-                    "",
-                    "",
-                    "",
-                    0L,
-                    "",
-                    "",
-                ))
-
-                // Not really in edit mode, but we have to insert a bottle to get an id
-                triggerEditMode(id)
-            }
-
+        viewModelScope.launch(IO) {
+            if (!isEditMode)
+                repository.insertBottle(partialBottle).also { bottleId = it }
+            else
+                repository.updateBottle(partialBottle)
         }
     }
 
     fun saveBottle(otherInfo: String, addToFavorite: Boolean) {
-        if (wineId == null) _userFeedback.postOnce(R.string.base_error)
+        if (bottleId == null) {
+            _userFeedback.postOnce(R.string.base_error)
+            return
+        }
 
-        partialBottle?.let {
-            val bottle = Bottle(
-                it.bottleId,
-                wineId!!,
-                it.vintage,
-                it.apogee,
-                addToFavorite.toInt(),
-                it.count,
-                it.price,
-                it.currency,
-                otherInfo,
-                it.location,
-                it.date,
-                "",
-                pdfPath
-            )
+        viewModelScope.launch(IO) {
+            val step1 = repository.getBottleByIdNotLive(bottleId!!)
+            val bottle = mergeStep1Bottle(step1, addToFavorite, otherInfo)
+            repository.updateBottle(bottle)
 
-            viewModelScope.launch(IO) {
-                L.v("$isEditMode")
-                val insertedBottleId =
-                    if (isEditMode) {
-                        repository.updateBottle(bottle)
-                        bottle.bottleId
-                    } else {
-                        repository.insertBottle(bottle)
-                    }
+            // Review
 
-                // Review
-
-                wineId = null
-                partialBottle = null
-                reviewManager.reset()
-                _updatedBottle.postValue(null)
-                _bottleUpdatedEvent.postOnce(R.string.bottle_added)
-            }
+            wineId = null
+            bottleId = null
+            reviewManager.reset()
+            _updatedBottle.postValue(null)
+            _bottleUpdatedEvent.postOnce(R.string.bottle_added)
         }
     }
 
     private fun triggerEditMode(bottleId: Long) {
         viewModelScope.launch(IO) {
             val editedBottle = repository.getBottleByIdNotLive(bottleId)
-//            with(editedBottle) {
-//                setPartialBottle(
-//                    vintage,
-//                    apogee,
-//                    count.toString(),
-//                    price.toString(),
-//                    currency,
-//                    buyLocation,
-//                    buyDate
-//                )
-//            }
-
-            L.v("editedWineId: $wineId")
-            L.v("editedBottle: $editedBottle")
             _updatedBottle.postValue(editedBottle)
 
             // grape
@@ -172,14 +126,22 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    data class PartialBottle(
-        val bottleId: Long,
-        val vintage: Int,
-        val apogee: Int,
-        val count: Int,
-        val price: Float,
-        val currency: String,
-        val location: String,
-        val date: Long
-    )
+    // Hiding boring stuff
+    private fun mergeStep1Bottle(step1: Bottle, addToFavorite: Boolean, otherInfo: String): Bottle {
+        return Bottle(
+            step1.bottleId,
+            step1.wineId,
+            step1.vintage,
+            step1.apogee,
+            addToFavorite.toInt(),
+            step1.count,
+            step1.price,
+            step1.currency,
+            otherInfo,
+            step1.buyLocation,
+            step1.buyDate,
+            tasteComment = "",
+            pdfPath
+        )
+    }
 }
