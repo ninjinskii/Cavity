@@ -18,11 +18,8 @@ class QuantifiedGrapeManager {
         get() = MAX_PERCENTAGE - total
 
 
-    fun requestAddQGrape(bottleId: Long, grapeId: Long): QuantifiedBottleGrapeXRef {
-//        L.v("add")
-//        L.v("total: $total, defaultPercentage: $defaultPercentage")
-        total += defaultPercentage
-        return QuantifiedBottleGrapeXRef(bottleId, grapeId, defaultPercentage)
+    fun requestAddQGrape(): Int {
+        return defaultPercentage.also { total += defaultPercentage }
     }
 
     fun requestUpdateQGrape(oldValue: Int, newValue: Int): Int {

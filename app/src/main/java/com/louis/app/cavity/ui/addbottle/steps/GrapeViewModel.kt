@@ -37,21 +37,31 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun insertQuantifiedGrape(bottleId: Long, grapeId: Long) {
-        val checkedQGrape = qGrapeManager.requestAddQGrape(bottleId, grapeId)
-        viewModelScope.launch(IO) { repository.insertQuantifiedGrape(checkedQGrape) }
+        val defaultValue = qGrapeManager.requestAddQGrape()
+        val qGrape = QuantifiedBottleGrapeXRef(bottleId, grapeId, defaultValue)
+
+        viewModelScope.launch(IO) {
+            repository.insertQuantifiedGrape(qGrape)
+        }
     }
 
     fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef, newValue: Int) {
         val checkedValue = qGrapeManager.requestUpdateQGrape(qGrape.percentage, newValue)
         val newQGrape = qGrape.copy(percentage = checkedValue)
 
-        viewModelScope.launch(IO) { repository.updateQuantifiedGrape(newQGrape) }
+        viewModelScope.launch(IO) {
+            repository.updateQuantifiedGrape(newQGrape)
+        }
     }
 
     // Delete from recycler view
     fun removeQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) {
         qGrapeManager.requestRemoveQGrape(qGrape)
         checkedGrapes.find { it.isChecked && it.grape.grapeId == qGrape.grapeId }?.isChecked = false
+
+        viewModelScope.launch(IO) {
+            repository.deleteQuantifiedGrape(qGrape)
+        }
     }
 
     // Delete from dialog
@@ -60,6 +70,7 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
             val qGrape = repository.getQGrape(bottleId, grapeId)
             qGrapeManager.requestRemoveQGrape(qGrape)
             checkedGrapes.find { it.isChecked && it.grape.grapeId == grapeId }?.isChecked = false
+            repository.deleteQuantifiedGrape(qGrape)
         }
     }
 
