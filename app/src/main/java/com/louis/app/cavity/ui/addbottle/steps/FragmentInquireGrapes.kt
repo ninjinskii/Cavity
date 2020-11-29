@@ -55,6 +55,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
         grapeViewModel.getQGrapesForBottle(1).observe(viewLifecycleOwner) {
             toggleRvPlaceholder(it.isEmpty())
+            L.v("submitList: $it")
             quantifiedGrapeAdapter.submitList(it)
         }
 

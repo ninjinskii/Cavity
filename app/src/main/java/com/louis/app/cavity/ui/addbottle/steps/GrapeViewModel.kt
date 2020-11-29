@@ -2,23 +2,22 @@ package com.louis.app.cavity.ui.addbottle.steps
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class GrapeViewModel(app: Application) : AndroidViewModel(app) {
+
     private val repository = WineRepository.getInstance(app)
     private val qGrapeManager = QuantifiedGrapeManager()
 
     // A list to preserve checked state for dialog, should not be used for any other purpose
     var checkedGrapes = mutableListOf<CheckedGrape>()
         private set
+
 
     init {
         viewModelScope.launch(IO) {
@@ -43,13 +42,13 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef, newValue: Int) {
-        L.v("update $newValue")
-        val checkedQGrape = qGrapeManager.requestUpdateQGrape(qGrape, newValue)
-        L.v("${checkedQGrape.percentage}")
-        viewModelScope.launch(IO) { repository.updateQuantifiedGrape(checkedQGrape) }
+        val checkedValue = qGrapeManager.requestUpdateQGrape(qGrape.percentage, newValue)
+        val newQGrape = qGrape.copy(percentage = checkedValue)
+
+        viewModelScope.launch(IO) { repository.updateQuantifiedGrape(newQGrape) }
     }
 
-    // Delete from recycler view todo: consider remove ability to do this via RV ?
+    // Delete from recycler view
     fun removeQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) {
         qGrapeManager.requestRemoveQGrape(qGrape)
         checkedGrapes.find { it.isChecked && it.grape.grapeId == qGrape.grapeId }?.isChecked = false

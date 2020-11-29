@@ -1,16 +1,7 @@
 package com.louis.app.cavity.ui.addbottle.steps
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.louis.app.cavity.R
-import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.postOnce
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.louis.app.cavity.util.L
 
 class QuantifiedGrapeManager {
 
@@ -28,27 +19,20 @@ class QuantifiedGrapeManager {
 
 
     fun requestAddQGrape(bottleId: Long, grapeId: Long): QuantifiedBottleGrapeXRef {
+//        L.v("add")
+//        L.v("total: $total, defaultPercentage: $defaultPercentage")
         total += defaultPercentage
         return QuantifiedBottleGrapeXRef(bottleId, grapeId, defaultPercentage)
     }
 
+    fun requestUpdateQGrape(oldValue: Int, newValue: Int): Int {
+        val diff = newValue - oldValue
 
-    fun requestUpdateQGrape(
-        qGrape: QuantifiedBottleGrapeXRef,
-        newValue: Int
-    ): QuantifiedBottleGrapeXRef {
-        val diff = newValue - qGrape.percentage
-
-        if (diff > 0) {
-            if (total + diff > MAX_PERCENTAGE) {
-                qGrape.percentage = fillValue
-            }
-            total += qGrape.percentage
+        return if (diff > 0) {
+            if (total + diff > MAX_PERCENTAGE) fillValue else newValue
         } else {
-            total += diff
-        }
-
-        return qGrape
+            newValue
+        }.also { total += diff }
     }
 
     fun requestRemoveQGrape(qGrape: QuantifiedBottleGrapeXRef) {

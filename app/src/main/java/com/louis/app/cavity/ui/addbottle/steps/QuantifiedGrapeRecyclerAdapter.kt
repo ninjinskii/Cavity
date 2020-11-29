@@ -10,6 +10,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.util.L
 
 class QuantifiedGrapeRecyclerAdapter(
     val onDeleteListener: (QuantifiedBottleGrapeXRef) -> Unit,
