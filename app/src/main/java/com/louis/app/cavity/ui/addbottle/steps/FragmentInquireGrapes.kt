@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes){
+class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var quantifiedGrapeAdapter: QuantifiedGrapeRecyclerAdapter
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
@@ -53,7 +53,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes){
         }
 
 
-        grapeViewModel.getQGrapesForBottle(0).observe(viewLifecycleOwner) {
+        grapeViewModel.getQGrapesForBottle(1).observe(viewLifecycleOwner) {
             toggleRvPlaceholder(it.isEmpty())
             quantifiedGrapeAdapter.submitList(it)
         }
@@ -67,7 +67,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes){
         binding.buttonAddGrape.setOnClickListener { showDialog() }
 
         binding.buttonCreateGrape.setOnClickListener {
-            grapeViewModel.addGrape(Grape(grapeId = 0, name = binding.grapeName.text.toString()))
+            grapeViewModel.insertGrape(Grape(grapeId = 0, name = binding.grapeName.text.toString()))
         }
     }
 
@@ -77,7 +77,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes){
             return
         }
 
-        grapeViewModel.addGrape(Grape(0, grapeName))
+        grapeViewModel.insertGrape(Grape(0, grapeName))
     }
 
     private fun toggleRvPlaceholder(toggle: Boolean) {
@@ -90,33 +90,27 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes){
 
     private fun showDialog() {
         val dialogBinding = DialogAddGrapeBinding.inflate(layoutInflater)
+        val grapesName = grapeViewModel.getGrapeToStringArray()
+        val checkedGrapes = grapeViewModel.getGrapeToBooleanArray()
 
-        lifecycleScope.launch(IO) {
-            val grapes = grapeViewModel.getAllGrapesNotLive()
-            val grapesName = grapes.map { it.name }.toTypedArray()
-            val checked = grapes.map { false }.toBooleanArray()
+        MaterialAlertDialogBuilder(requireContext())
+            .setCancelable(false)
+            .setTitle(R.string.add_grapes)
+            .setMultiChoiceItems(grapesName, checkedGrapes) { _, pos, checked ->
+                val grapeId = grapeViewModel.getGrapeIdForPosition(pos)
 
-            withContext(Main) {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setCancelable(false)
-                    .setTitle(R.string.add_grapes)
-                    .setMultiChoiceItems(grapesName, checked) { a, pos, checked ->
-                        if (checked) {
-                            grapeViewModel.addQuantifiedGrape(1, grapes[pos].grapeId)
-                        } else {
-                            //grapeViewModel.removeQuantifiedGrape()
-                        }
-                    }
-                    .setNegativeButton(R.string.cancel) { _, _ ->
-                    }
-                    .setPositiveButton(R.string.submit) { _, _ ->
-                        addGrape(dialogBinding.grapeName.text.toString())
-                    }
-                    .show()
+                if (checked) {
+                    grapeViewModel.insertQuantifiedGrape(1, grapeId)
+                } else {
+                    grapeViewModel.removeQuantifiedGrape(1, grapeId)
+                }
             }
-
-        }
-
+            .setNegativeButton(R.string.cancel) { _, _ ->
+            }
+            .setPositiveButton(R.string.submit) { _, _ ->
+                addGrape(dialogBinding.grapeName.text.toString())
+            }
+            .show()
     }
 
     override fun onDestroyView() {

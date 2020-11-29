@@ -43,7 +43,7 @@ interface BottleDao {
 
     // ---------------Grape---------------
     @Insert
-    fun insertGrape(grape: Grape)
+    fun insertGrape(grape: Grape): Long
 
     @Update
     fun updateGrape(grape: Grape)
@@ -66,6 +66,9 @@ interface BottleDao {
 
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
     fun getQGrapesForBottle(bottleId: Long) : LiveData<List<QuantifiedBottleGrapeXRef>>
+
+    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId AND grape_id=:grapeId")
+    fun getQGrape(bottleId: Long, grapeId: Long): QuantifiedBottleGrapeXRef
 
     // ---------------Review---------------
     @Insert
