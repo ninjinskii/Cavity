@@ -10,21 +10,16 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.QuantifiedGrapeAndGrape
 import com.louis.app.cavity.util.L
 
 class QuantifiedGrapeRecyclerAdapter(
-    val onDeleteListener: (QuantifiedBottleGrapeXRef) -> Unit,
-    val onValueChangeListener: (QuantifiedBottleGrapeXRef, newValue: Int) -> Unit
+    val onDeleteListener: (QuantifiedGrapeAndGrape) -> Unit,
+    val onValueChangeListener: (QuantifiedGrapeAndGrape, newValue: Int) -> Unit
 ) :
-    ListAdapter<QuantifiedBottleGrapeXRef, QuantifiedGrapeRecyclerAdapter.GrapeViewHolder>(
+    ListAdapter<QuantifiedGrapeAndGrape, QuantifiedGrapeRecyclerAdapter.GrapeViewHolder>(
         GrapeItemDiffCallback()
     ) {
-
-    var grapes = emptyList<Grape>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GrapeViewHolder {
         val binding = ItemGrapeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -39,16 +34,16 @@ class QuantifiedGrapeRecyclerAdapter(
         return currentList[position].getId()
     }
 
-    class GrapeItemDiffCallback : DiffUtil.ItemCallback<QuantifiedBottleGrapeXRef>() {
+    class GrapeItemDiffCallback : DiffUtil.ItemCallback<QuantifiedGrapeAndGrape>() {
         override fun areItemsTheSame(
-            oldItem: QuantifiedBottleGrapeXRef,
-            newItem: QuantifiedBottleGrapeXRef
+            oldItem: QuantifiedGrapeAndGrape,
+            newItem: QuantifiedGrapeAndGrape
         ) =
             oldItem.getId() == newItem.getId()
 
         override fun areContentsTheSame(
-            oldItem: QuantifiedBottleGrapeXRef,
-            newItem: QuantifiedBottleGrapeXRef
+            oldItem: QuantifiedGrapeAndGrape,
+            newItem: QuantifiedGrapeAndGrape
         ) =
             oldItem == newItem
     }
@@ -56,12 +51,14 @@ class QuantifiedGrapeRecyclerAdapter(
     inner class GrapeViewHolder(private val binding: ItemGrapeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(quantifiedGrape: QuantifiedBottleGrapeXRef) {
+        fun bind(quantifiedGrape: QuantifiedGrapeAndGrape) {
             with(binding) {
-                grapeName.text = getGrapeName(quantifiedGrape.grapeId)
-                percent.text =
-                    itemView.context.getString(R.string.percentage, quantifiedGrape.percentage)
-                slider.value = quantifiedGrape.percentage.toFloat()
+                grapeName.text = quantifiedGrape.grape.name
+                percent.text = itemView.context.getString(
+                    R.string.percentage,
+                    quantifiedGrape.qGrape.percentage
+                )
+                slider.value = quantifiedGrape.qGrape.percentage.toFloat()
 
                 slider.clearOnSliderTouchListeners()
                 slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
@@ -78,8 +75,5 @@ class QuantifiedGrapeRecyclerAdapter(
                 }
             }
         }
-
-        private fun getGrapeName(grapeId: Long) =
-            grapes.find { it.grapeId == grapeId }?.name.orEmpty()
     }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -14,21 +15,20 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
     private val qGrapeManager = QuantifiedGrapeManager()
 
-    // A list to preserve checked state for dialog, should not be used for any other purpose
-    var checkedGrapes = mutableListOf<CheckedGrape>()
+    var currentCheckedGrapes = mutableListOf<CheckableGrape>()
         private set
-
 
     init {
         viewModelScope.launch(IO) {
             val grapes = repository.getAllGrapesNotLive()
-            checkedGrapes = grapes.map { CheckedGrape(it, isChecked = false) }.toMutableList()
+            currentCheckedGrapes = grapes.map { CheckableGrape(it, isChecked = false) } as MutableList
         }
     }
 
     fun getAllGrapes() = repository.getAllGrapes()
 
-    fun getQGrapesForBottle(bottleId: Long) = repository.getQGrapesForBottle(bottleId)
+    fun getQGrapesAndGrapeForBottle(bottleId: Long) =
+        repository.getQGrapesAndGrapeForBottle(bottleId)
 
     fun insertGrape(grape: Grape) = viewModelScope.launch(IO) {
         val id = repository.insertGrape(grape)
@@ -54,10 +54,11 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    // Delete from recycler view
+    // Delete from recycler view (might need to submit a new checkedGList from fragment)
     fun removeQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) {
         qGrapeManager.requestRemoveQGrape(qGrape)
-        checkedGrapes.find { it.isChecked && it.grape.grapeId == qGrape.grapeId }?.isChecked = false
+        currentCheckedGrapes.find { it.isChecked && it.grape.grapeId == qGrape.grapeId }?.isChecked =
+            false
 
         viewModelScope.launch(IO) {
             repository.deleteQuantifiedGrape(qGrape)
@@ -69,20 +70,34 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             val qGrape = repository.getQGrape(bottleId, grapeId)
             qGrapeManager.requestRemoveQGrape(qGrape)
-            checkedGrapes.find { it.isChecked && it.grape.grapeId == grapeId }?.isChecked = false
+            //checkedGrapes.find { it.isChecked && it.grape.grapeId == grapeId }?.isChecked = false
             repository.deleteQuantifiedGrape(qGrape)
         }
     }
 
-    fun getGrapeIdForPosition(pos: Int) = checkedGrapes[pos].grape.grapeId
+    fun getGrapeToStringArray() = currentCheckedGrapes.map { it.grape.name }.toTypedArray()
 
-    fun getGrapeToStringArray() = checkedGrapes.map { it.grape.name }.toTypedArray()
+    fun getGrapeToBooleanArray() = currentCheckedGrapes.map { it.isChecked }.toBooleanArray()
 
-    fun getGrapeToBooleanArray() = checkedGrapes.map { it.isChecked }.toBooleanArray()
+    fun submitCheckedGrapes(newCheckedGrapes: List<CheckableGrape>) {
+        for (checkableGrape in newCheckedGrapes) {
+            val grapeId = checkableGrape.grape.grapeId
+            val oldOne = currentCheckedGrapes.find { it.grape.grapeId == grapeId }
 
-    private fun addCheckedGrapes(grape: Grape) {
-        checkedGrapes.add(CheckedGrape(grape, isChecked = false))
+            if (checkableGrape.isChecked && oldOne?.isChecked != true) {
+                insertQuantifiedGrape(1, grapeId)
+            }
+
+            if (!checkableGrape.isChecked && oldOne?.isChecked != false)
+                removeQuantifiedGrape(1, grapeId)
+        }
+
+        currentCheckedGrapes = newCheckedGrapes as MutableList
     }
 
-    data class CheckedGrape(val grape: Grape, var isChecked: Boolean)
+    private fun addCheckedGrapes(grape: Grape) {
+        currentCheckedGrapes.add(CheckableGrape(grape, isChecked = true))
+    }
+
+    data class CheckableGrape(val grape: Grape, var isChecked: Boolean)
 }

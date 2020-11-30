@@ -8,6 +8,7 @@ import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.model.relation.BottleWithQGrapes
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.QuantifiedGrapeAndGrape
 
 @Dao
 interface BottleDao {
@@ -67,8 +68,15 @@ interface BottleDao {
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
     fun getQGrapesForBottle(bottleId: Long) : LiveData<List<QuantifiedBottleGrapeXRef>>
 
+    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
+    fun getQGrapesForBottleNotLive(bottleId: Long) : List<QuantifiedBottleGrapeXRef>
+
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId AND grape_id=:grapeId")
     fun getQGrape(bottleId: Long, grapeId: Long): QuantifiedBottleGrapeXRef
+
+    @Transaction
+    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
+    fun getQGrapesAndGrapeForBottle(bottleId: Long): LiveData<List<QuantifiedGrapeAndGrape>>
 
     // ---------------Review---------------
     @Insert

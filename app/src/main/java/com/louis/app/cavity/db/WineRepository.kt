@@ -44,6 +44,8 @@ class WineRepository private constructor(app: Application) {
         bottleDao.deleteQuantifiedGrape(qGrape)
 
     fun getQGrapesForBottle(bottleId: Long) = bottleDao.getQGrapesForBottle(bottleId)
+    fun getQGrapesAndGrapeForBottle(bottleId: Long) = bottleDao.getQGrapesAndGrapeForBottle(bottleId)
+    fun getQGrapesForBottleNotLive(bottleId: Long) = bottleDao.getQGrapesForBottleNotLive(bottleId)
     fun getQGrape(bottleId: Long, grapeId: Long) = bottleDao.getQGrape(bottleId, grapeId)
 
     fun updateReview(review: Review) = bottleDao.updateReview(review)

@@ -37,9 +37,9 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private fun initRecyclerView() {
         lifecycleScope.launch(IO) {
             quantifiedGrapeAdapter = QuantifiedGrapeRecyclerAdapter(
-                onDeleteListener = { grapeViewModel.removeQuantifiedGrape(it) },
-                onValueChangeListener = { qGrape, newValue ->
-                    grapeViewModel.updateQuantifiedGrape(qGrape, newValue)
+                onDeleteListener = { grapeViewModel.removeQuantifiedGrape(it.qGrape) },
+                onValueChangeListener = { qGrapeAndGrape, newValue ->
+                    grapeViewModel.updateQuantifiedGrape(qGrapeAndGrape.qGrape, newValue)
                 },
             )
 
@@ -53,14 +53,9 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         }
 
 
-        grapeViewModel.getQGrapesForBottle(1).observe(viewLifecycleOwner) {
+        grapeViewModel.getQGrapesAndGrapeForBottle(1).observe(viewLifecycleOwner) {
             toggleRvPlaceholder(it.isEmpty())
-            L.v("submitList: $it")
             quantifiedGrapeAdapter.submitList(it)
-        }
-
-        grapeViewModel.getAllGrapes().observe(viewLifecycleOwner) {
-            quantifiedGrapeAdapter.grapes = it
         }
     }
 
@@ -90,26 +85,20 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     }
 
     private fun showDialog() {
-        val dialogBinding = DialogAddGrapeBinding.inflate(layoutInflater)
+        val checkedGrapes = grapeViewModel.currentCheckedGrapes
         val grapesName = grapeViewModel.getGrapeToStringArray()
-        val checkedGrapes = grapeViewModel.getGrapeToBooleanArray()
+        val grapesBool = grapeViewModel.getGrapeToBooleanArray()
 
         MaterialAlertDialogBuilder(requireContext())
             .setCancelable(false)
             .setTitle(R.string.add_grapes)
-            .setMultiChoiceItems(grapesName, checkedGrapes) { _, pos, checked ->
-                val grapeId = grapeViewModel.getGrapeIdForPosition(pos)
-
-                if (checked) {
-                    grapeViewModel.insertQuantifiedGrape(1, grapeId)
-                } else {
-                    grapeViewModel.removeQuantifiedGrape(1, grapeId)
-                }
+            .setMultiChoiceItems(grapesName, grapesBool) { _, pos, checked ->
+                checkedGrapes[pos] = checkedGrapes[pos].copy(isChecked = checked)
             }
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->
-                addGrape(dialogBinding.grapeName.text.toString())
+                grapeViewModel.submitCheckedGrapes(checkedGrapes)
             }
             .show()
     }
