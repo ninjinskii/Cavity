@@ -12,6 +12,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.QuantifiedGrapeAndGrape
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -25,6 +27,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private val grapeViewModel: GrapeViewModel by viewModels()
+    private var qGrapes = emptyList<QuantifiedGrapeAndGrape>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,6 +57,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
 
         grapeViewModel.getQGrapesAndGrapeForBottle(1).observe(viewLifecycleOwner) {
+            qGrapes = it
             toggleRvPlaceholder(it.isEmpty())
             quantifiedGrapeAdapter.submitList(it)
         }
@@ -85,14 +89,11 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     }
 
     private fun showDialog() {
-        val checkedGrapes = grapeViewModel.currentCheckedGrapes
-        val grapesName = grapeViewModel.getGrapeToStringArray()
-        val grapesBool = grapeViewModel.getGrapeToBooleanArray()
-
-        L.v("$checkedGrapes", "from inquire grapes")
-
         lifecycleScope.launch(IO) {
-            val data = grapeViewModel.getCheckedGrapes().toMutableList()
+            val grapes = grapeViewModel.getAllGrapesNotLive()
+            val qGrapes = qGrapes.map { it.grape }
+            val grapesBool = grapes.map { it in qGrapes }.toBooleanArray()
+            val grapesName = grapes.map { it.name }.toTypedArray()
 
             withContext(Main) {
 
@@ -100,12 +101,12 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
                     .setCancelable(false)
                     .setTitle(R.string.add_grapes)
                     .setMultiChoiceItems(grapesName, grapesBool) { _, pos, checked ->
-                        data[pos] = GrapeViewModel.CheckableGrape(grape = checkedGrapes[pos].grape, isChecked = checked)
+                        //data[pos] = GrapeViewModel.CheckableGrape(grape = data[pos].grape, isChecked = checked)
                     }
                     .setNegativeButton(R.string.cancel) { _, _ ->
                     }
                     .setPositiveButton(R.string.submit) { _, _ ->
-                        grapeViewModel.submitCheckedGrapes(data)
+                        //grapeViewModel.submitCheckedGrapes()
                     }
                     .show()
             }

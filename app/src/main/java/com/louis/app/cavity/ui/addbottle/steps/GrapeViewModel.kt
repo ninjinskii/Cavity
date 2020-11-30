@@ -26,6 +26,8 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun getAllGrapesNotLive() = repository.getAllGrapesNotLive()
+
     fun getQGrapesAndGrapeForBottle(bottleId: Long) =
         repository.getQGrapesAndGrapeForBottle(bottleId)
 
@@ -98,11 +100,11 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
         currentCheckedGrapes = newCheckedGrapes as MutableList
     }
 
-    suspend fun getCheckedGrapes(): List<CheckableGrape> {
+    suspend fun getCheckedGrapes(): MutableList<CheckableGrape> {
         val grapes = repository.getAllGrapesNotLive()
         val qGrapes = repository.getQGrapesForBottleNotLive(1).map { it.grapeId }
 
-        return grapes.map { CheckableGrape(it, it.grapeId in qGrapes) }.also { L.v("$it") }
+        return grapes.map { CheckableGrape(it, it.grapeId in qGrapes) } as MutableList
     }
 
     private fun addCheckedGrapes(grape: Grape) {
