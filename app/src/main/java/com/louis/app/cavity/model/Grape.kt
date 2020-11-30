@@ -8,6 +8,6 @@ import androidx.room.PrimaryKey
 data class Grape(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "grape_id")
-    val grapeId: Long = 0,
+    val grapeId: Long,
     val name: String
 )

@@ -89,18 +89,29 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         val grapesName = grapeViewModel.getGrapeToStringArray()
         val grapesBool = grapeViewModel.getGrapeToBooleanArray()
 
-        MaterialAlertDialogBuilder(requireContext())
-            .setCancelable(false)
-            .setTitle(R.string.add_grapes)
-            .setMultiChoiceItems(grapesName, grapesBool) { _, pos, checked ->
-                checkedGrapes[pos] = checkedGrapes[pos].copy(isChecked = checked)
+        L.v("$checkedGrapes", "from inquire grapes")
+
+        lifecycleScope.launch(IO) {
+            val data = grapeViewModel.getCheckedGrapes().toMutableList()
+
+            withContext(Main) {
+
+                MaterialAlertDialogBuilder(requireContext())
+                    .setCancelable(false)
+                    .setTitle(R.string.add_grapes)
+                    .setMultiChoiceItems(grapesName, grapesBool) { _, pos, checked ->
+                        data[pos] = GrapeViewModel.CheckableGrape(grape = checkedGrapes[pos].grape, isChecked = checked)
+                    }
+                    .setNegativeButton(R.string.cancel) { _, _ ->
+                    }
+                    .setPositiveButton(R.string.submit) { _, _ ->
+                        grapeViewModel.submitCheckedGrapes(data)
+                    }
+                    .show()
             }
-            .setNegativeButton(R.string.cancel) { _, _ ->
-            }
-            .setPositiveButton(R.string.submit) { _, _ ->
-                grapeViewModel.submitCheckedGrapes(checkedGrapes)
-            }
-            .show()
+        }
+
+
     }
 
     override fun onDestroyView() {

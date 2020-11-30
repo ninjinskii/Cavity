@@ -7,6 +7,9 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
 
 @Database(
@@ -55,7 +58,7 @@ abstract class CavityDatabase : RoomDatabase() {
                 val wineDao = instance?.wineDao()
                 val countyDao = instance?.countyDao()
 
-                thread {
+                GlobalScope.launch(IO) {
                     with(countyDao!!) {
                         insertCounty(County(1, "Alsace", 0))
                         insertCounty(County(2, "Bourgogne", 1))

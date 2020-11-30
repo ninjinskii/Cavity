@@ -15,64 +15,68 @@ interface BottleDao {
 
     // ---------------Bottle---------------
     @Insert
-    fun insertBottle(bottle: Bottle): Long
+    suspend fun insertBottle(bottle: Bottle): Long
 
     @Update
-    fun updateBottle(bottle: Bottle)
+    suspend fun updateBottle(bottle: Bottle)
 
     @Delete
-    fun deleteBottle(bottle: Bottle)
+    suspend fun deleteBottle(bottle: Bottle)
 
     @Query("SELECT * FROM bottle")
     fun getAllBottles(): LiveData<List<Bottle>>
 
     @Query("SELECT * FROM grape")
-    fun getAllGrapesNotLive(): List<Grape>
+    suspend fun getAllGrapesNotLive(): List<Grape>
 
     @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
-    fun getBottleByIdNotLive(bottleId: Long): Bottle
+    suspend fun getBottleByIdNotLive(bottleId: Long): Bottle
 
     @Query("DELETE FROM bottle WHERE bottle_id=:bottleId")
-    fun deleteBottleById(bottleId: Long)
+    suspend fun deleteBottleById(bottleId: Long)
 
+    @Transaction
     @Query("SELECT bottle_id, name, naming, cuvee, color, is_organic, vintage, apogee, is_favorite, count, price, currency, other_info, buy_location, buy_date, taste_comment, pdf_path, county_id FROM wine, bottle WHERE wine.wine_id = bottle.wine_id")
-    fun getBottlesAndWineNotLive(): List<BottleAndWine>
+    suspend fun getBottlesAndWineNotLive(): List<BottleAndWine>
 
     @Transaction
     @Query("SELECT * FROM bottle")
-    fun getBottleWithQGrapesNotLive(): List<BottleWithQGrapes>
+    suspend fun getBottleWithQGrapesNotLive(): List<BottleWithQGrapes>
 
     // ---------------Grape---------------
     @Insert
-    fun insertGrape(grape: Grape): Long
+    suspend fun insertGrape(grape: Grape): Long
 
     @Update
-    fun updateGrape(grape: Grape)
+    suspend fun updateGrape(grape: Grape)
 
     @Delete
-    fun deleteGrape(grape: Grape)
+    suspend fun deleteGrape(grape: Grape)
 
     @Query("SELECT * FROM grape")
     fun getAllGrapes(): LiveData<List<Grape>>
 
     // ----------Quantified Grape---------
     @Insert
-    fun insertQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
+    suspend fun insertQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
 
     @Update
-    fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
+    suspend fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
 
     @Delete
-    fun deleteQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
+    suspend fun deleteQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
 
+    @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
     fun getQGrapesForBottle(bottleId: Long) : LiveData<List<QuantifiedBottleGrapeXRef>>
 
+    @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
-    fun getQGrapesForBottleNotLive(bottleId: Long) : List<QuantifiedBottleGrapeXRef>
+    suspend fun getQGrapesForBottleNotLive(bottleId: Long) : List<QuantifiedBottleGrapeXRef>
 
+    @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId AND grape_id=:grapeId")
-    fun getQGrape(bottleId: Long, grapeId: Long): QuantifiedBottleGrapeXRef
+    suspend fun getQGrape(bottleId: Long, grapeId: Long): QuantifiedBottleGrapeXRef
 
     @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
@@ -80,13 +84,13 @@ interface BottleDao {
 
     // ---------------Review---------------
     @Insert
-    fun insertReview(review: Review)
+    suspend fun insertReview(review: Review)
 
     @Update
-    fun updateReview(review: Review)
+    suspend fun updateReview(review: Review)
 
     @Delete
-    fun deleteReview(review: Review)
+    suspend fun deleteReview(review: Review)
 
     @Query("SELECT * FROM review")
     fun getAllReviews(): LiveData<List<Review>>
