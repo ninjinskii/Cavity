@@ -3,7 +3,6 @@ package com.louis.app.cavity.db
 import android.app.Application
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
-import com.louis.app.cavity.util.L
 
 class WineRepository private constructor(app: Application) {
 
@@ -69,7 +68,14 @@ class WineRepository private constructor(app: Application) {
     suspend fun getAllGrapesNotLive() = bottleDao.getAllGrapesNotLive()
 
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
-    suspend fun deleteBottleAndChildsById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
+    suspend fun deleteBottleAndChildsById(bottleId: Long) {
+        bottleDao.deleteBottleById(bottleId)
+        qGrapeDao.deleteQGrapeForBottle(bottleId)
+        // TODO: Tasting entry
+
+        // TODO: Reviews
+    }
+
     suspend fun getBottlesAndWineNotLive() = bottleDao.getBottlesAndWineNotLive()
     suspend fun getBottleWithQGrapesNotLive() = bottleDao.getBottleWithQGrapesNotLive()
 
