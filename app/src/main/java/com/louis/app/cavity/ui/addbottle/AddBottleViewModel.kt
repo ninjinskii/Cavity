@@ -9,7 +9,6 @@ import com.louis.app.cavity.ui.addbottle.steps.ReviewManager
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
@@ -116,7 +115,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     fun onStoppingFragmentAddBottle() {
         if (!isBottleFullyRegistered) {
             viewModelScope.launch(IO) {
-                repository.deleteBottleById(bottleId)
+                repository.deleteBottleAndChildsById(bottleId)
             }
         }
     }

@@ -22,6 +22,9 @@ class WineRepository private constructor(app: Application) {
     private val wineDao = database.wineDao()
     private val bottleDao = database.bottleDao()
     private val countyDao = database.countyDao()
+    private val grapeDao = database.grapeDao()
+    private val qGrapeDao = database.qGrapeDao()
+    private val reviewDao = database.reviewDao()
 
     fun insertWine(wine: Wine) = wineDao.insertWine(wine)
     fun updateWine(wine: Wine) = wineDao.updateWine(wine)
@@ -32,25 +35,25 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
 
-    suspend fun updateGrape(grape: Grape) = bottleDao.updateGrape(grape)
-    suspend fun deleteGrape(grape: Grape) = bottleDao.deleteGrape(grape)
-    suspend fun insertGrape(grape: Grape) = bottleDao.insertGrape(grape)
+    suspend fun updateGrape(grape: Grape) = grapeDao.updateGrape(grape)
+    suspend fun deleteGrape(grape: Grape) = grapeDao.deleteGrape(grape)
+    suspend fun insertGrape(grape: Grape) = grapeDao.insertGrape(grape)
 
     suspend fun insertQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
-        bottleDao.insertQuantifiedGrape(qGrape)
+        qGrapeDao.insertQuantifiedGrape(qGrape)
     suspend fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
-        bottleDao.updateQuantifiedGrape(qGrape)
+        qGrapeDao.updateQuantifiedGrape(qGrape)
     suspend fun deleteQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
-        bottleDao.deleteQuantifiedGrape(qGrape)
+        qGrapeDao.deleteQuantifiedGrape(qGrape)
 
-    fun getQGrapesForBottle(bottleId: Long) = bottleDao.getQGrapesForBottle(bottleId)
-    fun getQGrapesAndGrapeForBottle(bottleId: Long) = bottleDao.getQGrapesAndGrapeForBottle(bottleId)
-    suspend fun getQGrapesForBottleNotLive(bottleId: Long) = bottleDao.getQGrapesForBottleNotLive(bottleId)
-    suspend fun getQGrape(bottleId: Long, grapeId: Long) = bottleDao.getQGrape(bottleId, grapeId)
+    fun getQGrapesForBottle(bottleId: Long) = qGrapeDao.getQGrapesForBottle(bottleId)
+    fun getQGrapesAndGrapeForBottle(bottleId: Long) = qGrapeDao.getQGrapesAndGrapeForBottle(bottleId)
+    suspend fun getQGrapesForBottleNotLive(bottleId: Long) = qGrapeDao.getQGrapesForBottleNotLive(bottleId)
+    suspend fun getQGrape(bottleId: Long, grapeId: Long) = qGrapeDao.getQGrape(bottleId, grapeId)
 
-    suspend fun updateReview(review: Review) = bottleDao.updateReview(review)
-    suspend fun deleteReview(review: Review) = bottleDao.deleteReview(review)
-    suspend fun insertReview(review: Review) = bottleDao.insertReview(review)
+    suspend fun updateReview(review: Review) = reviewDao.updateReview(review)
+    suspend fun deleteReview(review: Review) = reviewDao.deleteReview(review)
+    suspend fun insertReview(review: Review) = reviewDao.insertReview(review)
 
     fun getAllWines() = wineDao.getAllWines()
     fun getWineByIdNotLive(wineId: Long) = wineDao.getWineByIdNotLive(wineId)
@@ -66,13 +69,13 @@ class WineRepository private constructor(app: Application) {
     suspend fun getAllGrapesNotLive() = bottleDao.getAllGrapesNotLive()
 
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
-    suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId) // TODO: remove orphans and separate daos
+    suspend fun deleteBottleAndChildsById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
     suspend fun getBottlesAndWineNotLive() = bottleDao.getBottlesAndWineNotLive()
     suspend fun getBottleWithQGrapesNotLive() = bottleDao.getBottleWithQGrapesNotLive()
 
-    fun getAllGrapes() = bottleDao.getAllGrapes()
+    fun getAllGrapes() = grapeDao.getAllGrapes()
 
-    fun getAllReviews() = bottleDao.getAllReviews()
+    fun getAllReviews() = reviewDao.getAllReviews()
 
     fun getCountiesWithWinesNotLive() = countyDao.getCountiesWithWinesNotLive()
 

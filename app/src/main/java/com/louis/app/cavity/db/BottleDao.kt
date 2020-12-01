@@ -12,8 +12,6 @@ import com.louis.app.cavity.model.relation.QuantifiedGrapeAndGrape
 
 @Dao
 interface BottleDao {
-
-    // ---------------Bottle---------------
     @Insert
     suspend fun insertBottle(bottle: Bottle): Long
 
@@ -42,57 +40,5 @@ interface BottleDao {
     @Transaction
     @Query("SELECT * FROM bottle")
     suspend fun getBottleWithQGrapesNotLive(): List<BottleWithQGrapes>
-
-    // ---------------Grape---------------
-    @Insert
-    suspend fun insertGrape(grape: Grape): Long
-
-    @Update
-    suspend fun updateGrape(grape: Grape)
-
-    @Delete
-    suspend fun deleteGrape(grape: Grape)
-
-    @Query("SELECT * FROM grape")
-    fun getAllGrapes(): LiveData<List<Grape>>
-
-    // ----------Quantified Grape---------
-    @Insert
-    suspend fun insertQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
-
-    @Update
-    suspend fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
-
-    @Delete
-    suspend fun deleteQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
-
-    @Transaction
-    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
-    fun getQGrapesForBottle(bottleId: Long) : LiveData<List<QuantifiedBottleGrapeXRef>>
-
-    @Transaction
-    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
-    suspend fun getQGrapesForBottleNotLive(bottleId: Long) : List<QuantifiedBottleGrapeXRef>
-
-    @Transaction
-    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId AND grape_id=:grapeId")
-    suspend fun getQGrape(bottleId: Long, grapeId: Long): QuantifiedBottleGrapeXRef
-
-    @Transaction
-    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
-    fun getQGrapesAndGrapeForBottle(bottleId: Long): LiveData<List<QuantifiedGrapeAndGrape>>
-
-    // ---------------Review---------------
-    @Insert
-    suspend fun insertReview(review: Review)
-
-    @Update
-    suspend fun updateReview(review: Review)
-
-    @Delete
-    suspend fun deleteReview(review: Review)
-
-    @Query("SELECT * FROM review")
-    fun getAllReviews(): LiveData<List<Review>>
 
 }

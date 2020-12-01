@@ -29,6 +29,9 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun wineDao(): WineDao
     abstract fun bottleDao(): BottleDao
     abstract fun countyDao(): CountyDao
+    abstract fun grapeDao(): GrapeDao
+    abstract fun qGrapeDao(): QuantifiedGrapeDao
+    abstract fun reviewDao(): ReviewDao
 
     companion object {
         @Volatile
