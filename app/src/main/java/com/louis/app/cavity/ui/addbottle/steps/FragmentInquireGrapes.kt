@@ -9,10 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.DialogAddGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
 import com.louis.app.cavity.model.relation.QuantifiedGrapeAndGrape
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.util.*
@@ -34,6 +32,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         _binding = FragmentInquireGrapesBinding.bind(view)
 
         initRecyclerView()
+        observe()
         setListeners()
     }
 
@@ -55,7 +54,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             }
         }
 
-
         grapeViewModel.getQGrapesAndGrapeForBottle(1).observe(viewLifecycleOwner) {
             qGrapes = it
             toggleRvPlaceholder(it.isEmpty())
@@ -63,8 +61,31 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         }
     }
 
+    private fun observe() {
+        grapeViewModel.grapeDialogEvent.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { checkableGrapes ->
+                val copy = checkableGrapes.map { it.copy() }.toMutableList()
+                val names = checkableGrapes.map { it.grape.name }.toTypedArray()
+                val bool = checkableGrapes.map { it.isChecked }.toBooleanArray()
+
+                MaterialAlertDialogBuilder(requireContext())
+                    .setCancelable(false)
+                    .setTitle(R.string.add_grapes)
+                    .setMultiChoiceItems(names, bool) { _, pos, checked ->
+                        copy[pos].isChecked = checked
+                    }
+                    .setNegativeButton(R.string.cancel) { _, _ ->
+                    }
+                    .setPositiveButton(R.string.submit) { _, _ ->
+                        grapeViewModel.submitCheckedGrapes(copy)
+                    }
+                    .show()
+            }
+        }
+    }
+
     private fun setListeners() {
-        binding.buttonAddGrape.setOnClickListener { showDialog() }
+        binding.buttonAddGrape.setOnClickListener { grapeViewModel.requestGrapeDialog() }
 
         binding.buttonCreateGrape.setOnClickListener {
             grapeViewModel.insertGrape(Grape(grapeId = 0, name = binding.grapeName.text.toString()))
@@ -86,33 +107,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             explanation.setVisible(toggle)
             buttonAddGrapeSecondary.setVisible(toggle)
         }
-    }
-
-    private fun showDialog() {
-        lifecycleScope.launch(IO) {
-            val grapes = grapeViewModel.getAllGrapesNotLive()
-            val qGrapes = qGrapes.map { it.grape }
-            val grapesBool = grapes.map { it in qGrapes }.toBooleanArray()
-            val grapesName = grapes.map { it.name }.toTypedArray()
-
-            withContext(Main) {
-
-                MaterialAlertDialogBuilder(requireContext())
-                    .setCancelable(false)
-                    .setTitle(R.string.add_grapes)
-                    .setMultiChoiceItems(grapesName, grapesBool) { _, pos, checked ->
-                        //data[pos] = GrapeViewModel.CheckableGrape(grape = data[pos].grape, isChecked = checked)
-                    }
-                    .setNegativeButton(R.string.cancel) { _, _ ->
-                    }
-                    .setPositiveButton(R.string.submit) { _, _ ->
-                        //grapeViewModel.submitCheckedGrapes()
-                    }
-                    .show()
-            }
-        }
-
-
     }
 
     override fun onDestroyView() {
