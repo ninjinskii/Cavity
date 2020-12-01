@@ -21,7 +21,7 @@ import kotlin.concurrent.thread
         Review::class,
         QuantifiedBottleGrapeXRef::class
     ],
-    version = 21,
+    version = 23,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {

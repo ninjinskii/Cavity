@@ -8,6 +8,4 @@ data class QuantifiedBottleGrapeXRef(
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
     @ColumnInfo(name = "grape_id") val grapeId: Long,
     var percentage: Int,
-) {
-    fun getId () = "$bottleId$grapeId".toLong()
-}
+)

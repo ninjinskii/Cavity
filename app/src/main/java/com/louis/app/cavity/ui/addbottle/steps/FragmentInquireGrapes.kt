@@ -25,11 +25,14 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by activityViewModels()
     private val grapeViewModel: GrapeViewModel by viewModels()
-    private var qGrapes = emptyList<QuantifiedGrapeAndGrape>()
+    private var bottleId = 0L
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireGrapesBinding.bind(view)
+
+        bottleId = addBottleViewModel.bottleId
+        grapeViewModel.start(bottleId)
 
         initRecyclerView()
         observe()
@@ -54,8 +57,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             }
         }
 
-        grapeViewModel.getQGrapesAndGrapeForBottle(1).observe(viewLifecycleOwner) {
-            qGrapes = it
+        grapeViewModel.getQGrapesAndGrapeForBottle(bottleId).observe(viewLifecycleOwner) {
             toggleRvPlaceholder(it.isEmpty())
             quantifiedGrapeAdapter.submitList(it)
         }
@@ -69,7 +71,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
                 val bool = checkableGrapes.map { it.isChecked }.toBooleanArray()
 
                 MaterialAlertDialogBuilder(requireContext())
-                    .setCancelable(false)
                     .setTitle(R.string.add_grapes)
                     .setMultiChoiceItems(names, bool) { _, pos, checked ->
                         copy[pos].isChecked = checked

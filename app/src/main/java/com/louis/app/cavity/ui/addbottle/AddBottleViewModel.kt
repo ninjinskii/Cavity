@@ -26,19 +26,16 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    private val _step = MutableLiveData(0)
-    val step: LiveData<Int>
-        get() = _step
 
     val reviewManager = ReviewManager(repository, _userFeedback, viewModelScope)
 
     private var wineId: Long? = null
-    private var bottleId: Long? = null
     private var buyDateTimestamp = -1L
     private var pdfPath: String = ""
+    private var isBottleFullyRegistered = false
 
-    private val isEditMode: Boolean
-        get() = _updatedBottle.value != null
+    var bottleId: Long = 0
+        private set
 
     val hasPdf: Boolean
         get() = pdfPath.isNotBlank()
@@ -70,10 +67,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         currency: String,
         location: String
     ) {
-
-        L.v("$bottleId")
         val partialBottle = Bottle(
-            bottleId ?: 0,
+            bottleId,
             wineId ?: return,
             vintage,
             apogee,
@@ -89,7 +84,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         )
 
         viewModelScope.launch(IO) {
-            if (bottleId == null)
+            if (bottleId == 0L)
                 repository.insertBottle(partialBottle).also { bottleId = it }
             else
                 repository.updateBottle(partialBottle)
@@ -97,23 +92,32 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun saveBottle(otherInfo: String, addToFavorite: Boolean) {
-        if (bottleId == null) {
+        if (bottleId == 0L) {
             _userFeedback.postOnce(R.string.base_error)
             return
         }
 
         viewModelScope.launch(IO) {
-            val step1 = repository.getBottleByIdNotLive(bottleId!!)
+            val step1 = repository.getBottleByIdNotLive(bottleId)
             val bottle = mergeStep1Bottle(step1, addToFavorite, otherInfo)
             repository.updateBottle(bottle)
 
-            // Review
-
+            isBottleFullyRegistered =
+                true // remove bottle if it is not the case when leaving addBottleFrag
             wineId = null
-            bottleId = null
+            bottleId = 0
             reviewManager.reset()
             _updatedBottle.postValue(null)
             _bottleUpdatedEvent.postOnce(R.string.bottle_added)
+        }
+    }
+
+    // Triggered when user quits without having the entire form filled
+    fun onStoppingFragmentAddBottle() {
+        if (!isBottleFullyRegistered) {
+            viewModelScope.launch(IO) {
+                repository.deleteBottleById(bottleId)
+            }
         }
     }
 
@@ -121,10 +125,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             val editedBottle = repository.getBottleByIdNotLive(bottleId)
             _updatedBottle.postValue(editedBottle)
-
-            // grape
-
-            // reviews
         }
     }
 

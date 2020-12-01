@@ -78,6 +78,11 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
         binding.viewPager.currentItem--
     }
 
+    override fun onStop() {
+        super.onStop()
+        addBottleViewModel.onStoppingFragmentAddBottle()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

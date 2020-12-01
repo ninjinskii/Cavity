@@ -66,7 +66,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun getAllGrapesNotLive() = bottleDao.getAllGrapesNotLive()
 
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
-    suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
+    suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId) // TODO: remove orphans and separate daos
     suspend fun getBottlesAndWineNotLive() = bottleDao.getBottlesAndWineNotLive()
     suspend fun getBottleWithQGrapesNotLive() = bottleDao.getBottleWithQGrapesNotLive()
 

@@ -21,13 +21,19 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     val grapeDialogEvent: LiveData<Event<List<CheckableGrape>>>
         get() = _grapeDialogEvent
 
+    private var bottleId = 0L
+
+    fun start(bottleId: Long) {
+        this.bottleId = bottleId
+    }
+
     fun getQGrapesAndGrapeForBottle(bottleId: Long) =
         repository.getQGrapesAndGrapeForBottle(bottleId)
 
     fun insertGrape(grape: Grape) {
         viewModelScope.launch(IO) {
             val id = repository.insertGrape(grape)
-            insertQuantifiedGrape(1, id)
+            insertQuantifiedGrape(bottleId, id)
         }
     }
 
@@ -75,9 +81,9 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
 
             when {
                 checkableGrape.isChecked && oldOne?.isChecked != true ->
-                    insertQuantifiedGrape(1, grapeId)
+                    insertQuantifiedGrape(bottleId, grapeId)
                 !checkableGrape.isChecked && oldOne?.isChecked != false ->
-                    removeQuantifiedGrape(1, grapeId)
+                    removeQuantifiedGrape(bottleId, grapeId)
             }
 
             // Not updating the value of the _grapeDialogEvent LiveData. This will be done
@@ -88,7 +94,7 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     fun requestGrapeDialog() {
         viewModelScope.launch(IO) {
             val grapes = repository.getAllGrapesNotLive()
-            val qGrapes = repository.getQGrapesForBottleNotLive(1).map { it.grapeId }
+            val qGrapes = repository.getQGrapesForBottleNotLive(bottleId).map { it.grapeId }
             val currentCheckedGrapes =
                 grapes.map { CheckableGrape(it, isChecked = it.grapeId in qGrapes) }
 
