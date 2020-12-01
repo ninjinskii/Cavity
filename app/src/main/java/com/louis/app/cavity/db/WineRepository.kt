@@ -2,6 +2,7 @@ package com.louis.app.cavity.db
 
 import android.app.Application
 import com.louis.app.cavity.model.*
+import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
 
 class WineRepository private constructor(app: Application) {
@@ -24,6 +25,7 @@ class WineRepository private constructor(app: Application) {
     private val grapeDao = database.grapeDao()
     private val qGrapeDao = database.qGrapeDao()
     private val reviewDao = database.reviewDao()
+    private val fReviewDao = database.fReviewDao()
 
     fun insertWine(wine: Wine) = wineDao.insertWine(wine)
     fun updateWine(wine: Wine) = wineDao.updateWine(wine)
@@ -46,13 +48,35 @@ class WineRepository private constructor(app: Application) {
         qGrapeDao.deleteQuantifiedGrape(qGrape)
 
     fun getQGrapesForBottle(bottleId: Long) = qGrapeDao.getQGrapesForBottle(bottleId)
-    fun getQGrapesAndGrapeForBottle(bottleId: Long) = qGrapeDao.getQGrapesAndGrapeForBottle(bottleId)
-    suspend fun getQGrapesForBottleNotLive(bottleId: Long) = qGrapeDao.getQGrapesForBottleNotLive(bottleId)
+    fun getQGrapesAndGrapeForBottle(bottleId: Long) =
+        qGrapeDao.getQGrapesAndGrapeForBottle(bottleId)
+
+    suspend fun getQGrapesForBottleNotLive(bottleId: Long) =
+        qGrapeDao.getQGrapesForBottleNotLive(bottleId)
+
     suspend fun getQGrape(bottleId: Long, grapeId: Long) = qGrapeDao.getQGrape(bottleId, grapeId)
 
     suspend fun updateReview(review: Review) = reviewDao.updateReview(review)
     suspend fun deleteReview(review: Review) = reviewDao.deleteReview(review)
     suspend fun insertReview(review: Review) = reviewDao.insertReview(review)
+
+    suspend fun insertFilledReview(fReview: FilledBottleReviewXRef) =
+        fReviewDao.insertFilledReview(fReview)
+
+    suspend fun updateFilledReview(fReview: FilledBottleReviewXRef) =
+        fReviewDao.updateFilledReview(fReview)
+
+    suspend fun deleteFilledReview(fReview: FilledBottleReviewXRef) =
+        fReviewDao.deleteFilledReview(fReview)
+
+    fun getFReviewAndReviewForBottle(bottleId: Long) =
+        fReviewDao.getFReviewAndReviewForBottle(bottleId)
+
+    suspend fun getFReviewForBottleNotLive(bottleId: Long) =
+        fReviewDao.getFReviewForBottleNotLive(bottleId)
+
+    suspend fun getFReview(bottleId: Long, reviewId: Long) =
+        fReviewDao.getFReview(bottleId, reviewId)
 
     fun getAllWines() = wineDao.getAllWines()
     fun getWineByIdNotLive(wineId: Long) = wineDao.getWineByIdNotLive(wineId)
@@ -71,9 +95,10 @@ class WineRepository private constructor(app: Application) {
     suspend fun deleteBottleAndChildsById(bottleId: Long) {
         bottleDao.deleteBottleById(bottleId)
         qGrapeDao.deleteQGrapeForBottle(bottleId)
+        fReviewDao.deleteFReviewForBottle(bottleId)
+
         // TODO: Tasting entry
 
-        // TODO: Reviews
     }
 
     suspend fun getBottlesAndWineNotLive() = bottleDao.getBottlesAndWineNotLive()

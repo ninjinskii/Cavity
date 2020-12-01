@@ -10,7 +10,6 @@ import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlin.concurrent.thread
 
 @Database(
     entities = [
@@ -32,6 +31,7 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun grapeDao(): GrapeDao
     abstract fun qGrapeDao(): QuantifiedGrapeDao
     abstract fun reviewDao(): ReviewDao
+    abstract fun fReviewDao(): FilledReviewDao
 
     companion object {
         @Volatile

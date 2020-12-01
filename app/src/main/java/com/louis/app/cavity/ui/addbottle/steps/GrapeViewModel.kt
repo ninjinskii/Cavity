@@ -1,13 +1,14 @@
 package com.louis.app.cavity.ui.addbottle.steps
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -65,6 +66,7 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     // Delete from dialog
+    // TODO: use caller grape instead of fetching it again in db
     private fun removeQuantifiedGrape(bottleId: Long, grapeId: Long) {
         viewModelScope.launch(IO) {
             val qGrape = repository.getQGrape(bottleId, grapeId)
