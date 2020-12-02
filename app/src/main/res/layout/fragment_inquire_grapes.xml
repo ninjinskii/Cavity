@@ -29,13 +29,26 @@
             app:layout_constraintTop_toBottomOf="@id/stepper" />
 
         <ImageButton
-            android:id="@+id/buttonAddGrape"
+            android:id="@+id/buttonSelectGrape"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
             android:layout_margin="@dimen/medium_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/add_county"
             android:src="@drawable/ic_edit"
+            android:tint="?attr/colorOnBackground"
+            app:layout_constraintBottom_toBottomOf="@id/grapeTitle"
+            app:layout_constraintEnd_toStartOf="@+id/buttonAddGrape"
+            app:layout_constraintTop_toTopOf="@id/grapeTitle" />
+
+        <ImageButton
+            android:id="@+id/buttonAddGrape"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:layout_margin="@dimen/medium_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/add_county"
+            android:src="@drawable/ic_add"
             android:tint="?attr/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="@id/grapeTitle"
             app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +100,7 @@
             android:id="@+id/buttonAddGrapeSecondary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/add_grapes"
+            android:text="@string/select_grapes"
             android:visibility="gone"
             android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintWidth_percent="0.75"
@@ -96,61 +109,6 @@
             app:layout_constraintStart_toStartOf="@id/recyclerView"
             app:layout_constraintTop_toBottomOf="@id/explanation"
             app:layout_constraintVertical_chainStyle="packed" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/shape_backdrop"
-        android:elevation="4dp"
-        app:behavior_peekHeight="?attr/actionBarSize"
-        app:layout_behavior="@string/bottom_sheet_behavior"
-        app:layout_insetEdge="bottom">
-
-        <TextView
-            android:id="@+id/newGrapeTitle"
-            style="?attr/textAppearanceHeadline4"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            android:gravity="center"
-            android:text="@string/new_grape"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
-            android:id="@+id/grapeNameLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/newGrapeTitle"
-            app:startIconDrawable="@drawable/ic_grape">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/grapeName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:hint="@string/grape_name"
-                android:inputType="textCapSentences" />
-
-        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonCreateGrape"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            android:text="@string/submit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/grapeNameLayout" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -111,7 +111,8 @@
     <string name="favorite">Coup de cœurs</string>
     <string name="add_pdf">Associer un fichier PDF</string>
     <string name="pdf">PDF</string>
-    <string name="add_grapes">Renseigner les cépages</string>
+    <string name="select_grapes">Renseigner les cépages</string>
+    <string name="add_grape">Créer un nouveau cépage</string>
     <string name="medal_color">Couleur de la médaille</string>
     <string name="remove_pdf">Retirer le PDF</string>
     <string name="bottle_added">La bouteille a été ajoutée.</string>
