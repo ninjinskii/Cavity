@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.model.*
+import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
@@ -18,9 +19,10 @@ import kotlinx.coroutines.launch
         Bottle::class,
         Grape::class,
         Review::class,
-        QuantifiedBottleGrapeXRef::class
+        QuantifiedBottleGrapeXRef::class,
+        FilledBottleReviewXRef::class
     ],
-    version = 23,
+    version = 24,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {

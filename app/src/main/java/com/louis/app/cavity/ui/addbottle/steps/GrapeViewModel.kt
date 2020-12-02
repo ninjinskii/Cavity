@@ -47,16 +47,19 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef, newValue: Int) {
+    // Return true if the value requested is accepted
+    fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef, newValue: Int): Int {
         val checkedValue = qGrapeManager.requestUpdateQGrape(qGrape.percentage, newValue)
-        val newQGrape = qGrape.copy(percentage = checkedValue)
+        val newQGrape = qGrape.copy(percentage = checkedValue) // need copy to avoid false positive
 
         viewModelScope.launch(IO) {
             repository.updateQuantifiedGrape(newQGrape)
         }
+
+        return checkedValue
     }
 
-    // Delete from recycler view (might need to submit a new checkedGList from fragment)
+    // Delete from recycler view
     fun removeQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) {
         qGrapeManager.requestRemoveQGrape(qGrape)
 

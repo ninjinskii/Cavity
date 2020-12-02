@@ -7,13 +7,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
@@ -49,6 +47,7 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
             if (binding.viewPager.currentItem != 0) {
                 binding.viewPager.currentItem = binding.viewPager.currentItem - 1
             } else {
+                cancel()
                 remove()
                 requireActivity().onBackPressed()
             }
@@ -70,17 +69,16 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
         }
     }
 
+    private fun cancel() {
+        addBottleViewModel.onCancel()
+    }
+
     override fun requestNextPage() {
         binding.viewPager.currentItem++
     }
 
     override fun requestPreviousPage() {
         binding.viewPager.currentItem--
-    }
-
-    override fun onStop() {
-        super.onStop()
-        addBottleViewModel.onStoppingFragmentAddBottle()
     }
 
     override fun onDestroyView() {

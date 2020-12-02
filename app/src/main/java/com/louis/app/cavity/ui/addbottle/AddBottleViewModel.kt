@@ -1,12 +1,17 @@
 package com.louis.app.cavity.ui.addbottle
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.addbottle.steps.ReviewManager
-import com.louis.app.cavity.util.*
+import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -112,7 +117,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     // Triggered when user quits without having the entire form filled
-    fun onStoppingFragmentAddBottle() {
+    fun onCancel() {
         if (!isBottleFullyRegistered) {
             viewModelScope.launch(IO) {
                 repository.deleteBottleAndChildsById(bottleId)

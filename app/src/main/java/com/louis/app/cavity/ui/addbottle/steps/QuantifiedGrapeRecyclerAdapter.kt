@@ -8,14 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.Slider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeBinding
-import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
 import com.louis.app.cavity.model.relation.QuantifiedGrapeAndGrape
-import com.louis.app.cavity.util.L
 
 class QuantifiedGrapeRecyclerAdapter(
     val onDeleteListener: (QuantifiedGrapeAndGrape) -> Unit,
-    val onValueChangeListener: (QuantifiedGrapeAndGrape, newValue: Int) -> Unit
+    val onValueChangeListener: (QuantifiedGrapeAndGrape, newValue: Int) -> Int
 ) :
     ListAdapter<QuantifiedGrapeAndGrape, QuantifiedGrapeRecyclerAdapter.GrapeViewHolder>(
         GrapeItemDiffCallback()
@@ -66,7 +63,9 @@ class QuantifiedGrapeRecyclerAdapter(
                     }
 
                     override fun onStopTrackingTouch(slider: Slider) {
-                        onValueChangeListener(quantifiedGrape, slider.value.toInt())
+                        val acceptedVal =
+                            onValueChangeListener(quantifiedGrape, slider.value.toInt())
+                        slider.value = acceptedVal.toFloat()
                     }
                 })
 
