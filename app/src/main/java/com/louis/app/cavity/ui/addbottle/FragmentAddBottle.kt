@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.louis.app.cavity.R
@@ -12,13 +12,15 @@ import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
+import com.louis.app.cavity.ui.addbottle.steps.GrapeViewModel
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
     lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentAddBottleBinding? = null
     private val binding get() = _binding!!
-    private val addBottleViewModel: AddBottleViewModel by activityViewModels()
+    private val addBottleViewModel: AddBottleViewModel by viewModels()
+    private val grapeViewModel: GrapeViewModel by viewModels()
     private val args: FragmentAddBottleArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,6 +67,12 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
             it.getContentIfNotHandled()?.let { stringRes ->
                 snackbarProvider.onShowSnackbarRequested(stringRes)
                 findNavController().navigateUp()
+            }
+        }
+
+        grapeViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
             }
         }
     }

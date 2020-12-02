@@ -7,8 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
@@ -19,7 +18,9 @@ import com.louis.app.cavity.util.toBoolean
 class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {
     private var _binding: FragmentInquireOtherInfoBinding? = null
     private val binding get() = _binding!!
-    private val addBottleViewModel: AddBottleViewModel by activityViewModels()
+    private val addBottleViewModel: AddBottleViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
 
     companion object {
         const val PICK_PDF_RESULT_CODE = 2

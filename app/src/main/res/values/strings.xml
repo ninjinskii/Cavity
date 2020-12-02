@@ -22,7 +22,7 @@
     <string name="empty_contest_name">Indiquez un nom de concours.</string>
     <string name="empty_grape_name">Indiquez un nom de cépage.</string>
     <string name="empty_grape_percent">Un cépage vaut 0%.</string>
-    <string name="grape_already_exist">Ce cépage est déjà dans la liste.</string>
+    <string name="grape_already_exist">Ce cépage existe déjà.</string>
     <string name="contest_name_already_exist">Ce concours est déjà dans la liste.</string>
     <string name="falsy_price">Le prix ne peut pas contenir de caractères.</string>
     <string name="rate_out_of_bounds">La note n\'est pas correcte.</string>

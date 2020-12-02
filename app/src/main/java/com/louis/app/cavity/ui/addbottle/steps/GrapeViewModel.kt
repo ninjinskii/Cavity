@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
@@ -22,6 +23,10 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     val grapeDialogEvent: LiveData<Event<List<CheckableGrape>>>
         get() = _grapeDialogEvent
 
+    private val _userFeedback = MutableLiveData<Event<Int>>()
+    val userFeedback: LiveData<Event<Int>>
+        get() = _userFeedback
+
     private var bottleId = 0L
 
     fun start(bottleId: Long) {
@@ -31,10 +36,16 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     fun getQGrapesAndGrapeForBottle(bottleId: Long) =
         repository.getQGrapesAndGrapeForBottle(bottleId)
 
-    fun insertGrape(grape: Grape) {
+    fun insertGrape(grapeName: String) {
         viewModelScope.launch(IO) {
-            val id = repository.insertGrape(grape)
-            insertQuantifiedGrape(bottleId, id)
+            val grapes = repository.getAllGrapesNotLive().map { it.name }
+
+            if (grapeName !in grapes) {
+                val id = repository.insertGrape(Grape(grapeId = 0, grapeName))
+                insertQuantifiedGrape(bottleId, id)
+            } else {
+                _userFeedback.postOnce(R.string.grape_already_exist)
+            }
         }
     }
 

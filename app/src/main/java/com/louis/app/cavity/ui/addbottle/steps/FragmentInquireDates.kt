@@ -5,7 +5,7 @@ import android.text.InputType
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
@@ -13,7 +13,6 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.L
 import java.util.*
 
 class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
@@ -21,7 +20,9 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private val binding get() = _binding!!
     private lateinit var datePicker: MaterialDatePicker<Long>
     private lateinit var stepper: Stepper
-    private val addBottleViewModel: AddBottleViewModel by activityViewModels()
+    private val addBottleViewModel: AddBottleViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
     private var isDatePickerDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

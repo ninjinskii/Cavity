@@ -5,20 +5,25 @@ import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireReviewBinding
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
-import com.louis.app.cavity.util.*
+import com.louis.app.cavity.util.MedalColor
+import com.louis.app.cavity.util.ReviewType
+import com.louis.app.cavity.util.Stars
+import com.louis.app.cavity.util.setVisible
 
 // TODO: use material dialogs instead of text fields
-class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review){
+class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
     private var _binding: FragmentInquireReviewBinding? = null
     private val binding get() = _binding!!
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private val addBottleViewModel: AddBottleViewModel by activityViewModels()
+    private val addBottleViewModel: AddBottleViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentInquireReviewBinding.bind(view)

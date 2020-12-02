@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.addbottle.steps
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,12 +10,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
-import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard
-import com.louis.app.cavity.util.showSnackbar
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -26,8 +23,15 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var quantifiedGrapeAdapter: QuantifiedGrapeRecyclerAdapter
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
-    private val addBottleViewModel: AddBottleViewModel by activityViewModels()
-    private val grapeViewModel: GrapeViewModel by viewModels()
+
+    private val addBottleViewModel: AddBottleViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+
+    private val grapeViewModel: GrapeViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+
     private var bottleId = 0L
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,22 +107,14 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             }
             .setPositiveButton(R.string.submit) { _, _ ->
                 val name = dialogBinding.grapeName.text.toString()
-                grapeViewModel.insertGrape(Grape(grapeId = 0, name))
+                grapeViewModel.insertGrape(name)
             }
             .setView(dialogBinding.root)
+            .setCancelable(false)
             .setOnDismissListener { dialogBinding.root.hideKeyboard() }
             .show()
 
         dialogBinding.grapeName.post { dialogBinding.grapeName.showKeyboard() }
-    }
-
-    private fun addGrape(grapeName: String) {
-        if (grapeName == resources.getString(R.string.grape_other)) {
-            binding.coordinator.showSnackbar(R.string.reserved_name)
-            return
-        }
-
-        grapeViewModel.insertGrape(Grape(0, grapeName))
     }
 
     private fun toggleRvPlaceholder(toggle: Boolean) {
