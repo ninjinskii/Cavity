@@ -82,7 +82,8 @@
     <string name="count">Quantité</string>
     <string name="grapes">Cépages</string>
     <string name="grape_name">Nom du cépage</string>
-    <string name="new_grape">Créer un cépage</string>
+    <string name="select_grapes">Renseigner les cépages</string>
+    <string name="add_grape">Créer un nouveau cépage</string>
     <string name="grape_explanation">Choisissez les cépages contenus dans cette bouteille, ou créez en des nouveaux s\'ils sont manquants</string>
     <string name="grape_other">Autre</string>
     <string name="percentage">%1$d %%</string>
@@ -111,8 +112,6 @@
     <string name="favorite">Coup de cœurs</string>
     <string name="add_pdf">Associer un fichier PDF</string>
     <string name="pdf">PDF</string>
-    <string name="select_grapes">Renseigner les cépages</string>
-    <string name="add_grape">Créer un nouveau cépage</string>
     <string name="medal_color">Couleur de la médaille</string>
     <string name="remove_pdf">Retirer le PDF</string>
     <string name="bottle_added">La bouteille a été ajoutée.</string>

@@ -49,6 +49,11 @@ class RuledTextInputLayout @JvmOverloads constructor(
         if (!containsFlag(RULE_REQUIRED) && input.isBlank())
             return true
 
+        if (containsFlag(RULE_REQUIRED) && input.isBlank()) {
+            error = context.getString(R.string.required_field)
+            return false
+        }
+
         for (rule in rules) {
             if (!rule.test(input)) {
                 error = context.getString(rule.onTestFailed)
