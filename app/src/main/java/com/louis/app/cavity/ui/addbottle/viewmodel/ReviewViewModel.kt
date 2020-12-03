@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 
 class ReviewViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
-    private val fReviewManager = FilledReviewManager()
 
     private val _reviewDialogEvent = MutableLiveData<Event<List<CheckableReview>>>()
     val reviewDialogEvent: LiveData<Event<List<CheckableReview>>>
@@ -39,7 +38,8 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
             val reviews = repository.getAllReviewsNotLive().map { it.contestName }
 
             if (contestName !in reviews) {
-                repository.insertReview(Review(reviewId = 0, contestName, type))
+                val id = repository.insertReview(Review(reviewId = 0, contestName, type))
+                insertFilledReview(id, getDefaultValue(type))
             } else {
                 _userFeedback.postOnce(R.string.contest_name_already_exist)
             }
@@ -54,6 +54,23 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun updateFilledReview() {}
+
+    // Delete from recycler view
+    fun removeFilledReview(fReview: FilledBottleReviewXRef) {
+        viewModelScope.launch(IO) {
+            repository.deleteFilledReview(fReview)
+        }
+    }
+
+    // Delete from dialog
+    fun removeFilledReview(reviewId: Long) {
+        viewModelScope.launch(IO) {
+            val fReview = repository.getFReview(bottleId, reviewId)
+            repository.deleteFilledReview(fReview)
+        }
+    }
+
     fun insertFReview(bottleId: Long, reviewId: Long, value: Int) {
         viewModelScope.launch(IO) {
             repository.insertFilledReview(FilledBottleReviewXRef(bottleId, reviewId, value))
@@ -62,13 +79,13 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
 
     fun submitCheckedReviews(newCheckedReviews: List<CheckableReview>) {
         for (checkableReview in newCheckedReviews) {
-            val reviewId = checkableReview.review.reviewId
+            val (reviewId, _, type) = checkableReview.review
             val oldOne =
                 _reviewDialogEvent.value?.peekContent()?.find { it.review.reviewId == reviewId }
 
             when {
                 checkableReview.isChecked && oldOne?.isChecked != true ->
-                    insertFilledReview(reviewId)
+                    insertFilledReview(reviewId, getDefaultValue(type))
                 !checkableReview.isChecked && oldOne?.isChecked != false ->
                     removeFilledReview(reviewId)
             }
@@ -76,6 +93,14 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
             // Not updating the value of the _grapeDialogEvent LiveData. This will be done
             // when requestGrapeDialog() is called only
         }
+    }
+
+    private fun getDefaultValue(type: Int) = when (type) {
+        0 -> 1
+        1 -> 15
+        2 -> 80
+        3 -> 1
+        else -> 0
     }
 
     data class CheckableReview(val review: Review, var isChecked: Boolean)

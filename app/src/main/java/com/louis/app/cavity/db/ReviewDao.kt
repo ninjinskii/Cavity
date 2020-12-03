@@ -7,7 +7,7 @@ import com.louis.app.cavity.model.Review
 @Dao
 interface ReviewDao {
     @Insert
-    suspend fun insertReview(review: Review)
+    suspend fun insertReview(review: Review): Long
 
     @Update
     suspend fun updateReview(review: Review)

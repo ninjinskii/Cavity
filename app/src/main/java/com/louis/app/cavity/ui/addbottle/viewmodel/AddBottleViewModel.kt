@@ -29,9 +29,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-
-    val reviewManager = FilledReviewManager(repository, _userFeedback, viewModelScope)
-
     private var wineId: Long? = null
     private var buyDateTimestamp = -1L
     private var pdfPath: String = ""
@@ -109,7 +106,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 true // remove bottle if it is not the case when leaving addBottleFrag
             wineId = null
             bottleId = 0
-            reviewManager.reset()
             _updatedBottle.postValue(null)
             _bottleUpdatedEvent.postOnce(R.string.bottle_added)
         }

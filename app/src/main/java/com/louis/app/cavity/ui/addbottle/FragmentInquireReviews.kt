@@ -92,7 +92,8 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
             }
             .setPositiveButton(R.string.submit) { _, _ ->
                 val name = dialogBinding.contestName.text.toString()
-                reviewViewModel.insertReview(name)
+                // TODO: get type
+                reviewViewModel.insertReview(name, 0)
             }
             .setView(dialogBinding.root)
             .setOnDismissListener { dialogBinding.root.hideKeyboard() }
