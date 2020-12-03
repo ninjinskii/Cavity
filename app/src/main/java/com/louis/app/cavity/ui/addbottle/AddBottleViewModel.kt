@@ -117,6 +117,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     // Triggered when user quits without having the entire form filled
+    // Need to do this when straight killing app too
     fun onCancel() {
         if (!isBottleFullyRegistered) {
             viewModelScope.launch(IO) {
