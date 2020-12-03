@@ -22,7 +22,7 @@ interface FilledReviewDao {
 
     @Transaction
     @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId")
-    suspend fun getFReviewForBottleNotLive(bottleId: Long): List<FilledBottleReviewXRef>
+    suspend fun getFReviewsForBottleNotLive(bottleId: Long): List<FilledBottleReviewXRef>
 
     @Transaction
     @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId AND review_id=:reviewId")

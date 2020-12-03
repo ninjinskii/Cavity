@@ -54,7 +54,13 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun updateFilledReview() {}
+    fun updateFilledReview(fReview: FilledBottleReviewXRef, contestValue: Int) {
+        fReview.value = contestValue
+
+        viewModelScope.launch(IO) {
+            repository.updateFilledReview(fReview)
+        }
+    }
 
     // Delete from recycler view
     fun removeFilledReview(fReview: FilledBottleReviewXRef) {
@@ -91,6 +97,17 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
 
             // Not updating the value of the _grapeDialogEvent LiveData. This will be done
             // when requestGrapeDialog() is called only
+        }
+    }
+
+    fun requestReviewDialog() {
+        viewModelScope.launch(IO) {
+            val reviews = repository.getAllReviewsNotLive()
+            val fReviews = repository.getFReviewsForBottleNotLive(bottleId).map { it.reviewId }
+            val currentCheckedReviews =
+                reviews.map { CheckableReview(it, isChecked = it.reviewId in fReviews) }
+
+            _reviewDialogEvent.postOnce(currentCheckedReviews)
         }
     }
 

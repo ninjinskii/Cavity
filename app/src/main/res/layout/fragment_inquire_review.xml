@@ -36,7 +36,7 @@
             app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <ImageButton
-            android:id="@+id/buttonSelectGrape"
+            android:id="@+id/buttonSelectReview"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
             android:layout_margin="@dimen/medium_margin"
@@ -45,11 +45,11 @@
             android:src="@drawable/ic_list_check"
             android:tint="?attr/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="@id/reviewTitle"
-            app:layout_constraintEnd_toStartOf="@+id/buttonAddGrape"
+            app:layout_constraintEnd_toStartOf="@+id/buttonAddReview"
             app:layout_constraintTop_toTopOf="@id/reviewTitle" />
 
         <ImageButton
-            android:id="@+id/buttonAddGrape"
+            android:id="@+id/buttonAddReview"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
             android:layout_margin="@dimen/medium_margin"

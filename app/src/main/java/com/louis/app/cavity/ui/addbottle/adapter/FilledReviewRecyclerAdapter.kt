@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,10 +12,13 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemReviewMedalBinding
 import com.louis.app.cavity.databinding.ItemReviewRateBinding
 import com.louis.app.cavity.databinding.ItemReviewStarBinding
-import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.FilledReviewAndReview
 
-class FilledReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
+class FilledReviewRecyclerAdapter(
+    val onValueChangedListener: (fReview: FilledBottleReviewXRef, checkedButtonId: Int) -> Unit,
+    val onDeleteListener: (FilledBottleReviewXRef) -> Unit
+) :
     ListAdapter<FilledReviewAndReview, FilledReviewRecyclerAdapter.BaseReviewViewHolder>(
         ReviewItemDiffCallback()
     ) {
@@ -102,8 +106,15 @@ class FilledReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
             contestName.text = review.contestName
             medal.setColorFilter(medalColors[fReview.value])
 
+            medalBinding.rbGroupMedal.apply {
+                clearOnButtonCheckedListeners()
+                addOnButtonCheckedListener { _, checkedId, _ ->
+                    onValueChangedListener(fReview, children.indexOfFirst { it.id == checkedId })
+                }
+            }
+
             deleteReview.setOnClickListener {
-                onDeleteListener(review)
+                onDeleteListener(fReview)
             }
         }
     }
@@ -116,10 +127,11 @@ class FilledReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
             val total = if (review.type == 1) 20 else 100
 
             contestName.text = review.contestName
-            rate.text = itemView.context.getString(R.string.item_rate, fReview.value, total)
+            rateLayout.suffixText = "/$total"
+            rate.setText(fReview.value.toString())
 
             deleteReview.setOnClickListener {
-                onDeleteListener(review)
+                onDeleteListener(fReview)
             }
         }
     }
@@ -133,8 +145,15 @@ class FilledReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
             contestName.text = review.contestName
             starCount.text = (fReview.value + 1).toString()
 
+            starBinding.rbGroupStars.apply {
+                clearOnButtonCheckedListeners()
+                addOnButtonCheckedListener { _, checkedId, _ ->
+                    onValueChangedListener(fReview, children.indexOfFirst { it.id == checkedId })
+                }
+            }
+
             deleteReview.setOnClickListener {
-                onDeleteListener(review)
+                onDeleteListener(fReview)
             }
         }
     }

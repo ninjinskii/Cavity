@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/review_height"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/small_margin"
     app:cardBackgroundColor="#12000000"
     app:cardElevation="0dp"
@@ -33,21 +33,21 @@
             android:layout_margin="@dimen/small_margin"
             android:contentDescription="@string/rate"
             android:src="@drawable/ic_rate"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:tint="@color/medal_gold" />
 
         <com.louis.app.cavity.ui.widget.RuledTextInputLayout
             android:id="@+id/rateLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-            android:layout_width="124dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="224dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/small_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/medium_margin"
             app:layout_constraintStart_toEndOf="@id/rateIcon"
-            app:layout_constraintTop_toTopOf="parent"
-            app:startIconDrawable="@drawable/ic_grade">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contestName"
+            app:startIconDrawable="@drawable/ic_rate">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/rate"
@@ -67,7 +67,6 @@
             android:contentDescription="@string/delete"
             android:src="@drawable/ic_close"
             android:tint="?attr/colorError"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

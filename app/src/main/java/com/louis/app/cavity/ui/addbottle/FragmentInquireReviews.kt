@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.addbottle
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,9 +43,15 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
     }
 
     private fun initRecyclerView() {
-        val reviewAdapter = FilledReviewRecyclerAdapter {
-            // remove review
-        }
+        val reviewAdapter = FilledReviewRecyclerAdapter(
+            onValueChangedListener = { fReview, value ->
+                reviewViewModel.updateFilledReview(fReview, value)
+            },
+
+            onDeleteListener = {
+                reviewViewModel.removeFilledReview(it)
+            }
+        )
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -81,6 +88,10 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
     }
 
     private fun setListeners() {
+        with(binding) {
+            buttonAddReview.setOnClickListener { showAddReviewDialog() }
+            buttonSelectReview.setOnClickListener { reviewViewModel.requestReviewDialog() }
+        }
     }
 
     private fun showAddReviewDialog() {
@@ -92,14 +103,23 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
             }
             .setPositiveButton(R.string.submit) { _, _ ->
                 val name = dialogBinding.contestName.text.toString()
-                // TODO: get type
-                reviewViewModel.insertReview(name, 0)
+                val type = getReviewType(dialogBinding.rbGroupType.checkedButtonId)
+
+                reviewViewModel.insertReview(name, type)
             }
             .setView(dialogBinding.root)
             .setOnDismissListener { dialogBinding.root.hideKeyboard() }
             .show()
 
         dialogBinding.contestName.post { dialogBinding.contestName.showKeyboard() }
+        dialogBinding.rbMedal.performClick()
+    }
+
+    private fun getReviewType(@IdRes button: Int) = when (button) {
+        R.id.rbMedal -> 0
+        R.id.rbRate20 -> 1
+        R.id.rbRate100 -> 2
+        else -> 3
     }
 
     private fun revealViews() {
