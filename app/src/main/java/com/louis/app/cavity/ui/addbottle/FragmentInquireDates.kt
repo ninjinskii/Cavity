@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.addbottle.steps
+package com.louis.app.cavity.ui.addbottle
 
 import android.os.Bundle
 import android.text.InputType
@@ -10,8 +10,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
+import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.util.DateFormatter
 import java.util.*
 

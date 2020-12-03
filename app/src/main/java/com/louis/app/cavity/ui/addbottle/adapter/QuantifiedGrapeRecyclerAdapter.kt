@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.addbottle.steps
+package com.louis.app.cavity.ui.addbottle.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

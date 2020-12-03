@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.addbottle.steps
+package com.louis.app.cavity.ui.addbottle
 
 import android.os.Bundle
 import android.view.View
@@ -7,10 +7,15 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.DialogAddReviewBinding
 import com.louis.app.cavity.databinding.FragmentInquireReviewBinding
-import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.adapter.FilledReviewRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
+import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.viewmodel.ReviewViewModel
+import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.showKeyboard
 
 class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
     private lateinit var stepperx: Stepper
@@ -37,7 +42,7 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
     }
 
     private fun initRecyclerView() {
-        val reviewAdapter = ReviewRecyclerAdapter {
+        val reviewAdapter = FilledReviewRecyclerAdapter {
             // remove review
         }
 
@@ -55,10 +60,10 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
 
     private fun observe() {
         reviewViewModel.reviewDialogEvent.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { checkableGrapes ->
-                val copy = checkableGrapes.map { it.copy() }.toMutableList()
-                val names = checkableGrapes.map { it.grape.name }.toTypedArray()
-                val bool = checkableGrapes.map { it.isChecked }.toBooleanArray()
+            event.getContentIfNotHandled()?.let { checkableReviews ->
+                val copy = checkableReviews.map { it.copy() }.toMutableList()
+                val names = checkableReviews.map { it.review.contestName }.toTypedArray()
+                val bool = checkableReviews.map { it.isChecked }.toBooleanArray()
 
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.select_grapes)
@@ -68,7 +73,7 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
                     .setNegativeButton(R.string.cancel) { _, _ ->
                     }
                     .setPositiveButton(R.string.submit) { _, _ ->
-                        grapeViewModel.submitCheckedGrapes(copy)
+                        reviewViewModel.submitCheckedReviews(copy)
                     }
                     .show()
             }
@@ -76,6 +81,24 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
     }
 
     private fun setListeners() {
+    }
+
+    private fun showAddReviewDialog() {
+        val dialogBinding = DialogAddReviewBinding.inflate(layoutInflater)
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.add_grape)
+            .setNegativeButton(R.string.cancel) { _, _ ->
+            }
+            .setPositiveButton(R.string.submit) { _, _ ->
+                val name = dialogBinding.contestName.text.toString()
+                reviewViewModel.insertReview(name)
+            }
+            .setView(dialogBinding.root)
+            .setOnDismissListener { dialogBinding.root.hideKeyboard() }
+            .show()
+
+        dialogBinding.contestName.post { dialogBinding.contestName.showKeyboard() }
     }
 
     private fun revealViews() {

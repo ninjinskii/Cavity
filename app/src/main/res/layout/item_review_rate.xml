@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/review_height"
     android:layout_margin="@dimen/small_margin"
-    app:cardElevation="4dp">
+    app:cardBackgroundColor="#12000000"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/cardview_stroke"
+    app:strokeWidth="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -13,27 +16,48 @@
 
         <TextView
             android:id="@+id/contestName"
-            style="?attr/textAppearanceHeadline6"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
             android:ellipsize="end"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/deleteReview"
-            app:layout_constraintStart_toEndOf="@id/rate"
+            app:layout_constraintStart_toEndOf="@id/rateIcon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Concours Parker" />
 
-        <TextView
-            android:id="@+id/rate"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/rateIcon"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
             android:layout_margin="@dimen/small_margin"
+            android:contentDescription="@string/rate"
+            android:src="@drawable/ic_rate"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="86 / 100" />
+            tools:tint="@color/medal_gold" />
+
+        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+            android:id="@+id/rateLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+            android:layout_width="124dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/small_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/rateIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:startIconDrawable="@drawable/ic_grade">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/rate"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences" />
+
+        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
         <ImageButton
             android:id="@+id/deleteReview"

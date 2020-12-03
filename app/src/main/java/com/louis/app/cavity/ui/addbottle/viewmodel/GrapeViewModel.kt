@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.addbottle.steps
+package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.addbottle
+package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.ui.addbottle.steps.ReviewManager
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
@@ -31,7 +30,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         get() = _userFeedback
 
 
-    val reviewManager = ReviewManager(repository, _userFeedback, viewModelScope)
+    val reviewManager = FilledReviewManager(repository, _userFeedback, viewModelScope)
 
     private var wineId: Long? = null
     private var buyDateTimestamp = -1L

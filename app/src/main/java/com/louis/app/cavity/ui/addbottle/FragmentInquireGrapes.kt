@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.addbottle.steps
+package com.louis.app.cavity.ui.addbottle
 
 import android.os.Bundle
 import android.view.View
@@ -9,8 +9,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
-import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.adapter.QuantifiedGrapeRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
+import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeViewModel
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard
@@ -79,6 +81,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
                     .setPositiveButton(R.string.submit) { _, _ ->
                         grapeViewModel.submitCheckedGrapes(copy)
                     }
+                    .setCancelable(false)
                     .show()
             }
         }
@@ -105,7 +108,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
                 grapeViewModel.insertGrape(name)
             }
             .setView(dialogBinding.root)
-            .setCancelable(false)
             .setOnDismissListener { dialogBinding.root.hideKeyboard() }
             .show()
 

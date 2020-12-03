@@ -12,7 +12,8 @@ import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
-import com.louis.app.cavity.ui.addbottle.steps.GrapeViewModel
+import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeViewModel
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {

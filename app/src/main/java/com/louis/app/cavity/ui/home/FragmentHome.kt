@@ -4,14 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
-import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
 import com.louis.app.cavity.util.setupNavigation
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null

@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.addbottle.steps
+package com.louis.app.cavity.ui.addbottle.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +13,9 @@ import com.louis.app.cavity.databinding.ItemReviewRateBinding
 import com.louis.app.cavity.databinding.ItemReviewStarBinding
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.relation.FilledReviewAndReview
-import com.louis.app.cavity.util.toBoolean
 
-class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
-    ListAdapter<FilledReviewAndReview, ReviewRecyclerAdapter.BaseReviewViewHolder>(
+class FilledReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
+    ListAdapter<FilledReviewAndReview, FilledReviewRecyclerAdapter.BaseReviewViewHolder>(
         ReviewItemDiffCallback()
     ) {
 
@@ -56,11 +55,7 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: BaseReviewViewHolder, position: Int) {
-        when (holder) {
-            is MedalViewHolder -> holder.bind(currentList[position])
-            is RateViewHolder -> holder.bind(currentList[position])
-            is StarViewHolder -> holder.bind(currentList[position])
-        }
+        holder.bind(currentList[position])
     }
 
     override fun getItemId(position: Int): Long {
@@ -70,10 +65,11 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
     override fun getItemViewType(position: Int): Int {
         val (_, review) = currentList[position]
 
-        return when {
-            review.isMedal.toBoolean() -> TYPE_MEDAL
-            review.isRate20.toBoolean() or review.isRate100.toBoolean() -> TYPE_RATE
-            review.isStar.toBoolean() -> TYPE_STAR
+        return when (review.type) {
+            0 -> TYPE_MEDAL
+            1 -> TYPE_RATE
+            2 -> TYPE_RATE
+            3 -> TYPE_STAR
             else -> throw IllegalArgumentException("Unknown view type")
         }
     }
@@ -117,7 +113,7 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
 
         override fun bind(item: FilledReviewAndReview) = with(rateBinding) {
             val (fReview, review) = item
-            val total = if (review.isRate20.toBoolean()) 20 else 100
+            val total = if (review.type == 1) 20 else 100
 
             contestName.text = review.contestName
             rate.text = itemView.context.getString(R.string.item_rate, fReview.value, total)

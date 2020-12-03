@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/review_height"
     android:layout_margin="@dimen/small_margin"
-    app:cardElevation="4dp">
+    app:cardBackgroundColor="#12000000"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/cardview_stroke"
+    app:strokeWidth="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -13,19 +16,18 @@
 
         <TextView
             android:id="@+id/contestName"
-            style="?attr/textAppearanceHeadline6"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
             android:ellipsize="end"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/deleteReview"
-            app:layout_constraintStart_toEndOf="@+id/star"
+            app:layout_constraintEnd_toStartOf="@id/deleteReview"
+            app:layout_constraintStart_toEndOf="@id/medal"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Concours Parker" />
 
         <ImageView
-            android:id="@+id/star"
+            android:id="@+id/medal"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
             android:layout_margin="@dimen/small_margin"
@@ -34,21 +36,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/medal_gold" />
-
-        <TextView
-            android:id="@+id/starCount"
-            style="@style/TextAppearance.MaterialComponents.Headline1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnPrimary"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/star"
-            app:layout_constraintEnd_toEndOf="@id/star"
-            app:layout_constraintStart_toStartOf="@id/star"
-            app:layout_constraintTop_toTopOf="@id/star"
-            tools:text="3" />
+            tools:tint="@color/medal_gold" />
 
         <ImageButton
             android:id="@+id/deleteReview"
@@ -62,5 +50,61 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/rbGroupStars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/medium_margin"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/deleteReview"
+            app:layout_constraintStart_toEndOf="@id/medal"
+            app:layout_constraintTop_toBottomOf="@id/contestName"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <Button
+                android:id="@+id/rbStar1"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/star1" />
+
+            <Button
+                android:id="@+id/rbStar2"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/star2" />
+
+            <Button
+                android:id="@+id/rbStar3"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/star3" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/rateLayout"
+            android:layout_width="126dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rbGroupType">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/rate"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
+
