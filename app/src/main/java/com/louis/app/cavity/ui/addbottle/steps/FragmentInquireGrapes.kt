@@ -11,6 +11,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard
@@ -21,6 +22,7 @@ import kotlinx.coroutines.withContext
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var quantifiedGrapeAdapter: QuantifiedGrapeRecyclerAdapter
+    private lateinit var stepperx: Stepper
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
 
@@ -38,6 +40,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireGrapesBinding.bind(view)
 
+        stepperx = parentFragment as Stepper
         bottleId = addBottleViewModel.bottleId
         grapeViewModel.start(bottleId)
 
@@ -93,9 +96,12 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     }
 
     private fun setListeners() {
-        binding.buttonSelectGrape.setOnClickListener { grapeViewModel.requestGrapeDialog() }
-
-        binding.buttonAddGrape.setOnClickListener { showAddGrapeDialog() }
+        with(binding) {
+            buttonSelectGrape.setOnClickListener { grapeViewModel.requestGrapeDialog() }
+            buttonSelectGrapeSecondary.setOnClickListener { grapeViewModel.requestGrapeDialog() }
+            buttonAddGrape.setOnClickListener { showAddGrapeDialog() }
+            buttonSkip.setOnClickListener { stepperx.requestNextPage() }
+        }
     }
 
     private fun showAddGrapeDialog() {
@@ -121,7 +127,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         with(binding) {
             grapeIconEmpty.setVisible(toggle)
             explanation.setVisible(toggle)
-            buttonAddGrapeSecondary.setVisible(toggle)
+            buttonSelectGrapeSecondary.setVisible(toggle)
+            buttonSkip.setVisible(toggle)
         }
     }
 

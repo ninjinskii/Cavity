@@ -49,7 +49,7 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
             if (binding.viewPager.currentItem != 0) {
                 binding.viewPager.currentItem = binding.viewPager.currentItem - 1
             } else {
-                cancel()
+                //addBottleViewModel.onCancel() // TODO find a way to remove uncompleted bottle when straight killing app
                 remove()
                 requireActivity().onBackPressed()
             }
@@ -75,10 +75,6 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
                 binding.coordinator.showSnackbar(stringRes)
             }
         }
-    }
-
-    private fun cancel() {
-        addBottleViewModel.onCancel()
     }
 
     override fun requestNextPage() {

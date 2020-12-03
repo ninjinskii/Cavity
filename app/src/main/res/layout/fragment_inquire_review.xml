@@ -6,301 +6,130 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true">
-
-            <View
-                android:id="@+id/lineStart"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="?attr/colorSecondary"
-                app:layout_constraintBottom_toBottomOf="@id/step"
-                app:layout_constraintEnd_toStartOf="@id/step"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/step" />
-
-            <View
-                android:id="@+id/lineEnd"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="?attr/colorSecondary"
-                app:layout_constraintBottom_toBottomOf="@id/step"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/step"
-                app:layout_constraintTop_toTopOf="@id/step" />
-
-            <TextView
-                android:id="@+id/step"
-                android:layout_width="@dimen/stepper_icon"
-                android:layout_height="@dimen/stepper_icon"
-                android:layout_marginVertical="@dimen/small_margin"
-                android:layout_marginLeft="@dimen/medium_margin"
-                android:layout_marginRight="@dimen/medium_margin"
-                android:background="@drawable/shape_step"
-                android:gravity="center"
-                android:padding="4dp"
-                android:text="@string/step_3"
-                android:textColor="?attr/colorSecondary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/marginHelper"
-                android:layout_width="0dp"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/reviewTitle"
-                style="?attr/textAppearanceSubtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:text="@string/review"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/marginHelper" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/contestNameLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/reviewTitle"
-                app:startIconDrawable="@drawable/ic_grade">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/contestName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/contest_name"
-                    android:imeOptions="actionDone"
-                    android:inputType="textCapSentences" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <View
-                android:id="@+id/divider"
-                style="@style/Widget.Cavity.Divider"
-                android:layout_marginStart="@dimen/xlarge_margin"
-                android:layout_marginEnd="@dimen/xlarge_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contestNameLayout" />
-
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/rbGroupType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider"
-                app:selectionRequired="true"
-                app:singleSelection="true">
-
-                <Button
-                    android:id="@+id/rbMedal"
-                    style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:icon="@drawable/ic_grade" />
-
-                <Button
-                    android:id="@+id/rbRate100"
-                    style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rate100" />
-
-                <Button
-                    android:id="@+id/rbRate20"
-                    style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rate20" />
-
-                <Button
-                    android:id="@+id/rbStar"
-                    style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:icon="@drawable/ic_star" />
-
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/rbGroupMedal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rbGroupType"
-                app:selectionRequired="true"
-                app:singleSelection="true">
-
-                <Button
-                    android:id="@+id/rbBronze"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bronze" />
-
-                <Button
-                    android:id="@+id/rbSilver"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/silver" />
-
-                <Button
-                    android:id="@+id/rbGold"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/gold" />
-
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/rbGroupStars"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rbGroupType"
-                app:selectionRequired="true"
-                app:singleSelection="true">
-
-                <Button
-                    android:id="@+id/rbStar1"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/star1" />
-
-                <Button
-                    android:id="@+id/rbStar2"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/star2" />
-
-                <Button
-                    android:id="@+id/rbStar3"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/star3" />
-
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/rateLayout"
-                android:layout_width="126dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rbGroupType">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/rate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/rate"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonAddReview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="100dp"
-                android:text="@string/add_review"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rateLayout" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-
-    <!-- Bottom Sheet -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:background="?attr/colorSecondary"
-        android:elevation="4dp"
-        app:behavior_peekHeight="0dp"
-        app:layout_behavior="@string/bottom_sheet_behavior"
-        app:layout_insetEdge="bottom">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="@dimen/large_margin"
-            android:layout_height="@dimen/large_margin"
-            android:layout_marginStart="@dimen/large_margin"
-            android:contentDescription="@string/review"
-            android:src="@drawable/ic_grade"
-            app:layout_constraintBottom_toBottomOf="@id/dynamicListHint"
+        <include
+            android:id="@+id/stepper"
+            layout="@layout/stepper"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/divider"
+            style="@style/Widget.Cavity.Divider.Start"
+            android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/dynamicListHint"
-            app:tint="?attr/colorOnPrimary" />
+            app:layout_constraintTop_toBottomOf="@id/stepper" />
 
         <TextView
-            android:id="@+id/dynamicListHint"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:id="@+id/reviewTitle"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
-            android:gravity="center"
-            android:textColor="?attr/colorOnPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/reviews"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Avis (3) : " />
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <ImageButton
-            android:id="@+id/buttonShowBottomSheet"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
+            android:id="@+id/buttonSelectGrape"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:layout_margin="@dimen/medium_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/show_bottom_sheet"
-            android:src="@drawable/ic_up"
-            android:tint="?attr/colorOnPrimary"
-            app:layout_constraintBottom_toBottomOf="@id/dynamicListHint"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/dynamicListHint"
-            app:layout_constraintTop_toTopOf="@id/dynamicListHint" />
+            android:contentDescription="@string/add_county"
+            android:src="@drawable/ic_list_check"
+            android:tint="?attr/colorOnBackground"
+            app:layout_constraintBottom_toBottomOf="@id/reviewTitle"
+            app:layout_constraintEnd_toStartOf="@+id/buttonAddGrape"
+            app:layout_constraintTop_toTopOf="@id/reviewTitle" />
 
-        <!-- Width match parent to prevent weird recycleview behavior -->
+        <ImageButton
+            android:id="@+id/buttonAddGrape"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:layout_margin="@dimen/medium_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/add_county"
+            android:src="@drawable/ic_add"
+            android:tint="?attr/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@id/reviewTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/reviewTitle" />
+
+        <!-- Match parent width required to get correct behavior when changing sliders value /!\ -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="?attr/colorSurface"
+            android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonShowBottomSheet"
+            app:layout_constraintTop_toBottomOf="@id/reviewTitle"
             tools:listitem="@layout/item_review_medal" />
+
+        <!-- TODO: On landscape mobile, image to left -->
+        <ImageView
+            android:id="@+id/reviewIconEmpty"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.38"
+            android:src="@drawable/ic_grade"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/explanation"
+            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            app:layout_constraintHeight_percent="0.3"
+            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:tint="?attr/colorOnSurface" />
+
+        <TextView
+            android:id="@+id/explanation"
+            style="?attr/textAppearanceBody1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="caca"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/buttonSelectReviewSecondary"
+            app:layout_constraintEnd_toEndOf="@id/buttonSelectReviewSecondary"
+            app:layout_constraintStart_toStartOf="@id/buttonSelectReviewSecondary"
+            app:layout_constraintTop_toBottomOf="@id/reviewIconEmpty"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSelectReviewSecondary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:text="@string/select_reviews"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/buttonSkip"
+            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintTop_toBottomOf="@id/explanation"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.75" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSkip"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/skip"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintTop_toBottomOf="@id/buttonSelectReviewSecondary"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.75" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
