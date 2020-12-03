@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
@@ -15,13 +14,8 @@ import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
-    private lateinit var quantifiedGrapeAdapter: QuantifiedGrapeRecyclerAdapter
     private lateinit var stepperx: Stepper
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
@@ -34,15 +28,12 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         ownerProducer = { requireParentFragment() }
     )
 
-    private var bottleId = 0L
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireGrapesBinding.bind(view)
 
         stepperx = parentFragment as Stepper
-        bottleId = addBottleViewModel.bottleId
-        grapeViewModel.start(bottleId)
+        grapeViewModel.start(addBottleViewModel.bottleId)
 
         initRecyclerView()
         observe()
@@ -50,22 +41,20 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     }
 
     private fun initRecyclerView() {
-        lifecycleScope.launch(IO) {
-            quantifiedGrapeAdapter = QuantifiedGrapeRecyclerAdapter(
-                onDeleteListener = { grapeViewModel.removeQuantifiedGrape(it.qGrape) },
-                onValueChangeListener = { qGrapeAndGrape, newValue ->
-                    grapeViewModel.updateQuantifiedGrape(qGrapeAndGrape.qGrape, newValue)
-                },
-            )
+        val quantifiedGrapeAdapter = QuantifiedGrapeRecyclerAdapter(
+            onDeleteListener = { grapeViewModel.removeQuantifiedGrape(it.qGrape) },
+            onValueChangeListener = { qGrapeAndGrape, newValue ->
+                grapeViewModel.updateQuantifiedGrape(qGrapeAndGrape.qGrape, newValue)
+            },
+        )
 
-            withContext(Main) {
-                binding.recyclerView.apply {
-                    layoutManager = LinearLayoutManager(activity)
-                    setHasFixedSize(true)
-                    adapter = quantifiedGrapeAdapter
-                }
-            }
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(activity)
+            setHasFixedSize(true)
+            adapter = quantifiedGrapeAdapter
         }
+
+        val bottleId = addBottleViewModel.bottleId
 
         grapeViewModel.getQGrapesAndGrapeForBottle(bottleId).observe(viewLifecycleOwner) {
             toggleRvPlaceholder(it.isEmpty())

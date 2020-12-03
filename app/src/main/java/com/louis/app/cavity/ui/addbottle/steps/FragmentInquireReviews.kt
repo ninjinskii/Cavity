@@ -5,15 +5,22 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireReviewBinding
 import com.louis.app.cavity.ui.addbottle.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.stepper.Stepper
+import com.louis.app.cavity.util.setVisible
 
-// TODO: use material dialogs instead of text fields
 class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
+    private lateinit var stepperx: Stepper
     private var _binding: FragmentInquireReviewBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+
+    private val reviewViewModel: ReviewViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
 
@@ -21,13 +28,17 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
         _binding = FragmentInquireReviewBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
 
+        stepperx = parentFragment as Stepper
+        reviewViewModel.start(addBottleViewModel.bottleId)
+
         initRecyclerView()
+        observe()
         setListeners()
     }
 
     private fun initRecyclerView() {
         val reviewAdapter = ReviewRecyclerAdapter {
-            addBottleViewModel.reviewManager.removeReview(it)
+            // remove review
         }
 
         binding.recyclerView.apply {
@@ -36,10 +47,31 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
             adapter = reviewAdapter
         }
 
-        addBottleViewModel.reviewManager.reviews.observe(viewLifecycleOwner) {
+        reviewViewModel.getFReviewAndReview().observe(viewLifecycleOwner) {
+            toggleRvPlaceholder(it.isEmpty())
+            reviewAdapter.submitList(it)
+        }
+    }
 
-            // Using toMutableList() to change the list reference, otherwise our call to submitList will be ignored
-            reviewAdapter.submitList(it.toMutableList())
+    private fun observe() {
+        reviewViewModel.reviewDialogEvent.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { checkableGrapes ->
+                val copy = checkableGrapes.map { it.copy() }.toMutableList()
+                val names = checkableGrapes.map { it.grape.name }.toTypedArray()
+                val bool = checkableGrapes.map { it.isChecked }.toBooleanArray()
+
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.select_grapes)
+                    .setMultiChoiceItems(names, bool) { _, pos, checked ->
+                        copy[pos].isChecked = checked
+                    }
+                    .setNegativeButton(R.string.cancel) { _, _ ->
+                    }
+                    .setPositiveButton(R.string.submit) { _, _ ->
+                        grapeViewModel.submitCheckedGrapes(copy)
+                    }
+                    .show()
+            }
         }
     }
 
@@ -103,6 +135,15 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
 //            addBottleViewModel.reviewManager.addReview(constestName, type)
 //            contestName.setText("")
 //        }
+    }
+
+    private fun toggleRvPlaceholder(toggle: Boolean) {
+        with(binding) {
+            reviewIconEmpty.setVisible(toggle)
+            explanation.setVisible(toggle)
+            buttonSelectReviewSecondary.setVisible(toggle)
+            buttonSkip.setVisible(toggle)
+        }
     }
 
     override fun onDestroyView() {

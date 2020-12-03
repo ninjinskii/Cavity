@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
 import com.louis.app.cavity.util.Event
 import kotlinx.coroutines.Dispatchers.IO
@@ -37,4 +38,5 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    data class CheckableReview(val review: Review, var isChecked: Boolean)
 }

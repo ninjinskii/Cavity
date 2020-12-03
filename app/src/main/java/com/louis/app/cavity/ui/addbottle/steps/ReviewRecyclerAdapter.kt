@@ -15,9 +15,7 @@ import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.util.toBoolean
 
 class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
-    ListAdapter<Review, ReviewRecyclerAdapter.BaseReviewViewHolder>(
-        ReviewItemDiffCallback()
-    ) {
+    ListAdapter<Review, ReviewRecyclerAdapter.BaseReviewViewHolder>(ReviewItemDiffCallback()) {
 
     companion object {
         private const val TYPE_MEDAL = 0
