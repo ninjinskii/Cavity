@@ -12,10 +12,13 @@ import com.louis.app.cavity.databinding.ItemReviewMedalBinding
 import com.louis.app.cavity.databinding.ItemReviewRateBinding
 import com.louis.app.cavity.databinding.ItemReviewStarBinding
 import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.relation.FilledReviewAndReview
 import com.louis.app.cavity.util.toBoolean
 
 class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
-    ListAdapter<Review, ReviewRecyclerAdapter.BaseReviewViewHolder>(ReviewItemDiffCallback()) {
+    ListAdapter<FilledReviewAndReview, ReviewRecyclerAdapter.BaseReviewViewHolder>(
+        ReviewItemDiffCallback()
+    ) {
 
     companion object {
         private const val TYPE_MEDAL = 0
@@ -61,11 +64,11 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
     }
 
     override fun getItemId(position: Int): Long {
-        return currentList[position].contestName.hashCode().toLong()
+        return currentList[position].getId()
     }
 
     override fun getItemViewType(position: Int): Int {
-        val review = currentList[position]
+        val (_, review) = currentList[position]
 
         return when {
             review.isMedal.toBoolean() -> TYPE_MEDAL
@@ -75,25 +78,34 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
         }
     }
 
-    class ReviewItemDiffCallback : DiffUtil.ItemCallback<Review>() {
-        override fun areItemsTheSame(oldItem: Review, newItem: Review) =
-            oldItem.contestName == newItem.contestName
+    class ReviewItemDiffCallback : DiffUtil.ItemCallback<FilledReviewAndReview>() {
+        override fun areItemsTheSame(
+            oldItem: FilledReviewAndReview,
+            newItem: FilledReviewAndReview
+        ) =
+            oldItem.getId() == newItem.getId()
 
-        override fun areContentsTheSame(oldItem: Review, newItem: Review) =
+        override fun areContentsTheSame(
+            oldItem: FilledReviewAndReview,
+            newItem: FilledReviewAndReview
+        ) =
             oldItem == newItem
     }
 
     inner class MedalViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
-        private val bindingMedal = ItemReviewMedalBinding.bind(itemView)
+        private val medalBinding = ItemReviewMedalBinding.bind(itemView)
         private val medalColors = listOf(
             ContextCompat.getColor(itemView.context, R.color.medal_bronze),
             ContextCompat.getColor(itemView.context, R.color.medal_silver),
             ContextCompat.getColor(itemView.context, R.color.medal_gold)
         )
 
-        override fun bind(review: Review) = with(bindingMedal) {
+        override fun bind(item: FilledReviewAndReview) = with(medalBinding) {
+            val (fReview, review) = item
+
             contestName.text = review.contestName
-            //medal.setColorFilter(medalColors[review.value])
+            medal.setColorFilter(medalColors[fReview.value])
+
             deleteReview.setOnClickListener {
                 onDeleteListener(review)
             }
@@ -101,12 +113,15 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
     }
 
     inner class RateViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
-        private val bindingRate = ItemReviewRateBinding.bind(itemView)
+        private val rateBinding = ItemReviewRateBinding.bind(itemView)
 
-        override fun bind(review: Review) = with(bindingRate) {
-            contestName.text = review.contestName
+        override fun bind(item: FilledReviewAndReview) = with(rateBinding) {
+            val (fReview, review) = item
             val total = if (review.isRate20.toBoolean()) 20 else 100
-            //rate.text = itemView.context.getString(R.string.item_rate, review.value, total)
+
+            contestName.text = review.contestName
+            rate.text = itemView.context.getString(R.string.item_rate, fReview.value, total)
+
             deleteReview.setOnClickListener {
                 onDeleteListener(review)
             }
@@ -114,11 +129,14 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
     }
 
     inner class StarViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
-        private val bindingStar = ItemReviewStarBinding.bind(itemView)
+        private val starBinding = ItemReviewStarBinding.bind(itemView)
 
-        override fun bind(review: Review) = with(bindingStar) {
+        override fun bind(item: FilledReviewAndReview) = with(starBinding) {
+            val (fReview, review) = item
+
             contestName.text = review.contestName
-            //starCount.text = (review.value + 1).toString()
+            starCount.text = (fReview.value + 1).toString()
+
             deleteReview.setOnClickListener {
                 onDeleteListener(review)
             }
@@ -126,6 +144,6 @@ class ReviewRecyclerAdapter(val onDeleteListener: (Review) -> Unit) :
     }
 
     abstract class BaseReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        abstract fun bind(review: Review)
+        abstract fun bind(item: FilledReviewAndReview)
     }
 }
