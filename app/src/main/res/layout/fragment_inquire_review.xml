@@ -56,7 +56,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/add_county"
             android:src="@drawable/ic_add"
-            android:tint="?attr/colorPrimary"
+            android:tint="?attr/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="@id/reviewTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/reviewTitle" />
