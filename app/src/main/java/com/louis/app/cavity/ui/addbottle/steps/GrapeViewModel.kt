@@ -42,14 +42,14 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
 
             if (grapeName !in grapes) {
                 val id = repository.insertGrape(Grape(grapeId = 0, grapeName))
-                insertQuantifiedGrape(bottleId, id)
+                insertQuantifiedGrape(id)
             } else {
                 _userFeedback.postOnce(R.string.grape_already_exist)
             }
         }
     }
 
-    private fun insertQuantifiedGrape(bottleId: Long, grapeId: Long) {
+    private fun insertQuantifiedGrape(grapeId: Long) {
         val defaultValue = qGrapeManager.requestAddQGrape()
         val qGrape = QuantifiedBottleGrapeXRef(bottleId, grapeId, defaultValue)
 
@@ -80,8 +80,7 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     // Delete from dialog
-    // TODO: use caller grape instead of fetching it again in db
-    private fun removeQuantifiedGrape(bottleId: Long, grapeId: Long) {
+    private fun removeQuantifiedGrape(grapeId: Long) {
         viewModelScope.launch(IO) {
             val qGrape = repository.getQGrape(bottleId, grapeId)
             qGrapeManager.requestRemoveQGrape(qGrape)
@@ -97,9 +96,9 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
 
             when {
                 checkableGrape.isChecked && oldOne?.isChecked != true ->
-                    insertQuantifiedGrape(bottleId, grapeId)
+                    insertQuantifiedGrape(grapeId)
                 !checkableGrape.isChecked && oldOne?.isChecked != false ->
-                    removeQuantifiedGrape(bottleId, grapeId)
+                    removeQuantifiedGrape(grapeId)
             }
 
             // Not updating the value of the _grapeDialogEvent LiveData. This will be done
