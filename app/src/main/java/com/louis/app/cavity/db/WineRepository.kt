@@ -42,10 +42,15 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun insertQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
         qGrapeDao.insertQuantifiedGrape(qGrape)
+
     suspend fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
         qGrapeDao.updateQuantifiedGrape(qGrape)
+
     suspend fun deleteQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
         qGrapeDao.deleteQuantifiedGrape(qGrape)
+
+    suspend fun deleteQGrapeByPk(bottleId: Long, grapeId: Long) =
+        qGrapeDao.deleteQGrapeByPk(bottleId, grapeId)
 
     fun getQGrapesForBottle(bottleId: Long) = qGrapeDao.getQGrapesForBottle(bottleId)
     fun getQGrapesAndGrapeForBottle(bottleId: Long) =
@@ -68,6 +73,9 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun deleteFilledReview(fReview: FilledBottleReviewXRef) =
         fReviewDao.deleteFilledReview(fReview)
+
+    suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long) =
+        fReviewDao.deleteFReviewByPk(bottleId, reviewId)
 
     fun getFReviewAndReviewForBottle(bottleId: Long) =
         fReviewDao.getFReviewAndReviewForBottle(bottleId)

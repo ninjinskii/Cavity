@@ -64,10 +64,9 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     // Delete from dialog
-    fun removeFilledReview(reviewId: Long) {
+    private fun removeFilledReview(reviewId: Long) {
         viewModelScope.launch(IO) {
-            val fReview = repository.getFReview(bottleId, reviewId)
-            repository.deleteFilledReview(fReview)
+            repository.deleteFReviewByPk(bottleId, reviewId)
         }
     }
 

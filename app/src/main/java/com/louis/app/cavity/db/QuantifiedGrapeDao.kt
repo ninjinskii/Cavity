@@ -33,4 +33,7 @@ interface QuantifiedGrapeDao {
     @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
     fun getQGrapesAndGrapeForBottle(bottleId: Long): LiveData<List<QuantifiedGrapeAndGrape>>
+
+    @Query("DELETE FROM q_grape WHERE bottle_id=:bottleId AND grape_id=:grapeId")
+    suspend fun deleteQGrapeByPk(bottleId: Long, grapeId: Long)
 }
