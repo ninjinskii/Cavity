@@ -48,30 +48,29 @@ class QuantifiedGrapeRecyclerAdapter(
     inner class GrapeViewHolder(private val binding: ItemGrapeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(quantifiedGrape: QuantifiedGrapeAndGrape) {
-            with(binding) {
-                grapeName.text = quantifiedGrape.grape.name
-                percent.text = itemView.context.getString(
-                    R.string.percentage,
-                    quantifiedGrape.qGrape.percentage
-                )
-                slider.value = quantifiedGrape.qGrape.percentage.toFloat()
+        fun bind(item: QuantifiedGrapeAndGrape) = with(binding) {
+            val (qGrape, grape) = item
 
-                slider.clearOnSliderTouchListeners()
-                slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-                    override fun onStartTrackingTouch(slider: Slider) {
-                    }
+            grapeName.text = grape.name
+            slider.value = qGrape.percentage.toFloat()
+            percent.text = itemView.context.getString(
+                R.string.percentage,
+                qGrape.percentage
+            )
 
-                    override fun onStopTrackingTouch(slider: Slider) {
-                        val acceptedVal =
-                            onValueChangeListener(quantifiedGrape, slider.value.toInt())
-                        slider.value = acceptedVal.toFloat()
-                    }
-                })
-
-                deleteGrape.setOnClickListener {
-                    onDeleteListener(quantifiedGrape)
+            slider.clearOnSliderTouchListeners()
+            slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+                override fun onStartTrackingTouch(slider: Slider) {
                 }
+
+                override fun onStopTrackingTouch(slider: Slider) {
+                    val acceptedVal = onValueChangeListener(item, slider.value.toInt())
+                    slider.value = acceptedVal.toFloat()
+                }
+            })
+
+            deleteGrape.setOnClickListener {
+                onDeleteListener(item)
             }
         }
     }
