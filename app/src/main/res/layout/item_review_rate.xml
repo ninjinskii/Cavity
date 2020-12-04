@@ -44,9 +44,10 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/small_margin"
             android:layout_marginBottom="@dimen/medium_margin"
-            app:layout_constraintStart_toEndOf="@id/rateIcon"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/rateIcon"
             app:layout_constraintTop_toBottomOf="@id/contestName"
+            app:rule="required|positive|integer"
             app:startIconDrawable="@drawable/ic_rate">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -55,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/rate"
                 android:imeOptions="actionDone"
-                android:inputType="textCapSentences" />
+                android:inputType="number" />
 
         </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 

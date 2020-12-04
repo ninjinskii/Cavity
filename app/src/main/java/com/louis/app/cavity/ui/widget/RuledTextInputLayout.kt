@@ -66,6 +66,14 @@ class RuledTextInputLayout @JvmOverloads constructor(
         return true
     }
 
+    fun clearRules(clearDefaultRules: Boolean) {
+        rules.clear()
+
+        if (!clearDefaultRules) {
+            setDefaultRules()
+        }
+    }
+
     private fun setDefaultRules() {
         if (containsFlag(RULE_REQUIRED))
             addRules(Rule(R.string.required_field) { it.isNotBlank() })

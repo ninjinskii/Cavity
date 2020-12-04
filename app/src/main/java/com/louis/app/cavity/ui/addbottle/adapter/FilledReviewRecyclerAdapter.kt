@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,9 +15,10 @@ import com.louis.app.cavity.databinding.ItemReviewRateBinding
 import com.louis.app.cavity.databinding.ItemReviewStarBinding
 import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.FilledReviewAndReview
+import com.louis.app.cavity.ui.widget.Rule
 
 class FilledReviewRecyclerAdapter(
-    val onValueChangedListener: (fReview: FilledBottleReviewXRef, checkedButtonId: Int) -> Unit,
+    val onValueChangedListener: (fReview: FilledBottleReviewXRef, checkedButtonIdOrRate: Int) -> Unit,
     val onDeleteListener: (FilledBottleReviewXRef) -> Unit
 ) :
     ListAdapter<FilledReviewAndReview, FilledReviewRecyclerAdapter.BaseReviewViewHolder>(
@@ -106,8 +108,9 @@ class FilledReviewRecyclerAdapter(
             contestName.text = review.contestName
             medal.setColorFilter(medalColors[fReview.value])
 
-            medalBinding.rbGroupMedal.apply {
+            rbGroupMedal.apply {
                 clearOnButtonCheckedListeners()
+                getChildAt(fReview.value).performClick()
                 addOnButtonCheckedListener { _, checkedId, _ ->
                     onValueChangedListener(fReview, children.indexOfFirst { it.id == checkedId })
                 }
@@ -125,10 +128,30 @@ class FilledReviewRecyclerAdapter(
         override fun bind(item: FilledReviewAndReview) = with(rateBinding) {
             val (fReview, review) = item
             val total = if (review.type == 1) 20 else 100
+            val watcher = rate.doOnTextChanged { text, _, _, _ ->
+                if (rateBinding.rateLayout.validate()) {
+                    onValueChangedListener(fReview, text.toString().toInt())
+                }
+            }
 
             contestName.text = review.contestName
-            rateLayout.suffixText = "/$total"
-            rate.setText(fReview.value.toString())
+
+            rateLayout.apply {
+                clearRules(clearDefaultRules = false)
+                suffixText = "/$total"
+
+                val rule = Rule(R.string.base_error) {
+                    it.toInt() in 0..total
+                }
+
+                addRules(rule)
+            }
+
+            rate.apply {
+                removeTextChangedListener(watcher)
+                setText(fReview.value.toString())
+                addTextChangedListener(watcher)
+            }
 
             deleteReview.setOnClickListener {
                 onDeleteListener(fReview)
@@ -145,8 +168,10 @@ class FilledReviewRecyclerAdapter(
             contestName.text = review.contestName
             starCount.text = (fReview.value + 1).toString()
 
-            starBinding.rbGroupStars.apply {
+
+            rbGroupStars.apply {
                 clearOnButtonCheckedListeners()
+                getChildAt(fReview.value).performClick()
                 addOnButtonCheckedListener { _, checkedId, _ ->
                     onValueChangedListener(fReview, children.indexOfFirst { it.id == checkedId })
                 }
