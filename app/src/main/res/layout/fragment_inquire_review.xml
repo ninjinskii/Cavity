@@ -106,6 +106,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSelectReviewSecondary"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/medium_margin"
@@ -120,7 +121,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSkip"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/skip"
