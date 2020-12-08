@@ -1,12 +1,13 @@
 package com.louis.app.cavity.ui.addbottle.adapter
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Checkable
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ import com.louis.app.cavity.databinding.ItemReviewStarBinding
 import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.FilledReviewAndReview
 import com.louis.app.cavity.ui.widget.Rule
+import com.louis.app.cavity.util.L
 
 class FilledReviewRecyclerAdapter(
     val onValueChangedListener: (fReview: FilledBottleReviewXRef, checkedButtonIdOrRate: Int) -> Unit,
@@ -34,6 +36,8 @@ class FilledReviewRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseReviewViewHolder {
         val inflater = LayoutInflater.from(parent.context)
+
+        L.v("onCreateVH")
 
         return when (viewType) {
             TYPE_MEDAL -> MedalViewHolder(
@@ -132,31 +136,41 @@ class FilledReviewRecyclerAdapter(
     inner class RateViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
         private val rateBinding = ItemReviewRateBinding.bind(itemView)
 
-        override fun bind(item: FilledReviewAndReview) = with(rateBinding) {
-            val (fReview, review) = item
-            val total = if (review.type == 1) 20 else 100
-            val watcher = rate.doOnTextChanged { text, _, _, _ ->
-                if (rateLayout.validate()) {
+        private val watcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (rateBinding.rateLayout.validate()) {
+                    val fReview = currentList[adapterPosition].fReview
                     onValueChangedListener(fReview, text.toString().toInt())
                 }
             }
 
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        }
+
+        override fun bind(item: FilledReviewAndReview) = with(rateBinding) {
+            val (fReview, review) = item
+            val total = if (review.type == 1) 20 else 100
+
             contestName.text = review.contestName
 
             rateLayout.apply {
-                clearRules(clearDefaultRules = false)
-                //suffixText = "/$total"
-
                 val rule = Rule(R.string.base_error) {
                     it.toInt() in 0..total
                 }
 
+                suffixText = "/$total"
+
+                clearRules(clearDefaultRules = false)
                 addRules(rule)
             }
 
             rate.apply {
                 removeTextChangedListener(watcher)
-                //setText(fReview.value.toString())
+                setText(fReview.value.toString())
                 addTextChangedListener(watcher)
             }
 
