@@ -136,7 +136,7 @@ class FilledReviewRecyclerAdapter(
             val (fReview, review) = item
             val total = if (review.type == 1) 20 else 100
             val watcher = rate.doOnTextChanged { text, _, _, _ ->
-                if (rateBinding.rateLayout.validate()) {
+                if (rateLayout.validate()) {
                     onValueChangedListener(fReview, text.toString().toInt())
                 }
             }
@@ -145,7 +145,7 @@ class FilledReviewRecyclerAdapter(
 
             rateLayout.apply {
                 clearRules(clearDefaultRules = false)
-                suffixText = "/$total"
+                //suffixText = "/$total"
 
                 val rule = Rule(R.string.base_error) {
                     it.toInt() in 0..total
@@ -156,7 +156,7 @@ class FilledReviewRecyclerAdapter(
 
             rate.apply {
                 removeTextChangedListener(watcher)
-                setText(fReview.value.toString())
+                //setText(fReview.value.toString())
                 addTextChangedListener(watcher)
             }
 

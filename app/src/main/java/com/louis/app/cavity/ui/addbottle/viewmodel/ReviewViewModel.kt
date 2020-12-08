@@ -10,6 +10,7 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -56,6 +57,7 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
 
     fun updateFilledReview(fReview: FilledBottleReviewXRef, contestValue: Int) {
         val newFReview = fReview.copy(value = contestValue)
+        L.v("update filled review: $newFReview")
 
         viewModelScope.launch(IO) {
             repository.updateFilledReview(newFReview)
