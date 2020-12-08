@@ -42,7 +42,7 @@
             android:layout_margin="@dimen/medium_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/add_county"
-            android:src="@drawable/ic_list_check"
+            android:src="@drawable/ic_grape"
             android:tint="?attr/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="@id/grapeTitle"
             app:layout_constraintEnd_toStartOf="@+id/buttonAddGrape"
@@ -85,8 +85,9 @@
             app:layout_constraintEnd_toEndOf="@id/recyclerView"
             app:layout_constraintHeight_percent="0.3"
             app:layout_constraintStart_toStartOf="@id/recyclerView"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/recyclerView"
             app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintVertical_bias="0.35"
             app:tint="?attr/colorOnSurface" />
 
         <TextView
@@ -105,6 +106,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_select_grape_secondary"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/medium_margin"
@@ -119,12 +121,12 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSkip"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/skip"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/recyclerView"
             app:layout_constraintEnd_toEndOf="@id/recyclerView"
             app:layout_constraintStart_toStartOf="@id/recyclerView"
             app:layout_constraintTop_toBottomOf="@id/button_select_grape_secondary"

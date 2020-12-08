@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:rule="required"
-        app:startIconDrawable="@drawable/ic_grade">
+        app:startIconDrawable="@drawable/ic_contest">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/contestName"
