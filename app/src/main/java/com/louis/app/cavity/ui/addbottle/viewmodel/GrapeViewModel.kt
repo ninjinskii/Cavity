@@ -10,6 +10,7 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -62,6 +63,8 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef, newValue: Int): Int {
         val checkedValue = qGrapeManager.requestUpdateQGrape(qGrape.percentage, newValue)
         val newQGrape = qGrape.copy(percentage = checkedValue) // need copy to avoid false positive
+
+        L.v("update qGrape: $newQGrape")
 
         viewModelScope.launch(IO) {
             repository.updateQuantifiedGrape(newQGrape)

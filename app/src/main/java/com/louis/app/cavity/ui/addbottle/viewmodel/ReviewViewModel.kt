@@ -55,10 +55,10 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun updateFilledReview(fReview: FilledBottleReviewXRef, contestValue: Int) {
-        fReview.value = contestValue
+        val newFReview = fReview.copy(value = contestValue)
 
         viewModelScope.launch(IO) {
-            repository.updateFilledReview(fReview)
+            repository.updateFilledReview(newFReview)
         }
     }
 

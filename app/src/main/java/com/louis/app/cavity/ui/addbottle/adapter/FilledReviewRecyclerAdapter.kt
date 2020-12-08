@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.addbottle.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Checkable
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.widget.doOnTextChanged
@@ -110,9 +111,15 @@ class FilledReviewRecyclerAdapter(
 
             rbGroupMedal.apply {
                 clearOnButtonCheckedListeners()
-                getChildAt(fReview.value).performClick()
-                addOnButtonCheckedListener { _, checkedId, _ ->
-                    onValueChangedListener(fReview, children.indexOfFirst { it.id == checkedId })
+
+                val v = getChildAt(fReview.value)
+                (v as Checkable).isChecked = true
+
+                addOnButtonCheckedListener { _, checkedId, isChecked ->
+                    if (isChecked) {
+                        val contestValue = children.indexOfFirst { it.id == checkedId }
+                        onValueChangedListener(fReview, contestValue)
+                    }
                 }
             }
 
@@ -168,12 +175,17 @@ class FilledReviewRecyclerAdapter(
             contestName.text = review.contestName
             starCount.text = (fReview.value + 1).toString()
 
-
             rbGroupStars.apply {
                 clearOnButtonCheckedListeners()
-                getChildAt(fReview.value).performClick()
-                addOnButtonCheckedListener { _, checkedId, _ ->
-                    onValueChangedListener(fReview, children.indexOfFirst { it.id == checkedId })
+
+                val v = getChildAt(fReview.value)
+                (v as Checkable).isChecked = true
+
+                addOnButtonCheckedListener { _, checkedId, isChecked ->
+                    if (isChecked) {
+                        val contestValue = children.indexOfFirst { it.id == checkedId }
+                        onValueChangedListener(fReview, contestValue)
+                    }
                 }
             }
 
