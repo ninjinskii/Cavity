@@ -171,6 +171,7 @@ class FilledReviewRecyclerAdapter(
             rate.apply {
                 removeTextChangedListener(watcher)
                 setText(fReview.value.toString())
+                setSelection(fReview.value.toString().length)
                 addTextChangedListener(watcher)
             }
 

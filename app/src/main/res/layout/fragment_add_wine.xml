@@ -94,8 +94,14 @@
                             app:layout_constraintTop_toBottomOf="@+id/nameLayout"
                             app:selectionRequired="true"
                             app:singleLine="true"
-                            app:singleSelection="true" />
+                            app:singleSelection="true">
 
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:visibility="invisible" />
+
+                        </com.google.android.material.chip.ChipGroup>
                     </LinearLayout>
                 </HorizontalScrollView>
 
@@ -140,9 +146,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
-                    app:layout_constraintTop_toBottomOf="@+id/nameLayout"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nameLayout"
                     app:rule="required">
 
                     <com.google.android.material.textfield.TextInputEditText
