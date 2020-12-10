@@ -33,6 +33,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         _binding = FragmentInquireOtherInfoBinding.bind(view)
 
         stepperx = parentFragment as Stepper
+        otherInfoViewModel.start(stepperx.getBottleId())
 
         setListeners()
         observe()

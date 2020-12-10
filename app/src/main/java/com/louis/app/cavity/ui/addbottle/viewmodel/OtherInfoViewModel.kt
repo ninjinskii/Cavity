@@ -29,16 +29,13 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    private var wineId: Long? = null
     private var bottleId = 0L
     private var pdfPath: String = ""
 
     val hasPdf: Boolean
         get() = pdfPath.isNotBlank()
 
-    fun start(bottleWineId: Long, editedBottleId: Long) {
-        wineId = bottleWineId
-
+    fun start(editedBottleId: Long) {
         if (editedBottleId != 0L) {
             bottleId = editedBottleId
             triggerEditMode(editedBottleId)
@@ -62,7 +59,6 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
             val bottle = mergeStep1Bottle(step1, addToFavorite, otherInfo)
             repository.updateBottle(bottle)
 
-            wineId = null
             bottleId = 0
             _updatedBottle.postValue(null)
             _bottleUpdatedEvent.postOnce(R.string.bottle_added)

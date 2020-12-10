@@ -76,6 +76,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         val countyId = arguments?.getLong(COUNTY_ID)
         homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
+            L.v("updated observer for county: $countyId")
             wineAdapter.submitList(it)
         }
     }

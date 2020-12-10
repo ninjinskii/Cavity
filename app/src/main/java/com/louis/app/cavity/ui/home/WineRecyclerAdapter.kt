@@ -14,6 +14,7 @@ import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.WineWithBottles
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -41,13 +42,14 @@ class WineRecyclerAdapter(
             oldItem.wine.wineId == newItem.wine.wineId
 
         override fun areContentsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
-            oldItem.wine == newItem.wine
+            oldItem.wine == newItem.wine && oldItem.bottles == newItem.bottles
     }
 
     inner class WineViewHolder(private val binding: ItemWineBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(wineWithBottles: WineWithBottles) {
+            L.v("$wineWithBottles")
             val wine = wineWithBottles.wine
             val bottles = wineWithBottles.bottles.sortedBy { it.vintage }
 

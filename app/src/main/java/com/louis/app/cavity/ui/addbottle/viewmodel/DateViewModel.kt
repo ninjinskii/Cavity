@@ -23,8 +23,10 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
         get() = _userFeedback
 
     private var wineId: Long? = null
-    private var bottleId = 0L
     private var buyDateTimestamp = -1L
+
+    var bottleId = 0L
+        private set
 
     fun start(bottleWineId: Long, editedBottleId: Long) {
         wineId = bottleWineId
