@@ -21,11 +21,9 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var stepperx: Stepper
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
-
     private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
-
     private val grapeViewModel: GrapeViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
@@ -93,6 +91,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             buttonSelectGrapeSecondary.setOnClickListener { grapeViewModel.requestGrapeDialog() }
             buttonAddGrape.setOnClickListener { showAddGrapeDialog() }
             buttonSkip.setOnClickListener { stepperx.requestNextPage() }
+            stepper.next.setOnClickListener { stepperx.requestNextPage() }
+            stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
         }
     }
 

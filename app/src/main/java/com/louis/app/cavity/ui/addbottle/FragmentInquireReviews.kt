@@ -25,14 +25,13 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
     private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
-
     private val reviewViewModel: ReviewViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _binding = FragmentInquireReviewBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentInquireReviewBinding.bind(view)
 
         stepperx = parentFragment as Stepper
         reviewViewModel.start(addBottleViewModel.bottleId)
@@ -91,6 +90,10 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
         with(binding) {
             buttonAddReview.setOnClickListener { showAddReviewDialog() }
             buttonSelectReview.setOnClickListener { reviewViewModel.requestReviewDialog() }
+            buttonSelectReviewSecondary.setOnClickListener { reviewViewModel.requestReviewDialog() }
+            buttonSkip.setOnClickListener { stepperx.requestNextPage() }
+            stepper.next.setOnClickListener { stepperx.requestNextPage() }
+            stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
         }
     }
 

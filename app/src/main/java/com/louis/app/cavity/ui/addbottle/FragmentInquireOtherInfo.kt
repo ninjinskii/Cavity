@@ -11,11 +11,13 @@ import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
 
 class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {
+    private lateinit var stepperx: Stepper
     private var _binding: FragmentInquireOtherInfoBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by viewModels(
@@ -29,6 +31,8 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireOtherInfoBinding.bind(view)
+
+        stepperx = parentFragment as Stepper
 
         setListeners()
         observe()
@@ -53,14 +57,18 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
             }
         }
 
-        binding.submitAddBottle.setOnClickListener {
-            with(binding) {
+        with(binding) {
+            submitAddBottle.setOnClickListener {
                 addBottleViewModel.saveBottle(
                     otherInfo.text.toString(),
                     addToFavorite.isChecked,
                 )
             }
+
+            stepper.next.setOnClickListener { stepperx.requestNextPage() }
+            stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
         }
+
     }
 
     private fun observe() {

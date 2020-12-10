@@ -16,10 +16,10 @@ import com.louis.app.cavity.util.DateFormatter
 import java.util.*
 
 class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
+    private lateinit var stepperx: Stepper
+    private lateinit var datePicker: MaterialDatePicker<Long>
     private var _binding: FragmentInquireDatesBinding? = null
     private val binding get() = _binding!!
-    private lateinit var datePicker: MaterialDatePicker<Long>
-    private lateinit var stepper: Stepper
     private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
@@ -29,7 +29,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireDatesBinding.bind(view)
 
-        stepper = parentFragment as Stepper
+        stepperx = parentFragment as Stepper
 
         initNumberPickers()
         initCurrencyDropdown()
@@ -104,9 +104,10 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             }
         }
 
-        binding.stepper.next.setOnClickListener { validateFields() }
-
-        binding.stepper.previous.setOnClickListener { stepper.requestPreviousPage() }
+        with(binding) {
+            stepper.next.setOnClickListener { validateFields() }
+            stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
+        }
     }
 
     private fun observe() {
@@ -128,7 +129,12 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     }
 
     private fun validateFields() = binding.countLayout.validate() && binding.priceLayout.validate()
-        .also { if (it) { savePartialBottle(); stepper.requestNextPage() } }
+        .also {
+            if (it) {
+                savePartialBottle()
+                stepperx.requestNextPage()
+            }
+        }
 
     private fun savePartialBottle() {
         with(binding) {
