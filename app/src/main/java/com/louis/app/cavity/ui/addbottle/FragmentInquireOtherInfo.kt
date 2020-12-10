@@ -13,6 +13,7 @@ import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoViewModel
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
 
@@ -41,7 +42,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
     private fun setListeners() {
         binding.buttonAddPdf.setOnClickListener {
-            if (otherInfoViewModel.hasPdf) {
+            if (!otherInfoViewModel.hasPdf) {
                 val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                 fileChooseIntent.apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
@@ -49,6 +50,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
                 }
 
                 try {
+                    L.v("euhhh")
                     startActivityForResult(fileChooseIntent, PICK_PDF_RESULT_CODE)
                 } catch (e: ActivityNotFoundException) {
                     binding.coordinator.showSnackbar(R.string.no_file_explorer)
