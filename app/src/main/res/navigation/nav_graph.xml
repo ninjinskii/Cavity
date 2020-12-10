@@ -21,7 +21,14 @@
             app:destination="@id/search_dest" />
         <action
             android:id="@+id/homeToBottleDetails"
-            app:destination="@id/fragmentBottleDetails" />
+            app:destination="@id/fragmentBottleDetails">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
         <action
             android:id="@+id/homeToWineOptions"
             app:destination="@id/wine_options_dialog" />
@@ -116,13 +123,20 @@
         tools:layout="@layout/fragment_bottle_details">
         <argument
             android:name="wineId"
-            app:argType="long"/>
+            app:argType="long" />
         <argument
             android:name="bottleId"
-            app:argType="long"/>
+            app:argType="long" />
         <action
             android:id="@+id/bottleDetailsToEditBottle"
-            app:destination="@id/add_bottle_dest" />
+            app:destination="@id/add_bottle_dest">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+            <argument
+                android:name="editedBottleId"
+                app:argType="long" />
+        </action>
     </fragment>
 
 </navigation>

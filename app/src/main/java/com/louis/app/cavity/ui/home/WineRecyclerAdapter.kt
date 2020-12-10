@@ -14,7 +14,6 @@ import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.WineWithBottles
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -49,7 +48,6 @@ class WineRecyclerAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(wineWithBottles: WineWithBottles) {
-            L.v("$wineWithBottles")
             val wine = wineWithBottles.wine
             val bottles = wineWithBottles.bottles.sortedBy { it.vintage }
 

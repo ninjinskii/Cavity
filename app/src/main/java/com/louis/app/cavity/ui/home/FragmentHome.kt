@@ -31,9 +31,10 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
 
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
-            // Remove coroutine
+            // Potential coroutine
             with(binding) {
                 tab.addTabs(it)
+                // viewPager.isSaveEnabled = false // might correct the crash when getting back to home sometimes, but reduce apps perfs a lot
                 viewPager.adapter = WinesPagerAdapter(requireActivity(), it)
                 viewPager.offscreenPageLimit = 1
                 tab.setUpWithViewPager(viewPager)
