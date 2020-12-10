@@ -33,8 +33,6 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
 
         // editedBottleId is equal to 0 if user is not editing a bottle, but adding a new one
         dateViewModel.start(args.wineId, args.editedBottleId)
-        reviewViewModel.start(args.editedBottleId)
-        otherInfoViewModel.start(args.editedBottleId)
 
         initStepper()
         setupCustomBackNav()
