@@ -12,7 +12,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
-import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
+import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoViewModel
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
 
@@ -20,7 +20,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     private lateinit var stepperx: Stepper
     private var _binding: FragmentInquireOtherInfoBinding? = null
     private val binding get() = _binding!!
-    private val addBottleViewModel: AddBottleViewModel by viewModels(
+    private val otherInfoViewModel: OtherInfoViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
 
@@ -40,7 +40,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
     private fun setListeners() {
         binding.buttonAddPdf.setOnClickListener {
-            if (addBottleViewModel.hasPdf) {
+            if (otherInfoViewModel.hasPdf) {
                 val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                 fileChooseIntent.apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
@@ -59,7 +59,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
         with(binding) {
             submitAddBottle.setOnClickListener {
-                addBottleViewModel.saveBottle(
+                otherInfoViewModel.saveBottle(
                     otherInfo.text.toString(),
                     addToFavorite.isChecked,
                 )
@@ -72,7 +72,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     }
 
     private fun observe() {
-        addBottleViewModel.updatedBottle.observe(viewLifecycleOwner) {
+        otherInfoViewModel.updatedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
         }
     }
@@ -81,7 +81,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         with(binding) {
             otherInfo.setText(editedBottle.otherInfo)
             addToFavorite.isChecked = editedBottle.isFavorite.toBoolean()
-            addBottleViewModel.setPdfPath(editedBottle.pdfPath)
+            otherInfoViewModel.setPdfPath(editedBottle.pdfPath)
         }
     }
 
@@ -100,7 +100,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     }
 
     private fun onPdfRemoved() {
-        addBottleViewModel.setPdfPath("")
+        otherInfoViewModel.setPdfPath("")
         binding.buttonAddPdf.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pdf)
         binding.buttonAddPdf.text = resources.getString(R.string.add_pdf)
     }
@@ -109,7 +109,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         requestMediaPersistentPermission(intent)
 
         if (intent != null) {
-            addBottleViewModel.setPdfPath(intent.data.toString())
+            otherInfoViewModel.setPdfPath(intent.data.toString())
             binding.buttonAddPdf.icon =
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
             binding.buttonAddPdf.text = resources.getString(R.string.remove_pdf)

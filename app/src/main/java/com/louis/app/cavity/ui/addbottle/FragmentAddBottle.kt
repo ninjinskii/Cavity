@@ -12,8 +12,7 @@ import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
-import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
-import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeViewModel
+import com.louis.app.cavity.ui.addbottle.viewmodel.*
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
@@ -21,7 +20,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
     private var _binding: FragmentAddBottleBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by viewModels()
+    private val dateViewModel: DateViewModel by viewModels()
     private val grapeViewModel: GrapeViewModel by viewModels()
+    private val reviewViewModel: ReviewViewModel by viewModels()
+    private val otherInfoViewModel: OtherInfoViewModel by viewModels()
     private val args: FragmentAddBottleArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,7 +33,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
         snackbarProvider = activity as SnackbarProvider
 
         // editedBottleId is equal to 0 if user is not editing a bottle, but adding a new one
-        addBottleViewModel.start(args.wineId, args.editedBottleId)
+        dateViewModel.start(args.wineId, args.editedBottleId)
+        grapeViewModel.start(args.editedBottleId)
+        reviewViewModel.start(args.editedBottleId)
+        otherInfoViewModel.start(args.wineId, args.editedBottleId)
 
         initStepper()
         setupCustomBackNav()
@@ -84,6 +89,10 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
 
     override fun requestPreviousPage() {
         binding.viewPager.currentItem--
+    }
+
+    override fun getBottleId(): Long {
+        return addBottleViewModel.bottleId
     }
 
     override fun onDestroyView() {

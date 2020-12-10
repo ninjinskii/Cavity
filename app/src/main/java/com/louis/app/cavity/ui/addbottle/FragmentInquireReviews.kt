@@ -12,7 +12,6 @@ import com.louis.app.cavity.databinding.DialogAddReviewBinding
 import com.louis.app.cavity.databinding.FragmentInquireReviewBinding
 import com.louis.app.cavity.ui.addbottle.adapter.FilledReviewRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
-import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.ReviewViewModel
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
@@ -22,9 +21,6 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
     private lateinit var stepperx: Stepper
     private var _binding: FragmentInquireReviewBinding? = null
     private val binding get() = _binding!!
-    private val addBottleViewModel: AddBottleViewModel by viewModels(
-        ownerProducer = { requireParentFragment() }
-    )
     private val reviewViewModel: ReviewViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
@@ -34,7 +30,7 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
         _binding = FragmentInquireReviewBinding.bind(view)
 
         stepperx = parentFragment as Stepper
-        reviewViewModel.start(addBottleViewModel.bottleId)
+        reviewViewModel.start(stepperx.getBottleId())
 
         initRecyclerView()
         observe()

@@ -11,7 +11,6 @@ import com.louis.app.cavity.databinding.DialogAddGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.ui.addbottle.adapter.QuantifiedGrapeRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
-import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeViewModel
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
@@ -21,9 +20,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var stepperx: Stepper
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
-    private val addBottleViewModel: AddBottleViewModel by viewModels(
-        ownerProducer = { requireParentFragment() }
-    )
     private val grapeViewModel: GrapeViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
@@ -33,7 +29,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         _binding = FragmentInquireGrapesBinding.bind(view)
 
         stepperx = parentFragment as Stepper
-        grapeViewModel.start(addBottleViewModel.bottleId)
+        grapeViewModel.start(stepperx.getBottleId())
 
         initRecyclerView()
         observe()
@@ -54,7 +50,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             adapter = quantifiedGrapeAdapter
         }
 
-        val bottleId = addBottleViewModel.bottleId
+        val bottleId = stepperx.getBottleId()
 
         grapeViewModel.getQGrapesAndGrapeForBottle(bottleId).observe(viewLifecycleOwner) {
             toggleRvPlaceholder(it.isEmpty())

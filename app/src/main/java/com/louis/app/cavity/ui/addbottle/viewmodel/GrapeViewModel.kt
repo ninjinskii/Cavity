@@ -16,7 +16,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class GrapeViewModel(app: Application) : AndroidViewModel(app) {
-
     private val repository = WineRepository.getInstance(app)
     private val qGrapeManager = QuantifiedGrapeManager()
 
@@ -30,8 +29,8 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
 
     private var bottleId = 0L
 
-    fun start(bottleId: Long) {
-        this.bottleId = bottleId
+    fun start(editedBottleId: Long) {
+        bottleId = editedBottleId
     }
 
     fun getQGrapesAndGrapeForBottle(bottleId: Long) =

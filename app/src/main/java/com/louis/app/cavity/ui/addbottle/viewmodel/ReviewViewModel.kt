@@ -28,8 +28,8 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
 
     private var bottleId = 0L
 
-    fun start(bottleId: Long) {
-        this.bottleId = bottleId
+    fun start(editedBottleId: Long) {
+        bottleId = editedBottleId
     }
 
     fun getFReviewAndReview() = repository.getFReviewAndReviewForBottle(bottleId)
