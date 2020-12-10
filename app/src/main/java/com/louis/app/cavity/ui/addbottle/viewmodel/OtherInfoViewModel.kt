@@ -9,9 +9,10 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
@@ -36,6 +37,7 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
         get() = pdfPath.isNotBlank()
 
     fun start(editedBottleId: Long) {
+        L.v("$bottleId")
         if (editedBottleId != 0L) {
             bottleId = editedBottleId
             triggerEditMode(editedBottleId)
@@ -54,19 +56,21 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
             return
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             val step1 = repository.getBottleByIdNotLive(bottleId)
             val bottle = mergeStep1Bottle(step1, addToFavorite, otherInfo)
             repository.updateBottle(bottle)
 
-            bottleId = 0
             _updatedBottle.postValue(null)
             _bottleUpdatedEvent.postOnce(R.string.bottle_added)
         }
     }
 
-    private fun triggerEditMode(editedBottleId: Long) {
-
+    private fun triggerEditMode(bottleId: Long) {
+        viewModelScope.launch(IO) {
+            val editedBottle = repository.getBottleByIdNotLive(bottleId)
+            _updatedBottle.postValue(editedBottle)
+        }
     }
 
     // Hiding boring stuff

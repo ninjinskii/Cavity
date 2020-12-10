@@ -13,7 +13,6 @@ import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoViewModel
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
 
@@ -50,7 +49,6 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
                 }
 
                 try {
-                    L.v("euhhh")
                     startActivityForResult(fileChooseIntent, PICK_PDF_RESULT_CODE)
                 } catch (e: ActivityNotFoundException) {
                     binding.coordinator.showSnackbar(R.string.no_file_explorer)
@@ -85,6 +83,11 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
             otherInfo.setText(editedBottle.otherInfo)
             addToFavorite.isChecked = editedBottle.isFavorite.toBoolean()
             otherInfoViewModel.setPdfPath(editedBottle.pdfPath)
+
+            if (otherInfoViewModel.hasPdf) {
+                buttonAddPdf.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
+                buttonAddPdf.text = resources.getString(R.string.remove_pdf)
+            }
         }
     }
 

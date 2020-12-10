@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.util.Event
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class DateViewModel(app: Application) : AndroidViewModel(app) {
@@ -51,23 +51,28 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
         currency: String,
         location: String
     ) {
+        val otherInfo = _updatedBottle.value?.otherInfo.orEmpty()
+        val isFavorite = _updatedBottle.value?.isFavorite ?: 0
+        val pdfPath = _updatedBottle.value?.pdfPath.orEmpty()
+        val tasteComment = _updatedBottle.value?.tasteComment.orEmpty()
+
         val partialBottle = Bottle(
             bottleId,
             wineId ?: return,
             vintage,
             apogee,
-            0,
+            isFavorite,
             count,
             price,
             currency,
-            "",
+            otherInfo,
             location,
             buyDateTimestamp,
-            "",
-            ""
+            tasteComment,
+            pdfPath
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             if (bottleId == 0L)
                 repository.insertBottle(partialBottle).also { bottleId = it }
             else
@@ -76,7 +81,7 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun triggerEditMode(bottleId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             val editedBottle = repository.getBottleByIdNotLive(bottleId)
             _updatedBottle.postValue(editedBottle)
         }
