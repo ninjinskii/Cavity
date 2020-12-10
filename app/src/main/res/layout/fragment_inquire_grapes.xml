@@ -1,137 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinator"
-    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
+        android:id="@+id/stepper"
+        layout="@layout/stepper"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        style="@style/Widget.Cavity.Divider.Start"
+        android:layout_marginTop="@dimen/medium_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stepper" />
+
+    <TextView
+        android:id="@+id/grapeTitle"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/medium_margin"
+        android:text="@string/grapes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider" />
+
+    <ImageButton
+        android:id="@+id/buttonSelectGrape"
+        android:layout_width="@dimen/medium_icon"
+        android:layout_height="@dimen/medium_icon"
+        android:layout_margin="@dimen/medium_margin"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/add_county"
+        android:src="@drawable/ic_grape"
+        android:tint="?attr/colorOnBackground"
+        app:layout_constraintBottom_toBottomOf="@id/grapeTitle"
+        app:layout_constraintEnd_toStartOf="@+id/buttonAddGrape"
+        app:layout_constraintTop_toTopOf="@id/grapeTitle" />
+
+    <ImageButton
+        android:id="@+id/buttonAddGrape"
+        android:layout_width="@dimen/medium_icon"
+        android:layout_height="@dimen/medium_icon"
+        android:layout_margin="@dimen/medium_margin"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/add_county"
+        android:src="@drawable/ic_add"
+        android:tint="?attr/colorOnBackground"
+        app:layout_constraintBottom_toBottomOf="@id/grapeTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/grapeTitle" />
+
+    <!-- Match parent width required to get correct behavior when changing sliders value /!\ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/medium_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/grapeTitle"
+        tools:listitem="@layout/item_grape" />
 
-        <include
-            android:id="@+id/stepper"
-            layout="@layout/stepper"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+    <!-- TODO: On landscape mobile, image to left -->
+    <ImageView
+        android:id="@+id/grapeIconEmpty"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.38"
+        android:src="@drawable/ic_grape"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/explanation"
+        app:layout_constraintEnd_toEndOf="@id/recyclerView"
+        app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintStart_toStartOf="@id/recyclerView"
+        app:layout_constraintTop_toTopOf="@id/recyclerView"
+        app:layout_constraintVertical_bias="0.35"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="?attr/colorOnSurface" />
 
-        <View
-            android:id="@+id/divider"
-            style="@style/Widget.Cavity.Divider.Start"
-            android:layout_marginTop="@dimen/medium_margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/stepper" />
+    <TextView
+        android:id="@+id/explanation"
+        style="?attr/textAppearanceBody1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/grape_explanation"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/button_select_grape_secondary"
+        app:layout_constraintEnd_toEndOf="@id/button_select_grape_secondary"
+        app:layout_constraintStart_toStartOf="@id/button_select_grape_secondary"
+        app:layout_constraintTop_toBottomOf="@id/grapeIconEmpty"
+        app:layout_constraintVertical_chainStyle="packed" />
 
-        <TextView
-            android:id="@+id/grapeTitle"
-            style="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            android:text="@string/grapes"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_select_grape_secondary"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:text="@string/select_grapes"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/buttonSkip"
+        app:layout_constraintEnd_toEndOf="@id/recyclerView"
+        app:layout_constraintStart_toStartOf="@id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@id/explanation"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_percent="0.75" />
 
-        <ImageButton
-            android:id="@+id/buttonSelectGrape"
-            android:layout_width="@dimen/medium_icon"
-            android:layout_height="@dimen/medium_icon"
-            android:layout_margin="@dimen/medium_margin"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/add_county"
-            android:src="@drawable/ic_grape"
-            android:tint="?attr/colorOnBackground"
-            app:layout_constraintBottom_toBottomOf="@id/grapeTitle"
-            app:layout_constraintEnd_toStartOf="@+id/buttonAddGrape"
-            app:layout_constraintTop_toTopOf="@id/grapeTitle" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSkip"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/skip"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/recyclerView"
+        app:layout_constraintEnd_toEndOf="@id/recyclerView"
+        app:layout_constraintStart_toStartOf="@id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@id/button_select_grape_secondary"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_percent="0.75" />
 
-        <ImageButton
-            android:id="@+id/buttonAddGrape"
-            android:layout_width="@dimen/medium_icon"
-            android:layout_height="@dimen/medium_icon"
-            android:layout_margin="@dimen/medium_margin"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/add_county"
-            android:src="@drawable/ic_add"
-            android:tint="?attr/colorOnBackground"
-            app:layout_constraintBottom_toBottomOf="@id/grapeTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/grapeTitle" />
-
-        <!-- Match parent width required to get correct behavior when changing sliders value /!\ -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/medium_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/grapeTitle"
-            tools:listitem="@layout/item_grape" />
-
-        <!-- TODO: On landscape mobile, image to left -->
-        <ImageView
-            android:id="@+id/grapeIconEmpty"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0.38"
-            android:src="@drawable/ic_grape"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/explanation"
-            app:layout_constraintEnd_toEndOf="@id/recyclerView"
-            app:layout_constraintHeight_percent="0.3"
-            app:layout_constraintStart_toStartOf="@id/recyclerView"
-            app:layout_constraintTop_toTopOf="@id/recyclerView"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintVertical_bias="0.35"
-            app:tint="?attr/colorOnSurface" />
-
-        <TextView
-            android:id="@+id/explanation"
-            style="?attr/textAppearanceBody1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/grape_explanation"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/button_select_grape_secondary"
-            app:layout_constraintEnd_toEndOf="@id/button_select_grape_secondary"
-            app:layout_constraintStart_toStartOf="@id/button_select_grape_secondary"
-            app:layout_constraintTop_toBottomOf="@id/grapeIconEmpty"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_select_grape_secondary"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:text="@string/select_grapes"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/buttonSkip"
-            app:layout_constraintEnd_toEndOf="@id/recyclerView"
-            app:layout_constraintStart_toStartOf="@id/recyclerView"
-            app:layout_constraintTop_toBottomOf="@id/explanation"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintWidth_percent="0.75" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonSkip"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/skip"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/recyclerView"
-            app:layout_constraintEnd_toEndOf="@id/recyclerView"
-            app:layout_constraintStart_toStartOf="@id/recyclerView"
-            app:layout_constraintTop_toBottomOf="@id/button_select_grape_secondary"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintWidth_percent="0.75" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

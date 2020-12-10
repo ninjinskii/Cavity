@@ -1,216 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <include
+        android:id="@+id/stepper"
+        layout="@layout/stepper"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <include
-            android:id="@+id/stepper"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            layout="@layout/stepper" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stepper">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/stepper">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <View
+                android:id="@+id/divider1"
+                style="@style/Widget.Cavity.Divider.Start"
+                android:layout_marginTop="@dimen/medium_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:id="@+id/divider1"
-                    style="@style/Widget.Cavity.Divider.Start"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="@dimen/medium_margin"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/dateTitle"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider1" />
 
-                <TextView
-                    android:id="@+id/dateTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/vintageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/vintage"
+                app:layout_constraintEnd_toEndOf="@id/vintage"
+                app:layout_constraintStart_toStartOf="@id/vintage"
+                app:layout_constraintTop_toBottomOf="@id/dateTitle" />
+
+            <NumberPicker
+                android:id="@+id/vintage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                app:layout_constraintEnd_toStartOf="@id/apogee"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vintageText" />
+
+            <TextView
+                android:id="@+id/apogeeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/apogee"
+                app:layout_constraintEnd_toEndOf="@id/apogee"
+                app:layout_constraintStart_toStartOf="@id/apogee"
+                app:layout_constraintTop_toBottomOf="@id/dateTitle" />
+
+            <NumberPicker
+                android:id="@+id/apogee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                app:layout_constraintEnd_toStartOf="@id/countLayout"
+                app:layout_constraintStart_toEndOf="@id/vintage"
+                app:layout_constraintTop_toBottomOf="@id/apogeeText" />
+
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/countLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                app:errorEnabled="true"
+                app:layout_constraintBottom_toBottomOf="@+id/vintage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/apogee"
+                app:layout_constraintTop_toTopOf="@+id/vintage"
+                app:rule="required|integer|positive">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/count"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/date"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider1" />
+                    android:hint="@string/count"
+                    android:inputType="number"
+                    android:maxLength="5"
+                    android:nextFocusDown="@id/price"
+                    android:text="@string/default_bottle_quantity" />
 
-                <TextView
-                    android:id="@+id/vintageText"
-                    android:layout_width="wrap_content"
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+            <View
+                android:id="@+id/divider2"
+                style="@style/Widget.Cavity.Divider.Start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vintage" />
+
+            <TextView
+                android:id="@+id/priceTitle"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/buying"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/priceLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                app:layout_constraintEnd_toStartOf="@+id/currencyLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/priceTitle"
+                app:rule="floating|positive"
+                app:startIconDrawable="@drawable/ic_price">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/price"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/vintage"
-                    app:layout_constraintEnd_toEndOf="@id/vintage"
-                    app:layout_constraintStart_toStartOf="@id/vintage"
-                    app:layout_constraintTop_toBottomOf="@id/dateTitle" />
+                    android:hint="@string/price"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"
+                    android:nextFocusDown="@id/buyLocation"
+                    app:errorEnabled="true" />
 
-                <NumberPicker
-                    android:id="@+id/vintage"
-                    android:layout_width="wrap_content"
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/currencyLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/priceLayout"
+                app:layout_constraintTop_toBottomOf="@+id/priceTitle"
+                app:startIconDrawable="@drawable/ic_currency">
+
+                <AutoCompleteTextView
+                    android:id="@+id/currency"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    app:layout_constraintEnd_toStartOf="@id/apogee"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/vintageText" />
+                    android:hint="@string/currency"
+                    android:inputType="none"
+                    android:nextFocusDown="@id/buyLocation" />
 
-                <TextView
-                    android:id="@+id/apogeeText"
-                    android:layout_width="wrap_content"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/buyLocationLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/priceLayout"
+                app:startIconDrawable="@drawable/ic_location">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/buyLocation"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/apogee"
-                    app:layout_constraintEnd_toEndOf="@id/apogee"
-                    app:layout_constraintStart_toStartOf="@id/apogee"
-                    app:layout_constraintTop_toBottomOf="@id/dateTitle" />
+                    android:hint="@string/buying_location"
+                    android:inputType="textCapSentences"
+                    android:nextFocusDown="@id/buyDate" />
 
-                <NumberPicker
-                    android:id="@+id/apogee"
-                    android:layout_width="wrap_content"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/buyDateLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                app:endIconMode="clear_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buyLocationLayout"
+                app:startIconDrawable="@drawable/ic_calendar">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/buyDate"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    app:layout_constraintEnd_toStartOf="@id/countLayout"
-                    app:layout_constraintStart_toEndOf="@id/vintage"
-                    app:layout_constraintTop_toBottomOf="@id/apogeeText" />
+                    android:hint="@string/buying_date"
+                    android:inputType="none" />
 
-                <com.louis.app.cavity.ui.widget.RuledTextInputLayout
-                    android:id="@+id/countLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    app:errorEnabled="true"
-                    app:layout_constraintBottom_toBottomOf="@+id/vintage"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/apogee"
-                    app:layout_constraintTop_toTopOf="@+id/vintage"
-                    app:rule="required|integer|positive">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/count"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/count"
-                        android:inputType="number"
-                        android:maxLength="5"
-                        android:nextFocusDown="@id/price"
-                        android:text="@string/default_bottle_quantity" />
-
-                </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
-
-                <View
-                    android:id="@+id/divider2"
-                    style="@style/Widget.Cavity.Divider.Start"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/vintage" />
-
-                <TextView
-                    android:id="@+id/priceTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/buying"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider2" />
-
-                <com.louis.app.cavity.ui.widget.RuledTextInputLayout
-                    android:id="@+id/priceLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    app:layout_constraintEnd_toStartOf="@+id/currencyLayout"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/priceTitle"
-                    app:rule="floating|positive"
-                    app:startIconDrawable="@drawable/ic_price">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/price"
-                        android:inputType="numberDecimal"
-                        android:maxLength="5"
-                        android:nextFocusDown="@id/buyLocation"
-                        app:errorEnabled="true" />
-
-                </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/currencyLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/priceLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/priceTitle"
-                    app:startIconDrawable="@drawable/ic_currency">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/currency"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/currency"
-                        android:inputType="none"
-                        android:nextFocusDown="@id/buyLocation" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/buyLocationLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/priceLayout"
-                    app:startIconDrawable="@drawable/ic_location">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/buyLocation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/buying_location"
-                        android:inputType="textCapSentences"
-                        android:nextFocusDown="@id/buyDate" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/buyDateLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    app:endIconMode="clear_text"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/buyLocationLayout"
-                    app:startIconDrawable="@drawable/ic_calendar">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/buyDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/buying_date"
-                        android:inputType="none" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
