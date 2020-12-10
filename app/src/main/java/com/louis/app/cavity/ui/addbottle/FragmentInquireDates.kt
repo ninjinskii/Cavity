@@ -117,11 +117,13 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     }
 
     private fun updateFields(editedBottle: Bottle) {
+        val formattedPrice = editedBottle.price.let { if (it != -1F) it.toString() else "" }
+
         with(binding) {
             vintage.value = editedBottle.vintage
             apogee.value = editedBottle.apogee
             count.setText(editedBottle.count.toString())
-            price.setText(editedBottle.price.toString())
+            price.setText(formattedPrice)
             currency.setSelection(0) // TODO: get actual selection
             buyLocation.setText(editedBottle.buyLocation)
             buyDate.setText(DateFormatter.formatDate(editedBottle.buyDate))
