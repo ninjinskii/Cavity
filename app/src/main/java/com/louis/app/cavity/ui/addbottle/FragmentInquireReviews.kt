@@ -125,65 +125,6 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
         else -> 3
     }
 
-    private fun revealViews() {
-//        with(binding) {
-//            when (rbGroupType.checkedButtonId) {
-//                R.id.rbMedal -> {
-//                    rbGroupMedal.setVisible(true)
-//                    rbGroupStars.setVisible(false)
-//                    rateLayout.setVisible(false, invisible = true)
-//                }
-//                R.id.rbRate100 -> {
-//                    rateLayout.setVisible(true)
-//                    rbGroupMedal.setVisible(false)
-//                    rbGroupStars.setVisible(false)
-//                }
-//                R.id.rbRate20 -> {
-//                    rateLayout.setVisible(true)
-//                    rbGroupMedal.setVisible(false)
-//                    rbGroupStars.setVisible(false)
-//                }
-//                R.id.rbStar -> {
-//                    rbGroupStars.setVisible(true)
-//                    rbGroupMedal.setVisible(false)
-//                    rateLayout.setVisible(false, invisible = true)
-//                }
-//            }
-//        }
-    }
-
-    private fun makeReview() {
-//        with(binding) {
-//            val constestName = contestName.text.toString().trim()
-//            val rate = rate.text.toString().trim()
-//            val type = when (rbGroupType.checkedButtonId) {
-//                R.id.rbRate20 -> ReviewType.RATE_20 to rate.toInt()
-//                R.id.rbRate100 -> ReviewType.RATE_100 to rate.toInt()
-//                R.id.rbMedal -> {
-//                    val medal: Int = when (rbGroupMedal.checkedButtonId) {
-//                        R.id.rbBronze -> MedalColor.BRONZE.ordinal
-//                        R.id.rbSilver -> MedalColor.SILVER.ordinal
-//                        else -> MedalColor.GOLD.ordinal
-//                    }
-//
-//                    ReviewType.MEDAL to medal
-//                }
-//                else -> {
-//                    val starsNumber: Int = when (rbGroupStars.checkedButtonId) {
-//                        R.id.rbStar1 -> Stars.STAR_1.ordinal
-//                        R.id.rbStar2 -> Stars.STAR_2.ordinal
-//                        else -> Stars.STAR_3.ordinal
-//                    }
-//
-//                    ReviewType.STARS to starsNumber
-//                }
-//            }
-//
-//            addBottleViewModel.reviewManager.addReview(constestName, type)
-//            contestName.setText("")
-//        }
-    }
-
     private fun toggleRvPlaceholder(toggle: Boolean) {
         with(binding) {
             reviewIconEmpty.setVisible(toggle)
