@@ -24,10 +24,10 @@ class GrapeBar @JvmOverloads constructor(
     private val colors = mutableListOf(
         context.getColor(R.color.cavity_red),
         context.getColor(R.color.cavity_indigo),
-        context.getColor(R.color.cavity_yellow),
         context.getColor(R.color.cavity_light_green),
         context.getColor(R.color.cavity_purple),
         context.getColor(R.color.cavity_brown),
+        context.getColor(R.color.cavity_yellow),
         context.getColor(R.color.cavity_grey),
     )
 

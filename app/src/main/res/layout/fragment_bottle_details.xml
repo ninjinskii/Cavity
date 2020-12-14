@@ -79,6 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/medium_margin"
             android:layout_marginBottom="@dimen/small_margin"
+            android:contentDescription="@string/edit_bottle"
             android:src="@drawable/ic_edit"
             app:layout_constraintBottom_toBottomOf="@id/shaper"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -100,9 +101,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/small_margin"
-                android:text="En stock: 2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="En stock: 2" />
 
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/buttonGroupInteract"
@@ -111,23 +112,23 @@
                 android:layout_marginBottom="@dimen/small_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stock"
-                app:selectionRequired="true"
-                app:singleSelection="true">
+                app:layout_constraintTop_toBottomOf="@id/stock">
 
                 <Button
                     android:id="@+id/buttonConsume"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Déguster" />
+                    android:text="@string/taste"
+                    app:icon="@drawable/ic_glass" />
 
                 <Button
                     android:id="@+id/buttonProvide"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ajouter" />
+                    android:text="@string/provide"
+                    app:icon="@drawable/ic_add" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -218,6 +219,7 @@
                         android:layout_width="@dimen/medium_icon"
                         android:layout_height="@dimen/medium_icon"
                         android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/favorite"
                         android:src="@drawable/ic_star"
                         android:tint="@color/medal_gold"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -229,7 +231,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/small_margin"
-                        android:text="PDF"
+                        android:text="@string/pdf"
                         app:layout_constraintBottom_toBottomOf="@id/favorite"
                         app:layout_constraintEnd_toStartOf="@id/favorite"
                         app:layout_constraintTop_toTopOf="@id/favorite" />
