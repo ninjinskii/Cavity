@@ -12,7 +12,8 @@
         android:layout_height="match_parent"
         android:background="?attr/colorSurface"
         android:elevation="4dp"
-        app:layoutDescription="@xml/motion_collapsible_toolbar_header">
+        app:layoutDescription="@xml/motion_collapsible_toolbar_header"
+        tools:maxHeight="4dp">
 
         <ImageView
             android:id="@+id/bottlePicture"
@@ -95,62 +96,147 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/wineImage"
-                android:layout_width="140dp"
-                android:layout_height="190dp"
+            <TextView
+                android:id="@+id/stock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/small_margin"
-                android:background="?attr/colorSurface"
-                app:cardElevation="4dp"
+                android:text="En stock: 2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/buttonGroupInteract"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/small_margin"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stock"
+                app:selectionRequired="true"
+                app:singleSelection="true">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="?attr/colorSurface"
-                    android:src="@color/cavity_green"
-                    app:cardElevation="4dp">
+                <Button
+                    android:id="@+id/buttonConsume"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Déguster" />
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/medium_margin"
-                        android:background="?attr/colorSurface"
-                        app:cardElevation="4dp">
+                <Button
+                    android:id="@+id/buttonProvide"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ajouter" />
 
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="@dimen/medium_margin"
-                            android:background="?attr/colorSurface"
-                            app:cardElevation="0dp" />
-
-                    </com.google.android.material.card.MaterialCardView>
-                </com.google.android.material.card.MaterialCardView>
-
-            </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <!-- Step 1 info, grapes -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/globalCardView"
+                android:id="@+id/grapesCardView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/small_margin"
+                android:layout_marginHorizontal="@dimen/small_margin"
+                android:layout_marginVertical="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/wineImage">
+                app:layout_constraintTop_toBottomOf="@id/buttonGroupInteract">
 
                 <com.louis.app.cavity.ui.bottle.GrapeBar
                     android:id="@+id/grapeBar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <Button
-                    android:id="@+id/buttonEditBottle"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Trigger grapebar" />
+                    android:layout_marginHorizontal="@dimen/small_margin" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/miscCardView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/small_margin"
+                android:layout_marginVertical="@dimen/medium_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/grapesCardView">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/apogee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:drawablePadding="@dimen/xsmall_margin"
+                        app:drawableLeftCompat="@drawable/ic_glass"
+                        app:drawableTint="?attr/colorAccent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="2020" />
+
+                    <TextView
+                        android:id="@+id/price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:drawablePadding="@dimen/xsmall_margin"
+                        app:drawableLeftCompat="@drawable/ic_coin_stack"
+                        app:drawableTint="?attr/colorAccent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/apogee"
+                        tools:text="41.5 €" />
+
+                    <TextView
+                        android:id="@+id/buyLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:drawablePadding="@dimen/xsmall_margin"
+                        app:drawableLeftCompat="@drawable/ic_location"
+                        app:drawableTint="?attr/colorAccent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/price"
+                        tools:text="Foire aux vins Lure (14/12/2010)" />
+
+                    <TextView
+                        android:id="@+id/otherInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:drawablePadding="@dimen/xsmall_margin"
+                        app:drawableLeftCompat="@drawable/ic_comment"
+                        app:drawableTint="?attr/colorAccent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buyLocation"
+                        tools:text="Achat particulier" />
+
+                    <ImageButton
+                        android:id="@+id/favorite"
+                        android:layout_width="@dimen/medium_icon"
+                        android:layout_height="@dimen/medium_icon"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_star"
+                        android:tint="@color/medal_gold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonShowPdf"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:text="PDF"
+                        app:layout_constraintBottom_toBottomOf="@id/favorite"
+                        app:layout_constraintEnd_toStartOf="@id/favorite"
+                        app:layout_constraintTop_toTopOf="@id/favorite" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -158,36 +244,19 @@
                 android:id="@+id/reviewCardView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/small_margin"
                 android:layout_marginVertical="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/globalCardView">
+                app:layout_constraintTop_toBottomOf="@id/miscCardView">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/reviewRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin" />
 
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- Other info, wine pdf, taste comment -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/miscellaneousCardView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/reviewCardView">
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/long_text"
-                app:layout_constraintTop_toBottomOf="@id/miscellaneousCardView" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.motion.widget.MotionLayout>

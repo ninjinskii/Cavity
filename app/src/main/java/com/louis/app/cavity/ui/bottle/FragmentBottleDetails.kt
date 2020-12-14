@@ -43,10 +43,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun setListeners() {
-        binding.buttonEditBottle.setOnClickListener {
-            binding.grapeBar.triggerAnimation()
-        }
-
         binding.fabEditBottle.setOnClickListener {
             val action = FragmentBottleDetailsDirections.bottleDetailsToEditBottle(
                 args.wineId,
