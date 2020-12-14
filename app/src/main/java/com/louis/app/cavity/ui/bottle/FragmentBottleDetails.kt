@@ -20,36 +20,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         //binding.grapeBar.addAllGrapes()
 
         binding.grapeBar.triggerAnimation()
-        setupCollapsingToolbar()
         setListeners()
-    }
-
-    private fun setupCollapsingToolbar() {
-//        binding.collapsingToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
-//            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
-//            }
-//
-//            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
-//                binding.fabEditBottle.run { if (p3 > 0.6) hide() else show() }
-//            }
-//
-//            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
-//            }
-//
-//            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
-//            }
-//        })
     }
 
     private fun setListeners() {
         binding.buttonEditBottle.setOnClickListener {
-//            val wineId = arguments?.getLong(WINE_ID)
-//            val bottleId = arguments?.getLong(BOTTLE_ID)
-//            bottleId?.let {
-//                val bundle = bundleOf(WINE_ID to wineId, EDIT_BOTTLE_ID to it)
-//                findNavController().navigate(R.id.bottleDetailsToAddBottle, bundle)
-//            }
-
             binding.grapeBar.triggerAnimation()
         }
 
@@ -65,9 +40,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
-    }
-
-    private fun observe() {
     }
 
     override fun onDestroyView() {
