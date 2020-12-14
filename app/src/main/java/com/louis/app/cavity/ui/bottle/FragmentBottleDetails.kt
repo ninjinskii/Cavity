@@ -21,7 +21,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         //binding.grapeBar.addAllGrapes()
 
-        binding.grapeBar.triggerAnimation()
+        observe()
         setListeners()
     }
 
@@ -31,7 +31,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         bottleDetailsViewModel.getQGrapesForBottle(args.bottleId).observe(viewLifecycleOwner) {
-
+            binding.grapeBar.apply {
+                addAllGrapes(it)
+                triggerAnimation()
+            }
         }
 
         bottleDetailsViewModel.getFReviewForBottle(args.bottleId).observe(viewLifecycleOwner) {

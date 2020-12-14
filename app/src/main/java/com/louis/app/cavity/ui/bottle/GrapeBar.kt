@@ -5,16 +5,13 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.util.AttributeSet
-import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.GrapeBarBinding
-import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
-import java.util.ArrayList
+import com.louis.app.cavity.model.relation.QuantifiedGrapeAndGrape
 
 class GrapeBar @JvmOverloads constructor(
     context: Context,
@@ -39,9 +36,9 @@ class GrapeBar @JvmOverloads constructor(
         binding = GrapeBarBinding.bind(view)
     }
 
-    fun addAllGrapes(grapes: List<QuantifiedBottleGrapeXRef>) {
+    fun addAllGrapes(grapes: List<QuantifiedGrapeAndGrape>) {
         val mutGrapes = grapes.toMutableList()
-        mutGrapes.sortBy { it.percentage }
+        mutGrapes.sortBy { it.qGrape.percentage }
         mutGrapes.forEachIndexed { index, grape -> prepareBar(index, grape) }
         bars.reverse()
     }
@@ -63,7 +60,7 @@ class GrapeBar @JvmOverloads constructor(
         }
     }
 
-    private fun prepareBar(index: Int, grape: QuantifiedBottleGrapeXRef) {
+    private fun prepareBar(index: Int, grape: QuantifiedGrapeAndGrape) {
         val set = ConstraintSet()
         val progressBar = ProgressBar(
             ContextThemeWrapper(
@@ -81,7 +78,7 @@ class GrapeBar @JvmOverloads constructor(
             progressTintList = ColorStateList.valueOf(colors[index])
         }
 
-        bars.add(progressBar to grape.percentage)
+        bars.add(progressBar to grape.qGrape.percentage)
         addView(progressBar, childCount)
 
         set.apply {
