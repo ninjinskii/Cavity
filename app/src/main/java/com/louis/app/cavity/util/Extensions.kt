@@ -2,7 +2,6 @@ package com.louis.app.cavity.util
 
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
@@ -12,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
@@ -102,5 +100,10 @@ fun Fragment.setupNavigation(toolbar: Toolbar) {
 
     toolbar.setupWithNavController(navController, appBarConfiguration)
     act.navView.setupWithNavController(navController)
+}
+
+// String
+fun String.isNotBlankOrNull(): String? {
+    return if (this.isBlank()) null else this
 }
 

@@ -31,7 +31,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 apogee.text = it.apogee.toString()
                 price.text = getString(R.string.price_and_currency, it.price, it.currency)
                 buyLocation.text = it.buyLocation
-                buyLocation.text = DateFormatter.formatDate(it.buyDate)
+                buyDate.text = DateFormatter.formatDate(it.buyDate)
                 otherInfo.text = it.otherInfo
             }
         }
