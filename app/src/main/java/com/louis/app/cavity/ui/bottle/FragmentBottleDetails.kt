@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
+import com.louis.app.cavity.util.DateFormatter
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -19,15 +20,20 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
 
-        //binding.grapeBar.addAllGrapes()
-
         observe()
         setListeners()
     }
 
     private fun observe() {
         bottleDetailsViewModel.getBottleById(args.bottleId).observe(viewLifecycleOwner) {
-            // update ui
+            with(binding) {
+                stock.text = getString(R.string.stock_number, it.count)
+                apogee.text = it.apogee.toString()
+                price.text = getString(R.string.price_and_currency, it.price, it.currency)
+                buyLocation.text = it.buyLocation
+                buyLocation.text = DateFormatter.formatDate(it.buyDate)
+                otherInfo.text = it.otherInfo
+            }
         }
 
         bottleDetailsViewModel.getQGrapesForBottle(args.bottleId).observe(viewLifecycleOwner) {
@@ -55,6 +61,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
+
+        binding.buttonConsume.setOnClickListener { }
+
+        binding.buttonProvide.setOnClickListener { }
     }
 
     override fun onDestroyView() {

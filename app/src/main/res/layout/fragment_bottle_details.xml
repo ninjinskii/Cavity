@@ -199,7 +199,19 @@
                         app:drawableTint="?attr/colorAccent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/price"
-                        tools:text="Foire aux vins Lure (14/12/2010)" />
+                        tools:text="Foire aux vins Lure" />
+
+                    <TextView
+                        android:id="@+id/buyDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:drawablePadding="@dimen/xsmall_margin"
+                        app:drawableLeftCompat="@drawable/ic_calendar"
+                        app:drawableTint="?attr/colorAccent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buyLocation"
+                        tools:text="14 décembre 2010" />
 
                     <TextView
                         android:id="@+id/otherInfo"
@@ -211,7 +223,7 @@
                         app:drawableTint="?attr/colorAccent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/buyLocation"
+                        app:layout_constraintTop_toBottomOf="@id/buyDate"
                         tools:text="Achat particulier" />
 
                     <ImageButton
