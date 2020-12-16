@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/small_margin"
-    app:cardBackgroundColor="#12000000"
+    app:cardBackgroundColor="@color/flat_card_background"
     app:cardElevation="0dp"
     app:strokeColor="@color/cardview_stroke"
     app:strokeWidth="1dp">
@@ -95,26 +95,6 @@
                 android:text="@string/star3" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/rateLayout"
-            android:layout_width="126dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rbGroupType">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/rate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/rate"
-                android:inputType="number" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
 

@@ -68,7 +68,7 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:strokeColor="@color/cardview_stroke"
-    app:cardBackgroundColor="#12000000"
+    app:cardBackgroundColor="@color/flat_card_background"
     app:strokeWidth="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout

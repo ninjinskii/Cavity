@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="surface_elevation_4dp">#282828</color>
+    <color name="flat_card_background">#12ffffff</color>
 </resources>

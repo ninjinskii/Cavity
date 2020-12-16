@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.util.DateFormatter
@@ -20,8 +21,23 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
 
+        initRecyclerView()
         observe()
         setListeners()
+    }
+
+    private fun initRecyclerView() {
+        val reviewAdapter = ShowFilledReviewsRecyclerAdapter()
+
+        binding.reviewRecyclerView.apply {
+            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = reviewAdapter
+        }
+
+        bottleDetailsViewModel.getFReviewForBottle(args.bottleId).observe(viewLifecycleOwner) {
+            reviewAdapter.submitList(it)
+        }
     }
 
     private fun observe() {
@@ -42,10 +58,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 addAllGrapes(it)
                 triggerAnimation()
             }
-        }
-
-        bottleDetailsViewModel.getFReviewForBottle(args.bottleId).observe(viewLifecycleOwner) {
-
         }
     }
 

@@ -20,6 +20,7 @@
     <color name="wine_rose">#f48fb1</color>
 
     <color name="unselected_tab">#5c4209</color>
+    <color name="flat_card_background">#12000000</color>
 
     <color name="medal_bronze">#614e1a</color>
     <color name="medal_silver">#aaa9ad</color>
