@@ -143,11 +143,43 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/buttonGroupInteract">
 
-                <com.louis.app.cavity.ui.bottle.GrapeBar
-                    android:id="@+id/grapeBar"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/small_margin" />
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/grapeTitleIcon"
+                        android:layout_width="@dimen/small_icon"
+                        android:layout_height="@dimen/small_icon"
+                        android:layout_margin="@dimen/small_margin"
+                        android:src="@drawable/ic_grape"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="?attr/colorPrimary" />
+
+
+                    <TextView
+                        android:id="@+id/grapeTitle"
+                        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/grapes"
+                        app:layout_constraintBottom_toBottomOf="@id/grapeTitleIcon"
+                        app:layout_constraintStart_toEndOf="@id/grapeTitleIcon"
+                        app:layout_constraintTop_toTopOf="@id/grapeTitleIcon" />
+
+
+                    <com.louis.app.cavity.ui.bottle.widget.GrapeBar
+                        android:id="@+id/grapeBar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/small_margin"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -165,66 +197,85 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:id="@+id/miscTitleIcon"
+                        android:layout_width="@dimen/small_icon"
+                        android:layout_height="@dimen/small_icon"
+                        android:layout_margin="@dimen/small_margin"
+                        android:src="@drawable/ic_info"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="?attr/colorPrimary" />
+
                     <TextView
+                        android:id="@+id/miscTitle"
+                        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Général"
+                        app:layout_constraintBottom_toBottomOf="@id/miscTitleIcon"
+                        app:layout_constraintStart_toEndOf="@id/miscTitleIcon"
+                        app:layout_constraintTop_toTopOf="@id/miscTitleIcon" />
+
+                    <com.louis.app.cavity.ui.bottle.widget.LabeledData
                         android:id="@+id/apogee"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/small_margin"
-                        android:drawablePadding="@dimen/xsmall_margin"
-                        app:drawableLeftCompat="@drawable/ic_glass"
-                        app:drawableTint="?attr/colorAccent"
+                        app:icon="@drawable/ic_glass"
+                        app:label="@string/apogee"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="2020" />
+                        app:layout_constraintTop_toBottomOf="@id/miscTitleIcon" />
 
-                    <TextView
-                        android:id="@+id/price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/small_margin"
-                        android:drawablePadding="@dimen/xsmall_margin"
-                        app:drawableLeftCompat="@drawable/ic_coin_stack"
-                        app:drawableTint="?attr/colorAccent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/apogee"
-                        tools:text="41.5 €" />
 
-                    <TextView
-                        android:id="@+id/buyLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/small_margin"
-                        android:drawablePadding="@dimen/xsmall_margin"
-                        app:drawableLeftCompat="@drawable/ic_location"
-                        app:drawableTint="?attr/colorAccent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/price"
-                        tools:text="Foire aux vins Lure" />
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/price"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="@dimen/small_margin"-->
+                    <!--                        android:drawablePadding="@dimen/xsmall_margin"-->
+                    <!--                        app:drawableLeftCompat="@drawable/ic_coin_stack"-->
+                    <!--                        app:drawableTint="?attr/colorAccent"-->
+                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
+                    <!--                        app:layout_constraintTop_toBottomOf="@id/apogee"-->
+                    <!--                        tools:text="41.5 €" />-->
 
-                    <TextView
-                        android:id="@+id/buyDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/small_margin"
-                        android:drawablePadding="@dimen/xsmall_margin"
-                        app:drawableLeftCompat="@drawable/ic_calendar"
-                        app:drawableTint="?attr/colorAccent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/buyLocation"
-                        tools:text="14 décembre 2010" />
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/buyLocation"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="@dimen/small_margin"-->
+                    <!--                        android:drawablePadding="@dimen/xsmall_margin"-->
+                    <!--                        app:drawableLeftCompat="@drawable/ic_location"-->
+                    <!--                        app:drawableTint="?attr/colorAccent"-->
+                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
+                    <!--                        app:layout_constraintTop_toBottomOf="@id/price"-->
+                    <!--                        tools:text="Foire aux vins Lure" />-->
 
-                    <TextView
-                        android:id="@+id/otherInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/small_margin"
-                        android:drawablePadding="@dimen/xsmall_margin"
-                        app:drawableLeftCompat="@drawable/ic_comment"
-                        app:drawableTint="?attr/colorAccent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/buyDate"
-                        tools:text="Achat particulier" />
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/buyDate"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="@dimen/small_margin"-->
+                    <!--                        android:drawablePadding="@dimen/xsmall_margin"-->
+                    <!--                        app:drawableLeftCompat="@drawable/ic_calendar"-->
+                    <!--                        app:drawableTint="?attr/colorAccent"-->
+                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
+                    <!--                        app:layout_constraintTop_toBottomOf="@id/buyLocation"-->
+                    <!--                        tools:text="14 décembre 2010" />-->
+
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/otherInfo"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="@dimen/small_margin"-->
+                    <!--                        android:drawablePadding="@dimen/xsmall_margin"-->
+                    <!--                        app:drawableLeftCompat="@drawable/ic_comment"-->
+                    <!--                        app:drawableTint="?attr/colorAccent"-->
+                    <!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
+                    <!--                        app:layout_constraintTop_toBottomOf="@id/buyDate"-->
+                    <!--                        tools:text="Achat particulier" />-->
 
                     <ImageButton
                         android:id="@+id/favorite"
@@ -237,16 +288,16 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonShowPdf"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/small_margin"
-                        android:text="@string/pdf"
-                        app:layout_constraintBottom_toBottomOf="@id/favorite"
-                        app:layout_constraintEnd_toStartOf="@id/favorite"
-                        app:layout_constraintTop_toTopOf="@id/favorite" />
+                    <!--        <com.google.android.material.button.MaterialButton
+                                android:id="@+id/buttonShowPdf"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/small_margin"
+                                android:text="@string/show_pdf"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent" />-->
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

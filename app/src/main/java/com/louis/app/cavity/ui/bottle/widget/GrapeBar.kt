@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.bottle
+package com.louis.app.cavity.ui.bottle.widget
 
 import android.animation.ObjectAnimator
 import android.content.Context

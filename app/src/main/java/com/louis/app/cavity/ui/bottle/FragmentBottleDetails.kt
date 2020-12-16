@@ -9,7 +9,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
-import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -44,12 +44,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         bottleDetailsViewModel.getBottleById(args.bottleId).observe(viewLifecycleOwner) {
             with(binding) {
                 stock.text = getString(R.string.stock_number, it.count)
-                apogee.text = it.apogee.toString()
-                price.text =
-                    getString(R.string.price_and_currency, it.price.toString(), it.currency)
-                buyLocation.text = it.buyLocation
-                buyDate.text = DateFormatter.formatDate(it.buyDate)
-                otherInfo.text = it.otherInfo
+                apogee.setData(it.apogee.toString())
+//                price.text =
+//                    getString(R.string.price_and_currency, it.price.toString(), it.currency)
+//                buyLocation.text = it.buyLocation
+//                buyDate.text = DateFormatter.formatDate(it.buyDate)
+//                otherInfo.text = it.otherInfo
             }
         }
 
