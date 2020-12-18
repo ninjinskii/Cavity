@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
+import com.louis.app.cavity.util.DateFormatter
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -45,11 +46,16 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             with(binding) {
                 stock.text = getString(R.string.stock_number, it.count)
                 apogee.setData(it.apogee.toString())
-//                price.text =
-//                    getString(R.string.price_and_currency, it.price.toString(), it.currency)
-//                buyLocation.text = it.buyLocation
-//                buyDate.text = DateFormatter.formatDate(it.buyDate)
-//                otherInfo.text = it.otherInfo
+                price.setData(
+                    getString(
+                        R.string.price_and_currency,
+                        it.price.toString(),
+                        it.currency
+                    )
+                )
+                buyLocation.setData(it.buyLocation)
+                buyDate.setData(DateFormatter.formatDate(it.buyDate))
+                otherInfo.setData(it.otherInfo)
             }
         }
 

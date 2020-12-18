@@ -114,7 +114,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/stock">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonConsume"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
@@ -122,7 +122,7 @@
                     android:text="@string/taste"
                     app:icon="@drawable/ic_glass" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonProvide"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
@@ -219,63 +219,58 @@
 
                     <com.louis.app.cavity.ui.bottle.widget.LabeledData
                         android:id="@+id/apogee"
-                        android:layout_width="wrap_content"
+                        android:layout_width="146dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/small_margin"
                         app:icon="@drawable/ic_glass"
                         app:label="@string/apogee"
+                        app:layout_constraintEnd_toStartOf="@id/price"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/miscTitleIcon" />
 
+                    <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                        android:id="@+id/price"
+                        android:layout_width="146dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        app:icon="@drawable/ic_coin_stack"
+                        app:label="@string/price"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/apogee"
+                        app:layout_constraintTop_toBottomOf="@id/miscTitleIcon" />
 
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/price"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="@dimen/small_margin"-->
-                    <!--                        android:drawablePadding="@dimen/xsmall_margin"-->
-                    <!--                        app:drawableLeftCompat="@drawable/ic_coin_stack"-->
-                    <!--                        app:drawableTint="?attr/colorAccent"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toBottomOf="@id/apogee"-->
-                    <!--                        tools:text="41.5 €" />-->
+                    <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                        android:id="@+id/buyLocation"
+                        android:layout_width="146dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        app:icon="@drawable/ic_location"
+                        app:label="@string/buying_location"
+                        app:layout_constraintEnd_toStartOf="@id/buyDate"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/apogee" />
 
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/buyLocation"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="@dimen/small_margin"-->
-                    <!--                        android:drawablePadding="@dimen/xsmall_margin"-->
-                    <!--                        app:drawableLeftCompat="@drawable/ic_location"-->
-                    <!--                        app:drawableTint="?attr/colorAccent"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toBottomOf="@id/price"-->
-                    <!--                        tools:text="Foire aux vins Lure" />-->
+                    <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                        android:id="@+id/buyDate"
+                        android:layout_width="146dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        app:icon="@drawable/ic_calendar"
+                        app:label="@string/buying_date"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/buyLocation"
+                        app:layout_constraintTop_toBottomOf="@id/price" />
 
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/buyDate"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="@dimen/small_margin"-->
-                    <!--                        android:drawablePadding="@dimen/xsmall_margin"-->
-                    <!--                        app:drawableLeftCompat="@drawable/ic_calendar"-->
-                    <!--                        app:drawableTint="?attr/colorAccent"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toBottomOf="@id/buyLocation"-->
-                    <!--                        tools:text="14 décembre 2010" />-->
-
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/otherInfo"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="@dimen/small_margin"-->
-                    <!--                        android:drawablePadding="@dimen/xsmall_margin"-->
-                    <!--                        app:drawableLeftCompat="@drawable/ic_comment"-->
-                    <!--                        app:drawableTint="?attr/colorAccent"-->
-                    <!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toBottomOf="@id/buyDate"-->
-                    <!--                        tools:text="Achat particulier" />-->
+                    <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                        android:id="@+id/otherInfo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/small_margin"
+                        app:icon="@drawable/ic_comment"
+                        app:label="@string/other_info"
+                        app:layout_constraintEnd_toEndOf="@id/buyDate"
+                        app:layout_constraintStart_toStartOf="@id/buyLocation"
+                        app:layout_constraintTop_toBottomOf="@id/buyLocation" />
 
                     <ImageButton
                         android:id="@+id/favorite"
@@ -288,20 +283,31 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <!--        <com.google.android.material.button.MaterialButton
-                                android:id="@+id/buttonShowPdf"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/small_margin"
-                                android:text="@string/show_pdf"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent" />-->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonShowPdf"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:text="@string/show_pdf"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/otherInfo" />
 
+                    <TextView
+                        android:id="@+id/noPdf"
+                        style="@style/TextAppearance.MaterialComponents.Overline"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:text="@string/no_pdf"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/otherInfo" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
