@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/stepper"
+            layout="@layout/stepper"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/divider"
+            style="@style/Widget.Cavity.Divider.Start"
+            android:layout_marginTop="@dimen/medium_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stepper" />
+
+        <TextView
+            android:id="@+id/reviewTitle"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/reviews"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <ImageButton
+            android:id="@+id/buttonSelectReview"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:layout_margin="@dimen/medium_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/add_county"
+            android:src="@drawable/ic_contest"
+            android:tint="?attr/colorOnBackground"
+            app:layout_constraintBottom_toBottomOf="@id/reviewTitle"
+            app:layout_constraintEnd_toStartOf="@+id/buttonAddReview"
+            app:layout_constraintTop_toTopOf="@id/reviewTitle" />
+
+        <ImageButton
+            android:id="@+id/buttonAddReview"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:layout_margin="@dimen/medium_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/add_county"
+            android:src="@drawable/ic_add"
+            android:tint="?attr/colorOnBackground"
+            app:layout_constraintBottom_toBottomOf="@id/reviewTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/reviewTitle" />
+
+        <!-- Match parent width required to get correct behavior when changing sliders value /!\ -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/medium_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reviewTitle"
+            tools:listitem="@layout/item_review_medal" />
+
+        <!-- TODO: On landscape mobile, image to left -->
+        <ImageView
+            android:id="@+id/reviewIconEmpty"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.38"
+            android:src="@drawable/ic_grade"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/explanation"
+            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            app:layout_constraintHeight_percent="0.3"
+            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintTop_toTopOf="@id/recyclerView"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintVertical_bias="0.35"
+            app:tint="?attr/colorOnSurface" />
+
+        <TextView
+            android:id="@+id/explanation"
+            style="?attr/textAppearanceBody1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Empty text"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/buttonSelectReviewSecondary"
+            app:layout_constraintEnd_toEndOf="@id/buttonSelectReviewSecondary"
+            app:layout_constraintStart_toStartOf="@id/buttonSelectReviewSecondary"
+            app:layout_constraintTop_toBottomOf="@id/reviewIconEmpty"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSelectReviewSecondary"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:text="@string/select_reviews"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/buttonSkip"
+            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintTop_toBottomOf="@id/explanation"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.75" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSkip"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/skip"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/recyclerView"
+            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintTop_toBottomOf="@id/buttonSelectReviewSecondary"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.75" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

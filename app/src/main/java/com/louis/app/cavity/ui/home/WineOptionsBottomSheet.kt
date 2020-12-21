@@ -7,32 +7,26 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetWineOptionsBinding
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.ui.home.FragmentWines.Companion.WINE_ID
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
-class WineOptionsBottomSheet() : BottomSheetDialogFragment() {
-    var wine: Wine? = null
-
-    constructor(wine: Wine) : this() {
-        this.wine = wine
-    }
-
+class WineOptionsBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetWineOptionsBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val args: WineOptionsBottomSheetArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        if (wine == null) dismiss()
         _binding = BottomSheetWineOptionsBinding.inflate(inflater)
         return binding.root
     }
@@ -46,28 +40,33 @@ class WineOptionsBottomSheet() : BottomSheetDialogFragment() {
                 it.getColor(R.color.wine_red),
                 it.getColor(R.color.wine_sweet),
                 it.getColor(R.color.wine_rose),
-                it.getColor(R.color.colorAccent)
+                it.getColor(R.color.cavity_gold)
             )
         } ?: return
 
         with(binding) {
-            currentWine.wineName.text = wine?.name
-            currentWine.wineNaming.text = wine?.naming
-            currentWine.wineColorIndicator.setColorFilter(colors[wine?.color ?: 0])
-            currentWine.organicImage.setVisible(wine?.isOrganic?.toBoolean() ?: false)
+            currentWine.wineName.text = args.wineName
+            currentWine.wineNaming.text = args.wineNaming
+            currentWine.wineColorIndicator.setColorFilter(colors[args.color])
+            currentWine.organicImage.setVisible(args.isOrganic)
 
             addBottle.setOnClickListener {
                 dismiss()
 
-                val bundle = bundleOf(WINE_ID to wine?.wineId)
-                findNavController().navigate(R.id.homeToAddBottle, bundle)
+                val action = WineOptionsBottomSheetDirections.wineOptionsToAddBottle(args.wineId)
+
+                findNavController().navigate(action)
             }
 
             binding.editWine.setOnClickListener {
                 dismiss()
 
-                val bundle = bundleOf(WINE_ID to wine?.wineId)
-                findNavController().navigate(R.id.homeToAddWine, bundle)
+                val action = WineOptionsBottomSheetDirections.wineOptionsToEditWine(
+                    args.wineId,
+                    args.countyId
+                )
+
+                findNavController().navigate(action)
             }
 
             deleteWine.setOnClickListener {
@@ -77,7 +76,7 @@ class WineOptionsBottomSheet() : BottomSheetDialogFragment() {
                         .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                         }
                         .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
-                            wine?.let { homeViewModel.deleteWine(it) }
+                            homeViewModel.deleteWine(args.wineId)
                             dismiss()
                         }
                         .show()

@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.toBoolean
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
@@ -31,18 +33,26 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 it.getColor(R.color.wine_red),
                 it.getColor(R.color.wine_sweet),
                 it.getColor(R.color.wine_rose),
-                it.getColor(R.color.colorAccent)
+                it.getColor(R.color.cavity_gold)
             )
         }
 
         val onVintageClick = { wineId: Long, bottle: Bottle ->
-            val bundle = bundleOf(WINE_ID to wineId, BOTTLE_ID to bottle.bottleId)
-            findNavController().navigate(R.id.homeToBottleDetails, bundle)
+            val action = FragmentHomeDirections.homeToBottleDetails(wineId, bottle.bottleId)
+            findNavController().navigate(action)
         }
 
         val wineAdapter = WineRecyclerAdapter(colors ?: return, onVintageClick) { wine ->
             activity?.supportFragmentManager?.let {
-                WineOptionsBottomSheet(wine).show(it, getString(R.string.tag_modal_sheet_id))
+                val action = FragmentHomeDirections.homeToWineOptions(
+                    wine.wineId,
+                    wine.countyId,
+                    wine.name,
+                    wine.naming,
+                    wine.isOrganic.toBoolean(),
+                    wine.color
+                )
+                findNavController().navigate(action)
             }
         }
 
@@ -66,6 +76,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         val countyId = arguments?.getLong(COUNTY_ID)
         homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
+            L.v("updated observer for county: $countyId")
             wineAdapter.submitList(it)
         }
     }
@@ -77,12 +88,11 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     companion object {
         private const val COUNTY_ID = "com.louis.app.cavity.ui.home.FragmentWines.COUNTY_ID"
-        const val BOTTLE_ID = "com.louis.app.cavity.ui.home.FragmentWines.BOTTLE_ID"
-        const val WINE_ID = "com.louis.app.cavity.ui.home.FragmentWines.WINE_ID"
 
+        // Used by WinesPagerAdapter
         fun newInstance(countyId: Long): FragmentWines {
             return FragmentWines().apply {
-                arguments = Bundle().apply { putLong(COUNTY_ID, countyId) }
+                arguments = bundleOf(COUNTY_ID to countyId)
             }
         }
     }

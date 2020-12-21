@@ -12,6 +12,6 @@
         android:layout_marginStart="@dimen/large_margin"
         tools:text="Alsace" />
 
-    <include layout="@layout/divider" />
+    <View style="@style/Widget.Cavity.Divider" />
 
 </LinearLayout>

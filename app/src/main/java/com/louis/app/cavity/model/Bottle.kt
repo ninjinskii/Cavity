@@ -2,6 +2,7 @@ package com.louis.app.cavity.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.*
 
@@ -15,7 +16,7 @@ data class Bottle(
     val apogee: Int,
     @ColumnInfo(name = "is_favorite") var isFavorite: Int,
     val count: Int,
-    val price: Int,
+    val price: Float,
     val currency: String,
     @ColumnInfo(name = "other_info") var otherInfo: String,
     @ColumnInfo(name = "buy_location") val buyLocation: String,
@@ -29,5 +30,4 @@ data class Bottle(
     }
 }
 
-// Préparer un set de couleur clair avec légende pour identifier les cépages dans une jauge dans les infos de bouteille
 // Context getFilesDIr() pour récupérer le stockage privé et mettre les photos dedans

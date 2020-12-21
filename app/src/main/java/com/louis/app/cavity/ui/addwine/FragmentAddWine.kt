@@ -6,10 +6,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.doOnLayout
+import androidx.core.view.doOnNextLayout
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,18 +25,18 @@ import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.CountyLoader
 import com.louis.app.cavity.ui.SnackbarProvider
-import com.louis.app.cavity.ui.home.FragmentWines.Companion.WINE_ID
+import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
+class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
     private val addWineViewModel: AddWineViewModel by viewModels()
-    private var wineImagePath: String? = null
+    private val args: FragmentAddWineArgs by navArgs()
 
     companion object {
         const val PICK_IMAGE_RESULT_CODE = 1
@@ -38,14 +44,12 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         _binding = FragmentAddWineBinding.bind(view)
+
+        setupNavigation(binding.appBar.toolbar)
         snackbarProvider = activity as SnackbarProvider
 
-        arguments?.let {
-            val wineId = it.getLong(WINE_ID)
-            addWineViewModel.startEditMode(wineId)
-        }
+        addWineViewModel.start(args.editedWineId)
 
         inflateChips()
         setListeners()
@@ -63,11 +67,12 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
             val toInflate = allCounties - alreadyInflated
             alreadyInflated.addAll(toInflate)
 
-            loadCounties(
+            CountyLoader().loadCounties(
                 lifecycleScope,
                 layoutInflater,
                 binding.countyChipGroup,
                 toInflate,
+                preselect = listOf(args.countyId)
             )
         }
     }
@@ -75,31 +80,36 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     private fun setListeners() {
         binding.submitAddWine.setOnClickListener {
             with(binding) {
-                val name = name.text.toString().trim()
-                val naming = naming.text.toString().trim()
-                val cuvee = cuvee.text.toString().trim()
-                val isOrganic = organicWine.isChecked.toInt()
-                val color = colorChipGroup.checkedChipId
-                val checkedChipId = countyChipGroup.checkedChipId
+                root.hideKeyboard()
 
-                if (countyChipGroup.checkedChipId == View.NO_ID) {
-                    coordinator.showSnackbar(R.string.no_county)
-                    nestedScrollView.smoothScrollTo(0, 0)
+                val valid = nameLayout.validate() and namingLayout.validate()
+
+                if (valid) {
+                    val name = name.text.toString().trim()
+                    val naming = naming.text.toString().trim()
+                    val cuvee = cuvee.text.toString().trim()
+                    val isOrganic = organicWine.isChecked.toInt()
+                    val color = colorChipGroup.checkedChipId
+                    val checkedChipId = countyChipGroup.checkedChipId
+
+                    if (countyChipGroup.checkedChipId == View.NO_ID) {
+                        coordinator.showSnackbar(R.string.no_county)
+                        nestedScrollView.smoothScrollTo(0, 0)
+                    }
+
+                    val county = countyChipGroup
+                        .findViewById<Chip>(checkedChipId)
+                        .getTag(R.string.tag_chip_id) as County
+
+                    addWineViewModel.saveWine(
+                        name,
+                        naming,
+                        cuvee,
+                        isOrganic,
+                        color,
+                        county
+                    )
                 }
-
-                val county = countyChipGroup
-                    .findViewById<Chip>(checkedChipId)
-                    .getTag(R.string.tag_chip_id) as County
-
-                addWineViewModel.saveWine(
-                    name,
-                    naming,
-                    cuvee,
-                    isOrganic,
-                    color,
-                    county,
-                    wineImagePath
-                )
             }
         }
 
@@ -112,8 +122,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
         }
 
         binding.buttonBrowsePhoto.setOnClickListener {
-            val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-            fileChooseIntent.apply {
+            val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 type = "image/*"
             }
@@ -131,7 +140,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
 
         binding.buttonRemoveWineImage.setOnClickListener {
             toggleImageViews(false)
-            wineImagePath = null
+            addWineViewModel.setImage("")
         }
     }
 
@@ -146,39 +155,34 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
                 addWineViewModel.addCounty(dialogBinding.countyName.text.toString().trim())
             }
             .setView(dialogBinding.root)
+            .setOnDismissListener { dialogBinding.root.hideKeyboard() }
             .show()
 
-        lifecycleScope.launch(Main) {
-            delay(300)
-            dialogBinding.countyName.showKeyboard()
-        }
+        dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
     }
 
     private fun observe() {
         addWineViewModel.updatedWine.observe(viewLifecycleOwner) {
-            if (it != null) {
-                with(binding) {
-                    naming.setText(it.naming)
-                    name.setText(it.name)
-                    cuvee.setText(it.cuvee)
-                    (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
-                    organicWine.isChecked = it.isOrganic.toBoolean()
-                    wineImagePath = it.imgPath
-                    loadImage(it.imgPath)
-                }
+            with(binding) {
+                naming.setText(it.naming)
+                name.setText(it.name)
+                cuvee.setText(it.cuvee)
+                (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
+                organicWine.isChecked = it.isOrganic.toBoolean()
+                loadImage(it.imgPath)
             }
         }
 
         addWineViewModel.wineUpdatedEvent.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
                 snackbarProvider.onShowSnackbarRequested(stringRes)
-                findNavController().popBackStack()
+                findNavController().navigateUp()
             }
         }
 
         addWineViewModel.userFeedback.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
+                snackbarProvider.onShowSnackbarRequested(stringRes)
             }
         }
     }
@@ -198,10 +202,15 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine), CountyLoader {
     }
 
     private fun onImageSelected(data: Intent?) {
-        requestMediaPersistentPermission(data)
-        wineImagePath = data?.data.toString()
-        binding.wineMiniImage.setVisible(true)
-        loadImage(wineImagePath)
+        if (data != null) {
+            val imagePath = data.data.toString()
+            requestMediaPersistentPermission(data)
+            addWineViewModel.setImage(imagePath)
+            loadImage(imagePath)
+            binding.wineMiniImage.setVisible(true)
+        } else {
+            snackbarProvider.onShowSnackbarRequested(R.string.base_error)
+        }
     }
 
     private fun loadImage(uri: String?) {

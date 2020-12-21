@@ -10,7 +10,7 @@
 
     <include
         android:id="@+id/main"
-        layout="@layout/app_bar_main" />
+        layout="@layout/content_main" />
 
     <!-- NavHost fragment -->
     <com.google.android.material.navigation.NavigationView

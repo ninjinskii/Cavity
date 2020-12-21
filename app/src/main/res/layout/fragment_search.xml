@@ -1,306 +1,361 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<!-- We need an nested layout to get correct behavior for BottomSheet -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true">
+    android:background="?attr/colorPrimarySurface"
+    android:orientation="vertical">
 
-    <ScrollView
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/motionToolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/colorPrimary">
+        android:layout_height="?attr/actionBarSize"
+        app:layoutDescription="@xml/motion_search_toolbar"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <!-- TODO: replace all android:white with colorOnPrimary -->
+        <!-- Using a toolbar here to get correct title and nav icon positioning -->
+
+        <!-- TODO: check if padding is correct on tablet. -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/fakeToolbar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconColor="?attr/colorOnPrimarySurface"
+            app:title="SearchFragment"
+            app:titleTextColor="?attr/colorOnPrimarySurface"
+            tools:layout_editor_absoluteX="29dp" />
+
+        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
+            android:id="@+id/toggleBackdrop"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="0dp"
+            android:background="?attr/actionBarItemBackground"
+            android:scaleType="centerInside"
+            android:tint="?attr/colorOnPrimarySurface"
+            app:initialAvd="@drawable/anim_close_filter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:otherAvd="@drawable/anim_filter_close" />
+
+        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
+            android:id="@+id/searchButton"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="0dp"
+            android:background="?attr/actionBarItemBackground"
+            android:scaleType="centerInside"
+            android:tint="?attr/colorOnPrimarySurface"
+            app:initialAvd="@drawable/anim_search_close"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:otherAvd="@drawable/anim_close_search" />
+
+        <EditText
+            android:id="@+id/searchView"
+            style="@style/Widget.Cavity.SearchView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:background="@android:color/transparent"
+            android:hint="@string/search_wine_hint"
+            android:inputType="textCapSentences"
+            android:imeOptions="actionDone"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:scrollbars="none">
 
-            <androidx.constraintlayout.motion.widget.MotionLayout
-                android:id="@+id/motionToolbar"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <HorizontalScrollView
+                    android:id="@+id/countyScrollView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/countyChipGroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/medium_margin"
+                            android:layout_marginTop="@dimen/small_margin"
+                            app:selectionRequired="false"
+                            app:singleLine="true"
+                            app:singleSelection="false">
+
+                            <!-- This is a stub, to avoid 2 layout passes -->
+                            <com.google.android.material.chip.Chip
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:visibility="invisible" />
+
+                        </com.google.android.material.chip.ChipGroup>
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <HorizontalScrollView
+                    android:id="@+id/colorScrollView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/countyScrollView">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/colorChipGroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/medium_margin"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/nameLayout"
+                            app:singleLine="true">
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipRed"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checkable="true"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/wine_color_red" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipWhite"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checkable="true"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/wine_color_white" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipSweet"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checkable="true"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/wine_color_sweet" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipRose"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checkable="true"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/wine_color_rose" />
+
+                        </com.google.android.material.chip.ChipGroup>
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <HorizontalScrollView
+                    android:id="@+id/otherScrollView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/colorScrollView">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/otherChipGroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/medium_margin"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/nameLayout"
+                            app:singleLine="true">
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipReadyToDrink"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checkable="true"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/ready_to_drink" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipOrganic"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checkable="true"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/organic" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipFavorite"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checkable="true"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/favorite" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipPdf"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checkable="true"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:text="@string/pdf" />
+
+                        </com.google.android.material.chip.ChipGroup>
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/vintageSlider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:stepSize="1.0"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/otherScrollView" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonMoreFilters"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="?attr/actionBarSize"
+                    android:text="@string/more_filters"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vintageSlider"
+                    app:layout_constraintVertical_bias="0.0" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <!-- Using BottomSheet as Backdrop here. Since the 'opiniated' bs in Material,
+        we can't use the shape system, otherwise corners will expand when the bottom sheet is expanded.
+         This should not happen since we want a backdrop (which doesn't exist yet in MDC) -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:elevation="1dp"
+            android:focusable="true"
+            app:layout_behavior=".ui.search.widget.LockedBottomSheetBehavior"
+            app:layout_insetEdge="bottom">
+
+            <!-- Nested layout for bottom sheet header -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/backdropHeader"
+                android:layout_width="0dp"
                 android:layout_height="?attr/actionBarSize"
-                app:layoutDescription="@xml/motion_search_toolbar"
+                android:animateLayoutChanges="true"
+                android:background="@drawable/shape_backdrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/scndToolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:navigationIcon="@drawable/ic_arrow_back"
-                    app:title="SearchFragment"/>
-
-                <ImageButton
-                    android:id="@+id/toggleBackdrop"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="0dp"
-                    android:src="@drawable/anim_filter_close"
-                    android:background="?attr/actionBarItemBackground"
-                    android:tint="?attr/colorOnPrimary"/>
-
-                <ImageButton
-                    android:id="@+id/searchButton"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="0dp"
-                    android:paddingEnd="@dimen/small_margin"
-                    android:src="@drawable/anim_close_filter"
-                    android:background="@android:color/transparent"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:tint="?attr/colorOnPrimary"/>
-
-                <ImageButton
-                    android:id="@+id/backButton"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="0dp"
-                    android:paddingStart="8dp"
-                    android:src="@drawable/ic_arrow_back"
-                    android:background="@android:color/transparent"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:tint="?attr/colorOnPrimary"/>
-
-            </androidx.constraintlayout.motion.widget.MotionLayout>
-
-            <HorizontalScrollView
-                android:id="@+id/countyScrollView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/motionToolbar">
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/matchingWines"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="12 résultats" />
 
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/countyChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/medium_margin"
-                        android:layout_marginTop="@dimen/small_margin"
-                        app:selectionRequired="false"
-                        app:singleLine="true"
-                        app:singleSelection="false" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <HorizontalScrollView
-                android:id="@+id/colorScrollView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/countyScrollView">
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/currentQuery"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:ellipsize="end"
+                    android:maxWidth="100dp"
+                    android:maxLines="1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="'Barolo'" />
 
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/colorChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/medium_margin"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                        app:singleLine="true">
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipRed"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/wine_color_red" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipWhite"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/wine_color_white" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipSweet"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/wine_color_sweet" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipRose"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/wine_color_rose" />
-
-                    </com.google.android.material.chip.ChipGroup>
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <HorizontalScrollView
-                android:id="@+id/otherScrollView"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
+                android:layout_height="0dp"
+                android:background="@color/surface_elevation_4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/colorScrollView">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/otherChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/medium_margin"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                        app:singleLine="true">
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipReadyToDrink"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/ready_to_drink" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipOrganic"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/organic" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipFavorite"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/favorite" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipPdf"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checkable="true"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:text="@string/pdf" />
-
-                    </com.google.android.material.chip.ChipGroup>
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <com.google.android.material.slider.RangeSlider
-                android:id="@+id/vintageSlider"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/small_margin"
-                android:stepSize="4.0"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/otherScrollView" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonMoreFilters"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="?attr/actionBarSize"
-                android:textColor="?attr/colorSecondary"
-                android:text="@string/more_filters"
+                app:layout_constraintTop_toBottomOf="@id/backdropHeader"
                 app:layout_constraintVertical_bias="0.0"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_bottle" />
+
+            <View
+                android:id="@+id/scrim"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:alpha="0"
+                android:background="?attr/colorSurface"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vintageSlider"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/backdropHeader" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-
-    <!-- Backdrop Bottom Sheet-->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottomSheet"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior=".ui.search.LockedBottomSheetBehavior"
-        app:layout_insetEdge="bottom">
-
-        <!-- Nested layout for bottom sheet header -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/backdropHeader"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/shape_backdrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/matchingWines"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="12 résultats" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="?attr/colorSurface"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/backdropHeader"
-            app:layout_constraintVertical_bias="0.0"
-            tools:listitem="@layout/item_wine" />
-
-        <View
-            android:id="@+id/scrim"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0"
-            android:background="#ffffff"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backdropHeader" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

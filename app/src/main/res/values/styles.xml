@@ -1,21 +1,15 @@
 <resources>
     <!-- Base application theme. -->
     <style name="CavityTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/cavity_gold</item>
+        <item name="colorAccent">@color/cavity_gold</item>
+        <item name="colorSecondary">@color/cavity_gold</item>
 
-        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Cavtiy.LargeComponent
-        </item>
-
-        <item name="searchViewStyle">@style/Cavity.SearchView</item>
-        <!-- Customize searchview text, problem: applies to other compoenent (number pickers) -->
-        <!--<item name="android:editTextColor">?attr/colorOnPrimary</item>-->
-        <!--<item name="android:textColorHint">@color/search_view_hint</item>-->
+        <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
     </style>
 
     <!-- Scrollable tab -->
-    <style name="TabTextAppearance" parent="TextAppearance.AppCompat.Button" />
+    <style name="TabTextAppearance" parent="TextAppearance.MaterialComponents.Button" />
 
     <!-- Grouped button -->
     <style name="Widget.Cavity.Button.OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -28,23 +22,28 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
-    <!-- Shape -->
-    <style name="ShapeAppearance.Cavtiy.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">0dp</item>
-    </style>
-
-    <!-- Backdrop front layer shape -->
-    <style name="ShapeAppearenceOverlay.Cavity.Backdrop" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerRadius">16dp</item>
-    </style>
-
     <!-- SearchView -->
-    <style name="Cavity.SearchView" parent="Widget.AppCompat.SearchView">
-        <item name="queryBackground">@drawable/search_view_background</item>
-        <item name="searchHintIcon">@null</item>
-        <item name="queryHint">@string/search_wine_hint</item>
-        <item name="closeIcon">@drawable/ic_search_close</item>
+    <style name="Widget.Cavity.SearchView" parent="android:style/Widget.Material.SearchView">
+        <item name="colorControlActivated">?android:colorAccent</item>
+        <item name="android:searchIcon">@android:color/transparent</item>
+        <item name="android:searchHintIcon">@android:color/transparent</item>
+        <item name="android:closeIcon">@android:color/transparent</item>
+        <item name="android:queryBackground">@android:color/transparent</item>
+        <item name="android:submitBackground">@android:color/transparent</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
+
+    <style name="Widget.Cavity.Divider" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/divider_height</item>
+        <item name="android:layout_marginTop">@dimen/medium_margin</item>
+        <item name="android:layout_marginBottom">@dimen/medium_margin</item>
+        <item name="android:background">?attr/colorOnBackground</item>
+        <item name="android:alpha">0.20</item>
+    </style>
+
+    <style name="Widget.Cavity.Divider.Start">
+        <item name="android:layout_marginStart">@dimen/medium_margin</item>
+    </style>
+
 </resources>

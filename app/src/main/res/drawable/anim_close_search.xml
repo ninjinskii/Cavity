@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="closetosearch"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <group android:name="cts_oval_container">
+                <path
+                    android:name="cts_oval"
+                    android:pathData="M 13.389 13.389 C 15.537 11.241 15.537 7.759 13.389 5.611 C 11.241 3.463 7.759 3.463 5.611 5.611 C 3.463 7.759 3.463 11.241 5.611 13.389 C 7.759 15.537 11.241 15.537 13.389 13.389 Z"
+                    android:strokeColor="#000000"
+                    android:strokeWidth="1.8"
+                    android:trimPathStart="1"/>
+            </group>
+            <path
+                android:name="cts_ne_stem"
+                android:pathData="M 18 6 L 6 18"
+                android:strokeColor="#000000"
+                android:strokeWidth="1.8"
+                android:trimPathStart="0"/>
+            <path
+                android:name="cts_nw_stem"
+                android:pathData="M 6 6 L 20 20"
+                android:strokeColor="#000000"
+                android:strokeWidth="1.8"
+                android:trimPathEnd="0.86"/>
+        </vector>
+    </aapt:attr>
+    <target android:name="cts_nw_stem">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="trimPathStart"
+                    android:startOffset="202"
+                    android:duration="798"
+                    android:valueFrom="0"
+                    android:valueTo="0.48"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:startOffset="300"
+                    android:duration="500"
+                    android:valueFrom="0.86"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="cts_ne_stem">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="trimPathStart"
+                android:duration="612"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="cts_oval">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="trimPathStart"
+                android:startOffset="202"
+                android:duration="714"
+                android:valueFrom="1"
+                android:valueTo="0"
+                android:valueType="floatType"
+                android:interpolator="@android:anim/accelerate_decelerate_interpolator"/>
+        </aapt:attr>
+    </target>
+    <target android:name="cts_oval_container">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="translateX"
+                    android:startOffset="202"
+                    android:duration="798"
+                    android:valueFrom="-6.7"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="translateY"
+                    android:startOffset="202"
+                    android:duration="798"
+                    android:valueFrom="-6.7"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

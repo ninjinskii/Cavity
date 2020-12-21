@@ -5,4 +5,19 @@
         <attr name="unSelectedColor" format="color" />
         <attr name="tabTextAppearance" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="AnimatedImageButton">
+        <attr name="initialAvd" format="reference" />
+        <attr name="otherAvd" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="RuledTextInputLayout">
+        <attr name="rule">
+            <flag name="absent" value="0" />
+            <flag name="required" value="1" />
+            <flag name="integer" value="2" />
+            <flag name="floating" value="4" />
+            <flag name="positive" value="8" />
+        </attr>
+    </declare-styleable>
 </resources>

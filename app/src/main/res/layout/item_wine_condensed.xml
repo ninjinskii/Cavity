@@ -10,7 +10,7 @@
         android:layout_width="@dimen/wine_color_indicator_width"
         android:layout_height="@dimen/wine_color_indicator_height"
         android:layout_marginStart="@dimen/small_margin"
-        android:src="@color/colorPrimaryDark"
+        android:src="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/wineNaming"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/wineName" />

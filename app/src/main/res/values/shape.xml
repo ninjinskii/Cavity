@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ShapeAppearance.Cavtiy.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="ShapeAppearance.Cavtiy.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">70dp</item>
+    </style>
+
+    <!-- Backdrop front layer shape -->
+    <style name="ShapeAppearenceOverlay.Cavity.Backdrop" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+</resources>
+

@@ -3,7 +3,9 @@ package com.louis.app.cavity.ui.bottle
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Canvas
 import android.util.AttributeSet
+import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -11,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintSet
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.GrapeBarBinding
 import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import java.util.ArrayList
 
 class GrapeBar @JvmOverloads constructor(
     context: Context,
@@ -35,16 +39,16 @@ class GrapeBar @JvmOverloads constructor(
         binding = GrapeBarBinding.bind(view)
     }
 
-    fun addAllGrapes(grapes: List<Grape>) {
+    fun addAllGrapes(grapes: List<QuantifiedBottleGrapeXRef>) {
         val mutGrapes = grapes.toMutableList()
         mutGrapes.sortBy { it.percentage }
         mutGrapes.forEachIndexed { index, grape -> prepareBar(index, grape) }
+        bars.reverse()
     }
 
     fun triggerAnimation() {
         var progress = 0
 
-        bars.reverse()
         bars.forEach {
             ObjectAnimator.ofInt(it.first, "progress", 0, (it.second + progress) * 10).apply {
                 duration = 800
@@ -59,7 +63,7 @@ class GrapeBar @JvmOverloads constructor(
         }
     }
 
-    private fun prepareBar(index: Int, grape: Grape) {
+    private fun prepareBar(index: Int, grape: QuantifiedBottleGrapeXRef) {
         val set = ConstraintSet()
         val progressBar = ProgressBar(
             ContextThemeWrapper(
@@ -88,5 +92,9 @@ class GrapeBar @JvmOverloads constructor(
             connect(progressBar.id, ConstraintSet.BOTTOM, id, ConstraintSet.BOTTOM)
             applyTo(this@GrapeBar)
         }
+    }
+
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
     }
 }

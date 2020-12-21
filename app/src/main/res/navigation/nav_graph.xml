@@ -17,15 +17,53 @@
             android:id="@+id/homeToAddWine"
             app:destination="@id/add_wine_dest" />
         <action
-            android:id="@+id/homeToAddBottle"
-            app:destination="@id/add_bottle_dest" />
-        <action
             android:id="@+id/homeToSearch"
             app:destination="@id/search_dest" />
         <action
             android:id="@+id/homeToBottleDetails"
-            app:destination="@id/fragmentBottleDetails" />
+            app:destination="@id/fragmentBottleDetails">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
+        <action
+            android:id="@+id/homeToWineOptions"
+            app:destination="@id/wine_options_dialog" />
     </fragment>
+
+    <dialog
+        android:id="@+id/wine_options_dialog"
+        android:name="com.louis.app.cavity.ui.home.WineOptionsBottomSheet"
+        tools:layout="@layout/bottom_sheet_wine_options">
+        <argument
+            android:name="wineId"
+            app:argType="long" />
+        <argument
+            android:name="countyId"
+            app:argType="long" />
+        <argument
+            android:name="wineName"
+            app:argType="string" />
+        <argument
+            android:name="wineNaming"
+            app:argType="string" />
+        <argument
+            android:name="isOrganic"
+            app:argType="boolean" />
+        <argument
+            android:name="color"
+            app:argType="integer" />
+        <action
+            android:id="@+id/wineOptionsToEditWine"
+            app:destination="@+id/add_wine_dest" />
+        <action
+            android:id="@+id/wineOptionsToAddBottle"
+            app:destination="@id/add_bottle_dest" />
+    </dialog>
+
 
     <fragment
         android:id="@+id/settings_dest"
@@ -37,19 +75,36 @@
         android:id="@+id/add_wine_dest"
         android:name="com.louis.app.cavity.ui.addwine.FragmentAddWine"
         android:label="FragmentAddWine"
-        tools:layout="@layout/fragment_add_wine" />
+        tools:layout="@layout/fragment_add_wine">
+        <argument
+            android:name="editedWineId"
+            android:defaultValue="0L"
+            app:argType="long" />
+        <argument
+            android:name="countyId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+    </fragment>
 
     <fragment
         android:id="@+id/add_bottle_dest"
         android:name="com.louis.app.cavity.ui.addbottle.FragmentAddBottle"
         android:label="FragmentAddBottle"
-        tools:layout="@layout/fragment_inquire_dates" />
+        tools:layout="@layout/fragment_inquire_dates">
+        <argument
+            android:name="wineId"
+            app:argType="long" />
+        <argument
+            android:name="editedBottleId"
+            android:defaultValue="0L"
+            app:argType="long" />
+    </fragment>
 
     <fragment
         android:id="@+id/search_dest"
         android:name="com.louis.app.cavity.ui.search.FragmentSearch"
         android:label="FragmentSearch"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/searchToMoreFilters"
             app:destination="@id/more_filters_dest" />
@@ -65,10 +120,23 @@
         android:id="@+id/fragmentBottleDetails"
         android:name="com.louis.app.cavity.ui.bottle.FragmentBottleDetails"
         android:label="FragmentBottleDetails"
-        tools:layout="@layout/fragment_bottle_details" >
+        tools:layout="@layout/fragment_bottle_details">
+        <argument
+            android:name="wineId"
+            app:argType="long" />
+        <argument
+            android:name="bottleId"
+            app:argType="long" />
         <action
-            android:id="@+id/bottleDetailsToAddBottle"
-            app:destination="@id/add_bottle_dest" />
+            android:id="@+id/bottleDetailsToEditBottle"
+            app:destination="@id/add_bottle_dest">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+            <argument
+                android:name="editedBottleId"
+                app:argType="long" />
+        </action>
     </fragment>
 
 </navigation>

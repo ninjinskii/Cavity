@@ -4,21 +4,26 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
-import com.louis.app.cavity.ui.addbottle.stepper.FragmentStepper
-import com.louis.app.cavity.ui.home.FragmentWines.Companion.WINE_ID
-import com.louis.app.cavity.util.L
+import com.louis.app.cavity.ui.addbottle.stepper.Stepper
+import com.louis.app.cavity.ui.addbottle.viewmodel.*
+import com.louis.app.cavity.util.showSnackbar
 
-class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
-    private lateinit var snackbarProvider: SnackbarProvider
+class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
+    lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentAddBottleBinding? = null
     private val binding get() = _binding!!
-    private val addBottleViewModel: AddBottleViewModel by activityViewModels()
+    private val dateViewModel: DateViewModel by viewModels()
+    private val grapeViewModel: GrapeViewModel by viewModels()
+    private val reviewViewModel: ReviewViewModel by viewModels()
+    private val otherInfoViewModel: OtherInfoViewModel by viewModels()
+    private val args: FragmentAddBottleArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -26,40 +31,81 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle) {
 
         snackbarProvider = activity as SnackbarProvider
 
-        if (arguments?.getLong(WINE_ID) == null) {
-            snackbarProvider.onShowSnackbarRequested(R.string.base_error)
-            findNavController().popBackStack()
-            return
+        // editedBottleId is equal to 0 if user is not editing a bottle, but adding a new one
+        dateViewModel.start(args.wineId, args.editedBottleId)
+
+        initStepper()
+        setupCustomBackNav()
+        observe()
+    }
+
+    private fun initStepper() {
+        binding.viewPager.apply {
+            adapter = AddBottlesPagerAdapter(this@FragmentAddBottle)
+            isUserInputEnabled = false
         }
+    }
 
-        arguments?.let {
-            L.v("Start viewModel")
-            addBottleViewModel.start(it.getLong(WINE_ID), it.getLong(EDIT_BOTTLE_ID))
-        }
-
-        val stepperFragment = childFragmentManager.findFragmentById(R.id.stepper) as FragmentStepper
-
-        binding.viewPager
-            .apply { adapter = AddBottlesPagerAdapter(this@FragmentAddBottle) }
-            .also { stepperFragment.setupWithViewPager(it) }
-
+    private fun setupCustomBackNav() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (binding.viewPager.currentItem != 0) {
                 binding.viewPager.currentItem = binding.viewPager.currentItem - 1
             } else {
+                //addBottleViewModel.onCancel() // TODO find a way to remove uncompleted bottle when straight killing app
                 remove()
                 requireActivity().onBackPressed()
             }
         }
     }
 
+    private fun observe() {
+        dateViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+
+        grapeViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+
+        reviewViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+
+        otherInfoViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+
+        otherInfoViewModel.bottleUpdatedEvent.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                // Using snackbar provider since we are quitting this fragment
+                snackbarProvider.onShowSnackbarRequested(stringRes)
+                findNavController().navigateUp()
+            }
+        }
+    }
+
+    override fun requestNextPage() {
+        binding.viewPager.currentItem++
+    }
+
+    override fun requestPreviousPage() {
+        binding.viewPager.currentItem--
+    }
+
+    override fun getBottleId(): Long {
+        return dateViewModel.bottleId
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        const val EDIT_BOTTLE_ID =
-            "com.louis.app.cavity.ui.addbottle.FragmentAddBottle.ARG_EDIT_BOTTLE_ID"
     }
 }

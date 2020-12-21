@@ -11,6 +11,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -26,17 +27,25 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     val wineUpdatedEvent: LiveData<Event<Int>>
         get() = _wineUpdatedEvent
 
-    private val _updatedWine = MutableLiveData<Wine?>()
-    val updatedWine: LiveData<Wine?>
+    private val _updatedWine = MutableLiveData<Wine>()
+    val updatedWine: LiveData<Wine>
         get() = _updatedWine
 
     private val isEditMode: Boolean
-        get() = _updatedWine.value != null
+        get() = wineId != 0L
 
-    fun startEditMode(wineId: Long) {
-        viewModelScope.launch(IO) {
-            val wine = repository.getWineByIdNotLive(wineId)
-            _updatedWine.postValue(wine)
+    private var wineId = 0L
+    private var image = ""
+
+    fun start(wineId: Long) {
+        this.wineId = wineId
+
+        if (wineId != 0L) {
+            viewModelScope.launch(IO) {
+                val wine = repository.getWineByIdNotLive(wineId)
+                image = wine.imgPath
+                _updatedWine.postValue(wine)
+            }
         }
     }
 
@@ -47,13 +56,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         isOrganic: Int,
         color: Int,
         county: County,
-        imagePath: String?
     ) {
-        if (name.isBlank() || naming.isBlank()) {
-            _userFeedback.postOnce(R.string.empty_name_or_naming)
-            return
-        }
-
         val colorNumber = when (color) {
             R.id.colorWhite -> WineColor.COLOR_WHITE
             R.id.colorRed -> WineColor.COLOR_RED
@@ -62,27 +65,26 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         val wine = Wine(
-            0,
+            wineId,
             name,
             naming,
             Wine.wineColorToColorNumber(colorNumber),
             cuvee,
             county.countyId,
             isOrganic,
-            imagePath ?: ""
+            image
         )
 
         viewModelScope.launch(IO) {
             if (isEditMode) {
-                wine.wineId = _updatedWine.value!!.wineId // isEditMode checks for nullability
                 repository.updateWine(wine)
-
-                _updatedWine.postValue(null)
                 _wineUpdatedEvent.postOnce(R.string.wine_updated)
             } else {
                 repository.insertWine(wine)
                 _wineUpdatedEvent.postOnce(R.string.wine_added)
             }
+
+            reset()
         }
 
     }
@@ -101,6 +103,15 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
                 _userFeedback.postOnce(R.string.empty_county_name)
             }
         }
+    }
+
+    fun setImage(imagePath: String) {
+        image = imagePath
+    }
+
+    private fun reset() {
+        wineId = -1
+        image = ""
     }
 
     fun getAllCounties() = repository.getAllCounties()

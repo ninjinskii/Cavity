@@ -4,58 +4,49 @@
 
     <Transition
         motion:constraintSetEnd="@+id/end"
-        motion:constraintSetStart="@+id/start" />
+        motion:constraintSetStart="@+id/start"
+        motion:duration="250"
+        motion:motionInterpolator="linear">
+        <OnSwipe
+            motion:dragDirection="dragUp"
+            motion:touchAnchorId="@+id/motionLayout"
+            motion:touchAnchorSide="bottom" />
+    </Transition>
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
-            android:id="@id/bottlePicture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="1.0"
-            motion:layout_constraintBottom_toBottomOf="parent" />
-        <Constraint
-            android:id="@id/bottleName"
-            android:layout_width="wrap_content"
+            android:id="@id/motionLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/small_margin"
-            android:rotation="-90.0"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintStart_toStartOf="parent" />
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/motionLayout" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@id/bottlePicture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.2"
-            android:translationY="200dp"
-            motion:layout_constraintBottom_toBottomOf="parent" />
-        <Constraint
-            android:id="@id/bottleName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
-            android:rotation="0.0"
-            motion:layout_constraintBottom_toBottomOf="@id/centerHelper"
+            android:id="@id/motionLayout"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toTopOf="@id/centerHelper" />
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:motionProgress="1" />
         <Constraint
-            android:id="@id/shaper"
-            android:layout_width="match_parent"
-            android:layout_height="-70dp"
-            motion:layout_constraintBottom_toBottomOf="parent" />
-        <Constraint
-            android:id="@id/bottleVintage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:translationY="20dp"
-            android:alpha="0" />
-        <Constraint
-            android:id="@id/fabEditBottle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:translationX="400dp"
-            android:translationY="-100dp" />
+            android:id="@id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/motionLayout" />
     </ConstraintSet>
 </MotionScene>

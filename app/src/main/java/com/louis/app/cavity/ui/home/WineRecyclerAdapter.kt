@@ -41,7 +41,7 @@ class WineRecyclerAdapter(
             oldItem.wine.wineId == newItem.wine.wineId
 
         override fun areContentsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
-            oldItem.wine == newItem.wine
+            oldItem.wine == newItem.wine && oldItem.bottles == newItem.bottles
     }
 
     inner class WineViewHolder(private val binding: ItemWineBinding) :

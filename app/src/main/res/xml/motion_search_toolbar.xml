@@ -3,58 +3,88 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        motion:duration="1000"
         motion:constraintSetEnd="@+id/end"
-        motion:constraintSetStart="@+id/start" />
+        motion:constraintSetStart="@+id/start"
+        motion:duration="1000">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0"
+                motion:framePosition="90"
+                motion:motionTarget="@id/searchView" />
+        </KeyFrameSet>
+    </Transition>
 
+    <!-- TODO: check icon size with higher toolbars (tablet) -->
     <ConstraintSet android:id="@+id/start">
         <Constraint
-            android:id="@+id/toggleBackdrop"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="match_parent"
+            android:id="@id/fakeToolbar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="1"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@id/toggleBackdrop"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="0dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
         <Constraint
-            android:id="@+id/searchButton"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="match_parent"
+            android:id="@id/searchButton"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="0dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
-            motion:layout_constraintTop_toTopOf="parent" />
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:transitionEasing="decelerate" />
         <Constraint
-            android:id="@+id/backButton"
+            android:id="@id/searchView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:alpha="0"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="match_parent"
             motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
+            motion:layout_constraintStart_toEndOf="@id/searchButton"
             motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
+            android:id="@id/fakeToolbar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.5"
+            android:translationX="-1000dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
             android:id="@+id/toggleBackdrop"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:alpha="0"
-            motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintTop_toTopOf="parent" />
-        <Constraint
-            android:id="@+id/searchButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            motion:layout_constraintStart_toStartOf="@id/backButton"
+            android:translationX="100dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
         <Constraint
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:alpha="0"
+            android:id="@id/searchButton"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="0dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:transitionEasing="decelerate" />
+        <Constraint
+            android:id="@id/searchView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+            android:background="@android:color/transparent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toEndOf="@id/searchButton"
             motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 </MotionScene>

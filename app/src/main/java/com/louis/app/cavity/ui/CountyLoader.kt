@@ -13,13 +13,13 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-interface CountyLoader {
+class CountyLoader {
     fun loadCounties(
         scope: CoroutineScope,
         layoutInflater: LayoutInflater,
         chipGroup: ChipGroup,
         counties: Set<County>,
-        editWine: Wine? = null,
+        preselect: List<Long> = emptyList(),
         selectionRequired: Boolean = true,
         onCheckedChangeListener: ((btn: CompoundButton, isChecked: Boolean) -> Unit)? = null
     ) {
@@ -41,7 +41,7 @@ interface CountyLoader {
                     chipGroup.addView(chip)
                     if (index == 0 && selectionRequired) chip.isChecked = true
 
-                    if (editWine != null && county.countyId == editWine.countyId) {
+                    if (county.countyId in preselect) {
                         chip.isChecked = true
                     }
                 }

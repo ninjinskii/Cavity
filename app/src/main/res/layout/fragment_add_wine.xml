@@ -5,413 +5,402 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
-        android:id="@+id/nestedScrollView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <include
+            android:id="@+id/appBar"
+            layout="@layout/app_bar" />
+
+        <ScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <TextView
-                android:id="@+id/countyTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:text="@string/county"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/buttonAddCounty"
-                android:layout_width="@dimen/medium_icon"
-                android:layout_height="@dimen/medium_icon"
-                android:layout_margin="@dimen/medium_margin"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/add_county"
-                android:src="@drawable/ic_add"
-                android:tint="?attr/colorOnBackground"
-                app:layout_constraintBottom_toBottomOf="@+id/countyTitle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/countyTitle" />
-
-            <HorizontalScrollView
-                android:id="@+id/countyScrollView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/countyTitle">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/large_margin"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonAddCountyIfEmpty"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/medium_margin"
-                        android:layout_marginEnd="@dimen/medium_margin"
-                        android:text="@string/add_county"
-                        android:visibility="gone" />
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/countyChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/medium_margin"
-                        android:layout_marginTop="@dimen/medium_margin"
-                        android:layout_marginEnd="@dimen/large_margin"
-                        android:layout_marginBottom="@dimen/medium_margin"
-                        android:animateLayoutChanges="true"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                        app:selectionRequired="true"
-                        app:singleLine="true"
-                        app:singleSelection="true" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <include
-                android:id="@+id/divider1"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/countyScrollView" />
-
-            <TextView
-                android:id="@+id/identificationTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:text="@string/identification"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider1" />
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/namingLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/identificationTitle">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/naming"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/naming"
-                    android:inputType="textCapSentences" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/nameLayout"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/namingLayout">
+                android:animateLayoutChanges="true">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/name"
-                    android:inputType="textCapSentences" />
+                <View
+                    android:id="@+id/divider1"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <include
-                android:id="@+id/divider2"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/nameLayout" />
-
-            <TextView
-                android:id="@+id/cuveeTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:text="@string/cuvee"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider2" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cuveeLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cuveeTitle">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cuvee"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/cuvee"
-                    android:inputType="textCapSentences" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <include
-                android:id="@+id/divider3"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cuveeLayout" />
-
-            <TextView
-                android:id="@+id/colorTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:text="@string/color"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider3" />
-
-            <HorizontalScrollView
-                android:id="@+id/colorScrollView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/colorTitle">
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/countyTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/large_margin"
-                    android:orientation="horizontal">
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/county"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider1" />
 
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/colorChipGroup"
+                <ImageButton
+                    android:id="@+id/buttonAddCounty"
+                    android:layout_width="@dimen/medium_icon"
+                    android:layout_height="@dimen/medium_icon"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/add_county"
+                    android:src="@drawable/ic_add"
+                    android:tint="?attr/colorOnBackground"
+                    app:layout_constraintBottom_toBottomOf="@+id/countyTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/countyTitle" />
+
+                <HorizontalScrollView
+                    android:id="@+id/countyScrollView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/countyTitle">
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/medium_margin"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                        app:selectionRequired="true"
-                        app:singleSelection="true">
+                        android:layout_marginEnd="@dimen/large_margin"
+                        android:orientation="horizontal">
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/colorWhite"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonAddCountyIfEmpty"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="@string/wine_color_white" />
+                            android:layout_marginStart="@dimen/medium_margin"
+                            android:layout_marginEnd="@dimen/medium_margin"
+                            android:text="@string/add_county"
+                            android:visibility="gone" />
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/colorRed"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/countyChipGroup"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@string/wine_color_red" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/medium_margin"
+                            android:layout_marginTop="@dimen/medium_margin"
+                            android:layout_marginEnd="@dimen/large_margin"
+                            android:layout_marginBottom="@dimen/medium_margin"
+                            android:animateLayoutChanges="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/nameLayout"
+                            app:selectionRequired="true"
+                            app:singleLine="true"
+                            app:singleSelection="true">
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/colorSweet"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                        </com.google.android.material.chip.ChipGroup>
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <View
+                    android:id="@+id/divider2"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/countyScrollView" />
+
+                <TextView
+                    android:id="@+id/identificationTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/identification"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                    android:id="@+id/nameLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/identificationTitle"
+                    app:rule="required">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/name"
+                        android:inputType="textCapSentences" />
+
+                </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+                <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                    android:id="@+id/namingLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nameLayout"
+                    app:rule="required">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/naming"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/naming"
+                        android:inputType="textCapSentences" />
+
+                </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+                <View
+                    android:id="@+id/divider3"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/namingLayout" />
+
+                <TextView
+                    android:id="@+id/cuveeTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/cuvee"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cuveeLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cuveeTitle">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cuvee"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/cuvee"
+                        android:inputType="textCapSentences" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <View
+                    android:id="@+id/divider4"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cuveeLayout" />
+
+                <TextView
+                    android:id="@+id/colorTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/color"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider4" />
+
+                <HorizontalScrollView
+                    android:id="@+id/colorScrollView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/colorTitle">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/large_margin"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/colorChipGroup"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@string/wine_color_sweet" />
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/medium_margin"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/nameLayout"
+                            app:selectionRequired="true"
+                            app:singleSelection="true">
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/colorRose"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@string/wine_color_rose" />
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/colorWhite"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="@string/wine_color_white" />
 
-                    </com.google.android.material.chip.ChipGroup>
-                </LinearLayout>
-            </HorizontalScrollView>
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/colorRed"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="@string/wine_color_red" />
 
-            <include
-                android:id="@+id/divider4"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/colorScrollView" />
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/colorSweet"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="@string/wine_color_sweet" />
 
-            <TextView
-                android:id="@+id/organicTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:text="@string/organic"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider4" />
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/colorRose"
+                                style="@style/Widget.MaterialComponents.Chip.Choice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="@string/wine_color_rose" />
 
-            <CheckBox
-                android:id="@+id/organicWine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:text="@string/organic_wine"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/organicTitle" />
+                        </com.google.android.material.chip.ChipGroup>
+                    </LinearLayout>
+                </HorizontalScrollView>
 
-            <include
-                android:id="@+id/divider5"
-                layout="@layout/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/divider_height"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/organicWine" />
+                <View
+                    android:id="@+id/divider5"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/colorScrollView" />
 
-            <TextView
-                android:id="@+id/imageTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:text="@string/wine_photo"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider5" />
+                <TextView
+                    android:id="@+id/organicTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/organic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider5" />
 
-            <ImageButton
-                android:id="@+id/buttonTakePhoto"
-                android:layout_width="@dimen/large_icon"
-                android:layout_height="@dimen/large_icon"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginEnd="@dimen/medium_margin"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/take_photo"
-                android:src="@drawable/ic_camera"
-                android:tint="?attr/colorPrimary"
-                app:layout_constraintEnd_toStartOf="@+id/buttonBrowsePhoto"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageTitle" />
+                <CheckBox
+                    android:id="@+id/organicWine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:text="@string/organic_wine"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/organicTitle" />
 
-            <TextView
-                android:id="@+id/textButtonTakePhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="@string/take_photo"
-                app:layout_constraintVertical_bias="0.0"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/buttonTakePhoto"
-                app:layout_constraintStart_toStartOf="@id/buttonTakePhoto"
-                app:layout_constraintTop_toBottomOf="@id/buttonTakePhoto" />
+                <View
+                    android:id="@+id/divider6"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/organicWine" />
 
-            <ImageButton
-                android:id="@+id/buttonBrowsePhoto"
-                android:layout_width="@dimen/large_icon"
-                android:layout_height="@dimen/large_icon"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginEnd="@dimen/medium_margin"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/take_photo"
-                android:src="@drawable/ic_image_search"
-                android:tint="?attr/colorPrimary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/buttonTakePhoto"
-                app:layout_constraintTop_toBottomOf="@+id/imageTitle" />
+                <TextView
+                    android:id="@+id/imageTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/wine_photo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider6" />
 
-            <TextView
-                android:id="@+id/textButtonBrowsePhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="@string/add_photo"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/buttonBrowsePhoto"
-                app:layout_constraintStart_toStartOf="@id/buttonBrowsePhoto"
-                app:layout_constraintTop_toBottomOf="@id/buttonBrowsePhoto" />
+                <ImageButton
+                    android:id="@+id/buttonTakePhoto"
+                    android:layout_width="@dimen/large_icon"
+                    android:layout_height="@dimen/large_icon"
+                    android:layout_marginStart="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginEnd="@dimen/medium_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/take_photo"
+                    android:src="@drawable/ic_camera"
+                    android:tint="?attr/colorPrimary"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonBrowsePhoto"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageTitle" />
 
-            <ImageView
-                android:id="@+id/wineMiniImage"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginEnd="@dimen/medium_margin"
-                android:layout_marginBottom="100dp"
-                android:contentDescription="@string/wine_photo"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageTitle"
-                app:layout_constraintVertical_bias="0.0" />
+                <TextView
+                    android:id="@+id/textButtonTakePhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="100dp"
+                    android:text="@string/take_photo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/buttonTakePhoto"
+                    app:layout_constraintStart_toStartOf="@id/buttonTakePhoto"
+                    app:layout_constraintTop_toBottomOf="@id/buttonTakePhoto"
+                    app:layout_constraintVertical_bias="0.0" />
 
-            <ImageButton
-                android:id="@+id/buttonRemoveWineImage"
-                android:layout_width="@dimen/medium_icon"
-                android:layout_height="@dimen/medium_icon"
-                android:layout_margin="@dimen/large_margin"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/add_county"
-                android:src="@drawable/ic_close"
-                android:tint="?attr/colorError"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/wineMiniImage"
-                app:layout_constraintStart_toEndOf="@id/wineMiniImage"
-                app:layout_constraintTop_toTopOf="@id/wineMiniImage" />
+                <ImageButton
+                    android:id="@+id/buttonBrowsePhoto"
+                    android:layout_width="@dimen/large_icon"
+                    android:layout_height="@dimen/large_icon"
+                    android:layout_marginStart="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginEnd="@dimen/medium_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/take_photo"
+                    android:src="@drawable/ic_image_search"
+                    android:tint="?attr/colorPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/buttonTakePhoto"
+                    app:layout_constraintTop_toBottomOf="@+id/imageTitle" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+                <TextView
+                    android:id="@+id/textButtonBrowsePhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="100dp"
+                    android:text="@string/add_photo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/buttonBrowsePhoto"
+                    app:layout_constraintStart_toStartOf="@id/buttonBrowsePhoto"
+                    app:layout_constraintTop_toBottomOf="@id/buttonBrowsePhoto" />
 
-    <!-- Change ripple color to get a ripple effect -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/submitAddWine"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="@dimen/medium_margin"
-        android:gravity="center"
-        android:text="@string/submit"
-        app:icon="@drawable/ic_check" />
+                <ImageView
+                    android:id="@+id/wineMiniImage"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginEnd="@dimen/medium_margin"
+                    android:layout_marginBottom="100dp"
+                    android:contentDescription="@string/wine_photo"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageTitle"
+                    app:layout_constraintVertical_bias="0.0" />
 
+                <ImageButton
+                    android:id="@+id/buttonRemoveWineImage"
+                    android:layout_width="@dimen/medium_icon"
+                    android:layout_height="@dimen/medium_icon"
+                    android:layout_margin="@dimen/large_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/add_county"
+                    android:src="@drawable/ic_close"
+                    android:tint="?attr/colorError"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@id/wineMiniImage"
+                    app:layout_constraintStart_toEndOf="@id/wineMiniImage"
+                    app:layout_constraintTop_toTopOf="@id/wineMiniImage" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/submitAddWine"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/submit"
+                    app:icon="@drawable/ic_check"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

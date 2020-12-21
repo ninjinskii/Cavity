@@ -6,11 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
+import com.louis.app.cavity.ui.search.filters.NoFilter
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.ui.search.filters.*
+import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -20,16 +22,16 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val bottlesAndWine = mutableListOf<BottleAndWine>()
 
     // These filters are located in FragmentSearch
-    private var countyFilter: WineFilter = NoFilter()
-    private var colorFilter: WineFilter = NoFilter()
-    private var otherFilter: WineFilter = NoFilter()
-    private var vintageFilter: WineFilter = NoFilter()
-    private var textFilter: WineFilter = NoFilter()
+    private var countyFilter: WineFilter = NoFilter
+    private var colorFilter: WineFilter = NoFilter
+    private var otherFilter: WineFilter = NoFilter
+    private var vintageFilter: WineFilter = NoFilter
+    private var textFilter: WineFilter = NoFilter
 
     // These filters are located in FragmentMoreFilters
-    private var priceFilter: WineFilter = NoFilter()
-    private var dateFilter: WineFilter = NoFilter()
-    private var stockFilter: WineFilter = NoFilter()
+    private var priceFilter: WineFilter = NoFilter
+    private var dateFilter: WineFilter = NoFilter
+    private var stockFilter: WineFilter = NoFilter
 
     private val _results = MutableLiveData<List<BottleAndWine>>()
     val results: LiveData<List<BottleAndWine>>
@@ -57,7 +59,9 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
 
             val filtered = combinedFilters.meetFilters(bottlesAndWine)
-            _results.postValue(filtered)
+            // Deleting 'toList()' seems to introduce a bug sometimes, where the observer is not
+            // aware that the data has been changed, the first time you access FragmentSearch
+            _results.postValue(filtered.toList())
         }
     }
 
@@ -69,7 +73,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         countyFilter =
             if (countyFilters.isNotEmpty())
                 countyFilters.reduce { acc, filterCounty -> acc.orCombine(filterCounty) }
-            else NoFilter()
+            else NoFilter
 
         filter()
     }
@@ -91,7 +95,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         colorFilter =
             if (colorFilters.isNotEmpty())
                 colorFilters.reduce { acc, wineFilter -> acc.orCombine(wineFilter) }
-            else NoFilter()
+            else NoFilter
 
         filter()
     }
@@ -109,7 +113,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         otherFilter =
             if (otherFilters.isNotEmpty())
                 otherFilters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
-            else NoFilter()
+            else NoFilter
 
         filter()
     }
@@ -121,19 +125,37 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setTextFilter(query: String) {
-        textFilter = if (query.isNotEmpty()) FilterText(query) else NoFilter()
+        textFilter = if (query.isNotEmpty()) FilterText(query) else NoFilter
         filter()
     }
 
     fun setPriceFilter(minValue: Int, maxValue: Int) {
         state.price = if (minValue != -1) minValue to maxValue else null
-        priceFilter = if (minValue != -1) FilterPrice(minValue, maxValue) else NoFilter()
+        priceFilter = if (minValue != -1) FilterPrice(minValue, maxValue) else NoFilter
         filter()
     }
 
-    fun setDateFilter(date: Long, searchBefore: Boolean) {
-        state.date = if (date != -1L) date to searchBefore else null
-        dateFilter = if (date != -1L) FilterDate(date, searchBefore) else NoFilter()
+    fun setBeyondFilter(beyond: Long?) {
+        val currentUntilDate = state.date?.second
+        state.date = beyond to currentUntilDate
+        dateFilter =
+            if (beyond == null && currentUntilDate == null)
+                NoFilter
+            else
+                FilterDate(beyond, currentUntilDate)
+
+        filter()
+    }
+
+    fun setUntilFilter(until: Long?) {
+        val currentBeyondDate = state.date?.first
+        state.date = currentBeyondDate to until
+        dateFilter =
+            if (until == null && currentBeyondDate == null)
+                NoFilter
+            else
+                FilterDate(currentBeyondDate, until)
+
         filter()
     }
 
@@ -143,13 +165,28 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         filter()
     }
 
+    fun reset() {
+        countyFilter = NoFilter
+        colorFilter = NoFilter
+        otherFilter = NoFilter
+        vintageFilter = NoFilter
+        textFilter = NoFilter
+        priceFilter = NoFilter
+        dateFilter = NoFilter
+        stockFilter = NoFilter
+
+        state = SearchState()
+
+        filter()
+    }
+
     data class SearchState(
         var counties: List<Long>? = null,
         var colors: List<Int>? = null,
         var others: List<Int>? = null,
         var vintage: Pair<Int, Int>? = null,
         var price: Pair<Int, Int>? = null,
-        var date: Pair<Long, Boolean>? = null,
+        var date: Pair<Long?, Long?>? = null,
         var stock: Pair<Int, Int>? = null
     )
 }

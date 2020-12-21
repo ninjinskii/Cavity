@@ -3,30 +3,25 @@ package com.louis.app.cavity.ui.bottle
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
-import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.ui.ActivityMain
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
     private val binding get() = _binding!!
+    private val args: FragmentBottleDetailsArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
 
-        binding.grapeBar.addAllGrapes(
-            listOf(
-                Grape(0, "Merlot", 30, 0),
-                Grape(0, "Syrah", 20, 0),
-                Grape(0, "Grenache", 5, 0),
-            )
-        )
+        //binding.grapeBar.addAllGrapes()
 
         binding.grapeBar.triggerAnimation()
         setupCollapsingToolbar()
-        setListener()
+        setListeners()
     }
 
     private fun setupCollapsingToolbar() {
@@ -46,7 +41,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 //        })
     }
 
-    private fun setListener() {
+    private fun setListeners() {
         binding.buttonEditBottle.setOnClickListener {
 //            val wineId = arguments?.getLong(WINE_ID)
 //            val bottleId = arguments?.getLong(BOTTLE_ID)
@@ -57,19 +52,22 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
             binding.grapeBar.triggerAnimation()
         }
+
+        binding.fabEditBottle.setOnClickListener {
+            val action = FragmentBottleDetailsDirections.bottleDetailsToEditBottle(
+                args.wineId,
+                args.bottleId
+            )
+
+            findNavController().navigate(action)
+        }
+
+        binding.backButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun observe() {
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (activity as ActivityMain).hideMainToolbar()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        (activity as ActivityMain).showMainToolbar()
     }
 
     override fun onDestroyView() {
