@@ -11,10 +11,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
+import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
-import com.louis.app.cavity.util.*
+import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -25,6 +30,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
+
+        bottleDetailsViewModel.prepareImage(args.wineId)
 
         initRecyclerView()
         observe()
@@ -47,25 +54,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private fun observe() {
         bottleDetailsViewModel.getBottleById(args.bottleId).observe(viewLifecycleOwner) {
-            with(binding) {
-                stock.text = getString(R.string.stock_number, it.count)
-                apogee.setData(it.apogee.toString())
-                price.setData(
-                    getString(
-                        R.string.price_and_currency,
-                        it.price.toString(),
-                        it.currency
-                    )
-                )
-                buyLocation.setData(it.buyLocation)
-                buyDate.setData(DateFormatter.formatDate(it.buyDate))
-                otherInfo.setData(it.otherInfo)
-
-                if (!it.hasPdf()) {
-                    noPdf.setVisible(true)
-                    buttonShowPdf.setVisible(false)
-                }
-            }
+            updateUI(it)
         }
 
         bottleDetailsViewModel.getQGrapesForBottle(args.bottleId).observe(viewLifecycleOwner) {
@@ -75,8 +64,16 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             }
         }
 
+        bottleDetailsViewModel.imageEvent.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { uri ->
+                showImage(uri)
+            }
+        }
+
         bottleDetailsViewModel.pdfEvent.observe(viewLifecycleOwner) {
-            showPdf(it)
+            it.getContentIfNotHandled()?.let { uri ->
+                showPdf(uri)
+            }
         }
 
         bottleDetailsViewModel.userFeedback.observe(viewLifecycleOwner) {
@@ -84,6 +81,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 binding.coordinator.showSnackbar(stringRes)
             }
         }
+
     }
 
     private fun setListeners() {
@@ -115,24 +113,55 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
     }
 
-    private fun showPdf(pdfEvent: Event<Uri>) {
-        pdfEvent.getContentIfNotHandled()?.let {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.apply {
-                setDataAndType(it, "application/pdf")
-                addFlags(
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                            Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                )
-            }
+    private fun showImage(image: Uri) {
+        try {
+            Glide.with(this)
+                .load(image)
+                .centerCrop()
+                .into(binding.bottlePicture)
+        } catch (e: SecurityException) {
+            // Do nothing
+        }
+    }
 
-            try {
-                startActivity(intent)
-            } catch (a: ActivityNotFoundException) {
-                binding.coordinator.showSnackbar(R.string.no_pdf_app)
-            } catch (e: SecurityException) {
-                binding.coordinator.showSnackbar(R.string.base_error)
+    private fun showPdf(pdf: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.apply {
+            setDataAndType(pdf, "application/pdf")
+            addFlags(
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                        Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+        }
+
+        try {
+            startActivity(intent)
+        } catch (a: ActivityNotFoundException) {
+            binding.coordinator.showSnackbar(R.string.no_pdf_app)
+        } catch (e: SecurityException) {
+            binding.coordinator.showSnackbar(R.string.base_error)
+        }
+    }
+
+    private fun updateUI(bottle: Bottle) {
+        with(binding) {
+            stock.text = getString(R.string.stock_number, bottle.count)
+            apogee.setData(bottle.apogee.toString())
+            price.setData(
+                getString(
+                    R.string.price_and_currency,
+                    bottle.price.toString(),
+                    bottle.currency
+                )
+            )
+            buyLocation.setData(bottle.buyLocation)
+            buyDate.setData(DateFormatter.formatDate(bottle.buyDate))
+            otherInfo.setData(bottle.otherInfo)
+
+            if (!bottle.hasPdf()) {
+                noPdf.setVisible(true)
+                buttonShowPdf.setVisible(false)
             }
         }
     }

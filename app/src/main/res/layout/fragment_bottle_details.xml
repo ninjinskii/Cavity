@@ -24,9 +24,7 @@
             <ImageView
                 android:id="@+id/bottlePicture"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/pine_branch" />
+                android:layout_height="0dp" />
 
             <ImageButton
                 android:id="@+id/backButton"
