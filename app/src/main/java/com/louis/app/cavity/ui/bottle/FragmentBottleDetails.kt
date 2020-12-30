@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.bottle
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Checkable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -81,9 +82,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             findNavController().navigateUp()
         }
 
-        binding.buttonConsume.setOnClickListener { }
+        binding.buttonConsume.setOnClickListener {
+            (it as Checkable).isChecked = false
+            // consume
+        }
 
-        binding.buttonProvide.setOnClickListener { }
+        binding.buttonProvide.setOnClickListener {
+            (it as Checkable).isChecked = false
+            // provide
+        }
     }
 
     override fun onDestroyView() {

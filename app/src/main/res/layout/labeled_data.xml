@@ -7,8 +7,9 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="@dimen/medium_icon"
-        android:layout_height="@dimen/medium_icon"
+        android:layout_width="@dimen/labeled_data_icon"
+        android:layout_height="@dimen/labeled_data_icon"
+        android:contentDescription="@string/labeled_data"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorOnSurface"
