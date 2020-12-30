@@ -1,5 +1,8 @@
 package com.louis.app.cavity.ui.bottle
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Checkable
@@ -11,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
-import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -57,6 +60,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 buyLocation.setData(it.buyLocation)
                 buyDate.setData(DateFormatter.formatDate(it.buyDate))
                 otherInfo.setData(it.otherInfo)
+
+                if (!it.hasPdf()) {
+                    noPdf.setVisible(true)
+                    buttonShowPdf.setVisible(false)
+                }
             }
         }
 
@@ -64,6 +72,16 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             binding.grapeBar.apply {
                 addAllGrapes(it)
                 triggerAnimation()
+            }
+        }
+
+        bottleDetailsViewModel.pdfEvent.observe(viewLifecycleOwner) {
+            showPdf(it)
+        }
+
+        bottleDetailsViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
             }
         }
     }
@@ -90,6 +108,32 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         binding.buttonProvide.setOnClickListener {
             (it as Checkable).isChecked = false
             // provide
+        }
+
+        binding.buttonShowPdf.setOnClickListener {
+            bottleDetailsViewModel.preparePdf(args.bottleId)
+        }
+    }
+
+    private fun showPdf(pdfEvent: Event<Uri>) {
+        pdfEvent.getContentIfNotHandled()?.let {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.apply {
+                setDataAndType(it, "application/pdf")
+                addFlags(
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                            Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            }
+
+            try {
+                startActivity(intent)
+            } catch (a: ActivityNotFoundException) {
+                binding.coordinator.showSnackbar(R.string.no_pdf_app)
+            } catch (e: SecurityException) {
+                binding.coordinator.showSnackbar(R.string.base_error)
+            }
         }
     }
 
