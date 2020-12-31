@@ -17,7 +17,6 @@ import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 
@@ -30,8 +29,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
-
-        bottleDetailsViewModel.prepareImage(args.wineId)
 
         initRecyclerView()
         observe()
@@ -64,10 +61,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             }
         }
 
-        bottleDetailsViewModel.imageEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { uri ->
-                showImage(uri)
-            }
+        bottleDetailsViewModel.getWineById(args.wineId).observe(viewLifecycleOwner) {
+            binding.bottleName.text = it.name
+            showImage(Uri.parse(it.imgPath))
         }
 
         bottleDetailsViewModel.pdfEvent.observe(viewLifecycleOwner) {
@@ -158,6 +154,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             buyLocation.setData(bottle.buyLocation)
             buyDate.setData(DateFormatter.formatDate(bottle.buyDate))
             otherInfo.setData(bottle.otherInfo)
+            bottleVintage.text = bottle.vintage.toString()
 
             if (!bottle.hasPdf()) {
                 noPdf.setVisible(true)

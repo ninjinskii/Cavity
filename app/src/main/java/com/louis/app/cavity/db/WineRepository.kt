@@ -87,6 +87,7 @@ class WineRepository private constructor(app: Application) {
         fReviewDao.getFReview(bottleId, reviewId)
 
     fun getAllWines() = wineDao.getAllWines()
+    fun getWineById(wineId: Long) = wineDao.getWineById(wineId)
     fun getWineByIdNotLive(wineId: Long) = wineDao.getWineByIdNotLive(wineId)
     fun getWineWithBottles() = wineDao.getWineWithBottles()
     fun getWineWithBottlesNotLive() = wineDao.getWineWithBottlesNotLive()
