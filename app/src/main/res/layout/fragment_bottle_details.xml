@@ -162,17 +162,16 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:tint="?attr/colorPrimary" />
 
-
                         <TextView
                             android:id="@+id/grapeTitle"
                             style="@style/TextAppearance.MaterialComponents.Subtitle1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/small_margin"
                             android:text="@string/grapes"
                             app:layout_constraintBottom_toBottomOf="@id/grapeTitleIcon"
                             app:layout_constraintStart_toEndOf="@id/grapeTitleIcon"
                             app:layout_constraintTop_toTopOf="@id/grapeTitleIcon" />
-
 
                         <com.louis.app.cavity.ui.bottle.widget.GrapeBar
                             android:id="@+id/grapeBar"
@@ -184,8 +183,6 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
@@ -217,7 +214,8 @@
                             style="@style/TextAppearance.MaterialComponents.Subtitle1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Général"
+                            android:layout_margin="@dimen/small_margin"
+                            android:text="@string/misc"
                             app:layout_constraintBottom_toBottomOf="@id/miscTitleIcon"
                             app:layout_constraintStart_toEndOf="@id/miscTitleIcon"
                             app:layout_constraintTop_toTopOf="@id/miscTitleIcon" />
@@ -274,7 +272,6 @@
                             android:id="@+id/otherInfo"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/small_margin"
                             android:layout_marginVertical="@dimen/medium_margin"
                             app:icon="@drawable/ic_comment"
                             app:label="@string/other_info"
@@ -282,17 +279,17 @@
                             app:layout_constraintStart_toStartOf="@id/buyLocation"
                             app:layout_constraintTop_toBottomOf="@id/buyLocation" />
 
-<!--                        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton-->
-<!--                            android:id="@id/favorite"-->
-<!--                            android:layout_width="@dimen/medium_icon"-->
-<!--                            android:layout_height="@dimen/medium_icon"-->
-<!--                            android:background="?attr/actionBarItemBackground"-->
-<!--                            android:scaleType="centerInside"-->
-<!--                            app:initialAvd="@drawable/anim_set_fav"-->
-<!--                            app:layout_constraintEnd_toEndOf="parent"-->
-<!--                            android:src="@drawable/ic_star_outline"-->
-<!--                            app:layout_constraintTop_toTopOf="parent"-->
-<!--                            app:otherAvd="@drawable/anim_unfav" />-->
+                        <!--                        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton-->
+                        <!--                            android:id="@id/favorite"-->
+                        <!--                            android:layout_width="@dimen/medium_icon"-->
+                        <!--                            android:layout_height="@dimen/medium_icon"-->
+                        <!--                            android:background="?attr/actionBarItemBackground"-->
+                        <!--                            android:scaleType="centerInside"-->
+                        <!--                            app:initialAvd="@drawable/anim_set_fav"-->
+                        <!--                            app:layout_constraintEnd_toEndOf="parent"-->
+                        <!--                            android:src="@drawable/ic_star_outline"-->
+                        <!--                            app:layout_constraintTop_toTopOf="parent"-->
+                        <!--                            app:otherAvd="@drawable/anim_unfav" />-->
 
                         <ImageButton
                             android:id="@+id/favorite"
@@ -300,8 +297,8 @@
                             android:layout_height="@dimen/medium_icon"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/favorite"
-                            android:tint="@color/medal_silver"
                             android:src="@drawable/ic_star_outline"
+                            android:tint="@color/medal_silver"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -343,15 +340,45 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/miscCardView">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/reviewRecyclerView"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_margin="@dimen/small_margin"
-                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/item_show_review_medal"
-                        tools:orientation="horizontal" />
+                        android:layout_height="match_parent">
 
+                        <ImageView
+                            android:id="@+id/reviewTitleIcon"
+                            android:layout_width="@dimen/small_icon"
+                            android:layout_height="@dimen/small_icon"
+                            android:layout_margin="@dimen/small_margin"
+                            android:src="@drawable/ic_contest"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/reviewTitle"
+                            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/small_margin"
+                            android:text="@string/expert_advice"
+                            app:layout_constraintBottom_toBottomOf="@id/reviewTitleIcon"
+                            app:layout_constraintStart_toEndOf="@id/reviewTitleIcon"
+                            app:layout_constraintTop_toTopOf="@id/reviewTitleIcon" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/reviewRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:layout_margin="@dimen/small_margin"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/reviewTitleIcon"
+                            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/item_show_review_medal"
+                            tools:orientation="horizontal" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
