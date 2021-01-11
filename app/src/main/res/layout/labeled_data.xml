@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/labeled_data_icon"
+        android:layout_height="@dimen/labeled_data_icon"
+        android:contentDescription="@string/labeled_data"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorOnSurface"
+        tools:src="@drawable/ic_glass" />
+
+    <TextView
+        android:id="@+id/label"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/xsmall_margin"
+        android:text="@string/apogee"
+        app:layout_constraintBottom_toTopOf="@id/data"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toTopOf="@id/icon" />
+
+    <TextView
+        android:id="@+id/data"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/xsmall_margin"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toBottomOf="@id/label"
+        tools:text="2020" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

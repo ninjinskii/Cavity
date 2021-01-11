@@ -17,4 +17,7 @@ interface GrapeDao {
 
     @Query("SELECT * FROM grape")
     fun getAllGrapes(): LiveData<List<Grape>>
+
+    @Query("SELECT * FROM grape")
+    suspend fun getAllGrapesNotLive(): List<Grape>
 }

@@ -1,193 +1,380 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<!-- Coordinator layout just for snackbars -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layoutDescription="@xml/motion_collapsible_toolbar">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.motion.widget.MotionLayout
-        android:id="@+id/motionLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorSurface"
-        android:elevation="4dp"
-        app:layoutDescription="@xml/motion_collapsible_toolbar_header">
+        app:layoutDescription="@xml/motion_collapsible_toolbar">
 
-        <ImageView
-            android:id="@+id/bottlePicture"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/pine_branch" />
-
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="@dimen/medium_icon"
-            android:layout_height="@dimen/medium_icon"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/shape_step"
-            android:backgroundTint="#20000000"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/actionBarItemBackground"
-            android:src="@drawable/ic_arrow_back"
-            android:tint="?attr/colorControlNormal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/centerHelper"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <TextView
-            android:id="@+id/bottleName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            android:textColor="?attr/colorOnPrimary"
-            android:transformPivotX="0dp"
-            android:transformPivotY="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="Domaine F. Engel" />
-
-        <TextView
-            android:id="@+id/bottleVintage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBody1"
-            android:textColor="?attr/colorOnPrimary"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="2016" />
-
-        <FrameLayout
-            android:id="@+id/shaper"
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/motionLayout"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="@drawable/shape_curve" />
+            android:layout_height="match_parent"
+            android:background="?attr/colorSurface"
+            app:layoutDescription="@xml/motion_collapsible_toolbar_header">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabEditBottle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/medium_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            android:src="@drawable/ic_edit"
-            app:layout_constraintBottom_toBottomOf="@id/shaper"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.motion.widget.MotionLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/wineImage"
-                android:layout_width="140dp"
-                android:layout_height="190dp"
-                android:layout_margin="@dimen/small_margin"
-                android:background="?attr/colorSurface"
-                app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="?attr/colorSurface"
-                    android:src="@color/cavity_green"
-                    app:cardElevation="4dp">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/medium_margin"
-                        android:background="?attr/colorSurface"
-                        app:cardElevation="4dp">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="@dimen/medium_margin"
-                            android:background="?attr/colorSurface"
-                            app:cardElevation="0dp" />
-
-                    </com.google.android.material.card.MaterialCardView>
-                </com.google.android.material.card.MaterialCardView>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Step 1 info, grapes -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/globalCardView"
+            <ImageView
+                android:id="@+id/bottlePicture"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/small_margin"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_height="0dp" />
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="@dimen/medium_icon"
+                android:layout_height="@dimen/medium_icon"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/shape_uncover"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/actionBarItemBackground"
+                android:src="@drawable/ic_arrow_back"
+                android:tint="?attr/colorControlNormal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/wineImage">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <com.louis.app.cavity.ui.bottle.GrapeBar
-                    android:id="@+id/grapeBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <Button
-                    android:id="@+id/buttonEditBottle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Trigger grapebar" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/reviewCardView"
+            <View
+                android:id="@+id/centerHelper"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/globalCardView">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/reviewRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Other info, wine pdf, taste comment -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/miscellaneousCardView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/medium_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/reviewCardView">
-
-            </com.google.android.material.card.MaterialCardView>
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/bottleName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/long_text"
-                app:layout_constraintTop_toBottomOf="@id/miscellaneousCardView" />
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="?attr/colorOnSurface"
+                android:transformPivotX="0dp"
+                android:transformPivotY="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Domaine F. Engel" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
-</androidx.constraintlayout.motion.widget.MotionLayout>
+            <TextView
+                android:id="@+id/bottleVintage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="2016" />
+
+            <FrameLayout
+                android:id="@+id/shaper"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/shape_curve" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabEditBottle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:contentDescription="@string/edit_bottle"
+                android:src="@drawable/ic_edit"
+                app:layout_constraintBottom_toBottomOf="@id/shaper"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.motion.widget.MotionLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/stock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="En stock: 2" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/buttonGroupInteract"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/stock">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonConsume"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/taste"
+                        app:icon="@drawable/ic_glass" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonProvide"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/provide"
+                        app:icon="@drawable/ic_add" />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <!-- Step 1 info, grapes -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/grapesCardView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    app:cardElevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/buttonGroupInteract">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/grapeTitleIcon"
+                            android:layout_width="@dimen/small_icon"
+                            android:layout_height="@dimen/small_icon"
+                            android:layout_margin="@dimen/small_margin"
+                            android:src="@drawable/ic_grape"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/grapeTitle"
+                            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/small_margin"
+                            android:text="@string/grapes"
+                            app:layout_constraintBottom_toBottomOf="@id/grapeTitleIcon"
+                            app:layout_constraintStart_toEndOf="@id/grapeTitleIcon"
+                            app:layout_constraintTop_toTopOf="@id/grapeTitleIcon" />
+
+                        <com.louis.app.cavity.ui.bottle.widget.GrapeBar
+                            android:id="@+id/grapeBar"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/small_margin"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/miscCardView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    app:cardElevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/grapesCardView">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/miscTitleIcon"
+                            android:layout_width="@dimen/small_icon"
+                            android:layout_height="@dimen/small_icon"
+                            android:layout_margin="@dimen/small_margin"
+                            android:src="@drawable/ic_info"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/miscTitle"
+                            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/small_margin"
+                            android:text="@string/misc"
+                            app:layout_constraintBottom_toBottomOf="@id/miscTitleIcon"
+                            app:layout_constraintStart_toEndOf="@id/miscTitleIcon"
+                            app:layout_constraintTop_toTopOf="@id/miscTitleIcon" />
+
+                        <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                            android:id="@+id/apogee"
+                            android:layout_width="146dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/small_margin"
+                            android:layout_marginVertical="@dimen/medium_margin"
+                            app:icon="@drawable/ic_glass"
+                            app:label="@string/apogee"
+                            app:layout_constraintEnd_toStartOf="@id/price"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/miscTitleIcon" />
+
+                        <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                            android:id="@+id/price"
+                            android:layout_width="146dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/small_margin"
+                            android:layout_marginVertical="@dimen/medium_margin"
+                            app:icon="@drawable/ic_coin_stack"
+                            app:label="@string/price"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/apogee"
+                            app:layout_constraintTop_toBottomOf="@id/miscTitleIcon" />
+
+                        <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                            android:id="@+id/buyLocation"
+                            android:layout_width="146dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/small_margin"
+                            android:layout_marginVertical="@dimen/medium_margin"
+                            app:icon="@drawable/ic_location"
+                            app:label="@string/buying_location"
+                            app:layout_constraintEnd_toStartOf="@id/buyDate"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/apogee" />
+
+                        <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                            android:id="@+id/buyDate"
+                            android:layout_width="146dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/small_margin"
+                            android:layout_marginVertical="@dimen/medium_margin"
+                            app:icon="@drawable/ic_calendar"
+                            app:label="@string/buying_date"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/buyLocation"
+                            app:layout_constraintTop_toBottomOf="@id/price" />
+
+                        <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                            android:id="@+id/otherInfo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/medium_margin"
+                            app:icon="@drawable/ic_comment"
+                            app:label="@string/other_info"
+                            app:layout_constraintEnd_toEndOf="@id/buyDate"
+                            app:layout_constraintStart_toStartOf="@id/buyLocation"
+                            app:layout_constraintTop_toBottomOf="@id/buyLocation" />
+
+                        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
+                            android:id="@+id/favorite"
+                            android:layout_width="@dimen/medium_icon"
+                            android:layout_height="@dimen/medium_icon"
+                            android:background="?attr/actionBarItemBackground"
+                            android:contentDescription="@string/favorite"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_heart"
+                            app:initialAvd="@drawable/anim_fav"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:otherAvd="@drawable/anim_unfav" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonShowPdf"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/small_margin"
+                            android:text="@string/show_pdf"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/price"
+                            app:layout_constraintStart_toStartOf="@id/apogee"
+                            app:layout_constraintTop_toBottomOf="@id/otherInfo" />
+
+                        <TextView
+                            android:id="@+id/noPdf"
+                            style="@style/TextAppearance.MaterialComponents.Overline"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/small_margin"
+                            android:layout_marginTop="@dimen/large_margin"
+                            android:gravity="center"
+                            android:text="@string/no_pdf"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/price"
+                            app:layout_constraintStart_toStartOf="@id/apogee"
+                            app:layout_constraintTop_toBottomOf="@id/otherInfo" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/reviewCardView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    app:cardElevation="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/miscCardView">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/reviewTitleIcon"
+                            android:layout_width="@dimen/small_icon"
+                            android:layout_height="@dimen/small_icon"
+                            android:layout_margin="@dimen/small_margin"
+                            android:src="@drawable/ic_contest"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/reviewTitle"
+                            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/small_margin"
+                            android:text="@string/expert_advice"
+                            app:layout_constraintBottom_toBottomOf="@id/reviewTitleIcon"
+                            app:layout_constraintStart_toEndOf="@id/reviewTitleIcon"
+                            app:layout_constraintTop_toTopOf="@id/reviewTitleIcon" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/reviewRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:layout_margin="@dimen/small_margin"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/reviewTitleIcon"
+                            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/item_show_review_medal"
+                            tools:orientation="horizontal" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -20,6 +20,7 @@
     <dimen name="large_icon">64dp</dimen>
     <dimen name="stepper_icon">36dp</dimen>
     <dimen name="stepper_icon_background">42dp</dimen>
+    <dimen name="labeled_data_icon">36dp</dimen>
 
     <dimen name="review_height">96dp</dimen>
 

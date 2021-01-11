@@ -11,6 +11,12 @@
             motion:dragDirection="dragUp"
             motion:touchAnchorId="@+id/motionLayout"
             motion:touchAnchorSide="bottom" />
+        <KeyFrameSet>
+            <KeyAttribute
+                android:elevation="0dp"
+                motion:framePosition="90"
+                motion:motionTarget="@id/motionLayout" />
+        </KeyFrameSet>
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
@@ -18,6 +24,7 @@
             android:id="@id/motionLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:elevation="0dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
@@ -39,6 +46,7 @@
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent"
+            android:elevation="4dp"
             motion:motionProgress="1" />
         <Constraint
             android:id="@id/scrollView"

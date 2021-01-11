@@ -25,7 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconColor="?attr/colorOnPrimarySurface"
+            app:navigationIconTint="?attr/colorOnPrimarySurface"
             app:title="SearchFragment"
             app:titleTextColor="?attr/colorOnPrimarySurface"
             tools:layout_editor_absoluteX="29dp" />

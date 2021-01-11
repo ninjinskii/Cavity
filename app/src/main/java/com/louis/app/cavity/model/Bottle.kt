@@ -28,6 +28,8 @@ data class Bottle(
         val year = Calendar.getInstance().get(Calendar.YEAR)
         return year >= apogee
     }
+
+    fun hasPdf() = pdfPath.isNotBlank()
 }
 
 // Context getFilesDIr() pour récupérer le stockage privé et mettre les photos dedans

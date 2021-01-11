@@ -7,6 +7,7 @@
     <string name="confirmation_delete">Supprimer le vin et ses bouteilles ?</string>
     <string name="next">Suivant</string>
     <string name="previous">Précédent</string>
+    <string name="unknown">Non renseigné</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
@@ -64,7 +65,7 @@
     <string name="wine_color_red">Rouge</string>
     <string name="wine_color_sweet">Liquoreux</string>
     <string name="wine_color_rose">Rosé</string>
-    <string name="vintage_and_count">%d (%d)</string>
+    <string name="vintage_and_count">%1$d (%2$d)</string>
 
     <string name="step_1">1</string>
     <string name="step_2">2</string>
@@ -136,40 +137,21 @@
 
     <!-- Bottle details -->
     <string name="edit_bottle">Éditer</string>
-    <string name="long_text">Éditer fQGH KDJFQIUS EGHFOIUYSEGFIUSGQE  iuqsh fqipousg fvijhsbd fpivqbhsiudrqpiousghrfi fpiushg f usgfi spiudgfsoiu
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-        dfqsrgjk grh oeurh fkjnbdlk ckljse hfmkjs dfohi fqerohi gqeoprhhfisre  fgr fri urf lqgf piqurh for oir goiesr gi erqe rug
-    </string>
+    <string name="taste">Déguster</string>
+    <string name="provide">Ajouter</string>
+    <string name="stock_number">En stock: %1$d</string>
+    <string name="price_and_currency">%1$s %2$s</string>
+    <string name="show_pdf">Consulter le PDF</string>
+    <string name="no_pdf">Pas de pdf associé à cette bouteille.</string>
+    <string name="no_pdf_app">Aucun lecteur de pdf trouvé sur le téléphone.</string>
+    <string name="labeled_data">Icon</string>
+    <string name="misc">Général</string>
+    <string name="expert_advice">Avis d\'expert</string>
+    <string name="bottle_count">Nombre de bouteilles</string>
+    <string name="entry">Entrée en stock</string>
+    <string name="how_many_to_add">Combien de bouteilles à ajouter ?</string>
+    <string name="use_long">Déguster une bouteille</string>
+    <string name="tasting_comment">Commentaire de dégustation</string>
 
     <!-- Tags -->
     <string name="tag_chip_id">com.louis.app.cavity.TAG_CHIP_ID</string>

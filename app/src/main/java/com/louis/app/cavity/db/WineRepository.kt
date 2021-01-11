@@ -87,6 +87,7 @@ class WineRepository private constructor(app: Application) {
         fReviewDao.getFReview(bottleId, reviewId)
 
     fun getAllWines() = wineDao.getAllWines()
+    fun getWineById(wineId: Long) = wineDao.getWineById(wineId)
     fun getWineByIdNotLive(wineId: Long) = wineDao.getWineByIdNotLive(wineId)
     fun getWineWithBottles() = wineDao.getWineWithBottles()
     fun getWineWithBottlesNotLive() = wineDao.getWineWithBottlesNotLive()
@@ -96,8 +97,9 @@ class WineRepository private constructor(app: Application) {
     fun getAllCountiesNotLive() = countyDao.getAllCountiesNotLive()
 
     fun getAllBottles() = bottleDao.getAllBottles()
+    fun getBottleById(bottleId: Long) = bottleDao.getBottleById(bottleId)
     suspend fun getBottleByIdNotLive(bottleId: Long) = bottleDao.getBottleByIdNotLive(bottleId)
-    suspend fun getAllGrapesNotLive() = bottleDao.getAllGrapesNotLive()
+    suspend fun getAllGrapesNotLive() = grapeDao.getAllGrapesNotLive()
 
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
     suspend fun deleteBottleAndChildsById(bottleId: Long) {
@@ -119,4 +121,9 @@ class WineRepository private constructor(app: Application) {
 
     fun getCountiesWithWinesNotLive() = countyDao.getCountiesWithWinesNotLive()
 
+    suspend fun fav(bottleId: Long) = bottleDao.fav(bottleId)
+    suspend fun unfav(bottleId: Long) = bottleDao.unfav(bottleId)
+
+    suspend fun removeBottles(bottleId: Long, count: Int) = bottleDao.removeBottles(bottleId, count)
+    suspend fun addBottles(bottleId: Long, count: Int) = bottleDao.addBottles(bottleId, count)
 }

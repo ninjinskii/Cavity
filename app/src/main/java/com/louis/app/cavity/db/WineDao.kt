@@ -24,6 +24,9 @@ interface WineDao {
     fun getAllWines(): LiveData<List<Wine>>
 
     @Query("SELECT * FROM wine WHERE wine_id =:wineId")
+    fun getWineById(wineId: Long): LiveData<Wine>
+
+    @Query("SELECT * FROM wine WHERE wine_id =:wineId")
     fun getWineByIdNotLive(wineId: Long): Wine
 
     @Transaction
