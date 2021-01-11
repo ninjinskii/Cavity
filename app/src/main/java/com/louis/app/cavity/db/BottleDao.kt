@@ -21,9 +21,6 @@ interface BottleDao {
     @Query("SELECT * FROM bottle")
     fun getAllBottles(): LiveData<List<Bottle>>
 
-    @Query("SELECT * FROM grape")
-    suspend fun getAllGrapesNotLive(): List<Grape>
-
     @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
     fun getBottleById(bottleId: Long): LiveData<Bottle>
 
