@@ -16,20 +16,19 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddBottleBinding
+import com.louis.app.cavity.databinding.DialogUseBottleBinding
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.search.widget.AnimatedImageButton
-import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.showSnackbar
-import com.louis.app.cavity.util.toBoolean
+import com.louis.app.cavity.util.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
     private val binding get() = _binding!!
     private val bottleDetailsViewModel: BottleDetailsViewModel by viewModels()
     private val args: FragmentBottleDetailsArgs by navArgs()
+    private var shouldTriggerFavAnim = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -101,7 +100,19 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         binding.buttonConsume.setOnClickListener {
             (it as Checkable).isChecked = false
-            // consume
+            val dialogBinding = DialogUseBottleBinding.inflate(layoutInflater)
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(resources.getString(R.string.use_long))
+                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
+                }
+                .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
+                    val count = dialogBinding.bottleCount.text.toString().toInt()
+                    bottleDetailsViewModel.removeBottles(args.bottleId, count)
+                    // TODO: history
+                }
+                .setView(dialogBinding.root)
+                .show()
         }
 
         binding.buttonProvide.setOnClickListener {
@@ -110,7 +121,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(resources.getString(R.string.entry))
-                .setMessage(resources.getString(R.string.how_many))
+                .setMessage(resources.getString(R.string.how_many_to_add))
                 .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                 }
                 .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
@@ -190,7 +201,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 buttonShowPdf.setVisible(false)
             }
 
-            if (bottle.isFavorite.toBoolean()) {
+            if (bottle.isFavorite.toBoolean() && shouldTriggerFavAnim) {
+                shouldTriggerFavAnim = false
                 favorite.triggerAnimation()
             }
         }
