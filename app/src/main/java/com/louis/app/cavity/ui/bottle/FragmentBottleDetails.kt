@@ -25,7 +25,6 @@ import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
-import kotlinx.android.synthetic.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
