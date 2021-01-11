@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDrawableOrThrow
 import com.louis.app.cavity.R
 
@@ -18,8 +17,8 @@ class AnimatedImageButton @JvmOverloads constructor(
     var state = 0
         private set
 
-    private val initialDrawable: AnimatedVectorDrawable
-    private val otherDrawable: AnimatedVectorDrawable
+    private var initialDrawable: AnimatedVectorDrawable
+    private var otherDrawable: AnimatedVectorDrawable
     private var currentUsedDrawable: AnimatedVectorDrawable? = null
 
     init {
@@ -58,6 +57,8 @@ class AnimatedImageButton @JvmOverloads constructor(
             toggleState()
         }
     }
+
+    fun isAnimationRunning() = currentUsedDrawable?.isRunning ?: false
 
     private fun toggleState() {
         state = if (state == 1) 0 else 1

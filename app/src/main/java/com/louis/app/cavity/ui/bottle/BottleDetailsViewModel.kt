@@ -10,6 +10,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -31,6 +32,15 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     fun getQGrapesForBottle(bottleId: Long) = repository.getQGrapesAndGrapeForBottle(bottleId)
 
     fun getFReviewForBottle(bottleId: Long) = repository.getFReviewAndReviewForBottle(bottleId)
+
+    fun toggleFavorite(bottleId: Long) {
+        viewModelScope.launch(IO) {
+            repository.run {
+                val bottle = getBottleByIdNotLive(bottleId)
+                if (bottle.isFavorite.toBoolean()) unfav(bottleId) else fav(bottleId)
+            }
+        }
+    }
 
     fun preparePdf(bottleId: Long) {
         viewModelScope.launch(IO) {

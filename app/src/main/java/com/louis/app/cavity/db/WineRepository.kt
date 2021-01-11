@@ -121,4 +121,7 @@ class WineRepository private constructor(app: Application) {
 
     fun getCountiesWithWinesNotLive() = countyDao.getCountiesWithWinesNotLive()
 
+    suspend fun fav(bottleId: Long) = bottleDao.fav(bottleId)
+    suspend fun unfav(bottleId: Long) = bottleDao.unfav(bottleId)
+
 }

@@ -2,10 +2,12 @@ package com.louis.app.cavity.ui.bottle
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Checkable
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,9 +19,11 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
+import com.louis.app.cavity.ui.search.widget.AnimatedImageButton
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.toBoolean
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -108,6 +112,17 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         binding.buttonShowPdf.setOnClickListener {
             bottleDetailsViewModel.preparePdf(args.bottleId)
         }
+
+        binding.favorite.setOnClickListener {
+            val button = it as AnimatedImageButton
+            button.apply {
+                triggerAnimation()
+
+                if (!isAnimationRunning()) {
+                    bottleDetailsViewModel.toggleFavorite(args.bottleId)
+                }
+            }
+        }
     }
 
     private fun showImage(image: Uri) {
@@ -161,6 +176,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             if (!bottle.hasPdf()) {
                 noPdf.setVisible(true)
                 buttonShowPdf.setVisible(false)
+            }
+
+            if (bottle.isFavorite.toBoolean()) {
+                favorite.triggerAnimation()
             }
         }
     }

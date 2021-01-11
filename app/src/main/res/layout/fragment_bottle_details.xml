@@ -18,8 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/colorSurface"
-            app:layoutDescription="@xml/motion_collapsible_toolbar_header"
-            tools:maxHeight="4dp">
+            app:layoutDescription="@xml/motion_collapsible_toolbar_header">
 
             <ImageView
                 android:id="@+id/bottlePicture"
@@ -280,26 +279,16 @@
                             app:layout_constraintStart_toStartOf="@id/buyLocation"
                             app:layout_constraintTop_toBottomOf="@id/buyLocation" />
 
-                        <!--                        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton-->
-                        <!--                            android:id="@id/favorite"-->
-                        <!--                            android:layout_width="@dimen/medium_icon"-->
-                        <!--                            android:layout_height="@dimen/medium_icon"-->
-                        <!--                            android:background="?attr/actionBarItemBackground"-->
-                        <!--                            android:scaleType="centerInside"-->
-                        <!--                            app:initialAvd="@drawable/anim_set_fav"-->
-                        <!--                            app:layout_constraintEnd_toEndOf="parent"-->
-                        <!--                            android:src="@drawable/ic_star_outline"-->
-                        <!--                            app:layout_constraintTop_toTopOf="parent"-->
-                        <!--                            app:otherAvd="@drawable/anim_unfav" />-->
-
-                        <ImageButton
+                        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
                             android:id="@+id/favorite"
                             android:layout_width="@dimen/medium_icon"
                             android:layout_height="@dimen/medium_icon"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:background="?attr/actionBarItemBackground"
+                            android:scaleType="centerInside"
+                            app:initialAvd="@drawable/anim_fav"
+                            app:otherAvd="@drawable/anim_unfav"
                             android:contentDescription="@string/favorite"
-                            android:src="@drawable/ic_star_outline"
-                            android:tint="@color/medal_silver"
+                            android:src="@drawable/ic_heart"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
