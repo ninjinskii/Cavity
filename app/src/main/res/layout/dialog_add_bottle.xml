@@ -12,7 +12,9 @@
         android:layout_margin="@dimen/medium_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:startIconDrawable="@drawable/ic_bottle">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/bottleCount"
@@ -20,7 +22,8 @@
             android:layout_height="wrap_content"
             android:focusable="true"
             android:hint="@string/bottle_count"
-            android:inputType="textCapSentences" />
+            android:inputType="number"
+            android:text="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

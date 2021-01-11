@@ -33,6 +33,18 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getFReviewForBottle(bottleId: Long) = repository.getFReviewAndReviewForBottle(bottleId)
 
+    fun addBottles(bottleId: Long, count: Int) {
+        viewModelScope.launch(IO) {
+            repository.addBottles(bottleId, count)
+        }
+    }
+
+    fun removeBottles(bottleId: Long, count: Int) {
+        viewModelScope.launch(IO) {
+            repository.removeBottles(bottleId, count)
+        }
+    }
+
     fun toggleFavorite(bottleId: Long) {
         viewModelScope.launch(IO) {
             repository.run {

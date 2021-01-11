@@ -2,12 +2,10 @@ package com.louis.app.cavity.ui.bottle
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Checkable
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,7 +13,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.DialogAddBottleBinding
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
@@ -106,7 +106,19 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         binding.buttonProvide.setOnClickListener {
             (it as Checkable).isChecked = false
-            // provide
+            val dialogBinding = DialogAddBottleBinding.inflate(layoutInflater)
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(resources.getString(R.string.entry))
+                .setMessage(resources.getString(R.string.how_many))
+                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
+                }
+                .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
+                    val count = dialogBinding.bottleCount.text.toString().toInt()
+                    bottleDetailsViewModel.addBottles(args.bottleId, count)
+                }
+                .setView(dialogBinding.root)
+                .show()
         }
 
         binding.buttonShowPdf.setOnClickListener {

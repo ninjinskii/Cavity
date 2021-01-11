@@ -124,4 +124,6 @@ class WineRepository private constructor(app: Application) {
     suspend fun fav(bottleId: Long) = bottleDao.fav(bottleId)
     suspend fun unfav(bottleId: Long) = bottleDao.unfav(bottleId)
 
+    suspend fun removeBottles(bottleId: Long, count: Int) = bottleDao.removeBottles(bottleId, count)
+    suspend fun addBottles(bottleId: Long, count: Int) = bottleDao.addBottles(bottleId, count)
 }

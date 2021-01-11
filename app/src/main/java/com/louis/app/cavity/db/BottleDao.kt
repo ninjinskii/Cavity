@@ -36,6 +36,12 @@ interface BottleDao {
     @Query("UPDATE bottle SET is_favorite = 0 WHERE bottle_id=:bottleId")
     suspend fun unfav(bottleId: Long)
 
+    @Query("UPDATE bottle SET count=:count + bottle.count WHERE bottle_id=:bottleId")
+    suspend fun addBottles(bottleId: Long, count: Int)
+
+    @Query("UPDATE bottle SET count=:count - bottle.count WHERE bottle_id=:bottleId")
+    suspend fun removeBottles(bottleId: Long, count: Int)
+
     @Transaction
     @Query("SELECT bottle_id, name, naming, cuvee, color, is_organic, vintage, apogee, is_favorite, count, price, currency, other_info, buy_location, buy_date, taste_comment, pdf_path, county_id FROM wine, bottle WHERE wine.wine_id = bottle.wine_id")
     suspend fun getBottlesAndWineNotLive(): List<BottleAndWine>
