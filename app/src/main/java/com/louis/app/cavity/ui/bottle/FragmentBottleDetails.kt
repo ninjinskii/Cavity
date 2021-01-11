@@ -28,7 +28,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private val binding get() = _binding!!
     private val bottleDetailsViewModel: BottleDetailsViewModel by viewModels()
     private val args: FragmentBottleDetailsArgs by navArgs()
-    private var shouldTriggerFavAnim = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -201,8 +200,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 buttonShowPdf.setVisible(false)
             }
 
-            if (bottle.isFavorite.toBoolean() && shouldTriggerFavAnim) {
-                shouldTriggerFavAnim = false
+            if (bottle.isFavorite.toBoolean()) {
+                // TODO: Fix favorite wrong icon when bottle is fav
                 favorite.triggerAnimation()
             }
         }
