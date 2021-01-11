@@ -21,7 +21,11 @@ import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.search.widget.AnimatedImageButton
-import com.louis.app.cavity.util.*
+import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.toBoolean
+import kotlinx.android.synthetic.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -48,7 +52,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         bottleDetailsViewModel.getFReviewForBottle(args.bottleId).observe(viewLifecycleOwner) {
-            reviewAdapter.submitList(it)
+            if (it.isEmpty()) {
+                binding.reviewCardView.setVisible(false)
+            } else {
+                reviewAdapter.submitList(it)
+            }
         }
     }
 
@@ -58,9 +66,13 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         bottleDetailsViewModel.getQGrapesForBottle(args.bottleId).observe(viewLifecycleOwner) {
-            binding.grapeBar.apply {
-                addAllGrapes(it)
-                triggerAnimation()
+            if (it.isEmpty()) {
+                binding.grapesCardView.setVisible(false)
+            } else {
+                binding.grapeBar.apply {
+                    addAllGrapes(it)
+                    triggerAnimation()
+                }
             }
         }
 
