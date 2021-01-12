@@ -17,11 +17,13 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize" />
 
             <!-- android:background="@android:color/transparent"-->
             <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:tabMode="scrollable">
@@ -47,7 +49,6 @@
                     android:text="@string/friends" />
 
             </com.google.android.material.tabs.TabLayout>
-
         </com.google.android.material.appbar.AppBarLayout>
 
         <View
