@@ -32,6 +32,9 @@
         <action
             android:id="@+id/homeToWineOptions"
             app:destination="@id/wine_options_dialog" />
+        <action
+            android:id="@+id/homeToManager"
+            app:destination="@id/manager_dest" />
     </fragment>
 
     <dialog
@@ -138,5 +141,11 @@
                 app:argType="long" />
         </action>
     </fragment>
+
+    <fragment
+        android:id="@+id/manager_dest"
+        android:name="com.louis.app.cavity.ui.manager.FragmentManager"
+        android:label="FragmentManager"
+        tools:layout="@layout/fragment_manager" />
 
 </navigation>

@@ -9,13 +9,17 @@
         <item
             android:id="@+id/tasting_dest"
             android:icon="@drawable/ic_toast_wine"
-            android:iconTint="#FFFFFF"
             android:title="@string/tasting" />
 
         <item
             android:id="@+id/search_dest"
             android:icon="@drawable/ic_search"
             android:title="@string/search" />
+
+        <item
+            android:id="@+id/manager_dest"
+            android:icon="@drawable/ic_manager"
+            android:title="@string/manager" />
 
         <item
             android:id="@+id/history_dest"

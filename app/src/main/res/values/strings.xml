@@ -154,7 +154,7 @@
     <string name="tasting_comment">Commentaire de dégustation</string>
 
     <!-- Manager -->
-    <string name="manager_title">Gestionnaire</string>
+    <string name="manager">Gestionnaire</string>
     <string name="counties">Régions</string>
     <string name="contests">Concours</string>
     <string name="friends">Amis</string>
