@@ -42,7 +42,7 @@
                     android:valueType="floatType" />
                 <objectAnimator
                     android:duration="500"
-                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:interpolator="@android:anim/overshoot_interpolator"
                     android:propertyName="trimPathEnd"
                     android:startOffset="300"
                     android:valueFrom="1"
@@ -55,7 +55,7 @@
         <aapt:attr name="android:animation">
             <objectAnimator
                 android:duration="612"
-                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:interpolator="@android:anim/accelerate_decelerate_interpolator"
                 android:propertyName="trimPathStart"
                 android:startOffset="388"
                 android:valueFrom="1"

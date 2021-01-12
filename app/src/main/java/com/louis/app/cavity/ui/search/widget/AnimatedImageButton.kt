@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.AttributeSet
+import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.res.getDrawableOrThrow
 import com.louis.app.cavity.R
@@ -58,9 +59,25 @@ class AnimatedImageButton @JvmOverloads constructor(
         }
     }
 
-    fun isAnimationRunning() = currentUsedDrawable?.isRunning ?: false
+    private fun isAnimationRunning() = currentUsedDrawable?.isRunning ?: false
 
     private fun toggleState() {
         state = if (state == 1) 0 else 1
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        super.onTouchEvent(event)
+
+        if (event?.action == MotionEvent.ACTION_UP && !isAnimationRunning()) {
+            performClick()
+        }
+
+        return true
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        triggerAnimation()
+        return true
     }
 }

@@ -21,10 +21,7 @@ import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.search.widget.AnimatedImageButton
-import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.showSnackbar
-import com.louis.app.cavity.util.toBoolean
+import com.louis.app.cavity.util.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -147,14 +144,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.favorite.setOnClickListener {
-            val button = it as AnimatedImageButton
-            button.apply {
-                triggerAnimation()
-
-                if (!isAnimationRunning()) {
-                    bottleDetailsViewModel.toggleFavorite(args.bottleId)
-                }
-            }
+            bottleDetailsViewModel.toggleFavorite(args.bottleId)
         }
     }
 

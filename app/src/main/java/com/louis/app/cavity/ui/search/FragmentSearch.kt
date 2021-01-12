@@ -4,11 +4,11 @@ import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.*
+import androidx.core.view.children
+import androidx.core.view.doOnLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -235,8 +235,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             if (!isToolbarAnimRunning()) {
                 if (isSearchMode()) binding.motionToolbar.transitionToStart()
                 else binding.motionToolbar.transitionToEnd()
-
-                binding.searchButton.triggerAnimation()
             }
         }
 
@@ -266,9 +264,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun toggleBackdrop() {
-        if (bottomSheetBehavior.isExpanded() || bottomSheetBehavior.isCollapsed()) {
-            bottomSheetBehavior.toggleState()
-            binding.toggleBackdrop.triggerAnimation()
+        bottomSheetBehavior.run {
+            if (isExpanded() || isCollapsed())
+                toggleState()
         }
     }
 
