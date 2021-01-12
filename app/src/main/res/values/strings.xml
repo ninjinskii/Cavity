@@ -153,6 +153,13 @@
     <string name="use_long">Déguster une bouteille</string>
     <string name="tasting_comment">Commentaire de dégustation</string>
 
+    <!-- Manager -->
+    <string name="manager_title">Gestionnaire</string>
+    <string name="counties">Régions</string>
+    <string name="contests">Concours</string>
+    <string name="friends">Amis</string>
+
+
     <!-- Tags -->
     <string name="tag_chip_id">com.louis.app.cavity.TAG_CHIP_ID</string>
     <string name="tag_modal_sheet_id">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
