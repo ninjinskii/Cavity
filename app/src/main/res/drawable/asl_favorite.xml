@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fav"
+        android:state_checked="true"
+        android:drawable="@drawable/ic_heart" />
+
+    <item
+        android:id="@+id/unfav"
+        android:drawable="@drawable/ic_favorite_outline" />
+
+    <transition
+        android:fromId="@id/fav"
+        android:toId="@id/unfav"
+        android:drawable="@drawable/anim_unfav" />
+
+    <transition
+        android:fromId="@id/unfav"
+        android:toId="@id/fav"
+        android:drawable="@drawable/anim_fav" />
+</animated-selector>

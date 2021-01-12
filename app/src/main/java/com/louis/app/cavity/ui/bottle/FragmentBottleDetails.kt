@@ -34,6 +34,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         _binding = FragmentBottleDetailsBinding.bind(view)
 
         initRecyclerView()
+        initFavButton()
         observe()
         setListeners()
     }
@@ -53,6 +54,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             } else {
                 reviewAdapter.submitList(it)
             }
+        }
+    }
+
+    private fun initFavButton() {
+        binding.favorite.apply {
+            setButtonDrawable(R.drawable.asl_favorite)
         }
     }
 
@@ -203,7 +210,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
             if (bottle.isFavorite.toBoolean()) {
                 // TODO: Fix favorite wrong icon when bottle is fav
-                favorite.triggerAnimation()
+
             }
         }
     }
