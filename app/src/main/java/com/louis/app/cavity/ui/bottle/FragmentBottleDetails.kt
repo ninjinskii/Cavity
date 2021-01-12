@@ -208,9 +208,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 buttonShowPdf.setVisible(false)
             }
 
-            if (bottle.isFavorite.toBoolean()) {
-                // TODO: Fix favorite wrong icon when bottle is fav
-
+            favorite.apply {
+                isChecked = bottle.isFavorite.toBoolean()
             }
         }
     }
