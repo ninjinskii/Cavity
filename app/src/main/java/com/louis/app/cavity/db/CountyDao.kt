@@ -24,5 +24,9 @@ interface CountyDao {
 
     @Transaction
     @Query("SELECT * FROM county")
+    fun getCountiesWithWines(): LiveData<List<CountyWithWines>>
+
+    @Transaction
+    @Query("SELECT * FROM county")
     fun getCountiesWithWinesNotLive(): List<CountyWithWines>
 }

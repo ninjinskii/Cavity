@@ -23,7 +23,10 @@ class FragmentManager: Fragment(R.layout.fragment_manager) {
     }
 
     private fun setupWithViewPager() {
-        binding.viewPager.adapter = ManagerPagerAdapter(this)
+        binding.viewPager.apply {
+            adapter = ManagerPagerAdapter(this@FragmentManager)
+            isUserInputEnabled = false
+        }
 
         binding.tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {

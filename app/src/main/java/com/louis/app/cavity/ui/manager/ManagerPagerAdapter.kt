@@ -8,9 +8,9 @@ class ManagerPagerAdapter(fragmentManager: FragmentManager) :
     override fun getItemCount() = 4
 
     override fun createFragment(position: Int) = when (position) {
-        1 -> FragmentHome()
-        2 -> FragmentHome()
-        3 -> FragmentHome()
-        else -> FragmentHome()
+        0 -> FragmentManageCounty()
+        1 -> FragmentManageGrape()
+        2 -> FragmentManageReview()
+        else -> FragmentManageFriend()
     }
 }
