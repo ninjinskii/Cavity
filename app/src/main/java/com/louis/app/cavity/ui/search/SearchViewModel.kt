@@ -47,7 +47,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun getAllCountiesNotLive() = repository.getAllCountiesNotLive()
+    suspend fun getAllCountiesNotLive() = repository.getAllCountiesNotLive()
 
     private fun filter() {
         viewModelScope.launch(Default) {

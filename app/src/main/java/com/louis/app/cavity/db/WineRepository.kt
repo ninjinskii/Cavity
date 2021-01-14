@@ -94,7 +94,7 @@ class WineRepository private constructor(app: Application) {
     fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
 
     fun getAllCounties() = countyDao.getAllCounties()
-    fun getAllCountiesNotLive() = countyDao.getAllCountiesNotLive()
+    suspend fun getAllCountiesNotLive() = countyDao.getAllCountiesNotLive()
 
     fun getAllBottles() = bottleDao.getAllBottles()
     fun getBottleById(bottleId: Long) = bottleDao.getBottleById(bottleId)
@@ -120,7 +120,7 @@ class WineRepository private constructor(app: Application) {
     fun getAllReviewsNotLive() = reviewDao.getAllReviewsNotLive()
 
     fun getCountiesWithWines() = countyDao.getCountiesWithWines()
-    fun getCountiesWithWinesNotLive() = countyDao.getCountiesWithWinesNotLive()
+    suspend fun getCountiesWithWinesNotLive() = countyDao.getCountiesWithWinesNotLive()
 
     suspend fun fav(bottleId: Long) = bottleDao.fav(bottleId)
     suspend fun unfav(bottleId: Long) = bottleDao.unfav(bottleId)
@@ -130,4 +130,6 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun swapCounties(county1Id: Long, pos1: Int, county2Id: Long, pos2: Int) =
         countyDao.swapCounties(county1Id, pos1, county2Id, pos2)
+
+    suspend fun resetOrder() = countyDao.resetOrder()
 }

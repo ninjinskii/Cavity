@@ -6,10 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemCountyManagerBinding
+import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.CountyWithWines
 
 class CountyRecyclerAdapter :
-    ListAdapter<CountyWithWines, CountyRecyclerAdapter.CountyViewHolder>(CountyItemDiffCallback()) {
+    ListAdapter<County, CountyRecyclerAdapter.CountyViewHolder>(CountyItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountyViewHolder {
         val binding =
             ItemCountyManagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,24 +22,25 @@ class CountyRecyclerAdapter :
         holder.bind(getItem(position))
 
     override fun getItemId(position: Int): Long {
-        return currentList[position].county.countyId
+        return currentList[position].countyId
     }
 
-    class CountyItemDiffCallback : DiffUtil.ItemCallback<CountyWithWines>() {
-        override fun areItemsTheSame(oldItem: CountyWithWines, newItem: CountyWithWines) =
-            oldItem.county.countyId == newItem.county.countyId
+    class CountyItemDiffCallback : DiffUtil.ItemCallback<County>() {
+        override fun areItemsTheSame(oldItem: County, newItem: County): Boolean {
+            return oldItem.countyId == newItem.countyId
+        }
 
-        override fun areContentsTheSame(oldItem: CountyWithWines, newItem: CountyWithWines) =
-            oldItem.county == newItem.county && oldItem.wines == newItem.wines
+        override fun areContentsTheSame(oldItem: County, newItem: County): Boolean {
+            return oldItem == newItem
+        }
     }
 
     inner class CountyViewHolder(private val binding: ItemCountyManagerBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(countyWithWines: CountyWithWines) {
+        fun bind(county: County) {
             with(binding) {
-                countyName.text = countyWithWines.county.name
-                bottleCount.text = countyWithWines.wines.size.toString()
+                countyName.text = county.name
             }
         }
     }

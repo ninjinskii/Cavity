@@ -21,15 +21,15 @@ interface CountyDao {
     fun getAllCounties(): LiveData<List<County>>
 
     @Query("SELECT * FROM county")
-    fun getAllCountiesNotLive(): List<County>
+    suspend fun getAllCountiesNotLive(): List<County>
 
     @Transaction
-    @Query("SELECT * FROM county")
+    @Query("SELECT * FROM county ORDER BY pref_order")
     fun getCountiesWithWines(): LiveData<List<CountyWithWines>>
 
     @Transaction
-    @Query("SELECT * FROM county")
-    fun getCountiesWithWinesNotLive(): List<CountyWithWines>
+    @Query("SELECT * FROM county ORDER BY pref_order")
+    suspend fun getCountiesWithWinesNotLive(): List<CountyWithWines>
 
     @Transaction
     suspend fun swapCounties(county1Id: Long, pos1: Int, county2Id: Long, pos2: Int) {
@@ -41,4 +41,8 @@ interface CountyDao {
 
     @Query("UPDATE county SET pref_order=:newOrder WHERE county_id=:countyId")
     suspend fun setCountyOrder(countyId: Long, newOrder: Int)
+
+    // TODO: remove
+    @Query("UPDATE county SET pref_order = county_id - 1")
+    suspend fun resetOrder()
 }
