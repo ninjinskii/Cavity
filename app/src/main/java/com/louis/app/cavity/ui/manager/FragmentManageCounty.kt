@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageCountyBinding
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.*
@@ -55,13 +54,26 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county) {
                 target: RecyclerView.ViewHolder
             ): Boolean {
                 val from = viewHolder.adapterPosition
+                val fromId = recyclerView.adapter?.getItemId(from)
                 val to = target.adapterPosition
+                val toId = recyclerView.adapter?.getItemId(to)
                 val counties = countyAdapter.currentList.toMutableList()
-                Collections.swap(counties, from, to)
+
+                if (from < to) {
+                    for (i in from..to) {
+                        Collections.swap(counties, i, i + 1)
+                    }
+                } else {
+                    for (i in to downTo from) {
+                        Collections.swap(counties, i, i - 1)
+                    }
+                }
+
                 countyAdapter.notifyItemMoved(from, to)
+                //Collections.swap(counties, from, to)
                 //countyAdapter.submitList(counties)
 //                L.v("from: $from, fromId: $fromId, to: $to, toId: $toId")
-//                managerViewModel.swapCounties(fromId, to, toId, from)
+                managerViewModel.swapCounties(fromId ?: 0, from, toId ?: 0, to)
                 //countyAdapter.submitList(countyAdapter.currentList.toMutableList().)
                 return true
             }

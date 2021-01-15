@@ -20,7 +20,7 @@ interface CountyDao {
     @Query("SELECT * FROM county ORDER BY pref_order")
     fun getAllCounties(): LiveData<List<County>>
 
-    @Query("SELECT * FROM county")
+    @Query("SELECT * FROM county ORDER BY pref_order")
     suspend fun getAllCountiesNotLive(): List<County>
 
     @Transaction

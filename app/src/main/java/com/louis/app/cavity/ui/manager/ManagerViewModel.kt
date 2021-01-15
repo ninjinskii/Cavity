@@ -11,9 +11,9 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
     init {
-        viewModelScope.launch(IO) {
-            repository.resetOrder()
-        }
+//        viewModelScope.launch(IO) {
+//            repository.resetOrder()
+//        }
     }
 
     suspend fun getCountiesWithWinesNotLive() = repository.getCountiesWithWinesNotLive()
