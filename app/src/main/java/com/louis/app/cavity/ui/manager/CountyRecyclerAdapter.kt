@@ -1,15 +1,15 @@
 package com.louis.app.cavity.ui.manager
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemCountyManagerBinding
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.relation.CountyWithWines
 
-class CountyRecyclerAdapter :
+class CountyRecyclerAdapter(private val dragCallback: DragListener) :
     ListAdapter<County, CountyRecyclerAdapter.CountyViewHolder>(CountyItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountyViewHolder {
         val binding =
@@ -38,10 +38,22 @@ class CountyRecyclerAdapter :
     inner class CountyViewHolder(private val binding: ItemCountyManagerBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        // TODO: fix accessibiliy warning
         fun bind(county: County) {
             with(binding) {
                 countyName.text = county.name
+                drag.setOnTouchListener { _, event ->
+                    if (event.action == MotionEvent.ACTION_DOWN) {
+                        dragCallback.requestDrag(this@CountyViewHolder)
+                    }
+
+                    false
+                }
             }
         }
+    }
+
+    interface DragListener {
+        fun requestDrag(viewHolder: RecyclerView.ViewHolder)
     }
 }
