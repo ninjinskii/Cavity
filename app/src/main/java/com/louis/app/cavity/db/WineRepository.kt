@@ -131,4 +131,6 @@ class WineRepository private constructor(app: Application) {
     suspend fun updateCounties(counties: List<County>) = countyDao.updateCounties(counties)
 
     suspend fun resetOrder() = countyDao.resetOrder()
+
+    suspend fun deleteCounty(countyId: Long) = countyDao.deleteCounty(countyId)
 }

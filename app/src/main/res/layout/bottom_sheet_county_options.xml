@@ -68,7 +68,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/removeCounty"
+        android:id="@+id/delete_county"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"

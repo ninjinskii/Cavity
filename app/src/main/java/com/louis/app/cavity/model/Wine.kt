@@ -2,10 +2,18 @@ package com.louis.app.cavity.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.louis.app.cavity.ui.home.WineColor
 
-@Entity(tableName = "wine")
+@Entity(
+    tableName = "wine", foreignKeys = [ForeignKey(
+        entity = County::class,
+        parentColumns = arrayOf("county_id"),
+        childColumns = arrayOf("county_id"),
+        onDelete = ForeignKey.CASCADE
+    )]
+)
 data class Wine(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "wine_id")

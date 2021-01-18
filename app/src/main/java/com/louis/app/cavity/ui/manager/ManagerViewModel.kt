@@ -13,7 +13,13 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
 
     suspend fun getCountiesWithWinesNotLive() = repository.getCountiesWithWinesNotLive()
 
-    suspend fun getAllCountiesNotLive() = repository.getAllCountiesNotLive()
+    fun getAllCounties() = repository.getAllCounties()
+
+    fun deleteCounty(countyId: Long) {
+        viewModelScope.launch(IO) {
+            repository.deleteCounty(countyId)
+        }
+    }
 
     fun updateCounties(counties: List<County>) {
         viewModelScope.launch(IO) {

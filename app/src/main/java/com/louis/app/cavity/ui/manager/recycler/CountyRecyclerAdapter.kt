@@ -6,9 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemCountyManagerBinding
 import com.louis.app.cavity.model.County
+import kotlinx.coroutines.withContext
 import java.util.*
 
-class CountyRecyclerAdapter(private val dragCallback: DragListener) :
+class CountyRecyclerAdapter(
+    private val dragCallback: DragListener,
+    private val onLongClick: (County) -> Unit
+) :
     RecyclerView.Adapter<CountyRecyclerAdapter.CountyViewHolder>() {
 
     private val counties = mutableListOf<County>()
@@ -54,6 +58,11 @@ class CountyRecyclerAdapter(private val dragCallback: DragListener) :
                     dragCallback.requestDrag(this@CountyViewHolder)
                 }
 
+                true
+            }
+
+            binding.root.setOnLongClickListener {
+                onLongClick(counties[adapterPosition])
                 false
             }
         }
