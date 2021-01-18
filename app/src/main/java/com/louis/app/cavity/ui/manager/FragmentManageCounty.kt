@@ -39,7 +39,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
 
         lifecycleScope.launch(IO) {
             val counties = managerViewModel.getAllCountiesNotLive()
-            countyAdapter.submitList(counties)
+            countyAdapter.setCounties(counties)
         }
 
         val dragDirs = ItemTouchHelper.UP or
@@ -56,27 +56,8 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
                 target: RecyclerView.ViewHolder
             ): Boolean {
                 val from = viewHolder.adapterPosition
-                val fromId = recyclerView.adapter?.getItemId(from)
                 val to = target.adapterPosition
-                val toId = recyclerView.adapter?.getItemId(to)
-                val counties = countyAdapter.currentList.toMutableList()
-
-                if (from < to) {
-                    for (i in from..to) {
-                        Collections.swap(counties, i, i + 1)
-                    }
-                } else {
-                    for (i in to downTo from) {
-                        Collections.swap(counties, i, i - 1)
-                    }
-                }
-
-                countyAdapter.notifyItemMoved(from, to)
-                //Collections.swap(counties, from, to)
-                //countyAdapter.submitList(counties)
-//                L.v("from: $from, fromId: $fromId, to: $to, toId: $toId")
-                managerViewModel.swapCounties(fromId ?: 0, from, toId ?: 0, to)
-                //countyAdapter.submitList(countyAdapter.currentList.toMutableList().)
+                countyAdapter.swapCounties(from, to)
                 return true
             }
 

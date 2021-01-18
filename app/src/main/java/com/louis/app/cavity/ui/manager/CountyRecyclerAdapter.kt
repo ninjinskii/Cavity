@@ -4,13 +4,16 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemCountyManagerBinding
 import com.louis.app.cavity.model.County
+import java.util.*
 
 class CountyRecyclerAdapter(private val dragCallback: DragListener) :
-    ListAdapter<County, CountyRecyclerAdapter.CountyViewHolder>(CountyItemDiffCallback()) {
+    RecyclerView.Adapter<CountyRecyclerAdapter.CountyViewHolder>() {
+
+    private val counties = mutableListOf<County>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountyViewHolder {
         val binding =
             ItemCountyManagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -19,20 +22,23 @@ class CountyRecyclerAdapter(private val dragCallback: DragListener) :
     }
 
     override fun onBindViewHolder(holder: CountyViewHolder, position: Int) =
-        holder.bind(getItem(position))
+        holder.bind(counties[position])
 
     override fun getItemId(position: Int): Long {
-        return currentList[position].countyId
+        return counties[position].countyId
     }
 
-    class CountyItemDiffCallback : DiffUtil.ItemCallback<County>() {
-        override fun areItemsTheSame(oldItem: County, newItem: County): Boolean {
-            return oldItem.countyId == newItem.countyId
-        }
+    override fun getItemCount() = counties.size
 
-        override fun areContentsTheSame(oldItem: County, newItem: County): Boolean {
-            return oldItem == newItem
-        }
+    fun setCounties(list: List<County>) {
+        counties.clear()
+        counties.addAll(list)
+        notifyDataSetChanged()
+    }
+
+    fun swapCounties(pos1: Int, pos2: Int) {
+        Collections.swap(counties, pos1, pos2)
+        notifyItemMoved(pos1, pos2)
     }
 
     inner class CountyViewHolder(private val binding: ItemCountyManagerBinding) :
