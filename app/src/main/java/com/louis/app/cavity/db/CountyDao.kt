@@ -14,6 +14,9 @@ interface CountyDao {
     @Update
     fun updateCounty(county: County)
 
+    @Update
+    suspend fun updateCounties(counties: List<County>)
+
     @Delete
     fun deleteCounty(county: County)
 

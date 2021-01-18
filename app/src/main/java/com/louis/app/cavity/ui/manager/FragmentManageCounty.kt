@@ -74,7 +74,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
 
     override fun onPause() {
         super.onPause()
-        managerViewModel.saveCountiesOrder(countyAdapter.getCounties())
+        managerViewModel.updateCounties(countyAdapter.getCounties())
     }
 
     override fun onDestroyView() {

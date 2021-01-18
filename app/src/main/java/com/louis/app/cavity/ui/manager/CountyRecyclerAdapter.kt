@@ -37,6 +37,8 @@ class CountyRecyclerAdapter(private val dragCallback: DragListener) :
 
     fun swapCounties(pos1: Int, pos2: Int) {
         Collections.swap(counties, pos1, pos2)
+        counties[pos1].prefOrder = pos1
+        counties[pos2].prefOrder = pos2
         notifyItemMoved(pos1, pos2)
     }
 

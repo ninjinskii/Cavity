@@ -128,8 +128,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun removeBottles(bottleId: Long, count: Int) = bottleDao.removeBottles(bottleId, count)
     suspend fun addBottles(bottleId: Long, count: Int) = bottleDao.addBottles(bottleId, count)
 
-    suspend fun swapCounties(county1Id: Long, pos1: Int, county2Id: Long, pos2: Int) =
-        countyDao.swapCounties(county1Id, pos1, county2Id, pos2)
+    suspend fun updateCounties(counties: List<County>) = countyDao.updateCounties(counties)
 
     suspend fun resetOrder() = countyDao.resetOrder()
 }

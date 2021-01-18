@@ -11,20 +11,13 @@ import kotlinx.coroutines.launch
 class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
-    init {
-//        viewModelScope.launch(IO) {
-//            repository.resetOrder()
-//        }
-    }
-
     suspend fun getCountiesWithWinesNotLive() = repository.getCountiesWithWinesNotLive()
 
     suspend fun getAllCountiesNotLive() = repository.getAllCountiesNotLive()
 
-    fun saveCountiesOrder(counties: List<County>) {
-
+    fun updateCounties(counties: List<County>) {
         viewModelScope.launch(IO) {
-            repository.swapCounties()
+            repository.updateCounties(counties)
         }
     }
 }

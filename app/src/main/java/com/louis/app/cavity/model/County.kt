@@ -10,5 +10,5 @@ data class County(
     @ColumnInfo(name = "county_id")
     val countyId: Long = 0,
     val name: String,
-    @ColumnInfo(name = "pref_order") val prefOrder: Int
+    @ColumnInfo(name = "pref_order") var prefOrder: Int
 )
