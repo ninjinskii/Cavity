@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.manager
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemCountyManagerBinding
 import com.louis.app.cavity.model.County
@@ -40,6 +39,8 @@ class CountyRecyclerAdapter(private val dragCallback: DragListener) :
         Collections.swap(counties, pos1, pos2)
         notifyItemMoved(pos1, pos2)
     }
+
+    fun getCounties() = counties.toList()
 
     inner class CountyViewHolder(private val binding: ItemCountyManagerBinding) :
         RecyclerView.ViewHolder(binding.root) {

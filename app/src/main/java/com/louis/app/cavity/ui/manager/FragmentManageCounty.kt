@@ -12,13 +12,13 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageCountyBinding
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import java.util.*
 
 class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
     CountyRecyclerAdapter.DragListener {
     private var _binding: FragmentManageCountyBinding? = null
     private val binding get() = _binding!!
     private val managerViewModel: ManagerViewModel by viewModels()
+    private val countyAdapter = CountyRecyclerAdapter(this)
     private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,8 +29,6 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
     }
 
     private fun initRecyclerView() {
-        val countyAdapter = CountyRecyclerAdapter(this)
-
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
@@ -72,6 +70,11 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
 
     override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        managerViewModel.saveCountiesOrder(countyAdapter.getCounties())
     }
 
     override fun onDestroyView() {
