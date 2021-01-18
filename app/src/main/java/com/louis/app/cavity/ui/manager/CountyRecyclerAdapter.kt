@@ -38,17 +38,20 @@ class CountyRecyclerAdapter(private val dragCallback: DragListener) :
     inner class CountyViewHolder(private val binding: ItemCountyManagerBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        // TODO: fix accessibiliy warning
+        init {
+            // TODO: fix accessibiliy warning
+            binding.drag.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    dragCallback.requestDrag(this@CountyViewHolder)
+                }
+
+                false
+            }
+        }
+
         fun bind(county: County) {
             with(binding) {
                 countyName.text = county.name
-                drag.setOnTouchListener { _, event ->
-                    if (event.action == MotionEvent.ACTION_DOWN) {
-                        dragCallback.requestDrag(this@CountyViewHolder)
-                    }
-
-                    false
-                }
             }
         }
     }
