@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageCountyBinding
+import com.louis.app.cavity.ui.manager.recycler.CountyItemTouchHelperCallback
+import com.louis.app.cavity.ui.manager.recycler.CountyRecyclerAdapter
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -40,30 +42,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
             countyAdapter.setCounties(counties)
         }
 
-        val dragDirs = ItemTouchHelper.UP or
-                ItemTouchHelper.DOWN or
-                ItemTouchHelper.START or
-                ItemTouchHelper.END
-
-        val swipeDirs = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-
-        val callback = object : ItemTouchHelper.SimpleCallback(dragDirs, 0) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                val from = viewHolder.adapterPosition
-                val to = target.adapterPosition
-                countyAdapter.swapCounties(from, to)
-                return true
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            }
-
-        }
-
+        val callback = CountyItemTouchHelperCallback(countyAdapter)
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }

@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.manager
+package com.louis.app.cavity.ui.manager.recycler
 
 import android.view.LayoutInflater
 import android.view.MotionEvent
