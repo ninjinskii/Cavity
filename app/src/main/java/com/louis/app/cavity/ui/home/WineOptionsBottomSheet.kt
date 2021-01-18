@@ -26,7 +26,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = BottomSheetWineOptionsBinding.inflate(inflater)
         return binding.root
     }

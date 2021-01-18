@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.manager
+package com.louis.app.cavity.ui.manager.county
 
 import android.os.Bundle
 import android.view.View
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageCountyBinding
+import com.louis.app.cavity.ui.manager.ManagerViewModel
 import com.louis.app.cavity.ui.manager.recycler.CountyItemTouchHelperCallback
 import com.louis.app.cavity.ui.manager.recycler.CountyRecyclerAdapter
 import kotlinx.coroutines.Dispatchers.IO
