@@ -7,7 +7,9 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManagerBinding
+import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManager: Fragment(R.layout.fragment_manager) {
     private var _binding: FragmentManagerBinding? = null

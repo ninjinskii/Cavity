@@ -12,7 +12,7 @@ interface CountyDao {
     fun insertCounty(county: County)
 
     @Update
-    fun updateCounty(county: County)
+    suspend fun updateCounty(county: County)
 
     @Update
     suspend fun updateCounties(counties: List<County>)

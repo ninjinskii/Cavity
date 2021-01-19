@@ -15,6 +15,12 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllCounties() = repository.getAllCounties()
 
+    fun updateCounty(county: County) {
+        viewModelScope.launch(IO) {
+            repository.updateCounty(county)
+        }
+    }
+
     fun deleteCounty(countyId: Long) {
         viewModelScope.launch(IO) {
             repository.deleteCounty(countyId)

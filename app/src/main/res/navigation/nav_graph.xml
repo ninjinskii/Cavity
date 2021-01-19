@@ -163,8 +163,10 @@
             android:name="countyName"
             app:argType="string" />
         <argument
+            android:name="countyPrefOrder"
+            app:argType="integer" />
+        <argument
             android:name="bottlesCount"
             app:argType="integer" />
     </dialog>
-
 </navigation>

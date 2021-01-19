@@ -33,6 +33,7 @@ class WineRepository private constructor(app: Application) {
     fun deleteWineById(wineId: Long) = wineDao.deleteWineById(wineId)
 
     fun insertCounty(county: County) = countyDao.insertCounty(county)
+    suspend fun updateCounty(county: County) = countyDao.updateCounty(county)
 
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
 

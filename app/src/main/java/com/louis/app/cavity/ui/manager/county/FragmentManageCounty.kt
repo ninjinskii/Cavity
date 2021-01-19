@@ -21,6 +21,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
     CountyRecyclerAdapter.DragListener {
     private var _binding: FragmentManageCountyBinding? = null
     private val binding get() = _binding!!
+
     // TODO: Check VM scope carefully
     private val managerViewModel: ManagerViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
@@ -58,7 +59,12 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
     private fun showOptionsDialog(county: County) {
         county.let {
             val action =
-                FragmentManagerDirections.managerToCountyOptions(it.countyId, it.name, it.prefOrder)
+                FragmentManagerDirections.managerToCountyOptions(
+                    it.countyId,
+                    it.name,
+                    it.prefOrder,
+                    0
+                )
             findNavController().navigate(action)
         }
     }
