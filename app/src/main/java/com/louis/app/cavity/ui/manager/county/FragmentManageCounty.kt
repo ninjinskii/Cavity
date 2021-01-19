@@ -50,6 +50,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
         }
 
         val callback = CountyItemTouchHelperCallback(countyAdapter)
+
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
