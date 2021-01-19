@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageCountyBinding
-import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.relation.CountyWithWines
 import com.louis.app.cavity.ui.manager.FragmentManagerDirections
 import com.louis.app.cavity.ui.manager.ManagerViewModel
 import com.louis.app.cavity.ui.manager.recycler.CountyItemTouchHelperCallback
@@ -18,13 +18,13 @@ import com.louis.app.cavity.ui.manager.recycler.CountyRecyclerAdapter
 import com.louis.app.cavity.util.L
 
 class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
-    CountyRecyclerAdapter.DragListener {
+        CountyRecyclerAdapter.DragListener {
     private var _binding: FragmentManageCountyBinding? = null
     private val binding get() = _binding!!
 
     // TODO: Check VM scope carefully
     private val managerViewModel: ManagerViewModel by viewModels(
-        ownerProducer = { requireParentFragment() }
+            ownerProducer = { requireParentFragment() }
     )
     private val countyAdapter = CountyRecyclerAdapter(this) { showOptionsDialog(it) }
     private lateinit var itemTouchHelper: ItemTouchHelper
@@ -56,17 +56,16 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
-    private fun showOptionsDialog(county: County) {
-        county.let {
-            val action =
-                FragmentManagerDirections.managerToCountyOptions(
-                    it.countyId,
-                    it.name,
-                    it.prefOrder,
-                    0
-                )
-            findNavController().navigate(action)
-        }
+    private fun showOptionsDialog(countyWithWines: CountyWithWines) {
+        val (county, wines) = countyWithWines
+        val action = FragmentManagerDirections.managerToCountyOptions(
+                county.countyId,
+                county.name,
+                county.prefOrder,
+                wines.size
+        )
+
+        findNavController().navigate(action)
     }
 
     override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {

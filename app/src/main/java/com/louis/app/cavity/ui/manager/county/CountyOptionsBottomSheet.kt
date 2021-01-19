@@ -43,7 +43,7 @@ class CountyOptionsBottomSheet : BottomSheetDialogFragment() {
 
         with(binding) {
             countyName.text = args.countyName
-            bottleCount.text = args.bottlesCount.toString()
+            wineCount.text = args.wineCount.toString()
 
             editCounty.setOnClickListener {
                 showEditCountyDialog()

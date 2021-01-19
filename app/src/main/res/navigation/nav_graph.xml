@@ -166,7 +166,7 @@
             android:name="countyPrefOrder"
             app:argType="integer" />
         <argument
-            android:name="bottlesCount"
+            android:name="wineCount"
             app:argType="integer" />
     </dialog>
 </navigation>

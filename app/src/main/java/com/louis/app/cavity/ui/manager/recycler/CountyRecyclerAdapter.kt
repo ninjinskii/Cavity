@@ -1,18 +1,18 @@
 package com.louis.app.cavity.ui.manager.recycler
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemCountyManagerBinding
-import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.CountyWithWines
 import java.util.*
 
 class CountyRecyclerAdapter(
         private val dragCallback: DragListener,
-        private val onLongClick: (County) -> Unit
+        private val onLongClick: (CountyWithWines) -> Unit
 ) :
         RecyclerView.Adapter<CountyRecyclerAdapter.CountyViewHolder>() {
 
@@ -37,7 +37,7 @@ class CountyRecyclerAdapter(
     fun setCounties(list: List<CountyWithWines>) {
         counties.clear()
         counties.addAll(list)
-        notifyItemRangeInserted(0, counties.size)
+        notifyDataSetChanged()
     }
 
     fun swapCounties(pos1: Int, pos2: Int) {
@@ -49,12 +49,13 @@ class CountyRecyclerAdapter(
 
     fun getCounties() = counties.map { it.county }
 
+    // Clicking on the drag icon does nothing anyway
+    @SuppressLint("ClickableViewAccessibility")
     inner class CountyViewHolder(private val binding: ItemCountyManagerBinding) :
             RecyclerView.ViewHolder(binding.root) {
         private val context = binding.root.context
 
         init {
-            // TODO: fix accessibiliy warning
             binding.drag.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_DOWN) {
                     dragCallback.requestDrag(this@CountyViewHolder)
@@ -64,7 +65,7 @@ class CountyRecyclerAdapter(
             }
 
             binding.root.setOnLongClickListener {
-                onLongClick(counties[adapterPosition].county)
+                onLongClick(counties[adapterPosition])
                 false
             }
         }
@@ -74,7 +75,8 @@ class CountyRecyclerAdapter(
 
             with(binding) {
                 countyName.text = county.name
-                wineCount.text = context.resources.getQuantityText(R.plurals.wines, wines.size)
+                wineCount.text =
+                        context.resources.getQuantityString(R.plurals.wines, wines.size, wines.size)
             }
         }
     }
