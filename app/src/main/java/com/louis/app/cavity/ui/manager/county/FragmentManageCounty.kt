@@ -46,7 +46,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
             adapter = countyAdapter
         }
 
-        managerViewModel.getAllCounties().observe(viewLifecycleOwner) {
+        managerViewModel.getCountiesWithWines().observe(viewLifecycleOwner) {
             countyAdapter.setCounties(it)
         }
 

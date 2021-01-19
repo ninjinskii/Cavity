@@ -6,17 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/buttonEdit"
-        android:layout_width="@dimen/xsmall_icon"
-        android:layout_height="@dimen/xsmall_icon"
-        android:layout_margin="@dimen/small_margin"
-        android:src="@drawable/ic_edit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorOnBackground" />
-
     <TextView
         android:id="@+id/countyName"
         style="@style/TextAppearance.MaterialComponents.Headline5"
@@ -24,24 +13,24 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/medium_margin"
         android:layout_marginTop="@dimen/small_margin"
-        app:layout_constraintBottom_toTopOf="@id/bottleCount"
-        app:layout_constraintStart_toEndOf="@id/buttonEdit"
+        app:layout_constraintBottom_toTopOf="@id/wineCount"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/drag"
         tools:text="Alsace" />
 
     <TextView
-        android:id="@+id/bottleCount"
+        android:id="@+id/wineCount"
         style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/small_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/buttonEdit"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/countyName"
         app:layout_constraintEnd_toStartOf="@id/drag"
-        tools:text="Nombre de bouteilles: 12" />
+        tools:text="12 vins" />
 
     <ImageButton
         android:id="@+id/drag"
