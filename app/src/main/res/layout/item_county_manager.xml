@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -14,9 +13,9 @@
         android:layout_marginHorizontal="@dimen/medium_margin"
         android:layout_marginTop="@dimen/small_margin"
         app:layout_constraintBottom_toTopOf="@id/wineCount"
+        app:layout_constraintEnd_toStartOf="@id/buttonOptions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/drag"
         tools:text="Alsace" />
 
     <TextView
@@ -27,10 +26,21 @@
         android:layout_marginHorizontal="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/small_margin"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonOptions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/countyName"
-        app:layout_constraintEnd_toStartOf="@id/drag"
         tools:text="12 vins" />
+
+    <ImageButton
+        android:id="@+id/buttonOptions"
+        android:layout_width="@dimen/medium_icon"
+        android:layout_height="0dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_options"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/drag"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorOnBackground" />
 
     <ImageButton
         android:id="@+id/drag"

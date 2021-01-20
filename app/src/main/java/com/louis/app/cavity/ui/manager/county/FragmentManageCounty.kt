@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageCountyBinding
-import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.CountyWithWines
 import com.louis.app.cavity.ui.manager.FragmentManagerDirections
 import com.louis.app.cavity.ui.manager.ManagerViewModel
@@ -18,8 +17,7 @@ import com.louis.app.cavity.ui.manager.recycler.CountyItemTouchHelperCallback
 import com.louis.app.cavity.ui.manager.recycler.CountyRecyclerAdapter
 import com.louis.app.cavity.util.L
 
-class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
-        CountyRecyclerAdapter.DragListener {
+class FragmentManageCounty : Fragment(R.layout.fragment_manage_county) {
     private var _binding: FragmentManageCountyBinding? = null
     private val binding get() = _binding!!
 
@@ -27,7 +25,10 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
     private val managerViewModel: ManagerViewModel by viewModels(
             ownerProducer = { requireParentFragment() }
     )
-    private val countyAdapter = CountyRecyclerAdapter(this) { showOptionsDialog(it) }
+    private val countyAdapter = CountyRecyclerAdapter(
+            onDragIconTouched = { vh: RecyclerView.ViewHolder -> requestDrag(vh) },
+            onOptionsClick = { countyWithWines -> showOptionsDialog(countyWithWines) }
+    )
     private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,7 +70,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
         findNavController().navigate(action)
     }
 
-    override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
+    private fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
     }
 

@@ -11,8 +11,8 @@ import com.louis.app.cavity.model.relation.CountyWithWines
 import java.util.*
 
 class CountyRecyclerAdapter(
-        private val dragCallback: DragListener,
-        private val onLongClick: (CountyWithWines) -> Unit
+        private val onDragIconTouched: (RecyclerView.ViewHolder) -> Unit,
+        private val onOptionsClick: (CountyWithWines) -> Unit
 ) :
         RecyclerView.Adapter<CountyRecyclerAdapter.CountyViewHolder>() {
 
@@ -58,15 +58,14 @@ class CountyRecyclerAdapter(
         init {
             binding.drag.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_DOWN) {
-                    dragCallback.requestDrag(this@CountyViewHolder)
+                    onDragIconTouched(this@CountyViewHolder)
                 }
 
                 true
             }
 
-            binding.root.setOnLongClickListener {
-                onLongClick(counties[adapterPosition])
-                false
+            binding.buttonOptions.setOnClickListener {
+                onOptionsClick(counties[adapterPosition])
             }
         }
 
