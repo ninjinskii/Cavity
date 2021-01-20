@@ -7,24 +7,25 @@ import androidx.room.PrimaryKey
 import com.louis.app.cavity.ui.home.WineColor
 
 @Entity(
-    tableName = "wine", foreignKeys = [ForeignKey(
-        entity = County::class,
-        parentColumns = arrayOf("county_id"),
-        childColumns = arrayOf("county_id"),
-        onDelete = ForeignKey.CASCADE
-    )]
+        tableName = "wine",
+        foreignKeys = [ForeignKey(
+                entity = County::class,
+                parentColumns = arrayOf("county_id"),
+                childColumns = arrayOf("county_id"),
+                onDelete = ForeignKey.CASCADE
+        )]
 )
 data class Wine(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "wine_id")
-    val wineId: Long = 0,
-    val name: String,
-    val naming: String,
-    val color: Int,
-    val cuvee: String,
-    @ColumnInfo(name = "county_id") val countyId: Long,
-    @ColumnInfo(name = "is_organic") val isOrganic: Int,
-    @ColumnInfo(name = "img_path") val imgPath: String
+        @PrimaryKey(autoGenerate = true)
+        @ColumnInfo(name = "wine_id")
+        val wineId: Long = 0,
+        val name: String,
+        val naming: String,
+        val color: Int,
+        val cuvee: String,
+        @ColumnInfo(name = "county_id") val countyId: Long,
+        @ColumnInfo(name = "is_organic") val isOrganic: Int,
+        @ColumnInfo(name = "img_path") val imgPath: String
 ) {
     companion object {
         fun wineColorToColorNumber(color: WineColor): Int {

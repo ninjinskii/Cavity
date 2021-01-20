@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageCountyBinding
+import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.CountyWithWines
 import com.louis.app.cavity.ui.manager.FragmentManagerDirections
 import com.louis.app.cavity.ui.manager.ManagerViewModel
@@ -57,15 +58,16 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
     }
 
     private fun showOptionsDialog(countyWithWines: CountyWithWines) {
-        val (county, wines) = countyWithWines
-        val action = FragmentManagerDirections.managerToCountyOptions(
-                county.countyId,
-                county.name,
-                county.prefOrder,
-                wines.size
-        )
-
-        findNavController().navigate(action)
+        managerViewModel.deleteGrape(Grape(1, ""))
+//        val (county, wines) = countyWithWines
+//        val action = FragmentManagerDirections.managerToCountyOptions(
+//                county.countyId,
+//                county.name,
+//                county.prefOrder,
+//                wines.size
+//        )
+//
+//        findNavController().navigate(action)
     }
 
     override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {

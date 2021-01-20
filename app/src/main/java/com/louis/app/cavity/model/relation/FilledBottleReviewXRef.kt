@@ -2,8 +2,29 @@ package com.louis.app.cavity.model.relation
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.Review
 
-@Entity(tableName = "f_review", primaryKeys = ["bottle_id", "review_id"])
+@Entity(
+        tableName = "f_review",
+        primaryKeys = ["bottle_id", "review_id"],
+        foreignKeys = [
+            ForeignKey(
+                    entity = Bottle::class,
+                    parentColumns = arrayOf("bottle_id"),
+                    childColumns = arrayOf("bottle_id"),
+                    onDelete = ForeignKey.CASCADE
+            ),
+            ForeignKey(
+                    entity = Review::class,
+                    parentColumns = arrayOf("review_id"),
+                    childColumns = arrayOf("review_id"),
+                    onDelete = ForeignKey.CASCADE
+            )
+        ]
+)
 data class FilledBottleReviewXRef(
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
     @ColumnInfo(name = "review_id") val reviewId: Long,

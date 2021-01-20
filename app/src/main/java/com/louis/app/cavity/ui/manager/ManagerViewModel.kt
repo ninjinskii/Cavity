@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.Grape
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,12 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     fun updateCounties(counties: List<County>) {
         viewModelScope.launch(IO) {
             repository.updateCounties(counties)
+        }
+    }
+
+    fun deleteGrape(grape: Grape) {
+        viewModelScope.launch (IO) {
+            repository.deleteGrape(grape)
         }
     }
 }
