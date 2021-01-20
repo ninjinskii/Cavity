@@ -1,21 +1,25 @@
 package com.louis.app.cavity.ui.manager.county
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.DialogAddCountyBinding
+import com.louis.app.cavity.databinding.DialogConfirmDeleteBinding
 import com.louis.app.cavity.databinding.FragmentManageCountyBinding
-import com.louis.app.cavity.model.relation.CountyWithWines
-import com.louis.app.cavity.ui.manager.FragmentManagerDirections
+import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.manager.ManagerViewModel
 import com.louis.app.cavity.ui.manager.recycler.CountyItemTouchHelperCallback
 import com.louis.app.cavity.ui.manager.recycler.CountyRecyclerAdapter
 import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.hideKeyboard
+import com.louis.app.cavity.util.showKeyboard
 
 class FragmentManageCounty : Fragment(R.layout.fragment_manage_county) {
     private var _binding: FragmentManageCountyBinding? = null
@@ -25,9 +29,10 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county) {
     private val managerViewModel: ManagerViewModel by viewModels(
             ownerProducer = { requireParentFragment() }
     )
-    private val countyAdapter = CountyRecyclerAdapter(
+    private val countyAdapter = CountyRecyclerAdapter (
             onDragIconTouched = { vh: RecyclerView.ViewHolder -> requestDrag(vh) },
-            onOptionsClick = { countyWithWines -> showOptionsDialog(countyWithWines) }
+            onRename = { county: County -> showEditCountyDialog(county) },
+            onDelete = { county: County -> showConfirmDeleteDialog(county) }
     )
     private lateinit var itemTouchHelper: ItemTouchHelper
 
@@ -58,20 +63,49 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county) {
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
-    private fun showOptionsDialog(countyWithWines: CountyWithWines) {
-        val (county, wines) = countyWithWines
-        val action = FragmentManagerDirections.managerToCountyOptions(
-                county.countyId,
-                county.name,
-                county.prefOrder,
-                wines.size
-        )
-
-        findNavController().navigate(action)
+    private fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
+        //binding.recyclerView.itemAnimator = null
+        itemTouchHelper.startDrag(viewHolder)
     }
 
-    private fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
-        itemTouchHelper.startDrag(viewHolder)
+    private fun showEditCountyDialog(county: County) {
+        val dialogBinding = DialogAddCountyBinding.inflate(layoutInflater)
+        dialogBinding.countyName.setText(county.name)
+        dialogBinding.countyName.setSelection(county.name.length)
+
+        MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.rename_county)
+                .setNegativeButton(R.string.cancel) { _, _ ->
+                }
+                .setPositiveButton(R.string.submit) { _, _ ->
+                    val name = dialogBinding.countyName.text.toString()
+                    val updatedCounty = County(county.countyId, name, county.prefOrder)
+                    managerViewModel.updateCounty(updatedCounty)
+                }
+                .setView(dialogBinding.root)
+                .setOnDismissListener { dialogBinding.root.hideKeyboard() }
+                .show()
+
+        dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
+    }
+
+    private fun showConfirmDeleteDialog(county: County) {
+        val dialogBinding = DialogConfirmDeleteBinding.inflate(layoutInflater)
+
+        MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.delete)
+                .setNegativeButton(R.string.cancel) { _, _ ->
+                }
+                .setPositiveButton(R.string.delete) { _, _ ->
+                    if (dialogBinding.countyName.text.toString() == county.name) {
+                        managerViewModel.deleteCounty(county.countyId)
+                    }
+                }
+                .setView(dialogBinding.root)
+                .setOnDismissListener { dialogBinding.root.hideKeyboard() }
+                .show()
+
+        dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
     }
 
     override fun onPause() {

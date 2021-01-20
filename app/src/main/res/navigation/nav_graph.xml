@@ -146,27 +146,5 @@
         android:id="@+id/manager_dest"
         android:name="com.louis.app.cavity.ui.manager.FragmentManager"
         android:label="FragmentManager"
-        tools:layout="@layout/fragment_manager">
-        <action
-            android:id="@+id/managerToCountyOptions"
-            app:destination="@id/county_options_dialog" />
-    </fragment>
-
-    <dialog
-        android:id="@+id/county_options_dialog"
-        android:name="com.louis.app.cavity.ui.manager.county.CountyOptionsBottomSheet"
-        tools:layout="@layout/bottom_sheet_county_options">
-        <argument
-            android:name="countyId"
-            app:argType="long" />
-        <argument
-            android:name="countyName"
-            app:argType="string" />
-        <argument
-            android:name="countyPrefOrder"
-            app:argType="integer" />
-        <argument
-            android:name="wineCount"
-            app:argType="integer" />
-    </dialog>
+        tools:layout="@layout/fragment_manager" />
 </navigation>

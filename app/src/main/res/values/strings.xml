@@ -156,9 +156,8 @@
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>
     <string name="counties">Régions</string>
-    <string name="rename_county">Renommer la région</string>
+    <string name="rename_county">Renommer</string>
     <string name="delete_county">Supprimer la région et son contenu</string>
-    <string name="delete_county_short">Supprimer la région</string>
     <string name="delete_county_warn">Supprimer cette région entraînera la supression de toutes les bouteilles et entrées dans l\'historique liées à cette région. Pour confirmer, entrez le nom de la région à supprimer.</string>
     <string name="contests">Concours</string>
     <string name="friends">Amis</string>

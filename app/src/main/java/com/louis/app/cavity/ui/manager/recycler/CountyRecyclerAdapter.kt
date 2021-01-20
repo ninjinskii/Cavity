@@ -1,20 +1,24 @@
 package com.louis.app.cavity.ui.manager.recycler
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemCountyManagerBinding
+import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.CountyWithWines
 import java.util.*
 
 class CountyRecyclerAdapter(
         private val onDragIconTouched: (RecyclerView.ViewHolder) -> Unit,
-        private val onOptionsClick: (CountyWithWines) -> Unit
-) :
-        RecyclerView.Adapter<CountyRecyclerAdapter.CountyViewHolder>() {
+        private val onRename: (County) -> Unit,
+        private val onDelete: (County) -> Unit
+) : RecyclerView.Adapter<CountyRecyclerAdapter.CountyViewHolder>() {
 
     private val counties = mutableListOf<CountyWithWines>()
 
@@ -65,7 +69,7 @@ class CountyRecyclerAdapter(
             }
 
             binding.buttonOptions.setOnClickListener {
-                onOptionsClick(counties[adapterPosition])
+                showPopup(it)
             }
         }
 
@@ -78,9 +82,24 @@ class CountyRecyclerAdapter(
                         context.resources.getQuantityString(R.plurals.wines, wines.size, wines.size)
             }
         }
-    }
 
-    interface DragListener {
-        fun requestDrag(viewHolder: RecyclerView.ViewHolder)
+        private fun showPopup(view: View) {
+            val county = counties[adapterPosition].county
+
+            PopupMenu(this.context, view).apply {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) setForceShowIcon(true)
+
+                menuInflater.inflate(R.menu.county_menu, menu)
+
+                setOnMenuItemClickListener {
+                    when(it.itemId) {
+                        R.id.edit_county -> onRename(county)
+                        R.id.delete_county -> onDelete(county)
+                    }
+                    true
+                }
+                show()
+            }
+        }
     }
 }
