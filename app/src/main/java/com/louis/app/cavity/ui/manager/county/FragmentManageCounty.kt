@@ -58,16 +58,15 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county),
     }
 
     private fun showOptionsDialog(countyWithWines: CountyWithWines) {
-        managerViewModel.deleteGrape(Grape(1, ""))
-//        val (county, wines) = countyWithWines
-//        val action = FragmentManagerDirections.managerToCountyOptions(
-//                county.countyId,
-//                county.name,
-//                county.prefOrder,
-//                wines.size
-//        )
-//
-//        findNavController().navigate(action)
+        val (county, wines) = countyWithWines
+        val action = FragmentManagerDirections.managerToCountyOptions(
+                county.countyId,
+                county.name,
+                county.prefOrder,
+                wines.size
+        )
+
+        findNavController().navigate(action)
     }
 
     override fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
