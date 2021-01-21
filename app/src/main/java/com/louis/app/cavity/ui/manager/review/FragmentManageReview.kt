@@ -41,7 +41,7 @@ class FragmentManageReview: Fragment(R.layout.fragment_manage_base) {
             editedString = review.contestName
         ) {
             val updatedReview = review.copy(contestName = it)
-            managerViewModel.updateReview(updatedReview)
+            //managerViewModel.updateReview(updatedReview)
         }
     }
 
@@ -51,7 +51,7 @@ class FragmentManageReview: Fragment(R.layout.fragment_manage_base) {
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->
-                managerViewModel.deleteReview(review)
+                //managerViewModel.deleteReview(review)
                 binding.coordinator.showSnackbar(R.string.review_deleted)
             }
             .show()

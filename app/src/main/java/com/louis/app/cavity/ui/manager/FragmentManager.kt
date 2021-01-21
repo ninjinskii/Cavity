@@ -3,15 +3,12 @@ package com.louis.app.cavity.ui.manager
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManagerBinding
-import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.util.setupNavigation
-import com.louis.app.cavity.util.showSnackbar
 
-class FragmentManager: Fragment(R.layout.fragment_manager) {
+class FragmentManager : Fragment(R.layout.fragment_manager) {
     private var _binding: FragmentManagerBinding? = null
     private val binding get() = _binding!!
 
@@ -25,22 +22,16 @@ class FragmentManager: Fragment(R.layout.fragment_manager) {
     }
 
     private fun setupWithViewPager() {
-        binding.viewPager.apply {
-            adapter = ManagerPagerAdapter(this@FragmentManager)
-            isUserInputEnabled = false
-        }
+        binding.viewPager.adapter = ManagerPagerAdapter(this@FragmentManager)
 
-        binding.tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                binding.viewPager.currentItem = tab?.position ?: 0
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            when(position) {
+                0 -> tab.text = getString(R.string.counties)
+                1 -> tab.text = getString(R.string.grapes)
+                2 -> tab.text = getString(R.string.reviews)
+                3 -> tab.text = getString(R.string.friends)
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
-        })
+        }.attach()
     }
 
     override fun onDestroyView() {
