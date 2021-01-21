@@ -6,7 +6,7 @@
         android:id="@+id/edit_item"
         android:icon="@drawable/ic_edit"
         android:iconTint="?attr/colorOnSurface"
-        android:title="@string/rename_county"
+        android:title="@string/rename"
         app:iconTint="?attr/colorOnSurface"
         tools:targetApi="o" />
 

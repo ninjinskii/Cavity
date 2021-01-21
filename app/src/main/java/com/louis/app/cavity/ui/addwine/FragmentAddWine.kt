@@ -6,16 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.doOnLayout
-import androidx.core.view.doOnNextLayout
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -24,12 +19,9 @@ import com.louis.app.cavity.databinding.DialogAddCountyBinding
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
-import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.*
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -145,20 +137,13 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     }
 
     private fun showDialog() {
-        val dialogBinding = DialogAddCountyBinding.inflate(layoutInflater)
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.add_county)
-            .setNegativeButton(R.string.cancel) { _, _ ->
-            }
-            .setPositiveButton(R.string.submit) { _, _ ->
-                addWineViewModel.addCounty(dialogBinding.countyName.text.toString().trim())
-            }
-            .setView(dialogBinding.root)
-            .setOnDismissListener { dialogBinding.root.hideKeyboard() }
-            .show()
-
-        dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
+        SimpleInputDialog(requireContext(), layoutInflater).show(
+            title = R.string.add_county,
+            hint = R.string.county,
+            icon = null,
+        ) {
+            addWineViewModel.addCounty(it)
+        }
     }
 
     private fun observe() {

@@ -34,6 +34,12 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun updateGrape(grape: Grape) {
+        viewModelScope.launch (IO) {
+            repository.updateGrape(grape)
+        }
+    }
+
     fun deleteGrape(grape: Grape) {
         viewModelScope.launch (IO) {
             repository.deleteGrape(grape)

@@ -68,7 +68,7 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
                 val bool = checkableReviews.map { it.isChecked }.toBooleanArray()
 
                 MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.select_grapes)
+                    .setTitle(R.string.select_reviews)
                     .setMultiChoiceItems(names, bool) { _, pos, checked ->
                         copy[pos].isChecked = checked
                     }
@@ -97,7 +97,7 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
         val dialogBinding = DialogAddReviewBinding.inflate(layoutInflater)
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.add_grape)
+            .setTitle(R.string.add_review)
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->

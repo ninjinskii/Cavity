@@ -4,7 +4,6 @@
     <string name="cancel">Annuler</string>
     <string name="save">Save</string>
     <string name="delete">Supprimer</string>
-    <string name="confirmation_delete">Supprimer le vin et ses bouteilles ?</string>
     <string name="next">Suivant</string>
     <string name="previous">Précédent</string>
     <string name="unknown">Non renseigné</string>
@@ -66,6 +65,7 @@
     <string name="wine_color_sweet">Liquoreux</string>
     <string name="wine_color_rose">Rosé</string>
     <string name="vintage_and_count">%1$d (%2$d)</string>
+    <string name="confirm_wine_delete">Supprimer le vin et ses bouteilles ?</string>
 
     <string name="step_1">1</string>
     <string name="step_2">2</string>
@@ -156,9 +156,12 @@
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>
     <string name="counties">Régions</string>
-    <string name="rename_county">Renommer</string>
+    <string name="rename">Renommer</string>
+    <string name="rename_county">Renommer la région</string>
+    <string name="rename_grape">Renommer le cépage</string>
     <string name="delete_county">Supprimer la région et son contenu</string>
     <string name="delete_county_warn">Supprimer cette région entraînera la supression de toutes les bouteilles et entrées dans l\'historique liées à cette région. Pour confirmer, entrez le nom de la région à supprimer.</string>
+    <string name="confirm_grape_delete">Supprimer le cépage ?</string>
     <string name="contests">Concours</string>
     <string name="friends">Amis</string>
     <string name="cannot_delete">Les noms ne correspondent pas.</string>

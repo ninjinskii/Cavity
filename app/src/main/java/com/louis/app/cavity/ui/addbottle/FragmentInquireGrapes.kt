@@ -9,6 +9,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddGrapeBinding
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.adapter.QuantifiedGrapeRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeViewModel
@@ -93,21 +94,13 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     }
 
     private fun showAddGrapeDialog() {
-        val dialogBinding = DialogAddGrapeBinding.inflate(layoutInflater)
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.add_grape)
-            .setNegativeButton(R.string.cancel) { _, _ ->
-            }
-            .setPositiveButton(R.string.submit) { _, _ ->
-                val name = dialogBinding.grapeName.text.toString()
-                grapeViewModel.insertGrape(name)
-            }
-            .setView(dialogBinding.root)
-            .setOnDismissListener { dialogBinding.root.hideKeyboard() }
-            .show()
-
-        dialogBinding.grapeName.post { dialogBinding.grapeName.showKeyboard() }
+        SimpleInputDialog(requireContext(), layoutInflater).show(
+            title = R.string.add_grape,
+            hint = R.string.grape_name,
+            icon = R.drawable.ic_grape,
+        ) {
+            grapeViewModel.insertGrape(it)
+        }
     }
 
     private fun toggleRvPlaceholder(toggle: Boolean) {

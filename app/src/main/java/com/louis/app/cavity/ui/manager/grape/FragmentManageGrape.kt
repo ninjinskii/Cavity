@@ -5,9 +5,11 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageGrapeBinding
 import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.ManagerViewModel
 
 class FragmentManageGrape : Fragment(R.layout.fragment_manage_grape) {
@@ -28,8 +30,8 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_grape) {
 
     private fun initRecyclerView() {
         val grapeAdapter = GrapeRecylerAdapter(
-            onRename = { grape: Grape -> },
-            onDelete = { grape: Grape -> }
+            onRename = { grape: Grape -> showEditGrapeDialog(grape) },
+            onDelete = { grape: Grape -> showConfirmDeleteDialog(grape) }
         )
 
         binding.recyclerView.apply {
@@ -41,6 +43,29 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_grape) {
         managerViewModel.getGrapeWithQuantifiedGrapes().observe(viewLifecycleOwner) {
             grapeAdapter.submitList(it)
         }
+    }
+
+    private fun showEditGrapeDialog(grape: Grape) {
+        SimpleInputDialog(requireContext(), layoutInflater).showForEdit(
+            title = R.string.rename_grape,
+            hint = R.string.grape_name,
+            icon = R.drawable.ic_grape,
+            editedString = grape.name
+        ) {
+            val updatedGrape = grape.copy(name = it)
+            managerViewModel.updateGrape(updatedGrape)
+        }
+    }
+
+    private fun showConfirmDeleteDialog(grape: Grape) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage(R.string.confirm_grape_delete)
+            .setNegativeButton(R.string.cancel) { _, _ ->
+            }
+            .setPositiveButton(R.string.submit) { _, _ ->
+                managerViewModel.deleteGrape(grape)
+            }
+            .show()
     }
 
     override fun onDestroyView() {

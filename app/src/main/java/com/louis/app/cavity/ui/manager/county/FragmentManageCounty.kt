@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.DialogAddCountyBinding
 import com.louis.app.cavity.databinding.DialogConfirmDeleteBinding
 import com.louis.app.cavity.databinding.FragmentManageCountyBinding
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.ManagerViewModel
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.hideKeyboard
@@ -24,12 +24,12 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county) {
 
     // TODO: Check VM scope carefully
     private val managerViewModel: ManagerViewModel by viewModels(
-            ownerProducer = { requireParentFragment() }
+        ownerProducer = { requireParentFragment() }
     )
-    private val countyAdapter = CountyRecyclerAdapter (
-            onDragIconTouched = { vh: RecyclerView.ViewHolder -> requestDrag(vh) },
-            onRename = { county: County -> showEditCountyDialog(county) },
-            onDelete = { county: County -> showConfirmDeleteDialog(county) }
+    private val countyAdapter = CountyRecyclerAdapter(
+        onDragIconTouched = { vh: RecyclerView.ViewHolder -> requestDrag(vh) },
+        onRename = { county: County -> showEditCountyDialog(county) },
+        onDelete = { county: County -> showConfirmDeleteDialog(county) }
     )
     private lateinit var itemTouchHelper: ItemTouchHelper
 
@@ -66,41 +66,33 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county) {
     }
 
     private fun showEditCountyDialog(county: County) {
-        val dialogBinding = DialogAddCountyBinding.inflate(layoutInflater)
-        dialogBinding.countyName.setText(county.name)
-        dialogBinding.countyName.setSelection(county.name.length)
-
-        MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.rename_county)
-                .setNegativeButton(R.string.cancel) { _, _ ->
-                }
-                .setPositiveButton(R.string.submit) { _, _ ->
-                    val name = dialogBinding.countyName.text.toString()
-                    val updatedCounty = County(county.countyId, name, county.prefOrder)
-                    managerViewModel.updateCounty(updatedCounty)
-                }
-                .setView(dialogBinding.root)
-                .setOnDismissListener { dialogBinding.root.hideKeyboard() }
-                .show()
-
-        dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
+        SimpleInputDialog(requireContext(), layoutInflater).showForEdit(
+            title = R.string.rename_county,
+            hint = R.string.county,
+            icon = null,
+            editedString = county.name
+        ) {
+            val updatedCounty = county.copy(name = it)
+            managerViewModel.updateCounty(updatedCounty)
+        }
     }
 
     private fun showConfirmDeleteDialog(county: County) {
         val dialogBinding = DialogConfirmDeleteBinding.inflate(layoutInflater)
 
         MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.delete)
-                .setNegativeButton(R.string.cancel) { _, _ ->
+            .setTitle(R.string.delete)
+            .setMessage(R.string.delete_county_warn)
+            .setNegativeButton(R.string.cancel) { _, _ ->
+            }
+            .setPositiveButton(R.string.delete) { _, _ ->
+                if (dialogBinding.countyName.text.toString() == county.name) {
+                    managerViewModel.deleteCounty(county.countyId)
                 }
-                .setPositiveButton(R.string.delete) { _, _ ->
-                    if (dialogBinding.countyName.text.toString() == county.name) {
-                        managerViewModel.deleteCounty(county.countyId)
-                    }
-                }
-                .setView(dialogBinding.root)
-                .setOnDismissListener { dialogBinding.root.hideKeyboard() }
-                .show()
+            }
+            .setView(dialogBinding.root)
+            .setOnDismissListener { dialogBinding.root.hideKeyboard() }
+            .show()
 
         dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
     }
