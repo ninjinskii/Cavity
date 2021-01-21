@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogConfirmDeleteBinding
-import com.louis.app.cavity.databinding.FragmentManageCountyBinding
+import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.ManagerViewModel
@@ -18,8 +18,8 @@ import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showKeyboard
 
-class FragmentManageCounty : Fragment(R.layout.fragment_manage_county) {
-    private var _binding: FragmentManageCountyBinding? = null
+class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
+    private var _binding: FragmentManageBaseBinding? = null
     private val binding get() = _binding!!
 
     // TODO: Check VM scope carefully
@@ -35,7 +35,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_county) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentManageCountyBinding.bind(view)
+        _binding = FragmentManageBaseBinding.bind(view)
 
         // Ensuring we are scoping our VM to the good fragment
         L.v("${requireParentFragment()}")

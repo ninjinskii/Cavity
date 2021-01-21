@@ -7,13 +7,13 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.FragmentManageGrapeBinding
+import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.ManagerViewModel
 
-class FragmentManageGrape : Fragment(R.layout.fragment_manage_grape) {
-    private var _binding: FragmentManageGrapeBinding? = null
+class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
+    private var _binding: FragmentManageBaseBinding? = null
     private val binding get() = _binding!!
 
     // TODO: Check VM scope carefully
@@ -23,7 +23,7 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_grape) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentManageGrapeBinding.bind(view)
+        _binding = FragmentManageBaseBinding.bind(view)
 
         initRecyclerView()
     }
