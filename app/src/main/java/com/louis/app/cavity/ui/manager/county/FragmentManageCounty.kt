@@ -17,6 +17,7 @@ import com.louis.app.cavity.ui.manager.ManagerViewModel
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showKeyboard
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
     private var _binding: FragmentManageBaseBinding? = null
@@ -88,6 +89,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
             .setPositiveButton(R.string.delete) { _, _ ->
                 if (dialogBinding.countyName.text.toString() == county.name) {
                     managerViewModel.deleteCounty(county.countyId)
+                    binding.coordinator.showSnackbar(R.string.county_deleted)
                 }
             }
             .setView(dialogBinding.root)

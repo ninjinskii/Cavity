@@ -11,6 +11,7 @@ import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.ManagerViewModel
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
     private var _binding: FragmentManageBaseBinding? = null
@@ -64,6 +65,7 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
             }
             .setPositiveButton(R.string.submit) { _, _ ->
                 managerViewModel.deleteGrape(grape)
+                binding.coordinator.showSnackbar(R.string.grape_deleted)
             }
             .show()
     }
