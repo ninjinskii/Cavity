@@ -15,22 +15,22 @@ import com.louis.app.cavity.model.relation.CountyWithWines
 import java.util.*
 
 class CountyRecyclerAdapter(
-        private val onDragIconTouched: (RecyclerView.ViewHolder) -> Unit,
-        private val onRename: (County) -> Unit,
-        private val onDelete: (County) -> Unit
+    private val onDragIconTouched: (RecyclerView.ViewHolder) -> Unit,
+    private val onRename: (County) -> Unit,
+    private val onDelete: (County) -> Unit
 ) : RecyclerView.Adapter<CountyRecyclerAdapter.CountyViewHolder>() {
 
     private val counties = mutableListOf<CountyWithWines>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountyViewHolder {
         val binding =
-                ItemCountyManagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemCountyManagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return CountyViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CountyViewHolder, position: Int) =
-            holder.bind(counties[position])
+        holder.bind(counties[position])
 
     override fun getItemId(position: Int): Long {
         return counties[position].county.countyId
@@ -56,7 +56,7 @@ class CountyRecyclerAdapter(
     // Clicking on the drag icon does nothing anyway
     @SuppressLint("ClickableViewAccessibility")
     inner class CountyViewHolder(private val binding: ItemCountyManagerBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
         private val context = binding.root.context
 
         init {
@@ -79,22 +79,22 @@ class CountyRecyclerAdapter(
             with(binding) {
                 countyName.text = county.name
                 wineCount.text =
-                        context.resources.getQuantityString(R.plurals.wines, wines.size, wines.size)
+                    context.resources.getQuantityString(R.plurals.wines, wines.size, wines.size)
             }
         }
 
         private fun showPopup(view: View) {
             val county = counties[adapterPosition].county
 
-            PopupMenu(this.context, view).apply {
+            PopupMenu(context, view).apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) setForceShowIcon(true)
 
-                menuInflater.inflate(R.menu.county_menu, menu)
+                menuInflater.inflate(R.menu.rename_delete_menu, menu)
 
                 setOnMenuItemClickListener {
-                    when(it.itemId) {
-                        R.id.edit_county -> onRename(county)
-                        R.id.delete_county -> onDelete(county)
+                    when (it.itemId) {
+                        R.id.edit_item -> onRename(county)
+                        R.id.delete_item -> onDelete(county)
                     }
                     true
                 }

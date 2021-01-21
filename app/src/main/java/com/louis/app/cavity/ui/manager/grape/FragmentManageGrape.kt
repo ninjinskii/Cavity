@@ -7,14 +7,16 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageGrapeBinding
+import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.manager.ManagerViewModel
 
-class FragmentManageGrape: Fragment(R.layout.fragment_manage_grape) {
+class FragmentManageGrape : Fragment(R.layout.fragment_manage_grape) {
     private var _binding: FragmentManageGrapeBinding? = null
     private val binding get() = _binding!!
+
     // TODO: Check VM scope carefully
     private val managerViewModel: ManagerViewModel by viewModels(
-            ownerProducer = { requireParentFragment() }
+        ownerProducer = { requireParentFragment() }
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -25,14 +27,19 @@ class FragmentManageGrape: Fragment(R.layout.fragment_manage_grape) {
     }
 
     private fun initRecyclerView() {
+        val grapeAdapter = GrapeRecylerAdapter(
+            onRename = { grape: Grape -> },
+            onDelete = { grape: Grape -> }
+        )
+
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
-            adapter =
+            adapter = grapeAdapter
         }
 
         managerViewModel.getGrapeWithQuantifiedGrapes().observe(viewLifecycleOwner) {
-
+            grapeAdapter.submitList(it)
         }
     }
 

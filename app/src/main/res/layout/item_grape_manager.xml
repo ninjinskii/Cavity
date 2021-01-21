@@ -6,22 +6,22 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/countyName"
+        android:id="@+id/grapeName"
         style="@style/TextAppearance.MaterialComponents.Headline5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/medium_margin"
         android:layout_marginTop="@dimen/small_margin"
-        android:maxLines="1"
         android:ellipsize="end"
-        app:layout_constraintBottom_toTopOf="@id/wineCount"
+        android:maxLines="1"
+        app:layout_constraintBottom_toTopOf="@id/bottleCount"
         app:layout_constraintEnd_toStartOf="@id/buttonOptions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Alsace" />
+        tools:text="Syrah" />
 
     <TextView
-        android:id="@+id/wineCount"
+        android:id="@+id/bottleCount"
         style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -30,8 +30,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/buttonOptions"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/countyName"
-        tools:text="12 vins" />
+        app:layout_constraintTop_toBottomOf="@id/grapeName"
+        tools:text="12 bouteilles" />
 
     <ImageButton
         android:id="@+id/buttonOptions"
@@ -40,20 +40,8 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_options"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/drag"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorOnBackground" />
-
-    <ImageButton
-        android:id="@+id/drag"
-        android:layout_width="@dimen/medium_icon"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/small_margin"
-        android:background="@null"
-        android:src="@drawable/ic_reorder"
-        android:tint="?attr/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
