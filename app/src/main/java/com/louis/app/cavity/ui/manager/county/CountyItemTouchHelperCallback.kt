@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.manager.recycler
+package com.louis.app.cavity.ui.manager.county
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*

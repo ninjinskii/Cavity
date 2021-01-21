@@ -14,6 +14,8 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getCountiesWithWines() = repository.getCountiesWithWines()
 
+    fun getGrapeWithQuantifiedGrapes() = repository.getGrapeWithQuantifiedGrapes()
+
     fun updateCounty(county: County) {
         viewModelScope.launch(IO) {
             repository.updateCounty(county)

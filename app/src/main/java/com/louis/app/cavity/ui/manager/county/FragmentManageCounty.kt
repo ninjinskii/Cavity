@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.manager.county
 
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,8 +14,6 @@ import com.louis.app.cavity.databinding.DialogConfirmDeleteBinding
 import com.louis.app.cavity.databinding.FragmentManageCountyBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.manager.ManagerViewModel
-import com.louis.app.cavity.ui.manager.recycler.CountyItemTouchHelperCallback
-import com.louis.app.cavity.ui.manager.recycler.CountyRecyclerAdapter
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showKeyboard

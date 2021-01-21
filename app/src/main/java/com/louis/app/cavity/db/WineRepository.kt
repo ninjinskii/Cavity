@@ -41,6 +41,8 @@ class WineRepository private constructor(app: Application) {
     suspend fun deleteGrape(grape: Grape) = grapeDao.deleteGrape(grape)
     suspend fun insertGrape(grape: Grape) = grapeDao.insertGrape(grape)
 
+    fun getGrapeWithQuantifiedGrapes() = grapeDao.getGrapeWithQuantifiedGrapes()
+
     suspend fun insertQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
         qGrapeDao.insertQuantifiedGrape(qGrape)
 
