@@ -3,6 +3,8 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.relation.GrapeWithQuantifiedGrapes
+import com.louis.app.cavity.model.relation.ReviewWithFilledReviews
 
 @Dao
 interface ReviewDao {
@@ -20,4 +22,8 @@ interface ReviewDao {
 
     @Query("SELECT * FROM review")
     fun getAllReviewsNotLive(): List<Review>
+
+    @Transaction
+    @Query("SELECT * FROM review")
+    fun getReviewWithFilledReviews(): LiveData<List<ReviewWithFilledReviews>>
 }

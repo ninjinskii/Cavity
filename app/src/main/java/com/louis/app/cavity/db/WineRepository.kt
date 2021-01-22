@@ -68,6 +68,8 @@ class WineRepository private constructor(app: Application) {
     suspend fun deleteReview(review: Review) = reviewDao.deleteReview(review)
     suspend fun insertReview(review: Review) = reviewDao.insertReview(review)
 
+    fun getReviewWithFilledReviews() = reviewDao.getReviewWithFilledReviews()
+
     suspend fun insertFilledReview(fReview: FilledBottleReviewXRef) =
         fReviewDao.insertFilledReview(fReview)
 

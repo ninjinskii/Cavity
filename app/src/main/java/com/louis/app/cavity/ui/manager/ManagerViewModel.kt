@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.Review
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -15,6 +16,8 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     fun getCountiesWithWines() = repository.getCountiesWithWines()
 
     fun getGrapeWithQuantifiedGrapes() = repository.getGrapeWithQuantifiedGrapes()
+
+    fun getReviewWithFilledReviews() = repository.getReviewWithFilledReviews()
 
     fun updateCounty(county: County) {
         viewModelScope.launch(IO) {
@@ -35,14 +38,26 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun updateGrape(grape: Grape) {
-        viewModelScope.launch (IO) {
+        viewModelScope.launch(IO) {
             repository.updateGrape(grape)
         }
     }
 
     fun deleteGrape(grape: Grape) {
-        viewModelScope.launch (IO) {
+        viewModelScope.launch(IO) {
             repository.deleteGrape(grape)
+        }
+    }
+
+    fun updateReview(review: Review) {
+        viewModelScope.launch(IO) {
+            repository.updateReview(review)
+        }
+    }
+
+    fun deleteReview(review: Review) {
+        viewModelScope.launch(IO) {
+            repository.deleteReview(review)
         }
     }
 }

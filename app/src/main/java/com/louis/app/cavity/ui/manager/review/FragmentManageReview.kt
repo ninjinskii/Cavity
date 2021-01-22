@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageBaseBinding
@@ -30,18 +32,30 @@ class FragmentManageReview: Fragment(R.layout.fragment_manage_base) {
     }
 
     private fun initRecyclerView() {
+        val reviewAdapter = ReviewRecyclerAdapter(
+            onRename = { review: Review -> showEditReviewDialog(review) },
+            onDelete = { review: Review -> showConfirmDeleteDialog(review) }
+        )
 
+        binding.recyclerView.apply {
+            adapter = reviewAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
+        managerViewModel.getReviewWithFilledReviews().observe(viewLifecycleOwner) {
+            reviewAdapter.submitList(it)
+        }
     }
 
     private fun showEditReviewDialog(review: Review) {
         SimpleInputDialog(requireContext(), layoutInflater).showForEdit(
             title = R.string.rename_review,
             hint = R.string.review,
-            icon = R.drawable.ic_grade,
+            icon = R.drawable.ic_contest,
             editedString = review.contestName
         ) {
             val updatedReview = review.copy(contestName = it)
-            //managerViewModel.updateReview(updatedReview)
+            managerViewModel.updateReview(updatedReview)
         }
     }
 
@@ -51,7 +65,7 @@ class FragmentManageReview: Fragment(R.layout.fragment_manage_base) {
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->
-                //managerViewModel.deleteReview(review)
+                managerViewModel.deleteReview(review)
                 binding.coordinator.showSnackbar(R.string.review_deleted)
             }
             .show()

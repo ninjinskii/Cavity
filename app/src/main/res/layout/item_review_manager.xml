@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/grapeName"
+        android:id="@+id/reviewName"
         style="@style/TextAppearance.MaterialComponents.Headline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,14 +15,14 @@
         android:drawablePadding="4dp"
         android:ellipsize="end"
         android:maxLines="1"
-        app:drawableStartCompat="@drawable/ic_grape"
+        app:drawableStartCompat="@drawable/ic_contest"
         app:drawableTint="?attr/colorPrimary"
         app:layout_constraintBottom_toTopOf="@id/bottleCount"
-        app:layout_constraintEnd_toStartOf="@id/buttonOptions"
+        app:layout_constraintEnd_toStartOf="@id/reviewType"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Syrah" />
+        tools:text="Concours Parker" />
 
     <TextView
         android:id="@+id/bottleCount"
@@ -34,8 +34,28 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/buttonOptions"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/grapeName"
+        app:layout_constraintTop_toBottomOf="@id/reviewName"
         tools:text="12 bouteilles" />
+
+    <TextView
+        android:id="@+id/reviewType"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonOptions"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+<!--    <ImageView-->
+<!--        android:id="@+id/reviewType"-->
+<!--        android:layout_width="@dimen/small_icon"-->
+<!--        android:layout_height="@dimen/small_icon"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/buttonOptions"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:tint="?attr/colorOnBackground"-->
+<!--        tools:src="@drawable/ic_grade" />-->
 
     <ImageButton
         android:id="@+id/buttonOptions"
