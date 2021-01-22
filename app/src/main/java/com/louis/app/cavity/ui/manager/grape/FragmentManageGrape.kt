@@ -27,6 +27,8 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
         _binding = FragmentManageBaseBinding.bind(view)
 
         initRecyclerView()
+        observe()
+        setListener()
     }
 
     private fun initRecyclerView() {
@@ -43,6 +45,28 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
 
         managerViewModel.getGrapeWithQuantifiedGrapes().observe(viewLifecycleOwner) {
             grapeAdapter.submitList(it)
+        }
+    }
+
+    private fun observe() {
+        managerViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+    }
+
+    private fun setListener() {
+        binding.fab.setOnClickListener { showAddGrapeDialog() }
+    }
+
+    private fun showAddGrapeDialog() {
+        SimpleInputDialog(requireContext(), layoutInflater).show(
+            title = R.string.add_grape,
+            hint = R.string.grape_name,
+            icon = R.drawable.ic_grape
+        ) {
+            managerViewModel.addGrape(it)
         }
     }
 
