@@ -94,13 +94,15 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     }
 
     private fun showAddGrapeDialog() {
-        SimpleInputDialog(requireContext(), layoutInflater).show(
+        val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.add_grape,
             hint = R.string.grape_name,
-            icon = R.drawable.ic_grape,
+            icon = R.drawable.ic_grape
         ) {
             grapeViewModel.insertGrape(it)
         }
+
+        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
     }
 
     private fun toggleRvPlaceholder(toggle: Boolean) {

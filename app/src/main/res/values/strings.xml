@@ -172,6 +172,7 @@
     <string name="grape_added">Cépage ajouté.</string>
     <string name="review_deleted">Avis d\'expert supprimé.</string>
     <string name="review_renamed">Avis d\'expert renommé.</string>
+    <string name="review_added">Avis d\'expert créé.</string>
     <string name="contests">Concours</string>
     <string name="friends">Amis</string>
     <string name="cannot_delete">Les noms ne correspondent pas.</string>

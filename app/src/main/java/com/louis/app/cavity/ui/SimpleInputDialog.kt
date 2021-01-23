@@ -11,39 +11,22 @@ import com.louis.app.cavity.databinding.DialogSimpleInputBinding
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showKeyboard
 
-class SimpleInputDialog(
-    private val context: Context,
-    private val layoutInflater: LayoutInflater,
-) {
-    private val dialogBinding by lazy {
-        DialogSimpleInputBinding.inflate(layoutInflater)
+class SimpleInputDialog(private val context: Context, private val layoutInflater: LayoutInflater) {
+    private lateinit var dialogBinding: DialogSimpleInputBinding
+
+    fun show(resources: DialogContent) {
+        dialogBinding = DialogSimpleInputBinding.inflate(layoutInflater)
+        buildAndShow(resources)
     }
 
-    fun show(
-        @StringRes title: Int,
-        @StringRes hint: Int,
-        @DrawableRes icon: Int?,
-        onPositiveClick: (String) -> Unit
-    ) {
-        customizeEditText(hint, icon)
-        buildAndShow(title, onPositiveClick)
-    }
-
-    fun showForEdit(
-        @StringRes title: Int,
-        @StringRes hint: Int,
-        @DrawableRes icon: Int?,
-        editedString: String,
-        onPositiveClick: (String) -> Unit
-    ) {
-        customizeEditText(hint, icon)
-
+    fun showForEdit(resources: DialogContent, editedString: String) {
+        dialogBinding = DialogSimpleInputBinding.inflate(layoutInflater)
         dialogBinding.input.apply {
             setText(editedString)
             setSelection(editedString.length)
         }
 
-        buildAndShow(title, onPositiveClick)
+        buildAndShow(resources)
     }
 
     private fun customizeEditText(@StringRes hint: Int, @DrawableRes icon: Int?) {
@@ -53,19 +36,31 @@ class SimpleInputDialog(
         }
     }
 
-    private fun buildAndShow(@StringRes title: Int, onPositiveClick: (String) -> Unit) {
-        MaterialAlertDialogBuilder(context)
-            .setTitle(title)
+    private fun buildAndShow(resources: DialogContent) {
+        customizeEditText(resources.hint, resources.icon)
+
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setTitle(resources.title)
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->
                 val input = dialogBinding.input.text.toString().trim()
-                onPositiveClick(input)
+                resources.onPositiveClick(input)
             }
             .setView(dialogBinding.root)
             .setOnDismissListener { dialogBinding.root.hideKeyboard() }
-            .show()
+
+        resources.message?.let { dialog.setMessage(context.getString(it)) }
+        dialog.show()
 
         dialogBinding.input.post { dialogBinding.input.showKeyboard() }
     }
+
+    data class DialogContent(
+        @StringRes val title: Int,
+        @StringRes val message: Int? = null,
+        @StringRes val hint: Int,
+        @DrawableRes val icon: Int? = null,
+        val onPositiveClick: (String) -> Unit,
+    )
 }

@@ -22,6 +22,7 @@ import com.louis.app.cavity.util.showSnackbar
 class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
     private var _binding: FragmentManageBaseBinding? = null
     private val binding get() = _binding!!
+    private lateinit var simpleInputDialog: SimpleInputDialog
 
     // TODO: Check VM scope carefully
     private val managerViewModel: ManagerViewModel by viewModels(
@@ -37,6 +38,9 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentManageBaseBinding.bind(view)
+
+        simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater)
+
 
         // Ensuring we are scoping our VM to the good fragment
         L.v("${requireParentFragment()}")
@@ -81,25 +85,26 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
     }
 
     private fun showAddCountyDialog() {
-        SimpleInputDialog(requireContext(), layoutInflater).show(
+        val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.add_county,
-            hint = R.string.county,
-            icon = null,
+            hint = R.string.county
         ) {
             managerViewModel.addCounty(it)
         }
+
+        simpleInputDialog.show(dialogResources)
     }
 
     private fun showEditCountyDialog(county: County) {
-        SimpleInputDialog(requireContext(), layoutInflater).showForEdit(
+        val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.rename_county,
-            hint = R.string.county,
-            icon = null,
-            editedString = county.name
+            hint = R.string.county
         ) {
             val updatedCounty = county.copy(name = it)
             managerViewModel.updateCounty(updatedCounty)
         }
+
+        simpleInputDialog.showForEdit(dialogResources, county.name)
     }
 
     private fun showConfirmDeleteDialog(county: County) {

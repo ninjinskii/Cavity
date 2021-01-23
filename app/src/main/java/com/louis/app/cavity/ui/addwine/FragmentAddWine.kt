@@ -137,13 +137,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     }
 
     private fun showDialog() {
-        SimpleInputDialog(requireContext(), layoutInflater).show(
+        val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.add_county,
-            hint = R.string.county,
-            icon = null,
+            hint = R.string.county
         ) {
             addWineViewModel.addCounty(it)
         }
+
+        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
     }
 
     private fun observe() {

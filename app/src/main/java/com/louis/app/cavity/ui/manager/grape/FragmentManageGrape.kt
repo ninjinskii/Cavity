@@ -17,6 +17,8 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
     private var _binding: FragmentManageBaseBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var simpleInputDialog: SimpleInputDialog
+
     // TODO: Check VM scope carefully
     private val managerViewModel: ManagerViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
@@ -25,6 +27,8 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentManageBaseBinding.bind(view)
+
+        simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater)
 
         initRecyclerView()
         observe()
@@ -61,25 +65,28 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
     }
 
     private fun showAddGrapeDialog() {
-        SimpleInputDialog(requireContext(), layoutInflater).show(
+        val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.add_grape,
             hint = R.string.grape_name,
             icon = R.drawable.ic_grape
         ) {
             managerViewModel.addGrape(it)
         }
+
+        simpleInputDialog.show(dialogResources)
     }
 
     private fun showEditGrapeDialog(grape: Grape) {
-        SimpleInputDialog(requireContext(), layoutInflater).showForEdit(
+        val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.rename_grape,
             hint = R.string.grape_name,
-            icon = R.drawable.ic_grape,
-            editedString = grape.name
+            icon = R.drawable.ic_grape
         ) {
             val updatedGrape = grape.copy(name = it)
             managerViewModel.updateGrape(updatedGrape)
         }
+
+        simpleInputDialog.show(dialogResources)
     }
 
     private fun showConfirmDeleteDialog(grape: Grape) {
@@ -89,7 +96,6 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
             }
             .setPositiveButton(R.string.submit) { _, _ ->
                 managerViewModel.deleteGrape(grape)
-                binding.coordinator.showSnackbar(R.string.grape_deleted)
             }
             .show()
     }

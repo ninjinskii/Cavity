@@ -97,6 +97,18 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun addReview(contestName: String, type: Int) {
+        viewModelScope.launch(IO) {
+            val reviews = repository.getAllReviewsNotLive().map { it.contestName }
+
+            if (contestName !in reviews) {
+                repository.insertReview(Review(reviewId = 0, contestName, type))
+            } else {
+                _userFeedback.postOnce(R.string.contest_name_already_exist)
+            }
+        }
+    }
+
     fun updateReview(review: Review) {
         viewModelScope.launch(IO) {
             repository.updateReview(review)
