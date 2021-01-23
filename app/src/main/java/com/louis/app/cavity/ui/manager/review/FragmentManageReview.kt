@@ -37,7 +37,6 @@ class FragmentManageReview: Fragment(R.layout.fragment_manage_base) {
         simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater)
 
         initRecyclerView()
-        setListener()
     }
 
     private fun initRecyclerView() {
@@ -54,31 +53,6 @@ class FragmentManageReview: Fragment(R.layout.fragment_manage_base) {
         managerViewModel.getReviewWithFilledReviews().observe(viewLifecycleOwner) {
             reviewAdapter.submitList(it)
         }
-    }
-
-    private fun setListener() {
-        binding.fab.setOnClickListener { showAddReviewDialog() }
-    }
-
-    private fun showAddReviewDialog() {
-        val dialogBinding = DialogAddReviewBinding.inflate(layoutInflater)
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.add_review)
-            .setNegativeButton(R.string.cancel) { _, _ ->
-            }
-            .setPositiveButton(R.string.submit) { _, _ ->
-                val name = dialogBinding.contestName.text.toString()
-                val type = getReviewType(dialogBinding.rbGroupType.checkedButtonId)
-
-                managerViewModel.addReview(name, type)
-            }
-            .setView(dialogBinding.root)
-            .setOnDismissListener { dialogBinding.root.hideKeyboard() }
-            .show()
-
-        dialogBinding.contestName.post { dialogBinding.contestName.showKeyboard() }
-        dialogBinding.rbMedal.performClick()
     }
 
     private fun showEditReviewDialog(review: Review) {
@@ -104,13 +78,6 @@ class FragmentManageReview: Fragment(R.layout.fragment_manage_base) {
                 binding.coordinator.showSnackbar(R.string.review_deleted)
             }
             .show()
-    }
-
-    private fun getReviewType(@IdRes button: Int) = when (button) {
-        R.id.rbMedal -> 0
-        R.id.rbRate20 -> 1
-        R.id.rbRate100 -> 2
-        else -> 3
     }
 
     override fun onDestroyView() {

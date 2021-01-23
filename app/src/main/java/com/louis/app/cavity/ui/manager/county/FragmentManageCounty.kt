@@ -46,8 +46,6 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
         L.v("${requireParentFragment()}")
 
         initRecyclerView()
-        observe()
-        setListener()
     }
 
     private fun initRecyclerView() {
@@ -68,31 +66,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
     }
 
     private fun requestDrag(viewHolder: RecyclerView.ViewHolder) {
-        //binding.recyclerView.itemAnimator = null
         itemTouchHelper.startDrag(viewHolder)
-    }
-
-    private fun observe() {
-        managerViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
-            }
-        }
-    }
-
-    private fun setListener() {
-        binding.fab.setOnClickListener { showAddCountyDialog() }
-    }
-
-    private fun showAddCountyDialog() {
-        val dialogResources = SimpleInputDialog.DialogContent(
-            title = R.string.add_county,
-            hint = R.string.county
-        ) {
-            managerViewModel.addCounty(it)
-        }
-
-        simpleInputDialog.show(dialogResources)
     }
 
     private fun showEditCountyDialog(county: County) {

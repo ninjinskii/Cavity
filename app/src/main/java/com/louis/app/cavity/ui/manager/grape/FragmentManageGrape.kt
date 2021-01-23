@@ -31,8 +31,6 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
         simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater)
 
         initRecyclerView()
-        observe()
-        setListener()
     }
 
     private fun initRecyclerView() {
@@ -50,30 +48,6 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
         managerViewModel.getGrapeWithQuantifiedGrapes().observe(viewLifecycleOwner) {
             grapeAdapter.submitList(it)
         }
-    }
-
-    private fun observe() {
-        managerViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
-            }
-        }
-    }
-
-    private fun setListener() {
-        binding.fab.setOnClickListener { showAddGrapeDialog() }
-    }
-
-    private fun showAddGrapeDialog() {
-        val dialogResources = SimpleInputDialog.DialogContent(
-            title = R.string.add_grape,
-            hint = R.string.grape_name,
-            icon = R.drawable.ic_grape
-        ) {
-            managerViewModel.addGrape(it)
-        }
-
-        simpleInputDialog.show(dialogResources)
     }
 
     private fun showEditGrapeDialog(grape: Grape) {
