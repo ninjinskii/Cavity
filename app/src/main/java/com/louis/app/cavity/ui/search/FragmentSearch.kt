@@ -23,6 +23,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -33,6 +34,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private val binding get() = _binding!!
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private val recyclerViewDisabler = RecyclerViewDisabler()
     private val searchViewModel: SearchViewModel by activityViewModels()
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
     private val upperBoundHeight by lazy { fetchUpperBoundHeight() }
@@ -266,9 +268,16 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun toggleBackdrop() {
-        bottomSheetBehavior.run {
-            if (isExpanded() || isCollapsed())
+        with(bottomSheetBehavior) {
+            if (isExpanded()) {
+                binding.scrim.alpha = 0.76F
+                binding.recyclerView.addOnItemTouchListener(recyclerViewDisabler)
                 toggleState()
+            } else if (isCollapsed()) {
+                binding.scrim.alpha = 0F
+                binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+                toggleState()
+            }
         }
     }
 
