@@ -51,7 +51,11 @@ class FilterText(private val query: String) : WineFilter {
 
 class FilterPrice(private val minPrice: Int, private val maxPrice: Int) : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine> {
-        return bottlesAndWine.filter { it.price in minPrice..maxPrice }
+        return if (minPrice == maxPrice && maxPrice != 0) {
+            bottlesAndWine.filter { it.price > maxPrice }
+        } else {
+            bottlesAndWine.filter { it.price in minPrice..maxPrice }
+        }
     }
 }
 
