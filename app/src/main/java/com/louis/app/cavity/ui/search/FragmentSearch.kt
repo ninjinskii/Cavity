@@ -9,6 +9,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
+import androidx.core.view.doOnNextLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -73,7 +74,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     // Needed for split screen
     private fun setBottomSheetPeekHeight() {
-        binding.untilLayout.doOnLayout { upperBound ->
+        binding.root.doOnLayout {
+            val upperBound = binding.warning
             val display = activity?.window?.decorView?.height
             val location = IntArray(2)
 
@@ -88,13 +90,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
                 bottomSheetBehavior.peekHeight = peekHeight
             }
-
-            removeStubChip()
         }
-    }
-
-    private fun removeStubChip() {
-        binding.countyChipGroup.removeAllViews()
     }
 
     private fun initCountyChips() {
@@ -339,8 +335,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun fetchBackdropHeaderHeight() = binding.backdropHeader.height
 
-    private fun fetchUpperBoundHeight() =
-        binding.untilLayout.height + resources.getDimension(R.dimen.small_margin).toInt()
+    private fun fetchUpperBoundHeight() = binding.untilLayout.height
 
     private fun loadRevealShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.show_elevation)

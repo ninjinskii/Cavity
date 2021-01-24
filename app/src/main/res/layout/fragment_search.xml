@@ -64,8 +64,8 @@
             android:layout_marginEnd="@dimen/medium_margin"
             android:background="@android:color/transparent"
             android:hint="@string/search_wine_hint"
-            android:inputType="textCapSentences"
             android:imeOptions="actionDone"
+            android:inputType="textCapSentences"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -85,6 +85,26 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <!--   A fake, invisible chip group to get correct positionning of the views
+                   before inflating dynamic chip based on user's data-->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/countyStubChipGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="invisible" />
+
+                </com.google.android.material.chip.ChipGroup>
 
                 <HorizontalScrollView
                     android:id="@+id/countyScrollView"
@@ -109,12 +129,6 @@
                             app:singleLine="true"
                             app:singleSelection="false">
 
-                            <!-- This is a stub, to avoid 2 layout passes -->
-                            <com.google.android.material.chip.Chip
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:visibility="invisible" />
-
                         </com.google.android.material.chip.ChipGroup>
 
                     </LinearLayout>
@@ -127,7 +141,7 @@
                     android:scrollbars="none"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/countyScrollView">
+                    app:layout_constraintTop_toBottomOf="@+id/countyStubChipGroup">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -289,56 +303,6 @@
                     app:layout_constraintTop_toBottomOf="@id/vintageSlider" />
 
                 <TextView
-                    android:id="@+id/priceTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/price"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider2" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/togglePrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/medium_margin"
-                    android:checked="false"
-                    app:layout_constraintBottom_toBottomOf="@id/priceTitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/priceTitle" />
-
-                <com.google.android.material.slider.RangeSlider
-                    android:id="@+id/priceSlider"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/medium_margin"
-                    android:layout_marginTop="@dimen/small_margin"
-                    android:stepSize="10.0"
-                    android:valueFrom="0.0"
-                    android:valueTo="200.0"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/priceTitle"
-                    app:values="@array/initial_slider_values_price" />
-
-                <TextView
-                    android:id="@+id/warning"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/medium_margin"
-                    android:text="@string/no_price_no_results"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/priceSlider" />
-
-                <View
-                    android:id="@+id/divider3"
-                    style="@style/Widget.Cavity.Divider.Start"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/warning" />
-
-                <TextView
                     android:id="@+id/dateTitle"
                     style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="0dp"
@@ -346,7 +310,7 @@
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/date"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider3" />
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/beyondLayout"
@@ -358,8 +322,8 @@
                     android:layout_marginBottom="?attr/actionBarSize"
                     app:endIconMode="clear_text"
                     app:layout_constraintEnd_toStartOf="@id/untilLayout"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dateTitle">
+                    app:layout_constraintTop_toBottomOf="@id/dateTitle"
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/beyond"
@@ -396,18 +360,58 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-<!--                <com.google.android.material.button.MaterialButton-->
-<!--                    android:id="@+id/buttonMoreFilters"-->
-<!--                    style="@style/Widget.MaterialComponents.Button.TextButton"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginBottom="?attr/actionBarSize"-->
-<!--                    android:text="@string/more_filters"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@id/vintageSlider"-->
-<!--                    app:layout_constraintVertical_bias="0.0" />-->
+                <View
+                    android:id="@+id/divider3"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/untilLayout" />
+
+                <TextView
+                    android:id="@+id/priceTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/price"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/togglePrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:checked="false"
+                    app:layout_constraintBottom_toBottomOf="@id/priceTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/priceTitle" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/priceSlider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:stepSize="10.0"
+                    android:valueFrom="0.0"
+                    android:valueTo="200.0"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/priceTitle"
+                    app:values="@array/initial_slider_values_price" />
+
+                <TextView
+                    android:id="@+id/warning"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/small_margin"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginBottom="?attr/actionBarSize"
+                    android:text="@string/no_price_no_results"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/priceSlider" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
