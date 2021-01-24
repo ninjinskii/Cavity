@@ -74,8 +74,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     // Needed for split screen
     private fun setBottomSheetPeekHeight() {
-        binding.root.doOnLayout {
-            val upperBound = binding.warning
+        binding.warning.doOnLayout { upperBound ->
             val display = activity?.window?.decorView?.height
             val location = IntArray(2)
 
