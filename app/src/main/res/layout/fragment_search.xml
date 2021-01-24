@@ -254,6 +254,23 @@
                     </LinearLayout>
                 </HorizontalScrollView>
 
+                <View
+                    android:id="@+id/divider1"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/otherScrollView" />
+
+                <TextView
+                    android:id="@+id/vintageTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/vintage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider1" />
+
                 <com.google.android.material.slider.RangeSlider
                     android:id="@+id/vintageSlider"
                     android:layout_width="0dp"
@@ -263,20 +280,134 @@
                     android:stepSize="1.0"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/otherScrollView" />
+                    app:layout_constraintTop_toBottomOf="@id/vintageTitle" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonMoreFilters"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                <View
+                    android:id="@+id/divider2"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vintageSlider" />
+
+                <TextView
+                    android:id="@+id/priceTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/price"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/togglePrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="?attr/actionBarSize"
-                    android:text="@string/more_filters"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:checked="false"
+                    app:layout_constraintBottom_toBottomOf="@id/priceTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/priceTitle" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/priceSlider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:stepSize="10.0"
+                    android:valueFrom="0.0"
+                    android:valueTo="200.0"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/vintageSlider"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toBottomOf="@id/priceTitle"
+                    app:values="@array/initial_slider_values_price" />
+
+                <TextView
+                    android:id="@+id/warning"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:text="@string/no_price_no_results"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/priceSlider" />
+
+                <View
+                    android:id="@+id/divider3"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/warning" />
+
+                <TextView
+                    android:id="@+id/dateTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/date"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/beyondLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginBottom="?attr/actionBarSize"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toStartOf="@id/untilLayout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dateTitle">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/beyond"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusableInTouchMode="false"
+                        android:hint="@string/buying_date_beyond"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/untilLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginBottom="?attr/actionBarSize"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/beyondLayout"
+                    app:layout_constraintTop_toBottomOf="@id/dateTitle">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/until"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusableInTouchMode="false"
+                        android:hint="@string/buying_date_until"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+<!--                <com.google.android.material.button.MaterialButton-->
+<!--                    android:id="@+id/buttonMoreFilters"-->
+<!--                    style="@style/Widget.MaterialComponents.Button.TextButton"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginBottom="?attr/actionBarSize"-->
+<!--                    android:text="@string/more_filters"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/vintageSlider"-->
+<!--                    app:layout_constraintVertical_bias="0.0" />-->
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

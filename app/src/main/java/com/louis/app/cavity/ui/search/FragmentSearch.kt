@@ -23,6 +23,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val searchViewModel: SearchViewModel by activityViewModels()
+    private val recyclerViewDisabler = RecyclerViewDisabler()
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
     private val upperBoundHeight by lazy { fetchUpperBoundHeight() }
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
@@ -71,7 +73,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     // Needed for split screen
     private fun setBottomSheetPeekHeight() {
-        binding.buttonMoreFilters.doOnLayout { upperBound ->
+        binding.untilLayout.doOnLayout { upperBound ->
             val display = activity?.window?.decorView?.height
             val location = IntArray(2)
 
@@ -244,9 +246,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun setListeners() {
-        binding.buttonMoreFilters.setOnClickListener {
-            findNavController().navigate(R.id.searchToMoreFilters)
-        }
+//        binding.buttonMoreFilters.setOnClickListener {
+//            findNavController().navigate(R.id.searchToMoreFilters)
+//        }
 
         binding.currentQuery.setOnClickListener {
             binding.searchButton.performClick()
@@ -266,9 +268,16 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun toggleBackdrop() {
-        bottomSheetBehavior.run {
-            if (isExpanded() || isCollapsed())
+        with(bottomSheetBehavior) {
+            if(isExpanded()) {
                 toggleState()
+                binding.scrim.alpha = 0.76f
+                binding.recyclerView.addOnItemTouchListener(recyclerViewDisabler)
+            } else if (isCollapsed()) {
+                toggleState()
+                binding.scrim.alpha = 0f
+                binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+            }
         }
     }
 
@@ -331,7 +340,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun fetchBackdropHeaderHeight() = binding.backdropHeader.height
 
     private fun fetchUpperBoundHeight() =
-        binding.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
+        binding.untilLayout.height + resources.getDimension(R.dimen.small_margin).toInt()
 
     private fun loadRevealShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.show_elevation)
