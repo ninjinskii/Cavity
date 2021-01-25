@@ -6,14 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemBottleBinding
-import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class BottleRecyclerAdapter(
-    private val onClickListener: (Bottle) -> Unit,
-    private val colors: List<Int>
+    private val colors: List<Int>,
+    private val onClickListener: (Long, Long) -> Unit
 ) : ListAdapter<BottleAndWine, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottleViewHolder {
@@ -46,6 +45,11 @@ class BottleRecyclerAdapter(
                 wineNaming.text = bottleAndWine.naming
                 organicImage.setVisible(bottleAndWine.isOrganic.toBoolean())
                 wineColorIndicator.setColorFilter(colors[bottleAndWine.color])
+
+            }
+
+            binding.root.setOnClickListener {
+                onClickListener(bottleAndWine.wineId, bottleAndWine.bottleId)
             }
 
             binding.vintage.text = bottleAndWine.vintage.toString()

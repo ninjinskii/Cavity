@@ -142,7 +142,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             )
         }
 
-        bottlesAdapter = BottleRecyclerAdapter({}, colors ?: return)
+        bottlesAdapter = BottleRecyclerAdapter(colors ?: return) { wineId, bottleId ->
+            val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
+            findNavController().navigate(action)
+        }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import java.util.*
 
 data class BottleAndWine(
+    @ColumnInfo(name = "wine_id") val wineId: Long,
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
     val name: String,
     val naming: String,

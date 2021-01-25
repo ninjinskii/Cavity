@@ -180,6 +180,11 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         filter()
     }
 
+    override fun onCleared() {
+        L.v("search viewModel cleared")
+        super.onCleared()
+    }
+
     data class SearchState(
         var counties: List<Long>? = null,
         var colors: List<Int>? = null,

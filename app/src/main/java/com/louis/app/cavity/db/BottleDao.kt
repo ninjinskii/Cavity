@@ -43,7 +43,7 @@ interface BottleDao {
     suspend fun removeBottles(bottleId: Long, count: Int)
 
     @Transaction
-    @Query("SELECT bottle_id, name, naming, cuvee, color, is_organic, vintage, apogee, is_favorite, count, price, currency, other_info, buy_location, buy_date, taste_comment, pdf_path, county_id FROM wine, bottle WHERE wine.wine_id = bottle.wine_id")
+    @Query("SELECT wine.wine_id, bottle_id, name, naming, cuvee, color, is_organic, vintage, apogee, is_favorite, count, price, currency, other_info, buy_location, buy_date, taste_comment, pdf_path, county_id FROM wine, bottle WHERE wine.wine_id = bottle.wine_id")
     suspend fun getBottlesAndWineNotLive(): List<BottleAndWine>
 
     @Transaction

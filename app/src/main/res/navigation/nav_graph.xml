@@ -111,6 +111,16 @@
         <action
             android:id="@+id/searchToMoreFilters"
             app:destination="@id/more_filters_dest" />
+        <action
+            android:id="@+id/searchToBottleDetails"
+            app:destination="@id/fragmentBottleDetails">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
     </fragment>
 
     <fragment
