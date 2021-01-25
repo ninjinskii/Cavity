@@ -9,10 +9,8 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
-import androidx.core.view.doOnNextLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -133,13 +131,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initRecyclerView() {
-        val colors = context?.let {
+        val colors = requireContext().run {
             listOf(
-                it.getColor(R.color.wine_white),
-                it.getColor(R.color.wine_red),
-                it.getColor(R.color.wine_sweet),
-                it.getColor(R.color.wine_rose),
-                it.getColor(R.color.cavity_gold)
+                getColor(R.color.wine_white),
+                getColor(R.color.wine_red),
+                getColor(R.color.wine_sweet),
+                getColor(R.color.wine_rose),
+                getColor(R.color.cavity_gold)
             )
         }
 
@@ -249,6 +247,14 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 //            findNavController().navigate(R.id.searchToMoreFilters)
 //        }
 
+        binding.bottomSheet.setOnClickListener {
+            if (bottomSheetBehavior.isCollapsed()) {
+                toggleBackdrop()
+                binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+                // animate button back
+            }
+        }
+
         binding.currentQuery.setOnClickListener {
             binding.searchButton.performClick()
         }
@@ -268,7 +274,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun toggleBackdrop() {
         with(bottomSheetBehavior) {
-            if(isExpanded()) {
+            if (isExpanded()) {
                 toggleState()
                 binding.scrim.alpha = 0.76f
                 binding.recyclerView.addOnItemTouchListener(recyclerViewDisabler)
