@@ -9,6 +9,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
+import androidx.core.view.doOnNextLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -34,8 +35,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private val binding get() = _binding!!
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private val recyclerViewDisabler = RecyclerViewDisabler()
     private val searchViewModel: SearchViewModel by activityViewModels()
+    private val recyclerViewDisabler = RecyclerViewDisabler()
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
     private val upperBoundHeight by lazy { fetchUpperBoundHeight() }
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
@@ -73,7 +74,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     // Needed for split screen
     private fun setBottomSheetPeekHeight() {
-        binding.buttonMoreFilters.doOnLayout { upperBound ->
+        binding.warning.doOnLayout { upperBound ->
             val display = activity?.window?.decorView?.height
             val location = IntArray(2)
 
@@ -88,13 +89,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
                 bottomSheetBehavior.peekHeight = peekHeight
             }
-
-            removeStubChip()
         }
-    }
-
-    private fun removeStubChip() {
-        binding.countyChipGroup.removeAllViews()
     }
 
     private fun initCountyChips() {
@@ -246,9 +241,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun setListeners() {
-        binding.buttonMoreFilters.setOnClickListener {
-            findNavController().navigate(R.id.searchToMoreFilters)
-        }
+//        binding.buttonMoreFilters.setOnClickListener {
+//            findNavController().navigate(R.id.searchToMoreFilters)
+//        }
 
         binding.currentQuery.setOnClickListener {
             binding.searchButton.performClick()
@@ -269,14 +264,14 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun toggleBackdrop() {
         with(bottomSheetBehavior) {
-            if (isExpanded()) {
-                binding.scrim.alpha = 0.76F
+            if(isExpanded()) {
+                toggleState()
+                binding.scrim.alpha = 0.76f
                 binding.recyclerView.addOnItemTouchListener(recyclerViewDisabler)
-                toggleState()
             } else if (isCollapsed()) {
-                binding.scrim.alpha = 0F
-                binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
                 toggleState()
+                binding.scrim.alpha = 0f
+                binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
             }
         }
     }
@@ -339,8 +334,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun fetchBackdropHeaderHeight() = binding.backdropHeader.height
 
-    private fun fetchUpperBoundHeight() =
-        binding.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
+    private fun fetchUpperBoundHeight() = binding.untilLayout.height
 
     private fun loadRevealShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.show_elevation)
