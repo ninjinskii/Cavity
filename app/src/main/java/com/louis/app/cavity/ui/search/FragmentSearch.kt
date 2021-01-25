@@ -13,6 +13,7 @@ import androidx.core.view.doOnNextLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,7 +36,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private val binding get() = _binding!!
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private val searchViewModel: SearchViewModel by activityViewModels()
+    private val searchViewModel: SearchViewModel by viewModels()
     private val recyclerViewDisabler = RecyclerViewDisabler()
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
     private val upperBoundHeight by lazy { fetchUpperBoundHeight() }
@@ -316,19 +317,19 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun restoreState() {
         // See initCountyChip for selected couties restoration
-        with(searchViewModel.state) {
-            colors?.let { selectedChipIds ->
-                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
-            }
-
-            others?.let { selectedChipIds ->
-                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
-            }
-
-            vintage?.let {
-                binding.vintageSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
-            }
-        }
+//        with(searchViewModel.state) {
+//            colors?.let { selectedChipIds ->
+//                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
+//            }
+//
+//            others?.let { selectedChipIds ->
+//                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
+//            }
+//
+//            vintage?.let {
+//                binding.vintageSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
+//            }
+//        }
     }
 
     private fun isSearchMode() = binding.motionToolbar.progress == 1F
