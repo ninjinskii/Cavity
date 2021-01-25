@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.chip.Chip
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
@@ -239,7 +240,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             }
         }
 
-        binding.toggleBackdrop.setOnClickListener { toggleBackdrop() }
+        binding.toggleBackdrop.setOnClickListener {
+//            if (!bottomSheetBehavior.isCollapsed() && !bottomSheetBehavior.isExpanded()) {
+//                (it as MaterialCheckBox).isChecked = !it.isChecked
+//                it.jumpDrawablesToCurrentState()
+//            }
+            toggleBackdrop()
+        }
     }
 
     private fun setListeners() {
@@ -273,15 +280,21 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun toggleBackdrop() {
-        with(bottomSheetBehavior) {
-            if (isExpanded()) {
-                toggleState()
-                binding.scrim.alpha = 0.76f
-                binding.recyclerView.addOnItemTouchListener(recyclerViewDisabler)
-            } else if (isCollapsed()) {
-                toggleState()
-                binding.scrim.alpha = 0f
-                binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+        bottomSheetBehavior.run {
+            when {
+                isExpanded() -> {
+                    toggleState()
+                    binding.scrim.alpha = 0.76f
+                    binding.recyclerView.addOnItemTouchListener(recyclerViewDisabler)
+                }
+                isCollapsed() -> {
+                    toggleState()
+                    binding.scrim.alpha = 0f
+                    binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+                }
+                else -> {
+                    binding.toggleBackdrop.toggle()
+                }
             }
         }
     }

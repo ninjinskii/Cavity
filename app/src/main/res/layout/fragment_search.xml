@@ -30,18 +30,16 @@
             app:titleTextColor="?attr/colorOnPrimarySurface"
             tools:layout_editor_absoluteX="29dp" />
 
-        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/toggleBackdrop"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="0dp"
             android:background="?attr/actionBarItemBackground"
-            android:scaleType="centerInside"
-            android:tint="?attr/colorOnPrimarySurface"
-            app:initialAvd="@drawable/anim_close_filter"
+            android:button="@drawable/asl_filter"
+            android:buttonTint="?attr/colorOnPrimarySurface"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:otherAvd="@drawable/anim_filter_close" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
             android:id="@+id/searchButton"
@@ -322,8 +320,8 @@
                     android:layout_marginBottom="?attr/actionBarSize"
                     app:endIconMode="clear_text"
                     app:layout_constraintEnd_toStartOf="@id/untilLayout"
-                    app:layout_constraintTop_toBottomOf="@id/dateTitle"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dateTitle">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/beyond"
@@ -404,13 +402,13 @@
                     android:id="@+id/warning"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/small_margin"
                     android:layout_marginHorizontal="@dimen/medium_margin"
                     android:layout_marginBottom="?attr/actionBarSize"
+                    android:paddingBottom="@dimen/small_margin"
                     android:text="@string/no_price_no_results"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/priceSlider" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

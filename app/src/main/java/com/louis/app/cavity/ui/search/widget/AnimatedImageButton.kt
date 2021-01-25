@@ -1,12 +1,11 @@
 package com.louis.app.cavity.ui.search.widget
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.core.content.res.getDrawableOrThrow
+import androidx.core.content.res.use
 import com.louis.app.cavity.R
 
 class AnimatedImageButton @JvmOverloads constructor(
@@ -18,8 +17,8 @@ class AnimatedImageButton @JvmOverloads constructor(
     var state = 0
         private set
 
-    private var initialDrawable: AnimatedVectorDrawable
-    private var otherDrawable: AnimatedVectorDrawable
+    private var initialDrawable: AnimatedVectorDrawable? = null
+    private var otherDrawable: AnimatedVectorDrawable? = null
     private var currentUsedDrawable: AnimatedVectorDrawable? = null
 
     init {
@@ -28,23 +27,13 @@ class AnimatedImageButton @JvmOverloads constructor(
             R.styleable.AnimatedImageButton,
             defStyleAttr,
             0
-        ).apply {
-            try {
-                initialDrawable = getDrawableOrThrow(
-                    R.styleable.AnimatedImageButton_initialAvd
-                ) as AnimatedVectorDrawable
-                otherDrawable = getDrawableOrThrow(
-                    R.styleable.AnimatedImageButton_otherAvd
-                ) as AnimatedVectorDrawable
+        ).use {
+            initialDrawable =
+                it.getDrawable(R.styleable.AnimatedImageButton_initialAvd) as AnimatedVectorDrawable
+            otherDrawable =
+                it.getDrawable(R.styleable.AnimatedImageButton_otherAvd) as AnimatedVectorDrawable
 
-                setImageDrawable(initialDrawable)
-            } catch (e: ClassCastException) {
-                throw IllegalArgumentException("Cannot convert the given drawables into AnimatedVectorDrawable")
-            } catch (e: Resources.NotFoundException) {
-                throw IllegalArgumentException("Attributes initialAvd & otherAvd must be Drawables")
-            } finally {
-                recycle()
-            }
+            setImageDrawable(initialDrawable)
         }
     }
 
@@ -52,7 +41,7 @@ class AnimatedImageButton @JvmOverloads constructor(
     fun triggerAnimation() {
         if (currentUsedDrawable == null || currentUsedDrawable?.isRunning == false) {
             val baseAvd = if (state == 0) initialDrawable else otherDrawable
-            currentUsedDrawable = baseAvd.constantState?.newDrawable() as AnimatedVectorDrawable
+            currentUsedDrawable = baseAvd?.constantState?.newDrawable() as AnimatedVectorDrawable
             setImageDrawable(currentUsedDrawable)
             currentUsedDrawable?.start()
             toggleState()
