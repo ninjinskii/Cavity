@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
@@ -34,6 +36,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private val binding get() = _binding!!
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var beyondDatePicker: MaterialDatePicker<Long>
+    private lateinit var untilDatePicker: MaterialDatePicker<Long>
     private val searchViewModel: SearchViewModel by viewModels()
     private val recyclerViewDisabler = RecyclerViewDisabler()
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
@@ -41,6 +45,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
+    private var isDatePickerDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,7 +59,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         binding.fakeToolbar.setNavigationOnClickListener {
-            searchViewModel.reset()
             findNavController().navigateUp()
         }
 
@@ -66,7 +70,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         initColorChips()
         initOtherChips()
         initRecyclerView()
-        initSlider()
+        initDatePickers()
+        initSliders()
         setupMenu()
         setListeners()
         initSearchView()
@@ -95,7 +100,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun initCountyChips() {
         lifecycleScope.launch(IO) {
             val counties = searchViewModel.getAllCountiesNotLive().toSet()
-            val preselect = searchViewModel.state.counties.orEmpty()
+            val preselect = searchViewModel.counties
 
             CountyLoader().loadCounties(
                 lifecycleScope,
@@ -170,7 +175,55 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
     }
 
-    private fun initSlider() {
+    private fun initDatePickers() {
+        beyondDatePicker = MaterialDatePicker.Builder.datePicker().apply {
+            setTitleText(R.string.buying_date_beyond)
+        }.build()
+
+        untilDatePicker = MaterialDatePicker.Builder.datePicker().apply {
+            setTitleText(R.string.buying_date_until)
+        }.build()
+
+        binding.beyondLayout.setEndIconOnClickListener {
+            binding.beyond.setText("")
+            searchViewModel.setBeyondFilter(null)
+        }
+
+        binding.untilLayout.setEndIconOnClickListener {
+            binding.until.setText("")
+            searchViewModel.setUntilFilter(null)
+        }
+
+        beyondDatePicker.apply {
+            addOnDismissListener {
+                binding.beyond.clearFocus()
+                isDatePickerDisplayed = false
+            }
+
+            addOnPositiveButtonClickListener {
+                binding.beyond.setText(DateFormatter.formatDate(selection ?: 0))
+                selection?.let {
+                    searchViewModel.setBeyondFilter(it)
+                }
+            }
+        }
+
+        untilDatePicker.apply {
+            addOnDismissListener {
+                binding.until.clearFocus()
+                isDatePickerDisplayed = false
+            }
+
+            addOnPositiveButtonClickListener {
+                binding.until.setText(DateFormatter.formatDate(selection ?: 0))
+                selection?.let {
+                    searchViewModel.setUntilFilter(it)
+                }
+            }
+        }
+    }
+
+    private fun initSliders() {
         binding.vintageSlider.apply {
             val year = Calendar.getInstance().get(Calendar.YEAR).toFloat()
             valueFrom = year - 20F
@@ -180,6 +233,22 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
                 override fun onStopTrackingTouch(slider: RangeSlider) {
                     searchViewModel.setVintageFilter(
+                        slider.values[0].toInt(),
+                        slider.values[1].toInt()
+                    )
+                }
+
+                override fun onStartTrackingTouch(slider: RangeSlider) {
+                }
+            })
+        }
+
+        binding.priceSlider.apply {
+            isEnabled = false
+
+            addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+                override fun onStopTrackingTouch(slider: RangeSlider) {
+                    searchViewModel.setPriceFilter(
                         slider.values[0].toInt(),
                         slider.values[1].toInt()
                     )
@@ -255,6 +324,44 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         binding.currentQuery.setOnClickListener {
             binding.searchButton.performClick()
         }
+
+        binding.beyond.apply {
+            inputType = InputType.TYPE_NULL
+
+            setOnClickListener {
+                if (!isDatePickerDisplayed) {
+                    isDatePickerDisplayed = true
+
+                    beyondDatePicker.show(
+                        childFragmentManager,
+                        resources.getString(R.string.tag_date_picker)
+                    )
+                }
+            }
+        }
+
+        binding.until.apply {
+            inputType = InputType.TYPE_NULL
+
+            setOnClickListener {
+                if (!isDatePickerDisplayed) {
+                    isDatePickerDisplayed = true
+
+                    untilDatePicker.show(
+                        childFragmentManager,
+                        resources.getString(R.string.tag_date_picker)
+                    )
+                }
+            }
+        }
+
+        binding.togglePrice.setOnCheckedChangeListener { _, isChecked ->
+            binding.priceSlider.apply {
+                isEnabled = isChecked
+                val minPrice = if (isChecked) values[0].toInt() else -1
+                searchViewModel.setPriceFilter(minPrice, values[1].toInt())
+            }
+        }
     }
 
     private fun setHeaderShadow(setVisible: Boolean) {
@@ -314,7 +421,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             if (isSearchMode()) {
                 binding.searchButton.performClick()
             } else {
-                searchViewModel.reset()
                 remove()
                 requireActivity().onBackPressed()
             }
@@ -332,16 +438,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun loadHideShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.hide_elevation)
-
-//    override fun onResume() {
-//        super.onResume()
-//        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-//    }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

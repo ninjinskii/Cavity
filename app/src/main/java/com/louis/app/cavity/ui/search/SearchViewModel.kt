@@ -21,23 +21,22 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
     private val bottlesAndWine = mutableListOf<BottleAndWine>()
 
-    // These filters are located in FragmentSearch
+    private var currentBeyondDate: Long? = null
+    private var currentUntilDate: Long? = null
+
     private var countyFilter: WineFilter = NoFilter
     private var colorFilter: WineFilter = NoFilter
     private var otherFilter: WineFilter = NoFilter
     private var vintageFilter: WineFilter = NoFilter
     private var textFilter: WineFilter = NoFilter
-
-    // These filters are located in FragmentMoreFilters
     private var priceFilter: WineFilter = NoFilter
     private var dateFilter: WineFilter = NoFilter
-    private var stockFilter: WineFilter = NoFilter
 
     private val _results = MutableLiveData<List<BottleAndWine>>()
     val results: LiveData<List<BottleAndWine>>
         get() = _results
 
-    var state = SearchState()
+    var counties = emptyList<Long>()
         private set
 
     init {
@@ -53,7 +52,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(Default) {
             val filters = listOf(
                 countyFilter, colorFilter, otherFilter, vintageFilter,
-                textFilter, priceFilter, dateFilter, stockFilter
+                textFilter, priceFilter, dateFilter
             )
 
             val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
@@ -66,7 +65,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setCountiesFilters(filteredCounties: List<County>) {
-        state.counties = filteredCounties.map { it.countyId }
+        counties = filteredCounties.map { it.countyId }
 
         val countyFilters: List<WineFilter> = filteredCounties.map { FilterCounty(it.countyId) }
 
@@ -79,8 +78,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setColorFilters(colorCheckedChipIds: List<Int>) {
-        state.colors = colorCheckedChipIds
-
         val colorFilters = mutableListOf<WineFilter>()
 
         if (R.id.chipRed in colorCheckedChipIds)
@@ -101,8 +98,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setOtherFilters(otherCheckedChipIds: List<Int>) {
-        state.others = otherCheckedChipIds
-
         val otherFilters = mutableListOf<WineFilter>()
 
         if (R.id.chipReadyToDrink in otherCheckedChipIds) otherFilters.add(FilterReadyToDrink())
@@ -119,7 +114,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setVintageFilter(minValue: Int, maxValue: Int) {
-        state.vintage = minValue to maxValue
         vintageFilter = FilterVintage(minValue, maxValue)
         filter()
     }
@@ -130,14 +124,13 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setPriceFilter(minValue: Int, maxValue: Int) {
-        state.price = if (minValue != -1) minValue to maxValue else null
         priceFilter = if (minValue != -1) FilterPrice(minValue, maxValue) else NoFilter
         filter()
     }
 
     fun setBeyondFilter(beyond: Long?) {
-        val currentUntilDate = state.date?.second
-        state.date = beyond to currentUntilDate
+        currentBeyondDate = beyond
+
         dateFilter =
             if (beyond == null && currentUntilDate == null)
                 NoFilter
@@ -148,8 +141,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setUntilFilter(until: Long?) {
-        val currentBeyondDate = state.date?.first
-        state.date = currentBeyondDate to until
+        currentUntilDate = until
+
         dateFilter =
             if (until == null && currentBeyondDate == null)
                 NoFilter
@@ -158,40 +151,4 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
         filter()
     }
-
-    fun setStockFilter(minValue: Int, maxValue: Int) {
-        state.stock = minValue to maxValue
-        stockFilter = FilterStock(minValue, maxValue)
-        filter()
-    }
-
-    fun reset() {
-        countyFilter = NoFilter
-        colorFilter = NoFilter
-        otherFilter = NoFilter
-        vintageFilter = NoFilter
-        textFilter = NoFilter
-        priceFilter = NoFilter
-        dateFilter = NoFilter
-        stockFilter = NoFilter
-
-        state = SearchState()
-
-        filter()
-    }
-
-    override fun onCleared() {
-        L.v("search viewModel cleared")
-        super.onCleared()
-    }
-
-    data class SearchState(
-        var counties: List<Long>? = null,
-        var colors: List<Int>? = null,
-        var others: List<Int>? = null,
-        var vintage: Pair<Int, Int>? = null,
-        var price: Pair<Int, Int>? = null,
-        var date: Pair<Long?, Long?>? = null,
-        var stock: Pair<Int, Int>? = null
-    )
 }

@@ -18,10 +18,10 @@ import com.louis.app.cavity.util.setupNavigation
 class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
     private lateinit var beyondDatePicker: MaterialDatePicker<Long>
     private lateinit var untilDatePicker: MaterialDatePicker<Long>
+    private var isDatePickerDisplayed = false
     private var _binding: FragmentMoreFiltersBinding? = null
     private val binding get() = _binding!!
     private val searchViewModel: SearchViewModel by activityViewModels()
-    private var isDatePickerDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -101,15 +101,6 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
                 }
             })
         }
-
-        binding.stockSlider.addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
-            override fun onStopTrackingTouch(slider: RangeSlider) {
-                searchViewModel.setStockFilter(slider.values[0].toInt(), slider.values[1].toInt())
-            }
-
-            override fun onStartTrackingTouch(slider: RangeSlider) {
-            }
-        })
     }
 
     private fun initTextSwitcher() {
@@ -137,29 +128,29 @@ class FragmentMoreFilters : Fragment(R.layout.fragment_more_filters) {
     }
 
     private fun restoreState() {
-        with(searchViewModel.state) {
-            price?.let {
-                with(binding) {
-                    togglePrice.isChecked = true
-                    priceSlider.isEnabled = true
-                    priceSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
-                }
-            }
-
-            date?.let {
-                val beyondString = DateFormatter.formatDate(it.first)
-                val untilString = DateFormatter.formatDate(it.second)
-
-                with(binding) {
-                    beyond.setText(beyondString)
-                    until.setText(untilString)
-                }
-            }
-
-            stock?.let {
-                binding.stockSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
-            }
-        }
+//        with(searchViewModel.state) {
+//            price?.let {
+//                with(binding) {
+//                    togglePrice.isChecked = true
+//                    priceSlider.isEnabled = true
+//                    priceSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
+//                }
+//            }
+//
+//            date?.let {
+//                val beyondString = DateFormatter.formatDate(it.first)
+//                val untilString = DateFormatter.formatDate(it.second)
+//
+//                with(binding) {
+//                    beyond.setText(beyondString)
+//                    until.setText(untilString)
+//                }
+//            }
+//
+//            stock?.let {
+//                binding.stockSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
+//            }
+//        }
     }
 
     private fun setListeners() {
