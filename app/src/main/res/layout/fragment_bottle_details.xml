@@ -285,7 +285,7 @@
                             android:layout_height="@dimen/medium_icon"
                             android:scaleType="centerInside"
                             android:src="@drawable/asl_favorite"
-                            app:delayBeforeRepeat="1000"
+                            app:delayBeforeRepeat="1001"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 

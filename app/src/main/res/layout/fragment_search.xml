@@ -37,7 +37,7 @@
             android:background="?attr/actionBarItemBackground"
             android:scaleType="centerInside"
             android:src="@drawable/asl_filter"
-            app:delayBeforeRepeat="400"
+            app:delayBeforeRepeat="500"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -51,7 +51,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/asl_search"
             android:tint="?attr/colorOnPrimarySurface"
-            app:delayBeforeRepeat="1000"
+            app:delayBeforeRepeat="1001"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
             app:layout_constraintTop_toTopOf="parent" />
