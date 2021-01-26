@@ -17,7 +17,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.chip.Chip
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
@@ -42,6 +41,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
+    private var isToolbarAnimRunning = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -204,6 +204,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun setupMenu() {
         binding.motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(motionLayout: MotionLayout?, p1: Int, p2: Int) {
+                isToolbarAnimRunning = true
                 // When this callback is trigerred, the progress is already lower than 1, forcing us to check for a lower magic value.
                 if (motionLayout?.progress ?: 0F > 0.5F) {
                     with(binding) {
@@ -219,46 +220,38 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             }
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
+                isToolbarAnimRunning = false
+
                 if (isSearchMode()) {
                     binding.searchView.showKeyboard()
                 }
             }
 
-            override fun onTransitionTrigger(
-                p0: MotionLayout?,
-                p1: Int,
-                p2: Boolean,
-                p3: Float
-            ) {
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
             }
         })
 
-        binding.searchButton.setOnClickListener {
-            if (!isToolbarAnimRunning()) {
+        binding.searchButton.setOnCheckedChangeListener {
+            if (!isToolbarAnimRunning) {
                 if (isSearchMode()) binding.motionToolbar.transitionToStart()
                 else binding.motionToolbar.transitionToEnd()
+            } else {
+                binding.searchButton.toggle()
             }
         }
 
-        binding.toggleBackdrop.setOnClickListener {
-//            if (!bottomSheetBehavior.isCollapsed() && !bottomSheetBehavior.isExpanded()) {
-//                (it as MaterialCheckBox).isChecked = !it.isChecked
-//                it.jumpDrawablesToCurrentState()
-//            }
+        binding.toggleBackdrop.setOnCheckedChangeListener {
+            L.v("listener")
             toggleBackdrop()
         }
     }
 
     private fun setListeners() {
-//        binding.buttonMoreFilters.setOnClickListener {
-//            findNavController().navigate(R.id.searchToMoreFilters)
-//        }
-
         binding.bottomSheet.setOnClickListener {
             if (bottomSheetBehavior.isCollapsed()) {
                 toggleBackdrop()
                 binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
-                // animate button back
+                binding.toggleBackdrop.toggle()
             }
         }
 
@@ -293,7 +286,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                     binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
                 }
                 else -> {
-                    binding.toggleBackdrop.toggle()
+                    //binding.toggleBackdrop.toggle()
                 }
             }
         }
@@ -352,8 +345,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun isSearchMode() = binding.motionToolbar.progress == 1F
-
-    private fun isToolbarAnimRunning() = binding.motionToolbar.progress !in listOf(0F, 1F)
 
     private fun fetchBackdropHeaderHeight() = binding.backdropHeader.height
 

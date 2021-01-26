@@ -20,7 +20,6 @@ import com.louis.app.cavity.databinding.DialogUseBottleBinding
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
-import com.louis.app.cavity.ui.search.widget.AnimatedImageButton
 import com.louis.app.cavity.util.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
@@ -58,9 +57,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun initFavButton() {
-        binding.favorite.apply {
-            setButtonDrawable(R.drawable.asl_favorite)
-        }
+//        binding.favorite.apply {
+//            setButtonDrawable(R.drawable.asl_favorite)
+//        }
     }
 
     private fun observe() {

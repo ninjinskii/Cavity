@@ -12,7 +12,7 @@
     </declare-styleable>
 
     <declare-styleable name="AnimatedCheckBox">
-        <attr name="animationTime" format="integer" />
+        <attr name="delayBeforeRepeat" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="RuledTextInputLayout">

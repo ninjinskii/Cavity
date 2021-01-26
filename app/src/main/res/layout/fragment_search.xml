@@ -35,25 +35,26 @@
             android:layout_width="@dimen/medium_icon"
             android:layout_height="0dp"
             android:background="?attr/actionBarItemBackground"
-            android:src="@drawable/asl_filter"
-            app:tint="?attr/colorOnPrimarySurface"
             android:scaleType="centerInside"
+            android:src="@drawable/asl_filter"
+            app:delayBeforeRepeat="400"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnPrimarySurface" />
 
-        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
+        <com.louis.app.cavity.ui.search.widget.AnimatedCheckBox
             android:id="@+id/searchButton"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="0dp"
             android:background="?attr/actionBarItemBackground"
             android:scaleType="centerInside"
+            android:src="@drawable/asl_search"
             android:tint="?attr/colorOnPrimarySurface"
-            app:initialAvd="@drawable/anim_search_close"
+            app:delayBeforeRepeat="1000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
-            app:layout_constraintTop_toTopOf="parent"
-            app:otherAvd="@drawable/anim_close_search" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/searchView"
