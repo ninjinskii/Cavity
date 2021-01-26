@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.widget.Checkable
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.res.use
 import com.louis.app.cavity.R
@@ -68,5 +69,49 @@ class AnimatedImageButton @JvmOverloads constructor(
         super.performClick()
         triggerAnimation()
         return true
+    }
+}
+
+class AnimatedCheckBox @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+) : AppCompatImageButton(context, attrs, defStyleAttr), Checkable {
+    private var isChecked = false
+
+    override fun setChecked(checked: Boolean) {
+        if (isChecked != checked) {
+            isChecked = checked
+            refreshDrawableState()
+        }
+    }
+
+    override fun isChecked() = isChecked
+
+    override fun toggle() {
+        setChecked(!isChecked)
+    }
+
+    override fun drawableStateChanged() {
+        val d = drawable
+        if (d != null && d.isStateful && d.setState(drawableState)) {
+            invalidateDrawable(d)
+        }
+
+        super.drawableStateChanged()
+    }
+
+    override fun onCreateDrawableState(extraSpace: Int): IntArray {
+        val drawableState = super.onCreateDrawableState(extraSpace + 1)
+        if (isChecked()) {
+            mergeDrawableStates(drawableState, intArrayOf(android.R.attr.state_checked))
+        }
+
+        return drawableState
+    }
+
+    override fun performClick(): Boolean {
+        toggle()
+        return super.performClick()
     }
 }

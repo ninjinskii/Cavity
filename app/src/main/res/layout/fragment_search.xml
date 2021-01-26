@@ -30,13 +30,14 @@
             app:titleTextColor="?attr/colorOnPrimarySurface"
             tools:layout_editor_absoluteX="29dp" />
 
-        <com.google.android.material.checkbox.MaterialCheckBox
+        <com.louis.app.cavity.ui.search.widget.AnimatedCheckBox
             android:id="@+id/toggleBackdrop"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="0dp"
             android:background="?attr/actionBarItemBackground"
-            android:button="@drawable/asl_filter"
-            android:buttonTint="?attr/colorOnPrimarySurface"
+            android:src="@drawable/asl_filter"
+            app:tint="?attr/colorOnPrimarySurface"
+            android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
