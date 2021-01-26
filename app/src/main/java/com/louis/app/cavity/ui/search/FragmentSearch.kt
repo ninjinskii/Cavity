@@ -41,7 +41,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
-    private var isToolbarAnimRunning = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,7 +58,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             findNavController().navigateUp()
         }
 
-        setBottomSheetPeekHeight()
+        binding.warning.doOnLayout {
+            setBottomSheetPeekHeight()
+        }
+
         initCountyChips()
         initColorChips()
         initOtherChips()
@@ -69,26 +71,24 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         setListeners()
         initSearchView()
         setupCustomBackNav()
-        restoreState()
     }
 
     // Needed for split screen
     private fun setBottomSheetPeekHeight() {
-        binding.warning.doOnLayout { upperBound ->
-            val display = activity?.window?.decorView?.height
-            val location = IntArray(2)
+        val upperBound = binding.warning
+        val display = activity?.window?.decorView?.height
+        val location = IntArray(2)
 
-            display?.let {
-                upperBound.getLocationInWindow(location)
+        display?.let {
+            upperBound.getLocationInWindow(location)
 
-                val peekHeight =
-                    if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
-                        backdropHeaderHeight
-                    else
-                        it - location[1] - upperBoundHeight
+            val peekHeight =
+                if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
+                    backdropHeaderHeight
+                else
+                    it - location[1] - upperBoundHeight
 
-                bottomSheetBehavior.peekHeight = peekHeight
-            }
+            bottomSheetBehavior.peekHeight = peekHeight
         }
     }
 
@@ -142,7 +142,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             )
         }
 
-        bottlesAdapter = BottleRecyclerAdapter(colors ?: return) { wineId, bottleId ->
+        bottlesAdapter = BottleRecyclerAdapter(colors) { wineId, bottleId ->
             val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
             findNavController().navigate(action)
         }
@@ -203,16 +203,20 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun setupMenu() {
         binding.motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
-            override fun onTransitionStarted(motionLayout: MotionLayout?, p1: Int, p2: Int) {
-                isToolbarAnimRunning = true
-                // When this callback is trigerred, the progress is already lower than 1, forcing us to check for a lower magic value.
+            override fun onTransitionStarted(motionLayout: MotionLayout?, p0: Int, p1: Int) {
                 if (motionLayout?.progress ?: 0F > 0.5F) {
+                    setBottomSheetPeekHeight()
+
                     with(binding) {
                         currentQuery.setVisible(true)
                         searchView.hideKeyboard()
                     }
                 } else {
                     binding.currentQuery.setVisible(false)
+
+                    if (binding.toggleBackdrop.isChecked) {
+                        bottomSheetBehavior.peekHeight = backdropHeaderHeight
+                    }
                 }
             }
 
@@ -220,9 +224,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             }
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
-                isToolbarAnimRunning = false
-
-                if (isSearchMode()) {
+                if (id == R.id.end) {
                     binding.searchView.showKeyboard()
                 }
             }
@@ -232,16 +234,11 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         })
 
         binding.searchButton.setOnCheckedChangeListener {
-            if (!isToolbarAnimRunning) {
-                if (isSearchMode()) binding.motionToolbar.transitionToStart()
-                else binding.motionToolbar.transitionToEnd()
-            } else {
-                binding.searchButton.toggle()
-            }
+            if (isSearchMode()) binding.motionToolbar.transitionToStart()
+            else binding.motionToolbar.transitionToEnd()
         }
 
         binding.toggleBackdrop.setOnCheckedChangeListener {
-            L.v("listener")
             toggleBackdrop()
         }
     }
@@ -285,9 +282,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                     binding.scrim.alpha = 0f
                     binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
                 }
-                else -> {
-                    //binding.toggleBackdrop.toggle()
-                }
             }
         }
     }
@@ -327,23 +321,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
     }
 
-    private fun restoreState() {
-        // See initCountyChip for selected couties restoration
-//        with(searchViewModel.state) {
-//            colors?.let { selectedChipIds ->
-//                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
-//            }
-//
-//            others?.let { selectedChipIds ->
-//                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
-//            }
-//
-//            vintage?.let {
-//                binding.vintageSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
-//            }
-//        }
-    }
-
     private fun isSearchMode() = binding.motionToolbar.progress == 1F
 
     private fun fetchBackdropHeaderHeight() = binding.backdropHeader.height
@@ -355,6 +332,16 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun loadHideShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.hide_elevation)
+
+//    override fun onResume() {
+//        super.onResume()
+//        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
