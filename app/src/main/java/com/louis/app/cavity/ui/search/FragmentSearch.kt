@@ -39,7 +39,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private lateinit var beyondDatePicker: MaterialDatePicker<Long>
     private lateinit var untilDatePicker: MaterialDatePicker<Long>
     private val searchViewModel: SearchViewModel by viewModels()
-    private val recyclerViewDisabler = RecyclerViewDisabler()
+    private val recyclerViewDisabler =
+        RecyclerViewDisabler { binding.toggleBackdrop.performClick() }
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
     private val upperBoundHeight by lazy { fetchUpperBoundHeight() }
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
