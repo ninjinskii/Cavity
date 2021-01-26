@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.widget
 import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.StringRes
+import androidx.core.content.res.use
 import com.google.android.material.textfield.TextInputLayout
 import com.louis.app.cavity.R
 
@@ -21,7 +22,7 @@ class RuledTextInputLayout @JvmOverloads constructor(
     }
 
     private val rules = mutableSetOf<Rule>()
-    private val flags : Int
+    private var flags: Int = 0
 
     init {
         context.theme.obtainStyledAttributes(
@@ -29,13 +30,9 @@ class RuledTextInputLayout @JvmOverloads constructor(
             R.styleable.RuledTextInputLayout,
             defStyleAttr,
             0
-        ).apply {
-            try {
-                flags = getInteger(R.styleable.RuledTextInputLayout_rule, RULE_ABSENT)
-                setDefaultRules()
-            } finally {
-                recycle()
-            }
+        ).use {
+            flags = it.getInteger(R.styleable.RuledTextInputLayout_rule, RULE_ABSENT)
+            setDefaultRules()
         }
     }
 
