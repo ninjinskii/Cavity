@@ -4,6 +4,7 @@ import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -57,16 +58,14 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_EXPANDED
             isHideable = false
+            saveFlags = BottomSheetBehavior.SAVE_NONE
         }
 
         binding.fakeToolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
 
-        binding.warning.doOnLayout {
-            setBottomSheetPeekHeight()
-        }
-
+        setBottomSheetPeekHeight()
         initCountyChips()
         initColorChips()
         initOtherChips()
@@ -81,20 +80,44 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     // Needed for split screen
     private fun setBottomSheetPeekHeight() {
-        val upperBound = binding.warning
-        val display = activity?.window?.decorView?.height
-        val location = IntArray(2)
 
-        display?.let {
-            upperBound.getLocationInWindow(location)
+        binding.root.doOnLayout {
+            L.v("root")
+        }
 
-            val peekHeight =
-                if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
-                    backdropHeaderHeight
-                else
-                    it - location[1] - upperBoundHeight
+        binding.warning.doOnLayout {
+            L.v("warning")
+        }
+//        binding.root.doOnLayout {
+//            L.v("backropHeader");
+//            val upperBound = binding.warning
+//            val display = activity?.window?.decorView?.height
+//            val location = IntArray(2)
+//
+//            display?.let {
+//                upperBound.getLocationInWindow(location)
+//
+//                val peekHeight =
+//                    if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
+//                        backdropHeaderHeight
+//                    else
+//                        it - location[1] - upperBoundHeight
+//
+//                bottomSheetBehavior.peekHeight = peekHeight
+//            }
+//        }
 
-            bottomSheetBehavior.peekHeight = peekHeight
+        binding.root.apply {
+            viewTreeObserver.addOnGlobalLayoutListener(object: ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    L.v("global")
+                    viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    val display = activity?.window?.decorView?.height
+                    display?.let {
+                        bottomSheetBehavior.peekHeight = it - binding.warning.bottom - binding.warning.height
+                    }
+                }
+            })
         }
     }
 
@@ -285,7 +308,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                     binding.currentQuery.setVisible(false)
 
                     if (binding.toggleBackdrop.isChecked) {
-                        bottomSheetBehavior.peekHeight = backdropHeaderHeight
+                        //setBottomSheetPeekHeight()
                     }
                 }
             }
@@ -296,6 +319,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
                 if (id == R.id.end) {
                     binding.searchView.showKeyboard()
+                    L.v("header height: $backdropHeaderHeight")
+                    bottomSheetBehavior.peekHeight = backdropHeaderHeight
                 }
             }
 
@@ -432,7 +457,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun fetchBackdropHeaderHeight() = binding.backdropHeader.height
 
-    private fun fetchUpperBoundHeight() = binding.untilLayout.height
+    private fun fetchUpperBoundHeight() = binding.warning.height
 
     private fun loadRevealShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.show_elevation)
