@@ -80,14 +80,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     // Needed for split screen
     private fun setBottomSheetPeekHeight() {
-
-        binding.root.doOnLayout {
-            L.v("root")
-        }
-
-        binding.warning.doOnLayout {
-            L.v("warning")
-        }
 //        binding.root.doOnLayout {
 //            L.v("backropHeader");
 //            val upperBound = binding.warning
@@ -108,14 +100,37 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 //        }
 
         binding.root.apply {
-            viewTreeObserver.addOnGlobalLayoutListener(object: ViewTreeObserver.OnGlobalLayoutListener {
+            viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    L.v("global")
                     viewTreeObserver.removeOnGlobalLayoutListener(this)
                     val display = activity?.window?.decorView?.height
                     display?.let {
-                        bottomSheetBehavior.peekHeight = it - binding.warning.bottom - binding.warning.height
+                        val warn = binding.warning.top
+
+                        L.v("warning bottom $warn")
+                        L.v("screen height $it")
+                        L.v("final: ${it - warn}")
+                        bottomSheetBehavior.peekHeight = Math.abs(it - warn)
                     }
+
+                    //--------------------
+
+//                    val upperBound = binding.warning
+//                    val display = activity?.window?.decorView?.height
+//                    val location = IntArray(2)
+//
+//                    display?.let {
+//                        upperBound.getLocationInWindow(location)
+//
+//                        val peekHeight =
+//                            if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
+//                                backdropHeaderHeight
+//                            else
+//                                it - location[1] - upperBoundHeight
+//
+//                        bottomSheetBehavior.peekHeight = peekHeight
+//                    }
                 }
             })
         }
