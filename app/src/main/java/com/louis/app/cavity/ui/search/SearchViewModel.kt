@@ -60,7 +60,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             val filtered = combinedFilters.meetFilters(bottlesAndWine)
             // Deleting 'toList()' seems to introduce a bug sometimes, where the observer is not
             // aware that the data has been changed, the first time you access FragmentSearch
-            _results.postValue(filtered.toList())
+            _results.postValue(filtered)
         }
     }
 
@@ -124,7 +124,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setPriceFilter(minValue: Int, maxValue: Int) {
-        L.v("setPrice filter, min: $minValue, mew: $maxValue")
         priceFilter = if (minValue != -1) FilterPrice(minValue, maxValue) else NoFilter
         filter()
     }

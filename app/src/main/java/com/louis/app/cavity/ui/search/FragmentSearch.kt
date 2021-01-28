@@ -158,9 +158,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         searchViewModel.results.observe(viewLifecycleOwner) {
+            L.v("observer triggered", "DEBGGING SEARCH")
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
-            bottlesAdapter.submitList(it)
+            bottlesAdapter.submitList(it.toList())
         }
     }
 
@@ -350,7 +351,14 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         binding.togglePrice.setOnCheckedChangeListener { _, isChecked ->
-            binding.priceSlider.isEnabled = isChecked
+            binding.priceSlider.apply {
+                // Making sure the view has its chance to restore it state before grabbing values
+                doOnLayout {
+                    isEnabled = isChecked
+                    val minPrice = if (isChecked) values[0].toInt() else -1
+                    searchViewModel.setPriceFilter(minPrice, values[1].toInt())
+                }
+            }
         }
     }
 
