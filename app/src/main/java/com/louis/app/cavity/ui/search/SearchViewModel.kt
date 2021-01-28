@@ -124,6 +124,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setPriceFilter(minValue: Int, maxValue: Int) {
+        L.v("setPrice filter, min: $minValue, mew: $maxValue")
         priceFilter = if (minValue != -1) FilterPrice(minValue, maxValue) else NoFilter
         filter()
     }

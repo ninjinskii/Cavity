@@ -40,7 +40,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private lateinit var beyondDatePicker: MaterialDatePicker<Long>
     private lateinit var untilDatePicker: MaterialDatePicker<Long>
     private val searchViewModel: SearchViewModel by viewModels()
-    private val recyclerViewDisabler = RecyclerViewDisabler { toggleBackdrop() }
+    private val recyclerViewDisabler = RecyclerViewDisabler { binding.toggleBackdrop.toggle() }
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
@@ -350,11 +350,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         binding.togglePrice.setOnCheckedChangeListener { _, isChecked ->
-            binding.priceSlider.apply {
-                isEnabled = isChecked
-                val minPrice = if (isChecked) values[0].toInt() else -1
-                searchViewModel.setPriceFilter(minPrice, values[1].toInt())
-            }
+            binding.priceSlider.isEnabled = isChecked
         }
     }
 
@@ -424,8 +420,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun isSearchMode() = binding.motionToolbar.progress == 1F
 
     private fun fetchBackdropHeaderHeight() = binding.backdropHeader.height
-
-    private fun fetchUpperBoundHeight() = binding.warning.height
 
     private fun loadRevealShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.show_elevation)
