@@ -4,7 +4,6 @@ import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
-import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -31,6 +30,7 @@ import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.math.max
 
 class FragmentSearch : Fragment(R.layout.fragment_search) {
     private var _binding: FragmentSearchBinding? = null
@@ -65,7 +65,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             findNavController().navigateUp()
         }
 
-        setBottomSheetPeekHeight()
+        binding.root.doOnLayout {
+            setBottomSheetPeekHeight()
+        }
+
         initCountyChips()
         initColorChips()
         initOtherChips()
@@ -80,60 +83,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     // Needed for split screen
     private fun setBottomSheetPeekHeight() {
-//        binding.root.doOnLayout {
-//            L.v("backropHeader");
-//            val upperBound = binding.warning
-//            val display = activity?.window?.decorView?.height
-//            val location = IntArray(2)
-//
-//            display?.let {
-//                upperBound.getLocationInWindow(location)
-//
-//                val peekHeight =
-//                    if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
-//                        backdropHeaderHeight
-//                    else
-//                        it - location[1] - upperBoundHeight
-//
-//                bottomSheetBehavior.peekHeight = peekHeight
-//            }
-//        }
-
-        binding.root.apply {
-            viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    val display = activity?.window?.decorView?.height
-                    display?.let {
-                        val warn = binding.warning.top
-
-                        L.v("warning bottom $warn")
-                        L.v("screen height $it")
-                        L.v("final: ${it - warn}")
-                        bottomSheetBehavior.peekHeight = Math.abs(it - warn)
-                    }
-
-                    //--------------------
-
-//                    val upperBound = binding.warning
-//                    val display = activity?.window?.decorView?.height
-//                    val location = IntArray(2)
-//
-//                    display?.let {
-//                        upperBound.getLocationInWindow(location)
-//
-//                        val peekHeight =
-//                            if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
-//                                backdropHeaderHeight
-//                            else
-//                                it - location[1] - upperBoundHeight
-//
-//                        bottomSheetBehavior.peekHeight = peekHeight
-//                    }
-                }
-            })
-        }
+        val fill = binding.root.height - binding.warning.bottom - backdropHeaderHeight
+        bottomSheetBehavior.setPeekHeight(max(backdropHeaderHeight, fill), true)
     }
 
     private fun initCountyChips() {
@@ -313,8 +264,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         binding.motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(motionLayout: MotionLayout?, p0: Int, p1: Int) {
                 if (motionLayout?.progress ?: 0F > 0.5F) {
-                    setBottomSheetPeekHeight()
-
                     with(binding) {
                         currentQuery.setVisible(true)
                         searchView.hideKeyboard()
@@ -323,7 +272,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                     binding.currentQuery.setVisible(false)
 
                     if (binding.toggleBackdrop.isChecked) {
-                        //setBottomSheetPeekHeight()
+                        bottomSheetBehavior.peekHeight = backdropHeaderHeight
                     }
                 }
             }
@@ -334,8 +283,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
                 if (id == R.id.end) {
                     binding.searchView.showKeyboard()
-                    L.v("header height: $backdropHeaderHeight")
-                    bottomSheetBehavior.peekHeight = backdropHeaderHeight
+                } else {
+                    setBottomSheetPeekHeight()
                 }
             }
 
