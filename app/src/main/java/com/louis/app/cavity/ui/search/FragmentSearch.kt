@@ -40,10 +40,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private lateinit var beyondDatePicker: MaterialDatePicker<Long>
     private lateinit var untilDatePicker: MaterialDatePicker<Long>
     private val searchViewModel: SearchViewModel by viewModels()
-    private val recyclerViewDisabler =
-        RecyclerViewDisabler { binding.toggleBackdrop.performClick() }
+    private val recyclerViewDisabler = RecyclerViewDisabler { toggleBackdrop() }
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
-    private val upperBoundHeight by lazy { fetchUpperBoundHeight() }
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
@@ -81,10 +79,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         setupCustomBackNav()
     }
 
-    // Needed for split screen
     private fun setBottomSheetPeekHeight() {
         val fill = binding.root.height - binding.warning.bottom - backdropHeaderHeight
-        bottomSheetBehavior.setPeekHeight(max(backdropHeaderHeight, fill), true)
+        val peekHeight = max(backdropHeaderHeight, fill)
+        bottomSheetBehavior.setPeekHeight(peekHeight, true)
     }
 
     private fun initCountyChips() {
@@ -139,6 +137,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
         bottlesAdapter = BottleRecyclerAdapter(colors) { wineId, bottleId ->
             val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
+            binding.searchView.hideKeyboard()
             findNavController().navigate(action)
         }
 
@@ -260,6 +259,8 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
     }
 
+    // Kwown issue: bottom sheet might and the toggle button might misbehave
+    // if for some reason the keyboard does'nt show up when calling showKeyboard()
     private fun setupMenu() {
         binding.motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(motionLayout: MotionLayout?, p0: Int, p1: Int) {
@@ -271,9 +272,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                 } else {
                     binding.currentQuery.setVisible(false)
 
-                    if (binding.toggleBackdrop.isChecked) {
-                        bottomSheetBehavior.peekHeight = backdropHeaderHeight
-                    }
+//                    if (binding.toggleBackdrop.isChecked) {
+//                        bottomSheetBehavior.peekHeight = backdropHeaderHeight
+//                    }
                 }
             }
 
@@ -283,6 +284,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
                 if (id == R.id.end) {
                     binding.searchView.showKeyboard()
+                    if (binding.toggleBackdrop.isChecked) {
+                        bottomSheetBehavior.peekHeight = backdropHeaderHeight
+                    }
                 } else {
                     setBottomSheetPeekHeight()
                 }

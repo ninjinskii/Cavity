@@ -53,6 +53,7 @@ class AnimatedCheckBox @JvmOverloads constructor(
     override fun setChecked(checked: Boolean) {
         if (isChecked != checked) {
             isChecked = checked
+            L.v("newCheckBox state: ${if(checked) "checked" else "not checked"}")
             refreshDrawableState()
             onCheckedChangeListener?.invoke(isChecked)
         }
