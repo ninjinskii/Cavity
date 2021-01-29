@@ -261,7 +261,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     // Kwown issue: bottom sheet might and the toggle button might misbehave
-    // if for some reason the keyboard does'nt show up when calling showKeyboard()
+    // if for some reason the keyboard doesn't show up when calling showKeyboard()
     private fun setupMenu() {
         binding.motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(motionLayout: MotionLayout?, p0: Int, p1: Int) {
