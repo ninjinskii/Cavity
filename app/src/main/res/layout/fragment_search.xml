@@ -37,7 +37,7 @@
             android:background="?attr/actionBarItemBackground"
             android:scaleType="centerInside"
             android:src="@drawable/asl_filter"
-            app:delayBeforeRepeat="500"
+            app:delayBeforeRepeat="550"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -50,11 +50,11 @@
             android:background="?attr/actionBarItemBackground"
             android:scaleType="centerInside"
             android:src="@drawable/asl_search"
-            android:tint="?attr/colorOnPrimarySurface"
             app:delayBeforeRepeat="1001"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnPrimarySurface" />
 
         <EditText
             android:id="@+id/searchView"

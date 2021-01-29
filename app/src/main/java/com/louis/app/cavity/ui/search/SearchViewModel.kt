@@ -9,6 +9,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.search.filters.NoFilter
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.model.relation.BottleAndWineWithQGrapesAndFReviews
 import com.louis.app.cavity.ui.home.WineColor
@@ -32,12 +33,20 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private var textFilter: WineFilter = NoFilter
     private var priceFilter: WineFilter = NoFilter
     private var dateFilter: WineFilter = NoFilter
+    private var grapeFilter: WineFilter = NoFilter
+    private var reviewFilter: WineFilter = NoFilter
 
     private val _results = MutableLiveData<List<BottleAndWineWithQGrapesAndFReviews>>()
     val results: LiveData<List<BottleAndWineWithQGrapesAndFReviews>>
         get() = _results
 
     var counties = emptyList<Long>()
+        private set
+
+    var grapes = emptyList<Long>()
+        private set
+
+    var reviews = emptyList<Long>()
         private set
 
     init {
@@ -53,7 +62,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(Default) {
             val filters = listOf(
                 countyFilter, colorFilter, otherFilter, vintageFilter,
-                textFilter, priceFilter, dateFilter
+                textFilter, priceFilter, dateFilter, grapeFilter, reviewFilter
             )
 
             val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
@@ -151,5 +160,19 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                 FilterDate(currentBeyondDate, until)
 
         filter()
+    }
+
+    fun setGrapeFilter(filteredGrapes: List<Grape>) {
+//        grapeFilter =
+//            counties = filteredCounties.map { it.countyId }
+//
+//        val countyFilters: List<WineFilter> = filteredCounties.map { FilterCounty(it.countyId) }
+//
+//        countyFilter =
+//            if (countyFilters.isNotEmpty())
+//                countyFilters.reduce { acc, filterCounty -> acc.orCombine(filterCounty) }
+//            else NoFilter
+//
+//        filter()
     }
 }

@@ -78,6 +78,7 @@ class FilterPdf : WineFilter {
     }
 }
 
+// Might be irrelevant
 class FilterStock(private val minStock: Int, private val maxStock: Int) : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWineWithQGrapesAndFReviews>):
             List<BottleAndWineWithQGrapesAndFReviews> {
@@ -89,6 +90,28 @@ class FilterVintage(private val minYear: Int, private val maxYear: Int) : WineFi
     override fun meetFilters(bottlesAndWine: List<BottleAndWineWithQGrapesAndFReviews>):
             List<BottleAndWineWithQGrapesAndFReviews> {
         return bottlesAndWine.filter { it.vintage in minYear..maxYear }
+    }
+}
+
+class FilterGrape(private val grapeId: Long) : WineFilter {
+    override fun meetFilters(bottlesAndWine: List<BottleAndWineWithQGrapesAndFReviews>):
+            List<BottleAndWineWithQGrapesAndFReviews> {
+        return bottlesAndWine.filter {
+            it.qGrapes.map { qGrape ->
+                qGrape.grapeId
+            }.contains(grapeId)
+        }
+    }
+}
+
+class FilterReview(private val reviewId: Long) : WineFilter {
+    override fun meetFilters(bottlesAndWine: List<BottleAndWineWithQGrapesAndFReviews>):
+            List<BottleAndWineWithQGrapesAndFReviews> {
+        return bottlesAndWine.filter {
+            it.fReviews.map { fReview ->
+                fReview.reviewId
+            }.contains(reviewId)
+        }
     }
 }
 

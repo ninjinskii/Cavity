@@ -310,7 +310,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun setListeners() {
         binding.bottomSheet.setOnClickListener {
             if (bottomSheetBehavior.isCollapsed()) {
-                toggleBackdrop()
+                //toggleBackdrop()
                 binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
                 binding.toggleBackdrop.toggle()
             }
