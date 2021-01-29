@@ -6,15 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
-import com.louis.app.cavity.ui.search.filters.NoFilter
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.BottleAndWine
+import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.relation.BottleAndWineWithQGrapesAndFReviews
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.ui.search.filters.*
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -77,7 +75,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     fun setCountiesFilters(filteredCounties: List<County>) {
         counties = filteredCounties.map { it.countyId }
 
-        val countyFilters: List<WineFilter> = filteredCounties.map { FilterCounty(it.countyId) }
+        val countyFilters: List<WineFilter> = counties.map { FilterCounty(it) }
 
         countyFilter =
             if (countyFilters.isNotEmpty())
@@ -163,16 +161,26 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setGrapeFilter(filteredGrapes: List<Grape>) {
-//        grapeFilter =
-//            counties = filteredCounties.map { it.countyId }
-//
-//        val countyFilters: List<WineFilter> = filteredCounties.map { FilterCounty(it.countyId) }
-//
-//        countyFilter =
-//            if (countyFilters.isNotEmpty())
-//                countyFilters.reduce { acc, filterCounty -> acc.orCombine(filterCounty) }
-//            else NoFilter
-//
-//        filter()
+        grapes = filteredGrapes.map { it.grapeId }
+        val grapeFilters: List<WineFilter> = grapes.map { FilterCounty(it) }
+
+        grapeFilter =
+            if (grapeFilters.isNotEmpty())
+                grapeFilters.reduce { acc, filterGrape -> acc.orCombine(filterGrape) }
+            else NoFilter
+
+        filter()
+    }
+
+    fun setReviewFilter(filteredReviews: List<Review>) {
+        reviews = filteredReviews.map { it.reviewId }
+        val reviewFilters: List<WineFilter> = reviews.map { FilterReview(it) }
+
+        reviewFilter =
+            if (reviewFilters.isNotEmpty())
+                reviewFilters.reduce { acc, filterReview -> acc.orCombine(filterReview) }
+            else NoFilter
+
+        filter()
     }
 }
