@@ -78,12 +78,6 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun insertFReview(bottleId: Long, reviewId: Long, value: Int) {
-        viewModelScope.launch(IO) {
-            repository.insertFilledReview(FilledBottleReviewXRef(bottleId, reviewId, value))
-        }
-    }
-
     fun submitCheckedReviews(newCheckedReviews: List<CheckableReview>) {
         for (checkableReview in newCheckedReviews) {
             val (reviewId, _, type) = checkableReview.review

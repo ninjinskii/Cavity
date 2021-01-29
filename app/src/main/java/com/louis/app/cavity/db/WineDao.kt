@@ -20,22 +20,11 @@ interface WineDao {
     @Query("DELETE FROM wine WHERE wine_id =:wineId")
     fun deleteWineById(wineId: Long)
 
-    @Query("SELECT * FROM wine")
-    fun getAllWines(): LiveData<List<Wine>>
-
     @Query("SELECT * FROM wine WHERE wine_id =:wineId")
     fun getWineById(wineId: Long): LiveData<Wine>
 
     @Query("SELECT * FROM wine WHERE wine_id =:wineId")
     fun getWineByIdNotLive(wineId: Long): Wine
-
-    @Transaction
-    @Query("SELECT * FROM wine ORDER BY color, naming")
-    fun getWineWithBottles(): LiveData<List<WineWithBottles>>
-
-    @Transaction
-    @Query("SELECT * FROM wine ORDER BY color, naming")
-    fun getWineWithBottlesNotLive(): List<WineWithBottles>
 
     @Transaction
     @Query("SELECT * FROM wine WHERE county_id =:countyId ORDER BY color, naming")

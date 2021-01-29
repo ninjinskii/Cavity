@@ -18,7 +18,8 @@ class CountyRecyclerAdapter(
     private val onDragIconTouched: (RecyclerView.ViewHolder) -> Unit,
     private val onRename: (County) -> Unit,
     private val onDelete: (County) -> Unit
-) : RecyclerView.Adapter<CountyRecyclerAdapter.CountyViewHolder>() {
+) :
+    RecyclerView.Adapter<CountyRecyclerAdapter.CountyViewHolder>() {
 
     private val counties = mutableListOf<CountyWithWines>()
 
@@ -29,12 +30,11 @@ class CountyRecyclerAdapter(
         return CountyViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: CountyViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: CountyViewHolder, position: Int) {
         holder.bind(counties[position])
-
-    override fun getItemId(position: Int): Long {
-        return counties[position].county.countyId
     }
+
+    override fun getItemId(position: Int) = counties[position].county.countyId
 
     override fun getItemCount() = counties.size
 

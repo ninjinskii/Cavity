@@ -37,7 +37,6 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
         get() = pdfPath.isNotBlank()
 
     fun start(editedBottleId: Long) {
-        L.v("$bottleId")
         if (editedBottleId != 0L) {
             bottleId = editedBottleId
             triggerEditMode(editedBottleId)

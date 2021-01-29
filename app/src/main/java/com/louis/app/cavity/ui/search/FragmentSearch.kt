@@ -35,12 +35,12 @@ import java.util.*
 import kotlin.math.max
 
 class FragmentSearch : Fragment(R.layout.fragment_search) {
-    private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var beyondDatePicker: MaterialDatePicker<Long>
     private lateinit var untilDatePicker: MaterialDatePicker<Long>
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
     private val searchViewModel: SearchViewModel by viewModels()
     private val recyclerViewDisabler = RecyclerViewDisabler { binding.toggleBackdrop.toggle() }
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
@@ -182,7 +182,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         searchViewModel.results.observe(viewLifecycleOwner) {
-            L.v("observer triggered", "DEBGGING SEARCH")
+            L.v("observer triggered", "DEBUGGING SEARCH")
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter.submitList(it.toList())
@@ -354,7 +354,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun setListeners() {
         binding.bottomSheet.setOnClickListener {
             if (bottomSheetBehavior.isCollapsed()) {
-                //toggleBackdrop()
                 binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
                 binding.toggleBackdrop.toggle()
             }

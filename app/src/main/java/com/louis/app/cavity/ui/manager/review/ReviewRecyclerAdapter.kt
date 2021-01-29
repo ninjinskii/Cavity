@@ -20,6 +20,7 @@ class ReviewRecyclerAdapter(
     ListAdapter<ReviewWithFilledReviews, ReviewRecyclerAdapter.ReviewViewHolder>(
         ReviewItemDiffCallback()
     ) {
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -30,8 +31,9 @@ class ReviewRecyclerAdapter(
         return ReviewViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         holder.bind(getItem(position))
+    }
 
     class ReviewItemDiffCallback : DiffUtil.ItemCallback<ReviewWithFilledReviews>() {
         override fun areItemsTheSame(

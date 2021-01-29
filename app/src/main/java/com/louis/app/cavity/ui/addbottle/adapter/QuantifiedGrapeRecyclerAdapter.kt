@@ -24,12 +24,11 @@ class QuantifiedGrapeRecyclerAdapter(
         return GrapeViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: GrapeViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: GrapeViewHolder, position: Int) {
         holder.bind(getItem(position))
-
-    override fun getItemId(position: Int): Long {
-        return currentList[position].getId()
     }
+
+    override fun getItemId(position: Int) = currentList[position].getId()
 
     class GrapeItemDiffCallback : DiffUtil.ItemCallback<QuantifiedGrapeAndGrape>() {
         override fun areItemsTheSame(

@@ -20,7 +20,10 @@ import com.louis.app.cavity.databinding.DialogUseBottleBinding
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
-import com.louis.app.cavity.util.*
+import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.toBoolean
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -33,7 +36,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         _binding = FragmentBottleDetailsBinding.bind(view)
 
         initRecyclerView()
-        initFavButton()
         observe()
         setListeners()
     }
@@ -54,12 +56,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 reviewAdapter.submitList(it)
             }
         }
-    }
-
-    private fun initFavButton() {
-//        binding.favorite.apply {
-//            setButtonDrawable(R.drawable.asl_favorite)
-//        }
     }
 
     private fun observe() {
@@ -207,9 +203,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 buttonShowPdf.setVisible(false)
             }
 
-            favorite.apply {
-                isChecked = bottle.isFavorite.toBoolean()
-            }
+            favorite.isChecked = bottle.isFavorite.toBoolean()
         }
     }
 

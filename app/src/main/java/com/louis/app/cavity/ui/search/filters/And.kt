@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.search.filters
 
-import com.louis.app.cavity.model.relation.BottleAndWine
 import com.louis.app.cavity.model.relation.BottleAndWineWithQGrapesAndFReviews
 
 class And(private val filter: WineFilter, private val otherFilter: WineFilter) : WineFilter {

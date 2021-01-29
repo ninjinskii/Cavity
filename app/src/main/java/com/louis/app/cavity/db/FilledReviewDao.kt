@@ -17,16 +17,9 @@ interface FilledReviewDao {
     @Delete
     suspend fun deleteFilledReview(fReview: FilledBottleReviewXRef)
 
-    @Query("DELETE FROM f_review WHERE bottle_id=:bottleId")
-    suspend fun deleteFReviewForBottle(bottleId: Long)
-
     @Transaction
     @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId")
     suspend fun getFReviewsForBottleNotLive(bottleId: Long): List<FilledBottleReviewXRef>
-
-    @Transaction
-    @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId AND review_id=:reviewId")
-    suspend fun getFReview(bottleId: Long, reviewId: Long): FilledBottleReviewXRef
 
     @Transaction
     @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId")

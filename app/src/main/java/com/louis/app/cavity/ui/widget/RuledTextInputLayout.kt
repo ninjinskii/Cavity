@@ -11,7 +11,8 @@ class RuledTextInputLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : TextInputLayout(context, attrs, defStyleAttr) {
+) :
+    TextInputLayout(context, attrs, defStyleAttr) {
 
     companion object {
         const val RULE_ABSENT = 0x0

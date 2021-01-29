@@ -100,9 +100,7 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
         binding.viewPager.currentItem--
     }
 
-    override fun getBottleId(): Long {
-        return dateViewModel.bottleId
-    }
+    override fun getBottleId() = dateViewModel.bottleId
 
     override fun onDestroyView() {
         super.onDestroyView()

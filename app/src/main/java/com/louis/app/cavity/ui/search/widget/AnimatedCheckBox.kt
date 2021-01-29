@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.search.widget
 
 import android.content.Context
-import android.graphics.drawable.AnimatedStateListDrawable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Checkable
@@ -9,7 +8,6 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.res.use
 import androidx.core.view.postDelayed
 import com.louis.app.cavity.R
-import com.louis.app.cavity.util.L
 
 /**
  * A checkable image button to get rid of weird padding when using default checkboxes
@@ -19,7 +17,9 @@ class AnimatedCheckBox @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
-) : AppCompatImageButton(context, attrs, defStyleAttr), Checkable, View.OnClickListener {
+) :
+    AppCompatImageButton(context, attrs, defStyleAttr), Checkable, View.OnClickListener {
+
     private var isChecked = false
     private var lock = false
     private var onCheckedChangeListener: ((Boolean) -> Unit)? = null

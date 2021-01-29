@@ -20,11 +20,9 @@ import com.louis.app.cavity.util.showKeyboard
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
+    private lateinit var simpleInputDialog: SimpleInputDialog
     private var _binding: FragmentManageBaseBinding? = null
     private val binding get() = _binding!!
-    private lateinit var simpleInputDialog: SimpleInputDialog
-
-    // TODO: Check VM scope carefully
     private val managerViewModel: ManagerViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )

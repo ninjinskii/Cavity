@@ -18,9 +18,6 @@ interface ReviewDao {
     suspend fun deleteReview(review: Review)
 
     @Query("SELECT * FROM review")
-    fun getAllReviews(): LiveData<List<Review>>
-
-    @Query("SELECT * FROM review")
     suspend fun getAllReviewsNotLive(): List<Review>
 
     @Transaction

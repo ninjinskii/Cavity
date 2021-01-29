@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
-
     abstract fun wineDao(): WineDao
     abstract fun bottleDao(): BottleDao
     abstract fun countyDao(): CountyDao

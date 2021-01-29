@@ -106,4 +106,3 @@ fun Fragment.setupNavigation(toolbar: Toolbar) {
 fun String.isNotBlankOrNull(): String? {
     return if (this.isBlank()) null else this
 }
-

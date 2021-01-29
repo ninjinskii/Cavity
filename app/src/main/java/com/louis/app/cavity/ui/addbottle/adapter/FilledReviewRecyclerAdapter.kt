@@ -37,8 +37,6 @@ class FilledReviewRecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseReviewViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
-        L.v("onCreateVH")
-
         return when (viewType) {
             TYPE_MEDAL -> MedalViewHolder(
                 inflater.inflate(
@@ -69,9 +67,7 @@ class FilledReviewRecyclerAdapter(
         holder.bind(currentList[position])
     }
 
-    override fun getItemId(position: Int): Long {
-        return currentList[position].getId()
-    }
+    override fun getItemId(position: Int) = currentList[position].getId()
 
     override fun getItemViewType(position: Int): Int {
         val (_, review) = currentList[position]

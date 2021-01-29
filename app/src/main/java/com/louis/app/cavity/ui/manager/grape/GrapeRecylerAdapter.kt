@@ -16,9 +16,10 @@ import com.louis.app.cavity.model.relation.GrapeWithQuantifiedGrapes
 class GrapeRecylerAdapter(
     private val onRename: (Grape) -> Unit,
     private val onDelete: (Grape) -> Unit
-) : ListAdapter<GrapeWithQuantifiedGrapes, GrapeRecylerAdapter.GrapeViewHolder>(
-    GrapeItemDiffCallback()
-) {
+) :
+    ListAdapter<GrapeWithQuantifiedGrapes, GrapeRecylerAdapter.GrapeViewHolder>(
+        GrapeItemDiffCallback()
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GrapeViewHolder {
         val binding =
@@ -34,16 +35,15 @@ class GrapeRecylerAdapter(
         override fun areItemsTheSame(
             oldItem: GrapeWithQuantifiedGrapes,
             newItem: GrapeWithQuantifiedGrapes
-        ): Boolean {
-            return oldItem.grape.grapeId == newItem.grape.grapeId
-        }
+        ) =
+            oldItem.grape.grapeId == newItem.grape.grapeId
 
         override fun areContentsTheSame(
             oldItem: GrapeWithQuantifiedGrapes,
             newItem: GrapeWithQuantifiedGrapes
-        ): Boolean {
-            return oldItem.grape == newItem.grape && oldItem.qGrapes.size == oldItem.qGrapes.size
-        }
+        ) =
+            oldItem.grape == newItem.grape && oldItem.qGrapes.size == oldItem.qGrapes.size
+
     }
 
     inner class GrapeViewHolder(private val binding: ItemGrapeManagerBinding) :

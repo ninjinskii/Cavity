@@ -17,9 +17,9 @@ import com.louis.app.cavity.util.showKeyboard
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManager : Fragment(R.layout.fragment_manager) {
+    private lateinit var simpleInputDialog: SimpleInputDialog
     private var _binding: FragmentManagerBinding? = null
     private val binding get() = _binding!!
-    private lateinit var simpleInputDialog: SimpleInputDialog
     private val managerViewModel: ManagerViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -6,7 +6,6 @@ import androidx.room.Relation
 import com.louis.app.cavity.model.Person
 import com.louis.app.cavity.model.Tasting
 
-
 data class TastingWithPersons(
     @Embedded val tasting: Tasting,
     @Relation(

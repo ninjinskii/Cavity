@@ -63,8 +63,6 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
         val checkedValue = qGrapeManager.requestUpdateQGrape(qGrape.percentage, newValue)
         val newQGrape = qGrape.copy(percentage = checkedValue) // need copy to avoid false positive
 
-        L.v("update qGrape: $newQGrape")
-
         viewModelScope.launch(IO) {
             repository.updateQuantifiedGrape(newQGrape)
         }

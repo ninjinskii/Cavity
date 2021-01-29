@@ -21,7 +21,8 @@ class WineRecyclerAdapter(
     private val colors: List<Int>,
     private val onVintageClickListener: (Long, Bottle) -> Unit,
     private val onShowOptionsListener: (Wine) -> Unit,
-) : ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
+) :
+    ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,8 +30,9 @@ class WineRecyclerAdapter(
         return WineViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: WineViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: WineViewHolder, position: Int) {
         holder.bind(getItem(position))
+    }
 
     override fun getItemId(position: Int) = getItem(position).wine.wineId
 

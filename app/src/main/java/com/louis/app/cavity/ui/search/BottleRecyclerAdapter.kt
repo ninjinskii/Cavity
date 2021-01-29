@@ -13,7 +13,8 @@ import com.louis.app.cavity.util.toBoolean
 class BottleRecyclerAdapter(
     private val colors: List<Int>,
     private val onClickListener: (Long, Long) -> Unit
-) : ListAdapter<BottleAndWineWithQGrapesAndFReviews, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
+) :
+    ListAdapter<BottleAndWineWithQGrapesAndFReviews, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottleViewHolder {
         val binding = ItemBottleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,12 +22,11 @@ class BottleRecyclerAdapter(
         return BottleViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: BottleViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: BottleViewHolder, position: Int) {
         holder.bind(getItem(position))
-
-    override fun getItemId(position: Int): Long {
-        return currentList[position].bottleId
     }
+
+    override fun getItemId(position: Int) = currentList[position].bottleId
 
     class BottleItemDiffCallback : DiffUtil.ItemCallback<BottleAndWineWithQGrapesAndFReviews>() {
         override fun areItemsTheSame(oldItem: BottleAndWineWithQGrapesAndFReviews, newItem: BottleAndWineWithQGrapesAndFReviews) =

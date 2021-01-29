@@ -1,6 +1,26 @@
 package com.louis.app.cavity.ui.settings
 
+import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.FragmentManagerBinding
+import com.louis.app.cavity.databinding.FragmentSettingsBinding
+import com.louis.app.cavity.util.setupNavigation
 
-class FragmentSettings : Fragment(R.layout.fragment_settings)
+class FragmentSettings : Fragment(R.layout.fragment_settings) {
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentSettingsBinding.bind(view)
+
+        setupNavigation(binding.appBar.toolbar)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+}
