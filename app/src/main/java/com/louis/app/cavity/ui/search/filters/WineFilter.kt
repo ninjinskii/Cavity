@@ -1,9 +1,10 @@
 package com.louis.app.cavity.ui.search.filters
 
-import com.louis.app.cavity.model.relation.BottleAndWine
+import com.louis.app.cavity.model.relation.BottleAndWineWithQGrapesAndFReviews
 
 interface WineFilter {
-    fun meetFilters(bottlesAndWine: List<BottleAndWine>): List<BottleAndWine>
+    fun meetFilters(bottlesAndWine: List<BottleAndWineWithQGrapesAndFReviews>)
+            : List<BottleAndWineWithQGrapesAndFReviews>
 
     fun andCombine(filter: WineFilter): WineFilter {
         return if (this is NoFilter) filter else And(this, filter)

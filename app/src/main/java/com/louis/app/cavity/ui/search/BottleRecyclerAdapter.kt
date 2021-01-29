@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemBottleBinding
-import com.louis.app.cavity.model.relation.BottleAndWine
+import com.louis.app.cavity.model.relation.BottleAndWineWithQGrapesAndFReviews
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class BottleRecyclerAdapter(
     private val colors: List<Int>,
     private val onClickListener: (Long, Long) -> Unit
-) : ListAdapter<BottleAndWine, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
+) : ListAdapter<BottleAndWineWithQGrapesAndFReviews, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottleViewHolder {
         val binding = ItemBottleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -28,18 +28,18 @@ class BottleRecyclerAdapter(
         return currentList[position].bottleId
     }
 
-    class BottleItemDiffCallback : DiffUtil.ItemCallback<BottleAndWine>() {
-        override fun areItemsTheSame(oldItem: BottleAndWine, newItem: BottleAndWine) =
+    class BottleItemDiffCallback : DiffUtil.ItemCallback<BottleAndWineWithQGrapesAndFReviews>() {
+        override fun areItemsTheSame(oldItem: BottleAndWineWithQGrapesAndFReviews, newItem: BottleAndWineWithQGrapesAndFReviews) =
             oldItem.bottleId == newItem.bottleId
 
-        override fun areContentsTheSame(oldItem: BottleAndWine, newItem: BottleAndWine) =
+        override fun areContentsTheSame(oldItem: BottleAndWineWithQGrapesAndFReviews, newItem: BottleAndWineWithQGrapesAndFReviews) =
             oldItem == newItem
     }
 
     inner class BottleViewHolder(private val binding: ItemBottleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(bottleAndWine: BottleAndWine) {
+        fun bind(bottleAndWine: BottleAndWineWithQGrapesAndFReviews) {
             with(binding.wineColorNameNaming) {
                 wineName.text = bottleAndWine.name
                 wineNaming.text = bottleAndWine.naming

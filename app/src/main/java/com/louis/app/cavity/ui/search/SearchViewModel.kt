@@ -10,6 +10,7 @@ import com.louis.app.cavity.ui.search.filters.NoFilter
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.relation.BottleAndWine
+import com.louis.app.cavity.model.relation.BottleAndWineWithQGrapesAndFReviews
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.util.L
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
-    private val bottlesAndWine = mutableListOf<BottleAndWine>()
+    private val bottlesAndWine = mutableListOf<BottleAndWineWithQGrapesAndFReviews>()
 
     private var currentBeyondDate: Long? = null
     private var currentUntilDate: Long? = null
@@ -32,8 +33,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private var priceFilter: WineFilter = NoFilter
     private var dateFilter: WineFilter = NoFilter
 
-    private val _results = MutableLiveData<List<BottleAndWine>>()
-    val results: LiveData<List<BottleAndWine>>
+    private val _results = MutableLiveData<List<BottleAndWineWithQGrapesAndFReviews>>()
+    val results: LiveData<List<BottleAndWineWithQGrapesAndFReviews>>
         get() = _results
 
     var counties = emptyList<Long>()
@@ -41,7 +42,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         viewModelScope.launch(IO) {
-            bottlesAndWine.addAll(repository.getBottlesAndWineNotLive())
+            bottlesAndWine.addAll(repository.getWineAndBottleWithQGrapesAndFReviews())
             _results.postValue(bottlesAndWine)
         }
     }

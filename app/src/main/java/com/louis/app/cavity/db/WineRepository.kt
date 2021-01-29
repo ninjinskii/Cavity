@@ -138,4 +138,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun resetOrder() = countyDao.resetOrder()
 
     suspend fun deleteCounty(countyId: Long) = countyDao.deleteCounty(countyId)
+
+    suspend fun getWineAndBottleWithQGrapesAndFReviews() =
+        bottleDao.getBottleAndWineWithQGrapesAndFReview()
 }

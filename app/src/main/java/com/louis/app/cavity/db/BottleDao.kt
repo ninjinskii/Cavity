@@ -3,8 +3,8 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.BottleAndWine
+import com.louis.app.cavity.model.relation.BottleAndWineWithQGrapesAndFReviews
 import com.louis.app.cavity.model.relation.BottleWithQGrapes
 
 @Dao
@@ -49,5 +49,9 @@ interface BottleDao {
     @Transaction
     @Query("SELECT * FROM bottle")
     suspend fun getBottleWithQGrapesNotLive(): List<BottleWithQGrapes>
+
+    @Transaction
+    @Query("SELECT * FROM wine, bottle WHERE wine.wine_id = bottle.wine_id")
+    suspend fun getBottleAndWineWithQGrapesAndFReview(): List<BottleAndWineWithQGrapesAndFReviews>
 
 }
