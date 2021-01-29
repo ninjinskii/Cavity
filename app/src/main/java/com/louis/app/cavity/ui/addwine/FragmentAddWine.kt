@@ -16,7 +16,7 @@ import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.util.*
@@ -57,11 +57,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             val toInflate = allCounties - alreadyInflated
             alreadyInflated.addAll(toInflate)
 
-            CountyLoader().loadCounties(
-                lifecycleScope,
-                layoutInflater,
+            ChipLoader(lifecycleScope, layoutInflater).loadChips(
                 binding.countyChipGroup,
-                toInflate,
+                toInflate.toMutableList(),
                 preselect = listOf(args.countyId)
             )
         }

@@ -122,7 +122,7 @@ class WineRepository private constructor(app: Application) {
     fun getAllGrapes() = grapeDao.getAllGrapes()
 
     fun getAllReviews() = reviewDao.getAllReviews()
-    fun getAllReviewsNotLive() = reviewDao.getAllReviewsNotLive()
+    suspend fun getAllReviewsNotLive() = reviewDao.getAllReviewsNotLive()
 
     fun getCountiesWithWines() = countyDao.getCountiesWithWines()
     suspend fun getCountiesWithWinesNotLive() = countyDao.getCountiesWithWinesNotLive()

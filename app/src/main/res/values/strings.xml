@@ -179,7 +179,7 @@
 
 
     <!-- Tags -->
-    <string name="tag_chip_id">com.louis.app.cavity.TAG_CHIP_ID</string>
+    <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>
     <string name="tag_modal_sheet_id">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
     <string name="tag_date_picker">com.louis.app.cavity.TAG_DATE_PICKER</string>
 

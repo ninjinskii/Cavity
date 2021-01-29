@@ -56,6 +56,10 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     suspend fun getAllCountiesNotLive() = repository.getAllCountiesNotLive()
 
+    suspend fun getAllGrapesNotLive() = repository.getAllGrapesNotLive()
+
+    suspend fun getAllReviewsNotLive() = repository.getAllReviewsNotLive()
+
     private fun filter() {
         viewModelScope.launch(Default) {
             val filters = listOf(
@@ -160,9 +164,9 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         filter()
     }
 
-    fun setGrapeFilter(filteredGrapes: List<Grape>) {
+    fun setGrapeFilters(filteredGrapes: List<Grape>) {
         grapes = filteredGrapes.map { it.grapeId }
-        val grapeFilters: List<WineFilter> = grapes.map { FilterCounty(it) }
+        val grapeFilters: List<WineFilter> = grapes.map { FilterGrape(it) }
 
         grapeFilter =
             if (grapeFilters.isNotEmpty())
@@ -172,7 +176,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         filter()
     }
 
-    fun setReviewFilter(filteredReviews: List<Review>) {
+    fun setReviewFilters(filteredReviews: List<Review>) {
         reviews = filteredReviews.map { it.reviewId }
         val reviewFilters: List<WineFilter> = reviews.map { FilterReview(it) }
 

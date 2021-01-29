@@ -11,4 +11,7 @@ data class Review(
     val reviewId: Long = 0,
     @ColumnInfo(name = "contest_name") val contestName: String,
     @ColumnInfo(name = "type") var type: Int,
-)
+) : Chipable {
+    override fun getId() = reviewId
+    override fun getChipText() = contestName
+}

@@ -24,7 +24,9 @@ import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -67,7 +69,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             setBottomSheetPeekHeight()
         }
 
-        initCountyChips()
+        initDynamicChips()
         initColorChips()
         initOtherChips()
         initRecyclerView()
@@ -80,25 +82,47 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun setBottomSheetPeekHeight() {
-        val fill = binding.root.height - binding.warning.bottom - backdropHeaderHeight
+        val fill = binding.root.height - binding.reviewStubChipGroup.bottom - backdropHeaderHeight
         val peekHeight = max(backdropHeaderHeight, fill)
         bottomSheetBehavior.setPeekHeight(peekHeight, true)
     }
 
-    private fun initCountyChips() {
+    private fun initDynamicChips() {
         lifecycleScope.launch(IO) {
-            val counties = searchViewModel.getAllCountiesNotLive().toSet()
-            val preselect = searchViewModel.counties
+            with(searchViewModel) {
+                val countyList = getAllCountiesNotLive()
+                val grapeList = getAllGrapesNotLive()
+                val reviewList = getAllReviewsNotLive()
+                val preselectedCounties = counties
+                val preselectedGrapes = grapes
+                val preselectedReviews = reviews
 
-            CountyLoader().loadCounties(
-                lifecycleScope,
-                layoutInflater,
-                binding.countyChipGroup,
-                counties,
-                preselect,
-                selectionRequired = false,
-                onCheckedChangeListener = { _, _ -> prepareCountyFilters() }
-            )
+                ChipLoader(lifecycleScope, layoutInflater).apply {
+                    loadChips(
+                        binding.countyChipGroup,
+                        countyList,
+                        preselectedCounties,
+                        selectionRequired = false,
+                        onCheckedChangeListener = { _, _ -> prepareCountyFilters() }
+                    )
+
+                    loadChips(
+                        binding.grapeChipGroup,
+                        grapeList,
+                        preselectedGrapes,
+                        selectionRequired = false,
+                        onCheckedChangeListener = { _, _ -> prepareGrapeFilters() }
+                    )
+
+                    loadChips(
+                        binding.reviewChipGroup,
+                        reviewList,
+                        preselectedReviews,
+                        selectionRequired = false,
+                        onCheckedChangeListener = { _, _ -> prepareReviewFilters() }
+                    )
+                }
+            }
         }
     }
 
@@ -257,6 +281,26 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             }
 
             searchViewModel.setCountiesFilters(counties)
+        }
+    }
+
+    private fun prepareGrapeFilters() {
+        binding.grapeChipGroup.apply {
+            val grapes = checkedChipIds.map {
+                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Grape
+            }
+
+            searchViewModel.setGrapeFilters(grapes)
+        }
+    }
+
+    private fun prepareReviewFilters() {
+        binding.reviewChipGroup.apply {
+            val reviews = checkedChipIds.map {
+                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Review
+            }
+
+            searchViewModel.setReviewFilters(reviews)
         }
     }
 

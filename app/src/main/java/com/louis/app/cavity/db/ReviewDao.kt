@@ -21,7 +21,7 @@ interface ReviewDao {
     fun getAllReviews(): LiveData<List<Review>>
 
     @Query("SELECT * FROM review")
-    fun getAllReviewsNotLive(): List<Review>
+    suspend fun getAllReviewsNotLive(): List<Review>
 
     @Transaction
     @Query("SELECT * FROM review")

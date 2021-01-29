@@ -10,4 +10,7 @@ data class Grape(
     @ColumnInfo(name = "grape_id")
     val grapeId: Long,
     val name: String
-)
+) : Chipable {
+    override fun getId() = grapeId
+    override fun getChipText() = name
+}
