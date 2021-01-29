@@ -109,9 +109,6 @@
         android:label="FragmentSearch"
         tools:layout="@layout/fragment_search">
         <action
-            android:id="@+id/searchToMoreFilters"
-            app:destination="@id/more_filters_dest" />
-        <action
             android:id="@+id/searchToBottleDetails"
             app:destination="@id/fragmentBottleDetails">
             <argument
@@ -122,12 +119,6 @@
                 app:argType="long" />
         </action>
     </fragment>
-
-    <fragment
-        android:id="@+id/more_filters_dest"
-        android:name="com.louis.app.cavity.ui.search.FragmentMoreFilters"
-        android:label="FragmentMoreFilters"
-        tools:layout="@layout/fragment_more_filters" />
 
     <fragment
         android:id="@+id/fragmentBottleDetails"
