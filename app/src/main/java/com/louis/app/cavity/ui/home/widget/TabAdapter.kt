@@ -26,11 +26,13 @@ class TabAdapter(
         return TabViewHolder(view)
     }
 
-    override fun getItemCount() = tabs.size
-
     override fun onBindViewHolder(holder: TabViewHolder, position: Int) {
         holder.bind(tabs[position])
     }
+
+    override fun getItemCount() = tabs.size
+
+    override fun getItemId(position: Int) = tabs[position].countyId
 
     fun addAll(list: List<County>) {
         tabs.clear()

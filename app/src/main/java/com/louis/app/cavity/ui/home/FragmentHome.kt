@@ -51,8 +51,14 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     private fun setListeners() {
+        var currentCounty = 0L
+
+        binding.tab.addOnPageChangeListener {
+            currentCounty = binding.tab.adapter?.getItemId(it) ?: 0
+        }
+
         binding.fab.setOnClickListener {
-            val action = FragmentHomeDirections.homeToAddWine()
+            val action = FragmentHomeDirections.homeToAddWine(countyId = currentCounty)
             findNavController().navigate(action)
         }
     }

@@ -6,6 +6,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.children
+import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +33,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     companion object {
         const val PICK_IMAGE_RESULT_CODE = 1
+        const val TAKEN_PHOTO_URI = "com.louis.app.cavity.ui.TAKEN_PHOTO_URI"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null)
+            addWineViewModel.start(args.editedWineId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,8 +49,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
         setupNavigation(binding.appBar.toolbar)
         snackbarProvider = activity as SnackbarProvider
-
-        addWineViewModel.start(args.editedWineId)
 
         inflateChips()
         setListeners()
@@ -105,9 +114,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             showDialog()
         }
 
-        binding.buttonAddCountyIfEmpty.setOnClickListener {
-            showDialog()
-        }
+//        binding.buttonAddCountyIfEmpty.setOnClickListener {
+//            showDialog()
+//        }
 
         binding.buttonBrowsePhoto.setOnClickListener {
             val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -123,7 +132,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
 
         binding.buttonTakePhoto.setOnClickListener {
-            // Start camera activity
+            val action = FragmentAddWineDirections.addWineToCamera()
+            findNavController().navigate(action)
         }
 
         binding.buttonRemoveWineImage.setOnClickListener {
@@ -151,8 +161,11 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 cuvee.setText(it.cuvee)
                 (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
                 organicWine.isChecked = it.isOrganic.toBoolean()
-                loadImage(it.imgPath)
             }
+        }
+
+        addWineViewModel.image.observe(viewLifecycleOwner) {
+            loadImage(it)
         }
 
         addWineViewModel.wineUpdatedEvent.observe(viewLifecycleOwner) {
@@ -167,6 +180,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 snackbarProvider.onShowSnackbarRequested(stringRes)
             }
         }
+
+        findNavController()
+            .currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<String>(TAKEN_PHOTO_URI)
+            ?.observe(viewLifecycleOwner) {
+                addWineViewModel.setImage(it)
+            }
     }
 
     private fun requestMediaPersistentPermission(fileBrowserIntent: Intent?) {
@@ -188,7 +209,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             val imagePath = data.data.toString()
             requestMediaPersistentPermission(data)
             addWineViewModel.setImage(imagePath)
-            loadImage(imagePath)
             binding.wineMiniImage.setVisible(true)
         } else {
             snackbarProvider.onShowSnackbarRequested(R.string.base_error)
@@ -197,12 +217,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     private fun loadImage(uri: String?) {
         if (!uri.isNullOrEmpty()) {
-            context?.let {
-                Glide.with(it)
-                    .load(Uri.parse(uri))
-                    .centerCrop()
-                    .into(binding.wineMiniImage)
-            }
+            Glide.with(requireContext())
+                .load(Uri.parse(uri))
+                .centerCrop()
+                .into(binding.wineMiniImage)
 
             toggleImageViews(true)
         } else {

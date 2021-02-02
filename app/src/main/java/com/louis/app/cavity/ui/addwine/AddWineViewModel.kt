@@ -9,12 +9,14 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.ui.Cavity
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import java.io.File
 
 class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
@@ -31,11 +33,14 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     val updatedWine: LiveData<Wine>
         get() = _updatedWine
 
+    private val _image = MutableLiveData<String>()
+    val image: LiveData<String>
+        get() = _image
+
     private val isEditMode: Boolean
         get() = wineId != 0L
 
     private var wineId = 0L
-    private var image = ""
 
     fun start(wineId: Long) {
         this.wineId = wineId
@@ -43,8 +48,8 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         if (wineId != 0L) {
             viewModelScope.launch(IO) {
                 val wine = repository.getWineByIdNotLive(wineId)
-                image = wine.imgPath
                 _updatedWine.postValue(wine)
+                _image.postValue(wine.imgPath)
             }
         }
     }
@@ -55,7 +60,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         cuvee: String,
         isOrganic: Int,
         color: Int,
-        county: County,
+        county: County
     ) {
         val colorNumber = when (color) {
             R.id.colorWhite -> WineColor.COLOR_WHITE
@@ -72,7 +77,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
             cuvee,
             county.countyId,
             isOrganic,
-            image
+            _image.value ?: ""
         )
 
         viewModelScope.launch(IO) {
@@ -106,12 +111,11 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setImage(imagePath: String) {
-        image = imagePath
+        _image.postValue(imagePath)
     }
 
     private fun reset() {
         wineId = -1
-        image = ""
     }
 
     fun getAllCounties() = repository.getAllCounties()

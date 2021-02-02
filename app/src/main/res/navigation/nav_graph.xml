@@ -87,7 +87,16 @@
             android:name="countyId"
             android:defaultValue="-1L"
             app:argType="long" />
+        <action
+            android:id="@+id/addWineToCamera"
+            app:destination="@id/camera_dest" />
     </fragment>
+
+    <fragment
+        android:id="@+id/camera_dest"
+        android:name="com.louis.app.cavity.ui.addwine.FragmentCamera"
+        android:label="FragmentCamera"
+        tools:layout="@layout/fragment_camera" />
 
     <fragment
         android:id="@+id/add_bottle_dest"

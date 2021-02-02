@@ -30,6 +30,7 @@
     <string name="falsy_number">Chiffres uniquement.</string>
     <string name="no_negative">Entrez un nombre supérieur à 0.</string>
     <string name="too_much">Ça fait vraiment beaucoup là.</string>
+    <string name="camera_error">Échec de l\'initialisation de la caméra.</string>
 
     <!-- App -->
     <string name="app_name">Cavity</string>

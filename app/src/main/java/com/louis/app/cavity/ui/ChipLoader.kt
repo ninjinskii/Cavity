@@ -2,11 +2,13 @@ package com.louis.app.cavity.ui
 
 import android.view.LayoutInflater
 import android.widget.CompoundButton
+import android.widget.HorizontalScrollView
+import androidx.core.view.children
+import androidx.core.view.postDelayed
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Chipable
-import com.louis.app.cavity.model.County
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
@@ -47,6 +49,14 @@ class ChipLoader(
 
                     if (item.getId() in preselect)
                         chip.isChecked = true
+                }
+            }
+
+            into.children.firstOrNull { it is Chip && it.isChecked }?.let {
+                val scrollView = into.parent.parent as HorizontalScrollView
+
+                scrollView.postDelayed(500) {
+                    scrollView.smoothScrollTo(it.left - it.paddingLeft, it.top)
                 }
             }
         }
