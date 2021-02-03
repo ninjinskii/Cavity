@@ -61,6 +61,10 @@ abstract class CavityDatabase : RoomDatabase() {
                 val bottleDao = instance?.bottleDao()
                 val wineDao = instance?.wineDao()
                 val countyDao = instance?.countyDao()
+                val grapeDao = instance?.grapeDao()
+                val qGrapeDao = instance?.qGrapeDao()
+                val reviewDao = instance?.reviewDao()
+                val fReviewDao = instance?.fReviewDao()
 
                 GlobalScope.launch(IO) {
                     with(countyDao!!) {
@@ -76,430 +80,124 @@ abstract class CavityDatabase : RoomDatabase() {
                         insertCounty(County(10, "Vallée du Rhône", 9))
                     }
 
-                    with(wineDao!!) {
-                        insertWine(
-                            Wine(
-                                1,
-                                "Immelé",
-                                "Gerwurztraminer",
-                                0,
-                                "Saint Nicolas",
-                                1,
-                                0,
-                                ""
-                            )
-                        )
-                        insertWine(Wine(2, "Immelé", "Gerwurztraminer", 0, "", 1, 1, ""))
-                        insertWine(
-                            Wine(
-                                3,
-                                "Immelé",
-                                "Pinot gris",
-                                0,
-                                "Vendanges Tardives",
-                                1,
-                                0,
-                                ""
-                            )
-                        )
-                        insertWine(Wine(4, "Immelé", "Pinot Noir", 1, "", 1, 0, ""))
-                        insertWine(Wine(5, "Domaine F. Engel", "Gewurztraminer", 0, "", 1, 0, ""))
-                        insertWine(Wine(6, "Domaine F. Engel", "Riesling", 0, "", 1, 0, ""))
+                    val counties = 1..10
 
-                        insertWine(Wine(7, "Marc Dison", "Gevrey-Chambertin", 1, "", 2, 1, ""))
-                        insertWine(
+                    val wineNames = arrayOf(
+                        "Immelé",
+                        "Domaine F. Engel",
+                        "Château la cour",
+                        "Domaine des fusils",
+                        "Ripasso",
+                        "Domaine déliance frères",
+                        "Domaine Masse Fabrice",
+                        "Château Fleur Haut Gaussens",
+                        "Château Delmond",
+                        "Primitivo Rin Forzato Giordano"
+                    )
+
+                    val wineNamings = arrayOf(
+                        "Graves",
+                        "Gewurztraminer",
+                        "Riesling",
+                        "Amarone",
+                        "Côte du Roussillon",
+                        "Pinot gris",
+                        "Clos de la Marolle",
+                        "Bordeau supérieur",
+                        "Côte de Bourg",
+                        "Venetie",
+                        "Savagnin"
+                    )
+
+                    val buyLocations = arrayOf(
+                        "Leclerc Lure",
+                        "Intermarché Lure",
+                        "Fav Auchan",
+                        "Lidl Héricourt",
+                        "Qoqa",
+                        "Cavavin"
+                    )
+
+                    val wineColors = 0..3
+
+                    repeat(50) {
+                        wineDao!!.insertWine(
                             Wine(
-                                8,
-                                "Domaine Delience Frères",
-                                "Clos de la Marole",
-                                1,
+                                0,
+                                wineNames.random(),
+                                wineNamings.random(),
+                                wineColors.random(),
                                 "",
-                                2,
-                                1,
+                                counties.random().toLong(),
+                                (0..1).random(),
                                 ""
                             )
                         )
-                        insertWine(
-                            Wine(
-                                9,
-                                "Domaine Masse Fabrice",
-                                "Fa Brûlée",
-                                1,
-                                "Grand Cru Classé",
-                                2,
-                                0,
-                                ""
-                            )
-                        )
-                        insertWine(Wine(10, "Château de Santenay", "Mercurey", 1, "", 2, 0, ""))
-                        insertWine(Wine(11, "Fes frères Muzards", "Santenay", 1, "VV", 2, 0, ""))
-
-                        insertWine(Wine(12, "Savagnin", "Savagnin", 0, "", 5, 1, ""))
-                        insertWine(Wine(13, "Vin du Jura", "Savagnin", 0, "", 5, 0, ""))
-
-                        insertWine(Wine(14, "Domaine Fes Creisses", "Herault", 1, "", 4, 0, ""))
-                        insertWine(
-                            Wine(
-                                15,
-                                "Domaine Fes Creisses",
-                                "Herault",
-                                1,
-                                "Fe Bastion",
-                                4,
-                                0,
-                                ""
-                            )
-                        )
-                        insertWine(Wine(16, "Domaine Des Fusils", "Herault", 1, "", 4, 1, ""))
-
-                        insertWine(
-                            Wine(
-                                17,
-                                "Mas Amiel pur schiste",
-                                "Côte du Roussillon",
-                                1,
-                                "",
-                                9,
-                                0,
-                                ""
-                            )
-                        )
-                        insertWine(
-                            Wine(
-                                18,
-                                "Domaine Bastide Miraflor",
-                                "Côte du Roussillon",
-                                1,
-                                "",
-                                9,
-                                0,
-                                ""
-                            )
-                        )
-
-                        insertWine(Wine(19, "Domaine Fondrèche", "Ventoux", 1, "", 10, 1, ""))
-                        insertWine(Wine(20, "Persia", "Ventoux", 1, "", 10, 1, ""))
-
-                        insertWine(Wine(21, "Domaine de Marotte", "Foupiac", 2, "", 8, 0, ""))
-                        insertWine(Wine(22, "Fe pradey", "Sainte Croix du Mont", 2, "", 8, 0, ""))
-                        insertWine(Wine(23, "Château Delmond", "Sauternes", 2, "", 8, 0, ""))
-                        insertWine(Wine(24, "Château la Raspide", "Sauternes", 2, "", 8, 1, ""))
-                        insertWine(
-                            Wine(
-                                25,
-                                "Château Fleur Haut Gaussens",
-                                "Bordeau supérieur",
-                                1,
-                                "",
-                                8,
-                                0,
-                                ""
-                            )
-                        )
-                        insertWine(
-                            Wine(
-                                26,
-                                "Fes tuileries de Fansac",
-                                "Côte de Bourg",
-                                1,
-                                "",
-                                8,
-                                0,
-                                ""
-                            )
-                        )
-                        insertWine(Wine(27, "Château la Ouarde", "Graves", 1, "", 8, 0, ""))
-                        insertWine(Wine(28, "Château la Carolle", "Graves", 1, "", 8, 0, ""))
-                        insertWine(Wine(29, "Château de Fandiras", "Graves", 1, "", 8, 0, ""))
-
-                        insertWine(
-                            Wine(
-                                30,
-                                "Primitivo Rin Forzato Giordano",
-                                "Fes Pouilles",
-                                1,
-                                "Amaretto passi",
-                                7,
-                                0,
-                                ""
-                            )
-                        )
-                        insertWine(
-                            Wine(
-                                31,
-                                "Barolo le Terre",
-                                "Toscane",
-                                1,
-                                "Amaretto passi",
-                                7,
-                                1,
-                                ""
-                            )
-                        )
-                        insertWine(
-                            Wine(
-                                32,
-                                "Chianti classico Fa Palaia",
-                                "Toscane",
-                                1,
-                                "",
-                                7,
-                                0,
-                                ""
-                            )
-                        )
-                        insertWine(Wine(33, "Ripasso Superieur Zeni", "Venetie", 1, "", 7, 0, ""))
                     }
 
-                    with(bottleDao!!) {
-                        insertBottle(
-                            Bottle(
-                                0,
-                                1,
-                                2014,
-                                2024,
-                                0,
-                                1,
-                                14F,
-                                "",
-                                "Vin succulent",
-                                "Feclerc Fure",
-                                -1,
-                                "Notes amères",
-                                "",
-                                0
+                    repeat(150) {
+                        try {
+                            bottleDao!!.insertBottle(
+                                Bottle(
+                                    0,
+                                    (0..50).random().toLong(),
+                                    "20${(3..21).random()}".toInt(),
+                                    "20${(21..35).random()}".toInt(),
+                                    (0..1).random(),
+                                    1,
+                                    (0..300).random().toFloat(),
+                                    "€",
+                                    "",
+                                    buyLocations.random(),
+                                    (1486149968..System.currentTimeMillis()).random(),
+                                    "",
+                                    "",
+                                    0
+                                )
                             )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0,
-                                1,
-                                2013,
-                                2023,
-                                1,
-                                2,
-                                14F,
-                                "",
-                                "Elu super vin dans un certain concours",
-                                "",
-                                -1,
-                                "Doux",
-                                "",
-                                0
-                            )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0,
-                                1,
-                                2016,
-                                2019,
-                                0,
-                                1,
-                                25F,
-                                "",
-                                "",
-                                "",
-                                -1,
-                                "Doux",
-                                "",
-                                0
-                            )
-                        )
-                        insertBottle(Bottle(0, 2, 2017, 2019, 0, 1, 16F, "", "", "", -1, "", "", 0))
+                        } catch (e: Exception) {
+                            // Do nothing
+                        }
+                    }
 
-                        insertBottle(Bottle(0, 3, 2017, 2019, 0, 1, 16F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 4, 2009, 2013, 1, 1, 40F, "", "", "", -1, "", "", 0))
-                        insertBottle(
-                            Bottle(
-                                0,
-                                5,
-                                2017,
-                                2040,
-                                0,
-                                15,
-                                16F,
-                                "",
-                                "",
-                                "Cavavin",
-                                -1,
-                                "",
-                                "",
-                                0
-                            )
-                        )
-                        insertBottle(Bottle(0, 6, 2018, 2019, 1, 1, 160F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 7, 2014, 2021, 0, 5, 16F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 8, 2016, 2030, 0, 1, 16F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 9, 2019, 2019, 0, 1, 16F, "", "", "", -1, "", "", 0))
-                        insertBottle(
-                            Bottle(
-                                0,
-                                10,
-                                2020,
-                                2030,
-                                0,
-                                1,
-                                16F,
-                                "",
-                                "",
-                                "Foire aux vins Fure",
-                                -1,
-                                "",
-                                "",
-                                0
-                            )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0,
-                                10,
-                                2019,
-                                2031,
-                                1,
-                                1,
-                                18F,
-                                "",
-                                "",
-                                "Foire aux vins Fure",
-                                -1,
-                                "",
-                                "",
-                                0
-                            )
-                        )
-                        insertBottle(Bottle(0, 11, 2005, 2019, 0, 5, 16F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 12, 2016, 2028, 1, 1, 15F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 13, 2019, 2023, 0, 1, 30F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 14, 2017, 2019, 0, 1, 7F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 15, 2014, 2023, 0, 1, 3F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 15, 2015, 2020, 1, 2, 3F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 16, 2013, 2019, 0, 40, 0F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 17, 2012, 2019, 0, 1, -1F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 18, 2011, 2023, 0, 1, 15F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 19, 2010, 2023, 0, 1, -1F, "", "", "", -1, "", "", 0))
+                    with(grapeDao!!) {
+                        insertGrape(Grape(0, "Syrah"))
+                        insertGrape(Grape(0, "Cabernet"))
+                        insertGrape(Grape(0, "Sauvignon"))
+                        insertGrape(Grape(0, "Pinot noir"))
+                    }
 
-                        insertBottle(Bottle(0, 20, 2011, 2019, 0, 2, 15F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 21, 2016, 2019, 0, 1, -1F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 22, 2012, 2025, 0, 1, 400F, "", "", "", -1, "", "", 0))
-                        insertBottle(
-                            Bottle(
-                                0,
-                                23,
-                                2015,
-                                2019,
-                                1,
-                                1,
-                                1000F,
-                                "",
-                                "",
-                                "Intermarché Belfor",
-                                -1,
-                                "",
-                                "",
-                                0
-                            )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0,
-                                23,
-                                2014,
-                                2016,
-                                1,
-                                1,
-                                20F,
-                                "",
-                                "",
-                                "Un autre Intermarché",
-                                -1,
-                                "",
-                                "",
-                                0
-                            )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0, 24, 2018, 2021, 0, 1, 50F, "", "", "", -1, "", "",
-                                0
-                            )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0, 25, 2013, 2023, 0, 1, 63F, "", "", "", -1, "", "",
-                                0
-                            )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0, 26, 2014, 2019, 1, 1, 5F, "", "", "", -1, "", "",
-                                0
-                            )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0, 26, 2015, 2025, 1, 1, 5F, "", "", "", -1, "", "",
-                                0
-                            )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0, 27, 2019, 2024, 0, 1, 8F, "", "", "", -1, "", "",
-                                0
-                            )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0, 28, 2010, 2019, 0, 1, -1F, "", "", "", -1, "", "",
-                                0
-                            )
-                        )
-                        insertBottle(
-                            Bottle(
-                                0, 29, 2011, 2019, 0, 1, 40F, "", "", "", -1, "", "",
-                                0
-                            )
-                        )
+                    with(reviewDao!!) {
+                        insertReview(Review(0, "Parker", 0))
+                        insertReview(Review(0, "Vignerons indépendants", 1))
+                        insertReview(Review(0, "James Suckling", 2))
+                        insertReview(Review(0, "Les étoiles", 3))
+                    }
 
-                        insertBottle(
-                            Bottle(
-                                0,
-                                30,
-                                2011,
-                                2019,
-                                0,
-                                1,
-                                30F,
-                                "",
-                                "Aîe",
-                                "",
-                                -1,
-                                "Paille",
-                                "",
-                                0
+                    repeat(150) {
+                        try {
+                            qGrapeDao!!.insertQuantifiedGrape(
+                                QuantifiedBottleGrapeXRef(
+                                    (0..70).random().toLong(),
+                                    (1..4).random().toLong(),
+                                    (5..15).random()
+                                )
                             )
-                        )
-                        insertBottle(Bottle(0, 31, 2016, 2021, 0, 1, 40F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 32, 2014, 2019, 0, 1, 20F, "", "", "", -1, "", "", 0))
-                        insertBottle(Bottle(0, 32, 2016, 2019, 0, 1, 20F, "", "", "", -1, "", "", 0))
-                        insertBottle(
-                            Bottle(
-                                0,
-                                33,
-                                2015,
-                                2022,
-                                0,
-                                1,
-                                7F,
-                                "",
-                                "",
-                                "",
-                                -1,
-                                "Piquette",
-                                "",
-                                0
+                        } catch (e: Exception) {
+                            // Do nothing
+                        }
+
+                        try {
+                            fReviewDao!!.insertFilledReview(
+                                FilledBottleReviewXRef(
+                                    (0..70).random().toLong(),
+                                    (1..4).random().toLong(),
+                                    (0..2).random()
+                                )
                             )
-                        )
+                        } catch (e: Exception) {
+                            // Do nothing
+                        }
                     }
                 }
             }

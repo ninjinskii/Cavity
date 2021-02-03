@@ -87,7 +87,8 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
             step1.buyLocation,
             step1.buyDate,
             tasteComment = "",
-            pdfPath
+            pdfPath,
+            consumed = false.toInt()
         )
     }
 }

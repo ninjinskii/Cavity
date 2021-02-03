@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -69,7 +70,8 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
             location,
             buyDateTimestamp,
             tasteComment,
-            pdfPath
+            pdfPath,
+            consumed = false.toInt()
         )
 
         viewModelScope.launch(IO) {
