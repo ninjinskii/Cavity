@@ -75,7 +75,7 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
     // Hiding boring stuff
     private fun mergeStep1Bottle(step1: Bottle, addToFavorite: Boolean, otherInfo: String): Bottle {
         return Bottle(
-            step1.bottleId,
+            step1.id,
             step1.wineId,
             step1.vintage,
             step1.apogee,
@@ -86,9 +86,9 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
             otherInfo,
             step1.buyLocation,
             step1.buyDate,
-            tasteComment = "",
+            step1.tasteComment,
             pdfPath,
-            consumed = false.toInt()
+            step1.consumed
         )
     }
 }

@@ -7,11 +7,10 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "county")
 data class County(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "county_id")
-    val countyId: Long = 0,
+    val id: Long = 0,
     val name: String,
     @ColumnInfo(name = "pref_order") var prefOrder: Int
 ) : Chipable {
-    override fun getId() = countyId
+    override fun getItemId() = id
     override fun getChipText() = name
 }

@@ -9,7 +9,7 @@ import com.louis.app.cavity.model.HistoryEntry
 data class BottleAndHistoryEntry(
     @Embedded val bottle: Bottle,
     @Relation(
-        parentColumn = "bottle_id",
+        parentColumn = "id",
         entityColumn = "bottle_id"
     )
     val historyEntry: HistoryEntry

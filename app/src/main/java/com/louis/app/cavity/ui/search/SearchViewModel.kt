@@ -77,7 +77,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setCountiesFilters(filteredCounties: List<County>) {
-        counties = filteredCounties.map { it.countyId }
+        counties = filteredCounties.map { it.id }
 
         val countyFilters: List<WineFilter> = counties.map { FilterCounty(it) }
 
@@ -165,7 +165,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setGrapeFilters(filteredGrapes: List<Grape>) {
-        grapes = filteredGrapes.map { it.grapeId }
+        grapes = filteredGrapes.map { it.id }
         val grapeFilters: List<WineFilter> = grapes.map { FilterGrape(it) }
 
         grapeFilter =
@@ -177,7 +177,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setReviewFilters(filteredReviews: List<Review>) {
-        reviews = filteredReviews.map { it.reviewId }
+        reviews = filteredReviews.map { it.id }
         val reviewFilters: List<WineFilter> = reviews.map { FilterReview(it) }
 
         reviewFilter =

@@ -12,13 +12,13 @@ import com.louis.app.cavity.model.Grape
     foreignKeys = [
         ForeignKey(
             entity = Bottle::class,
-            parentColumns = arrayOf("bottle_id"),
+            parentColumns = arrayOf("id"),
             childColumns = arrayOf("bottle_id"),
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = Grape::class,
-            parentColumns = arrayOf("grape_id"),
+            parentColumns = arrayOf("id"),
             childColumns = arrayOf("grape_id"),
             onDelete = ForeignKey.CASCADE
         )

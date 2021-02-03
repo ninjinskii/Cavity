@@ -8,7 +8,7 @@ import com.louis.app.cavity.model.Wine
 data class CountyWithWines(
     @Embedded val county: County,
     @Relation(
-        parentColumn = "county_id",
+        parentColumn = "id",
         entityColumn = "county_id"
     )
     val wines: List<Wine>

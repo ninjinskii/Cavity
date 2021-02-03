@@ -17,13 +17,13 @@ interface WineDao {
     @Delete
     fun deleteWine(wine: Wine)
 
-    @Query("DELETE FROM wine WHERE wine_id =:wineId")
+    @Query("DELETE FROM wine WHERE id =:wineId")
     fun deleteWineById(wineId: Long)
 
-    @Query("SELECT * FROM wine WHERE wine_id =:wineId")
+    @Query("SELECT * FROM wine WHERE id =:wineId")
     fun getWineById(wineId: Long): LiveData<Wine>
 
-    @Query("SELECT * FROM wine WHERE wine_id =:wineId")
+    @Query("SELECT * FROM wine WHERE id =:wineId")
     fun getWineByIdNotLive(wineId: Long): Wine
 
     @Transaction

@@ -12,13 +12,13 @@ import com.louis.app.cavity.model.Review
     foreignKeys = [
         ForeignKey(
             entity = Bottle::class,
-            parentColumns = arrayOf("bottle_id"),
+            parentColumns = arrayOf("id"),
             childColumns = arrayOf("bottle_id"),
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = Review::class,
-            parentColumns = arrayOf("review_id"),
+            parentColumns = arrayOf("id"),
             childColumns = arrayOf("review_id"),
             onDelete = ForeignKey.CASCADE
         )

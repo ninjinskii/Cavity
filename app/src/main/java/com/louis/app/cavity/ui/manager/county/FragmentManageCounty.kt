@@ -89,7 +89,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
             }
             .setPositiveButton(R.string.delete) { _, _ ->
                 if (dialogBinding.countyName.text.toString() == county.name) {
-                    managerViewModel.deleteCounty(county.countyId)
+                    managerViewModel.deleteCounty(county.id)
                 }
             }
             .setView(dialogBinding.root)

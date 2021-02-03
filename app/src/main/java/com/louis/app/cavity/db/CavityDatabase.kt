@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
         QuantifiedBottleGrapeXRef::class,
         FilledBottleReviewXRef::class
     ],
-    version = 34,
+    version = 35,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -141,7 +141,7 @@ abstract class CavityDatabase : RoomDatabase() {
                                 Bottle(
                                     0,
                                     (0..50).random().toLong(),
-                                    "20${(3..21).random()}".toInt(),
+                                    "20${(10..21).random()}".toInt(),
                                     "20${(21..35).random()}".toInt(),
                                     (0..1).random(),
                                     1,
@@ -174,7 +174,7 @@ abstract class CavityDatabase : RoomDatabase() {
                         insertReview(Review(0, "Les étoiles", 3))
                     }
 
-                    repeat(150) {
+                    repeat(300) {
                         try {
                             qGrapeDao!!.insertQuantifiedGrape(
                                 QuantifiedBottleGrapeXRef(

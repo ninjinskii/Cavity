@@ -9,9 +9,9 @@ class WinesPagerAdapter(activity: FragmentActivity, private val counties: List<C
     override fun getItemCount(): Int = counties.size
 
     override fun createFragment(position: Int) =
-        FragmentWines.newInstance(counties[position].countyId)
+        FragmentWines.newInstance(counties[position].id)
 
-    override fun getItemId(position: Int) = counties[position].countyId
+    override fun getItemId(position: Int) = counties[position].id
 
-    override fun containsItem(itemId: Long) = counties.map { it.countyId }.contains(itemId)
+    override fun containsItem(itemId: Long) = counties.map { it.id }.contains(itemId)
 }

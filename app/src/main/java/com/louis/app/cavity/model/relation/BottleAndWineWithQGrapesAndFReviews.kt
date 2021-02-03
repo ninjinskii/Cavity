@@ -7,7 +7,7 @@ import java.util.*
 // TODO: something better
 data class BottleAndWineWithQGrapesAndFReviews(
     @ColumnInfo(name = "wine_id") val wineId: Long,
-    @ColumnInfo(name = "bottle_id") val bottleId: Long,
+    val id: Long,
     val name: String,
     val naming: String,
     val cuvee: String,
@@ -26,14 +26,12 @@ data class BottleAndWineWithQGrapesAndFReviews(
     @ColumnInfo(name = "pdf_path") val pdfPath: String,
     @ColumnInfo(name = "county_id") val countyId: Long,
     @Relation(
-        entity = QuantifiedBottleGrapeXRef::class,
-        parentColumn = "bottle_id",
+        parentColumn = "id",
         entityColumn = "bottle_id",
     )
     val qGrapes: List<QuantifiedBottleGrapeXRef>,
     @Relation(
-        entity = FilledBottleReviewXRef::class,
-        parentColumn = "bottle_id",
+        parentColumn = "id",
         entityColumn = "bottle_id",
     )
     val fReviews: List<FilledBottleReviewXRef>

@@ -7,8 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "history_entry")
 data class HistoryEntry(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "history_entry_id")
-    val historyEntryId: Long = 0,
+    val id: Long = 0,
     @ColumnInfo(name = "date") val date: Long,
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
     @ColumnInfo(name = "tasting_id") val tastingId: Long,

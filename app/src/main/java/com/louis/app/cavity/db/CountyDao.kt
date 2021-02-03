@@ -20,7 +20,7 @@ interface CountyDao {
     @Delete
     fun deleteCounty(county: County)
 
-    @Query("DELETE FROM county WHERE county_id=:countyId")
+    @Query("DELETE FROM county WHERE id=:countyId")
     suspend fun deleteCounty(countyId: Long)
 
     @Query("SELECT * FROM county ORDER BY pref_order")

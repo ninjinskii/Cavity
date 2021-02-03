@@ -38,14 +38,14 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         }
 
         val onVintageClick = { wineId: Long, bottle: Bottle ->
-            val action = FragmentHomeDirections.homeToBottleDetails(wineId, bottle.bottleId)
+            val action = FragmentHomeDirections.homeToBottleDetails(wineId, bottle.id)
             findNavController().navigate(action)
         }
 
         val wineAdapter = WineRecyclerAdapter(colors ?: return, onVintageClick) { wine ->
             activity?.supportFragmentManager?.let {
                 val action = FragmentHomeDirections.homeToWineOptions(
-                    wine.wineId,
+                    wine.id,
                     wine.countyId,
                     wine.name,
                     wine.naming,

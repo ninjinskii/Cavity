@@ -76,7 +76,7 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
             val grapes = repository.getAllGrapesNotLive().map { it.name }
 
             if (grapeName !in grapes) {
-                repository.insertGrape(Grape(grapeId = 0, grapeName))
+                repository.insertGrape(Grape(0, grapeName))
                 _userFeedback.postOnce(R.string.grape_added)
             } else {
                 _userFeedback.postOnce(R.string.grape_already_exist)
@@ -103,7 +103,7 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
             val reviews = repository.getAllReviewsNotLive().map { it.contestName }
 
             if (contestName !in reviews) {
-                repository.insertReview(Review(reviewId = 0, contestName, type))
+                repository.insertReview(Review(0, contestName, type))
             } else {
                 _userFeedback.postOnce(R.string.contest_name_already_exist)
             }

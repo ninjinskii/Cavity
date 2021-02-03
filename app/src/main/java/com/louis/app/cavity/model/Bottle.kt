@@ -10,15 +10,14 @@ import java.util.*
     tableName = "bottle",
     foreignKeys = [ForeignKey(
         entity = Wine::class,
-        parentColumns = arrayOf("wine_id"),
+        parentColumns = arrayOf("id"),
         childColumns = arrayOf("wine_id"),
         onDelete = ForeignKey.CASCADE
     )]
 )
 data class Bottle(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "bottle_id")
-    val bottleId: Long = 0,
+    val id: Long = 0,
     @ColumnInfo(name = "wine_id") val wineId: Long,
     val vintage: Int,
     val apogee: Int,
@@ -40,5 +39,3 @@ data class Bottle(
 
     fun hasPdf() = pdfPath.isNotBlank()
 }
-
-// Context getFilesDIr() pour récupérer le stockage privé et mettre les photos dedans

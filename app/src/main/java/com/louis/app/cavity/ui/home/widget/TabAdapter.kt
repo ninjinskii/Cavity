@@ -32,7 +32,7 @@ class TabAdapter(
 
     override fun getItemCount() = tabs.size
 
-    override fun getItemId(position: Int) = tabs[position].countyId
+    override fun getItemId(position: Int) = tabs[position].id
 
     fun addAll(list: List<County>) {
         tabs.clear()

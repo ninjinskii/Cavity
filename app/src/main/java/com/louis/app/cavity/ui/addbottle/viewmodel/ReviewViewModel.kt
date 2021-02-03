@@ -39,7 +39,7 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
             val reviews = repository.getAllReviewsNotLive().map { it.contestName }
 
             if (contestName !in reviews) {
-                val id = repository.insertReview(Review(reviewId = 0, contestName, type))
+                val id = repository.insertReview(Review(0, contestName, type))
                 insertFilledReview(id, getDefaultValue(type))
             } else {
                 _userFeedback.postOnce(R.string.contest_name_already_exist)
@@ -82,7 +82,7 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
         for (checkableReview in newCheckedReviews) {
             val (reviewId, _, type) = checkableReview.review
             val oldOne =
-                _reviewDialogEvent.value?.peekContent()?.find { it.review.reviewId == reviewId }
+                _reviewDialogEvent.value?.peekContent()?.find { it.review.id == reviewId }
 
             when {
                 checkableReview.isChecked && oldOne?.isChecked != true ->
@@ -101,7 +101,7 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
             val reviews = repository.getAllReviewsNotLive()
             val fReviews = repository.getFReviewsForBottleNotLive(bottleId).map { it.reviewId }
             val currentCheckedReviews =
-                reviews.map { CheckableReview(it, isChecked = it.reviewId in fReviews) }
+                reviews.map { CheckableReview(it, isChecked = it.id in fReviews) }
 
             _reviewDialogEvent.postOnce(currentCheckedReviews)
         }

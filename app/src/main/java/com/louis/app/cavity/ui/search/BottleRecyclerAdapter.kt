@@ -26,11 +26,11 @@ class BottleRecyclerAdapter(
         holder.bind(getItem(position))
     }
 
-    override fun getItemId(position: Int) = currentList[position].bottleId
+    override fun getItemId(position: Int) = currentList[position].id
 
     class BottleItemDiffCallback : DiffUtil.ItemCallback<BottleAndWineWithQGrapesAndFReviews>() {
         override fun areItemsTheSame(oldItem: BottleAndWineWithQGrapesAndFReviews, newItem: BottleAndWineWithQGrapesAndFReviews) =
-            oldItem.bottleId == newItem.bottleId
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: BottleAndWineWithQGrapesAndFReviews, newItem: BottleAndWineWithQGrapesAndFReviews) =
             oldItem == newItem
@@ -49,7 +49,7 @@ class BottleRecyclerAdapter(
             }
 
             binding.root.setOnClickListener {
-                onClickListener(bottleAndWine.wineId, bottleAndWine.bottleId)
+                onClickListener(bottleAndWine.wineId, bottleAndWine.id)
             }
 
             binding.vintage.text = bottleAndWine.vintage.toString()

@@ -36,7 +36,7 @@ class GrapeRecylerAdapter(
             oldItem: GrapeWithQuantifiedGrapes,
             newItem: GrapeWithQuantifiedGrapes
         ) =
-            oldItem.grape.grapeId == newItem.grape.grapeId
+            oldItem.grape.id == newItem.grape.id
 
         override fun areContentsTheSame(
             oldItem: GrapeWithQuantifiedGrapes,

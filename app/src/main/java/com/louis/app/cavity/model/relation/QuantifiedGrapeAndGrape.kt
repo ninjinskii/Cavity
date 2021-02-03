@@ -8,7 +8,7 @@ data class QuantifiedGrapeAndGrape(
     @Embedded val qGrape: QuantifiedBottleGrapeXRef,
     @Relation(
         parentColumn = "grape_id",
-        entityColumn = "grape_id"
+        entityColumn = "id"
     )
     val grape: Grape
 ) {

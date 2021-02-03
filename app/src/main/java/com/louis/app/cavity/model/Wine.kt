@@ -10,15 +10,14 @@ import com.louis.app.cavity.ui.home.WineColor
     tableName = "wine",
     foreignKeys = [ForeignKey(
         entity = County::class,
-        parentColumns = arrayOf("county_id"),
+        parentColumns = arrayOf("id"),
         childColumns = arrayOf("county_id"),
         onDelete = ForeignKey.CASCADE
     )]
 )
 data class Wine(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "wine_id")
-    val wineId: Long = 0,
+    val id: Long = 0,
     val name: String,
     val naming: String,
     val color: Int,

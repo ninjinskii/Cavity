@@ -34,11 +34,11 @@ class WineRecyclerAdapter(
         holder.bind(getItem(position))
     }
 
-    override fun getItemId(position: Int) = getItem(position).wine.wineId
+    override fun getItemId(position: Int) = getItem(position).wine.id
 
     class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {
         override fun areItemsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
-            oldItem.wine.wineId == newItem.wine.wineId
+            oldItem.wine.id == newItem.wine.id
 
         override fun areContentsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
             oldItem.wine == newItem.wine && oldItem.bottles == newItem.bottles
@@ -73,7 +73,7 @@ class WineRecyclerAdapter(
                         if (bottle.isReadyToDrink())
                             chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
 
-                        setOnClickListener { onVintageClickListener(wine.wineId, bottle) }
+                        setOnClickListener { onVintageClickListener(wine.id, bottle) }
                     }
 
                     binding.chipGroup.addView(chip)

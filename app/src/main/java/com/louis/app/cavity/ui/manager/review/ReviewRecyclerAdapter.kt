@@ -40,7 +40,7 @@ class ReviewRecyclerAdapter(
             oldItem: ReviewWithFilledReviews,
             newItem: ReviewWithFilledReviews
         ): Boolean {
-            return oldItem.review.reviewId == newItem.review.reviewId
+            return oldItem.review.id == newItem.review.id
         }
 
         override fun areContentsTheSame(

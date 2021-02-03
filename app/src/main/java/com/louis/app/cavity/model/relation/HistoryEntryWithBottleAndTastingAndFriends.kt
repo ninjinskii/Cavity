@@ -13,13 +13,13 @@ data class HistoryEntryWithBottleAndTastingAndFriends(
     val historyEntry: HistoryEntry,
 
     @Relation(
-        parentColumn = "bottle_id",
+        parentColumn = "id",
         entityColumn = "bottle_id"
     )
     val bottle: Bottle,
 
     @Relation(
-        parentColumn = "tasting_id",
+        parentColumn = "id",
         entityColumn = "tasting_id"
     )
     val tasting: Tasting,

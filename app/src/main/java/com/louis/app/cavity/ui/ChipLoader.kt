@@ -47,7 +47,7 @@ class ChipLoader(
                     if (index == 0 && selectionRequired && preselect.isEmpty())
                         chip.isChecked = true
 
-                    if (item.getId() in preselect)
+                    if (item.getItemId() in preselect)
                         chip.isChecked = true
                 }
             }

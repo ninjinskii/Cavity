@@ -41,7 +41,7 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
             val grapes = repository.getAllGrapesNotLive().map { it.name }
 
             if (grapeName !in grapes) {
-                val id = repository.insertGrape(Grape(grapeId = 0, grapeName))
+                val id = repository.insertGrape(Grape(0, grapeName))
                 insertQuantifiedGrape(id)
             } else {
                 _userFeedback.postOnce(R.string.grape_already_exist)
@@ -90,9 +90,9 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun submitCheckedGrapes(newCheckedGrapes: List<CheckableGrape>) {
         for (checkableGrape in newCheckedGrapes) {
-            val grapeId = checkableGrape.grape.grapeId
+            val grapeId = checkableGrape.grape.id
             val oldOne =
-                _grapeDialogEvent.value?.peekContent()?.find { it.grape.grapeId == grapeId }
+                _grapeDialogEvent.value?.peekContent()?.find { it.grape.id == grapeId }
 
             when {
                 checkableGrape.isChecked && oldOne?.isChecked != true ->
@@ -111,7 +111,7 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
             val grapes = repository.getAllGrapesNotLive()
             val qGrapes = repository.getQGrapesForBottleNotLive(bottleId).map { it.grapeId }
             val currentCheckedGrapes =
-                grapes.map { CheckableGrape(it, isChecked = it.grapeId in qGrapes) }
+                grapes.map { CheckableGrape(it, isChecked = it.id in qGrapes) }
 
             _grapeDialogEvent.postOnce(currentCheckedGrapes)
         }

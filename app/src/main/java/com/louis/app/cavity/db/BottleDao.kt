@@ -16,28 +16,28 @@ interface BottleDao {
     @Delete
     suspend fun deleteBottle(bottle: Bottle)
 
-    @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
+    @Query("SELECT * FROM bottle WHERE id=:bottleId")
     fun getBottleById(bottleId: Long): LiveData<Bottle>
 
-    @Query("SELECT * FROM bottle WHERE bottle_id=:bottleId")
+    @Query("SELECT * FROM bottle WHERE id=:bottleId")
     suspend fun getBottleByIdNotLive(bottleId: Long): Bottle
 
-    @Query("UPDATE bottle SET is_favorite = 1 WHERE bottle_id=:bottleId")
+    @Query("UPDATE bottle SET is_favorite = 1 WHERE id=:bottleId")
     suspend fun fav(bottleId: Long)
 
-    @Query("UPDATE bottle SET is_favorite = 0 WHERE bottle_id=:bottleId")
+    @Query("UPDATE bottle SET is_favorite = 0 WHERE id=:bottleId")
     suspend fun unfav(bottleId: Long)
 
-    @Query("UPDATE bottle SET count=:count + bottle.count WHERE bottle_id=:bottleId")
+    @Query("UPDATE bottle SET count=:count + bottle.count WHERE id=:bottleId")
     suspend fun addBottles(bottleId: Long, count: Int)
 
-    @Query("UPDATE bottle SET count=:count - bottle.count WHERE bottle_id=:bottleId")
+    @Query("UPDATE bottle SET count=:count - bottle.count WHERE id=:bottleId")
     suspend fun removeBottles(bottleId: Long, count: Int)
 
-    @Query("DELETE FROM bottle WHERE bottle_id=:bottleId")
+    @Query("DELETE FROM bottle WHERE id=:bottleId")
     suspend fun deleteBottleById(bottleId: Long)
 
     @Transaction
-    @Query("SELECT * FROM wine, bottle WHERE wine.wine_id = bottle.wine_id")
+    @Query("SELECT * FROM wine, bottle WHERE wine.id = bottle.wine_id")
     suspend fun getBottleAndWineWithQGrapesAndFReview(): List<BottleAndWineWithQGrapesAndFReviews>
 }

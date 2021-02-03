@@ -34,7 +34,7 @@ class CountyRecyclerAdapter(
         holder.bind(counties[position])
     }
 
-    override fun getItemId(position: Int) = counties[position].county.countyId
+    override fun getItemId(position: Int) = counties[position].county.id
 
     override fun getItemCount() = counties.size
 

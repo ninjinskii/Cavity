@@ -75,7 +75,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
             naming,
             Wine.wineColorToColorNumber(colorNumber),
             cuvee,
-            county.countyId,
+            county.id,
             isOrganic,
             _image.value ?: ""
         )
