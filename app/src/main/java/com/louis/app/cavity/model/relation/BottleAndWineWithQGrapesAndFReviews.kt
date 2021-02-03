@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Relation
 import java.util.*
 
-// TODO: something better
+// Not using @Embbeded for wines and bottles to avoid name clashes
 data class BottleAndWineWithQGrapesAndFReviews(
     @ColumnInfo(name = "wine_id") val wineId: Long,
     val id: Long,
@@ -25,11 +25,14 @@ data class BottleAndWineWithQGrapesAndFReviews(
     @ColumnInfo(name = "taste_comment") val tasteComment: String,
     @ColumnInfo(name = "pdf_path") val pdfPath: String,
     @ColumnInfo(name = "county_id") val countyId: Long,
+    val consumed: Int,
+
     @Relation(
         parentColumn = "id",
         entityColumn = "bottle_id",
     )
     val qGrapes: List<QuantifiedBottleGrapeXRef>,
+
     @Relation(
         parentColumn = "id",
         entityColumn = "bottle_id",

@@ -6,6 +6,7 @@ import com.louis.app.cavity.model.Grape
 
 data class GrapeWithQuantifiedGrapes(
     @Embedded val grape: Grape,
+
     @Relation(
         parentColumn = "id",
         entityColumn = "grape_id"

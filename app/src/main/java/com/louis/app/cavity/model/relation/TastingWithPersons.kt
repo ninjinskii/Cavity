@@ -8,6 +8,7 @@ import com.louis.app.cavity.model.Tasting
 
 data class TastingWithPersons(
     @Embedded val tasting: Tasting,
+
     @Relation(
         parentColumn = "id",
         entityColumn = "tasting_id",

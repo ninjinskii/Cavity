@@ -6,6 +6,7 @@ import com.louis.app.cavity.model.Review
 
 data class FilledReviewAndReview(
     @Embedded val fReview: FilledBottleReviewXRef,
+
     @Relation(
         parentColumn = "review_id",
         entityColumn = "id"
