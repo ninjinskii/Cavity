@@ -11,7 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.GrapeBarBinding
-import com.louis.app.cavity.model.relation.QuantifiedGrapeAndGrape
+import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
 
 class GrapeBar @JvmOverloads constructor(
     context: Context,

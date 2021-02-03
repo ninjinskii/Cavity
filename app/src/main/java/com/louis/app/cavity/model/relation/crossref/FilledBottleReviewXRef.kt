@@ -1,4 +1,4 @@
-package com.louis.app.cavity.model.relation
+package com.louis.app.cavity.model.relation.crossref
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

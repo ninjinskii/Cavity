@@ -1,7 +1,9 @@
-package com.louis.app.cavity.model.relation
+package com.louis.app.cavity.model.relation.bottle
 
 import androidx.room.ColumnInfo
 import androidx.room.Relation
+import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
+import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 import java.util.*
 
 // Not using @Embbeded for wines and bottles to avoid name clashes

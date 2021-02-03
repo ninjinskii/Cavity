@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemCountyManagerBinding
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.relation.CountyWithWines
+import com.louis.app.cavity.model.relation.county.CountyWithWines
 import java.util.*
 
 class CountyRecyclerAdapter(

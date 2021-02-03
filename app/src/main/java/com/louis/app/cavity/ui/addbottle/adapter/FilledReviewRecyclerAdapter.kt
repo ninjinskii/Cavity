@@ -15,10 +15,9 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemReviewMedalBinding
 import com.louis.app.cavity.databinding.ItemReviewRateBinding
 import com.louis.app.cavity.databinding.ItemReviewStarBinding
-import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
-import com.louis.app.cavity.model.relation.FilledReviewAndReview
+import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
+import com.louis.app.cavity.model.relation.review.FilledReviewAndReview
 import com.louis.app.cavity.ui.widget.Rule
-import com.louis.app.cavity.util.L
 
 class FilledReviewRecyclerAdapter(
     val onValueChangedListener: (fReview: FilledBottleReviewXRef, checkedButtonIdOrRate: Int) -> Unit,

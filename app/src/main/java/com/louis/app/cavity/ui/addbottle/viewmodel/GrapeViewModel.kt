@@ -8,9 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch

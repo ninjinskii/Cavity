@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
+import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce

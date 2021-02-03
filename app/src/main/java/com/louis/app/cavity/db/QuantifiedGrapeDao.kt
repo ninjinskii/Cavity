@@ -2,8 +2,8 @@ package com.louis.app.cavity.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
-import com.louis.app.cavity.model.relation.QuantifiedGrapeAndGrape
+import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
 @Dao
 interface QuantifiedGrapeDao {
     @Insert

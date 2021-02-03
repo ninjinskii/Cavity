@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.model.*
-import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
-import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
+import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

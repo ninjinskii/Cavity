@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeManagerBinding
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.GrapeWithQuantifiedGrapes
+import com.louis.app.cavity.model.relation.grape.GrapeWithQuantifiedGrapes
 
 class GrapeRecylerAdapter(
     private val onRename: (Grape) -> Unit,

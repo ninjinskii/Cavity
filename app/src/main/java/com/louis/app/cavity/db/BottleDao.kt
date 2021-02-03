@@ -3,7 +3,7 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.relation.BottleAndWineWithQGrapesAndFReviews
+import com.louis.app.cavity.model.relation.bottle.BottleAndWineWithQGrapesAndFReviews
 
 @Dao
 interface BottleDao {

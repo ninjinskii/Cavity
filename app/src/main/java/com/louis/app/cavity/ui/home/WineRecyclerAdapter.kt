@@ -13,7 +13,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.model.relation.WineWithBottles
+import com.louis.app.cavity.model.relation.wine.WineWithBottles
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 

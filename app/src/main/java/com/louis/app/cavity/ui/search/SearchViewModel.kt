@@ -10,7 +10,7 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.relation.BottleAndWineWithQGrapesAndFReviews
+import com.louis.app.cavity.model.relation.bottle.BottleAndWineWithQGrapesAndFReviews
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.ui.search.filters.*
 import kotlinx.coroutines.Dispatchers.Default

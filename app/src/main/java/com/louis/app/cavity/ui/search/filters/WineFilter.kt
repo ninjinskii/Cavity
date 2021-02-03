@@ -1,6 +1,6 @@
 package com.louis.app.cavity.ui.search.filters
 
-import com.louis.app.cavity.model.relation.BottleAndWineWithQGrapesAndFReviews
+import com.louis.app.cavity.model.relation.bottle.BottleAndWineWithQGrapesAndFReviews
 
 interface WineFilter {
     fun meetFilters(bottlesAndWine: List<BottleAndWineWithQGrapesAndFReviews>)

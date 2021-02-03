@@ -1,12 +1,13 @@
-package com.louis.app.cavity.model.relation
+package com.louis.app.cavity.model.relation.tasting
 
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Tasting
+import com.louis.app.cavity.model.relation.crossref.TastingPersonXRef
 
-data class TastingWithPersons(
+data class TastingWithFriends(
     @Embedded val tasting: Tasting,
 
     @Relation(

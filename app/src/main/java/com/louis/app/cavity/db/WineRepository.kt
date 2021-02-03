@@ -2,8 +2,8 @@ package com.louis.app.cavity.db
 
 import android.app.Application
 import com.louis.app.cavity.model.*
-import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
-import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
+import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 
 class WineRepository private constructor(app: Application) {
 

@@ -3,8 +3,7 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.relation.GrapeWithQuantifiedGrapes
-import com.louis.app.cavity.model.relation.ReviewWithFilledReviews
+import com.louis.app.cavity.model.relation.review.ReviewWithFilledReviews
 
 @Dao
 interface ReviewDao {

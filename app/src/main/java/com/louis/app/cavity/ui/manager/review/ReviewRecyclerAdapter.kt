@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemReviewManagerBinding
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.relation.ReviewWithFilledReviews
+import com.louis.app.cavity.model.relation.review.ReviewWithFilledReviews
 
 class ReviewRecyclerAdapter(
     private val onRename: (Review) -> Unit,

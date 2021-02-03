@@ -3,8 +3,7 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.relation.CountyWithWines
-import com.louis.app.cavity.util.L
+import com.louis.app.cavity.model.relation.county.CountyWithWines
 
 @Dao
 interface CountyDao {

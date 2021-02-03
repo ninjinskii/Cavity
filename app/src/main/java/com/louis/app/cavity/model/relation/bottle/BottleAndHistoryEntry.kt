@@ -1,4 +1,4 @@
-package com.louis.app.cavity.model.relation
+package com.louis.app.cavity.model.relation.bottle
 
 import androidx.room.Embedded
 import androidx.room.Relation

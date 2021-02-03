@@ -3,7 +3,7 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.GrapeWithQuantifiedGrapes
+import com.louis.app.cavity.model.relation.grape.GrapeWithQuantifiedGrapes
 
 @Dao
 interface GrapeDao {

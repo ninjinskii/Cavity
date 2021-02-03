@@ -2,8 +2,8 @@ package com.louis.app.cavity.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
-import com.louis.app.cavity.model.relation.FilledReviewAndReview
+import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
+import com.louis.app.cavity.model.relation.review.FilledReviewAndReview
 
 @Dao
 interface FilledReviewDao {
