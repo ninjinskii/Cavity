@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
         QuantifiedBottleGrapeXRef::class,
         FilledBottleReviewXRef::class
     ],
-    version = 33,
+    version = 34,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -267,6 +267,7 @@ abstract class CavityDatabase : RoomDatabase() {
                                 -1,
                                 "Notes amères",
                                 "",
+                                0
                             )
                         )
                         insertBottle(
@@ -284,6 +285,7 @@ abstract class CavityDatabase : RoomDatabase() {
                                 -1,
                                 "Doux",
                                 "",
+                                0
                             )
                         )
                         insertBottle(
@@ -301,12 +303,13 @@ abstract class CavityDatabase : RoomDatabase() {
                                 -1,
                                 "Doux",
                                 "",
+                                0
                             )
                         )
-                        insertBottle(Bottle(0, 2, 2017, 2019, 0, 1, 16F, "", "", "", -1, "", ""))
+                        insertBottle(Bottle(0, 2, 2017, 2019, 0, 1, 16F, "", "", "", -1, "", "", 0))
 
-                        insertBottle(Bottle(0, 3, 2017, 2019, 0, 1, 16F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 4, 2009, 2013, 1, 1, 40F, "", "", "", -1, "", ""))
+                        insertBottle(Bottle(0, 3, 2017, 2019, 0, 1, 16F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 4, 2009, 2013, 1, 1, 40F, "", "", "", -1, "", "", 0))
                         insertBottle(
                             Bottle(
                                 0,
@@ -322,12 +325,13 @@ abstract class CavityDatabase : RoomDatabase() {
                                 -1,
                                 "",
                                 "",
+                                0
                             )
                         )
-                        insertBottle(Bottle(0, 6, 2018, 2019, 1, 1, 160F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 7, 2014, 2021, 0, 5, 16F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 8, 2016, 2030, 0, 1, 16F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 9, 2019, 2019, 0, 1, 16F, "", "", "", -1, "", ""))
+                        insertBottle(Bottle(0, 6, 2018, 2019, 1, 1, 160F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 7, 2014, 2021, 0, 5, 16F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 8, 2016, 2030, 0, 1, 16F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 9, 2019, 2019, 0, 1, 16F, "", "", "", -1, "", "", 0))
                         insertBottle(
                             Bottle(
                                 0,
@@ -343,6 +347,7 @@ abstract class CavityDatabase : RoomDatabase() {
                                 -1,
                                 "",
                                 "",
+                                0
                             )
                         )
                         insertBottle(
@@ -360,22 +365,23 @@ abstract class CavityDatabase : RoomDatabase() {
                                 -1,
                                 "",
                                 "",
+                                0
                             )
                         )
-                        insertBottle(Bottle(0, 11, 2005, 2019, 0, 5, 16F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 12, 2016, 2028, 1, 1, 15F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 13, 2019, 2023, 0, 1, 30F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 14, 2017, 2019, 0, 1, 7F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 15, 2014, 2023, 0, 1, 3F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 15, 2015, 2020, 1, 2, 3F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 16, 2013, 2019, 0, 40, 0F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 17, 2012, 2019, 0, 1, -1F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 18, 2011, 2023, 0, 1, 15F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 19, 2010, 2023, 0, 1, -1F, "", "", "", -1, "", ""))
+                        insertBottle(Bottle(0, 11, 2005, 2019, 0, 5, 16F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 12, 2016, 2028, 1, 1, 15F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 13, 2019, 2023, 0, 1, 30F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 14, 2017, 2019, 0, 1, 7F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 15, 2014, 2023, 0, 1, 3F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 15, 2015, 2020, 1, 2, 3F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 16, 2013, 2019, 0, 40, 0F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 17, 2012, 2019, 0, 1, -1F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 18, 2011, 2023, 0, 1, 15F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 19, 2010, 2023, 0, 1, -1F, "", "", "", -1, "", "", 0))
 
-                        insertBottle(Bottle(0, 20, 2011, 2019, 0, 2, 15F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 21, 2016, 2019, 0, 1, -1F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 22, 2012, 2025, 0, 1, 400F, "", "", "", -1, "", ""))
+                        insertBottle(Bottle(0, 20, 2011, 2019, 0, 2, 15F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 21, 2016, 2019, 0, 1, -1F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 22, 2012, 2025, 0, 1, 400F, "", "", "", -1, "", "", 0))
                         insertBottle(
                             Bottle(
                                 0,
@@ -391,6 +397,7 @@ abstract class CavityDatabase : RoomDatabase() {
                                 -1,
                                 "",
                                 "",
+                                0
                             )
                         )
                         insertBottle(
@@ -408,15 +415,51 @@ abstract class CavityDatabase : RoomDatabase() {
                                 -1,
                                 "",
                                 "",
+                                0
                             )
                         )
-                        insertBottle(Bottle(0, 24, 2018, 2021, 0, 1, 50F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 25, 2013, 2023, 0, 1, 63F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 26, 2014, 2019, 1, 1, 5F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 26, 2015, 2025, 1, 1, 5F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 27, 2019, 2024, 0, 1, 8F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 28, 2010, 2019, 0, 1, -1F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 29, 2011, 2019, 0, 1, 40F, "", "", "", -1, "", ""))
+                        insertBottle(
+                            Bottle(
+                                0, 24, 2018, 2021, 0, 1, 50F, "", "", "", -1, "", "",
+                                0
+                            )
+                        )
+                        insertBottle(
+                            Bottle(
+                                0, 25, 2013, 2023, 0, 1, 63F, "", "", "", -1, "", "",
+                                0
+                            )
+                        )
+                        insertBottle(
+                            Bottle(
+                                0, 26, 2014, 2019, 1, 1, 5F, "", "", "", -1, "", "",
+                                0
+                            )
+                        )
+                        insertBottle(
+                            Bottle(
+                                0, 26, 2015, 2025, 1, 1, 5F, "", "", "", -1, "", "",
+                                0
+                            )
+                        )
+                        insertBottle(
+                            Bottle(
+                                0, 27, 2019, 2024, 0, 1, 8F, "", "", "", -1, "", "",
+                                0
+                            )
+                        )
+                        insertBottle(
+                            Bottle(
+                                0, 28, 2010, 2019, 0, 1, -1F, "", "", "", -1, "", "",
+                                0
+                            )
+                        )
+                        insertBottle(
+                            Bottle(
+                                0, 29, 2011, 2019, 0, 1, 40F, "", "", "", -1, "", "",
+                                0
+                            )
+                        )
 
                         insertBottle(
                             Bottle(
@@ -433,11 +476,12 @@ abstract class CavityDatabase : RoomDatabase() {
                                 -1,
                                 "Paille",
                                 "",
+                                0
                             )
                         )
-                        insertBottle(Bottle(0, 31, 2016, 2021, 0, 1, 40F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 32, 2014, 2019, 0, 1, 20F, "", "", "", -1, "", ""))
-                        insertBottle(Bottle(0, 32, 2016, 2019, 0, 1, 20F, "", "", "", -1, "", ""))
+                        insertBottle(Bottle(0, 31, 2016, 2021, 0, 1, 40F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 32, 2014, 2019, 0, 1, 20F, "", "", "", -1, "", "", 0))
+                        insertBottle(Bottle(0, 32, 2016, 2019, 0, 1, 20F, "", "", "", -1, "", "", 0))
                         insertBottle(
                             Bottle(
                                 0,
@@ -453,6 +497,7 @@ abstract class CavityDatabase : RoomDatabase() {
                                 -1,
                                 "Piquette",
                                 "",
+                                0
                             )
                         )
                     }

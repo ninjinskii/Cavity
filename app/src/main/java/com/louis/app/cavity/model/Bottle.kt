@@ -30,7 +30,8 @@ data class Bottle(
     @ColumnInfo(name = "buy_location") val buyLocation: String,
     @ColumnInfo(name = "buy_date") val buyDate: Long,
     @ColumnInfo(name = "taste_comment") val tasteComment: String,
-    @ColumnInfo(name = "pdf_path") var pdfPath: String
+    @ColumnInfo(name = "pdf_path") var pdfPath: String,
+    var consumed: Int
 ) {
     fun isReadyToDrink(): Boolean {
         val year = Calendar.getInstance().get(Calendar.YEAR)

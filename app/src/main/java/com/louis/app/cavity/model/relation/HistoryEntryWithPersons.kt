@@ -4,14 +4,14 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.louis.app.cavity.model.HistoryEntry
-import com.louis.app.cavity.model.Person
+import com.louis.app.cavity.model.Friend
 
 data class HistoryEntryWithPersons(
     @Embedded val historyEntry: HistoryEntry,
     @Relation(
         parentColumn = "history_entry_id",
-        entityColumn = "person_id",
-        associateBy = Junction(PersonHistoryEntryXRef::class)
+        entityColumn = "friend_id",
+        associateBy = Junction(FriendHistoryEntryXRef::class)
     )
-    val persons: List<Person>
+    val friends: List<Friend>
 )

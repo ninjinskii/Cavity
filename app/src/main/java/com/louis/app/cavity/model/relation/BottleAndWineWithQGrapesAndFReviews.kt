@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Relation
 import java.util.*
 
+// TODO: something better
 data class BottleAndWineWithQGrapesAndFReviews(
     @ColumnInfo(name = "wine_id") val wineId: Long,
     @ColumnInfo(name = "bottle_id") val bottleId: Long,

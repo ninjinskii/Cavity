@@ -9,6 +9,8 @@ data class HistoryEntry(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "history_entry_id")
     val historyEntryId: Long = 0,
-    @ColumnInfo(name = "drink_date") val drinkDate: String,
-    //@ColumnInfo(name = "id_bottle") val idBottle: Long
+    @ColumnInfo(name = "date") val date: Long,
+    @ColumnInfo(name = "bottle_id") val bottleId: Long,
+    @ColumnInfo(name = "tasting_id") val tastingId: Long,
+    val type: Int,
 )

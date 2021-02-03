@@ -36,6 +36,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun updateCounty(county: County) = countyDao.updateCounty(county)
 
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
+    suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
 
     suspend fun updateGrape(grape: Grape) = grapeDao.updateGrape(grape)
     suspend fun deleteGrape(grape: Grape) = grapeDao.deleteGrape(grape)
