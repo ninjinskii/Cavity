@@ -14,7 +14,9 @@ class BottleRecyclerAdapter(
     private val colors: List<Int>,
     private val onClickListener: (Long, Long) -> Unit
 ) :
-    ListAdapter<BottleAndWineWithQGrapesAndFReviews, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
+    ListAdapter<BottleAndWineWithQGrapesAndFReviews, BottleRecyclerAdapter.BottleViewHolder>(
+        BottleItemDiffCallback()
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottleViewHolder {
         val binding = ItemBottleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,13 +28,19 @@ class BottleRecyclerAdapter(
         holder.bind(getItem(position))
     }
 
-    override fun getItemId(position: Int) = currentList[position].id
+    override fun getItemId(position: Int) = currentList[position].bottle.id
 
     class BottleItemDiffCallback : DiffUtil.ItemCallback<BottleAndWineWithQGrapesAndFReviews>() {
-        override fun areItemsTheSame(oldItem: BottleAndWineWithQGrapesAndFReviews, newItem: BottleAndWineWithQGrapesAndFReviews) =
-            oldItem.id == newItem.id
+        override fun areItemsTheSame(
+            oldItem: BottleAndWineWithQGrapesAndFReviews,
+            newItem: BottleAndWineWithQGrapesAndFReviews
+        ) =
+            oldItem.bottle.id == newItem.bottle.id
 
-        override fun areContentsTheSame(oldItem: BottleAndWineWithQGrapesAndFReviews, newItem: BottleAndWineWithQGrapesAndFReviews) =
+        override fun areContentsTheSame(
+            oldItem: BottleAndWineWithQGrapesAndFReviews,
+            newItem: BottleAndWineWithQGrapesAndFReviews
+        ) =
             oldItem == newItem
     }
 
@@ -40,19 +48,21 @@ class BottleRecyclerAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(bottleAndWine: BottleAndWineWithQGrapesAndFReviews) {
+            val (bottle, wine) = bottleAndWine
+
             with(binding.wineColorNameNaming) {
-                wineName.text = bottleAndWine.name
-                wineNaming.text = bottleAndWine.naming
-                organicImage.setVisible(bottleAndWine.isOrganic.toBoolean())
-                wineColorIndicator.setColorFilter(colors[bottleAndWine.color])
+                wineName.text = wine.name
+                wineNaming.text = wine.naming
+                organicImage.setVisible(wine.isOrganic.toBoolean())
+                wineColorIndicator.setColorFilter(colors[wine.color])
 
             }
 
             binding.root.setOnClickListener {
-                onClickListener(bottleAndWine.wineId, bottleAndWine.id)
+                onClickListener(wine.id, bottle.id)
             }
 
-            binding.vintage.text = bottleAndWine.vintage.toString()
+            binding.vintage.text = bottle.vintage.toString()
         }
     }
 }
