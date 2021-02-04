@@ -7,12 +7,13 @@ import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 
 data class QuantifiedGrapeAndGrape(
     @Embedded val qGrape: QuantifiedBottleGrapeXRef,
-
     @Relation(
         parentColumn = "grape_id",
-        entityColumn = "id"
+        entityColumn = "id",
+        projection = ["name"],
+        entity = Grape::class
     )
-    val grape: Grape
+    val grapeName: String
 ) {
     fun getId() = "${qGrape.grapeId}${qGrape.bottleId}".toLong()
 }
