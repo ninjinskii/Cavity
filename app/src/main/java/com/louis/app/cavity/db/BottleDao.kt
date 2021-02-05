@@ -38,6 +38,6 @@ interface BottleDao {
     suspend fun deleteBottleById(bottleId: Long)
 
     @Transaction
-    @Query("SELECT * FROM wine, bottle WHERE wine.id = bottle.wine_id")
+    @Query("SELECT bottle.* FROM wine, bottle WHERE wine.id = bottle.wine_id")
     suspend fun getBottleAndWineWithQGrapesAndFReview(): List<BottleAndWineWithQGrapesAndFReviews>
 }

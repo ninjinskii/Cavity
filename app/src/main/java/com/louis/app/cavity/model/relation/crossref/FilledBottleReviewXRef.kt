@@ -26,6 +26,6 @@ import com.louis.app.cavity.model.Review
 )
 data class FilledBottleReviewXRef(
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
-    @ColumnInfo(name = "review_id") val reviewId: Long,
+    @ColumnInfo(name = "review_id", index = true) val reviewId: Long,
     var value: Int
 )

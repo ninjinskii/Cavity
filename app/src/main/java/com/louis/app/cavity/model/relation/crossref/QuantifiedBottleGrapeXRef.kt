@@ -26,6 +26,6 @@ import com.louis.app.cavity.model.Grape
 )
 data class QuantifiedBottleGrapeXRef(
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
-    @ColumnInfo(name = "grape_id") val grapeId: Long,
+    @ColumnInfo(name = "grape_id", index = true) val grapeId: Long,
     var percentage: Int,
 )

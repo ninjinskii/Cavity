@@ -18,7 +18,7 @@ import java.util.*
 data class Bottle(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    @ColumnInfo(name = "wine_id") val wineId: Long,
+    @ColumnInfo(name = "wine_id", index = true) val wineId: Long,
     val vintage: Int,
     val apogee: Int,
     @ColumnInfo(name = "is_favorite") var isFavorite: Int,
