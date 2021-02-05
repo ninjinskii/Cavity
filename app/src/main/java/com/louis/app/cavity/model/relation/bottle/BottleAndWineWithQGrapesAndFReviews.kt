@@ -19,14 +19,14 @@ data class BottleAndWineWithQGrapesAndFReviews(
         entity = QuantifiedBottleGrapeXRef::class,
         parentColumn = "id",
         entityColumn = "bottle_id",
-        projection = ["id"]
+        projection = ["bottle_id"]
     )
     val qGrapes: List<QuantifiedBottleGrapeXRef>,
     @Relation(
         entity = FilledBottleReviewXRef::class,
         parentColumn = "id",
         entityColumn = "bottle_id",
-        projection = ["id"]
+        projection = ["review_id"]
     )
     val fReviews: List<FilledBottleReviewXRef>,
 ) {
