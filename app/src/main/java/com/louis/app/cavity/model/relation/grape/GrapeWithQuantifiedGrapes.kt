@@ -7,7 +7,6 @@ import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 
 data class GrapeWithQuantifiedGrapes(
     @Embedded val grape: Grape,
-
     @Relation(
         parentColumn = "id",
         entityColumn = "grape_id"

@@ -7,7 +7,6 @@ import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
 
 data class ReviewWithFilledReviews(
     @Embedded val review: Review,
-
     @Relation(
         parentColumn = "id",
         entityColumn = "review_id"

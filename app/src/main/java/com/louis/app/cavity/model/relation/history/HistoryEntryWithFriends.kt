@@ -7,9 +7,8 @@ import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
 
-data class HistoryEntryWithPersons(
+data class HistoryEntryWithFriends(
     @Embedded val historyEntry: HistoryEntry,
-
     @Relation(
         parentColumn = "history_entry_id",
         entityColumn = "friend_id",

@@ -3,14 +3,13 @@ package com.louis.app.cavity.model.relation.bottle
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.HistoryEntry
+import com.louis.app.cavity.model.Wine
 
-
-data class BottleAndHistoryEntry(
+class BottleAndWine(
     @Embedded val bottle: Bottle,
     @Relation(
-        parentColumn = "id",
-        entityColumn = "bottle_id"
+        parentColumn = "wine_id",
+        entityColumn = "id"
     )
-    val historyEntry: HistoryEntry
+    val wine: Wine,
 )

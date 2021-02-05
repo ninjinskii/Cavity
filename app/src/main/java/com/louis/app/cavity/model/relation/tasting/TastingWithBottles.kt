@@ -3,14 +3,13 @@ package com.louis.app.cavity.model.relation.tasting
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.TastingEntry
+import com.louis.app.cavity.model.Tasting
 
-data class TastingEntryAndBottle(
-    @Embedded val tastingEntry: TastingEntry,
-
+data class TastingWithBottles(
+    @Embedded val tasting: Tasting,
     @Relation(
-        parentColumn = "tasting_entry_id",
+        parentColumn = "tasting_id",
         entityColumn = "bottle_id"
     )
-    val bottle: Bottle
+    val bottles: List<Bottle>
 )

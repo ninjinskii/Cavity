@@ -47,10 +47,10 @@ class QuantifiedGrapeRecyclerAdapter(
     inner class GrapeViewHolder(private val binding: ItemGrapeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: QuantifiedGrapeAndGrape) = with(binding) {
-            val (qGrape, grape) = item
+        fun bind(qGrapeAndGrape: QuantifiedGrapeAndGrape) = with(binding) {
+            val (qGrape, name) = qGrapeAndGrape
 
-            grapeName.text = grape.name
+            grapeName.text = name
             slider.value = qGrape.percentage.toFloat()
             percent.text = itemView.context.getString(
                 R.string.percentage,
@@ -63,13 +63,13 @@ class QuantifiedGrapeRecyclerAdapter(
                 }
 
                 override fun onStopTrackingTouch(slider: Slider) {
-                    val acceptedVal = onValueChangeListener(item, slider.value.toInt())
+                    val acceptedVal = onValueChangeListener(qGrapeAndGrape, slider.value.toInt())
                     slider.value = acceptedVal.toFloat()
                 }
             })
 
             deleteGrape.setOnClickListener {
-                onDeleteListener(item)
+                onDeleteListener(qGrapeAndGrape)
             }
         }
     }
