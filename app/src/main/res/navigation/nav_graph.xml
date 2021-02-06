@@ -157,4 +157,10 @@
         android:name="com.louis.app.cavity.ui.manager.FragmentManager"
         android:label="FragmentManager"
         tools:layout="@layout/fragment_manager" />
+
+    <fragment
+        android:id="@+id/history_dest"
+        android:name="com.louis.app.cavity.ui.history.FragmentHistory"
+        android:label="FragmentHistory"
+        tools:layout="@layout/fragment_history" />
 </navigation>

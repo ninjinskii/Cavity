@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
         QuantifiedBottleGrapeXRef::class,
         FilledBottleReviewXRef::class
     ],
-    version = 35,
+    version = 36,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {

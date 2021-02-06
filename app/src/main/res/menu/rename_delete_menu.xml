@@ -17,4 +17,5 @@
         android:title="@string/delete"
         app:iconTint="?attr/colorOnSurface"
         tools:targetApi="o" />
+
 </menu>
