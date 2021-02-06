@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.history
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.louis.app.cavity.db.WineRepository
 
@@ -20,7 +21,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                         HistoryUiModel.HeaedrModel(1612629158L)
                     else null
                 }
-        }
+        }.cachedIn(viewModelScope)
 
     private fun shouldSeparate(
         before: HistoryUiModel.EntryModel?,

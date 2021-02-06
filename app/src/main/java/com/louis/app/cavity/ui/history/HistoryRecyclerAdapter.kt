@@ -63,6 +63,10 @@ class HistoryRecyclerAdapter :
     inner class HistoryEntryViewHolder(private val binding: ItemHistoryUseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.root.setOnClickListener {  }
+        }
+
         fun bind(entry: HistoryUiModel.EntryModel?) {
             entry?.let {
                 binding.wineColorNameNaming.wineNaming.text =
