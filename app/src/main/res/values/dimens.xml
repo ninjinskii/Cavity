@@ -24,5 +24,7 @@
 
     <dimen name="review_height">96dp</dimen>
 
+    <dimen name="history_marker_width">4dp</dimen>
+
     <dimen name="app_bar_elevation">4dp</dimen>
 </resources>

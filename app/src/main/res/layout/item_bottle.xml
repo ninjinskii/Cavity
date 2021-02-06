@@ -13,35 +13,20 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintEnd_toStartOf="@id/vintage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.60" />
 
     <TextView
         android:id="@+id/vintage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
+        android:layout_marginVertical="@dimen/small_margin"
+        android:layout_marginEnd="@dimen/medium_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintStart_toEndOf="@id/wineColorNameNaming"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="2015" />
-
-    <TextView
-        android:id="@+id/count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/vintage"
-        app:layout_constraintStart_toEndOf="@id/vintage"
-        app:layout_constraintTop_toTopOf="@id/vintage"
-        tools:text=" (4)" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
