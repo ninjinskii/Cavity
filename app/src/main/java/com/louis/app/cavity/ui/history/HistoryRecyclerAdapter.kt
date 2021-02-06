@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.L
 
 class HistoryRecyclerAdapter :
     PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(
@@ -20,7 +21,7 @@ class HistoryRecyclerAdapter :
         if (holder is HistoryEntryViewHolder) {
             holder.bind(item as HistoryUiModel.EntryModel?)
         } else if (holder is HistorySeparatorViewHolder) {
-            holder.bind(item as HistoryUiModel.HeaedrModel)
+            holder.bind(item as HistoryUiModel.HeaderModel)
         }
     }
 
@@ -39,7 +40,7 @@ class HistoryRecyclerAdapter :
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
         is HistoryUiModel.EntryModel -> 0
-        is HistoryUiModel.HeaedrModel -> 1
+        is HistoryUiModel.HeaderModel -> 1
         else -> throw IllegalStateException("Unknown view type")
     }
 
@@ -47,10 +48,10 @@ class HistoryRecyclerAdapter :
         override fun areItemsTheSame(oldItem: HistoryUiModel, newItem: HistoryUiModel): Boolean {
             val isSameEntry = oldItem is HistoryUiModel.EntryModel
                     && newItem is HistoryUiModel.EntryModel
-                    && oldItem.historyEntry.id == newItem.historyEntry.id
+                    && oldItem.item.historyEntry.id == newItem.item.historyEntry.id
 
-            val isSameSeparator = oldItem is HistoryUiModel.HeaedrModel
-                    && newItem is HistoryUiModel.HeaedrModel
+            val isSameSeparator = oldItem is HistoryUiModel.HeaderModel
+                    && newItem is HistoryUiModel.HeaderModel
                     && oldItem == newItem
 
             return isSameEntry or isSameSeparator
@@ -68,9 +69,10 @@ class HistoryRecyclerAdapter :
         }
 
         fun bind(entry: HistoryUiModel.EntryModel?) {
+            L.v("${entry?.item}")
             entry?.let {
                 binding.wineColorNameNaming.wineNaming.text =
-                    DateFormatter.formatDate(it.historyEntry.date)
+                    DateFormatter.formatDate(it.item.historyEntry.date)
                 binding.wineColorNameNaming.wineName.text = "Bonjour"
                 binding.comment.text = "Une entrée dans l'historique"
                 binding.friends.text = "3"
@@ -81,7 +83,7 @@ class HistoryRecyclerAdapter :
     inner class HistorySeparatorViewHolder(private val binding: ItemHistorySeparatorBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(header: HistoryUiModel.HeaedrModel?) {
+        fun bind(header: HistoryUiModel.HeaderModel?) {
             header?.let { binding.date.text = DateFormatter.formatDate(it.date) }
         }
     }

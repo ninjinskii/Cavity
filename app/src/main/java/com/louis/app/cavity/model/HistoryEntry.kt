@@ -10,6 +10,6 @@ data class HistoryEntry(
     val id: Long = 0,
     @ColumnInfo(name = "date") val date: Long,
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
-    @ColumnInfo(name = "tasting_id") val tastingId: Long,
+    @ColumnInfo(name = "tasting_id") var tastingId: Long? = null,
     val type: Int,
 )

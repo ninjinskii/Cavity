@@ -6,10 +6,10 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Tasting
 
 data class TastingWithBottles(
-    @Embedded val tasting: Tasting,
+    @Embedded var tasting: Tasting,
     @Relation(
         parentColumn = "tasting_id",
-        entityColumn = "bottle_id"
+        entityColumn = "id"
     )
-    val bottles: List<Bottle>
+    var bottles: List<Bottle>
 )

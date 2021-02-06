@@ -1,10 +1,10 @@
 package com.louis.app.cavity.model.relation.bottle
 
 import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.Relation
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.HistoryEntry
-
 
 data class BottleAndHistoryEntries(
     @Embedded val bottle: Bottle,

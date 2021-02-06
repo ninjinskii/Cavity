@@ -7,12 +7,13 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
+import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
 import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.crossref.TastingFriendXRef
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.security.Timestamp
-import java.util.*
 
 @Database(
     entities = [
@@ -23,9 +24,13 @@ import java.util.*
         Review::class,
         QuantifiedBottleGrapeXRef::class,
         FilledBottleReviewXRef::class,
-        HistoryEntry::class
+        HistoryEntry::class,
+        Friend::class,
+        Tasting::class,
+        TastingFriendXRef::class,
+        FriendHistoryEntryXRef::class,
     ],
-    version = 37,
+    version = 38,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -37,6 +42,9 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun reviewDao(): ReviewDao
     abstract fun fReviewDao(): FilledReviewDao
     abstract fun historyDao(): HistoryDao
+    abstract fun friendDao(): FriendDao
+    abstract fun tastingDao(): TastingDao
+    abstract fun tastingXFriendDao(): TastingFriendXRefDao
 
     companion object {
         @Volatile
@@ -70,6 +78,9 @@ abstract class CavityDatabase : RoomDatabase() {
                 val reviewDao = instance?.reviewDao()
                 val fReviewDao = instance?.fReviewDao()
                 val historyDao = instance?.historyDao()
+                val friendDao = instance?.friendDao()
+                val tastingDao = instance?.tastingDao()
+                val tastingFriendXRefDao = instance?.tastingXFriendDao()
 
                 GlobalScope.launch(IO) {
                     with(countyDao!!) {
@@ -124,6 +135,14 @@ abstract class CavityDatabase : RoomDatabase() {
                     )
 
                     val wineColors = 0..3
+
+                    val friends = arrayOf(
+                        "Jean",
+                        "Lacour",
+                        "Hervé",
+                        "Simon",
+                        "Clarinette"
+                    )
 
                     repeat(50) {
                         wineDao!!.insertWine(
@@ -207,15 +226,135 @@ abstract class CavityDatabase : RoomDatabase() {
 
                     repeat(10) {
                         historyDao!!.insertEntry(
-                            HistoryEntry(0, 1612626996L, 1, 0, 0)
+                            HistoryEntry(0, 1607272358L, 1, 0, 0)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1612826997L, 2, 0, 0)
+                            HistoryEntry(0, 1607358758L, 2, 0, 0)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1613026998L, 2, 0, 0)
+                            HistoryEntry(0, 1607617958L, 2, 0, 0)
+                        )
+
+                        historyDao.insertEntry(
+                            HistoryEntry(0, 1607963558L, 2, 0, 0)
+                        )
+                    }
+
+                    repeat(8) {
+                        friendDao!!.insertFriend(Friend(0, friends.random(), friends.random()))
+                    }
+
+                    repeat(1) {
+                        tastingFriendXRefDao!!.insertTastingFriendXRef(
+                            TastingFriendXRef(
+                                (1..3).random().toLong(), (1..8).random().toLong()
+                            )
+                        )
+                    }
+
+                    GlobalScope.launch(IO) {
+                        delay(500)
+                        tastingDao!!.insertTasting(
+                            Tasting(
+                                1,
+                                1252686758L,
+                                tastingId = (1..8).random().toLong()
+                            )
+                        )
+
+                        tastingDao.insertTasting(
+                            Tasting(
+                                2,
+                                1252686758L,
+                                tastingId = (1..8).random().toLong()
+                            )
+                        )
+
+                        tastingDao.insertTasting(
+                            Tasting(
+                                3,
+                                1252686758L,
+                                tastingId = (1..8).random().toLong()
+                            )
+                        )
+
+                        bottleDao?.insertBottle(
+                            Bottle(
+                                0,
+                                1,
+                                2009,
+                                2020,
+                                1,
+                                1,
+                                14F,
+                                "€",
+                                "",
+                                "",
+                                -1L,
+                                "",
+                                "",
+                                1,
+                                1
+                            )
+                        )
+                        bottleDao?.insertBottle(
+                            Bottle(
+                                0,
+                                2,
+                                2010,
+                                2021,
+                                1,
+                                1,
+                                15F,
+                                "€",
+                                "",
+                                "",
+                                -1L,
+                                "",
+                                "",
+                                1,
+                                1
+                            )
+                        )
+                        bottleDao?.insertBottle(
+                            Bottle(
+                                0,
+                                2,
+                                2011,
+                                2022,
+                                1,
+                                1,
+                                15F,
+                                "€",
+                                "",
+                                "",
+                                -1L,
+                                "",
+                                "",
+                                1,
+                                2
+                            )
+                        )
+                        bottleDao?.insertBottle(
+                            Bottle(
+                                0,
+                                2,
+                                2012,
+                                2023,
+                                1,
+                                1,
+                                15F,
+                                "€",
+                                "",
+                                "",
+                                -1L,
+                                "",
+                                "",
+                                1,
+                                3
+                            )
                         )
                     }
                 }
