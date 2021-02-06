@@ -42,7 +42,7 @@ android {
 
 dependencies {
     def nav_version = "2.3.0"
-    def room_version = "2.2.5"
+    def room_version = "2.3.0-alpha02"
     def camerax_version = "1.0.0-rc02"
     def paging_version = "3.0.0-alpha13"
 

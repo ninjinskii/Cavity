@@ -102,9 +102,7 @@ class FilterGrape(private val grapeId: Long) : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWineWithQGrapesAndFReviews>):
             List<BottleAndWineWithQGrapesAndFReviews> {
         return bottlesAndWine.filter {
-            it.qGrapes.map { qGrape ->
-                qGrape.grapeId
-            }.contains(grapeId)
+            it.qGrapesIds.contains(grapeId)
         }
     }
 }
@@ -113,9 +111,7 @@ class FilterReview(private val reviewId: Long) : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWineWithQGrapesAndFReviews>):
             List<BottleAndWineWithQGrapesAndFReviews> {
         return bottlesAndWine.filter {
-            it.fReviews.map { fReview ->
-                fReview.reviewId
-            }.contains(reviewId)
+            it.fReviewsIds.contains(reviewId)
         }
     }
 }

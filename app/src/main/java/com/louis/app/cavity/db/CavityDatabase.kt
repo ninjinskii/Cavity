@@ -25,7 +25,7 @@ import java.util.*
         FilledBottleReviewXRef::class,
         HistoryEntry::class
     ],
-    version = 36,
+    version = 37,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -205,9 +205,17 @@ abstract class CavityDatabase : RoomDatabase() {
                         }
                     }
 
-                    repeat(300) {
+                    repeat(10) {
                         historyDao!!.insertEntry(
-                            HistoryEntry(0, Timestamp(Date(), null).timestamp.time, 1, 0, 0)
+                            HistoryEntry(0, 1612626996L, 1, 0, 0)
+                        )
+
+                        historyDao.insertEntry(
+                            HistoryEntry(0, 1612826997L, 2, 0, 0)
+                        )
+
+                        historyDao.insertEntry(
+                            HistoryEntry(0, 1613026998L, 2, 0, 0)
                         )
                     }
                 }

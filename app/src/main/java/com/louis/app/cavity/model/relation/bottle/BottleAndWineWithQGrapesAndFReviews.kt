@@ -21,14 +21,14 @@ data class BottleAndWineWithQGrapesAndFReviews(
         entityColumn = "bottle_id",
         projection = ["bottle_id"]
     )
-    val qGrapes: List<QuantifiedBottleGrapeXRef>,
+    val qGrapesIds: List<Long>,
     @Relation(
         entity = FilledBottleReviewXRef::class,
         parentColumn = "id",
         entityColumn = "bottle_id",
         projection = ["review_id"]
     )
-    val fReviews: List<FilledBottleReviewXRef>,
+    val fReviewsIds: List<Long>,
 ) {
     fun isReadyToDrink(): Boolean {
         val year = Calendar.getInstance().get(Calendar.YEAR)
