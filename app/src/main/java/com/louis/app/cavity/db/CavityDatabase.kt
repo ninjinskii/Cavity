@@ -11,6 +11,8 @@ import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.security.Timestamp
+import java.util.*
 
 @Database(
     entities = [
@@ -20,7 +22,8 @@ import kotlinx.coroutines.launch
         Grape::class,
         Review::class,
         QuantifiedBottleGrapeXRef::class,
-        FilledBottleReviewXRef::class
+        FilledBottleReviewXRef::class,
+        HistoryEntry::class
     ],
     version = 36,
     exportSchema = false
@@ -33,6 +36,7 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun qGrapeDao(): QuantifiedGrapeDao
     abstract fun reviewDao(): ReviewDao
     abstract fun fReviewDao(): FilledReviewDao
+    abstract fun historyDao(): HistoryDao
 
     companion object {
         @Volatile
@@ -65,6 +69,7 @@ abstract class CavityDatabase : RoomDatabase() {
                 val qGrapeDao = instance?.qGrapeDao()
                 val reviewDao = instance?.reviewDao()
                 val fReviewDao = instance?.fReviewDao()
+                val historyDao = instance?.historyDao()
 
                 GlobalScope.launch(IO) {
                     with(countyDao!!) {
@@ -198,6 +203,12 @@ abstract class CavityDatabase : RoomDatabase() {
                         } catch (e: Exception) {
                             // Do nothing
                         }
+                    }
+
+                    repeat(300) {
+                        historyDao!!.insertEntry(
+                            HistoryEntry(0, Timestamp(Date(), null).timestamp.time, 1, 0, 0)
+                        )
                     }
                 }
             }

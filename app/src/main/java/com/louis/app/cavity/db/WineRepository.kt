@@ -26,6 +26,7 @@ class WineRepository private constructor(app: Application) {
     private val qGrapeDao = database.qGrapeDao()
     private val reviewDao = database.reviewDao()
     private val fReviewDao = database.fReviewDao()
+    private val historyDao = database.historyDao()
 
     fun insertWine(wine: Wine) = wineDao.insertWine(wine)
     fun updateWine(wine: Wine) = wineDao.updateWine(wine)
@@ -115,4 +116,6 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun getWineAndBottleWithQGrapesAndFReviews() =
         bottleDao.getBottleAndWineWithQGrapesAndFReview()
+
+    fun getAllEntries() = historyDao.getAllEntries()
 }
