@@ -26,6 +26,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/title"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/wineColorNameNaming"
+        app:layout_constraintEnd_toEndOf="@id/wineColorNameNaming"
+        app:layout_constraintStart_toStartOf="@id/wineColorNameNaming"
+        app:layout_constraintTop_toTopOf="@id/wineColorNameNaming" />
+
+    <TextView
         android:id="@+id/vintage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

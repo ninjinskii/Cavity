@@ -178,6 +178,11 @@
     <string name="friends">Amis</string>
     <string name="cannot_delete">Les noms ne correspondent pas.</string>
 
+    <!-- History -->
+    <string name="buyed_at">Achetée à : %1$s</string>
+    <string name="gifted_to">Offerte à : %1$s</string>
+    <string name="gifted_by">Offerte par : %1$s</string>
+
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

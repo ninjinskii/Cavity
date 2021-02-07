@@ -9,6 +9,7 @@ data class Tasting(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val date: Long,
+    val opportunity: String,
     @ColumnInfo(name = "wine_temp") val wineTemp: Int = -1,
     @ColumnInfo(name = "cellar_temp") val cellarTemp: Int = -1,
     @ColumnInfo(name = "fridge_temp") val fridgeTemp: Int = -1,

@@ -10,6 +10,7 @@ import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.relation.bottle.BottleAndWine
 import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
 import com.louis.app.cavity.model.relation.tasting.TastingWithBottles
+import com.louis.app.cavity.ui.history.HistoryEntryTypes
 
 // TODO: Might need optimization
 data class HistoryEntryWithBottleAndTastingAndFriends(
@@ -37,4 +38,12 @@ data class HistoryEntryWithBottleAndTastingAndFriends(
         )
     )
     val friends: List<Friend>
-)
+) {
+    fun getType(): HistoryEntryTypes = when (historyEntry.type) {
+        0 -> HistoryEntryTypes.TYPE_USE
+        1 -> HistoryEntryTypes.TYPE_REPLENISHMENT
+        2 -> HistoryEntryTypes.TYPE_GIFTED_TO
+        3 -> HistoryEntryTypes.TYPE_GIFTED_BY
+        else -> HistoryEntryTypes.TYPE_TASTING
+    }
+}

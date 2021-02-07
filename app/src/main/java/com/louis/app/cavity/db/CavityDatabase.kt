@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
         TastingFriendXRef::class,
         FriendHistoryEntryXRef::class,
     ],
-    version = 38,
+    version = 39,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -226,19 +226,35 @@ abstract class CavityDatabase : RoomDatabase() {
 
                     repeat(10) {
                         historyDao!!.insertEntry(
-                            HistoryEntry(0, 1607272358L, 1, 0, 0)
+                            HistoryEntry(0, 1607272358L, 1, 0, 1)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1607358758L, 2, 0, 0)
+                            HistoryEntry(0, 1607458758L, 2, 0, 1)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1607617958L, 2, 0, 0)
+                            HistoryEntry(0, 1607858758L, 1, 0, 0)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1607963558L, 2, 0, 0)
+                            HistoryEntry(0, 1608858758L, 3, 0, 1)
+                        )
+
+                        historyDao.insertEntry(
+                            HistoryEntry(0, 1608858758L, 3, 0, 0)
+                        )
+
+                        historyDao.insertEntry(
+                            HistoryEntry(0, 1618858758L, 5, 0, 1)
+                        )
+
+                        historyDao.insertEntry(
+                            HistoryEntry(0, 1619858758L, 1, 1, 4)
+                        )
+
+                        historyDao.insertEntry(
+                            HistoryEntry(0, 1618858768L, 5, 0, 0)
                         )
                     }
 
@@ -260,6 +276,7 @@ abstract class CavityDatabase : RoomDatabase() {
                             Tasting(
                                 1,
                                 1252686758L,
+                                "Apéro chargé",
                                 tastingId = (1..8).random().toLong()
                             )
                         )
@@ -268,6 +285,7 @@ abstract class CavityDatabase : RoomDatabase() {
                             Tasting(
                                 2,
                                 1252686758L,
+                                "Anniversaire de Jean",
                                 tastingId = (1..8).random().toLong()
                             )
                         )
@@ -276,6 +294,7 @@ abstract class CavityDatabase : RoomDatabase() {
                             Tasting(
                                 3,
                                 1252686758L,
+                                "Pot de départ",
                                 tastingId = (1..8).random().toLong()
                             )
                         )
