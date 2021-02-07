@@ -45,6 +45,7 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun friendDao(): FriendDao
     abstract fun tastingDao(): TastingDao
     abstract fun tastingXFriendDao(): TastingFriendXRefDao
+    abstract fun historyXFriendDao(): FriendHistoryEntryXRefDao
 
     companion object {
         @Volatile
@@ -81,6 +82,7 @@ abstract class CavityDatabase : RoomDatabase() {
                 val friendDao = instance?.friendDao()
                 val tastingDao = instance?.tastingDao()
                 val tastingFriendXRefDao = instance?.tastingXFriendDao()
+                val friendHistoryEntryXRef = instance?.historyXFriendDao()
 
                 GlobalScope.launch(IO) {
                     with(countyDao!!) {
@@ -262,9 +264,9 @@ abstract class CavityDatabase : RoomDatabase() {
                         friendDao!!.insertFriend(Friend(0, friends.random(), friends.random()))
                     }
 
-                    repeat(1) {
-                        tastingFriendXRefDao!!.insertTastingFriendXRef(
-                            TastingFriendXRef(
+                    repeat(5) {
+                        friendHistoryEntryXRef!!.insertFriendHistoryEntryXRef(
+                            FriendHistoryEntryXRef(
                                 (1..3).random().toLong(), (1..8).random().toLong()
                             )
                         )
