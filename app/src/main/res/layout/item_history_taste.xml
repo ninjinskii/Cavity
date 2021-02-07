@@ -18,12 +18,26 @@
     <include
         android:id="@+id/wineColorNameNaming"
         layout="@layout/wine_color_name_naming"
+        android:visibility="invisible"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/medium_margin"
         app:layout_constraintEnd_toStartOf="@id/vintage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="Anniversaire Jean"
+        app:layout_constraintBottom_toBottomOf="@id/wineColorNameNaming"
+        app:layout_constraintEnd_toEndOf="@id/wineColorNameNaming"
+        app:layout_constraintStart_toStartOf="@id/wineColorNameNaming"
+        app:layout_constraintTop_toTopOf="@id/wineColorNameNaming" />
 
     <TextView
         android:id="@+id/vintage"

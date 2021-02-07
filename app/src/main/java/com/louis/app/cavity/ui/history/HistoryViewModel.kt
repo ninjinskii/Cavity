@@ -19,7 +19,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                 .map { HistoryUiModel.EntryModel(it) }
                 .insertSeparators { before, after ->
                     if (shouldSeparate(before, after))
-                        HistoryUiModel.HeaderModel(after?.item?.historyEntry?.date ?: 0L)
+                        HistoryUiModel.HeaderModel(after?.model?.historyEntry?.date ?: 0L)
                     else null
                 }
         }.cachedIn(viewModelScope)
@@ -29,7 +29,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         after: HistoryUiModel?
     ): Boolean {
         return if (after is HistoryUiModel.EntryModel) {
-            before?.item?.historyEntry?.date != after.item.historyEntry.date
+            before?.model?.historyEntry?.date != after.model.historyEntry.date
         } else false
     }
 }

@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
+import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
+import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.L
@@ -19,13 +21,19 @@ class HistoryRecyclerAdapter :
         HistoryEntryDiffItemCallback()
     ) {
 
+    companion object {
+        const val TYPE_SEPARATOR = 0
+        const val TYPE_NORMAL = 1
+        const val TYPE_TASTING = 2
+    }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
 
-        if (holder is HistoryEntryViewHolder) {
-            holder.bind(item as HistoryUiModel.EntryModel?)
-        } else if (holder is HistorySeparatorViewHolder) {
-            holder.bind(item as HistoryUiModel.HeaderModel)
+        when(holder) {
+            is HistoryEntryViewHolder -> holder.bind(item as HistoryUiModel.EntryModel?)
+            is HistoryEntryTasteViewHolder -> holder.bind(item as HistoryUiModel.EntryModel?)
+            is HistorySeparatorViewHolder -> holder.bind(item as HistoryUiModel.HeaderModel?)
         }
     }
 
@@ -33,26 +41,33 @@ class HistoryRecyclerAdapter :
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            0 -> HistoryEntryViewHolder(
+            TYPE_SEPARATOR -> HistorySeparatorViewHolder(
+                ItemHistorySeparatorBinding.inflate(inflater, parent, false)
+            )
+            TYPE_NORMAL -> HistoryEntryViewHolder(
                 ItemHistoryUseBinding.inflate(inflater, parent, false)
             )
-            else -> HistorySeparatorViewHolder(
-                ItemHistorySeparatorBinding.inflate(inflater, parent, false)
+            else -> HistoryEntryTasteViewHolder(
+                ItemHistoryTasteBinding.inflate(inflater, parent, false)
             )
         }
     }
 
-    override fun getItemViewType(position: Int) = when (getItem(position)) {
-        is HistoryUiModel.EntryModel -> 0
-        is HistoryUiModel.HeaderModel -> 1
-        else -> throw IllegalStateException("Unknown view type")
+    override fun getItemViewType(position: Int): Int {
+        return when (val item = getItem(position)) {
+            is HistoryUiModel.HeaderModel -> TYPE_SEPARATOR
+            is HistoryUiModel.EntryModel ->
+                if (item.model.getHistoryType() == HistoryTypes.HISTORY_TASTING)
+                    TYPE_TASTING else TYPE_NORMAL
+            else -> throw IllegalStateException("Unknown view type")
+        }
     }
 
     class HistoryEntryDiffItemCallback : DiffUtil.ItemCallback<HistoryUiModel>() {
         override fun areItemsTheSame(oldItem: HistoryUiModel, newItem: HistoryUiModel): Boolean {
             val isSameEntry = oldItem is HistoryUiModel.EntryModel
                     && newItem is HistoryUiModel.EntryModel
-                    && oldItem.item.historyEntry.id == newItem.item.historyEntry.id
+                    && oldItem.model.historyEntry.id == newItem.model.historyEntry.id
 
             val isSameSeparator = oldItem is HistoryUiModel.HeaderModel
                     && newItem is HistoryUiModel.HeaderModel
@@ -74,19 +89,18 @@ class HistoryRecyclerAdapter :
 
         fun bind(entry: HistoryUiModel.EntryModel?) {
             entry?.let {
-                val (bottle, wine) = it.item.bottleAndWine
+                val (bottle, wine) = it.model.bottleAndWine
 
                 with(binding) {
                     wineColorNameNaming.wineNaming.text = wine.naming
                     wineColorNameNaming.wineName.text = wine.name
                     vintage.text = bottle.vintage.toString()
 
-                    when (it.item.getType()) {
-                        HistoryEntryTypes.TYPE_USE -> bindForUse(it.item)
-                        HistoryEntryTypes.TYPE_REPLENISHMENT -> bindForReplenishment(it.item)
-                        HistoryEntryTypes.TYPE_GIFTED_TO -> bindForGiftedTo(it.item)
-                        HistoryEntryTypes.TYPE_GIFTED_BY -> bindForGiftedBy(it.item)
-                        HistoryEntryTypes.TYPE_TASTING -> bindForTasting(it.item)
+                    when (it.model.getHistoryType()) {
+                        HistoryTypes.HISTORY_USE -> bindForUse(it.model)
+                        HistoryTypes.HISTORY_REPLENISHMENT -> bindForReplenishment(it.model)
+                        HistoryTypes.HISTORY_GIFTED_TO -> bindForGiftedTo(it.model)
+                        else -> bindForGiftedBy(it.model)
                     }
                 }
 
@@ -97,7 +111,7 @@ class HistoryRecyclerAdapter :
             with(binding) {
                 bottles.setVisible(false)
                 friends.setVisible(true)
-                title.setVisible(false)
+                wineColorNameNaming.wineColorIndicator.setVisible(true)
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
 
                 comment.text = item.bottleAndWine.bottle.tasteComment
@@ -109,7 +123,7 @@ class HistoryRecyclerAdapter :
             with(binding) {
                 bottles.setVisible(false)
                 friends.setVisible(false)
-                title.setVisible(false)
+                wineColorNameNaming.wineColorIndicator.setVisible(true)
                 comment.text = item.bottleAndWine.bottle.buyLocation
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_light_green))
 
@@ -120,7 +134,7 @@ class HistoryRecyclerAdapter :
             with(binding) {
                 bottles.setVisible(false)
                 friends.setVisible(false)
-                title.setVisible(false)
+                wineColorNameNaming.wineColorIndicator.setVisible(true)
                 comment.text = root.context.getString(R.string.gifted_to, item.friends[0].firstName)
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
             }
@@ -130,22 +144,22 @@ class HistoryRecyclerAdapter :
             with(binding) {
                 bottles.setVisible(false)
                 friends.setVisible(false)
-                title.setVisible(false)
+                wineColorNameNaming.wineColorIndicator.setVisible(true)
                 comment.text = root.context.getString(R.string.gifted_by, item.friends[0].firstName)
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_light_green))
             }
         }
+    }
 
-        private fun bindForTasting(item: HistoryEntryWithBottleAndTastingAndFriends) {
-            with(binding) {
-                bottles.setVisible(true)
-                friends.setVisible(true)
-                title.setVisible(true)
-                wineColorNameNaming.wineColorIndicator.setVisible(false)
-                title.text = item.tasting?.tasting?.opportunity
-                marker.background = ColorDrawable(root.context.getColor(R.color.cavity_gold))
+    inner class HistoryEntryTasteViewHolder(private val binding: ItemHistoryTasteBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+            fun bind(entry: HistoryUiModel.EntryModel?) {
+                with(binding) {
+                    title.text = entry?.model?.tasting?.tasting?.opportunity
+                    bottles.text = entry?.model?.tasting?.bottles?.size?.toString()
+                }
             }
-        }
     }
 
     inner class HistorySeparatorViewHolder(private val binding: ItemHistorySeparatorBinding) :
@@ -155,5 +169,4 @@ class HistoryRecyclerAdapter :
             header?.let { binding.date.text = DateFormatter.formatDate(it.date) }
         }
     }
-
 }

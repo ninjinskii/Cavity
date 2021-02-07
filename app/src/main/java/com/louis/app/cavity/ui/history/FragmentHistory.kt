@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
+import com.louis.app.cavity.ui.history.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
@@ -31,7 +32,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             adapter = historyAdapter
             setHasFixedSize(true)
             addItemDecoration(StickyItemDecorator(this) { itemPos ->
-                (adapter as HistoryRecyclerAdapter).getItemViewType(itemPos) == 1
+                (adapter as HistoryRecyclerAdapter).getItemViewType(itemPos) == TYPE_SEPARATOR
             })
         }
 
