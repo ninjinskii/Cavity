@@ -1,8 +1,10 @@
 package com.louis.app.cavity.ui.history
 
+import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +18,7 @@ import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 
-class HistoryRecyclerAdapter :
+class HistoryRecyclerAdapter(context: Context) :
     PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(
         HistoryEntryDiffItemCallback()
     ) {
@@ -26,6 +28,12 @@ class HistoryRecyclerAdapter :
         const val TYPE_NORMAL = 1
         const val TYPE_TASTING = 2
     }
+
+    val redMarker = ColorDrawable(context.getColor(R.color.cavity_red))
+    val greenMarker = ColorDrawable(context.getColor(R.color.cavity_light_green))
+    val goldMarker = ColorDrawable(context.getColor(R.color.cavity_gold))
+
+    val
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
@@ -115,6 +123,7 @@ class HistoryRecyclerAdapter :
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
 
                 comment.text = item.bottleAndWine.bottle.tasteComment
+                comment.setCompoundDrawables(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_glass), null, null, null)
                 friends.text = item.friends.size.toString()
             }
         }

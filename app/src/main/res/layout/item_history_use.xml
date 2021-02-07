@@ -43,6 +43,8 @@
         android:layout_margin="@dimen/medium_margin"
         android:ellipsize="end"
         android:maxLines="1"
+        app:drawableLeftCompat="@drawable/ic_glass"
+        app:drawableTint="?attr/colorOnBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/bottles"
         app:layout_constraintStart_toEndOf="@id/marker"
