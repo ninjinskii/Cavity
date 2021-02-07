@@ -228,35 +228,35 @@ abstract class CavityDatabase : RoomDatabase() {
 
                     repeat(10) {
                         historyDao!!.insertEntry(
-                            HistoryEntry(0, 1607272358L, 1, 0, 1)
+                            HistoryEntry(0, 1612009671968L, 1, 0, 1)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1607458758L, 2, 0, 1)
+                            HistoryEntry(0, 1612109671968L, 2, 0, 1)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1607858758L, 1, 0, 0)
+                            HistoryEntry(0, 1612209671968L, 1, 0, 0)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1608858758L, 3, 0, 1)
+                            HistoryEntry(0, 1612309671968L, 3, 0, 1)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1608858758L, 3, 0, 0)
+                            HistoryEntry(0, 1612409671968L, 3, 0, 0)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1618858758L, 5, 0, 1)
+                            HistoryEntry(0, 1612509671968L, 5, 0, 1)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1619858758L, 1, 1, 4)
+                            HistoryEntry(0, 1612609671968L, 1, 1, 4)
                         )
 
                         historyDao.insertEntry(
-                            HistoryEntry(0, 1618858768L, 5, 0, 0)
+                            HistoryEntry(0, 1612709671968L, 5, 0, 0)
                         )
                     }
 

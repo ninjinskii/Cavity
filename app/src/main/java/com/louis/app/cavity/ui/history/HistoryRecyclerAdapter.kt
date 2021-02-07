@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
-import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.L
@@ -70,7 +69,7 @@ class HistoryRecyclerAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.root.setOnClickListener {  }
+            binding.root.setOnClickListener { }
         }
 
         fun bind(entry: HistoryUiModel.EntryModel?) {
@@ -82,7 +81,7 @@ class HistoryRecyclerAdapter :
                     wineColorNameNaming.wineName.text = wine.name
                     vintage.text = bottle.vintage.toString()
 
-                    when(it.item.getType()) {
+                    when (it.item.getType()) {
                         HistoryEntryTypes.TYPE_USE -> bindForUse(it.item)
                         HistoryEntryTypes.TYPE_REPLENISHMENT -> bindForReplenishment(it.item)
                         HistoryEntryTypes.TYPE_GIFTED_TO -> bindForGiftedTo(it.item)
