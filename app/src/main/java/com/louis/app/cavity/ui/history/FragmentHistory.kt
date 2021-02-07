@@ -25,7 +25,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun initRecyclerView() {
-        val historyAdapter = HistoryRecyclerAdapter()
+        val historyAdapter = HistoryRecyclerAdapter(requireContext())
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)

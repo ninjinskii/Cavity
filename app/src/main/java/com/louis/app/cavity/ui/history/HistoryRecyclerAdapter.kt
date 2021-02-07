@@ -33,7 +33,10 @@ class HistoryRecyclerAdapter(context: Context) :
     val greenMarker = ColorDrawable(context.getColor(R.color.cavity_light_green))
     val goldMarker = ColorDrawable(context.getColor(R.color.cavity_gold))
 
-    val
+    val glassIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
+    val bottleIcon = ContextCompat.getDrawable(context, R.drawable.ic_bottle)
+    val giftIcon = ContextCompat.getDrawable(context, R.drawable.ic_gift)
+    val tastingIcon = ContextCompat.getDrawable(context, R.drawable.ic_toast_wine)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
@@ -123,7 +126,7 @@ class HistoryRecyclerAdapter(context: Context) :
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
 
                 comment.text = item.bottleAndWine.bottle.tasteComment
-                comment.setCompoundDrawables(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_glass), null, null, null)
+                comment.setCompoundDrawables(glassIcon, null, null, null)
                 friends.text = item.friends.size.toString()
             }
         }
@@ -133,9 +136,10 @@ class HistoryRecyclerAdapter(context: Context) :
                 bottles.setVisible(false)
                 friends.setVisible(false)
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
-                comment.text = item.bottleAndWine.bottle.buyLocation
-                marker.background = ColorDrawable(root.context.getColor(R.color.cavity_light_green))
 
+                comment.text = item.bottleAndWine.bottle.buyLocation
+                comment.setCompoundDrawables(bottleIcon, null, null, null)
+                marker.background = ColorDrawable(root.context.getColor(R.color.cavity_light_green))
             }
         }
 
@@ -144,7 +148,9 @@ class HistoryRecyclerAdapter(context: Context) :
                 bottles.setVisible(false)
                 friends.setVisible(false)
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
+
                 comment.text = root.context.getString(R.string.gifted_to, item.friends[0].firstName)
+                comment.setCompoundDrawables(giftIcon, null, null, null)
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
             }
         }
@@ -155,6 +161,7 @@ class HistoryRecyclerAdapter(context: Context) :
                 friends.setVisible(false)
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
                 comment.text = root.context.getString(R.string.gifted_by, item.friends[0].firstName)
+                comment.setCompoundDrawables(giftIcon, null, null, null)
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_light_green))
             }
         }
@@ -167,6 +174,7 @@ class HistoryRecyclerAdapter(context: Context) :
                 with(binding) {
                     title.text = entry?.model?.tasting?.tasting?.opportunity
                     bottles.text = entry?.model?.tasting?.bottles?.size?.toString()
+                    comment.setCompoundDrawables(tastingIcon, null, null, null)
                 }
             }
     }
