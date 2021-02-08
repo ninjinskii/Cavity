@@ -13,6 +13,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentUseBottleBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
+import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.util.DateFormatter
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -34,26 +35,11 @@ class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
     }
 
     private fun initDatePicker() {
-        useDatePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText(R.string.buying_date_beyond)
-            .build()
+        val title = getString(R.string.use_date)
 
-        binding.useDateLayout.setEndIconOnClickListener {
-            binding.useDate.setText("")
-            useBottleViewModel.date = System.currentTimeMillis()
-        }
-
-        useDatePicker.apply {
-            addOnDismissListener {
-                binding.useDate.clearFocus()
-            }
-
-            addOnPositiveButtonClickListener {
-                binding.useDate.setText(DateFormatter.formatDate(selection ?: 0))
-                selection?.let {
-                    useBottleViewModel.date = it
-                }
-            }
+        DatePicker(childFragmentManager, System.currentTimeMillis(), binding.useDateLayout, title).apply {
+            onEndIconClickListener = { useBottleViewModel.date = System.currentTimeMillis() }
+            onDateChangedListener = { useBottleViewModel.date = it }
         }
     }
 

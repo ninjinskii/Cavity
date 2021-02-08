@@ -10,6 +10,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.DateViewModel
 import com.louis.app.cavity.util.DateFormatter
@@ -17,7 +18,6 @@ import java.util.*
 
 class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private lateinit var stepperx: Stepper
-    private lateinit var datePicker: MaterialDatePicker<Long>
     private var _binding: FragmentInquireDatesBinding? = null
     private val binding get() = _binding!!
     private val dateViewModel: DateViewModel by viewModels(
@@ -61,47 +61,10 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     }
 
     private fun setListeners() {
-        binding.buyDateLayout.setEndIconOnClickListener {
-            binding.buyDate.setText("")
-            dateViewModel.setTimestamp(-1L)
-        }
-
-        binding.buyDate.apply {
-            inputType = InputType.TYPE_NULL
-            datePicker = MaterialDatePicker.Builder
-                .datePicker()
-                .setTitleText(R.string.buying_date)
-                .build()
-
-            datePicker.addOnDismissListener {
-                clearFocus()
-                isDatePickerDisplayed = false
-            }
-
-            datePicker.addOnPositiveButtonClickListener {
-                dateViewModel.setTimestamp(datePicker.selection ?: -1L)
-                setText(datePicker.headerText.toString())
-            }
-
-            setOnClickListener {
-                datePicker.show(
-                    childFragmentManager,
-                    resources.getString(R.string.tag_date_picker)
-                )
-            }
-
-            setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    if (!isDatePickerDisplayed) {
-                        isDatePickerDisplayed = true
-
-                        datePicker.show(
-                            childFragmentManager,
-                            resources.getString(R.string.tag_date_picker)
-                        )
-                    }
-                }
-            }
+        val title = getString(R.string.buying_date)
+        DatePicker(childFragmentManager, -1L, binding.buyDateLayout, title).apply {
+            onEndIconClickListener = { dateViewModel.setTimestamp(-1L) }
+            onDateChangedListener = { dateViewModel.setTimestamp(it) }
         }
 
         with(binding) {

@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
@@ -27,6 +26,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.ui.ChipLoader
+import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -37,8 +37,6 @@ import kotlin.math.max
 class FragmentSearch : Fragment(R.layout.fragment_search) {
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private lateinit var beyondDatePicker: MaterialDatePicker<Long>
-    private lateinit var untilDatePicker: MaterialDatePicker<Long>
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private val searchViewModel: SearchViewModel by viewModels()
@@ -47,7 +45,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
-    private var isDatePickerDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -190,50 +187,17 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initDatePickers() {
-        beyondDatePicker = MaterialDatePicker.Builder.datePicker().apply {
-            setTitleText(R.string.buying_date_beyond)
-        }.build()
+        val beyondTitle = getString(R.string.buying_date_beyond)
+        val untilTitle = getString(R.string.buying_date_until)
 
-        untilDatePicker = MaterialDatePicker.Builder.datePicker().apply {
-            setTitleText(R.string.buying_date_until)
-        }.build()
-
-        binding.beyondLayout.setEndIconOnClickListener {
-            binding.beyond.setText("")
-            searchViewModel.setBeyondFilter(null)
+        DatePicker(childFragmentManager, -1L, binding.beyondLayout, beyondTitle).apply {
+            onEndIconClickListener = { searchViewModel.setBeyondFilter(null) }
+            onDateChangedListener = { searchViewModel.setBeyondFilter(it) }
         }
 
-        binding.untilLayout.setEndIconOnClickListener {
-            binding.until.setText("")
-            searchViewModel.setUntilFilter(null)
-        }
-
-        beyondDatePicker.apply {
-            addOnDismissListener {
-                binding.beyond.clearFocus()
-                isDatePickerDisplayed = false
-            }
-
-            addOnPositiveButtonClickListener {
-                binding.beyond.setText(DateFormatter.formatDate(selection ?: 0))
-                selection?.let {
-                    searchViewModel.setBeyondFilter(it)
-                }
-            }
-        }
-
-        untilDatePicker.apply {
-            addOnDismissListener {
-                binding.until.clearFocus()
-                isDatePickerDisplayed = false
-            }
-
-            addOnPositiveButtonClickListener {
-                binding.until.setText(DateFormatter.formatDate(selection ?: 0))
-                selection?.let {
-                    searchViewModel.setUntilFilter(it)
-                }
-            }
+        DatePicker(childFragmentManager, -1L, binding.untilLayout, untilTitle).apply {
+            onEndIconClickListener = { searchViewModel.setUntilFilter(null) }
+            onDateChangedListener = { searchViewModel.setUntilFilter(it) }
         }
     }
 
@@ -361,36 +325,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
         binding.currentQuery.setOnClickListener {
             binding.searchButton.performClick()
-        }
-
-        binding.beyond.apply {
-            inputType = InputType.TYPE_NULL
-
-            setOnClickListener {
-                if (!isDatePickerDisplayed) {
-                    isDatePickerDisplayed = true
-
-                    beyondDatePicker.show(
-                        childFragmentManager,
-                        resources.getString(R.string.tag_date_picker)
-                    )
-                }
-            }
-        }
-
-        binding.until.apply {
-            inputType = InputType.TYPE_NULL
-
-            setOnClickListener {
-                if (!isDatePickerDisplayed) {
-                    isDatePickerDisplayed = true
-
-                    untilDatePicker.show(
-                        childFragmentManager,
-                        resources.getString(R.string.tag_date_picker)
-                    )
-                }
-            }
         }
 
         binding.togglePrice.setOnCheckedChangeListener { _, isChecked ->

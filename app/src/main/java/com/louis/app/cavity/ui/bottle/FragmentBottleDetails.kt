@@ -108,20 +108,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonConsume.setOnClickListener {
-            (it as Checkable).isChecked = false
-            val dialogBinding = DialogUseBottleBinding.inflate(layoutInflater)
-
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(resources.getString(R.string.use_long))
-                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
-                }
-                .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
-                    val count = dialogBinding.bottleCount.text.toString().toInt()
-                    bottleDetailsViewModel.removeBottles(args.bottleId, count)
-                    // TODO: history
-                }
-                .setView(dialogBinding.root)
-                .show()
+            val action = FragmentBottleDetailsDirections.bottleDetailsToUseBottle(args.bottleId)
+            findNavController().navigate(action)
         }
 
         binding.buttonProvide.setOnClickListener {
