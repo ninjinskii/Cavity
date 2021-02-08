@@ -1,9 +1,6 @@
 package com.louis.app.cavity.db
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
 import com.louis.app.cavity.model.Friend
 
 @Dao
@@ -16,4 +13,7 @@ interface FriendDao {
 
     @Delete
     suspend fun deleteFriend(friend: Friend)
+
+    @Query("SELECT * FROM friend")
+    suspend fun getAllFriendsNotLive(): List<Friend>
 }

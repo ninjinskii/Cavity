@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.history
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,10 +13,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
 import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
-import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 
 class HistoryRecyclerAdapter(context: Context) :
@@ -41,7 +40,7 @@ class HistoryRecyclerAdapter(context: Context) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
 
-        when(holder) {
+        when (holder) {
             is HistoryEntryViewHolder -> holder.bind(item as HistoryUiModel.EntryModel?)
             is HistoryEntryTasteViewHolder -> holder.bind(item as HistoryUiModel.EntryModel?)
             is HistorySeparatorViewHolder -> holder.bind(item as HistoryUiModel.HeaderModel?)
@@ -126,7 +125,7 @@ class HistoryRecyclerAdapter(context: Context) :
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
 
                 comment.text = item.bottleAndWine.bottle.tasteComment
-                comment.setCompoundDrawables(glassIcon, null, null, null)
+                comment.setCompoundDrawablesWithIntrinsicBounds(glassIcon, null, null, null)
                 friends.text = item.friends.size.toString()
             }
         }
@@ -138,7 +137,7 @@ class HistoryRecyclerAdapter(context: Context) :
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
 
                 comment.text = item.bottleAndWine.bottle.buyLocation
-                comment.setCompoundDrawables(bottleIcon, null, null, null)
+                comment.setCompoundDrawablesWithIntrinsicBounds(bottleIcon, null, null, null)
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_light_green))
             }
         }
@@ -150,7 +149,7 @@ class HistoryRecyclerAdapter(context: Context) :
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
 
                 comment.text = root.context.getString(R.string.gifted_to, item.friends[0].firstName)
-                comment.setCompoundDrawables(giftIcon, null, null, null)
+                comment.setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
             }
         }
@@ -159,9 +158,10 @@ class HistoryRecyclerAdapter(context: Context) :
             with(binding) {
                 bottles.setVisible(false)
                 friends.setVisible(false)
+
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
                 comment.text = root.context.getString(R.string.gifted_by, item.friends[0].firstName)
-                comment.setCompoundDrawables(giftIcon, null, null, null)
+                comment.setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_light_green))
             }
         }
@@ -170,13 +170,20 @@ class HistoryRecyclerAdapter(context: Context) :
     inner class HistoryEntryTasteViewHolder(private val binding: ItemHistoryTasteBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-            fun bind(entry: HistoryUiModel.EntryModel?) {
-                with(binding) {
-                    title.text = entry?.model?.tasting?.tasting?.opportunity
-                    bottles.text = entry?.model?.tasting?.bottles?.size?.toString()
-                    comment.setCompoundDrawables(tastingIcon, null, null, null)
-                }
+        init {
+            binding.root.setOnClickListener { }
+        }
+
+        fun bind(entry: HistoryUiModel.EntryModel?) {
+            with(binding) {
+                bottles.setVisible(true)
+                friends.setVisible(true)
+
+                title.text = entry?.model?.tasting?.tasting?.opportunity
+                bottles.text = entry?.model?.tasting?.bottles?.size?.toString()
+                comment.setCompoundDrawablesWithIntrinsicBounds(tastingIcon, null, null, null)
             }
+        }
     }
 
     inner class HistorySeparatorViewHolder(private val binding: ItemHistorySeparatorBinding) :

@@ -10,4 +10,7 @@ data class Friend(
     val id: Long = 0,
     @ColumnInfo(name = "first_name") val firstName: String,
     @ColumnInfo(name = "last_name") val lastName: String
-)
+) : Chipable {
+    override fun getItemId() = id
+    override fun getChipText() = "$firstName $lastName"
+}

@@ -120,7 +120,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonConsume"
                         style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="146dp"
                         android:layout_height="wrap_content"
                         android:text="@string/taste"
                         app:icon="@drawable/ic_glass" />
@@ -128,10 +128,10 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonProvide"
                         style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="146dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/provide"
-                        app:icon="@drawable/ic_add" />
+                        android:text="@string/gift_to"
+                        app:icon="@drawable/ic_gift" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 

@@ -150,6 +150,13 @@
                 android:name="editedBottleId"
                 app:argType="long" />
         </action>
+        <action
+            android:id="@+id/bottleDetailsToUseBottle"
+            app:destination="@id/fragmentUseBottle">
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
     </fragment>
 
     <fragment
@@ -163,4 +170,20 @@
         android:name="com.louis.app.cavity.ui.history.FragmentHistory"
         android:label="FragmentHistory"
         tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/fragmentUseBottle"
+        android:name="com.louis.app.cavity.ui.bottle.FragmentUseBottle"
+        android:label="FragmentUseBottle"
+        tools:layout="@layout/fragment_use_bottle">
+        <argument
+            android:name="bottleId"
+            app:argType="long" />
+    </fragment>
+
+    <!--    <fragment-->
+    <!--        android:id="@+id/fragmentGiftBottle"-->
+    <!--        android:name="com.louis.app.cavity.ui.bottle.FragmentGiftBottle"-->
+    <!--        android:label="FragmentGiftBottle"-->
+    <!--        tools:layout="@layout/fragment_gift_bottle" />-->
 </navigation>

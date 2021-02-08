@@ -11,7 +11,7 @@ import com.louis.app.cavity.model.relation.history.HistoryEntryWithFriends
 @Dao
 interface HistoryDao {
     @Insert
-    fun insertEntry(entry: HistoryEntry)
+    fun insertEntry(entry: HistoryEntry): Long
 
     @Update
     fun updateEntry(entry: HistoryEntry)

@@ -129,7 +129,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             val dialogBinding = DialogAddBottleBinding.inflate(layoutInflater)
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle(resources.getString(R.string.entry))
+                .setTitle(resources.getString(R.string.gift_to))
                 .setMessage(resources.getString(R.string.how_many_to_add))
                 .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                 }

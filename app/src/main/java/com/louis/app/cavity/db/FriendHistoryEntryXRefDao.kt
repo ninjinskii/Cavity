@@ -12,6 +12,9 @@ interface FriendHistoryEntryXRefDao {
     @Insert
     suspend fun insertFriendHistoryEntryXRef(fxh: FriendHistoryEntryXRef)
 
+    @Insert
+    suspend fun insertFriendHistoryEntryXRef(fxh: List<FriendHistoryEntryXRef>)
+
     @Update
     suspend fun updateFriendHistoryEntryXRef(fxh: FriendHistoryEntryXRef)
 
