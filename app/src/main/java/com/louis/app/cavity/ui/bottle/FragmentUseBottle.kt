@@ -8,16 +8,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.chip.Chip
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentUseBottleBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
+import com.louis.app.cavity.ui.SnackbarProvider
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
+    private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentUseBottleBinding? = null
     private val binding get() = _binding!!
     private val useBottleViewModel: UseBottleViewModel by viewModels()
@@ -26,6 +27,8 @@ class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentUseBottleBinding.bind(view)
+
+        snackbarProvider = activity as SnackbarProvider
 
         initDatePicker()
         initChips()
@@ -69,6 +72,10 @@ class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
                 useBottleViewModel.useBottle(args.bottleId, friends)
             }
 
+            snackbarProvider.onShowSnackbarRequested(
+                R.string.bottle_consumed,
+                useAnchorView = false
+            )
             findNavController().navigateUp()
         }
 
