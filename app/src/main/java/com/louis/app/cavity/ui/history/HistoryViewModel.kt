@@ -31,7 +31,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     ): Boolean {
         return if (after is HistoryUiModel.EntryModel?) {
             val beforeTimestamp =
-                DateFormatter.roundToDay(before?.model?.historyEntry?.date ?: return false)
+                DateFormatter.roundToDay(before?.model?.historyEntry?.date ?: return true)
             val afterTimestamp =
                 DateFormatter.roundToDay(after?.model?.historyEntry?.date ?: return false)
 
