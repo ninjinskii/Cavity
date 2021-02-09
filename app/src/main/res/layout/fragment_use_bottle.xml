@@ -48,7 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:id="@+id/consumeDateLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -57,6 +58,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:rule="required"
                 app:startIconDrawable="@drawable/ic_calendar">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -66,13 +68,14 @@
                     android:hint="@string/consume_date"
                     android:inputType="none" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/buyLocationLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
+                android:gravity="top"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/consumeDateLayout"
@@ -84,6 +87,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/tasting_comment"
                     android:inputType="textMultiLine"
+                    android:gravity="top"
                     android:lines="7"
                     android:nextFocusDown="@id/buyDate" />
 
@@ -130,8 +134,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginBottom="@dimen/medium_margin"
                 android:text="@string/submit"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

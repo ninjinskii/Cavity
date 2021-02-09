@@ -64,6 +64,10 @@ class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
 
     private fun setListeners() {
         binding.buttonSubmit.setOnClickListener {
+            if (!binding.consumeDateLayout.validate()) {
+                return@setOnClickListener
+            }
+
             binding.friendsChipGroup.apply {
                 val friends = checkedChipIds.map {
                     (findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Friend).id

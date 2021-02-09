@@ -66,4 +66,10 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
             }
         }
     }
+
+    fun revertBottleConsumption(bottleId: Long) {
+        viewModelScope.launch(IO) {
+            repository.revertBottleConsumption(bottleId)
+        }
+    }
 }

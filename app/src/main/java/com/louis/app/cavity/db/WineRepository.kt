@@ -1,6 +1,7 @@
 package com.louis.app.cavity.db
 
 import android.app.Application
+import androidx.room.withTransaction
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
@@ -103,6 +104,17 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
 
+    suspend fun consumeBottle(bottleId: Long) {
+        bottleDao.consumeBottle(bottleId)
+    }
+
+    suspend fun revertBottleConsumption(bottleId: Long) {
+        database.withTransaction {
+            bottleDao.revertBottleConsumption(bottleId)
+            historyDao.deleteEntriesForBottle(bottleId)
+        }
+    }
+
     suspend fun getAllReviewsNotLive() = reviewDao.getAllReviewsNotLive()
 
     fun getCountiesWithWines() = countyDao.getCountiesWithWines()
@@ -128,7 +140,7 @@ class WineRepository private constructor(app: Application) {
     fun getAllEntries() = historyDao.getAllEntries()
 
     suspend fun insertHistoryEntry(entry: HistoryEntry): Long {
-        bottleDao.useBottle(entry.bottleId)
+        bottleDao.consumeBottle(entry.bottleId)
         return historyDao.insertEntry(entry)
     }
 }

@@ -16,7 +16,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddBottleBinding
-import com.louis.app.cavity.databinding.DialogUseBottleBinding
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
@@ -138,6 +137,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         binding.favorite.setOnClickListener {
             bottleDetailsViewModel.toggleFavorite(args.bottleId)
         }
+
+        binding.buttonRevertConsumption.setOnClickListener {
+            bottleDetailsViewModel.revertBottleConsumption(args.bottleId)
+        }
     }
 
     private fun showImage(image: Uri) {
@@ -174,7 +177,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private fun updateUI(bottle: Bottle) {
         with(binding) {
-            stock.text = getString(R.string.stock_number, bottle.count)
+            val consumed = bottle.consumed.toBoolean()
+            buttonGroupInteract.setVisible(!consumed)
+            consumedBanner.setVisible(consumed)
+
             apogee.setData(bottle.apogee.toString())
             price.setData(
                 getString(
