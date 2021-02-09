@@ -70,7 +70,7 @@ class DatePicker(
 
             datePicker.show(
                 childFragmentManager,
-                datePicker.resources.getString(R.string.tag_date_picker)
+                "random-tag"
             )
         }
     }
