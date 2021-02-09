@@ -117,7 +117,7 @@
                         app:icon="@drawable/ic_glass" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonProvide"
+                        android:id="@+id/buttonGiftTo"
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="146dp"
                         android:layout_height="wrap_content"

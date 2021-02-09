@@ -21,7 +21,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private val dateViewModel: DateViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
-    private var isDatePickerDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

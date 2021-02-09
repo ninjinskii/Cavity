@@ -22,7 +22,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     private var _binding: FragmentGiftBottleBinding? = null
     private val binding get() = _binding!!
     private val consumeGiftBottleViewModel: ConsumeGiftBottleViewModel by viewModels()
-    private val args: FragmentUseBottleArgs by navArgs()
+    private val args: FragmentGiftBottleArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,7 +44,8 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
             title,
             System.currentTimeMillis()
         ).apply {
-            onEndIconClickListener = { consumeGiftBottleViewModel.date = System.currentTimeMillis() }
+            onEndIconClickListener =
+                { consumeGiftBottleViewModel.date = System.currentTimeMillis() }
             onDateChangedListener = { consumeGiftBottleViewModel.date = it }
         }
     }
@@ -56,7 +57,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
                     binding.friendsChipGroup,
                     consumeGiftBottleViewModel.getAllFriendsNotLive(),
                     preselect = emptyList(),
-                    selectionRequired = false,
+                    selectionRequired = true,
                 )
             }
         }
@@ -69,11 +70,10 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
             }
 
             binding.friendsChipGroup.apply {
-                val friends = checkedChipIds.map {
-                    (findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Friend).id
-                }
+                val friend =
+                    (findViewById<Chip>(checkedChipId).getTag(R.string.tag_chip_id) as Friend).id
 
-                consumeGiftBottleViewModel.consumeBottle(args.bottleId, "", friends)
+                consumeGiftBottleViewModel.giftBottle(args.bottleId, "", friend)
             }
 
             snackbarProvider.onShowSnackbarRequested(

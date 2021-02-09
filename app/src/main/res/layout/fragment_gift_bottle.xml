@@ -98,9 +98,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/medium_margin"
                         android:layout_marginTop="@dimen/small_margin"
-                        app:selectionRequired="false"
+                        app:selectionRequired="true"
                         app:singleLine="true"
-                        app:singleSelection="false" />
+                        app:singleSelection="true" />
 
                 </LinearLayout>
             </HorizontalScrollView>

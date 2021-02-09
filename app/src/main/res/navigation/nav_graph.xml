@@ -151,8 +151,15 @@
                 app:argType="long" />
         </action>
         <action
-            android:id="@+id/bottleDetailsToUseBottle"
-            app:destination="@id/fragmentUseBottle">
+            android:id="@+id/bottleDetailsToConsumeBottle"
+            app:destination="@id/fragmentConsumeBottle">
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
+        <action
+            android:id="@+id/bottleDetailsToGiftBottle"
+            app:destination="@id/fragmentGiftBottle">
             <argument
                 android:name="bottleId"
                 app:argType="long" />
@@ -172,18 +179,22 @@
         tools:layout="@layout/fragment_history" />
 
     <fragment
-        android:id="@+id/fragmentUseBottle"
-        android:name="com.louis.app.cavity.ui.bottle.FragmentUseBottle"
-        android:label="FragmentUseBottle"
-        tools:layout="@layout/fragment_use_bottle">
+        android:id="@+id/fragmentConsumeBottle"
+        android:name="com.louis.app.cavity.ui.bottle.FragmentConsumeBottle"
+        android:label="FragmentConsumeBottle"
+        tools:layout="@layout/fragment_consume_bottle">
         <argument
             android:name="bottleId"
             app:argType="long" />
     </fragment>
 
-    <!--    <fragment-->
-    <!--        android:id="@+id/fragmentGiftBottle"-->
-    <!--        android:name="com.louis.app.cavity.ui.bottle.FragmentGiftBottle"-->
-    <!--        android:label="FragmentGiftBottle"-->
-    <!--        tools:layout="@layout/fragment_gift_bottle" />-->
+    <fragment
+        android:id="@+id/fragmentGiftBottle"
+        android:name="com.louis.app.cavity.ui.bottle.FragmentGiftBottle"
+        android:label="FragmentGiftBottle"
+        tools:layout="@layout/fragment_gift_bottle">
+        <argument
+            android:name="bottleId"
+            app:argType="long" />
+    </fragment>
 </navigation>

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
@@ -56,6 +57,7 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
         val isFavorite = _updatedBottle.value?.isFavorite ?: 0
         val pdfPath = _updatedBottle.value?.pdfPath.orEmpty()
         val tasteComment = _updatedBottle.value?.tasteComment.orEmpty()
+        val buyDate = DateFormatter.roundToDay(buyDateTimestamp)
 
         val partialBottle = Bottle(
             bottleId,
@@ -68,7 +70,7 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
             currency,
             otherInfo,
             location,
-            buyDateTimestamp,
+            buyDate,
             tasteComment,
             pdfPath,
             consumed = false.toInt()

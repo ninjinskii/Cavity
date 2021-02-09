@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.FragmentUseBottleBinding
+import com.louis.app.cavity.databinding.FragmentConsumeBottleBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
@@ -17,16 +17,16 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
+class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
     private lateinit var snackbarProvider: SnackbarProvider
-    private var _binding: FragmentUseBottleBinding? = null
+    private var _binding: FragmentConsumeBottleBinding? = null
     private val binding get() = _binding!!
     private val consumeGiftBottleViewModel: ConsumeGiftBottleViewModel by viewModels()
-    private val args: FragmentUseBottleArgs by navArgs()
+    private val args: FragmentConsumeBottleArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentUseBottleBinding.bind(view)
+        _binding = FragmentConsumeBottleBinding.bind(view)
 
         snackbarProvider = activity as SnackbarProvider
 

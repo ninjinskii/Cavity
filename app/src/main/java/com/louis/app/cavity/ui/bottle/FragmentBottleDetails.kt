@@ -109,25 +109,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         binding.buttonConsume.setOnClickListener {
             (it as Checkable).isChecked = false
 
-            val action = FragmentBottleDetailsDirections.bottleDetailsToUseBottle(args.bottleId)
+            val action = FragmentBottleDetailsDirections.bottleDetailsToConsumeBottle(args.bottleId)
             findNavController().navigate(action)
         }
 
-        binding.buttonProvide.setOnClickListener {
+        binding.buttonGiftTo.setOnClickListener {
             (it as Checkable).isChecked = false
-            val dialogBinding = DialogAddBottleBinding.inflate(layoutInflater)
 
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(resources.getString(R.string.gift_to))
-                .setMessage(resources.getString(R.string.how_many_to_add))
-                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
-                }
-                .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
-                    val count = dialogBinding.bottleCount.text.toString().toInt()
-                    bottleDetailsViewModel.addBottles(args.bottleId, count)
-                }
-                .setView(dialogBinding.root)
-                .show()
+            val action = FragmentBottleDetailsDirections.bottleDetailsToGiftBottle(args.bottleId) //vodka, captain, crème, chips, kubor, bières / aromatisée
+            findNavController().navigate(action)
         }
 
         binding.buttonShowPdf.setOnClickListener {
