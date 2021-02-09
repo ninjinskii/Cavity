@@ -71,7 +71,7 @@
             </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/buyLocationLayout"
+                android:id="@+id/tasteCommentLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -82,7 +82,7 @@
                 app:startIconDrawable="@drawable/ic_glass">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/buyLocation"
+                    android:id="@+id/tasteComment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/tasting_comment"
@@ -100,7 +100,7 @@
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/consumed_with"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buyLocationLayout" />
+                app:layout_constraintTop_toBottomOf="@id/tasteCommentLayout" />
 
             <HorizontalScrollView
                 android:id="@+id/friendsScrollView"

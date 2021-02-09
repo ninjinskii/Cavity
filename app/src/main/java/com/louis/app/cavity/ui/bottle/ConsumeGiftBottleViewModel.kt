@@ -9,19 +9,29 @@ import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class UseBottleViewModel(app: Application) : AndroidViewModel(app) {
+class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
-    private val use = 0
+    private val consume = 0
+    private val giftTo = 2
     var date: Long = System.currentTimeMillis()
 
-    fun useBottle(bottleId: Long, friends: List<Long>) {
-        val historyEntry = HistoryEntry(0, date, bottleId, null, type = use)
+    fun consumeBottle(bottleId: Long, comment: String, friends: List<Long>) {
+        val historyEntry = HistoryEntry(0, date, bottleId, null, comment, type = consume)
 
         viewModelScope.launch(IO) {
             val historyId = repository.insertHistoryEntry(historyEntry)
             val historyXFriends = friends.map { FriendHistoryEntryXRef(historyId, it) }
 
             repository.insertFriendHistoryXRef(historyXFriends)
+        }
+    }
+
+    fun giftBottle(bottleId: Long, comment: String, friends: List<Long>) {
+        val historyEntry = HistoryEntry(0, date, bottleId, null, comment, type = giftTo)
+
+        viewModelScope.launch(IO) {
+            val historyId = repository.insertHistoryEntry(historyEntry)
+            val
         }
     }
 
