@@ -5,7 +5,7 @@ import java.util.*
 
 object DateFormatter {
     fun formatDate(timestamp: Long?): String {
-        return if (timestamp != null && timestamp != -1L) {
+        return if (timestamp != null && timestamp > 0L) {
             val formatter = SimpleDateFormat("dd MMM yyyy", Locale.FRENCH)
             val calendar = Calendar.getInstance()
 

@@ -9,9 +9,9 @@ import com.louis.app.cavity.util.DateFormatter
 
 class DatePicker(
     childFragmentManager: FragmentManager,
-    defaultDate: Long,
     associatedTextLayout: TextInputLayout,
-    title: String
+    title: String,
+    defaultDate: Long? = null
 ) {
     private val datePicker = MaterialDatePicker.Builder
         .datePicker()
@@ -35,12 +35,12 @@ class DatePicker(
 
             editText?.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    show(childFragmentManager, title)
+                    show(childFragmentManager)
                 }
             }
 
             editText?.setOnClickListener {
-                show(childFragmentManager, title)
+                show(childFragmentManager)
             }
         }
 
@@ -56,9 +56,15 @@ class DatePicker(
                 selection?.let { onDateChangedListener?.invoke(it) }
             }
         }
+
+        defaultDate?.let {
+            val formattedDate = DateFormatter.formatDate(it)
+            associatedTextLayout.editText?.setText(formattedDate)
+            onDateChangedListener?.invoke(it)
+        }
     }
 
-    private fun show(childFragmentManager: FragmentManager, title: String) {
+    private fun show(childFragmentManager: FragmentManager) {
         if (!isDatePickerDisplayed) {
             isDatePickerDisplayed = true
 

@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -14,7 +15,6 @@ import com.louis.app.cavity.databinding.FragmentUseBottleBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
-import com.louis.app.cavity.util.DateFormatter
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -37,7 +37,12 @@ class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
     private fun initDatePicker() {
         val title = getString(R.string.use_date)
 
-        DatePicker(childFragmentManager, System.currentTimeMillis(), binding.useDateLayout, title).apply {
+        DatePicker(
+            childFragmentManager,
+            binding.useDateLayout,
+            title,
+            System.currentTimeMillis()
+        ).apply {
             onEndIconClickListener = { useBottleViewModel.date = System.currentTimeMillis() }
             onDateChangedListener = { useBottleViewModel.date = it }
         }
@@ -57,17 +62,6 @@ class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
     }
 
     private fun setListeners() {
-        binding.useDate.apply {
-            inputType = InputType.TYPE_NULL
-
-            setOnClickListener {
-                useDatePicker.show(
-                    childFragmentManager,
-                    resources.getString(R.string.tag_date_picker)
-                )
-            }
-        }
-
         binding.buttonSubmit.setOnClickListener {
             binding.friendsChipGroup.apply {
                 val friends = checkedChipIds.map {
@@ -76,6 +70,10 @@ class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
 
                 useBottleViewModel.useBottle(args.bottleId, friends)
             }
+        }
+
+        binding.buttonClose.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 

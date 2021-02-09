@@ -1,12 +1,10 @@
 package com.louis.app.cavity.ui.addbottle
 
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
@@ -62,7 +60,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
 
     private fun setListeners() {
         val title = getString(R.string.buying_date)
-        DatePicker(childFragmentManager, -1L, binding.buyDateLayout, title).apply {
+        DatePicker(childFragmentManager, binding.buyDateLayout, title).apply {
             onEndIconClickListener = { dateViewModel.setTimestamp(-1L) }
             onDateChangedListener = { dateViewModel.setTimestamp(it) }
         }
