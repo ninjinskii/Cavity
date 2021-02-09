@@ -151,10 +151,10 @@
     <string name="bottle_count">Nombre de bouteilles</string>
     <string name="gift_to">Offrir</string>
     <string name="how_many_to_add">Combien de bouteilles à ajouter ?</string>
-    <string name="use_bottle">Déguster une bouteille</string>
+    <string name="consume_bottle">Déguster une bouteille</string>
     <string name="tasting_comment">Commentaire de dégustation</string>
     <string name="delete_bottle">Supprimer cette bouteille.</string>
-    <string name="use_date">Date de dégustation</string>
+    <string name="consume_date">Date de dégustation</string>
     <string name="consumed_with">Bue avec:</string>
     <string name="gift_date">Offerte le</string>
     <string name="delete_bottle_warning">Cette action entraînera également la supression des entrées de l\'historique liées à cette bouteille.</string>

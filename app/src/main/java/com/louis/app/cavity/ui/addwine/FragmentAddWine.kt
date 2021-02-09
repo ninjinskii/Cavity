@@ -170,14 +170,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
         addWineViewModel.wineUpdatedEvent.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes)
+                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = true)
                 findNavController().navigateUp()
             }
         }
 
         addWineViewModel.userFeedback.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes)
+                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = false)
             }
         }
 
@@ -211,7 +211,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             addWineViewModel.setImage(imagePath)
             binding.wineMiniImage.setVisible(true)
         } else {
-            snackbarProvider.onShowSnackbarRequested(R.string.base_error)
+            snackbarProvider.onShowSnackbarRequested(R.string.base_error, useAnchorView = false)
         }
     }
 

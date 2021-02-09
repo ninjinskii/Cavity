@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.bottle
 
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,7 +18,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
-    private lateinit var useDatePicker: MaterialDatePicker<Long>
     private var _binding: FragmentUseBottleBinding? = null
     private val binding get() = _binding!!
     private val useBottleViewModel: UseBottleViewModel by viewModels()
@@ -35,11 +33,11 @@ class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
     }
 
     private fun initDatePicker() {
-        val title = getString(R.string.use_date)
+        val title = getString(R.string.consume_date)
 
         DatePicker(
             childFragmentManager,
-            binding.useDateLayout,
+            binding.consumeDateLayout,
             title,
             System.currentTimeMillis()
         ).apply {
@@ -70,6 +68,8 @@ class FragmentUseBottle : Fragment(R.layout.fragment_use_bottle) {
 
                 useBottleViewModel.useBottle(args.bottleId, friends)
             }
+
+            findNavController().navigateUp()
         }
 
         binding.buttonClose.setOnClickListener {

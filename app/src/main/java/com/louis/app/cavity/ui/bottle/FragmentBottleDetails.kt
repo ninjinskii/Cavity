@@ -108,6 +108,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonConsume.setOnClickListener {
+            (it as Checkable).isChecked = false
+
             val action = FragmentBottleDetailsDirections.bottleDetailsToUseBottle(args.bottleId)
             findNavController().navigate(action)
         }

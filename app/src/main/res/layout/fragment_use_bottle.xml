@@ -13,7 +13,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:text="@string/use_bottle"
+        android:text="@string/consume_bottle"
         app:layout_constraintEnd_toStartOf="@id/buttonClose"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/useDateLayout"
+                android:id="@+id/consumeDateLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -60,10 +60,10 @@
                 app:startIconDrawable="@drawable/ic_calendar">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/useDate"
+                    android:id="@+id/consumeDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/use_date"
+                    android:hint="@string/consume_date"
                     android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -75,7 +75,7 @@
                 android:layout_margin="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/useDateLayout"
+                app:layout_constraintTop_toBottomOf="@id/consumeDateLayout"
                 app:startIconDrawable="@drawable/ic_glass">
 
                 <com.google.android.material.textfield.TextInputEditText

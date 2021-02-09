@@ -33,7 +33,8 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         }
     }
 
-    override fun onShowSnackbarRequested(stringRes: Int) {
-        binding.main.coordinator.showSnackbar(stringRes, anchorView = binding.main.snackbarAnchor)
+    override fun onShowSnackbarRequested(stringRes: Int, useAnchorView: Boolean) {
+        val anchor = if (useAnchorView) binding.main.snackbarAnchor else null
+        binding.main.coordinator.showSnackbar(stringRes, anchorView = anchor)
     }
 }
