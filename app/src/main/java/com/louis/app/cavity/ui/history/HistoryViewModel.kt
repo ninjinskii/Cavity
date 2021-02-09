@@ -7,6 +7,7 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.util.DateFormatter
 
 class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val repository = WineRepository.getInstance(app)
@@ -28,8 +29,13 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         before: HistoryUiModel.EntryModel?,
         after: HistoryUiModel?
     ): Boolean {
-        return if (after is HistoryUiModel.EntryModel) {
-            before?.model?.historyEntry?.date != after.model.historyEntry.date
+        return if (after is HistoryUiModel.EntryModel?) {
+            val beforeTimestamp =
+                DateFormatter.roundToDay(before?.model?.historyEntry?.date ?: return false)
+            val afterTimestamp =
+                DateFormatter.roundToDay(after?.model?.historyEntry?.date ?: return false)
+
+            beforeTimestamp != afterTimestamp
         } else false
     }
 }

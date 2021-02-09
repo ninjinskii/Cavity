@@ -16,7 +16,6 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val giftTo = 2
 
     var date: Long = System.currentTimeMillis()
-        get() = DateFormatter.roundToDay(field)
 
     fun consumeBottle(bottleId: Long, comment: String, friends: List<Long>) {
         val historyEntry = HistoryEntry(0, date, bottleId, null, comment, type = consume)

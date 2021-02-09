@@ -57,7 +57,6 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
         val isFavorite = _updatedBottle.value?.isFavorite ?: 0
         val pdfPath = _updatedBottle.value?.pdfPath.orEmpty()
         val tasteComment = _updatedBottle.value?.tasteComment.orEmpty()
-        val buyDate = DateFormatter.roundToDay(buyDateTimestamp)
 
         val partialBottle = Bottle(
             bottleId,
@@ -70,7 +69,7 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
             currency,
             otherInfo,
             location,
-            buyDate,
+            buyDateTimestamp,
             tasteComment,
             pdfPath,
             consumed = false.toInt()

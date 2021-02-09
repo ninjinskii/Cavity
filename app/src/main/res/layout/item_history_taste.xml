@@ -18,10 +18,10 @@
     <include
         android:id="@+id/wineColorNameNaming"
         layout="@layout/wine_color_name_naming"
-        android:visibility="invisible"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/medium_margin"
+        android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@id/vintage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,11 +33,11 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        tools:text="Anniversaire Jean"
         app:layout_constraintBottom_toBottomOf="@id/wineColorNameNaming"
         app:layout_constraintEnd_toEndOf="@id/wineColorNameNaming"
         app:layout_constraintStart_toStartOf="@id/wineColorNameNaming"
-        app:layout_constraintTop_toTopOf="@id/wineColorNameNaming" />
+        app:layout_constraintTop_toTopOf="@id/wineColorNameNaming"
+        tools:text="Anniversaire Jean" />
 
     <TextView
         android:id="@+id/vintage"
@@ -55,8 +55,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/medium_margin"
+        android:drawablePadding="@dimen/small_margin"
         android:ellipsize="end"
         android:maxLines="1"
+        app:drawableLeftCompat="@drawable/ic_toast_wine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/bottles"
         app:layout_constraintStart_toEndOf="@id/marker"
