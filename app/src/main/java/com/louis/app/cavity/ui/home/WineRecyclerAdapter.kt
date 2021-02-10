@@ -49,7 +49,8 @@ class WineRecyclerAdapter(
 
         fun bind(wineWithBottles: WineWithBottles) {
             val wine = wineWithBottles.wine
-            val bottles = wineWithBottles.bottles.sortedBy { it.vintage }
+            val bottles =
+                wineWithBottles.bottles.filter { !it.consumed.toBoolean() }.sortedBy { it.vintage }
 
             with(binding.wineColorNameNaming) {
                 wineName.text = wine.name

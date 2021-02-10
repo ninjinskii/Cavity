@@ -89,7 +89,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 binding.coordinator.showSnackbar(stringRes)
             }
         }
-
     }
 
     private fun setListeners() {
