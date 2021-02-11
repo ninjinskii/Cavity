@@ -30,7 +30,6 @@ class HistoryRecyclerAdapter(context: Context) :
 
     val redMarker = ColorDrawable(context.getColor(R.color.cavity_red))
     val greenMarker = ColorDrawable(context.getColor(R.color.cavity_light_green))
-    val goldMarker = ColorDrawable(context.getColor(R.color.cavity_gold))
 
     val glassIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
     val bottleIcon = ContextCompat.getDrawable(context, R.drawable.ic_bottle)
@@ -109,8 +108,8 @@ class HistoryRecyclerAdapter(context: Context) :
                     when (it.model.getHistoryType()) {
                         HistoryTypes.HISTORY_USE -> bindForConsume(it.model)
                         HistoryTypes.HISTORY_REPLENISHMENT -> bindForReplenishment(it.model)
-                        HistoryTypes.HISTORY_GIFTED_TO -> bindForGiftedTo(it.model)
-                        else -> bindForGiftedBy(it.model)
+                        HistoryTypes.HISTORY_GIFTED_TO -> bindForGift(it.model, to = true)
+                        else -> bindForGift(it.model, to = false)
                     }
                 }
 
@@ -122,7 +121,7 @@ class HistoryRecyclerAdapter(context: Context) :
                 bottles.setVisible(false)
                 friends.setVisible(true)
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
-                marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
+                marker.background = redMarker
 
                 comment.apply {
                     if (item.historyEntry.comment.isBlank()) {
@@ -144,35 +143,29 @@ class HistoryRecyclerAdapter(context: Context) :
                 bottles.setVisible(false)
                 friends.setVisible(false)
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
+                marker.background = greenMarker
 
-                comment.text = item.bottleAndWine.bottle.buyLocation
-                comment.setCompoundDrawablesWithIntrinsicBounds(bottleIcon, null, null, null)
-                marker.background = ColorDrawable(root.context.getColor(R.color.cavity_light_green))
+                comment.apply {
+                    text =
+                        context.getString(R.string.buyed_at, item.bottleAndWine.bottle.buyLocation)
+                    setCompoundDrawablesWithIntrinsicBounds(bottleIcon, null, null, null)
+                }
             }
         }
 
-        private fun bindForGiftedTo(item: HistoryEntryWithBottleAndTastingAndFriends) {
+        private fun bindForGift(item: HistoryEntryWithBottleAndTastingAndFriends, to: Boolean) {
             with(binding) {
                 bottles.setVisible(false)
                 friends.setVisible(false)
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
+                marker.background = if(to) redMarker else greenMarker
 
-                val name = "${item.friends[0].firstName} ${item.friends[0].lastName}"
-                comment.text = root.context.getString(R.string.gifted_to, name)
-                comment.setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
-                marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
-            }
-        }
-
-        private fun bindForGiftedBy(item: HistoryEntryWithBottleAndTastingAndFriends) {
-            with(binding) {
-                bottles.setVisible(false)
-                friends.setVisible(false)
-
-                wineColorNameNaming.wineColorIndicator.setVisible(true)
-                comment.text = root.context.getString(R.string.gifted_by, item.friends[0].firstName)
-                comment.setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
-                marker.background = ColorDrawable(root.context.getColor(R.color.cavity_light_green))
+                comment.apply {
+                    val name = "${item.friends[0].firstName} ${item.friends[0].lastName}"
+                    val label = if(to) R.string.gifted_to else R.string.gifted_by
+                    text = context.getString(label, name)
+                    setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
+                }
             }
         }
     }

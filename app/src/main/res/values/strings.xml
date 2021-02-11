@@ -118,6 +118,9 @@
     <string name="add_pdf">Associer un fichier PDF</string>
     <string name="pdf">PDF</string>
     <string name="medal_color">Couleur de la médaille</string>
+    <string name="gifted_by_friend">Offerte par un ami</string>
+    <string name="add_friend">Ajouter un ami</string>
+    <string name="add_friend_label">Nom prénom</string>
     <string name="remove_pdf">Retirer le PDF</string>
     <string name="bottle_added">La bouteille a été ajoutée.</string>
 
@@ -169,6 +172,7 @@
     <string name="rename_county">Renommer la région</string>
     <string name="rename_grape">Renommer le cépage</string>
     <string name="rename_review">Renommer l\'avis d\'expert</string>
+    <string name="rename_friend">Renommer un ami</string>
     <string name="delete_county">Supprimer la région et son contenu</string>
     <string name="delete_county_warn">Supprimer cette région entraînera la supression de toutes les bouteilles et entrées dans l\'historique liées à cette région. Pour confirmer, entrez le nom de la région à supprimer.</string>
     <string name="confirm_grape_delete">Supprimer le cépage ?</string>
@@ -182,6 +186,9 @@
     <string name="review_deleted">Avis d\'expert supprimé.</string>
     <string name="review_renamed">Avis d\'expert renommé.</string>
     <string name="review_added">Avis d\'expert créé.</string>
+    <string name="friend_added">Ami ajouté.</string>
+    <string name="friend_renamed">Ami modifié.</string>
+    <string name="friend_deleted">Ami supprimé.</string>
     <string name="contests">Concours</string>
     <string name="friends">Amis</string>
     <string name="cannot_delete">Les noms ne correspondent pas.</string>
@@ -190,7 +197,7 @@
     <string name="buyed_at">Achetée à : %1$s</string>
     <string name="gifted_to">Offerte à : %1$s</string>
     <string name="gifted_by">Offerte par : %1$s</string>
-    <string name="no_description">Pas de commentaire.</string>
+    <string name="no_description">Pas de commentaire de dégustation.</string>
 
 
     <!-- Tags -->

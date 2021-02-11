@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.util.Event
@@ -28,6 +29,8 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     fun getGrapeWithQuantifiedGrapes() = repository.getGrapeWithQuantifiedGrapes()
 
     fun getReviewWithFilledReviews() = repository.getReviewWithFilledReviews()
+
+    fun getAllFriends() = repository.getAllFriends()
 
     fun addCounty(countyName: String) {
         viewModelScope.launch(IO) {
@@ -121,6 +124,37 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             repository.deleteReview(review)
             _userFeedback.postOnce(R.string.review_deleted)
+        }
+    }
+
+    fun insertFriend(nameLastName: String) {
+        if (nameLastName.isBlank()) {
+            _userFeedback.postOnce(R.string.base_error)
+            return
+        }
+
+        val name = Friend.parseName(nameLastName)
+
+        viewModelScope.launch(IO) {
+            repository.insertFriend(Friend(0, name.first, name.second, ""))
+            _userFeedback.postOnce(R.string.friend_added)
+        }
+    }
+
+    fun updateFriend(friend: Friend, input: String) {
+        val name = Friend.parseName(input)
+        val updatedFriend = friend.copy(firstName = name.first, lastName = name.second)
+
+        viewModelScope.launch(IO) {
+            repository.updateFriend(updatedFriend)
+            _userFeedback.postOnce(R.string.friend_renamed)
+        }
+    }
+
+    fun deleteFriend(friend: Friend) {
+        viewModelScope.launch(IO) {
+            repository.deleteFriend(friend)
+            _userFeedback.postOnce(R.string.friend_deleted)
         }
     }
 }

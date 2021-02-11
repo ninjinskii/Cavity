@@ -8,8 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.Friend
+import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
@@ -49,7 +50,7 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
         pdfPath = path
     }
 
-    fun saveBottle(otherInfo: String, addToFavorite: Boolean) {
+    fun saveBottle(otherInfo: String, addToFavorite: Boolean, friendId: Long?) {
         if (bottleId == 0L) {
             _userFeedback.postOnce(R.string.base_error)
             return
@@ -58,10 +59,40 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             val step1 = repository.getBottleByIdNotLive(bottleId)
             val bottle = mergeStep1Bottle(step1, addToFavorite, otherInfo)
+
             repository.updateBottle(bottle)
+            addHistoryEntry(bottle.buyDate, friendId)
 
             _updatedBottle.postValue(null)
             _bottleUpdatedEvent.postOnce(R.string.bottle_added)
+        }
+    }
+
+    fun getAllFriends() = repository.getAllFriends()
+
+    fun insertFriend(nameLastName: String) {
+        if (nameLastName.isBlank()) {
+            _userFeedback.postOnce(R.string.base_error)
+            return
+        }
+
+        val name = Friend.parseName(nameLastName)
+
+        viewModelScope.launch(IO) {
+            repository.insertFriend(Friend(0, name.first, name.second, ""))
+        }
+    }
+
+    private suspend fun addHistoryEntry(buyDate: Long, friendId: Long?) {
+        val replenishment = 1
+        val giftedBy = 3
+
+        if (friendId == null) {
+            val historyEntry = HistoryEntry(0, buyDate, bottleId, null, "", replenishment)
+            repository.insertHistoryEntry(historyEntry)
+        } else {
+            val historyEntry = HistoryEntry(0, buyDate, bottleId, null, "", giftedBy)
+            repository.declareGiftedBottle(historyEntry, friendId)
         }
     }
 

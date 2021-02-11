@@ -1,5 +1,6 @@
 package com.louis.app.cavity.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Friend
 
@@ -13,6 +14,9 @@ interface FriendDao {
 
     @Delete
     suspend fun deleteFriend(friend: Friend)
+
+    @Query("SELECT * FROM friend")
+    fun getAllFriends(): LiveData<List<Friend>>
 
     @Query("SELECT * FROM friend")
     suspend fun getAllFriendsNotLive(): List<Friend>

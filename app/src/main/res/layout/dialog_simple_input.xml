@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <com.louis.app.cavity.ui.widget.RuledTextInputLayout
         android:id="@+id/inputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
@@ -12,7 +12,8 @@
         android:layout_margin="@dimen/medium_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:rule="required">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input"
@@ -21,5 +22,5 @@
             android:focusable="true"
             android:inputType="textCapSentences" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+    </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

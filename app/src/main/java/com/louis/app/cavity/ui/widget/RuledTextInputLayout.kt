@@ -42,7 +42,7 @@ class RuledTextInputLayout @JvmOverloads constructor(
     }
 
     fun validate(): Boolean {
-        val input = editText?.text.toString()
+        val input = editText?.text.toString().trim()
 
         if (!containsFlag(RULE_REQUIRED) && input.isBlank())
             return true

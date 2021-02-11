@@ -11,7 +11,6 @@ import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.ManagerViewModel
-import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
     private lateinit var simpleInputDialog: SimpleInputDialog
@@ -31,7 +30,7 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
     }
 
     private fun initRecyclerView() {
-        val grapeAdapter = GrapeRecylerAdapter(
+        val grapeAdapter = GrapeRecyclerAdapter(
             onRename = { grape: Grape -> showEditGrapeDialog(grape) },
             onDelete = { grape: Grape -> showConfirmDeleteDialog(grape) }
         )

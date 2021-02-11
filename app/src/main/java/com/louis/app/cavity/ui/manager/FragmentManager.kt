@@ -62,6 +62,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
                 0 -> showAddCountyDialog()
                 1 -> showAddGrapeDialog()
                 2 -> showAddReviewDialog()
+                3 -> showAddFriendDialog()
             }
         }
     }
@@ -108,6 +109,18 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
 
         dialogBinding.contestName.post { dialogBinding.contestName.showKeyboard() }
         dialogBinding.rbMedal.performClick()
+    }
+
+    private fun showAddFriendDialog() {
+        val dialogResources = SimpleInputDialog.DialogContent(
+            title = R.string.add_friend,
+            hint = R.string.add_friend_label,
+            icon = R.drawable.ic_person,
+        ) {
+            managerViewModel.insertFriend(it)
+        }
+
+        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
     }
 
     private fun getReviewType(@IdRes button: Int) = when (button) {

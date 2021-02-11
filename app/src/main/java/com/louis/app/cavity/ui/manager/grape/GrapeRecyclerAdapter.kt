@@ -13,11 +13,11 @@ import com.louis.app.cavity.databinding.ItemGrapeManagerBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.relation.grape.GrapeWithQuantifiedGrapes
 
-class GrapeRecylerAdapter(
+class GrapeRecyclerAdapter(
     private val onRename: (Grape) -> Unit,
     private val onDelete: (Grape) -> Unit
 ) :
-    ListAdapter<GrapeWithQuantifiedGrapes, GrapeRecylerAdapter.GrapeViewHolder>(
+    ListAdapter<GrapeWithQuantifiedGrapes, GrapeRecyclerAdapter.GrapeViewHolder>(
         GrapeItemDiffCallback()
     ) {
 

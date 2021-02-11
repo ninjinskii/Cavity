@@ -8,11 +8,18 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.Chipable
+import com.louis.app.cavity.model.Friend
+import com.louis.app.cavity.ui.ChipLoader
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoViewModel
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
 
@@ -37,6 +44,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
         setListeners()
         observe()
+        initFriendsChips()
     }
 
     private fun setListeners() {
@@ -60,14 +68,26 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
         with(binding) {
             submitAddBottle.setOnClickListener {
-                otherInfoViewModel.saveBottle(
-                    otherInfo.text.toString(),
-                    addToFavorite.isChecked,
-                )
+                friendChipGroup.apply {
+                    val friend =
+                        if (giftedBy.isChecked) (findViewById<Chip>(checkedChipId).getTag(R.string.tag_chip_id) as Chipable).getItemId() else null
+
+                    otherInfoViewModel.saveBottle(
+                        otherInfo.text.toString(),
+                        addToFavorite.isChecked,
+                        friend
+                    )
+                }
             }
 
             stepper.next.setOnClickListener { stepperx.requestNextPage() }
             stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
+
+            giftedBy.setOnCheckedChangeListener { _, isChecked ->
+                friendScrollView.setVisible(isChecked)
+            }
+
+            buttonAddFriendIfEmpty.setOnClickListener { showAddFriendDialog() }
         }
 
     }
@@ -75,6 +95,25 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     private fun observe() {
         otherInfoViewModel.updatedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
+        }
+    }
+
+    private fun initFriendsChips() {
+        val allFriends = mutableSetOf<Friend>()
+        val alreadyInflated = mutableSetOf<Friend>()
+
+        otherInfoViewModel.getAllFriends().observe(viewLifecycleOwner) {
+            binding.buttonAddFriendIfEmpty.setVisible(it.isEmpty())
+
+            allFriends.addAll(it)
+            val toInflate = allFriends - alreadyInflated
+            alreadyInflated.addAll(toInflate)
+
+            ChipLoader(lifecycleScope, layoutInflater).loadChips(
+                binding.friendChipGroup,
+                toInflate.toMutableList(),
+                preselect = emptyList()
+            )
         }
     }
 
@@ -122,6 +161,18 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         } else {
             binding.coordinator.showSnackbar(R.string.base_error)
         }
+    }
+
+    private fun showAddFriendDialog() {
+        val dialogResources = SimpleInputDialog.DialogContent(
+            title = R.string.add_friend,
+            hint = R.string.add_friend_label,
+            icon = R.drawable.ic_person,
+        ) {
+            otherInfoViewModel.insertFriend(it)
+        }
+
+        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

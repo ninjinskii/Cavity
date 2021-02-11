@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
         TastingFriendXRef::class,
         FriendHistoryEntryXRef::class,
     ],
-    version = 40,
+    version = 41,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -261,7 +261,7 @@ abstract class CavityDatabase : RoomDatabase() {
                     }
 
                     repeat(8) {
-                        friendDao!!.insertFriend(Friend(0, friends.random(), friends.random()))
+                        friendDao!!.insertFriend(Friend(0, friends.random(), friends.random(), ""))
                     }
 
                     repeat(5) {

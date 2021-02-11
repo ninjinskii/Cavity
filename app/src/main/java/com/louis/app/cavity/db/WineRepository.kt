@@ -135,6 +135,14 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertFriendHistoryXRef(fxh: List<FriendHistoryEntryXRef>) =
         historyXFriendDao.insertFriendHistoryEntryXRef(fxh)
 
+    suspend fun insertFriendHistoryXRef(fxh: FriendHistoryEntryXRef) =
+        historyXFriendDao.insertFriendHistoryEntryXRef(fxh)
+
+    suspend fun insertFriend(friend: Friend) = friendDao.insertFriend(friend)
+    suspend fun updateFriend(friend: Friend) = friendDao.updateFriend(friend)
+    suspend fun deleteFriend(friend: Friend) = friendDao.deleteFriend(friend)
+
+    fun getAllFriends() = friendDao.getAllFriends()
     suspend fun getAllFriendsNotLive() = friendDao.getAllFriendsNotLive()
 
     fun getAllEntries() = historyDao.getAllEntries()
@@ -142,5 +150,12 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertHistoryEntry(entry: HistoryEntry): Long {
         bottleDao.consumeBottle(entry.bottleId)
         return historyDao.insertEntry(entry)
+    }
+
+    suspend fun declareGiftedBottle(entry: HistoryEntry, friendId: Long) {
+        database.withTransaction {
+            val entryId = historyDao.insertEntry(entry)
+            historyXFriendDao.insertFriendHistoryEntryXRef(FriendHistoryEntryXRef(entryId, friendId))
+        }
     }
 }

@@ -99,7 +99,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                         binding.countyChipGroup,
                         countyList,
                         preselectedCounties,
-                        selectionRequired = false,
                         onCheckedChangeListener = { _, _ -> prepareCountyFilters() }
                     )
 
@@ -107,7 +106,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                         binding.grapeChipGroup,
                         grapeList,
                         preselectedGrapes,
-                        selectionRequired = false,
                         onCheckedChangeListener = { _, _ -> prepareGrapeFilters() }
                     )
 
@@ -115,7 +113,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                         binding.reviewChipGroup,
                         reviewList,
                         preselectedReviews,
-                        selectionRequired = false,
                         onCheckedChangeListener = { _, _ -> prepareReviewFilters() }
                     )
                 }

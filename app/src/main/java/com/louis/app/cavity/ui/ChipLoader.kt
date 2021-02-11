@@ -23,7 +23,6 @@ class ChipLoader(
         into: ChipGroup,
         items: List<Chipable>,
         preselect: List<Long>,
-        selectionRequired: Boolean = true,
         onCheckedChangeListener: ((btn: CompoundButton, isChecked: Boolean) -> Unit)? = null
     ) {
         scope.launch(Default) {
@@ -44,7 +43,7 @@ class ChipLoader(
                 withContext(Main) {
                     into.addView(chip)
 
-                    if (index == 0 && selectionRequired && preselect.isEmpty())
+                    if (index == 0 && into.isSelectionRequired && preselect.isEmpty())
                         chip.isChecked = true
 
                     if (item.getItemId() in preselect)

@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogSimpleInputBinding
+import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showKeyboard
 
@@ -45,7 +46,10 @@ class SimpleInputDialog(private val context: Context, private val layoutInflater
             }
             .setPositiveButton(R.string.submit) { _, _ ->
                 val input = dialogBinding.input.text.toString().trim()
-                resources.onPositiveClick(input)
+
+                if (dialogBinding.inputLayout.validate()) {
+                    resources.onPositiveClick(input)
+                }
             }
             .setView(dialogBinding.root)
             .setOnDismissListener { dialogBinding.root.hideKeyboard() }

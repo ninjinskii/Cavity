@@ -55,8 +55,7 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
                 loadChips(
                     binding.friendsChipGroup,
                     consumeGiftBottleViewModel.getAllFriendsNotLive(),
-                    preselect = emptyList(),
-                    selectionRequired = false,
+                    preselect = emptyList()
                 )
             }
         }
