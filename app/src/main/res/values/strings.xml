@@ -190,6 +190,7 @@
     <string name="buyed_at">Achetée à : %1$s</string>
     <string name="gifted_to">Offerte à : %1$s</string>
     <string name="gifted_by">Offerte par : %1$s</string>
+    <string name="no_description">Pas de commentaire.</string>
 
 
     <!-- Tags -->

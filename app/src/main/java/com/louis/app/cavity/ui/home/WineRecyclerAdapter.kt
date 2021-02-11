@@ -47,6 +47,7 @@ class WineRecyclerAdapter(
     inner class WineViewHolder(private val binding: ItemWineBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        // TODO: Might use a different way to filter bottles
         fun bind(wineWithBottles: WineWithBottles) {
             val wine = wineWithBottles.wine
             val bottles =

@@ -1,7 +1,7 @@
 package com.louis.app.cavity.ui.history
 
 import android.content.Context
-import android.content.res.ColorStateList
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -107,7 +107,7 @@ class HistoryRecyclerAdapter(context: Context) :
                     vintage.text = bottle.vintage.toString()
 
                     when (it.model.getHistoryType()) {
-                        HistoryTypes.HISTORY_USE -> bindForUse(it.model)
+                        HistoryTypes.HISTORY_USE -> bindForConsume(it.model)
                         HistoryTypes.HISTORY_REPLENISHMENT -> bindForReplenishment(it.model)
                         HistoryTypes.HISTORY_GIFTED_TO -> bindForGiftedTo(it.model)
                         else -> bindForGiftedBy(it.model)
@@ -117,14 +117,23 @@ class HistoryRecyclerAdapter(context: Context) :
             }
         }
 
-        private fun bindForUse(item: HistoryEntryWithBottleAndTastingAndFriends) {
+        private fun bindForConsume(item: HistoryEntryWithBottleAndTastingAndFriends) {
             with(binding) {
                 bottles.setVisible(false)
                 friends.setVisible(true)
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
 
-                comment.text = item.bottleAndWine.bottle.tasteComment
+                comment.apply {
+                    if (item.historyEntry.comment.isBlank()) {
+                        setTypeface(null, Typeface.ITALIC)
+                        text = context.getString(R.string.no_description)
+                    } else {
+                        typeface = Typeface.DEFAULT
+                        text = item.historyEntry.comment
+                    }
+                }
+
                 comment.setCompoundDrawablesWithIntrinsicBounds(glassIcon, null, null, null)
                 friends.text = item.friends.size.toString()
             }
@@ -148,7 +157,8 @@ class HistoryRecyclerAdapter(context: Context) :
                 friends.setVisible(false)
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
 
-                comment.text = root.context.getString(R.string.gifted_to, item.friends[0].firstName)
+                val name = "${item.friends[0].firstName} ${item.friends[0].lastName}"
+                comment.text = root.context.getString(R.string.gifted_to, name)
                 comment.setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
                 marker.background = ColorDrawable(root.context.getColor(R.color.cavity_red))
             }

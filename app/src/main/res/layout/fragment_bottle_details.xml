@@ -140,7 +140,6 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        style="@style/TextAppearance.MaterialComponents.Body1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -159,6 +158,7 @@
                         android:layout_height="wrap_content"
                         android:text="Annuler"
                         android:textColor="?attr/colorOnError"
+                        app:rippleColor="?attr/colorOnError"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
