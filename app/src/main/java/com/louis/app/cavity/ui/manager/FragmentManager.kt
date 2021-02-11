@@ -98,7 +98,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->
-                val name = dialogBinding.contestName.text.toString()
+                val name = dialogBinding.contestName.text.toString().trim()
                 val type = getReviewType(dialogBinding.rbGroupType.checkedButtonId)
 
                 managerViewModel.addReview(name, type)

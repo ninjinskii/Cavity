@@ -35,6 +35,10 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
     fun getFReviewAndReview() = repository.getFReviewAndReviewForBottle(bottleId)
 
     fun insertReview(contestName: String, type: Int) {
+        if (contestName.isBlank()) {
+            _userFeedback.postOnce(R.string.input_error)
+        }
+
         viewModelScope.launch(IO) {
             val reviews = repository.getAllReviewsNotLive().map { it.contestName }
 

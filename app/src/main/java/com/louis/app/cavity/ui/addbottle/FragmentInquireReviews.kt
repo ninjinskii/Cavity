@@ -101,7 +101,7 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->
-                val name = dialogBinding.contestName.text.toString()
+                val name = dialogBinding.contestName.text.toString().trim()
                 val type = getReviewType(dialogBinding.rbGroupType.checkedButtonId)
 
                 reviewViewModel.insertReview(name, type)
