@@ -36,6 +36,11 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
         repository.getQGrapesAndGrapeForBottle(bottleId)
 
     fun insertGrape(grapeName: String) {
+        if (grapeName.isBlank()) {
+            _userFeedback.postOnce(R.string.input_error)
+            return
+        }
+
         viewModelScope.launch(IO) {
             val grapes = repository.getAllGrapesNotLive().map { it.name }
 

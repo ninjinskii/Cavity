@@ -7,12 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.*
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -33,18 +29,19 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     fun getAllFriends() = repository.getAllFriends()
 
     fun addCounty(countyName: String) {
-        viewModelScope.launch(IO) {
-            if (countyName.isNotEmpty()) {
-                val counties = repository.getAllCountiesNotLive().map { it.name }
+        if (countyName.isBlank()) {
+            _userFeedback.postOnce(R.string.empty_county_name)
+            return
+        }
 
-                if (countyName !in counties) {
-                    repository.insertCounty(County(name = countyName, prefOrder = counties.size))
-                    _userFeedback.postOnce(R.string.county_added)
-                } else {
-                    _userFeedback.postOnce(R.string.county_already_exist)
-                }
+        viewModelScope.launch(IO) {
+            val counties = repository.getAllCountiesNotLive().map { it.name }
+
+            if (countyName !in counties) {
+                repository.insertCounty(County(name = countyName, prefOrder = counties.size))
+                _userFeedback.postOnce(R.string.county_added)
             } else {
-                _userFeedback.postOnce(R.string.empty_county_name)
+                _userFeedback.postOnce(R.string.county_already_exist)
             }
         }
     }
@@ -75,12 +72,16 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun addGrape(grapeName: String) {
-        viewModelScope.launch(IO) {
-            val grapes = repository.getAllGrapesNotLive().map { it.name }
+        if (grapeName.isBlank()) {
+            _userFeedback.postOnce(R.string.empty_grape_name)
+            return
+        }
 
-            if (grapeName !in grapes) {
+        viewModelScope.launch(IO) {
+            if (isGrapeNameUnique(grapeName)) {
                 repository.insertGrape(Grape(0, grapeName))
                 _userFeedback.postOnce(R.string.grape_added)
+
             } else {
                 _userFeedback.postOnce(R.string.grape_already_exist)
             }
@@ -88,9 +89,18 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun updateGrape(grape: Grape) {
+        if (grape.name.isBlank()) {
+            _userFeedback.postOnce(R.string.empty_grape_name)
+            return
+        }
+
         viewModelScope.launch(IO) {
-            repository.updateGrape(grape)
-            _userFeedback.postOnce(R.string.grape_renamed)
+            if (isGrapeNameUnique(grape.name)) {
+                repository.updateGrape(grape)
+                _userFeedback.postOnce(R.string.grape_renamed)
+            } else {
+                _userFeedback.postOnce(R.string.grape_already_exist)
+            }
         }
     }
 
@@ -102,6 +112,11 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun addReview(contestName: String, type: Int) {
+        if (contestName.isBlank()) {
+            _userFeedback.postOnce(R.string.empty_contest_name)
+            return
+        }
+
         viewModelScope.launch(IO) {
             val reviews = repository.getAllReviewsNotLive().map { it.contestName }
 
@@ -129,7 +144,7 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
 
     fun insertFriend(nameLastName: String) {
         if (nameLastName.isBlank()) {
-            _userFeedback.postOnce(R.string.base_error)
+            _userFeedback.postOnce(R.string.input_error)
             return
         }
 
@@ -155,6 +170,58 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             repository.deleteFriend(friend)
             _userFeedback.postOnce(R.string.friend_deleted)
+        }
+    }
+
+    private suspend fun isGrapeNameUnique(grapeName: String): Boolean {
+        val grapes = repository.getAllGrapesNotLive().map { it.name }
+        return grapeName !in grapes
+    }
+
+    private fun handleGrape(grape: Grape) {
+        if (grape.name.isBlank()) {
+            _userFeedback.postOnce(R.string.empty_grape_name)
+            return
+        }
+
+        viewModelScope.launch(IO) {
+            val grapes = repository.getAllGrapesNotLive().map { it.name }
+
+            if (grape.name in grapes) {
+                _userFeedback.postOnce(R.string.grape_already_exist)
+            } else {
+                if (grape.id == 0L) {
+                    repository.insertGrape(grape)
+                    _userFeedback.postOnce(R.string.grape_added)
+                } else {
+                    repository.updateGrape(grape)
+                    _userFeedback.postOnce(R.string.grape_renamed)
+                }
+            }
+
+        }
+    }
+
+    private suspend fun handleGrape(item: Chipable): Int {
+        if (item.getChipText().isBlank()) {
+            return -1
+        }
+
+        val items = when(item) {
+            is County -> repository.getAllCountiesNotLive().map { it.name }
+            is Grape -> repository.getAllGrapesNotLive().map { it.name }
+            is Review -> repository.getAllReviewsNotLive().map { it.contestName }
+            else -> repository.getAllFriendsNotLive().map { it.lastName + it.firstName }
+        }
+
+        return if (item.getChipText() in items) {
+            0
+        } else {
+            if (item.getItemId() == 0L) {
+                1
+            } else {
+                2
+            }
         }
     }
 }

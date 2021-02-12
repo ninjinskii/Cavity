@@ -37,6 +37,7 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
     fun insertReview(contestName: String, type: Int) {
         if (contestName.isBlank()) {
             _userFeedback.postOnce(R.string.input_error)
+            return
         }
 
         viewModelScope.launch(IO) {
