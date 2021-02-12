@@ -25,7 +25,7 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
         get() = _userFeedback
 
     private var wineId: Long? = null
-    private var buyDateTimestamp = -1L
+    private var buyDateTimestamp = System.currentTimeMillis()
 
     var bottleId = 0L
         private set

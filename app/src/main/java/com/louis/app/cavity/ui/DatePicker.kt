@@ -30,6 +30,7 @@ class DatePicker(
 
             setEndIconOnClickListener {
                 editText?.setText("")
+
                 onEndIconClickListener?.invoke()
             }
 
@@ -51,9 +52,10 @@ class DatePicker(
             }
 
             addOnPositiveButtonClickListener {
-                val formattedDate = DateFormatter.formatDate(selection ?: defaultDate)
+                val date = if (DateFormatter.isToday(it)) System.currentTimeMillis() else it
+                val formattedDate = DateFormatter.formatDate(date ?: defaultDate)
                 associatedTextLayout.editText?.setText(formattedDate)
-                selection?.let { onDateChangedListener?.invoke(it) }
+                date?.let { d -> onDateChangedListener?.invoke(d) }
             }
         }
 

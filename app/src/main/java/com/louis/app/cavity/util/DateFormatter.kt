@@ -23,4 +23,12 @@ object DateFormatter {
         val exceed = timestamp % DAY_IN_MILLIS
         return timestamp - exceed
     }
+
+    fun isToday(timestamp: Long?): Boolean {
+        val currentTime = System.currentTimeMillis()
+        val startOfDay = roundToDay(currentTime)
+        val endOfDay = startOfDay + DAY_IN_MILLIS
+
+        return timestamp in startOfDay..endOfDay
+    }
 }

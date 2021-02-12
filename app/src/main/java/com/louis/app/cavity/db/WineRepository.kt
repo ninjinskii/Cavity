@@ -6,6 +6,7 @@ import com.louis.app.cavity.model.*
 import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
 import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.util.L
 
 class WineRepository private constructor(app: Application) {
     companion object {
@@ -228,8 +229,10 @@ class WineRepository private constructor(app: Application) {
         // TODO: handle tasting here
         return database.withTransaction {
             when(entry.type) {
-                0 or 2 -> consumeBottle(entry.bottleId)
-                1 or 3 -> revertBottleConsumption(entry.bottleId)
+                0 -> consumeBottle(entry.bottleId)
+                1 -> revertBottleConsumption(entry.bottleId)
+                2 -> consumeBottle(entry.bottleId)
+                3 -> revertBottleConsumption(entry.bottleId)
             }
 
             historyDao.insertEntry(entry)

@@ -59,8 +59,13 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
 
     private fun setListeners() {
         val title = getString(R.string.buying_date)
-        DatePicker(childFragmentManager, binding.buyDateLayout, title).apply {
-            onEndIconClickListener = { dateViewModel.setTimestamp(-1L) }
+        DatePicker(
+            childFragmentManager,
+            binding.buyDateLayout,
+            title,
+            defaultDate = System.currentTimeMillis()
+        ).apply {
+            onEndIconClickListener = { dateViewModel.setTimestamp(System.currentTimeMillis()) }
             onDateChangedListener = { dateViewModel.setTimestamp(it) }
         }
 

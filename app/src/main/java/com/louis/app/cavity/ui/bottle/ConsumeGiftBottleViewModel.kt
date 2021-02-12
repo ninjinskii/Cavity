@@ -29,7 +29,7 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
     var date: Long = System.currentTimeMillis()
 
     fun consumeBottle(bottleId: Long, comment: String, friends: List<Long>) {
-        val historyEntry = HistoryEntry(0, date, bottleId, null, comment, type = consume)
+        val historyEntry = HistoryEntry(0, date, bottleId, null, comment, consume)
 
         viewModelScope.launch(IO) {
             repository.insertHistoryEntryAndFriends(historyEntry, friends)
@@ -37,7 +37,7 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun giftBottle(bottleId: Long, comment: String, friendId: Long) {
-        val historyEntry = HistoryEntry(0, date, bottleId, null, comment, type = giftTo)
+        val historyEntry = HistoryEntry(0, date, bottleId, null, comment, giftTo)
 
         viewModelScope.launch(IO) {
             repository.insertHistoryEntryAndFriends(historyEntry, listOf(friendId))
