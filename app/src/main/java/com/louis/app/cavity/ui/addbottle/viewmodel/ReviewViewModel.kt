@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import android.app.Application
+import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -35,18 +36,13 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
     fun getFReviewAndReview() = repository.getFReviewAndReviewForBottle(bottleId)
 
     fun insertReview(contestName: String, type: Int) {
-        if (contestName.isBlank()) {
-            _userFeedback.postOnce(R.string.input_error)
-            return
-        }
-
         viewModelScope.launch(IO) {
-            val reviews = repository.getAllReviewsNotLive().map { it.contestName }
-
-            if (contestName !in reviews) {
-                val id = repository.insertReview(Review(0, contestName, type))
-                insertFilledReview(id, getDefaultValue(type))
-            } else {
+            try {
+                val reviewId = repository.insertReview(Review(0, contestName, type))
+                insertFilledReview(reviewId, getDefaultValue(type))
+            } catch (e: IllegalArgumentException) {
+                _userFeedback.postOnce(R.string.empty_contest_name)
+            } catch (e: SQLiteConstraintException) {
                 _userFeedback.postOnce(R.string.contest_name_already_exists)
             }
         }

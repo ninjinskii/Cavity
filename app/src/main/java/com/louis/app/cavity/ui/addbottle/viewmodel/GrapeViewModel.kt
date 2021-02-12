@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import android.app.Application
+import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -36,18 +37,14 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
         repository.getQGrapesAndGrapeForBottle(bottleId)
 
     fun insertGrape(grapeName: String) {
-        if (grapeName.isBlank()) {
-            _userFeedback.postOnce(R.string.input_error)
-            return
-        }
-
         viewModelScope.launch(IO) {
-            val grapes = repository.getAllGrapesNotLive().map { it.name }
-
-            if (grapeName !in grapes) {
-                val id = repository.insertGrape(Grape(0, grapeName))
-                insertQuantifiedGrape(id)
-            } else {
+            try {
+                // TODO: transaction
+                val grapeId = repository.insertGrape(Grape(0, grapeName))
+                insertQuantifiedGrape(grapeId)
+            } catch (e: IllegalArgumentException) {
+                _userFeedback.postOnce(R.string.empty_grape_name)
+            } catch (e: SQLiteConstraintException) {
                 _userFeedback.postOnce(R.string.grape_already_exists)
             }
         }

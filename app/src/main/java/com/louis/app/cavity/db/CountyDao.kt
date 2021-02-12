@@ -8,7 +8,7 @@ import com.louis.app.cavity.model.relation.county.CountyWithWines
 @Dao
 interface CountyDao {
     @Insert
-    fun insertCounty(county: County)
+    suspend fun insertCounty(county: County)
 
     @Update
     suspend fun updateCounty(county: County)

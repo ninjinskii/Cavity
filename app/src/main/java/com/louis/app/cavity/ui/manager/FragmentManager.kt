@@ -72,7 +72,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
             title = R.string.add_county,
             hint = R.string.county
         ) {
-            managerViewModel.addCounty(it)
+            managerViewModel.insertCounty(it)
         }
 
         simpleInputDialog.show(dialogResources)
@@ -84,7 +84,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
             hint = R.string.grape_name,
             icon = R.drawable.ic_grape
         ) {
-            managerViewModel.addGrape(it)
+            managerViewModel.insertGrape(it)
         }
 
         simpleInputDialog.show(dialogResources)
@@ -101,7 +101,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
                 val name = dialogBinding.contestName.text.toString().trim()
                 val type = getReviewType(dialogBinding.rbGroupType.checkedButtonId)
 
-                managerViewModel.addReview(name, type)
+                managerViewModel.insertReview(name, type)
             }
             .setView(dialogBinding.root)
             .setOnDismissListener { dialogBinding.root.hideKeyboard() }

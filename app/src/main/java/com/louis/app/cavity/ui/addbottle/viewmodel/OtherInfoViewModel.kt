@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import android.app.Application
+import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -71,13 +72,15 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
     fun getAllFriends() = repository.getAllFriends()
 
     fun insertFriend(nameLastName: String) {
-        if (nameLastName.isBlank()) {
-            _userFeedback.postOnce(R.string.base_error)
-            return
-        }
-
         viewModelScope.launch(IO) {
-            repository.insertFriend(Friend(0, nameLastName, ""))
+            try {
+                repository.insertFriend(Friend(0, nameLastName, ""))
+                _userFeedback.postOnce(R.string.friend_added)
+            } catch (e: IllegalArgumentException) {
+                _userFeedback.postOnce(R.string.input_error)
+            } catch (e: SQLiteConstraintException) {
+                _userFeedback.postOnce(R.string.friend_already_exists)
+            }
         }
     }
 

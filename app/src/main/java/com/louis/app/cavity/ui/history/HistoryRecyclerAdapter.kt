@@ -161,9 +161,8 @@ class HistoryRecyclerAdapter(context: Context) :
                 marker.background = if(to) redMarker else greenMarker
 
                 comment.apply {
-                    val name = "${item.friends[0].firstName} ${item.friends[0].lastName}"
                     val label = if(to) R.string.gifted_to else R.string.gifted_by
-                    text = context.getString(label, name)
+                    text = context.getString(label, item.friends[0].name)
                     setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
                 }
             }

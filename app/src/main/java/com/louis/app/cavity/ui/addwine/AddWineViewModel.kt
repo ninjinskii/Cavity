@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.app.Application
+import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,14 +10,11 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.ui.Cavity
 import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import java.io.File
 
 class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
@@ -94,18 +92,17 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
 
     }
 
-    fun addCounty(countyName: String) {
+    fun insertCounty(countyName: String) {
         viewModelScope.launch(IO) {
-            if (countyName.isNotEmpty()) {
-                val counties = repository.getAllCountiesNotLive().map { it.name }
+            val counties = repository.getAllCountiesNotLive()
 
-                if (countyName !in counties) {
-                    repository.insertCounty(County(name = countyName, prefOrder = counties.size))
-                } else {
-                    _userFeedback.postOnce(R.string.county_already_exist)
-                }
-            } else {
+            try {
+                repository.insertCounty(County(name = countyName, prefOrder = counties.size))
+                _userFeedback.postOnce(R.string.county_added)
+            } catch (e: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.empty_county_name)
+            } catch (e: SQLiteConstraintException) {
+                _userFeedback.postOnce(R.string.county_already_exists)
             }
         }
     }

@@ -12,7 +12,7 @@
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
     <string name="no_county">Aucune région sélectionnée.</string>
-    <string name="county_already_exist">Cette région existe déjà.</string>
+    <string name="county_already_exists">Cette région existe déjà.</string>
     <string name="no_file_explorer">Aucune application d\'exploration de fichier trouvée.</string>
     <string name="base_error">Une erreur est survenue.</string>
     <string name="required_field">Champ requis.</string>
@@ -25,7 +25,7 @@
     <string name="empty_grape_percent">Un cépage vaut 0%.</string>
     <string name="grape_already_exists">Ce cépage existe déjà.</string>
     <string name="contest_name_already_exists">Ce concours est existe déjà.</string>
-    <string name="friend_already_exists">Ce concours est existe déjà.</string>
+    <string name="friend_already_exists">Cet ami existe déjà.</string>
     <string name="falsy_price">Le prix ne peut pas contenir de caractères.</string>
     <string name="rate_out_of_bounds">La note n\'est pas correcte.</string>
     <string name="reserved_name">Nom réservé.</string>

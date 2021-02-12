@@ -37,15 +37,41 @@ class WineRepository private constructor(app: Application) {
     fun deleteWine(wine: Wine) = wineDao.deleteWine(wine)
     fun deleteWineById(wineId: Long) = wineDao.deleteWineById(wineId)
 
-    fun insertCounty(county: County) = countyDao.insertCounty(county)
-    suspend fun updateCounty(county: County) = countyDao.updateCounty(county)
+    suspend fun insertCounty(county: County) {
+        if (county.name.isBlank()) {
+            throw IllegalArgumentException("County name is blank.")
+        }
+
+        countyDao.insertCounty(county)
+    }
+
+    suspend fun updateCounty(county: County) {
+        if (county.name.isBlank()) {
+            throw IllegalArgumentException("County name is blank.")
+        }
+
+        countyDao.updateCounty(county)
+    }
 
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
     suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
 
-    suspend fun updateGrape(grape: Grape) = grapeDao.updateGrape(grape)
+    suspend fun updateGrape(grape: Grape) {
+        if (grape.name.isBlank()) {
+            throw IllegalArgumentException("Grape name is blank.")
+        }
+
+        grapeDao.updateGrape(grape)
+    }
+
     suspend fun deleteGrape(grape: Grape) = grapeDao.deleteGrape(grape)
-    suspend fun insertGrape(grape: Grape) = grapeDao.insertGrape(grape)
+    suspend fun insertGrape(grape: Grape): Long {
+        if (grape.name.isBlank()) {
+            throw IllegalArgumentException("Grape name is blank.")
+        }
+
+        return grapeDao.insertGrape(grape)
+    }
 
     fun getGrapeWithQuantifiedGrapes() = grapeDao.getGrapeWithQuantifiedGrapes()
 
@@ -66,9 +92,23 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun getQGrape(bottleId: Long, grapeId: Long) = qGrapeDao.getQGrape(bottleId, grapeId)
 
-    suspend fun updateReview(review: Review) = reviewDao.updateReview(review)
+    suspend fun insertReview(review: Review): Long {
+        if (review.contestName.isBlank()) {
+            throw IllegalArgumentException("Review contestName is blank.")
+        }
+
+        return reviewDao.insertReview(review)
+    }
+
+    suspend fun updateReview(review: Review) {
+        if (review.contestName.isBlank()) {
+            throw IllegalArgumentException("Review contestName is blank.")
+        }
+
+        reviewDao.updateReview(review)
+    }
+
     suspend fun deleteReview(review: Review) = reviewDao.deleteReview(review)
-    suspend fun insertReview(review: Review) = reviewDao.insertReview(review)
 
     fun getReviewWithFilledReviews() = reviewDao.getReviewWithFilledReviews()
 
@@ -138,8 +178,22 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertFriendHistoryXRef(fxh: FriendHistoryEntryXRef) =
         historyXFriendDao.insertFriendHistoryEntryXRef(fxh)
 
-    suspend fun insertFriend(friend: Friend) = friendDao.insertFriend(friend)
-    suspend fun updateFriend(friend: Friend) = friendDao.updateFriend(friend)
+    suspend fun insertFriend(friend: Friend) {
+        if (friend.name.isBlank()) {
+            throw IllegalArgumentException("Friend name is blank.")
+        }
+
+        friendDao.insertFriend(friend)
+    }
+
+    suspend fun updateFriend(friend: Friend) {
+        if (friend.name.isBlank()) {
+            throw IllegalArgumentException("Friend name is blank.")
+        }
+
+        friendDao.updateFriend(friend)
+    }
+
     suspend fun deleteFriend(friend: Friend) = friendDao.deleteFriend(friend)
 
     fun getAllFriends() = friendDao.getAllFriends()
@@ -148,14 +202,21 @@ class WineRepository private constructor(app: Application) {
     fun getAllEntries() = historyDao.getAllEntries()
 
     suspend fun insertHistoryEntry(entry: HistoryEntry): Long {
-        bottleDao.consumeBottle(entry.bottleId)
-        return historyDao.insertEntry(entry)
+        return database.withTransaction {
+            bottleDao.consumeBottle(entry.bottleId)
+            historyDao.insertEntry(entry)
+        }
     }
 
     suspend fun declareGiftedBottle(entry: HistoryEntry, friendId: Long) {
         database.withTransaction {
             val entryId = historyDao.insertEntry(entry)
-            historyXFriendDao.insertFriendHistoryEntryXRef(FriendHistoryEntryXRef(entryId, friendId))
+            historyXFriendDao.insertFriendHistoryEntryXRef(
+                FriendHistoryEntryXRef(
+                    entryId,
+                    friendId
+                )
+            )
         }
     }
 }

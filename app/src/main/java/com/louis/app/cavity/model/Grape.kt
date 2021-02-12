@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "grape")
+@Entity(tableName = "grape", indices = [Index(value = ["name"], unique = true)])
 data class Grape(
     @PrimaryKey(autoGenerate = true)
     val id: Long,

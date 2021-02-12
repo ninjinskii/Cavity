@@ -2,9 +2,10 @@ package com.louis.app.cavity.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "county")
+@Entity(tableName = "county", indices = [Index(value = ["name"], unique = true)])
 data class County(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
