@@ -47,9 +47,20 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun updateCounty(county: County) {
+        if (county.name.isBlank()) {
+            _userFeedback.postOnce(R.string.empty_county_name)
+            return
+        }
+
         viewModelScope.launch(IO) {
-            repository.updateCounty(county)
-            _userFeedback.postOnce(R.string.county_renamed)
+            val counties = repository.getAllCountiesNotLive().map { it.name }
+
+            if (county.name !in counties) {
+                repository.updateCounty(county)
+                _userFeedback.postOnce(R.string.county_renamed)
+            } else {
+                _userFeedback.postOnce(R.string.county_already_exist)
+            }
         }
     }
 
@@ -78,12 +89,14 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         viewModelScope.launch(IO) {
-            if (isGrapeNameUnique(grapeName)) {
+            val grapes = repository.getAllGrapesNotLive().map { it.name }
+
+            if (grapeName !in grapes) {
                 repository.insertGrape(Grape(0, grapeName))
                 _userFeedback.postOnce(R.string.grape_added)
 
             } else {
-                _userFeedback.postOnce(R.string.grape_already_exist)
+                _userFeedback.postOnce(R.string.grape_already_exists)
             }
         }
     }
@@ -95,11 +108,13 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         viewModelScope.launch(IO) {
-            if (isGrapeNameUnique(grape.name)) {
+            val grapes = repository.getAllGrapesNotLive().map { it.name }
+
+            if (grape.name !in grapes) {
                 repository.updateGrape(grape)
                 _userFeedback.postOnce(R.string.grape_renamed)
             } else {
-                _userFeedback.postOnce(R.string.grape_already_exist)
+                _userFeedback.postOnce(R.string.grape_already_exists)
             }
         }
     }
@@ -123,15 +138,26 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
             if (contestName !in reviews) {
                 repository.insertReview(Review(0, contestName, type))
             } else {
-                _userFeedback.postOnce(R.string.contest_name_already_exist)
+                _userFeedback.postOnce(R.string.contest_name_already_exists)
             }
         }
     }
 
     fun updateReview(review: Review) {
+        if (review.contestName.isBlank()) {
+            _userFeedback.postOnce(R.string.empty_contest_name)
+            return
+        }
+
         viewModelScope.launch(IO) {
-            repository.updateReview(review)
-            _userFeedback.postOnce(R.string.review_renamed)
+            val reviews = repository.getAllReviewsNotLive().map { it.contestName }
+
+            if (review.contestName !in reviews) {
+                repository.updateReview(review)
+                _userFeedback.postOnce(R.string.review_renamed)
+            } else {
+                _userFeedback.postOnce(R.string.contest_name_already_exists)
+            }
         }
     }
 
@@ -151,8 +177,14 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         val name = Friend.parseName(nameLastName)
 
         viewModelScope.launch(IO) {
-            repository.insertFriend(Friend(0, name.first, name.second, ""))
-            _userFeedback.postOnce(R.string.friend_added)
+            val friends = repository.getAllFriendsNotLive().map { it.firstName to it.lastName }
+
+            if (name !in friends) {
+                repository.insertFriend(Friend(0, name.first, name.second, ""))
+                _userFeedback.postOnce(R.string.friend_added)
+            } else {
+                _userFeedback.postOnce(R.string.friend_already_exists)
+            }
         }
     }
 
@@ -170,58 +202,6 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             repository.deleteFriend(friend)
             _userFeedback.postOnce(R.string.friend_deleted)
-        }
-    }
-
-    private suspend fun isGrapeNameUnique(grapeName: String): Boolean {
-        val grapes = repository.getAllGrapesNotLive().map { it.name }
-        return grapeName !in grapes
-    }
-
-    private fun handleGrape(grape: Grape) {
-        if (grape.name.isBlank()) {
-            _userFeedback.postOnce(R.string.empty_grape_name)
-            return
-        }
-
-        viewModelScope.launch(IO) {
-            val grapes = repository.getAllGrapesNotLive().map { it.name }
-
-            if (grape.name in grapes) {
-                _userFeedback.postOnce(R.string.grape_already_exist)
-            } else {
-                if (grape.id == 0L) {
-                    repository.insertGrape(grape)
-                    _userFeedback.postOnce(R.string.grape_added)
-                } else {
-                    repository.updateGrape(grape)
-                    _userFeedback.postOnce(R.string.grape_renamed)
-                }
-            }
-
-        }
-    }
-
-    private suspend fun handleGrape(item: Chipable): Int {
-        if (item.getChipText().isBlank()) {
-            return -1
-        }
-
-        val items = when(item) {
-            is County -> repository.getAllCountiesNotLive().map { it.name }
-            is Grape -> repository.getAllGrapesNotLive().map { it.name }
-            is Review -> repository.getAllReviewsNotLive().map { it.contestName }
-            else -> repository.getAllFriendsNotLive().map { it.lastName + it.firstName }
-        }
-
-        return if (item.getChipText() in items) {
-            0
-        } else {
-            if (item.getItemId() == 0L) {
-                1
-            } else {
-                2
-            }
         }
     }
 }

@@ -48,7 +48,7 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
                 val id = repository.insertGrape(Grape(0, grapeName))
                 insertQuantifiedGrape(id)
             } else {
-                _userFeedback.postOnce(R.string.grape_already_exist)
+                _userFeedback.postOnce(R.string.grape_already_exists)
             }
         }
     }

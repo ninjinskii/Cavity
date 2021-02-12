@@ -47,7 +47,7 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
                 val id = repository.insertReview(Review(0, contestName, type))
                 insertFilledReview(id, getDefaultValue(type))
             } else {
-                _userFeedback.postOnce(R.string.contest_name_already_exist)
+                _userFeedback.postOnce(R.string.contest_name_already_exists)
             }
         }
     }
