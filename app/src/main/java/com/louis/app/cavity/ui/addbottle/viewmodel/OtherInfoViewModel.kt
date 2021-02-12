@@ -76,10 +76,8 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
             return
         }
 
-        val name = Friend.parseName(nameLastName)
-
         viewModelScope.launch(IO) {
-            repository.insertFriend(Friend(0, name.first, name.second, ""))
+            repository.insertFriend(Friend(0, nameLastName, ""))
         }
     }
 

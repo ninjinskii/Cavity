@@ -13,6 +13,7 @@ import com.louis.app.cavity.databinding.FragmentGiftBottleBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -85,6 +86,22 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
         binding.buttonClose.setOnClickListener {
             findNavController().navigateUp()
         }
+
+        binding.buttonAddFriend.setOnClickListener {
+            showAddFriendDialog()
+        }
+    }
+
+    private fun showAddFriendDialog() {
+        val dialogResources = SimpleInputDialog.DialogContent(
+            title = R.string.add_friend,
+            hint = R.string.add_friend_label,
+            icon = R.drawable.ic_person,
+        ) {
+            consumeGiftBottleViewModel.insertFriend(it)
+        }
+
+        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
     }
 
     override fun onDestroy() {

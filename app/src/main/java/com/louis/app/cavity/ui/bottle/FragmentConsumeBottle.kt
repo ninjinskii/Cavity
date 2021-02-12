@@ -13,6 +13,7 @@ import com.louis.app.cavity.databinding.FragmentConsumeBottleBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -44,7 +45,8 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
             title,
             System.currentTimeMillis()
         ).apply {
-            onEndIconClickListener = { consumeGiftBottleViewModel.date = System.currentTimeMillis() }
+            onEndIconClickListener =
+                { consumeGiftBottleViewModel.date = System.currentTimeMillis() }
             onDateChangedListener = { consumeGiftBottleViewModel.date = it }
         }
     }
@@ -86,6 +88,22 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
         binding.buttonClose.setOnClickListener {
             findNavController().navigateUp()
         }
+
+        binding.buttonAddFriend.setOnClickListener {
+            showAddFriendDialog()
+        }
+    }
+
+    private fun showAddFriendDialog() {
+        val dialogResources = SimpleInputDialog.DialogContent(
+            title = R.string.add_friend,
+            hint = R.string.add_friend_label,
+            icon = R.drawable.ic_person,
+        ) {
+            consumeGiftBottleViewModel.insertFriend(it)
+        }
+
+        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
     }
 
     override fun onDestroy() {
