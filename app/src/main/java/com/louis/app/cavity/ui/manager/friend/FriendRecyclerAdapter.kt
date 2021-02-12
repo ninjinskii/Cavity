@@ -37,7 +37,7 @@ class FriendRecyclerAdapter(
     class GrapeItemDiffCallback : DiffUtil.ItemCallback<Friend>() {
         override fun areItemsTheSame(oldItem: Friend, newItem: Friend) = oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: Friend, newItem: Friend) = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: Friend, newItem: Friend) = oldItem == newItem
     }
 
     inner class FriendViewHolder(private val binding: ItemFriendBinding) :
