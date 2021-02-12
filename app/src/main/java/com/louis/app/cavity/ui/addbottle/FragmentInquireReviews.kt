@@ -104,7 +104,7 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
                 val name = dialogBinding.contestName.text.toString().trim()
                 val type = getReviewType(dialogBinding.rbGroupType.checkedButtonId)
 
-                reviewViewModel.insertReview(name, type)
+                reviewViewModel.insertReviewAndFReview(name, type)
             }
             .setView(dialogBinding.root)
             .setOnDismissListener { dialogBinding.root.hideKeyboard() }

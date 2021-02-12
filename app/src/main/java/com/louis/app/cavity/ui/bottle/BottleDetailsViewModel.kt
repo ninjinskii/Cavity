@@ -35,13 +35,13 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun addBottles(bottleId: Long, count: Int) {
         viewModelScope.launch(IO) {
-            repository.addBottles(bottleId, count)
+            repository.insertBottles(bottleId, count)
         }
     }
 
     fun removeBottles(bottleId: Long, count: Int) {
         viewModelScope.launch(IO) {
-            repository.removeBottles(bottleId, count)
+            repository.deleteBottles(bottleId, count)
         }
     }
 

@@ -36,12 +36,12 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     fun getQGrapesAndGrapeForBottle(bottleId: Long) =
         repository.getQGrapesAndGrapeForBottle(bottleId)
 
-    fun insertGrape(grapeName: String) {
+    fun insertGrapeAndQGrape(grapeName: String) {
         viewModelScope.launch(IO) {
             try {
-                // TODO: transaction
-                val grapeId = repository.insertGrape(Grape(0, grapeName))
-                insertQuantifiedGrape(grapeId)
+                val grape = Grape(0, grapeName)
+                val defaultValue = qGrapeManager.requestAddQGrape()
+                repository.insertGrapeAndQGrape(bottleId, grape, defaultValue)
             } catch (e: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.empty_grape_name)
             } catch (e: SQLiteConstraintException) {

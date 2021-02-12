@@ -12,9 +12,7 @@ import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.adapter.QuantifiedGrapeRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeViewModel
-import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.showKeyboard
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var stepperx: Stepper
@@ -98,7 +96,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             hint = R.string.grape_name,
             icon = R.drawable.ic_grape
         ) {
-            grapeViewModel.insertGrape(it)
+            grapeViewModel.insertGrapeAndQGrape(it)
         }
 
         SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)

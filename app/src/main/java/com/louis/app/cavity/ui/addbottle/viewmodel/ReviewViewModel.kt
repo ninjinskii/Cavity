@@ -35,11 +35,12 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getFReviewAndReview() = repository.getFReviewAndReviewForBottle(bottleId)
 
-    fun insertReview(contestName: String, type: Int) {
+    fun insertReviewAndFReview(contestName: String, type: Int) {
         viewModelScope.launch(IO) {
             try {
-                val reviewId = repository.insertReview(Review(0, contestName, type))
-                insertFilledReview(reviewId, getDefaultValue(type))
+                val review = Review(0, contestName, type)
+                val defaultValue = getDefaultValue(type)
+                repository.insertReviewAndFReview(bottleId, review, defaultValue)
             } catch (e: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.empty_contest_name)
             } catch (e: SQLiteConstraintException) {
@@ -58,7 +59,6 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
 
     fun updateFilledReview(fReview: FilledBottleReviewXRef, contestValue: Int) {
         val newFReview = fReview.copy(value = contestValue)
-        L.v("update filled review: $newFReview")
 
         viewModelScope.launch(IO) {
             repository.updateFilledReview(newFReview)
