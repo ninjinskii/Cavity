@@ -11,6 +11,7 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.HistoryEntry
+import com.louis.app.cavity.model.HistoryEntryType
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
@@ -85,14 +86,13 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private suspend fun addHistoryEntry(buyDate: Long, friendId: Long?) {
-        val replenishment = 1
-        val giftedBy = 3
-
         if (friendId == null) {
-            val historyEntry = HistoryEntry(0, buyDate, bottleId, null, "", replenishment)
+            val historyEntry =
+                HistoryEntry(0, buyDate, bottleId, null, "", HistoryEntryType.TYPE_REPLENISHMENT)
             repository.insertHistoryEntry(historyEntry)
         } else {
-            val historyEntry = HistoryEntry(0, buyDate, bottleId, null, "", giftedBy)
+            val historyEntry =
+                HistoryEntry(0, buyDate, bottleId, null, "", HistoryEntryType.TYPE_GIFTED_BY)
             repository.declareGiftedBottle(historyEntry, friendId)
         }
     }

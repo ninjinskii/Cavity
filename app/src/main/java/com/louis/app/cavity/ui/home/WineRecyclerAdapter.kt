@@ -13,6 +13,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.model.relation.wine.WineWithBottles
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
@@ -57,7 +58,7 @@ class WineRecyclerAdapter(
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
                 organicImage.setVisible(wine.isOrganic.toBoolean())
-                wineColorIndicator.setColorFilter(colors[wine.color])
+                wineColorIndicator.setColorFilter(colors[wine.color.ordinal])
                 binding.chipGroup.removeAllViews()
 
                 for (bottle in bottles) {

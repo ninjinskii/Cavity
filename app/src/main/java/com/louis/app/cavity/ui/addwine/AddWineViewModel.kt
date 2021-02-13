@@ -10,7 +10,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.ui.home.WineColor
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
@@ -61,17 +61,17 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         county: County
     ) {
         val colorNumber = when (color) {
-            R.id.colorWhite -> WineColor.COLOR_WHITE
-            R.id.colorRed -> WineColor.COLOR_RED
-            R.id.colorSweet -> WineColor.COLOR_SWEET
-            else -> WineColor.COLOR_ROSE
+            R.id.colorWhite -> WineColor.WINE_WHITE
+            R.id.colorRed -> WineColor.WINE_RED
+            R.id.colorSweet -> WineColor.WINE_SWEET
+            else -> WineColor.WINE_ROSE
         }
 
         val wine = Wine(
             wineId,
             name,
             naming,
-            Wine.wineColorToColorNumber(colorNumber),
+            colorNumber,
             cuvee,
             county.id,
             isOrganic,

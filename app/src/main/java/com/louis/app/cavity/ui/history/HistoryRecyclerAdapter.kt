@@ -13,6 +13,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
 import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
+import com.louis.app.cavity.model.HistoryEntryType
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
@@ -66,7 +67,7 @@ class HistoryRecyclerAdapter(context: Context) :
         return when (val item = getItem(position)) {
             is HistoryUiModel.HeaderModel -> TYPE_SEPARATOR
             is HistoryUiModel.EntryModel ->
-                if (item.model.getHistoryType() == HistoryTypes.HISTORY_TASTING)
+                if (item.model.historyEntry.type == HistoryEntryType.TYPE_TASTING)
                     TYPE_TASTING else TYPE_NORMAL
             else -> throw IllegalStateException("Unknown view type")
         }
@@ -105,10 +106,10 @@ class HistoryRecyclerAdapter(context: Context) :
                     wineColorNameNaming.wineName.text = wine.name
                     vintage.text = bottle.vintage.toString()
 
-                    when (it.model.getHistoryType()) {
-                        HistoryTypes.HISTORY_USE -> bindForConsume(it.model)
-                        HistoryTypes.HISTORY_REPLENISHMENT -> bindForReplenishment(it.model)
-                        HistoryTypes.HISTORY_GIFTED_TO -> bindForGift(it.model, to = true)
+                    when (it.model.historyEntry.type) {
+                        HistoryEntryType.TYPE_CONSUME -> bindForConsume(it.model)
+                        HistoryEntryType.TYPE_REPLENISHMENT -> bindForReplenishment(it.model)
+                        HistoryEntryType.TYPE_GIFTED_TO -> bindForGift(it.model, to = true)
                         else -> bindForGift(it.model, to = false)
                     }
                 }

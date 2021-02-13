@@ -31,15 +31,14 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val colors = context?.let {
+        val colors = requireContext().run {
             listOf(
-                it.getColor(R.color.wine_white),
-                it.getColor(R.color.wine_red),
-                it.getColor(R.color.wine_sweet),
-                it.getColor(R.color.wine_rose),
-                it.getColor(R.color.cavity_gold)
+                getColor(R.color.wine_white),
+                getColor(R.color.wine_red),
+                getColor(R.color.wine_sweet),
+                getColor(R.color.wine_rose)
             )
-        } ?: return
+        }
 
         with(binding) {
             currentWine.wineName.text = args.wineName

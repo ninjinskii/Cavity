@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
+import com.louis.app.cavity.db.Converters
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
@@ -152,11 +153,13 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     private fun observe() {
         addWineViewModel.updatedWine.observe(viewLifecycleOwner) {
+            val colorNumber = Converters().wineColorToNumber(it.color)
+
             with(binding) {
                 naming.setText(it.naming)
                 name.setText(it.name)
                 cuvee.setText(it.cuvee)
-                (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
+                (colorChipGroup.getChildAt(colorNumber) as Chip).isChecked = true
                 organicWine.isChecked = it.isOrganic.toBoolean()
             }
         }

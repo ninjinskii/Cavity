@@ -1,8 +1,8 @@
 package com.louis.app.cavity.ui.search.filters
 
 import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.model.relation.bottle.BottleAndWineWithQGrapesAndFReviews
-import com.louis.app.cavity.ui.home.WineColor
 import com.louis.app.cavity.util.toBoolean
 
 class FilterReadyToDrink : WineFilter {
@@ -15,7 +15,7 @@ class FilterReadyToDrink : WineFilter {
 class FilterColor(private val color: WineColor) : WineFilter {
     override fun meetFilters(bottlesAndWine: List<BottleAndWineWithQGrapesAndFReviews>):
             List<BottleAndWineWithQGrapesAndFReviews> {
-        return bottlesAndWine.filter { it.wine.color == Wine.wineColorToColorNumber(color) }
+        return bottlesAndWine.filter { it.wine.color == color }
     }
 }
 

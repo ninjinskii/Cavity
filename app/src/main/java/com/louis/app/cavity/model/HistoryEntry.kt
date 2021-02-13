@@ -12,5 +12,5 @@ data class HistoryEntry(
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
     @ColumnInfo(name = "tasting_id") var tastingId: Long? = null,
     val comment: String,
-    val type: Int,
+    val type: HistoryEntryType,
 )

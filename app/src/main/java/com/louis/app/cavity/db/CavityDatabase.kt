@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
@@ -30,9 +31,10 @@ import kotlinx.coroutines.launch
         TastingFriendXRef::class,
         FriendHistoryEntryXRef::class,
     ],
-    version = 42,
+    version = 43,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class CavityDatabase : RoomDatabase() {
     abstract fun wineDao(): WineDao
     abstract fun bottleDao(): BottleDao
@@ -152,7 +154,7 @@ abstract class CavityDatabase : RoomDatabase() {
                                 0,
                                 wineNames.random(),
                                 wineNamings.random(),
-                                wineColors.random(),
+                                Converters().numberToWineColor(wineColors.random()),
                                 "",
                                 counties.random().toLong(),
                                 (0..1).random(),

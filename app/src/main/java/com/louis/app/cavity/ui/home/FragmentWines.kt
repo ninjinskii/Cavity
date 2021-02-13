@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
+import com.louis.app.cavity.db.Converters
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 
@@ -27,13 +29,12 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     private fun initRecyclerView() {
-        val colors = context?.let {
+        val colors = requireContext().run {
             listOf(
-                it.getColor(R.color.wine_white),
-                it.getColor(R.color.wine_red),
-                it.getColor(R.color.wine_sweet),
-                it.getColor(R.color.wine_rose),
-                it.getColor(R.color.cavity_gold)
+                getColor(R.color.wine_white),
+                getColor(R.color.wine_red),
+                getColor(R.color.wine_sweet),
+                getColor(R.color.wine_rose)
             )
         }
 
@@ -42,7 +43,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             findNavController().navigate(action)
         }
 
-        val wineAdapter = WineRecyclerAdapter(colors ?: return, onVintageClick) { wine ->
+        val wineAdapter = WineRecyclerAdapter(colors, onVintageClick) { wine ->
             activity?.supportFragmentManager?.let {
                 val action = FragmentHomeDirections.homeToWineOptions(
                     wine.id,
@@ -50,7 +51,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                     wine.name,
                     wine.naming,
                     wine.isOrganic.toBoolean(),
-                    wine.color
+                    wine.color.ordinal
                 )
                 findNavController().navigate(action)
             }

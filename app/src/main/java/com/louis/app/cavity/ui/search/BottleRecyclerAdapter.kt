@@ -54,7 +54,7 @@ class BottleRecyclerAdapter(
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
                 organicImage.setVisible(wine.isOrganic.toBoolean())
-                wineColorIndicator.setColorFilter(colors[wine.color])
+                wineColorIndicator.setColorFilter(colors[wine.color.ordinal])
 
             }
 
