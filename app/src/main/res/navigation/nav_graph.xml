@@ -35,6 +35,9 @@
         <action
             android:id="@+id/homeToManager"
             app:destination="@id/manager_dest" />
+        <action
+            android:id="@+id/homeToHistory"
+            app:destination="@id/history_dest" />
     </fragment>
 
     <dialog
@@ -66,7 +69,6 @@
             android:id="@+id/wineOptionsToAddBottle"
             app:destination="@id/add_bottle_dest" />
     </dialog>
-
 
     <fragment
         android:id="@+id/settings_dest"

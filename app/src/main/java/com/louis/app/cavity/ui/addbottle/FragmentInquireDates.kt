@@ -95,13 +95,17 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         }
     }
 
-    private fun validateFields() = binding.countLayout.validate() && binding.priceLayout.validate()
-        .also {
-            if (it) {
-                savePartialBottle()
-                stepperx.requestNextPage()
+    private fun validateFields(): Boolean {
+        return binding.countLayout.validate() &&
+                binding.priceLayout.validate() &&
+                binding.buyDateLayout.validate()
+            .also {
+                if (it) {
+                    savePartialBottle()
+                    stepperx.requestNextPage()
+                }
             }
-        }
+    }
 
     private fun savePartialBottle() {
         with(binding) {
