@@ -7,12 +7,14 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.louis.app.cavity.util.doOnEachNextLayout
 
 class StickyItemDecorator(
     parent: RecyclerView,
     private val shouldFadeOutHeader: Boolean = false,
     private val isHeader: (itemPosition: Int) -> Boolean
-) : RecyclerView.ItemDecoration() {
+) :
+    RecyclerView.ItemDecoration() {
 
     private var currentHeader: Pair<Int, RecyclerView.ViewHolder>? = null
 
@@ -46,9 +48,10 @@ class StickyItemDecorator(
 
         val topChild = parent.findChildViewUnder(
             parent.paddingLeft.toFloat(),
-            parent.paddingTop.toFloat() /*+ (currentHeader?.second?.itemView?.height ?: 0 )*/
+            parent.paddingTop.toFloat()
         ) ?: return
         val topChildPosition = parent.getChildAdapterPosition(topChild)
+
         if (topChildPosition == RecyclerView.NO_POSITION) {
             return
         }
@@ -70,6 +73,7 @@ class StickyItemDecorator(
         if (parent.adapter == null) {
             return null
         }
+
         val headerPosition = getHeaderPositionForItem(itemPosition)
         if (headerPosition == RecyclerView.NO_POSITION) return null
         val headerType = parent.adapter?.getItemViewType(headerPosition) ?: return null
@@ -85,6 +89,7 @@ class StickyItemDecorator(
 
             currentHeader = headerPosition to headerHolder
         }
+
         return headerHolder?.itemView
     }
 
@@ -131,11 +136,7 @@ class StickyItemDecorator(
         return childInContact
     }
 
-    /**
-     * Properly measures and layouts the top sticky header.
-     */
     private fun fixLayoutSize(parent: ViewGroup, view: View) {
-
         val widthSpec = View.MeasureSpec.makeMeasureSpec(parent.width, View.MeasureSpec.EXACTLY)
         val heightSpec =
             View.MeasureSpec.makeMeasureSpec(parent.height, View.MeasureSpec.UNSPECIFIED)
@@ -165,12 +166,7 @@ class StickyItemDecorator(
             }
             currentPosition -= 1
         } while (currentPosition >= 0)
-        return headerPosition
-    }
-}
 
-inline fun View.doOnEachNextLayout(crossinline action: (view: View) -> Unit) {
-    addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
-        action(view)
+        return headerPosition
     }
 }
