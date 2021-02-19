@@ -23,6 +23,9 @@ interface HistoryDao {
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
     fun getAllEntries(): PagingSource<Int, HistoryEntryWithBottleAndTastingAndFriends>
 
+    @Query("SELECT * FROM history_entry ORDER BY date DESC")
+    fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
+
     @Transaction
     @Query("SELECT * FROM history_entry")
     fun getE(): LiveData<List<HistoryEntryWithFriends>>

@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.history
 
 import android.graphics.Canvas
 import android.graphics.Rect
-import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,8 @@ import com.louis.app.cavity.util.doOnEachNextLayout
 
 class StickyItemDecorator(
     parent: RecyclerView,
-    private val shouldFadeOutHeader: Boolean = false,
-    private val isHeader: (itemPosition: Int) -> Boolean
+    private val isHeader: (itemPosition: Int) -> Boolean,
+    private val onHeaderClick: () -> Unit
 ) :
     RecyclerView.ItemDecoration() {
 
@@ -36,9 +35,8 @@ class StickyItemDecorator(
                 recyclerView: RecyclerView,
                 motionEvent: MotionEvent
             ): Boolean {
-                return if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                    motionEvent.y <= currentHeader?.second?.itemView?.bottom ?: 0
-                } else false
+                return motionEvent.action == MotionEvent.ACTION_DOWN &&
+                        motionEvent.y <= currentHeader?.second?.itemView?.bottom ?: 0
             }
         })
     }
@@ -90,6 +88,7 @@ class StickyItemDecorator(
             currentHeader = headerPosition to headerHolder
         }
 
+        // TODO: add ripple here if really needed
         return headerHolder?.itemView
     }
 
@@ -102,20 +101,9 @@ class StickyItemDecorator(
 
     private fun moveHeader(c: Canvas, currentHeader: View, nextHeader: View, paddingTop: Int) {
         c.save()
-        if (!shouldFadeOutHeader) {
-            c.clipRect(0, paddingTop, c.width, paddingTop + currentHeader.height)
-        } else {
-            c.saveLayerAlpha(
-                RectF(0f, 0f, c.width.toFloat(), c.height.toFloat()),
-                (((nextHeader.top - paddingTop) / nextHeader.height.toFloat()) * 255).toInt()
-            )
-        }
+        c.clipRect(0, paddingTop, c.width, paddingTop + currentHeader.height)
         c.translate(0f, (nextHeader.top - currentHeader.height).toFloat() /*+ paddingTop*/)
-
         currentHeader.draw(c)
-        if (shouldFadeOutHeader) {
-            c.restore()
-        }
         c.restore()
     }
 

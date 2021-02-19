@@ -19,7 +19,7 @@ import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 
-class HistoryRecyclerAdapter(context: Context) :
+class HistoryRecyclerAdapter(context: Context, private val onHeaderClick: () -> Unit) :
     PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(
         HistoryEntryDiffItemCallback()
     ) {
@@ -194,7 +194,7 @@ class HistoryRecyclerAdapter(context: Context) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.buttonSelectDate.setOnClickListener { L.v("Here i am") }
+            itemView.setOnClickListener { onHeaderClick() }
         }
 
         fun bind(header: HistoryUiModel.HeaderModel?) {
