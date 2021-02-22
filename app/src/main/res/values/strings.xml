@@ -198,9 +198,16 @@
 
     <!-- History -->
     <string name="buyed_at">Achetée à : %1$s</string>
-    <string name="gifted_to">Offerte à : %1$s</string>
-    <string name="gifted_by">Offerte par : %1$s</string>
+    <string name="gifted_to_someone">Offerte à : %1$s</string>
+    <string name="gifted_by_someone">Offerte par : %1$s</string>
     <string name="no_description">Pas de commentaire de dégustation.</string>
+    <string name="replenishments">Entrées</string>
+    <string name="tastings">Dégustations</string>
+    <string name="consumptions">Sorties</string>
+    <string name="gifted_to">Offerte à</string>
+    <string name="gifted_by">Offerte par</string>
+    <string name="drinked">Consommation unique</string>
+    <string name="favorites">Favoris</string>
 
 
     <!-- Tags -->

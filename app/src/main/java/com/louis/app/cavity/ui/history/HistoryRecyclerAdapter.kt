@@ -16,7 +16,6 @@ import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.model.HistoryEntryType
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 
 class HistoryRecyclerAdapter(context: Context, private val onHeaderClick: () -> Unit) :
@@ -163,7 +162,7 @@ class HistoryRecyclerAdapter(context: Context, private val onHeaderClick: () -> 
                 marker.background = if(to) redMarker else greenMarker
 
                 comment.apply {
-                    val label = if(to) R.string.gifted_to else R.string.gifted_by
+                    val label = if(to) R.string.gifted_to_someone else R.string.gifted_by_someone
                     text = context.getString(label, item.friends[0].name)
                     setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
                 }
