@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.ui.history.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
@@ -17,6 +19,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private val historyViewModel: HistoryViewModel by viewModels()
+    private val args: FragmentHistoryArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,6 +30,9 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         scroller = object : LinearSmoothScroller(context) {
             override fun getVerticalSnapPreference() = SNAP_TO_START
         }
+
+        // TODO: uniformize viewmodels initialization
+        historyViewModel.bottleId = args.bottleId
 
         initRecyclerView()
         observe()

@@ -13,9 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.DialogAddBottleBinding
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
@@ -34,6 +32,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
 
+        bottleDetailsViewModel.setBottle(args.bottleId)
+
         initRecyclerView()
         observe()
         setListeners()
@@ -48,7 +48,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             adapter = reviewAdapter
         }
 
-        bottleDetailsViewModel.getFReviewForBottle(args.bottleId).observe(viewLifecycleOwner) {
+        bottleDetailsViewModel.getFReviewForBottle().observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.reviewCardView.setVisible(false)
             } else {
@@ -58,11 +58,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun observe() {
-        bottleDetailsViewModel.getBottleById(args.bottleId).observe(viewLifecycleOwner) {
+        bottleDetailsViewModel.getBottleById().observe(viewLifecycleOwner) {
             updateUI(it)
         }
 
-        bottleDetailsViewModel.getQGrapesForBottle(args.bottleId).observe(viewLifecycleOwner) {
+        bottleDetailsViewModel.getQGrapesForBottle().observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.grapesCardView.setVisible(false)
             } else {
@@ -115,12 +115,18 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         binding.buttonGiftTo.setOnClickListener {
             (it as Checkable).isChecked = false
 
-            val action = FragmentBottleDetailsDirections.bottleDetailsToGiftBottle(args.bottleId) //vodka, captain, crème, chips, kubor, bières / aromatisée
+            val action =
+                FragmentBottleDetailsDirections.bottleDetailsToGiftBottle(args.bottleId)
             findNavController().navigate(action)
         }
 
         binding.buttonShowPdf.setOnClickListener {
             bottleDetailsViewModel.preparePdf(args.bottleId)
+        }
+
+        binding.buttonShowHistory.setOnClickListener {
+            val action = FragmentBottleDetailsDirections.bottleDetailsToHistory(args.bottleId)
+            findNavController().navigate(action)
         }
 
         binding.favorite.setOnClickListener {

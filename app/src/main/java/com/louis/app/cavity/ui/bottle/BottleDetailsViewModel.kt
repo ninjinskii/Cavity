@@ -2,12 +2,12 @@ package com.louis.app.cavity.ui.bottle
 
 import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.paging.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.ui.history.HistoryUiModel
+import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
@@ -17,6 +17,11 @@ import kotlinx.coroutines.launch
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
+    // TODO: consider removing public part if not necessary in future
+    private val _bottleId = MutableLiveData<Long>()
+    val bottleId: LiveData<Long>
+        get() = _bottleId
+
     private val _pdfEvent = MutableLiveData<Event<Uri>>()
     val pdfEvent: LiveData<Event<Uri>>
         get() = _pdfEvent
@@ -25,13 +30,17 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
+    fun setBottle(bottleId: Long) {
+        _bottleId.postValue(bottleId)
+    }
+
     fun getWineById(wineId: Long) = repository.getWineById(wineId)
 
-    fun getBottleById(bottleId: Long) = repository.getBottleById(bottleId)
+    fun getBottleById() = bottleId.switchMap { repository.getBottleById(it) }
 
-    fun getQGrapesForBottle(bottleId: Long) = repository.getQGrapesAndGrapeForBottle(bottleId)
+    fun getQGrapesForBottle() = bottleId.switchMap { repository.getQGrapesAndGrapeForBottle(it) }
 
-    fun getFReviewForBottle(bottleId: Long) = repository.getFReviewAndReviewForBottle(bottleId)
+    fun getFReviewForBottle() = bottleId.switchMap { repository.getFReviewAndReviewForBottle(it) }
 
     fun addBottles(bottleId: Long, count: Int) {
         viewModelScope.launch(IO) {

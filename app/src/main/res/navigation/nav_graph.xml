@@ -166,6 +166,13 @@
                 android:name="bottleId"
                 app:argType="long" />
         </action>
+        <action
+            android:id="@+id/bottleDetailsToHistory"
+            app:destination="@id/history_dest">
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
     </fragment>
 
     <fragment
@@ -178,7 +185,12 @@
         android:id="@+id/history_dest"
         android:name="com.louis.app.cavity.ui.history.FragmentHistory"
         android:label="FragmentHistory"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history">
+        <argument
+            android:name="bottleId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragmentConsumeBottle"

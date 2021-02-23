@@ -22,9 +22,12 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val scrollTo: LiveData<Event<Int>>
         get() = _scrollTo
 
+    // TODO: consider removing public part if not needed
     private val _filter = MutableLiveData<Int?>(null)
     val filter: LiveData<Int?>
         get() = _filter
+
+    var bottleId = -1L
 
     val entries: LiveData<PagingData<HistoryUiModel>> = filter.switchMap {
         Pager(PagingConfig(pageSize = 100, prefetchDistance = 10, enablePlaceholders = true)) {
@@ -39,6 +42,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
             }
         }.liveData.map { pagingData ->
             pagingData
+                .filter { if (bottleId != -1L) it.bottleAndWine.bottle.id == bottleId else true }
                 .map { HistoryUiModel.EntryModel(it) }
                 .insertSeparators { before, after ->
                     if (shouldSeparate(before, after))

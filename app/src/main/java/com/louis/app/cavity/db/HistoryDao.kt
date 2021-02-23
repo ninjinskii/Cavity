@@ -32,6 +32,10 @@ interface HistoryDao {
     @Query("SELECT * FROM history_entry WHERE favorite = 1 ORDER BY date DESC")
     fun getFavoriteEntries(): PagingSource<Int, HistoryEntryWithBottleAndTastingAndFriends>
 
+    @Transaction
+    @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId ORDER BY date DESC")
+    fun getEntriesForBottle(bottleId: Long): PagingSource<Int, HistoryEntryWithBottleAndTastingAndFriends>
+
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
     fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
 

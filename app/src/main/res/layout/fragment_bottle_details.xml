@@ -328,16 +328,29 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/buttonShowPdf"
+                            android:id="@+id/buttonShowHistory"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="@dimen/small_margin"
+                            app:icon="@drawable/ic_history"
                             android:text="@string/show_pdf"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@id/price"
                             app:layout_constraintStart_toStartOf="@id/apogee"
                             app:layout_constraintTop_toBottomOf="@id/otherInfo" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonShowPdf"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/small_margin"
+                            android:text="@string/show_history"
+                            app:icon="@drawable/ic_pdf"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@id/price"
+                            app:layout_constraintStart_toStartOf="@id/apogee"
+                            app:layout_constraintTop_toBottomOf="@id/buttonShowHistory" />
 
                         <TextView
                             android:id="@+id/noPdf"
