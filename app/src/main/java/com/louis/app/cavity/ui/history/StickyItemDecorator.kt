@@ -58,8 +58,9 @@ class StickyItemDecorator(
 
         val contactPoint = headerView.bottom + parent.paddingTop
         val childInContact = getChildInContact(parent, contactPoint) ?: return
+        val childInContactPos = parent.getChildAdapterPosition(childInContact)
 
-        if (isHeader(parent.getChildAdapterPosition(childInContact))) {
+        if (childInContactPos >= 0 && isHeader(childInContactPos)) {
             moveHeader(c, headerView, childInContact, parent.paddingTop)
             return
         }

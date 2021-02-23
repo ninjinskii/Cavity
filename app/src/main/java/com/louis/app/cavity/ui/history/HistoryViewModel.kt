@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.history
 
 import android.app.Application
+import androidx.annotation.IdRes
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.louis.app.cavity.R
@@ -21,15 +22,15 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val scrollTo: LiveData<Event<Int>>
         get() = _scrollTo
 
-    private val _filter = MutableLiveData<Int>()
-    val filter: LiveData<Int>
+    private val _filter = MutableLiveData<Int?>(null)
+    val filter: LiveData<Int?>
         get() = _filter
 
-    val entries: LiveData<PagingData<HistoryUiModel>> =
+    val entries: LiveData<PagingData<HistoryUiModel>> = filter.switchMap {
         Pager(PagingConfig(pageSize = 100, prefetchDistance = 10, enablePlaceholders = true)) {
-            when (_filter.value) {
-                R.id.chipReplenishments -> repository.getEntriesByType(0, 2)
-                R.id.chipComsumptions -> repository.getEntriesByType(1, 3)
+            when (it) {
+                R.id.chipReplenishments -> repository.getEntriesByType(1, 3)
+                R.id.chipComsumptions -> repository.getEntriesByType(0, 2)
                 R.id.chipTastings -> repository.getEntriesByType(4, 4)
                 R.id.chipGiftedTo -> repository.getEntriesByType(2, 2)
                 R.id.chipGiftedBy -> repository.getEntriesByType(3, 3)
@@ -45,6 +46,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                     else null
                 }
         }.cachedIn(viewModelScope)
+    }
 
     fun requestScrollToDate(timestamp: Long) {
         viewModelScope.launch(IO) {
@@ -75,10 +77,18 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun setFilter(@IdRes chipId: Int?) {
+        _filter.postValue(chipId)
+    }
+
     private fun shouldSeparate(
         before: HistoryUiModel.EntryModel?,
         after: HistoryUiModel?
     ): Boolean {
+        if (before == null && after == null) {
+            return false
+        }
+
         return if (after is HistoryUiModel.EntryModel?) {
             val beforeTimestamp =
                 DateFormatter.roundToDay(before?.model?.historyEntry?.date ?: return true)

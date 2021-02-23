@@ -30,6 +30,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         initRecyclerView()
         observe()
+        setListeners()
     }
 
     private fun initRecyclerView() {
@@ -58,6 +59,12 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 scroller.targetPosition = pos
                 binding.recyclerView.layoutManager?.startSmoothScroll(scroller)
             }
+        }
+    }
+
+    private fun setListeners() {
+        binding.filterChipGroup.setOnCheckedChangeListener { _, checkedId ->
+            historyViewModel.setFilter(checkedId)
         }
     }
 
