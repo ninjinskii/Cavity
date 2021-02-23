@@ -150,6 +150,7 @@ class HistoryRecyclerAdapter(context: Context, private val onHeaderClick: () -> 
                     text =
                         context.getString(R.string.buyed_at, item.bottleAndWine.bottle.buyLocation)
                     setCompoundDrawablesWithIntrinsicBounds(bottleIcon, null, null, null)
+                    typeface = Typeface.DEFAULT
                 }
             }
         }
@@ -165,6 +166,7 @@ class HistoryRecyclerAdapter(context: Context, private val onHeaderClick: () -> 
                     val label = if(to) R.string.gifted_to_someone else R.string.gifted_by_someone
                     text = context.getString(label, item.friends[0].name)
                     setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
+                    typeface = Typeface.DEFAULT
                 }
             }
         }
