@@ -13,4 +13,5 @@ data class HistoryEntry(
     @ColumnInfo(name = "tasting_id") var tastingId: Long? = null,
     val comment: String,
     val type: HistoryEntryType,
+    val favorite: Int,
 )

@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
         TastingFriendXRef::class,
         FriendHistoryEntryXRef::class,
     ],
-    version = 43,
+    version = 44,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

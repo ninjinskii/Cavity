@@ -42,31 +42,43 @@
                 app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chipReplenishments"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/replenishments" />
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chipComsumptions"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/consumptions" />
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chipTastings"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tastings" />
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chipGiftedTo"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/gifted_to" />
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chipGiftedBy"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/gifted_by" />
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFavorites"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/favorites" />

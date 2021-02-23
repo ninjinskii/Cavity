@@ -88,11 +88,11 @@ class OtherInfoViewModel(app: Application) : AndroidViewModel(app) {
     private suspend fun addHistoryEntry(buyDate: Long, friendId: Long?) {
         if (friendId == null) {
             val historyEntry =
-                HistoryEntry(0, buyDate, bottleId, null, "", HistoryEntryType.TYPE_REPLENISHMENT)
+                HistoryEntry(0, buyDate, bottleId, null, "", HistoryEntryType.TYPE_REPLENISHMENT, 0)
             repository.insertHistoryEntry(historyEntry)
         } else {
             val historyEntry =
-                HistoryEntry(0, buyDate, bottleId, null, "", HistoryEntryType.TYPE_GIFTED_BY)
+                HistoryEntry(0, buyDate, bottleId, null, "", HistoryEntryType.TYPE_GIFTED_BY, 0)
             repository.declareGiftedBottle(historyEntry, friendId)
         }
     }

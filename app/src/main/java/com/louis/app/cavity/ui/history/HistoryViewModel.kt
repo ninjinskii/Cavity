@@ -3,7 +3,9 @@ package com.louis.app.cavity.ui.history
 import android.app.Application
 import androidx.lifecycle.*
 import androidx.paging.*
+import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.HistoryEntryType
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -19,9 +21,21 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val scrollTo: LiveData<Event<Int>>
         get() = _scrollTo
 
+    private val _filter = MutableLiveData<Int>()
+    val filter: LiveData<Int>
+        get() = _filter
+
     val entries: LiveData<PagingData<HistoryUiModel>> =
         Pager(PagingConfig(pageSize = 100, prefetchDistance = 10, enablePlaceholders = true)) {
-            repository.getAllEntries()
+            when (_filter.value) {
+                R.id.chipReplenishments -> repository.getEntriesByType(0, 2)
+                R.id.chipComsumptions -> repository.getEntriesByType(1, 3)
+                R.id.chipTastings -> repository.getEntriesByType(4, 4)
+                R.id.chipGiftedTo -> repository.getEntriesByType(2, 2)
+                R.id.chipGiftedBy -> repository.getEntriesByType(3, 3)
+                R.id.chipFavorites -> repository.getFavoriteEntries()
+                else -> repository.getAllEntries()
+            }
         }.liveData.map { pagingData ->
             pagingData
                 .map { HistoryUiModel.EntryModel(it) }

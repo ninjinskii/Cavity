@@ -5,6 +5,7 @@ import androidx.paging.DataSource
 import androidx.paging.PagingSource
 import androidx.room.*
 import com.louis.app.cavity.model.HistoryEntry
+import com.louis.app.cavity.model.HistoryEntryType
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithFriends
 
@@ -22,6 +23,14 @@ interface HistoryDao {
     @Transaction
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
     fun getAllEntries(): PagingSource<Int, HistoryEntryWithBottleAndTastingAndFriends>
+
+    @Transaction
+    @Query("SELECT * FROM history_entry WHERE type=:type1 OR type=:type2 ORDER BY date DESC")
+    fun getEntriesByType(type1: Int, type2: Int): PagingSource<Int, HistoryEntryWithBottleAndTastingAndFriends>
+
+    @Transaction
+    @Query("SELECT * FROM history_entry WHERE favorite = 1 ORDER BY date DESC")
+    fun getFavoriteEntries(): PagingSource<Int, HistoryEntryWithBottleAndTastingAndFriends>
 
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
     fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
