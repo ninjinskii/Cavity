@@ -32,7 +32,9 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         }
 
         // TODO: uniformize viewmodels initialization
-        historyViewModel.bottleId = args.bottleId
+        if (args.bottleId != -1L) {
+            historyViewModel.setFilter(HistoryFilter.BottleFilter(args.bottleId))
+        }
 
         initRecyclerView()
         observe()
@@ -70,7 +72,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
     private fun setListeners() {
         binding.filterChipGroup.setOnCheckedChangeListener { _, checkedId ->
-            historyViewModel.setFilter(checkedId)
+            historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
         }
     }
 

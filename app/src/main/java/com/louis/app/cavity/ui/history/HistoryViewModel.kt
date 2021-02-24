@@ -6,7 +6,7 @@ import androidx.lifecycle.*
 import androidx.paging.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.HistoryEntryType
+import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -23,26 +23,15 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         get() = _scrollTo
 
     // TODO: consider removing public part if not needed
-    private val _filter = MutableLiveData<Int?>(null)
-    val filter: LiveData<Int?>
+    private val _filter = MutableLiveData<HistoryFilter>(HistoryFilter.NoFilter)
+    val filter: LiveData<HistoryFilter>
         get() = _filter
-
-    var bottleId = -1L
 
     val entries: LiveData<PagingData<HistoryUiModel>> = filter.switchMap {
         Pager(PagingConfig(pageSize = 100, prefetchDistance = 10, enablePlaceholders = true)) {
-            when (it) {
-                R.id.chipReplenishments -> repository.getEntriesByType(1, 3)
-                R.id.chipComsumptions -> repository.getEntriesByType(0, 2)
-                R.id.chipTastings -> repository.getEntriesByType(4, 4)
-                R.id.chipGiftedTo -> repository.getEntriesByType(2, 2)
-                R.id.chipGiftedBy -> repository.getEntriesByType(3, 3)
-                R.id.chipFavorites -> repository.getFavoriteEntries()
-                else -> repository.getAllEntries()
-            }
+            getDataSource(it)
         }.liveData.map { pagingData ->
             pagingData
-                .filter { if (bottleId != -1L) it.bottleAndWine.bottle.id == bottleId else true }
                 .map { HistoryUiModel.EntryModel(it) }
                 .insertSeparators { before, after ->
                     if (shouldSeparate(before, after))
@@ -81,8 +70,8 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun setFilter(@IdRes chipId: Int?) {
-        _filter.postValue(chipId)
+    fun setFilter(filter: HistoryFilter) {
+        _filter.postValue(filter)
     }
 
     private fun shouldSeparate(
@@ -102,4 +91,28 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
             beforeTimestamp != afterTimestamp
         } else false
     }
+
+    private fun getDataSource(filter: HistoryFilter):
+            PagingSource<Int, HistoryEntryWithBottleAndTastingAndFriends> {
+        return when (filter) {
+            is HistoryFilter.TypeFilter -> when (filter.chipId) {
+                R.id.chipReplenishments -> repository.getEntriesByType(1, 3)
+                R.id.chipComsumptions -> repository.getEntriesByType(0, 2)
+                R.id.chipTastings -> repository.getEntriesByType(4, 4)
+                R.id.chipGiftedTo -> repository.getEntriesByType(2, 2)
+                R.id.chipGiftedBy -> repository.getEntriesByType(3, 3)
+                R.id.chipFavorites -> repository.getFavoriteEntries()
+                else -> repository.getAllEntries()
+            }
+            is HistoryFilter.BottleFilter -> repository.getEntriesForBottle(filter.bottleId)
+            else -> repository.getAllEntries()
+        }
+    }
+
+}
+
+sealed class HistoryFilter {
+    class TypeFilter(@IdRes val chipId: Int) : HistoryFilter()
+    class BottleFilter(val bottleId: Long) : HistoryFilter()
+    object NoFilter : HistoryFilter()
 }
