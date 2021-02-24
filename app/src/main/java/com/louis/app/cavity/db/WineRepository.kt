@@ -90,7 +90,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun revertBottleConsumption(bottleId: Long) {
         database.withTransaction {
             bottleDao.revertBottleConsumption(bottleId)
-            historyDao.deleteEntriesForBottle(bottleId)
+            historyDao.onBottleConsumptionReverted(bottleId)
         }
     }
 
