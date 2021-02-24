@@ -161,13 +161,13 @@
     <string name="consume_bottle">Déguster une bouteille</string>
     <string name="gift_bottle">Offrir une bouteille</string>
     <string name="tasting_comment">Commentaire de dégustation</string>
-    <string name="delete_bottle">Supprimer cette bouteille.</string>
     <string name="consume_date">Date de dégustation</string>
     <string name="consumed_with">Avec qui avez-vous bu cette bouteille ?</string>
     <string name="bottle_consumed">La bouteille a été dégustée.</string>
     <string name="bottle_gifted">La bouteille a été offerte.</string>
     <string name="gift_date">Offerte le</string>
-    <string name="delete_bottle_warning">Cette action entraînera également la supression des entrées de l\'historique liées à cette bouteille.</string>
+    <string name="delete_bottle">Érradiquer la bouteille</string>
+    <string name="delete_bottle_warning">Supprime totalement cette bouteille et ses entrées dans l\'historique..</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>

@@ -188,12 +188,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             buyDate.setData(DateFormatter.formatDate(bottle.buyDate))
             otherInfo.setData(bottle.otherInfo)
             bottleVintage.text = bottle.vintage.toString()
-
-            if (!bottle.hasPdf()) {
-                noPdf.setVisible(true)
-                buttonShowPdf.setVisible(false)
-            }
-
+            buttonShowPdf.isEnabled = bottle.hasPdf()
             favorite.isChecked = bottle.isFavorite.toBoolean()
         }
     }
