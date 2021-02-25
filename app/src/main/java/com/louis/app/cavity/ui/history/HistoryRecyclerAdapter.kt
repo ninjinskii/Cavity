@@ -14,6 +14,7 @@ import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
 import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.model.HistoryEntryType
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
@@ -35,6 +36,11 @@ class HistoryRecyclerAdapter(
 
     val redMarker = ColorDrawable(context.getColor(R.color.cavity_red))
     val greenMarker = ColorDrawable(context.getColor(R.color.cavity_light_green))
+
+    val wineWhite = ContextCompat.getColor(context, R.color.wine_white)
+    val wineRed = ContextCompat.getColor(context, R.color.wine_red)
+    val wineSweet = ContextCompat.getColor(context, R.color.wine_sweet)
+    val wineRose = ContextCompat.getColor(context, R.color.wine_rose)
 
     val glassIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
     val bottleIcon = ContextCompat.getDrawable(context, R.drawable.ic_bottle)
@@ -100,8 +106,15 @@ class HistoryRecyclerAdapter(
         fun bind(entry: HistoryUiModel.EntryModel?) {
             entry?.let {
                 val (bottle, wine) = it.model.bottleAndWine
+                val color = when(wine.color) {
+                    WineColor.WINE_WHITE -> wineWhite
+                    WineColor.WINE_RED -> wineRed
+                    WineColor.WINE_SWEET -> wineSweet
+                    WineColor.WINE_ROSE -> wineRose
+                }
 
                 with(binding) {
+                    wineColorNameNaming.wineColorIndicator.setColorFilter(color)
                     wineColorNameNaming.wineNaming.text = wine.naming
                     wineColorNameNaming.wineName.text = wine.name
                     vintage.text = bottle.vintage.toString()
