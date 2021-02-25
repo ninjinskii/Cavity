@@ -22,7 +22,7 @@ import com.louis.app.cavity.util.setVisible
 class HistoryRecyclerAdapter(
     context: Context,
     private val onHeaderClick: () -> Unit,
-    private val onItemClick: (Long) -> Unit
+    private val onItemClick: (HistoryUiModel.EntryModel) -> Unit
 ) :
     PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(
         HistoryEntryDiffItemCallback()
@@ -127,7 +127,7 @@ class HistoryRecyclerAdapter(
                     }
 
                     root.setOnClickListener {
-                        onItemClick(bottle.id)
+                        onItemClick(entry)
                     }
                 }
 

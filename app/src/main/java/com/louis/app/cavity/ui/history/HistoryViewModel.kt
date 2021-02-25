@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import androidx.paging.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
@@ -21,6 +22,10 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     private val _scrollTo = MutableLiveData<Event<Int>>()
     val scrollTo: LiveData<Event<Int>>
         get() = _scrollTo
+
+    private val _selectedEntry = MutableLiveData<HistoryEntryWithBottleAndTastingAndFriends>(null)
+    val selectedEntry: LiveData<HistoryEntryWithBottleAndTastingAndFriends>
+        get() = _selectedEntry
 
     // TODO: consider removing public part if not needed
     private val _filter = MutableLiveData<HistoryFilter>(HistoryFilter.NoFilter)
@@ -63,7 +68,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                         break
                     }
 
-                    // No date found, scroll to bottom
+                    // No date founded, scroll to bottom
                     _scrollTo.postOnce(position + headerCount)
                 }
             }
@@ -71,7 +76,12 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setFilter(filter: HistoryFilter) {
+        _selectedEntry.postValue(null)
         _filter.postValue(filter)
+    }
+
+    fun setSelectedHistoryEntry(entry: HistoryEntryWithBottleAndTastingAndFriends?) {
+        _selectedEntry.postValue(entry)
     }
 
     private fun shouldSeparate(
