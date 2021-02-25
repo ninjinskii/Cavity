@@ -411,6 +411,7 @@
                 <View
                     android:id="@+id/divider"
                     style="@style/Widget.Cavity.Divider"
+                    android:layout_marginTop="@dimen/large_margin"
                     app:layout_constraintTop_toBottomOf="@id/reviewCardView" />
 
                 <com.google.android.material.button.MaterialButton
@@ -418,7 +419,8 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:layout_marginHorizontal="@dimen/small_margin"
                     android:text="@string/delete_bottle"
                     app:icon="@drawable/ic_delete_all"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -434,7 +436,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/buttonUltraDelete" />
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

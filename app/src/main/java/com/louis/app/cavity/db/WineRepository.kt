@@ -73,7 +73,6 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
     suspend fun insertBottles(bottleId: Long, count: Int) = bottleDao.addBottles(bottleId, count)
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
-    suspend fun deleteBottles(bottleId: Long, count: Int) = bottleDao.removeBottles(bottleId, count)
     suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
     fun getBottleById(bottleId: Long) = bottleDao.getBottleById(bottleId)
     suspend fun getBottleByIdNotLive(bottleId: Long) = bottleDao.getBottleByIdNotLive(bottleId)

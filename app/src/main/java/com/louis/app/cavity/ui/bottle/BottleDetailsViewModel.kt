@@ -42,15 +42,9 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getFReviewForBottle() = bottleId.switchMap { repository.getFReviewAndReviewForBottle(it) }
 
-    fun addBottles(bottleId: Long, count: Int) {
+    fun deleteBottle(bottleId: Long) {
         viewModelScope.launch(IO) {
-            repository.insertBottles(bottleId, count)
-        }
-    }
-
-    fun removeBottles(bottleId: Long, count: Int) {
-        viewModelScope.launch(IO) {
-            repository.deleteBottles(bottleId, count)
+            repository.deleteBottleById(bottleId)
         }
     }
 

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
@@ -135,6 +136,18 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         binding.buttonRevertConsumption.setOnClickListener {
             bottleDetailsViewModel.revertBottleConsumption(args.bottleId)
+        }
+
+        binding.buttonUltraDelete.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(resources.getString(R.string.confirm_bottle_delete))
+                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
+                }
+                .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
+                    bottleDetailsViewModel.deleteBottle(args.bottleId)
+                    findNavController().popBackStack()
+                }
+                .show()
         }
     }
 
