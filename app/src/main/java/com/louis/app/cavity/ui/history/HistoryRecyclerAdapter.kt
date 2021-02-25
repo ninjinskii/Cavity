@@ -18,7 +18,11 @@ import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTast
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
 
-class HistoryRecyclerAdapter(context: Context, private val onHeaderClick: () -> Unit) :
+class HistoryRecyclerAdapter(
+    context: Context,
+    private val onHeaderClick: () -> Unit,
+    private val onItemClick: (Long) -> Unit
+) :
     PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(
         HistoryEntryDiffItemCallback()
     ) {
@@ -93,10 +97,6 @@ class HistoryRecyclerAdapter(context: Context, private val onHeaderClick: () -> 
     inner class HistoryEntryViewHolder(private val binding: ItemHistoryUseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.root.setOnClickListener { }
-        }
-
         fun bind(entry: HistoryUiModel.EntryModel?) {
             entry?.let {
                 val (bottle, wine) = it.model.bottleAndWine
@@ -111,6 +111,10 @@ class HistoryRecyclerAdapter(context: Context, private val onHeaderClick: () -> 
                         HistoryEntryType.TYPE_REPLENISHMENT -> bindForReplenishment(it.model)
                         HistoryEntryType.TYPE_GIFTED_TO -> bindForGift(it.model, to = true)
                         else -> bindForGift(it.model, to = false)
+                    }
+
+                    root.setOnClickListener {
+                        onItemClick(bottle.id)
                     }
                 }
 
@@ -160,10 +164,10 @@ class HistoryRecyclerAdapter(context: Context, private val onHeaderClick: () -> 
                 bottles.setVisible(false)
                 friends.setVisible(false)
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
-                marker.background = if(to) redMarker else greenMarker
+                marker.background = if (to) redMarker else greenMarker
 
                 comment.apply {
-                    val label = if(to) R.string.gifted_to_someone else R.string.gifted_by_someone
+                    val label = if (to) R.string.gifted_to_someone else R.string.gifted_by_someone
                     text = context.getString(label, item.friends[0].name)
                     setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
                     typeface = Typeface.DEFAULT

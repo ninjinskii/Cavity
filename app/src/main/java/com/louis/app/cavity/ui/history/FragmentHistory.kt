@@ -42,8 +42,8 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun initRecyclerView() {
-        val historyAdapter = HistoryRecyclerAdapter(requireContext()) {
-            showDatePicker()
+        val historyAdapter = HistoryRecyclerAdapter(requireContext(), { showDatePicker()}) {
+            historyViewModel.setFilter(HistoryFilter.BottleFilter(it))
         }
         val isHeader = { itemPos: Int -> historyAdapter.getItemViewType(itemPos) == TYPE_SEPARATOR }
 
