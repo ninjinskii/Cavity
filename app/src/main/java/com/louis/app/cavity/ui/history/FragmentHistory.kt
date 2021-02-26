@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
+import com.google.android.material.shape.TriangleEdgeTreatment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.model.HistoryEntryType
@@ -55,6 +58,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         initRecyclerView()
         observe()
         setListeners()
+        applyBottomSheetEdgeTreatment()
     }
 
     private fun initRecyclerView() {
@@ -160,6 +164,15 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                     .into(wineImage)
             }
         }
+    }
+
+    private fun applyBottomSheetEdgeTreatment() {
+        binding.bottomSheet.background = MaterialShapeDrawable(
+            ShapeAppearanceModel.builder()
+                .setTopEdge(RoundedEdgeTreatment(150f))
+                .setRightEdge(TriangleEdgeTreatment(100f, true))
+                .build()
+        )
     }
 
     override fun onDestroy() {

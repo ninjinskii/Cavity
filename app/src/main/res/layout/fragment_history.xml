@@ -101,10 +101,8 @@
     <!-- Bottom sheet -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheet"
-        style="@style/Widget.Design.BottomSheet.Modal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
         android:clickable="true"
         android:elevation="4dp"
         android:focusable="true"
