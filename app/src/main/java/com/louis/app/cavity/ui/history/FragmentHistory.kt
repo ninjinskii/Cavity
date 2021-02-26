@@ -21,6 +21,7 @@ import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTast
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.history.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
 import com.louis.app.cavity.util.isExpanded
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
@@ -95,7 +96,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
         }
 
-        binding.buttonCloseBottomSheet.setOnClickListener {
+        binding.bottleDetails.buttonCloseBottomSheet.setOnClickListener {
             if (bottomSheetBehavior.isExpanded()) {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             } else {
@@ -123,7 +124,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         if (entry == null) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
             val title = getString(
                 R.string.name_and_vintage,
@@ -139,7 +140,8 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 HistoryEntryType.TYPE_TASTING -> R.color.cavity_gold to R.string.tasting_label
             }
 
-            with(binding) {
+            with(binding.bottleDetails) {
+                friendChipGroup.removeAllViews()
                 ChipLoader(lifecycleScope, layoutInflater).loadChips(
                     friendChipGroup,
                     entry.friends,
@@ -149,9 +151,8 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 bottomSheetMarker.background =
                     ColorDrawable(requireContext().getColor(colorAndFriendLabel.first))
 
-                colorAndFriendLabel.second?.let {
-                    participants.text = getString(it)
-                }
+                participants.setVisible(entry.friends.isNotEmpty())
+                participants.text = colorAndFriendLabel.second?.let { getString(it) } ?: ""
 
                 Glide.with(requireContext())
                     .load(Uri.parse(entry.bottleAndWine.wine.imgPath))
