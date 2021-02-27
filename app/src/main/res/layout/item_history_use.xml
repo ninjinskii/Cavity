@@ -45,6 +45,8 @@
         android:maxLines="1"
         app:drawableLeftCompat="@drawable/ic_glass"
         app:drawableTint="?attr/colorOnBackground"
+        android:minHeight="@dimen/small_icon"
+        android:gravity="center_vertical"
         android:drawablePadding="@dimen/small_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/bottles"

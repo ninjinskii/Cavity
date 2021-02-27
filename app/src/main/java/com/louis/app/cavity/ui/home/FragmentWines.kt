@@ -68,9 +68,11 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                     if (
                         !recyclerView.canScrollVertically(1) &&
                         !recyclerView.canScrollVertically(-1)
-                    ) homeViewModel.isScrollingToTop.postValue(true)
-                    else if (dy > 0) homeViewModel.isScrollingToTop.postValue(false)
-                    else if (dy < 0) homeViewModel.isScrollingToTop.postValue(true)
+                    ) {
+                        homeViewModel.isScrollingToTop.postValue(true)
+                    } else {
+                        homeViewModel.isScrollingToTop.postValue(dy < 0)
+                    }
                 }
             })
         }

@@ -6,7 +6,6 @@ import com.louis.app.cavity.model.*
 import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
 import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
-import com.louis.app.cavity.util.L
 
 class WineRepository private constructor(app: Application) {
     companion object {
@@ -74,7 +73,6 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
     suspend fun insertBottles(bottleId: Long, count: Int) = bottleDao.addBottles(bottleId, count)
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
-    suspend fun deleteBottles(bottleId: Long, count: Int) = bottleDao.removeBottles(bottleId, count)
     suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
     fun getBottleById(bottleId: Long) = bottleDao.getBottleById(bottleId)
     suspend fun getBottleByIdNotLive(bottleId: Long) = bottleDao.getBottleByIdNotLive(bottleId)
@@ -91,7 +89,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun revertBottleConsumption(bottleId: Long) {
         database.withTransaction {
             bottleDao.revertBottleConsumption(bottleId)
-            historyDao.deleteEntriesForBottle(bottleId)
+            historyDao.onBottleConsumptionReverted(bottleId)
         }
     }
 
@@ -221,14 +219,17 @@ class WineRepository private constructor(app: Application) {
         historyXFriendDao.insertFriendHistoryEntryXRef(fxh)
 
 
-
     // History
     fun getAllEntries() = historyDao.getAllEntries()
+    fun getEntriesByType(type1: Int, type2: Int) = historyDao.getEntriesByType(type1, type2)
+    fun getEntriesForBottle(bottleId: Long) = historyDao.getEntriesForBottle(bottleId)
+    fun getFavoriteEntries() = historyDao.getFavoriteEntries()
+    fun getAllEntriesNotPagedNotLive() = historyDao.getAllEntriesNotPagedNotLive()
 
     suspend fun insertHistoryEntry(entry: HistoryEntry): Long {
         // TODO: handle tasting here
         return database.withTransaction {
-            when(entry.type) {
+            when (entry.type) {
                 HistoryEntryType.TYPE_CONSUME -> consumeBottle(entry.bottleId)
                 HistoryEntryType.TYPE_REPLENISHMENT -> revertBottleConsumption(entry.bottleId)
                 HistoryEntryType.TYPE_GIFTED_TO -> consumeBottle(entry.bottleId)

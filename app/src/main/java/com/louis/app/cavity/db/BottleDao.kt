@@ -31,9 +31,6 @@ interface BottleDao {
     @Query("UPDATE bottle SET count=:count + bottle.count WHERE id=:bottleId")
     suspend fun addBottles(bottleId: Long, count: Int)
 
-    @Query("UPDATE bottle SET count=:count - bottle.count WHERE id=:bottleId")
-    suspend fun removeBottles(bottleId: Long, count: Int)
-
     @Query("DELETE FROM bottle WHERE id=:bottleId")
     suspend fun deleteBottleById(bottleId: Long)
 

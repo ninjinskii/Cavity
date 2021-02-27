@@ -158,10 +158,10 @@
                         android:layout_height="wrap_content"
                         android:text="Annuler"
                         android:textColor="?attr/colorOnError"
-                        app:rippleColor="?attr/colorOnError"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:rippleColor="?attr/colorOnError" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -332,27 +332,26 @@
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="@dimen/small_margin"
+                            android:layout_marginTop="@dimen/medium_margin"
                             android:text="@string/show_pdf"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:icon="@drawable/ic_pdf"
                             app:layout_constraintEnd_toEndOf="@id/price"
                             app:layout_constraintStart_toStartOf="@id/apogee"
                             app:layout_constraintTop_toBottomOf="@id/otherInfo" />
 
-                        <TextView
-                            android:id="@+id/noPdf"
-                            style="@style/TextAppearance.MaterialComponents.Overline"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonShowHistory"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/large_margin"
-                            android:layout_marginBottom="@dimen/small_margin"
-                            android:gravity="center"
-                            android:text="@string/no_pdf"
-                            android:visibility="gone"
+                            android:layout_marginTop="@dimen/xsmall_margin"
+                            android:layout_marginBottom="@dimen/medium_margin"
+                            android:text="@string/show_history"
+                            app:icon="@drawable/ic_history"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@id/price"
                             app:layout_constraintStart_toStartOf="@id/apogee"
-                            app:layout_constraintTop_toBottomOf="@id/otherInfo" />
+                            app:layout_constraintTop_toBottomOf="@id/buttonShowPdf" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -364,7 +363,6 @@
                     android:layout_marginHorizontal="@dimen/small_margin"
                     android:layout_marginVertical="@dimen/medium_margin"
                     app:cardElevation="2dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/miscCardView">
@@ -409,6 +407,36 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+                <View
+                    android:id="@+id/divider"
+                    style="@style/Widget.Cavity.Divider"
+                    android:layout_marginTop="@dimen/large_margin"
+                    app:layout_constraintTop_toBottomOf="@id/reviewCardView" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonUltraDelete"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:text="@string/delete_bottle"
+                    app:icon="@drawable/ic_delete_all"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/small_margin"
+                    android:gravity="center"
+                    android:text="@string/delete_bottle_warning"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/buttonUltraDelete" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.motion.widget.MotionLayout>

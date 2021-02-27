@@ -1,11 +1,21 @@
 package com.louis.app.cavity.ui.widget
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Paint.ANTI_ALIAS_FLAG
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.util.AttributeSet
+import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.content.res.use
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textfield.TextInputLayout
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.L
 
 class RuledTextInputLayout @JvmOverloads constructor(
     context: Context,
@@ -104,6 +114,33 @@ class RuledTextInputLayout @JvmOverloads constructor(
         // TODO: This can cause a memory leak if not run, does it ? (if dev add custom rule with capturing lambda)
         rules.clear()
     }
+
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    override fun onDraw(canvas: Canvas?) {
+//        super.onDraw(canvas)
+//
+//        val paint = Paint(ANTI_ALIAS_FLAG).apply {
+//            style = Paint.Style.STROKE
+//            color = Color.RED
+//            strokeWidth = 20f
+//        }
+//
+//        val paint2 = Paint(ANTI_ALIAS_FLAG).apply {
+//            style = Paint.Style.STROKE
+//            color = Color.GREEN
+//            strokeWidth = 40f
+//        }
+//
+//        canvas?.apply {
+//            val bg = editText?.background as MaterialShapeDrawable
+//            val a = bg.transparentRegion?.boundaryPath
+//            clipOutPath(a ?: return) // if < api26: clipPath(path, Region.Op.XOR)
+//            drawLine(0f, 0f, 150f, 150f, paint)
+//            drawLine(150f, 150f, 300f, 300f, paint2)
+//            //editText?.background = ColorDrawable(Color.RED)
+//            //clipOutPath(a ?: return)
+//        }
+//    }
 
 }
 

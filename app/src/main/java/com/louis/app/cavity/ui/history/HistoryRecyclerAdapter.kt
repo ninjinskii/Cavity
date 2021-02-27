@@ -14,11 +14,16 @@ import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
 import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.model.HistoryEntryType
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
 
-class HistoryRecyclerAdapter(context: Context) :
+class HistoryRecyclerAdapter(
+    context: Context,
+    private val onHeaderClick: () -> Unit,
+    private val onItemClick: (HistoryUiModel.EntryModel) -> Unit
+) :
     PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(
         HistoryEntryDiffItemCallback()
     ) {
@@ -31,6 +36,11 @@ class HistoryRecyclerAdapter(context: Context) :
 
     val redMarker = ColorDrawable(context.getColor(R.color.cavity_red))
     val greenMarker = ColorDrawable(context.getColor(R.color.cavity_light_green))
+
+    val wineWhite = ContextCompat.getColor(context, R.color.wine_white)
+    val wineRed = ContextCompat.getColor(context, R.color.wine_red)
+    val wineSweet = ContextCompat.getColor(context, R.color.wine_sweet)
+    val wineRose = ContextCompat.getColor(context, R.color.wine_rose)
 
     val glassIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
     val bottleIcon = ContextCompat.getDrawable(context, R.drawable.ic_bottle)
@@ -93,15 +103,18 @@ class HistoryRecyclerAdapter(context: Context) :
     inner class HistoryEntryViewHolder(private val binding: ItemHistoryUseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.root.setOnClickListener { }
-        }
-
         fun bind(entry: HistoryUiModel.EntryModel?) {
             entry?.let {
                 val (bottle, wine) = it.model.bottleAndWine
+                val color = when(wine.color) {
+                    WineColor.WINE_WHITE -> wineWhite
+                    WineColor.WINE_RED -> wineRed
+                    WineColor.WINE_SWEET -> wineSweet
+                    WineColor.WINE_ROSE -> wineRose
+                }
 
                 with(binding) {
+                    wineColorNameNaming.wineColorIndicator.setColorFilter(color)
                     wineColorNameNaming.wineNaming.text = wine.naming
                     wineColorNameNaming.wineName.text = wine.name
                     vintage.text = bottle.vintage.toString()
@@ -111,6 +124,10 @@ class HistoryRecyclerAdapter(context: Context) :
                         HistoryEntryType.TYPE_REPLENISHMENT -> bindForReplenishment(it.model)
                         HistoryEntryType.TYPE_GIFTED_TO -> bindForGift(it.model, to = true)
                         else -> bindForGift(it.model, to = false)
+                    }
+
+                    root.setOnClickListener {
+                        onItemClick(entry)
                     }
                 }
 
@@ -150,6 +167,7 @@ class HistoryRecyclerAdapter(context: Context) :
                     text =
                         context.getString(R.string.buyed_at, item.bottleAndWine.bottle.buyLocation)
                     setCompoundDrawablesWithIntrinsicBounds(bottleIcon, null, null, null)
+                    typeface = Typeface.DEFAULT
                 }
             }
         }
@@ -159,12 +177,13 @@ class HistoryRecyclerAdapter(context: Context) :
                 bottles.setVisible(false)
                 friends.setVisible(false)
                 wineColorNameNaming.wineColorIndicator.setVisible(true)
-                marker.background = if(to) redMarker else greenMarker
+                marker.background = if (to) redMarker else greenMarker
 
                 comment.apply {
-                    val label = if(to) R.string.gifted_to else R.string.gifted_by
+                    val label = if (to) R.string.gifted_to_someone else R.string.gifted_by_someone
                     text = context.getString(label, item.friends[0].name)
                     setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
+                    typeface = Typeface.DEFAULT
                 }
             }
         }
@@ -191,6 +210,10 @@ class HistoryRecyclerAdapter(context: Context) :
 
     inner class HistorySeparatorViewHolder(private val binding: ItemHistorySeparatorBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            itemView.setOnClickListener { onHeaderClick() }
+        }
 
         fun bind(header: HistoryUiModel.HeaderModel?) {
             header?.let { binding.date.text = DateFormatter.formatDate(it.date) }

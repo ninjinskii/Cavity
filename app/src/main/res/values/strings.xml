@@ -148,6 +148,7 @@
     <string name="stock_number">En stock: %1$d</string>
     <string name="price_and_currency">%1$s %2$s</string>
     <string name="show_pdf">Consulter le PDF</string>
+    <string name="show_history">Voir l\'historique</string>
     <string name="no_pdf">Pas de pdf associé à cette bouteille.</string>
     <string name="no_pdf_app">Aucun lecteur de pdf trouvé sur le téléphone.</string>
     <string name="labeled_data">Icon</string>
@@ -160,13 +161,14 @@
     <string name="consume_bottle">Déguster une bouteille</string>
     <string name="gift_bottle">Offrir une bouteille</string>
     <string name="tasting_comment">Commentaire de dégustation</string>
-    <string name="delete_bottle">Supprimer cette bouteille.</string>
     <string name="consume_date">Date de dégustation</string>
     <string name="consumed_with">Avec qui avez-vous bu cette bouteille ?</string>
     <string name="bottle_consumed">La bouteille a été dégustée.</string>
     <string name="bottle_gifted">La bouteille a été offerte.</string>
     <string name="gift_date">Offerte le</string>
-    <string name="delete_bottle_warning">Cette action entraînera également la supression des entrées de l\'historique liées à cette bouteille.</string>
+    <string name="delete_bottle">Érradiquer la bouteille</string>
+    <string name="delete_bottle_warning">Supprime totalement cette bouteille et ses entrées dans l\'historique.</string>
+    <string name="confirm_bottle_delete">Voulez-vous vraiment supprimer cette bouteille ?</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>
@@ -197,10 +199,21 @@
     <string name="cannot_delete">Les noms ne correspondent pas.</string>
 
     <!-- History -->
+    <string name="name_and_vintage">%1$s (%2$d)</string>
     <string name="buyed_at">Achetée à : %1$s</string>
-    <string name="gifted_to">Offerte à : %1$s</string>
-    <string name="gifted_by">Offerte par : %1$s</string>
+    <string name="gifted_to_someone">Offerte à : %1$s</string>
+    <string name="gifted_by_someone">Offerte par : %1$s</string>
     <string name="no_description">Pas de commentaire de dégustation.</string>
+    <string name="replenishments">Entrées</string>
+    <string name="tastings">Dégustations</string>
+    <string name="consumptions">Sorties</string>
+    <string name="gifted_to">Offerte à</string>
+    <string name="gifted_by">Offerte par</string>
+    <string name="drinked">Consommation unique</string>
+    <string name="favorites">Favoris</string>
+    <string name="show_bottle">Voir la bouteille</string>
+    <string name="tasting_label">Participants: </string>
+    <string name="consume_label">Bue avec: </string>
 
 
     <!-- Tags -->

@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorSurface"
-    app:cardElevation="8dp"
-    app:cardCornerRadius="0dp">
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -25,16 +26,17 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Lundi 15 février" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/buttonSelectDate"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
-            android:background="?attr/actionBarItemBackground"
+            android:background="@null"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_arrow_down"
-            android:tint="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/date"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorPrimary" />
 
         <View
             style="@style/Widget.Cavity.Divider"

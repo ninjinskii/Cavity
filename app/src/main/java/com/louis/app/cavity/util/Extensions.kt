@@ -53,6 +53,12 @@ fun CoordinatorLayout.showSnackbar(
     }
 }
 
+inline fun View.doOnEachNextLayout(crossinline action: (view: View) -> Unit) {
+    addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
+        action(view)
+    }
+}
+
 // LiveData
 fun <T> MutableLiveData<Event<T>>.postOnce(value: T) {
     this.postValue(Event(value))

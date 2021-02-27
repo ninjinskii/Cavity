@@ -2,17 +2,18 @@ package com.louis.app.cavity.ui.history
 
 import android.graphics.Canvas
 import android.graphics.Rect
-import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.louis.app.cavity.util.doOnEachNextLayout
 
 class StickyItemDecorator(
     parent: RecyclerView,
-    private val shouldFadeOutHeader: Boolean = false,
-    private val isHeader: (itemPosition: Int) -> Boolean
-) : RecyclerView.ItemDecoration() {
+    private val isHeader: (itemPosition: Int) -> Boolean,
+    private val onHeaderClick: () -> Unit
+) :
+    RecyclerView.ItemDecoration() {
 
     private var currentHeader: Pair<Int, RecyclerView.ViewHolder>? = null
 
@@ -34,9 +35,8 @@ class StickyItemDecorator(
                 recyclerView: RecyclerView,
                 motionEvent: MotionEvent
             ): Boolean {
-                return if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                    motionEvent.y <= currentHeader?.second?.itemView?.bottom ?: 0
-                } else false
+                return motionEvent.action == MotionEvent.ACTION_DOWN &&
+                        motionEvent.y <= currentHeader?.second?.itemView?.bottom ?: 0
             }
         })
     }
@@ -46,9 +46,10 @@ class StickyItemDecorator(
 
         val topChild = parent.findChildViewUnder(
             parent.paddingLeft.toFloat(),
-            parent.paddingTop.toFloat() /*+ (currentHeader?.second?.itemView?.height ?: 0 )*/
+            parent.paddingTop.toFloat()
         ) ?: return
         val topChildPosition = parent.getChildAdapterPosition(topChild)
+
         if (topChildPosition == RecyclerView.NO_POSITION) {
             return
         }
@@ -57,8 +58,9 @@ class StickyItemDecorator(
 
         val contactPoint = headerView.bottom + parent.paddingTop
         val childInContact = getChildInContact(parent, contactPoint) ?: return
+        val childInContactPos = parent.getChildAdapterPosition(childInContact)
 
-        if (isHeader(parent.getChildAdapterPosition(childInContact))) {
+        if (childInContactPos >= 0 && isHeader(childInContactPos)) {
             moveHeader(c, headerView, childInContact, parent.paddingTop)
             return
         }
@@ -70,6 +72,7 @@ class StickyItemDecorator(
         if (parent.adapter == null) {
             return null
         }
+
         val headerPosition = getHeaderPositionForItem(itemPosition)
         if (headerPosition == RecyclerView.NO_POSITION) return null
         val headerType = parent.adapter?.getItemViewType(headerPosition) ?: return null
@@ -85,6 +88,8 @@ class StickyItemDecorator(
 
             currentHeader = headerPosition to headerHolder
         }
+
+        // TODO: add ripple here if really needed
         return headerHolder?.itemView
     }
 
@@ -97,20 +102,9 @@ class StickyItemDecorator(
 
     private fun moveHeader(c: Canvas, currentHeader: View, nextHeader: View, paddingTop: Int) {
         c.save()
-        if (!shouldFadeOutHeader) {
-            c.clipRect(0, paddingTop, c.width, paddingTop + currentHeader.height)
-        } else {
-            c.saveLayerAlpha(
-                RectF(0f, 0f, c.width.toFloat(), c.height.toFloat()),
-                (((nextHeader.top - paddingTop) / nextHeader.height.toFloat()) * 255).toInt()
-            )
-        }
+        c.clipRect(0, paddingTop, c.width, paddingTop + currentHeader.height)
         c.translate(0f, (nextHeader.top - currentHeader.height).toFloat() /*+ paddingTop*/)
-
         currentHeader.draw(c)
-        if (shouldFadeOutHeader) {
-            c.restore()
-        }
         c.restore()
     }
 
@@ -131,11 +125,7 @@ class StickyItemDecorator(
         return childInContact
     }
 
-    /**
-     * Properly measures and layouts the top sticky header.
-     */
     private fun fixLayoutSize(parent: ViewGroup, view: View) {
-
         val widthSpec = View.MeasureSpec.makeMeasureSpec(parent.width, View.MeasureSpec.EXACTLY)
         val heightSpec =
             View.MeasureSpec.makeMeasureSpec(parent.height, View.MeasureSpec.UNSPECIFIED)
@@ -165,12 +155,7 @@ class StickyItemDecorator(
             }
             currentPosition -= 1
         } while (currentPosition >= 0)
-        return headerPosition
-    }
-}
 
-inline fun View.doOnEachNextLayout(crossinline action: (view: View) -> Unit) {
-    addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
-        action(view)
+        return headerPosition
     }
 }

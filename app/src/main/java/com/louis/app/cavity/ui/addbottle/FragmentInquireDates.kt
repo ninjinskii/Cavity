@@ -70,7 +70,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         }
 
         with(binding) {
-            stepper.next.setOnClickListener { validateFields() }
+            stepper.next.setOnClickListener { goToNextPage() }
             stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
         }
     }
@@ -95,13 +95,16 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         }
     }
 
-    private fun validateFields() = binding.countLayout.validate() && binding.priceLayout.validate()
-        .also {
-            if (it) {
-                savePartialBottle()
-                stepperx.requestNextPage()
-            }
+    private fun goToNextPage() {
+        val isFormValid = binding.countLayout.validate() &&
+                binding.priceLayout.validate() &&
+                binding.buyDateLayout.validate()
+
+        if (isFormValid) {
+            savePartialBottle()
+            stepperx.requestNextPage()
         }
+    }
 
     private fun savePartialBottle() {
         with(binding) {
