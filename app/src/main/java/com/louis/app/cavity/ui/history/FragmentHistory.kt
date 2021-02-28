@@ -58,7 +58,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         initRecyclerView()
         observe()
         setListeners()
-        applyBottomSheetEdgeTreatment()
     }
 
     private fun initRecyclerView() {
@@ -164,15 +163,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                     .into(wineImage)
             }
         }
-    }
-
-    private fun applyBottomSheetEdgeTreatment() {
-        binding.bottomSheet.background = MaterialShapeDrawable(
-            ShapeAppearanceModel.builder()
-                .setTopEdge(RoundedEdgeTreatment(100f))
-                .setRightEdge(TriangleEdgeTreatment(100f, true))
-                .build()
-        )
     }
 
     override fun onDestroy() {
