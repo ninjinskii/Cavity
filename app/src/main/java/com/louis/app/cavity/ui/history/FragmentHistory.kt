@@ -4,6 +4,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.doOnLayout
+import androidx.core.view.marginStart
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -164,14 +166,21 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun applyBottomSheetShape() {
-        val shapeAppearance = ShapeAppearanceModel.builder()
-            .setTopEdge(BinderEdgeTreatment(300f))
-            .build()
+        val bg = MaterialShapeDrawable.createWithElevationOverlay(context).apply {
+            binding.bottomSheet.let {
+                elevation = it.elevation
+                it.background = this
+            }
+        }
 
-        MaterialShapeDrawable.createWithElevationOverlay(context).apply {
-            shapeAppearanceModel = shapeAppearance
-            elevation = binding.bottomSheet.elevation
-            binding.bottomSheet.background = this
+        binding.bottomSheet.doOnLayout {
+            with(binding.bottleDetails.wineImage) {
+                val diameter = marginStart * 2 + measuredWidth
+
+                bg.shapeAppearanceModel = ShapeAppearanceModel.builder()
+                    .setTopEdge(BinderEdgeTreatment(diameter.toFloat()))
+                    .build()
+            }
         }
     }
 

@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:shapeAppearanceOverlay="@style/RoundedImage"
-        android:layout_margin="@dimen/xsmall_margin"/>
+        android:layout_margin="4dp"/>
 
 <!--    <View-->
 <!--        android:id="@+id/bottomSheetMarker"-->
