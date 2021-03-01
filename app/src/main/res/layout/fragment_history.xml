@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
+    android:clipChildren="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -104,9 +105,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:elevation="4dp"
+        android:elevation="8dp"
         android:focusable="true"
-        app:behavior_peekHeight="?attr/actionBarSize"
+        app:behavior_peekHeight="100dp"
         app:layout_behavior="@string/bottom_sheet_behavior"
         app:layout_insetEdge="bottom">
 

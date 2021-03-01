@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.history
 
-import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -15,7 +14,6 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
@@ -166,18 +164,15 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun applyBottomSheetShape() {
-        val bg = MaterialShapeDrawable(
-            ShapeAppearanceModel.builder()
-                .setTopEdge(BinderEdgeTreatment(300f))
-                .build()
-        )
-        bg.shadowCompatibilityMode = SHADOW_COMPAT_MODE_ALWAYS
-        bg.paintStyle = Paint.Style.FILL
-        bg.initializeElevationOverlay(requireContext())
-        bg.elevation = binding.bottomSheet.elevation
+        val shapeAppearance = ShapeAppearanceModel.builder()
+            .setTopEdge(BinderEdgeTreatment(300f))
+            .build()
 
-
-        binding.bottomSheet.background = bg
+        MaterialShapeDrawable.createWithElevationOverlay(context).apply {
+            shapeAppearanceModel = shapeAppearance
+            elevation = binding.bottomSheet.elevation
+            binding.bottomSheet.background = this
+        }
     }
 
     override fun onDestroy() {
