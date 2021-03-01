@@ -3,24 +3,23 @@ package com.louis.app.cavity.ui.history
 import com.google.android.material.shape.EdgeTreatment
 import com.google.android.material.shape.ShapePath
 
-class BinderEdgeTreatment(private val radius: Float) : EdgeTreatment(), Cloneable {
+class BinderEdgeTreatment(private val diameter: Float) : EdgeTreatment(), Cloneable {
     override fun getEdgePath(
         length: Float,
         center: Float,
         interpolation: Float,
         shapePath: ShapePath
     ) {
-        val interpolatedRadius = radius * interpolation
+        val interpolatedDiameter = diameter * interpolation
 
-        //shapePath.lineTo(center - interpolatedRadius, 0f)
         shapePath.addArc(
             0f,
             0f,
-            interpolatedRadius,
-            interpolatedRadius,
+            interpolatedDiameter,
+            interpolatedDiameter,
             180f,
             180f
         )
-        shapePath.lineTo(length, interpolatedRadius / 2)
+        shapePath.lineTo(length, interpolatedDiameter / 2)
     }
 }
