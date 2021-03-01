@@ -47,4 +47,8 @@
     <style name="Widget.Cavity.Divider.Start">
         <item name="android:layout_marginStart">@dimen/medium_margin</item>
     </style>
+
+    <style name="RoundedImage">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

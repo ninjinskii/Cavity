@@ -1,6 +1,6 @@
 package com.louis.app.cavity.ui.history
 
-import android.graphics.drawable.ColorDrawable
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -15,15 +15,14 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS
 import com.google.android.material.shape.ShapeAppearanceModel
-import com.google.android.material.shape.TriangleEdgeTreatment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.model.HistoryEntryType
 import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.history.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
-import com.louis.app.cavity.util.isExpanded
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
@@ -100,13 +99,13 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
         }
 
-        binding.bottleDetails.buttonCloseBottomSheet.setOnClickListener {
-            if (bottomSheetBehavior.isExpanded()) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            } else {
-                historyViewModel.setFilter(HistoryFilter.NoFilter)
-            }
-        }
+//        binding.bottleDetails.buttonCloseBottomSheet.setOnClickListener {
+//            if (bottomSheetBehavior.isExpanded()) {
+//                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//            } else {
+//                historyViewModel.setFilter(HistoryFilter.NoFilter)
+//            }
+//        }
     }
 
     private fun showDatePicker() {
@@ -151,9 +150,9 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                     entry.friends,
                     emptyList()
                 )
-                bottomSheetTitle.text = title
-                bottomSheetMarker.background =
-                    ColorDrawable(requireContext().getColor(colorAndFriendLabel.first))
+//                bottomSheetTitle.text = title
+//                bottomSheetMarker.background =
+//                    ColorDrawable(requireContext().getColor(colorAndFriendLabel.first))
 
                 participants.setVisible(entry.friends.isNotEmpty())
                 participants.text = colorAndFriendLabel.second?.let { getString(it) } ?: ""
@@ -167,11 +166,18 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun applyBottomSheetShape() {
-        binding.bottomSheet.background = MaterialShapeDrawable(
+        val bg = MaterialShapeDrawable(
             ShapeAppearanceModel.builder()
-                .setTopEdge(BinderEdgeTreatment(150f))
+                .setTopEdge(BinderEdgeTreatment(300f))
                 .build()
         )
+        bg.shadowCompatibilityMode = SHADOW_COMPAT_MODE_ALWAYS
+        bg.paintStyle = Paint.Style.FILL
+        bg.initializeElevationOverlay(requireContext())
+        bg.elevation = binding.bottomSheet.elevation
+
+
+        binding.bottomSheet.background = bg
     }
 
     override fun onDestroy() {

@@ -16,11 +16,11 @@ class BinderEdgeTreatment(private val radius: Float) : EdgeTreatment(), Cloneabl
         shapePath.addArc(
             0f,
             0f,
-            interpolatedRadius * 2,
-            -interpolatedRadius,
+            interpolatedRadius,
+            interpolatedRadius,
             180f,
             180f
         )
-        shapePath.lineTo(length, 0f)
+        shapePath.lineTo(length, interpolatedRadius / 2)
     }
 }

@@ -2,50 +2,60 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/colorSurface"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <View
-        android:id="@+id/bottomSheetMarker"
-        android:layout_width="@dimen/history_marker_width"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/cavity_gold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/bottomSheetTitle"
-        style="@style/TextAppearance.MaterialComponents.Headline6"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginHorizontal="@dimen/medium_margin"
-        android:ellipsize="middle"
-        android:gravity="center"
-        android:singleLine="true"
-        app:layout_constraintEnd_toStartOf="@id/buttonCloseBottomSheet"
-        app:layout_constraintStart_toEndOf="@id/bottomSheetMarker"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Château la Cour (2016)" />
-
-    <ImageButton
-        android:id="@+id/buttonCloseBottomSheet"
-        android:layout_width="@dimen/medium_icon"
-        android:layout_height="@dimen/medium_icon"
-        android:layout_margin="@dimen/medium_margin"
-        android:background="?attr/actionBarItemBackground"
-        android:src="@drawable/ic_close"
-        app:layout_constraintBottom_toBottomOf="@id/bottomSheetTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/bottomSheetTitle" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/wineImage"
         android:layout_width="@dimen/history_wine_image_size"
         android:layout_height="@dimen/history_wine_image_size"
-        android:layout_margin="@dimen/large_margin"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottomSheetTitle" />
+        app:shapeAppearanceOverlay="@style/RoundedImage"
+        android:layout_margin="@dimen/xsmall_margin"/>
+
+<!--    <View-->
+<!--        android:id="@+id/bottomSheetMarker"-->
+<!--        android:layout_width="@dimen/history_marker_width"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:background="@color/cavity_gold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/bottomSheetTitle"-->
+<!--        style="@style/TextAppearance.MaterialComponents.Headline6"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:layout_marginHorizontal="@dimen/medium_margin"-->
+<!--        android:ellipsize="middle"-->
+<!--        android:gravity="center"-->
+<!--        android:singleLine="true"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/buttonCloseBottomSheet"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        tools:text="Château la Cour (2016)" />-->
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/buttonCloseBottomSheet"-->
+<!--        android:layout_width="@dimen/medium_icon"-->
+<!--        android:layout_height="@dimen/medium_icon"-->
+<!--        android:layout_margin="@dimen/medium_margin"-->
+<!--        android:background="?attr/actionBarItemBackground"-->
+<!--        android:src="@drawable/ic_close"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/bottomSheetTitle"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@id/bottomSheetTitle" />-->
+
+<!--    <com.google.android.material.imageview.ShapeableImageView-->
+<!--        android:id="@+id/wineImage"-->
+<!--        android:layout_width="@dimen/history_wine_image_size"-->
+<!--        android:layout_height="@dimen/history_wine_image_size"-->
+<!--        android:layout_margin="@dimen/large_margin"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/bottomSheetTitle" />-->
 
     <TextView
         android:id="@+id/participants"
