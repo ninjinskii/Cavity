@@ -1,15 +1,14 @@
 package com.louis.app.cavity.ui.addbottle
 
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.DateViewModel
 import com.louis.app.cavity.util.DateFormatter
@@ -17,13 +16,11 @@ import java.util.*
 
 class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private lateinit var stepperx: Stepper
-    private lateinit var datePicker: MaterialDatePicker<Long>
     private var _binding: FragmentInquireDatesBinding? = null
     private val binding get() = _binding!!
     private val dateViewModel: DateViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
-    private var isDatePickerDisplayed = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,51 +58,19 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     }
 
     private fun setListeners() {
-        binding.buyDateLayout.setEndIconOnClickListener {
-            binding.buyDate.setText("")
-            dateViewModel.setTimestamp(-1L)
-        }
-
-        binding.buyDate.apply {
-            inputType = InputType.TYPE_NULL
-            datePicker = MaterialDatePicker.Builder
-                .datePicker()
-                .setTitleText(R.string.buying_date)
-                .build()
-
-            datePicker.addOnDismissListener {
-                clearFocus()
-                isDatePickerDisplayed = false
-            }
-
-            datePicker.addOnPositiveButtonClickListener {
-                dateViewModel.setTimestamp(datePicker.selection ?: -1L)
-                setText(datePicker.headerText.toString())
-            }
-
-            setOnClickListener {
-                datePicker.show(
-                    childFragmentManager,
-                    resources.getString(R.string.tag_date_picker)
-                )
-            }
-
-            setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    if (!isDatePickerDisplayed) {
-                        isDatePickerDisplayed = true
-
-                        datePicker.show(
-                            childFragmentManager,
-                            resources.getString(R.string.tag_date_picker)
-                        )
-                    }
-                }
-            }
+        val title = getString(R.string.buying_date)
+        DatePicker(
+            childFragmentManager,
+            binding.buyDateLayout,
+            title,
+            defaultDate = System.currentTimeMillis()
+        ).apply {
+            onEndIconClickListener = { dateViewModel.setTimestamp(System.currentTimeMillis()) }
+            onDateChangedListener = { dateViewModel.setTimestamp(it) }
         }
 
         with(binding) {
-            stepper.next.setOnClickListener { validateFields() }
+            stepper.next.setOnClickListener { goToNextPage() }
             stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
         }
     }
@@ -130,13 +95,16 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         }
     }
 
-    private fun validateFields() = binding.countLayout.validate() && binding.priceLayout.validate()
-        .also {
-            if (it) {
-                savePartialBottle()
-                stepperx.requestNextPage()
-            }
+    private fun goToNextPage() {
+        val isFormValid = binding.countLayout.validate() &&
+                binding.priceLayout.validate() &&
+                binding.buyDateLayout.validate()
+
+        if (isFormValid) {
+            savePartialBottle()
+            stepperx.requestNextPage()
         }
+    }
 
     private fun savePartialBottle() {
         with(binding) {

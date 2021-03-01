@@ -99,41 +99,79 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/stock"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/small_margin"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="En stock: 2" />
-
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:id="@+id/buttonGroupInteract"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/medium_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/stock">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonConsume"
                         style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="146dp"
                         android:layout_height="wrap_content"
                         android:text="@string/taste"
                         app:icon="@drawable/ic_glass" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonProvide"
+                        android:id="@+id/buttonGiftTo"
                         style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="146dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/provide"
-                        app:icon="@drawable/ic_add" />
+                        android:text="@string/gift_to"
+                        app:icon="@drawable/ic_gift" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/consumedBanner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:background="@color/cavity_red"
+                    android:padding="@dimen/small_margin"
+                    android:textColor="?attr/colorOnError"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Cette bouteille à été consommée."
+                        android:textColor="?attr/colorOnError"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/buttonRevertConsumption"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonRevertConsumption"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Annuler"
+                        android:textColor="?attr/colorOnError"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:rippleColor="?attr/colorOnError" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierAllowsGoneWidgets="false"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="consumedBanner,buttonGroupInteract" />
 
                 <!-- Step 1 info, grapes -->
                 <com.google.android.material.card.MaterialCardView
@@ -145,7 +183,7 @@
                     app:cardElevation="2dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/buttonGroupInteract">
+                    app:layout_constraintTop_toBottomOf="@id/barrier">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -279,45 +317,41 @@
                             app:layout_constraintStart_toStartOf="@id/buyLocation"
                             app:layout_constraintTop_toBottomOf="@id/buyLocation" />
 
-                        <com.louis.app.cavity.ui.search.widget.AnimatedImageButton
+                        <com.louis.app.cavity.ui.search.widget.AnimatedCheckBox
                             android:id="@+id/favorite"
                             android:layout_width="@dimen/medium_icon"
                             android:layout_height="@dimen/medium_icon"
-                            android:background="?attr/actionBarItemBackground"
-                            android:contentDescription="@string/favorite"
                             android:scaleType="centerInside"
-                            android:src="@drawable/ic_heart"
-                            app:initialAvd="@drawable/anim_fav"
+                            android:src="@drawable/asl_favorite"
+                            app:delayBeforeRepeat="1001"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:otherAvd="@drawable/anim_unfav" />
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/buttonShowPdf"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="@dimen/small_margin"
+                            android:layout_marginTop="@dimen/medium_margin"
                             android:text="@string/show_pdf"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:icon="@drawable/ic_pdf"
                             app:layout_constraintEnd_toEndOf="@id/price"
                             app:layout_constraintStart_toStartOf="@id/apogee"
                             app:layout_constraintTop_toBottomOf="@id/otherInfo" />
 
-                        <TextView
-                            android:id="@+id/noPdf"
-                            style="@style/TextAppearance.MaterialComponents.Overline"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonShowHistory"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/small_margin"
-                            android:layout_marginTop="@dimen/large_margin"
-                            android:gravity="center"
-                            android:text="@string/no_pdf"
-                            android:visibility="gone"
+                            android:layout_marginTop="@dimen/xsmall_margin"
+                            android:layout_marginBottom="@dimen/medium_margin"
+                            android:text="@string/show_history"
+                            app:icon="@drawable/ic_history"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="@id/price"
                             app:layout_constraintStart_toStartOf="@id/apogee"
-                            app:layout_constraintTop_toBottomOf="@id/otherInfo" />
+                            app:layout_constraintTop_toBottomOf="@id/buttonShowPdf" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -329,7 +363,6 @@
                     android:layout_marginHorizontal="@dimen/small_margin"
                     android:layout_marginVertical="@dimen/medium_margin"
                     app:cardElevation="2dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/miscCardView">
@@ -374,6 +407,36 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+                <View
+                    android:id="@+id/divider"
+                    style="@style/Widget.Cavity.Divider"
+                    android:layout_marginTop="@dimen/large_margin"
+                    app:layout_constraintTop_toBottomOf="@id/reviewCardView" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonUltraDelete"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:text="@string/delete_bottle"
+                    app:icon="@drawable/ic_delete_all"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/small_margin"
+                    android:gravity="center"
+                    android:text="@string/delete_bottle_warning"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/buttonUltraDelete" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.motion.widget.MotionLayout>

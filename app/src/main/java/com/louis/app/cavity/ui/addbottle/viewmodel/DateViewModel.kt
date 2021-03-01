@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -23,7 +25,7 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
         get() = _userFeedback
 
     private var wineId: Long? = null
-    private var buyDateTimestamp = -1L
+    private var buyDateTimestamp = System.currentTimeMillis()
 
     var bottleId = 0L
         private set
@@ -69,7 +71,8 @@ class DateViewModel(app: Application) : AndroidViewModel(app) {
             location,
             buyDateTimestamp,
             tasteComment,
-            pdfPath
+            pdfPath,
+            consumed = false.toInt()
         )
 
         viewModelScope.launch(IO) {

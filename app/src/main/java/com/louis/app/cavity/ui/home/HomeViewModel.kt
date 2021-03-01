@@ -20,7 +20,6 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     val isScrollingToTop = MutableLiveData<Boolean>()
 
-    fun deleteWine(wine: Wine) = viewModelScope.launch(IO) { repository.deleteWine(wine) }
     fun deleteWine(wineId: Long) = viewModelScope.launch(IO) { repository.deleteWineById(wineId) }
 
     fun getAllCounties() = repository.getAllCounties()

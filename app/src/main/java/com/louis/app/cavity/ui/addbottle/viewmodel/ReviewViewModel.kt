@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import android.app.Application
+import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
+import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
@@ -34,15 +35,16 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getFReviewAndReview() = repository.getFReviewAndReviewForBottle(bottleId)
 
-    fun insertReview(contestName: String, type: Int) {
+    fun insertReviewAndFReview(contestName: String, type: Int) {
         viewModelScope.launch(IO) {
-            val reviews = repository.getAllReviewsNotLive().map { it.contestName }
-
-            if (contestName !in reviews) {
-                val id = repository.insertReview(Review(reviewId = 0, contestName, type))
-                insertFilledReview(id, getDefaultValue(type))
-            } else {
-                _userFeedback.postOnce(R.string.contest_name_already_exist)
+            try {
+                val review = Review(0, contestName, type)
+                val defaultValue = getDefaultValue(type)
+                repository.insertReviewAndFReview(bottleId, review, defaultValue)
+            } catch (e: IllegalArgumentException) {
+                _userFeedback.postOnce(R.string.empty_contest_name)
+            } catch (e: SQLiteConstraintException) {
+                _userFeedback.postOnce(R.string.contest_name_already_exists)
             }
         }
     }
@@ -57,7 +59,6 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
 
     fun updateFilledReview(fReview: FilledBottleReviewXRef, contestValue: Int) {
         val newFReview = fReview.copy(value = contestValue)
-        L.v("update filled review: $newFReview")
 
         viewModelScope.launch(IO) {
             repository.updateFilledReview(newFReview)
@@ -78,17 +79,11 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun insertFReview(bottleId: Long, reviewId: Long, value: Int) {
-        viewModelScope.launch(IO) {
-            repository.insertFilledReview(FilledBottleReviewXRef(bottleId, reviewId, value))
-        }
-    }
-
     fun submitCheckedReviews(newCheckedReviews: List<CheckableReview>) {
         for (checkableReview in newCheckedReviews) {
             val (reviewId, _, type) = checkableReview.review
             val oldOne =
-                _reviewDialogEvent.value?.peekContent()?.find { it.review.reviewId == reviewId }
+                _reviewDialogEvent.value?.peekContent()?.find { it.review.id == reviewId }
 
             when {
                 checkableReview.isChecked && oldOne?.isChecked != true ->
@@ -107,7 +102,7 @@ class ReviewViewModel(app: Application) : AndroidViewModel(app) {
             val reviews = repository.getAllReviewsNotLive()
             val fReviews = repository.getFReviewsForBottleNotLive(bottleId).map { it.reviewId }
             val currentCheckedReviews =
-                reviews.map { CheckableReview(it, isChecked = it.reviewId in fReviews) }
+                reviews.map { CheckableReview(it, isChecked = it.id in fReviews) }
 
             _reviewDialogEvent.postOnce(currentCheckedReviews)
         }

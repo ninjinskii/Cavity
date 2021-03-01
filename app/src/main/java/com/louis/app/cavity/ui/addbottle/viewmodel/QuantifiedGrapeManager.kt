@@ -1,6 +1,6 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
-import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 
 class QuantifiedGrapeManager {
 

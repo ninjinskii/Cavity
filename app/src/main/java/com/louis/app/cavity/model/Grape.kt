@@ -1,13 +1,15 @@
 package com.louis.app.cavity.model
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "grape")
+@Entity(tableName = "grape", indices = [Index(value = ["name"], unique = true)])
 data class Grape(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "grape_id")
-    val grapeId: Long,
+    val id: Long,
     val name: String
-)
+) : Chipable {
+    override fun getItemId() = id
+    override fun getChipText() = name
+}

@@ -7,17 +7,18 @@ import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class LockedBottomSheetBehavior<V : View> : BottomSheetBehavior<V> {
-    constructor() : super()
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+class LockedBottomSheetBehavior<V : View> @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) :
+    BottomSheetBehavior<V>(context, attrs) {
 
     override fun onInterceptTouchEvent(
         parent: CoordinatorLayout,
         child: V,
         event: MotionEvent
-    ): Boolean {
-        return false
-    }
+    ) =
+        false
 
     override fun onTouchEvent(parent: CoordinatorLayout, child: V, event: MotionEvent) = false
 
@@ -28,7 +29,8 @@ class LockedBottomSheetBehavior<V : View> : BottomSheetBehavior<V> {
         target: View,
         axes: Int,
         type: Int
-    ) = false
+    ) =
+        false
 
     override fun onNestedPreScroll(
         coordinatorLayout: CoordinatorLayout,
@@ -55,5 +57,6 @@ class LockedBottomSheetBehavior<V : View> : BottomSheetBehavior<V> {
         target: View,
         velocityX: Float,
         velocityY: Float
-    ) = false
+    ) =
+        false
 }

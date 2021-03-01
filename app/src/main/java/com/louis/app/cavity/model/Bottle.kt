@@ -6,23 +6,32 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "bottle")
+@Entity(
+    tableName = "bottle",
+    foreignKeys = [ForeignKey(
+        entity = Wine::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("wine_id"),
+        onDelete = ForeignKey.CASCADE
+    )]
+)
 data class Bottle(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "bottle_id")
-    val bottleId: Long = 0,
-    @ColumnInfo(name = "wine_id") val wineId: Long,
+    val id: Long = 0,
+    @ColumnInfo(name = "wine_id", index = true) val wineId: Long,
     val vintage: Int,
     val apogee: Int,
     @ColumnInfo(name = "is_favorite") var isFavorite: Int,
-    val count: Int,
+    val count: Int, // is going to disappear
     val price: Float,
     val currency: String,
     @ColumnInfo(name = "other_info") var otherInfo: String,
     @ColumnInfo(name = "buy_location") val buyLocation: String,
     @ColumnInfo(name = "buy_date") val buyDate: Long,
-    @ColumnInfo(name = "taste_comment") val tasteComment: String,
-    @ColumnInfo(name = "pdf_path") var pdfPath: String
+    @ColumnInfo(name = "taste_comment") val tasteComment: String, // might disappear
+    @ColumnInfo(name = "pdf_path") var pdfPath: String,
+    var consumed: Int,
+    @ColumnInfo(name = "tasting_id", index = true) var tastingId: Long? = null
 ) {
     fun isReadyToDrink(): Boolean {
         val year = Calendar.getInstance().get(Calendar.YEAR)
@@ -31,5 +40,3 @@ data class Bottle(
 
     fun hasPdf() = pdfPath.isNotBlank()
 }
-
-// Context getFilesDIr() pour récupérer le stockage privé et mettre les photos dedans

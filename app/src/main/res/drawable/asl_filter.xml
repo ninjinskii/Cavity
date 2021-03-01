@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/close"
+        android:drawable="@drawable/ic_close"
+        android:state_checked="true" />
+
+    <item
+        android:id="@+id/filter"
+        android:drawable="@drawable/ic_filter" />
+
+    <transition
+        android:drawable="@drawable/anim_filter_close"
+        android:fromId="@id/close"
+        android:toId="@id/filter" />
+
+    <transition
+        android:drawable="@drawable/anim_close_filter"
+        android:fromId="@id/filter"
+        android:toId="@id/close" />
+</animated-selector>

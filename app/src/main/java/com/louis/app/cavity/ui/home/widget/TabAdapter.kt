@@ -12,15 +12,13 @@ import com.louis.app.cavity.model.County
 class TabAdapter(
     private val tabs: MutableList<County> = mutableListOf(),
     private val style: TabStyle
-) : RecyclerView.Adapter<TabAdapter.TabViewHolder>() {
+) :
+    RecyclerView.Adapter<TabAdapter.TabViewHolder>() {
 
     private var onClickListener: ((position: Int) -> Unit)? = null
     private var onLongClickListener: ((county: County) -> Unit)? = null
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): TabViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_county, parent, false)
 
@@ -28,10 +26,13 @@ class TabAdapter(
         return TabViewHolder(view)
     }
 
+    override fun onBindViewHolder(holder: TabViewHolder, position: Int) {
+        holder.bind(tabs[position])
+    }
+
     override fun getItemCount() = tabs.size
 
-    override fun onBindViewHolder(holder: TabViewHolder, position: Int) =
-        holder.bind(tabs[position])
+    override fun getItemId(position: Int) = tabs[position].id
 
     fun addAll(list: List<County>) {
         tabs.clear()
@@ -46,8 +47,6 @@ class TabAdapter(
     fun onLongTabClick(longClickListener: ((county: County) -> Unit)?) {
         this.onLongClickListener = longClickListener
     }
-
-    //internal fun listenTabChangeForPager() {}
 
     inner class TabViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         private val textView: TextView = view.findViewById(R.id.county)

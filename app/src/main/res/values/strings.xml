@@ -4,15 +4,15 @@
     <string name="cancel">Annuler</string>
     <string name="save">Save</string>
     <string name="delete">Supprimer</string>
-    <string name="confirmation_delete">Supprimer le vin et ses bouteilles ?</string>
     <string name="next">Suivant</string>
     <string name="previous">Précédent</string>
     <string name="unknown">Non renseigné</string>
+    <string name="input_error">Saisie non valide.</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
     <string name="no_county">Aucune région sélectionnée.</string>
-    <string name="county_already_exist">Cette région existe déjà.</string>
+    <string name="county_already_exists">Cette région existe déjà.</string>
     <string name="no_file_explorer">Aucune application d\'exploration de fichier trouvée.</string>
     <string name="base_error">Une erreur est survenue.</string>
     <string name="required_field">Champ requis.</string>
@@ -23,14 +23,16 @@
     <string name="empty_contest_name">Indiquez un nom de concours.</string>
     <string name="empty_grape_name">Indiquez un nom de cépage.</string>
     <string name="empty_grape_percent">Un cépage vaut 0%.</string>
-    <string name="grape_already_exist">Ce cépage existe déjà.</string>
-    <string name="contest_name_already_exist">Ce concours est existe déjà.</string>
+    <string name="grape_already_exists">Ce cépage existe déjà.</string>
+    <string name="contest_name_already_exists">Ce concours est existe déjà.</string>
+    <string name="friend_already_exists">Cet ami existe déjà.</string>
     <string name="falsy_price">Le prix ne peut pas contenir de caractères.</string>
     <string name="rate_out_of_bounds">La note n\'est pas correcte.</string>
     <string name="reserved_name">Nom réservé.</string>
     <string name="falsy_number">Chiffres uniquement.</string>
     <string name="no_negative">Entrez un nombre supérieur à 0.</string>
     <string name="too_much">Ça fait vraiment beaucoup là.</string>
+    <string name="camera_error">Échec de l\'initialisation de la caméra.</string>
 
     <!-- App -->
     <string name="app_name">Cavity</string>
@@ -66,6 +68,7 @@
     <string name="wine_color_sweet">Liquoreux</string>
     <string name="wine_color_rose">Rosé</string>
     <string name="vintage_and_count">%1$d (%2$d)</string>
+    <string name="confirm_wine_delete">Supprimer le vin et ses bouteilles ?</string>
 
     <string name="step_1">1</string>
     <string name="step_2">2</string>
@@ -117,6 +120,9 @@
     <string name="add_pdf">Associer un fichier PDF</string>
     <string name="pdf">PDF</string>
     <string name="medal_color">Couleur de la médaille</string>
+    <string name="gifted_by_friend">Offerte par un ami</string>
+    <string name="add_friend">Ajouter un ami</string>
+    <string name="add_friend_label">Nom prénom</string>
     <string name="remove_pdf">Retirer le PDF</string>
     <string name="bottle_added">La bouteille a été ajoutée.</string>
 
@@ -142,19 +148,76 @@
     <string name="stock_number">En stock: %1$d</string>
     <string name="price_and_currency">%1$s %2$s</string>
     <string name="show_pdf">Consulter le PDF</string>
+    <string name="show_history">Voir l\'historique</string>
     <string name="no_pdf">Pas de pdf associé à cette bouteille.</string>
     <string name="no_pdf_app">Aucun lecteur de pdf trouvé sur le téléphone.</string>
     <string name="labeled_data">Icon</string>
     <string name="misc">Général</string>
     <string name="expert_advice">Avis d\'expert</string>
     <string name="bottle_count">Nombre de bouteilles</string>
-    <string name="entry">Entrée en stock</string>
+    <string name="gift_to">Offrir</string>
+    <string name="gift_to_who">A qui offrir cette bouteille ?</string>
     <string name="how_many_to_add">Combien de bouteilles à ajouter ?</string>
-    <string name="use_long">Déguster une bouteille</string>
+    <string name="consume_bottle">Déguster une bouteille</string>
+    <string name="gift_bottle">Offrir une bouteille</string>
     <string name="tasting_comment">Commentaire de dégustation</string>
+    <string name="consume_date">Date de dégustation</string>
+    <string name="consumed_with">Avec qui avez-vous bu cette bouteille ?</string>
+    <string name="bottle_consumed">La bouteille a été dégustée.</string>
+    <string name="bottle_gifted">La bouteille a été offerte.</string>
+    <string name="gift_date">Offerte le</string>
+    <string name="delete_bottle">Érradiquer la bouteille</string>
+    <string name="delete_bottle_warning">Supprime totalement cette bouteille et ses entrées dans l\'historique.</string>
+    <string name="confirm_bottle_delete">Voulez-vous vraiment supprimer cette bouteille ?</string>
+
+    <!-- Manager -->
+    <string name="manager">Gestionnaire</string>
+    <string name="counties">Régions</string>
+    <string name="rename">Renommer</string>
+    <string name="rename_county">Renommer la région</string>
+    <string name="rename_grape">Renommer le cépage</string>
+    <string name="rename_review">Renommer l\'avis d\'expert</string>
+    <string name="rename_friend">Renommer un ami</string>
+    <string name="delete_county">Supprimer la région et son contenu</string>
+    <string name="delete_county_warn">Supprimer cette région entraînera la supression de toutes les bouteilles et entrées dans l\'historique liées à cette région. Pour confirmer, entrez le nom de la région à supprimer.</string>
+    <string name="confirm_grape_delete">Supprimer le cépage ?</string>
+    <string name="confirm_review_delete">Supprimer l\'avis d\'expert ?</string>
+    <string name="county_deleted">Région supprimée.</string>
+    <string name="county_renamed">Région renomée.</string>
+    <string name="county_added">Région ajoutée.</string>
+    <string name="grape_deleted">Cépage supprimé.</string>
+    <string name="grape_renamed">Cépage renommé.</string>
+    <string name="grape_added">Cépage ajouté.</string>
+    <string name="review_deleted">Avis d\'expert supprimé.</string>
+    <string name="review_renamed">Avis d\'expert renommé.</string>
+    <string name="review_added">Avis d\'expert créé.</string>
+    <string name="friend_added">Ami ajouté.</string>
+    <string name="friend_renamed">Ami modifié.</string>
+    <string name="friend_deleted">Ami supprimé.</string>
+    <string name="contests">Concours</string>
+    <string name="friends">Amis</string>
+    <string name="cannot_delete">Les noms ne correspondent pas.</string>
+
+    <!-- History -->
+    <string name="name_and_vintage">%1$s (%2$d)</string>
+    <string name="buyed_at">Achetée à : %1$s</string>
+    <string name="gifted_to_someone">Offerte à : %1$s</string>
+    <string name="gifted_by_someone">Offerte par : %1$s</string>
+    <string name="no_description">Pas de commentaire de dégustation.</string>
+    <string name="replenishments">Entrées</string>
+    <string name="tastings">Dégustations</string>
+    <string name="consumptions">Sorties</string>
+    <string name="gifted_to">Offerte à</string>
+    <string name="gifted_by">Offerte par</string>
+    <string name="drinked">Consommation unique</string>
+    <string name="favorites">Favoris</string>
+    <string name="show_bottle">Voir la bouteille</string>
+    <string name="tasting_label">Participants: </string>
+    <string name="consume_label">Bue avec: </string>
+
 
     <!-- Tags -->
-    <string name="tag_chip_id">com.louis.app.cavity.TAG_CHIP_ID</string>
+    <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>
     <string name="tag_modal_sheet_id">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
     <string name="tag_date_picker">com.louis.app.cavity.TAG_DATE_PICKER</string>
 

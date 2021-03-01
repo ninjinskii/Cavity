@@ -2,8 +2,8 @@ package com.louis.app.cavity.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.louis.app.cavity.model.relation.QuantifiedBottleGrapeXRef
-import com.louis.app.cavity.model.relation.QuantifiedGrapeAndGrape
+import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
 @Dao
 interface QuantifiedGrapeDao {
     @Insert
@@ -14,13 +14,6 @@ interface QuantifiedGrapeDao {
 
     @Delete
     suspend fun deleteQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
-
-    @Query("DELETE FROM q_grape WHERE bottle_id=:bottleId")
-    suspend fun deleteQGrapeForBottle(bottleId: Long)
-
-    @Transaction
-    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
-    fun getQGrapesForBottle(bottleId: Long): LiveData<List<QuantifiedBottleGrapeXRef>>
 
     @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
@@ -33,7 +26,4 @@ interface QuantifiedGrapeDao {
     @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
     fun getQGrapesAndGrapeForBottle(bottleId: Long): LiveData<List<QuantifiedGrapeAndGrape>>
-
-    @Query("DELETE FROM q_grape WHERE bottle_id=:bottleId AND grape_id=:grapeId")
-    suspend fun deleteQGrapeByPk(bottleId: Long, grapeId: Long)
 }

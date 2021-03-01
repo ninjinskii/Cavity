@@ -15,10 +15,9 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemReviewMedalBinding
 import com.louis.app.cavity.databinding.ItemReviewRateBinding
 import com.louis.app.cavity.databinding.ItemReviewStarBinding
-import com.louis.app.cavity.model.relation.FilledBottleReviewXRef
-import com.louis.app.cavity.model.relation.FilledReviewAndReview
+import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
+import com.louis.app.cavity.model.relation.review.FilledReviewAndReview
 import com.louis.app.cavity.ui.widget.Rule
-import com.louis.app.cavity.util.L
 
 class FilledReviewRecyclerAdapter(
     val onValueChangedListener: (fReview: FilledBottleReviewXRef, checkedButtonIdOrRate: Int) -> Unit,
@@ -36,8 +35,6 @@ class FilledReviewRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseReviewViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-
-        L.v("onCreateVH")
 
         return when (viewType) {
             TYPE_MEDAL -> MedalViewHolder(
@@ -69,9 +66,7 @@ class FilledReviewRecyclerAdapter(
         holder.bind(currentList[position])
     }
 
-    override fun getItemId(position: Int): Long {
-        return currentList[position].getId()
-    }
+    override fun getItemId(position: Int) = currentList[position].getId()
 
     override fun getItemViewType(position: Int): Int {
         val (_, review) = currentList[position]

@@ -32,6 +32,12 @@
         <action
             android:id="@+id/homeToWineOptions"
             app:destination="@id/wine_options_dialog" />
+        <action
+            android:id="@+id/homeToManager"
+            app:destination="@id/manager_dest" />
+        <action
+            android:id="@+id/homeToHistory"
+            app:destination="@id/history_dest" />
     </fragment>
 
     <dialog
@@ -64,7 +70,6 @@
             app:destination="@id/add_bottle_dest" />
     </dialog>
 
-
     <fragment
         android:id="@+id/settings_dest"
         android:name="com.louis.app.cavity.ui.settings.FragmentSettings"
@@ -84,7 +89,16 @@
             android:name="countyId"
             android:defaultValue="-1L"
             app:argType="long" />
+        <action
+            android:id="@+id/addWineToCamera"
+            app:destination="@id/camera_dest" />
     </fragment>
+
+    <fragment
+        android:id="@+id/camera_dest"
+        android:name="com.louis.app.cavity.ui.addwine.FragmentCamera"
+        android:label="FragmentCamera"
+        tools:layout="@layout/fragment_camera" />
 
     <fragment
         android:id="@+id/add_bottle_dest"
@@ -106,15 +120,16 @@
         android:label="FragmentSearch"
         tools:layout="@layout/fragment_search">
         <action
-            android:id="@+id/searchToMoreFilters"
-            app:destination="@id/more_filters_dest" />
+            android:id="@+id/searchToBottleDetails"
+            app:destination="@id/fragmentBottleDetails">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
     </fragment>
-
-    <fragment
-        android:id="@+id/more_filters_dest"
-        android:name="com.louis.app.cavity.ui.search.FragmentMoreFilters"
-        android:label="FragmentMoreFilters"
-        tools:layout="@layout/fragment_more_filters" />
 
     <fragment
         android:id="@+id/fragmentBottleDetails"
@@ -137,6 +152,66 @@
                 android:name="editedBottleId"
                 app:argType="long" />
         </action>
+        <action
+            android:id="@+id/bottleDetailsToConsumeBottle"
+            app:destination="@id/fragmentConsumeBottle">
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
+        <action
+            android:id="@+id/bottleDetailsToGiftBottle"
+            app:destination="@id/fragmentGiftBottle">
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
+        <action
+            android:id="@+id/bottleDetailsToHistory"
+            app:destination="@id/history_dest">
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
     </fragment>
 
+    <fragment
+        android:id="@+id/manager_dest"
+        android:name="com.louis.app.cavity.ui.manager.FragmentManager"
+        android:label="FragmentManager"
+        tools:layout="@layout/fragment_manager" />
+
+    <fragment
+        android:id="@+id/history_dest"
+        android:name="com.louis.app.cavity.ui.history.FragmentHistory"
+        android:label="FragmentHistory"
+        tools:layout="@layout/fragment_history">
+        <argument
+            android:name="bottleId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+        <action
+            android:id="@+id/historyToBottle"
+            app:destination="@id/fragmentBottleDetails" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentConsumeBottle"
+        android:name="com.louis.app.cavity.ui.bottle.FragmentConsumeBottle"
+        android:label="FragmentConsumeBottle"
+        tools:layout="@layout/fragment_consume_bottle">
+        <argument
+            android:name="bottleId"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentGiftBottle"
+        android:name="com.louis.app.cavity.ui.bottle.FragmentGiftBottle"
+        android:label="FragmentGiftBottle"
+        tools:layout="@layout/fragment_gift_bottle">
+        <argument
+            android:name="bottleId"
+            app:argType="long" />
+    </fragment>
 </navigation>

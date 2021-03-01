@@ -27,7 +27,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     private fun setupScrollableTab() {
         binding.tab.addOnLongClickListener {
-            // show dialog info for county
+            // TODO: show dialog info for county
         }
 
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
@@ -35,7 +35,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             with(binding) {
                 tab.addTabs(it)
                 // viewPager.isSaveEnabled = false // might correct the crash when getting back to home sometimes, but reduce apps perfs a lot
-                viewPager.adapter = WinesPagerAdapter(requireActivity(), it)
+                viewPager.adapter =
+                    WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
                 viewPager.offscreenPageLimit = 1
                 tab.setUpWithViewPager(viewPager)
 
@@ -51,8 +52,14 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     private fun setListeners() {
+        var currentCounty = 0L
+
+        binding.tab.addOnPageChangeListener {
+            currentCounty = binding.tab.adapter?.getItemId(it) ?: 0
+        }
+
         binding.fab.setOnClickListener {
-            val action = FragmentHomeDirections.homeToAddWine()
+            val action = FragmentHomeDirections.homeToAddWine(countyId = currentCounty)
             findNavController().navigate(action)
         }
     }

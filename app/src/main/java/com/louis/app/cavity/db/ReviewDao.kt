@@ -3,6 +3,7 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.relation.review.ReviewWithFilledReviews
 
 @Dao
 interface ReviewDao {
@@ -16,8 +17,9 @@ interface ReviewDao {
     suspend fun deleteReview(review: Review)
 
     @Query("SELECT * FROM review")
-    fun getAllReviews(): LiveData<List<Review>>
+    suspend fun getAllReviewsNotLive(): List<Review>
 
+    @Transaction
     @Query("SELECT * FROM review")
-    fun getAllReviewsNotLive(): List<Review>
+    fun getReviewWithFilledReviews(): LiveData<List<ReviewWithFilledReviews>>
 }

@@ -2,16 +2,17 @@ package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.*
+import androidx.core.view.children
+import androidx.core.view.doOnLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,20 +23,25 @@ import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.ui.ChipLoader
+import com.louis.app.cavity.ui.DatePicker
+import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.math.max
 
 class FragmentSearch : Fragment(R.layout.fragment_search) {
-    private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private val searchViewModel: SearchViewModel by activityViewModels()
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+    private val searchViewModel: SearchViewModel by viewModels()
+    private val recyclerViewDisabler = RecyclerViewDisabler { binding.toggleBackdrop.toggle() }
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
-    private val upperBoundHeight by lazy { fetchUpperBoundHeight() }
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
@@ -44,69 +50,73 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
 
+        setupNavigation(binding.fakeToolbar)
+
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_EXPANDED
             isHideable = false
+            saveFlags = BottomSheetBehavior.SAVE_NONE
         }
 
         binding.fakeToolbar.setNavigationOnClickListener {
-            searchViewModel.reset()
             findNavController().navigateUp()
         }
 
-        setBottomSheetPeekHeight()
-        initCountyChips()
+        binding.root.doOnLayout {
+            setBottomSheetPeekHeight()
+        }
+
+        initDynamicChips()
         initColorChips()
         initOtherChips()
         initRecyclerView()
-        initSlider()
+        initDatePickers()
+        initSliders()
         setupMenu()
         setListeners()
         initSearchView()
         setupCustomBackNav()
-        restoreState()
     }
 
-    // Needed for split screen
     private fun setBottomSheetPeekHeight() {
-        binding.buttonMoreFilters.doOnLayout { upperBound ->
-            val display = activity?.window?.decorView?.height
-            val location = IntArray(2)
-
-            display?.let {
-                upperBound.getLocationInWindow(location)
-
-                val peekHeight =
-                    if (it - location[1] - upperBoundHeight < backdropHeaderHeight)
-                        backdropHeaderHeight
-                    else
-                        it - location[1] - upperBoundHeight
-
-                bottomSheetBehavior.peekHeight = peekHeight
-            }
-
-            removeStubChip()
-        }
+        val fill = binding.root.height - binding.reviewStubChipGroup.bottom - backdropHeaderHeight
+        val peekHeight = max(backdropHeaderHeight, fill)
+        bottomSheetBehavior.setPeekHeight(peekHeight, true)
     }
 
-    private fun removeStubChip() {
-        binding.countyChipGroup.removeAllViews()
-    }
-
-    private fun initCountyChips() {
+    private fun initDynamicChips() {
         lifecycleScope.launch(IO) {
-            val counties = searchViewModel.getAllCountiesNotLive().toSet()
-            val preselect = searchViewModel.state.counties.orEmpty()
+            with(searchViewModel) {
+                val countyList = getAllCountiesNotLive()
+                val grapeList = getAllGrapesNotLive()
+                val reviewList = getAllReviewsNotLive()
+                val preselectedCounties = counties
+                val preselectedGrapes = grapes
+                val preselectedReviews = reviews
 
-            CountyLoader().loadCounties(
-                lifecycleScope,
-                layoutInflater,
-                binding.countyChipGroup,
-                counties,
-                preselect,
-                selectionRequired = false,
-                onCheckedChangeListener = { _, _ -> prepareCountyFilters() }
-            )
+                ChipLoader(lifecycleScope, layoutInflater).apply {
+                    loadChips(
+                        binding.countyChipGroup,
+                        countyList,
+                        preselectedCounties,
+                        onCheckedChangeListener = { _, _ -> prepareCountyFilters() }
+                    )
+
+                    loadChips(
+                        binding.grapeChipGroup,
+                        grapeList,
+                        preselectedGrapes,
+                        onCheckedChangeListener = { _, _ -> prepareGrapeFilters() }
+                    )
+
+                    loadChips(
+                        binding.reviewChipGroup,
+                        reviewList,
+                        preselectedReviews,
+                        onCheckedChangeListener = { _, _ -> prepareReviewFilters() }
+                    )
+                }
+            }
         }
     }
 
@@ -133,17 +143,21 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initRecyclerView() {
-        val colors = context?.let {
+        val colors = requireContext().run {
             listOf(
-                it.getColor(R.color.wine_white),
-                it.getColor(R.color.wine_red),
-                it.getColor(R.color.wine_sweet),
-                it.getColor(R.color.wine_rose),
-                it.getColor(R.color.cavity_gold)
+                getColor(R.color.wine_white),
+                getColor(R.color.wine_red),
+                getColor(R.color.wine_sweet),
+                getColor(R.color.wine_rose),
+                getColor(R.color.cavity_gold)
             )
         }
 
-        bottlesAdapter = BottleRecyclerAdapter({}, colors ?: return)
+        bottlesAdapter = BottleRecyclerAdapter(colors) { wineId, bottleId ->
+            val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
+            binding.searchView.hideKeyboard()
+            findNavController().navigate(action)
+        }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -162,13 +176,29 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         searchViewModel.results.observe(viewLifecycleOwner) {
+            L.v("observer triggered", "DEBUGGING SEARCH")
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
-            bottlesAdapter.submitList(it)
+            bottlesAdapter.submitList(it.toList())
         }
     }
 
-    private fun initSlider() {
+    private fun initDatePickers() {
+        val beyondTitle = getString(R.string.buying_date_beyond)
+        val untilTitle = getString(R.string.buying_date_until)
+
+        DatePicker(childFragmentManager, binding.beyondLayout, beyondTitle).apply {
+            onEndIconClickListener = { searchViewModel.setBeyondFilter(null) }
+            onDateChangedListener = { searchViewModel.setBeyondFilter(it) }
+        }
+
+        DatePicker(childFragmentManager, binding.untilLayout, untilTitle).apply {
+            onEndIconClickListener = { searchViewModel.setUntilFilter(null) }
+            onDateChangedListener = { searchViewModel.setUntilFilter(it) }
+        }
+    }
+
+    private fun initSliders() {
         binding.vintageSlider.apply {
             val year = Calendar.getInstance().get(Calendar.YEAR).toFloat()
             valueFrom = year - 20F
@@ -178,6 +208,22 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
                 override fun onStopTrackingTouch(slider: RangeSlider) {
                     searchViewModel.setVintageFilter(
+                        slider.values[0].toInt(),
+                        slider.values[1].toInt()
+                    )
+                }
+
+                override fun onStartTrackingTouch(slider: RangeSlider) {
+                }
+            })
+        }
+
+        binding.priceSlider.apply {
+            isEnabled = false
+
+            addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+                override fun onStopTrackingTouch(slider: RangeSlider) {
+                    searchViewModel.setPriceFilter(
                         slider.values[0].toInt(),
                         slider.values[1].toInt()
                     )
@@ -199,10 +245,31 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
     }
 
+    private fun prepareGrapeFilters() {
+        binding.grapeChipGroup.apply {
+            val grapes = checkedChipIds.map {
+                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Grape
+            }
+
+            searchViewModel.setGrapeFilters(grapes)
+        }
+    }
+
+    private fun prepareReviewFilters() {
+        binding.reviewChipGroup.apply {
+            val reviews = checkedChipIds.map {
+                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Review
+            }
+
+            searchViewModel.setReviewFilters(reviews)
+        }
+    }
+
+    // Kwown issue: bottom sheet might and the toggle button might misbehave
+    // if for some reason the keyboard doesn't show up when calling showKeyboard()
     private fun setupMenu() {
         binding.motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
-            override fun onTransitionStarted(motionLayout: MotionLayout?, p1: Int, p2: Int) {
-                // When this callback is trigerred, the progress is already lower than 1, forcing us to check for a lower magic value.
+            override fun onTransitionStarted(motionLayout: MotionLayout?, p0: Int, p1: Int) {
                 if (motionLayout?.progress ?: 0F > 0.5F) {
                     with(binding) {
                         currentQuery.setVisible(true)
@@ -210,6 +277,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                     }
                 } else {
                     binding.currentQuery.setVisible(false)
+
+//                    if (binding.toggleBackdrop.isChecked) {
+//                        bottomSheetBehavior.peekHeight = backdropHeaderHeight
+//                    }
                 }
             }
 
@@ -217,39 +288,51 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             }
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, id: Int) {
-                if (isSearchMode()) {
+                if (id == R.id.end) {
                     binding.searchView.showKeyboard()
+                    if (binding.toggleBackdrop.isChecked) {
+                        bottomSheetBehavior.peekHeight = backdropHeaderHeight
+                    }
+                } else {
+                    setBottomSheetPeekHeight()
                 }
             }
 
-            override fun onTransitionTrigger(
-                p0: MotionLayout?,
-                p1: Int,
-                p2: Boolean,
-                p3: Float
-            ) {
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
             }
         })
 
-        binding.searchButton.setOnClickListener {
-            if (!isToolbarAnimRunning()) {
-                if (isSearchMode()) binding.motionToolbar.transitionToStart()
-                else binding.motionToolbar.transitionToEnd()
-
-                binding.searchButton.triggerAnimation()
-            }
+        binding.searchButton.setOnCheckedChangeListener {
+            if (isSearchMode()) binding.motionToolbar.transitionToStart()
+            else binding.motionToolbar.transitionToEnd()
         }
 
-        binding.toggleBackdrop.setOnClickListener { toggleBackdrop() }
+        binding.toggleBackdrop.setOnCheckedChangeListener {
+            toggleBackdrop()
+        }
     }
 
     private fun setListeners() {
-        binding.buttonMoreFilters.setOnClickListener {
-            findNavController().navigate(R.id.searchToMoreFilters)
+        binding.bottomSheet.setOnClickListener {
+            if (bottomSheetBehavior.isCollapsed()) {
+                binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+                binding.toggleBackdrop.toggle()
+            }
         }
 
         binding.currentQuery.setOnClickListener {
             binding.searchButton.performClick()
+        }
+
+        binding.togglePrice.setOnCheckedChangeListener { _, isChecked ->
+            binding.priceSlider.apply {
+                // Making sure the view has its chance to restore it state before grabbing values
+                doOnLayout {
+                    isEnabled = isChecked
+                    val minPrice = if (isChecked) values[0].toInt() else -1
+                    searchViewModel.setPriceFilter(minPrice, values[1].toInt())
+                }
+            }
         }
     }
 
@@ -266,9 +349,19 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun toggleBackdrop() {
-        if (bottomSheetBehavior.isExpanded() || bottomSheetBehavior.isCollapsed()) {
-            bottomSheetBehavior.toggleState()
-            binding.toggleBackdrop.triggerAnimation()
+        bottomSheetBehavior.run {
+            when {
+                isExpanded() -> {
+                    toggleState()
+                    binding.scrim.alpha = 0.76f
+                    binding.recyclerView.addOnItemTouchListener(recyclerViewDisabler)
+                }
+                isCollapsed() -> {
+                    toggleState()
+                    binding.scrim.alpha = 0f
+                    binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+                }
+            }
         }
     }
 
@@ -300,38 +393,15 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             if (isSearchMode()) {
                 binding.searchButton.performClick()
             } else {
-                searchViewModel.reset()
                 remove()
                 requireActivity().onBackPressed()
             }
         }
     }
 
-    private fun restoreState() {
-        // See initCountyChip for selected couties restoration
-        with(searchViewModel.state) {
-            colors?.let { selectedChipIds ->
-                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
-            }
-
-            others?.let { selectedChipIds ->
-                selectedChipIds.forEach { binding.root.findViewById<Chip>(it).isChecked = true }
-            }
-
-            vintage?.let {
-                binding.vintageSlider.values = listOf(it.first.toFloat(), it.second.toFloat())
-            }
-        }
-    }
-
     private fun isSearchMode() = binding.motionToolbar.progress == 1F
 
-    private fun isToolbarAnimRunning() = binding.motionToolbar.progress !in listOf(0F, 1F)
-
     private fun fetchBackdropHeaderHeight() = binding.backdropHeader.height
-
-    private fun fetchUpperBoundHeight() =
-        binding.buttonMoreFilters.height + resources.getDimension(R.dimen.small_margin).toInt()
 
     private fun loadRevealShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.show_elevation)

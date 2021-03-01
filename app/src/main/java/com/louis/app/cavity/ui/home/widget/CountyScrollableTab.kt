@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StyleRes
+import androidx.core.content.res.use
 import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -16,14 +17,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.util.L
 import kotlin.math.pow
 
 class CountyScrollableTab @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : RecyclerView(context, attrs, defStyleAttr) {
+) :
+    RecyclerView(context, attrs, defStyleAttr) {
 
     private val tabAdapter by lazy { TabAdapter(style = tabTextStyle) }
     private var selectedColor = Color.WHITE
@@ -95,22 +96,18 @@ class CountyScrollableTab @JvmOverloads constructor(
     }
 
     private fun initAttributes(set: AttributeSet?) {
-        context.obtainStyledAttributes(set, R.styleable.CountyScrollableTab).apply {
-            try {
-                background = MaterialShapeDrawable.createWithElevationOverlay(context, elevation)
-                selectedColor = getColor(R.styleable.CountyScrollableTab_selectedColor, Color.WHITE)
-                unSelectedColor =
-                    getColor(R.styleable.CountyScrollableTab_unSelectedColor, Color.GRAY)
-                tabTextStyle =
-                    TabStyle(
-                        getResourceId(
-                            R.styleable.CountyScrollableTab_tabTextAppearance,
-                            R.style.TabTextAppearance
-                        )
+        context.obtainStyledAttributes(set, R.styleable.CountyScrollableTab).use {
+            background = MaterialShapeDrawable.createWithElevationOverlay(context, elevation)
+            selectedColor = it.getColor(R.styleable.CountyScrollableTab_selectedColor, Color.WHITE)
+            unSelectedColor =
+                it.getColor(R.styleable.CountyScrollableTab_unSelectedColor, Color.GRAY)
+            tabTextStyle =
+                TabStyle(
+                    it.getResourceId(
+                        R.styleable.CountyScrollableTab_tabTextAppearance,
+                        R.style.TabTextAppearance
                     )
-            } finally {
-                recycle()
-            }
+                )
         }
     }
 

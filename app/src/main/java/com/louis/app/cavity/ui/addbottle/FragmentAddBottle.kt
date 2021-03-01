@@ -86,7 +86,7 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
         otherInfoViewModel.bottleUpdatedEvent.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
                 // Using snackbar provider since we are quitting this fragment
-                snackbarProvider.onShowSnackbarRequested(stringRes)
+                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = true)
                 findNavController().navigateUp()
             }
         }
@@ -100,9 +100,7 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
         binding.viewPager.currentItem--
     }
 
-    override fun getBottleId(): Long {
-        return dateViewModel.bottleId
-    }
+    override fun getBottleId() = dateViewModel.bottleId
 
     override fun onDestroyView() {
         super.onDestroyView()

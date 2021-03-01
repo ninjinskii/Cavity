@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
+import com.louis.app.cavity.db.Converters
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 
@@ -27,30 +29,29 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     private fun initRecyclerView() {
-        val colors = context?.let {
+        val colors = requireContext().run {
             listOf(
-                it.getColor(R.color.wine_white),
-                it.getColor(R.color.wine_red),
-                it.getColor(R.color.wine_sweet),
-                it.getColor(R.color.wine_rose),
-                it.getColor(R.color.cavity_gold)
+                getColor(R.color.wine_white),
+                getColor(R.color.wine_red),
+                getColor(R.color.wine_sweet),
+                getColor(R.color.wine_rose)
             )
         }
 
         val onVintageClick = { wineId: Long, bottle: Bottle ->
-            val action = FragmentHomeDirections.homeToBottleDetails(wineId, bottle.bottleId)
+            val action = FragmentHomeDirections.homeToBottleDetails(wineId, bottle.id)
             findNavController().navigate(action)
         }
 
-        val wineAdapter = WineRecyclerAdapter(colors ?: return, onVintageClick) { wine ->
+        val wineAdapter = WineRecyclerAdapter(colors, onVintageClick) { wine ->
             activity?.supportFragmentManager?.let {
                 val action = FragmentHomeDirections.homeToWineOptions(
-                    wine.wineId,
+                    wine.id,
                     wine.countyId,
                     wine.name,
                     wine.naming,
                     wine.isOrganic.toBoolean(),
-                    wine.color
+                    wine.color.ordinal
                 )
                 findNavController().navigate(action)
             }
@@ -67,16 +68,18 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                     if (
                         !recyclerView.canScrollVertically(1) &&
                         !recyclerView.canScrollVertically(-1)
-                    ) homeViewModel.isScrollingToTop.postValue(true)
-                    else if (dy > 0) homeViewModel.isScrollingToTop.postValue(false)
-                    else if (dy < 0) homeViewModel.isScrollingToTop.postValue(true)
+                    ) {
+                        homeViewModel.isScrollingToTop.postValue(true)
+                    } else {
+                        homeViewModel.isScrollingToTop.postValue(dy < 0)
+                    }
                 }
             })
         }
 
         val countyId = arguments?.getLong(COUNTY_ID)
+
         homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
-            L.v("updated observer for county: $countyId")
             wineAdapter.submitList(it)
         }
     }

@@ -11,6 +11,10 @@
         <attr name="otherAvd" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="AnimatedCheckBox">
+        <attr name="delayBeforeRepeat" format="integer" />
+    </declare-styleable>
+
     <declare-styleable name="RuledTextInputLayout">
         <attr name="rule">
             <flag name="absent" value="0" />

@@ -3,6 +3,7 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.relation.grape.GrapeWithQuantifiedGrapes
 
 @Dao
 interface GrapeDao {
@@ -16,8 +17,9 @@ interface GrapeDao {
     suspend fun deleteGrape(grape: Grape)
 
     @Query("SELECT * FROM grape")
-    fun getAllGrapes(): LiveData<List<Grape>>
-
-    @Query("SELECT * FROM grape")
     suspend fun getAllGrapesNotLive(): List<Grape>
+
+    @Transaction
+    @Query("SELECT * FROM grape")
+    fun getGrapeWithQuantifiedGrapes(): LiveData<List<GrapeWithQuantifiedGrapes>>
 }

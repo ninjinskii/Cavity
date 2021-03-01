@@ -42,7 +42,9 @@ android {
 
 dependencies {
     def nav_version = "2.3.0"
-    def room_version = "2.2.5"
+    def room_version = "2.3.0-alpha02"
+    def camerax_version = "1.0.0-rc02"
+    def paging_version = "3.0.0-alpha13"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -84,5 +86,14 @@ dependencies {
     // Glide
     implementation "com.github.bumptech.glide:glide:4.11.0"
     annotationProcessor "com.github.bumptech.glide:compiler:4.11.0"
+
+    // CameraX
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    implementation "androidx.camera:camera-view:1.0.0-alpha21"
+
+    // Paging
+    implementation "androidx.paging:paging-runtime:$paging_version"
+
 
 }

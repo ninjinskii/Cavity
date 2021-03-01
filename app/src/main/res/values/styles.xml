@@ -4,8 +4,10 @@
         <item name="colorPrimary">@color/cavity_gold</item>
         <item name="colorAccent">@color/cavity_gold</item>
         <item name="colorSecondary">@color/cavity_gold</item>
+        <item name="colorOnError">#ffffff</item>
 
         <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
+        <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
     </style>
 
     <!-- Scrollable tab -->
@@ -46,4 +48,7 @@
         <item name="android:layout_marginStart">@dimen/medium_margin</item>
     </style>
 
+    <style name="RoundedImage">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <plurals name="reviews">
         <item quantity="one">Avis (%d) :</item>
         <item quantity="other">Avis (%d) :</item>
@@ -8,5 +8,15 @@
     <plurals name="matching_wines">
         <item quantity="one">%d résultat</item>
         <item quantity="other">%d résultats</item>
+    </plurals>
+
+    <plurals name="wines">
+        <item quantity="one">%d vin</item>
+        <item quantity="other">%d vins</item>
+    </plurals>
+
+    <plurals name="bottles">
+        <item quantity="one">%d bouteille</item>
+        <item quantity="other">%d bouteilles</item>
     </plurals>
 </resources>

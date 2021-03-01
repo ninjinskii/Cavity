@@ -1,16 +1,28 @@
 package com.louis.app.cavity.ui.widget
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Paint.ANTI_ALIAS_FLAG
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.util.AttributeSet
+import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
+import androidx.core.content.res.use
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textfield.TextInputLayout
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.L
 
 class RuledTextInputLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : TextInputLayout(context, attrs, defStyleAttr) {
+) :
+    TextInputLayout(context, attrs, defStyleAttr) {
 
     companion object {
         const val RULE_ABSENT = 0x0
@@ -21,7 +33,7 @@ class RuledTextInputLayout @JvmOverloads constructor(
     }
 
     private val rules = mutableSetOf<Rule>()
-    private val flags : Int
+    private var flags: Int = 0
 
     init {
         context.theme.obtainStyledAttributes(
@@ -29,13 +41,9 @@ class RuledTextInputLayout @JvmOverloads constructor(
             R.styleable.RuledTextInputLayout,
             defStyleAttr,
             0
-        ).apply {
-            try {
-                flags = getInteger(R.styleable.RuledTextInputLayout_rule, RULE_ABSENT)
-                setDefaultRules()
-            } finally {
-                recycle()
-            }
+        ).use {
+            flags = it.getInteger(R.styleable.RuledTextInputLayout_rule, RULE_ABSENT)
+            setDefaultRules()
         }
     }
 
@@ -44,7 +52,7 @@ class RuledTextInputLayout @JvmOverloads constructor(
     }
 
     fun validate(): Boolean {
-        val input = editText?.text.toString()
+        val input = editText?.text.toString().trim()
 
         if (!containsFlag(RULE_REQUIRED) && input.isBlank())
             return true
@@ -106,6 +114,33 @@ class RuledTextInputLayout @JvmOverloads constructor(
         // TODO: This can cause a memory leak if not run, does it ? (if dev add custom rule with capturing lambda)
         rules.clear()
     }
+
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    override fun onDraw(canvas: Canvas?) {
+//        super.onDraw(canvas)
+//
+//        val paint = Paint(ANTI_ALIAS_FLAG).apply {
+//            style = Paint.Style.STROKE
+//            color = Color.RED
+//            strokeWidth = 20f
+//        }
+//
+//        val paint2 = Paint(ANTI_ALIAS_FLAG).apply {
+//            style = Paint.Style.STROKE
+//            color = Color.GREEN
+//            strokeWidth = 40f
+//        }
+//
+//        canvas?.apply {
+//            val bg = editText?.background as MaterialShapeDrawable
+//            val a = bg.transparentRegion?.boundaryPath
+//            clipOutPath(a ?: return) // if < api26: clipPath(path, Region.Op.XOR)
+//            drawLine(0f, 0f, 150f, 150f, paint)
+//            drawLine(150f, 150f, 300f, 300f, paint2)
+//            //editText?.background = ColorDrawable(Color.RED)
+//            //clipOutPath(a ?: return)
+//        }
+//    }
 
 }
 

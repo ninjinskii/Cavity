@@ -6,30 +6,21 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.doOnLayout
-import androidx.core.view.doOnNextLayout
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.DialogAddCountyBinding
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
+import com.louis.app.cavity.db.Converters
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.ui.CountyLoader
+import com.louis.app.cavity.ui.ChipLoader
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
-import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.*
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -40,6 +31,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     companion object {
         const val PICK_IMAGE_RESULT_CODE = 1
+        const val TAKEN_PHOTO_URI = "com.louis.app.cavity.ui.TAKEN_PHOTO_URI"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (savedInstanceState == null)
+            addWineViewModel.start(args.editedWineId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,8 +47,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
         setupNavigation(binding.appBar.toolbar)
         snackbarProvider = activity as SnackbarProvider
-
-        addWineViewModel.start(args.editedWineId)
 
         inflateChips()
         setListeners()
@@ -67,11 +64,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             val toInflate = allCounties - alreadyInflated
             alreadyInflated.addAll(toInflate)
 
-            CountyLoader().loadCounties(
-                lifecycleScope,
-                layoutInflater,
+            ChipLoader(lifecycleScope, layoutInflater).loadChips(
                 binding.countyChipGroup,
-                toInflate,
+                toInflate.toMutableList(),
                 preselect = listOf(args.countyId)
             )
         }
@@ -117,9 +112,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             showDialog()
         }
 
-        binding.buttonAddCountyIfEmpty.setOnClickListener {
-            showDialog()
-        }
+//        binding.buttonAddCountyIfEmpty.setOnClickListener {
+//            showDialog()
+//        }
 
         binding.buttonBrowsePhoto.setOnClickListener {
             val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -135,7 +130,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
 
         binding.buttonTakePhoto.setOnClickListener {
-            // Start camera activity
+            val action = FragmentAddWineDirections.addWineToCamera()
+            findNavController().navigate(action)
         }
 
         binding.buttonRemoveWineImage.setOnClickListener {
@@ -145,46 +141,53 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     }
 
     private fun showDialog() {
-        val dialogBinding = DialogAddCountyBinding.inflate(layoutInflater)
+        val dialogResources = SimpleInputDialog.DialogContent(
+            title = R.string.add_county,
+            hint = R.string.county
+        ) {
+            addWineViewModel.insertCounty(it)
+        }
 
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.add_county)
-            .setNegativeButton(R.string.cancel) { _, _ ->
-            }
-            .setPositiveButton(R.string.submit) { _, _ ->
-                addWineViewModel.addCounty(dialogBinding.countyName.text.toString().trim())
-            }
-            .setView(dialogBinding.root)
-            .setOnDismissListener { dialogBinding.root.hideKeyboard() }
-            .show()
-
-        dialogBinding.countyName.post { dialogBinding.countyName.showKeyboard() }
+        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
     }
 
     private fun observe() {
         addWineViewModel.updatedWine.observe(viewLifecycleOwner) {
+            val colorNumber = Converters().wineColorToNumber(it.color)
+
             with(binding) {
                 naming.setText(it.naming)
                 name.setText(it.name)
                 cuvee.setText(it.cuvee)
-                (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
+                (colorChipGroup.getChildAt(colorNumber) as Chip).isChecked = true
                 organicWine.isChecked = it.isOrganic.toBoolean()
-                loadImage(it.imgPath)
             }
+        }
+
+        addWineViewModel.image.observe(viewLifecycleOwner) {
+            loadImage(it)
         }
 
         addWineViewModel.wineUpdatedEvent.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes)
+                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = true)
                 findNavController().navigateUp()
             }
         }
 
         addWineViewModel.userFeedback.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes)
+                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = false)
             }
         }
+
+        findNavController()
+            .currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<String>(TAKEN_PHOTO_URI)
+            ?.observe(viewLifecycleOwner) {
+                addWineViewModel.setImage(it)
+            }
     }
 
     private fun requestMediaPersistentPermission(fileBrowserIntent: Intent?) {
@@ -206,21 +209,18 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             val imagePath = data.data.toString()
             requestMediaPersistentPermission(data)
             addWineViewModel.setImage(imagePath)
-            loadImage(imagePath)
             binding.wineMiniImage.setVisible(true)
         } else {
-            snackbarProvider.onShowSnackbarRequested(R.string.base_error)
+            snackbarProvider.onShowSnackbarRequested(R.string.base_error, useAnchorView = false)
         }
     }
 
     private fun loadImage(uri: String?) {
         if (!uri.isNullOrEmpty()) {
-            context?.let {
-                Glide.with(it)
-                    .load(Uri.parse(uri))
-                    .centerCrop()
-                    .into(binding.wineMiniImage)
-            }
+            Glide.with(requireContext())
+                .load(Uri.parse(uri))
+                .centerCrop()
+                .into(binding.wineMiniImage)
 
             toggleImageViews(true)
         } else {

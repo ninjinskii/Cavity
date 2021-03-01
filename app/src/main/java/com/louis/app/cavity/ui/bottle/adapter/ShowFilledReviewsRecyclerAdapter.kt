@@ -11,7 +11,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemShowReviewMedalBinding
 import com.louis.app.cavity.databinding.ItemShowReviewRateBinding
 import com.louis.app.cavity.databinding.ItemShowReviewStarBinding
-import com.louis.app.cavity.model.relation.FilledReviewAndReview
+import com.louis.app.cavity.model.relation.review.FilledReviewAndReview
 
 
 class ShowFilledReviewsRecyclerAdapter :
@@ -58,9 +58,7 @@ class ShowFilledReviewsRecyclerAdapter :
         holder.bind(currentList[position])
     }
 
-    override fun getItemId(position: Int): Long {
-        return currentList[position].getId()
-    }
+    override fun getItemId(position: Int) = currentList[position].getId()
 
     override fun getItemViewType(position: Int): Int {
         val (_, review) = currentList[position]

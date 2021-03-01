@@ -15,17 +15,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.DialogAddBottleBinding
-import com.louis.app.cavity.databinding.DialogUseBottleBinding
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
-import com.louis.app.cavity.ui.search.widget.AnimatedImageButton
-import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.showSnackbar
-import com.louis.app.cavity.util.toBoolean
-import kotlinx.android.synthetic.*
+import com.louis.app.cavity.util.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -36,6 +29,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
+
+        L.v("$args")
+        bottleDetailsViewModel.setBottle(args.bottleId)
 
         initRecyclerView()
         observe()
@@ -51,7 +47,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             adapter = reviewAdapter
         }
 
-        bottleDetailsViewModel.getFReviewForBottle(args.bottleId).observe(viewLifecycleOwner) {
+        bottleDetailsViewModel.getFReviewForBottle().observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.reviewCardView.setVisible(false)
             } else {
@@ -61,11 +57,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun observe() {
-        bottleDetailsViewModel.getBottleById(args.bottleId).observe(viewLifecycleOwner) {
+        bottleDetailsViewModel.getBottleById().observe(viewLifecycleOwner) {
             updateUI(it)
         }
 
-        bottleDetailsViewModel.getQGrapesForBottle(args.bottleId).observe(viewLifecycleOwner) {
+        bottleDetailsViewModel.getQGrapesForBottle().observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.grapesCardView.setVisible(false)
             } else {
@@ -92,7 +88,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 binding.coordinator.showSnackbar(stringRes)
             }
         }
-
     }
 
     private fun setListeners() {
@@ -111,51 +106,46 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         binding.buttonConsume.setOnClickListener {
             (it as Checkable).isChecked = false
-            val dialogBinding = DialogUseBottleBinding.inflate(layoutInflater)
 
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(resources.getString(R.string.use_long))
-                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
-                }
-                .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
-                    val count = dialogBinding.bottleCount.text.toString().toInt()
-                    bottleDetailsViewModel.removeBottles(args.bottleId, count)
-                    // TODO: history
-                }
-                .setView(dialogBinding.root)
-                .show()
+            val action = FragmentBottleDetailsDirections.bottleDetailsToConsumeBottle(args.bottleId)
+            findNavController().navigate(action)
         }
 
-        binding.buttonProvide.setOnClickListener {
+        binding.buttonGiftTo.setOnClickListener {
             (it as Checkable).isChecked = false
-            val dialogBinding = DialogAddBottleBinding.inflate(layoutInflater)
 
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(resources.getString(R.string.entry))
-                .setMessage(resources.getString(R.string.how_many_to_add))
-                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
-                }
-                .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
-                    val count = dialogBinding.bottleCount.text.toString().toInt()
-                    bottleDetailsViewModel.addBottles(args.bottleId, count)
-                }
-                .setView(dialogBinding.root)
-                .show()
+            val action =
+                FragmentBottleDetailsDirections.bottleDetailsToGiftBottle(args.bottleId)
+            findNavController().navigate(action)
         }
 
         binding.buttonShowPdf.setOnClickListener {
             bottleDetailsViewModel.preparePdf(args.bottleId)
         }
 
-        binding.favorite.setOnClickListener {
-            val button = it as AnimatedImageButton
-            button.apply {
-                triggerAnimation()
+        binding.buttonShowHistory.setOnClickListener {
+            val action = FragmentBottleDetailsDirections.bottleDetailsToHistory(args.bottleId)
+            findNavController().navigate(action)
+        }
 
-                if (!isAnimationRunning()) {
-                    bottleDetailsViewModel.toggleFavorite(args.bottleId)
+        binding.favorite.setOnClickListener {
+            bottleDetailsViewModel.toggleFavorite(args.bottleId)
+        }
+
+        binding.buttonRevertConsumption.setOnClickListener {
+            bottleDetailsViewModel.revertBottleConsumption(args.bottleId)
+        }
+
+        binding.buttonUltraDelete.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(resources.getString(R.string.confirm_bottle_delete))
+                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                 }
-            }
+                .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
+                    bottleDetailsViewModel.deleteBottle(args.bottleId)
+                    findNavController().popBackStack()
+                }
+                .show()
         }
     }
 
@@ -193,7 +183,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private fun updateUI(bottle: Bottle) {
         with(binding) {
-            stock.text = getString(R.string.stock_number, bottle.count)
+            val consumed = bottle.consumed.toBoolean()
+            buttonGroupInteract.setVisible(!consumed)
+            consumedBanner.setVisible(consumed)
+
             apogee.setData(bottle.apogee.toString())
             price.setData(
                 getString(
@@ -206,16 +199,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             buyDate.setData(DateFormatter.formatDate(bottle.buyDate))
             otherInfo.setData(bottle.otherInfo)
             bottleVintage.text = bottle.vintage.toString()
-
-            if (!bottle.hasPdf()) {
-                noPdf.setVisible(true)
-                buttonShowPdf.setVisible(false)
-            }
-
-            if (bottle.isFavorite.toBoolean()) {
-                // TODO: Fix favorite wrong icon when bottle is fav
-                favorite.triggerAnimation()
-            }
+            buttonShowPdf.isEnabled = bottle.hasPdf()
+            favorite.isChecked = bottle.isFavorite.toBoolean()
         }
     }
 

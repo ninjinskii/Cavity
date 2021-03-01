@@ -13,7 +13,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.model.relation.WineWithBottles
+import com.louis.app.cavity.model.WineColor
+import com.louis.app.cavity.model.relation.wine.WineWithBottles
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -21,7 +22,8 @@ class WineRecyclerAdapter(
     private val colors: List<Int>,
     private val onVintageClickListener: (Long, Bottle) -> Unit,
     private val onShowOptionsListener: (Wine) -> Unit,
-) : ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
+) :
+    ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,16 +31,15 @@ class WineRecyclerAdapter(
         return WineViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: WineViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: WineViewHolder, position: Int) {
         holder.bind(getItem(position))
-
-    override fun getItemId(position: Int): Long {
-        return currentList[position].wine.wineId
     }
+
+    override fun getItemId(position: Int) = getItem(position).wine.id
 
     class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {
         override fun areItemsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
-            oldItem.wine.wineId == newItem.wine.wineId
+            oldItem.wine.id == newItem.wine.id
 
         override fun areContentsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
             oldItem.wine == newItem.wine && oldItem.bottles == newItem.bottles
@@ -47,15 +48,17 @@ class WineRecyclerAdapter(
     inner class WineViewHolder(private val binding: ItemWineBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        // TODO: Might use a different way to filter bottles
         fun bind(wineWithBottles: WineWithBottles) {
             val wine = wineWithBottles.wine
-            val bottles = wineWithBottles.bottles.sortedBy { it.vintage }
+            val bottles =
+                wineWithBottles.bottles.filter { !it.consumed.toBoolean() }.sortedBy { it.vintage }
 
             with(binding.wineColorNameNaming) {
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
                 organicImage.setVisible(wine.isOrganic.toBoolean())
-                wineColorIndicator.setColorFilter(colors[wine.color])
+                wineColorIndicator.setColorFilter(colors[wine.color.ordinal])
                 binding.chipGroup.removeAllViews()
 
                 for (bottle in bottles) {
@@ -73,7 +76,7 @@ class WineRecyclerAdapter(
                         if (bottle.isReadyToDrink())
                             chipIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
 
-                        setOnClickListener { onVintageClickListener(wine.wineId, bottle) }
+                        setOnClickListener { onVintageClickListener(wine.id, bottle) }
                     }
 
                     binding.chipGroup.addView(chip)

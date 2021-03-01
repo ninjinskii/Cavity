@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.app.Application
+import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,9 +10,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.ui.home.WineColor
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -31,11 +31,14 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     val updatedWine: LiveData<Wine>
         get() = _updatedWine
 
+    private val _image = MutableLiveData<String>()
+    val image: LiveData<String>
+        get() = _image
+
     private val isEditMode: Boolean
         get() = wineId != 0L
 
     private var wineId = 0L
-    private var image = ""
 
     fun start(wineId: Long) {
         this.wineId = wineId
@@ -43,8 +46,8 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         if (wineId != 0L) {
             viewModelScope.launch(IO) {
                 val wine = repository.getWineByIdNotLive(wineId)
-                image = wine.imgPath
                 _updatedWine.postValue(wine)
+                _image.postValue(wine.imgPath)
             }
         }
     }
@@ -55,24 +58,24 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         cuvee: String,
         isOrganic: Int,
         color: Int,
-        county: County,
+        county: County
     ) {
         val colorNumber = when (color) {
-            R.id.colorWhite -> WineColor.COLOR_WHITE
-            R.id.colorRed -> WineColor.COLOR_RED
-            R.id.colorSweet -> WineColor.COLOR_SWEET
-            else -> WineColor.COLOR_ROSE
+            R.id.colorWhite -> WineColor.WINE_WHITE
+            R.id.colorRed -> WineColor.WINE_RED
+            R.id.colorSweet -> WineColor.WINE_SWEET
+            else -> WineColor.WINE_ROSE
         }
 
         val wine = Wine(
             wineId,
             name,
             naming,
-            Wine.wineColorToColorNumber(colorNumber),
+            colorNumber,
             cuvee,
-            county.countyId,
+            county.id,
             isOrganic,
-            image
+            _image.value ?: ""
         )
 
         viewModelScope.launch(IO) {
@@ -89,29 +92,27 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
 
     }
 
-    fun addCounty(countyName: String) {
+    fun insertCounty(countyName: String) {
         viewModelScope.launch(IO) {
-            if (countyName.isNotEmpty()) {
-                val counties = repository.getAllCountiesNotLive().map { it.name }
+            val counties = repository.getAllCountiesNotLive()
 
-                if (countyName !in counties) {
-                    repository.insertCounty(County(name = countyName, prefOrder = counties.size))
-                } else {
-                    _userFeedback.postOnce(R.string.county_already_exist)
-                }
-            } else {
+            try {
+                repository.insertCounty(County(name = countyName, prefOrder = counties.size))
+                _userFeedback.postOnce(R.string.county_added)
+            } catch (e: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.empty_county_name)
+            } catch (e: SQLiteConstraintException) {
+                _userFeedback.postOnce(R.string.county_already_exists)
             }
         }
     }
 
     fun setImage(imagePath: String) {
-        image = imagePath
+        _image.postValue(imagePath)
     }
 
     private fun reset() {
         wineId = -1
-        image = ""
     }
 
     fun getAllCounties() = repository.getAllCounties()
