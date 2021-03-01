@@ -25,6 +25,7 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.history.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.toBoolean
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var scroller: LinearSmoothScroller
@@ -47,6 +48,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
             isHideable = true
+            isFitToContents = true
         }
 
         // TODO: uniformize viewmodels initialization
@@ -99,13 +101,9 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
         }
 
-//        binding.bottleDetails.buttonCloseBottomSheet.setOnClickListener {
-//            if (bottomSheetBehavior.isExpanded()) {
-//                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-//            } else {
-//                historyViewModel.setFilter(HistoryFilter.NoFilter)
-//            }
-//        }
+        binding.bottleDetails.buttonCloseBottomSheet.setOnClickListener {
+            historyViewModel.setFilter(HistoryFilter.NoFilter)
+        }
     }
 
     private fun showDatePicker() {
@@ -127,7 +125,8 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         if (entry == null) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            val (bottle, wine) = entry.bottleAndWine
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
             val title = getString(
                 R.string.name_and_vintage,
@@ -150,15 +149,19 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                     entry.friends,
                     emptyList()
                 )
-//                bottomSheetTitle.text = title
-//                bottomSheetMarker.background =
-//                    ColorDrawable(requireContext().getColor(colorAndFriendLabel.first))
+
+                vintage.text = bottle.vintage.toString()
+
+                // wineDetails.wineColorIndicator.setColorFilter(wine.color)
+                wineDetails.wineName.text = wine.name
+                wineDetails.wineNaming.text = wine.naming
+                wineDetails.organicImage.setVisible(wine.isOrganic.toBoolean())
 
                 participants.setVisible(entry.friends.isNotEmpty())
                 participants.text = colorAndFriendLabel.second?.let { getString(it) } ?: ""
 
                 Glide.with(requireContext())
-                    .load(Uri.parse(entry.bottleAndWine.wine.imgPath))
+                    .load(Uri.parse(wine.imgPath))
                     .centerCrop()
                     .into(wineImage)
             }

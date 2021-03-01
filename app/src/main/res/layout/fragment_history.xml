@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
-    android:clipChildren="false"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/toolbarLayout"
@@ -107,9 +107,10 @@
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        app:behavior_peekHeight="100dp"
+        app:behavior_peekHeight="@dimen/history_wine_image_size"
         app:layout_behavior="@string/bottom_sheet_behavior"
-        app:layout_insetEdge="bottom">
+        app:layout_insetEdge="bottom"
+        tools:background="?attr/colorSurface">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

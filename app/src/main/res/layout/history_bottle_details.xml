@@ -9,52 +9,45 @@
         android:id="@+id/wineImage"
         android:layout_width="@dimen/history_wine_image_size"
         android:layout_height="@dimen/history_wine_image_size"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="4dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:shapeAppearanceOverlay="@style/RoundedImage"
-        android:layout_margin="4dp"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/RoundedImage" />
 
-<!--    <View-->
-<!--        android:id="@+id/bottomSheetMarker"-->
-<!--        android:layout_width="@dimen/history_marker_width"-->
-<!--        android:layout_height="?attr/actionBarSize"-->
-<!--        android:background="@color/cavity_gold"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <include
+        android:id="@+id/wineDetails"
+        layout="@layout/wine_color_name_naming"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xsmall_margin"
+        android:layout_marginEnd="@dimen/small_margin"
+        app:layout_constraintBottom_toBottomOf="@id/wineImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/wineImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.80" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/bottomSheetTitle"-->
-<!--        style="@style/TextAppearance.MaterialComponents.Headline6"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="?attr/actionBarSize"-->
-<!--        android:layout_marginHorizontal="@dimen/medium_margin"-->
-<!--        android:ellipsize="middle"-->
-<!--        android:gravity="center"-->
-<!--        android:singleLine="true"-->
-<!--        app:layout_constraintEnd_toStartOf="@id/buttonCloseBottomSheet"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        tools:text="Château la Cour (2016)" />-->
+    <ImageButton
+        android:id="@+id/buttonCloseBottomSheet"
+        android:layout_width="@dimen/medium_icon"
+        android:layout_height="@dimen/medium_icon"
+        android:layout_margin="@dimen/medium_margin"
+        android:background="?attr/actionBarItemBackground"
+        android:src="@drawable/ic_close"
+        android:tint="?attr/colorOnSurface"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/buttonCloseBottomSheet"-->
-<!--        android:layout_width="@dimen/medium_icon"-->
-<!--        android:layout_height="@dimen/medium_icon"-->
-<!--        android:layout_margin="@dimen/medium_margin"-->
-<!--        android:background="?attr/actionBarItemBackground"-->
-<!--        android:src="@drawable/ic_close"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/bottomSheetTitle"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@id/bottomSheetTitle" />-->
-
-<!--    <com.google.android.material.imageview.ShapeableImageView-->
-<!--        android:id="@+id/wineImage"-->
-<!--        android:layout_width="@dimen/history_wine_image_size"-->
-<!--        android:layout_height="@dimen/history_wine_image_size"-->
-<!--        android:layout_margin="@dimen/large_margin"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/bottomSheetTitle" />-->
+    <TextView
+        android:id="@+id/vintage"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/xsmall_margin"
+        app:layout_constraintEnd_toEndOf="@id/wineImage"
+        app:layout_constraintStart_toStartOf="@id/wineImage"
+        app:layout_constraintBottom_toBottomOf="@id/wineImage"
+        tools:text="2016" />
 
     <TextView
         android:id="@+id/participants"
@@ -62,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/medium_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wineImage"
+        app:layout_constraintTop_toBottomOf="@id/vintage"
         tools:text="Participants: " />
 
     <HorizontalScrollView
