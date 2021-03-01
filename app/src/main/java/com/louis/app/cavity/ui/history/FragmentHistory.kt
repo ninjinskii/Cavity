@@ -9,6 +9,7 @@ import androidx.core.view.marginStart
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
@@ -104,6 +105,14 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         binding.bottleDetails.buttonCloseBottomSheet.setOnClickListener {
             historyViewModel.setFilter(HistoryFilter.NoFilter)
         }
+
+        binding.bottleDetails.buttonShowBottle.setOnClickListener {
+            historyViewModel.selectedEntry.value?.let {
+                val (bottle, wine) = it.bottleAndWine
+                val action = FragmentHistoryDirections.historyToBottle(wine.id, bottle.id)
+                findNavController().navigate(action)
+            }
+        }
     }
 
     private fun showDatePicker() {
@@ -128,11 +137,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             val (bottle, wine) = entry.bottleAndWine
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-            val title = getString(
-                R.string.name_and_vintage,
-                entry.bottleAndWine.wine.name,
-                entry.bottleAndWine.bottle.vintage
-            )
             val colorAndFriendLabel = when (entry.historyEntry.type) {
                 HistoryEntryType.TYPE_CONSUME -> R.color.cavity_red to R.string.consume_label
                 HistoryEntryType.TYPE_REPLENISHMENT -> R.color.cavity_light_green to null

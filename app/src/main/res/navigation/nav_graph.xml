@@ -190,6 +190,9 @@
             android:name="bottleId"
             android:defaultValue="-1L"
             app:argType="long" />
+        <action
+            android:id="@+id/historyToBottle"
+            app:destination="@id/fragmentBottleDetails" />
     </fragment>
 
     <fragment
