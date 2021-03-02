@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
@@ -13,7 +12,6 @@ import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 import com.louis.app.cavity.model.relation.crossref.TastingFriendXRef
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Database(
@@ -34,7 +32,6 @@ import kotlinx.coroutines.launch
     version = 47,
     exportSchema = false
 )
-@TypeConverters(Converters::class)
 abstract class CavityDatabase : RoomDatabase() {
     abstract fun wineDao(): WineDao
     abstract fun bottleDao(): BottleDao

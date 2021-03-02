@@ -428,8 +428,8 @@
                     app:layout_constraintTop_toBottomOf="@id/divider" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/small_margin"
                     android:gravity="center"
                     android:text="@string/delete_bottle_warning"

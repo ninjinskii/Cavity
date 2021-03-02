@@ -17,8 +17,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
-import com.louis.app.cavity.R
-import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.ui.ActivityMain
 
 // Boolean and Int helpers for database compatibility

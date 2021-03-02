@@ -10,7 +10,6 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.model.relation.bottle.BoundedBottle
 import com.louis.app.cavity.ui.search.filters.*
 import kotlinx.coroutines.Dispatchers.Default
