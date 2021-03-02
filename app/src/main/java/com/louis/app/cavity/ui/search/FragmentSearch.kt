@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
@@ -94,28 +93,35 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                 val preselectedGrapes = grapes
                 val preselectedReviews = reviews
 
-                ChipLoader(lifecycleScope, layoutInflater).apply {
-                    loadChips(
-                        binding.countyChipGroup,
-                        countyList,
-                        preselectedCounties,
-                        onCheckedChangeListener = { _, _ -> prepareCountyFilters() }
-                    )
+                ChipLoader.Builder()
+                    .with(lifecycleScope)
+                    .useInflater(layoutInflater)
+                    .load(countyList)
+                    .into(binding.countyChipGroup)
+                    .preselect(preselectedCounties)
+                    .doOnClick { _, _ -> prepareCountyFilters() }
+                    .build()
+                    .go()
 
-                    loadChips(
-                        binding.grapeChipGroup,
-                        grapeList,
-                        preselectedGrapes,
-                        onCheckedChangeListener = { _, _ -> prepareGrapeFilters() }
-                    )
+                ChipLoader.Builder()
+                    .with(lifecycleScope)
+                    .useInflater(layoutInflater)
+                    .load(grapeList)
+                    .into(binding.grapeChipGroup)
+                    .preselect(preselectedGrapes)
+                    .doOnClick { _, _ -> prepareGrapeFilters() }
+                    .build()
+                    .go()
 
-                    loadChips(
-                        binding.reviewChipGroup,
-                        reviewList,
-                        preselectedReviews,
-                        onCheckedChangeListener = { _, _ -> prepareReviewFilters() }
-                    )
-                }
+                ChipLoader.Builder()
+                    .with(lifecycleScope)
+                    .useInflater(layoutInflater)
+                    .load(reviewList)
+                    .into(binding.reviewChipGroup)
+                    .preselect(preselectedReviews)
+                    .doOnClick { _, _ -> prepareReviewFilters() }
+                    .build()
+                    .go()
             }
         }
     }
@@ -143,17 +149,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initRecyclerView() {
-        val colors = requireContext().run {
-            listOf(
-                getColor(R.color.wine_white),
-                getColor(R.color.wine_red),
-                getColor(R.color.wine_sweet),
-                getColor(R.color.wine_rose),
-                getColor(R.color.cavity_gold)
-            )
-        }
-
-        bottlesAdapter = BottleRecyclerAdapter(colors) { wineId, bottleId ->
+        bottlesAdapter = BottleRecyclerAdapter(requireContext()) { wineId, bottleId ->
             val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
             binding.searchView.hideKeyboard()
             findNavController().navigate(action)

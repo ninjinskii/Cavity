@@ -6,8 +6,7 @@ import androidx.lifecycle.*
 import androidx.paging.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
+import com.louis.app.cavity.model.relation.history.BoundedHistoryEntry
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -23,8 +22,8 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val scrollTo: LiveData<Event<Int>>
         get() = _scrollTo
 
-    private val _selectedEntry = MutableLiveData<HistoryEntryWithBottleAndTastingAndFriends>(null)
-    val selectedEntry: LiveData<HistoryEntryWithBottleAndTastingAndFriends>
+    private val _selectedEntry = MutableLiveData<BoundedHistoryEntry>(null)
+    val selectedEntry: LiveData<BoundedHistoryEntry>
         get() = _selectedEntry
 
     // TODO: consider removing public part if not needed
@@ -44,6 +43,12 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                     else null
                 }
         }.cachedIn(viewModelScope)
+    }
+
+    fun start(bottleId: Long) {
+        if (bottleId != -1L) {
+            setFilter(HistoryFilter.BottleFilter(bottleId))
+        }
     }
 
     fun requestScrollToDate(timestamp: Long) {
@@ -80,7 +85,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         _filter.postValue(filter)
     }
 
-    fun setSelectedHistoryEntry(entry: HistoryEntryWithBottleAndTastingAndFriends?) {
+    fun setSelectedHistoryEntry(entry: BoundedHistoryEntry?) {
         _selectedEntry.postValue(entry)
     }
 
@@ -103,7 +108,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun getDataSource(filter: HistoryFilter):
-            PagingSource<Int, HistoryEntryWithBottleAndTastingAndFriends> {
+            PagingSource<Int, BoundedHistoryEntry> {
         return when (filter) {
             is HistoryFilter.TypeFilter -> when (filter.chipId) {
                 R.id.chipReplenishments -> repository.getEntriesByType(1, 3)

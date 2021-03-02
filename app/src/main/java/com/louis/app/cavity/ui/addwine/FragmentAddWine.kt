@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
-import com.louis.app.cavity.db.Converters
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
@@ -64,11 +63,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             val toInflate = allCounties - alreadyInflated
             alreadyInflated.addAll(toInflate)
 
-            ChipLoader(lifecycleScope, layoutInflater).loadChips(
-                binding.countyChipGroup,
-                toInflate.toMutableList(),
-                preselect = listOf(args.countyId)
-            )
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .load(toInflate.toMutableList())
+                .into(binding.countyChipGroup)
+                .preselect(args.countyId)
+                .build()
+                .go()
         }
     }
 
@@ -85,15 +87,16 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                     val cuvee = cuvee.text.toString().trim()
                     val isOrganic = organicWine.isChecked.toInt()
                     val color = colorChipGroup.checkedChipId
-                    val checkedChipId = countyChipGroup.checkedChipId
+                    val checkedCountyChipId = countyChipGroup.checkedChipId
 
                     if (countyChipGroup.checkedChipId == View.NO_ID) {
                         coordinator.showSnackbar(R.string.no_county)
                         nestedScrollView.smoothScrollTo(0, 0)
+                        return@setOnClickListener
                     }
 
                     val county = countyChipGroup
-                        .findViewById<Chip>(checkedChipId)
+                        .findViewById<Chip>(checkedCountyChipId)
                         .getTag(R.string.tag_chip_id) as County
 
                     addWineViewModel.saveWine(
@@ -112,9 +115,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             showDialog()
         }
 
-//        binding.buttonAddCountyIfEmpty.setOnClickListener {
-//            showDialog()
-//        }
+        binding.buttonAddCountyIfEmpty.setOnClickListener {
+            showDialog()
+        }
 
         binding.buttonBrowsePhoto.setOnClickListener {
             val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -153,13 +156,11 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     private fun observe() {
         addWineViewModel.updatedWine.observe(viewLifecycleOwner) {
-            val colorNumber = Converters().wineColorToNumber(it.color)
-
             with(binding) {
                 naming.setText(it.naming)
                 name.setText(it.name)
                 cuvee.setText(it.cuvee)
-                (colorChipGroup.getChildAt(colorNumber) as Chip).isChecked = true
+                (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
                 organicWine.isChecked = it.isOrganic.toBoolean()
             }
         }

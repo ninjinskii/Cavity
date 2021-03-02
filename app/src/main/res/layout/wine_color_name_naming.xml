@@ -10,7 +10,7 @@
         android:layout_width="@dimen/wine_color_indicator_width"
         android:layout_height="@dimen/wine_color_indicator_height"
         android:contentDescription=""
-        app:tint="@color/wine_red"
+        tools:tint="@color/wine_red"
         android:src="@drawable/shape_color_wine"
         app:layout_constraintBottom_toBottomOf="@+id/wineNaming"
         app:layout_constraintStart_toStartOf="parent"

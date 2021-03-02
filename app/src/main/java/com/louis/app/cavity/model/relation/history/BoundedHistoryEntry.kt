@@ -12,7 +12,7 @@ import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
 import com.louis.app.cavity.model.relation.tasting.TastingWithBottles
 
 // TODO: Might need optimization
-data class HistoryEntryWithBottleAndTastingAndFriends(
+data class BoundedHistoryEntry(
     @Embedded
     val historyEntry: HistoryEntry,
     @Relation(

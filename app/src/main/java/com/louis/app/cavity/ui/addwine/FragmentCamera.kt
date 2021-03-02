@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.Manifest
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -11,7 +10,6 @@ import android.util.DisplayMetrics
 import android.view.View
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
@@ -19,7 +17,9 @@ import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentCameraBinding
 import com.louis.app.cavity.ui.Cavity
+import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.TAKEN_PHOTO_URI
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.showSnackbar
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -39,6 +39,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     }
 
     private lateinit var cameraExecutor: ExecutorService
+    private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
 
@@ -46,14 +47,12 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCameraBinding.bind(view)
 
+        snackbarProvider = activity as SnackbarProvider
+
         if (hasPermissions()) {
             startCamera()
         } else {
-            ActivityCompat.requestPermissions(
-                activity as Activity,
-                REQUIRED_PERMISSIONS,
-                REQUEST_CODE_PERMISSIONS
-            )
+            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -171,6 +170,24 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             return AspectRatio.RATIO_4_3
         }
         return AspectRatio.RATIO_16_9
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        L.v("request permission result")
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (hasPermissions()) {
+                startCamera()
+            } else {
+                snackbarProvider.onShowSnackbarRequested(
+                    R.string.permissions_denied, useAnchorView = false
+                )
+                findNavController().navigateUp()
+            }
+        }
     }
 
     override fun onDestroyView() {

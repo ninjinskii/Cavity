@@ -8,7 +8,7 @@ import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 import java.util.*
 
-data class BottleAndWineWithQGrapesAndFReviews(
+data class BoundedBottle(
     @Embedded val bottle: Bottle,
     @Relation(
         parentColumn = "wine_id",

@@ -2,9 +2,10 @@ package com.louis.app.cavity.ui.history
 
 import android.content.Context
 import android.graphics.Typeface
-import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -13,20 +14,18 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
 import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
-import com.louis.app.cavity.model.HistoryEntryType
-import com.louis.app.cavity.model.WineColor
-import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
+import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
 
 class HistoryRecyclerAdapter(
-    context: Context,
+    private val _context: Context,
     private val onHeaderClick: () -> Unit,
     private val onItemClick: (HistoryUiModel.EntryModel) -> Unit
 ) :
     PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(
         HistoryEntryDiffItemCallback()
-    ) {
+    ), WineColorResolver {
 
     companion object {
         const val TYPE_SEPARATOR = 0
@@ -34,18 +33,14 @@ class HistoryRecyclerAdapter(
         const val TYPE_TASTING = 2
     }
 
-    val redMarker = ColorDrawable(context.getColor(R.color.cavity_red))
-    val greenMarker = ColorDrawable(context.getColor(R.color.cavity_light_green))
+    // Only lightweight drawables here
+    private val drawables = mutableMapOf<@DrawableRes Int, Drawable>()
 
-    val wineWhite = ContextCompat.getColor(context, R.color.wine_white)
-    val wineRed = ContextCompat.getColor(context, R.color.wine_red)
-    val wineSweet = ContextCompat.getColor(context, R.color.wine_sweet)
-    val wineRose = ContextCompat.getColor(context, R.color.wine_rose)
+    private fun getDrawable(@DrawableRes id: Int): Drawable? {
+        return drawables[id] ?: ContextCompat.getDrawable(_context, id)?.also { drawables[id] = it }
+    }
 
-    val glassIcon = ContextCompat.getDrawable(context, R.drawable.ic_glass)
-    val bottleIcon = ContextCompat.getDrawable(context, R.drawable.ic_bottle)
-    val giftIcon = ContextCompat.getDrawable(context, R.drawable.ic_gift)
-    val tastingIcon = ContextCompat.getDrawable(context, R.drawable.ic_toast_wine)
+    override fun getOverallContext() = _context
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
@@ -77,7 +72,7 @@ class HistoryRecyclerAdapter(
         return when (val item = getItem(position)) {
             is HistoryUiModel.HeaderModel -> TYPE_SEPARATOR
             is HistoryUiModel.EntryModel ->
-                if (item.model.historyEntry.type == HistoryEntryType.TYPE_TASTING)
+                if (item.model.historyEntry.type == 4)
                     TYPE_TASTING else TYPE_NORMAL
             else -> throw IllegalStateException("Unknown view type")
         }
@@ -86,12 +81,12 @@ class HistoryRecyclerAdapter(
     class HistoryEntryDiffItemCallback : DiffUtil.ItemCallback<HistoryUiModel>() {
         override fun areItemsTheSame(oldItem: HistoryUiModel, newItem: HistoryUiModel): Boolean {
             val isSameEntry = oldItem is HistoryUiModel.EntryModel
-                    && newItem is HistoryUiModel.EntryModel
-                    && oldItem.model.historyEntry.id == newItem.model.historyEntry.id
+                && newItem is HistoryUiModel.EntryModel
+                && oldItem.model.historyEntry.id == newItem.model.historyEntry.id
 
             val isSameSeparator = oldItem is HistoryUiModel.HeaderModel
-                    && newItem is HistoryUiModel.HeaderModel
-                    && oldItem == newItem
+                && newItem is HistoryUiModel.HeaderModel
+                && DateFormatter.roundToDay(oldItem.date) == DateFormatter.roundToDay(newItem.date)
 
             return isSameEntry or isSameSeparator
         }
@@ -105,85 +100,52 @@ class HistoryRecyclerAdapter(
 
         fun bind(entry: HistoryUiModel.EntryModel?) {
             entry?.let {
+                val (markerColor, icon, label, showFriends) = it.model.historyEntry.getResources()
                 val (bottle, wine) = it.model.bottleAndWine
-                val color = when(wine.color) {
-                    WineColor.WINE_WHITE -> wineWhite
-                    WineColor.WINE_RED -> wineRed
-                    WineColor.WINE_SWEET -> wineSweet
-                    WineColor.WINE_ROSE -> wineRose
-                }
+                val resolvedWineColor = resolveColor(wine.color)
+                val resolvedMarkerColor = _context.getColor(markerColor)
 
                 with(binding) {
-                    wineColorNameNaming.wineColorIndicator.setColorFilter(color)
+                    wineColorNameNaming.wineColorIndicator.setColorFilter(resolvedWineColor)
                     wineColorNameNaming.wineNaming.text = wine.naming
                     wineColorNameNaming.wineName.text = wine.name
                     vintage.text = bottle.vintage.toString()
 
-                    when (it.model.historyEntry.type) {
-                        HistoryEntryType.TYPE_CONSUME -> bindForConsume(it.model)
-                        HistoryEntryType.TYPE_REPLENISHMENT -> bindForReplenishment(it.model)
-                        HistoryEntryType.TYPE_GIFTED_TO -> bindForGift(it.model, to = true)
-                        else -> bindForGift(it.model, to = false)
+                    friends.setVisible(showFriends && it.model.friends.isNotEmpty())
+                    friends.text = it.model.friends.size.toString()
+
+                    marker.setBackgroundColor(resolvedMarkerColor)
+
+                    comment.apply {
+                        // Consume
+                        if (it.model.historyEntry.type == 0) {
+                            val comment = it.model.historyEntry.comment
+
+                            if (comment.isBlank()) {
+                                setTypeface(null, Typeface.ITALIC)
+                                text = context.getString(R.string.no_description)
+                            } else {
+                                typeface = Typeface.DEFAULT
+                                text = comment
+                            }
+                        } else {
+                            typeface = Typeface.DEFAULT
+
+                            val data = if (it.model.historyEntry.type == 1) {
+                                it.model.bottleAndWine.bottle.buyLocation
+                            } else {
+                                it.model.friends.firstOrNull()?.name ?: ""
+                            }
+
+                            text = context.getString(label, data)
+                        }
+
+                        setCompoundDrawablesWithIntrinsicBounds(getDrawable(icon), null, null, null)
                     }
 
                     root.setOnClickListener {
                         onItemClick(entry)
                     }
-                }
-
-            }
-        }
-
-        private fun bindForConsume(item: HistoryEntryWithBottleAndTastingAndFriends) {
-            with(binding) {
-                bottles.setVisible(false)
-                friends.setVisible(true)
-                wineColorNameNaming.wineColorIndicator.setVisible(true)
-                marker.background = redMarker
-
-                comment.apply {
-                    if (item.historyEntry.comment.isBlank()) {
-                        setTypeface(null, Typeface.ITALIC)
-                        text = context.getString(R.string.no_description)
-                    } else {
-                        typeface = Typeface.DEFAULT
-                        text = item.historyEntry.comment
-                    }
-                }
-
-                comment.setCompoundDrawablesWithIntrinsicBounds(glassIcon, null, null, null)
-                friends.text = item.friends.size.toString()
-            }
-        }
-
-        private fun bindForReplenishment(item: HistoryEntryWithBottleAndTastingAndFriends) {
-            with(binding) {
-                bottles.setVisible(false)
-                friends.setVisible(false)
-                wineColorNameNaming.wineColorIndicator.setVisible(true)
-                marker.background = greenMarker
-
-                comment.apply {
-                    text =
-                        context.getString(R.string.buyed_at, item.bottleAndWine.bottle.buyLocation)
-                    setCompoundDrawablesWithIntrinsicBounds(bottleIcon, null, null, null)
-                    typeface = Typeface.DEFAULT
-                }
-            }
-        }
-
-        private fun bindForGift(item: HistoryEntryWithBottleAndTastingAndFriends, to: Boolean) {
-            with(binding) {
-                bottles.setVisible(false)
-                friends.setVisible(false)
-                wineColorNameNaming.wineColorIndicator.setVisible(true)
-                marker.background = if (to) redMarker else greenMarker
-
-                comment.apply {
-                    val label = if (to) R.string.gifted_to_someone else R.string.gifted_by_someone
-                    text = context.getString(label, item.friends[0].name)
-                    setCompoundDrawablesWithIntrinsicBounds(giftIcon, null, null, null)
-                    typeface = Typeface.DEFAULT
                 }
             }
         }
@@ -203,7 +165,11 @@ class HistoryRecyclerAdapter(
 
                 title.text = entry?.model?.tasting?.tasting?.opportunity
                 bottles.text = entry?.model?.tasting?.bottles?.size?.toString()
-                comment.setCompoundDrawablesWithIntrinsicBounds(tastingIcon, null, null, null)
+                comment.setCompoundDrawablesWithIntrinsicBounds(
+                    entry?.model?.historyEntry?.getResources()?.let {
+                        getDrawable(it.icon)
+                    }, null, null, null
+                )
             }
         }
     }

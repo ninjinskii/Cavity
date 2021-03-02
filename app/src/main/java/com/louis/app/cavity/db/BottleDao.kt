@@ -3,7 +3,7 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.relation.bottle.BottleAndWineWithQGrapesAndFReviews
+import com.louis.app.cavity.model.relation.bottle.BoundedBottle
 
 @Dao
 interface BottleDao {
@@ -42,5 +42,5 @@ interface BottleDao {
 
     @Transaction
     @Query("SELECT bottle.* FROM wine, bottle WHERE wine.id = bottle.wine_id AND bottle.consumed = 0")
-    suspend fun getBottleAndWineWithQGrapesAndFReview(): List<BottleAndWineWithQGrapesAndFReviews>
+    suspend fun getBottleAndWineWithQGrapesAndFReview(): List<BoundedBottle>
 }

@@ -30,8 +30,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
 
-        L.v("$args")
-        bottleDetailsViewModel.setBottle(args.bottleId)
+        bottleDetailsViewModel.start(args.bottleId)
 
         initRecyclerView()
         observe()
@@ -47,7 +46,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             adapter = reviewAdapter
         }
 
-        bottleDetailsViewModel.getFReviewForBottle().observe(viewLifecycleOwner) {
+        bottleDetailsViewModel.reviews.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.reviewCardView.setVisible(false)
             } else {
@@ -57,11 +56,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun observe() {
-        bottleDetailsViewModel.getBottleById().observe(viewLifecycleOwner) {
+        bottleDetailsViewModel.bottle.observe(viewLifecycleOwner) {
             updateUI(it)
         }
 
-        bottleDetailsViewModel.getQGrapesForBottle().observe(viewLifecycleOwner) {
+        bottleDetailsViewModel.grapes.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.grapesCardView.setVisible(false)
             } else {
@@ -120,7 +119,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonShowPdf.setOnClickListener {
-            bottleDetailsViewModel.preparePdf(args.bottleId)
+            bottleDetailsViewModel.preparePdf()
         }
 
         binding.buttonShowHistory.setOnClickListener {
@@ -129,11 +128,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.favorite.setOnClickListener {
-            bottleDetailsViewModel.toggleFavorite(args.bottleId)
+            bottleDetailsViewModel.toggleFavorite()
         }
 
         binding.buttonRevertConsumption.setOnClickListener {
-            bottleDetailsViewModel.revertBottleConsumption(args.bottleId)
+            bottleDetailsViewModel.revertBottleConsumption()
         }
 
         binding.buttonUltraDelete.setOnClickListener {
@@ -142,7 +141,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                 }
                 .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
-                    bottleDetailsViewModel.deleteBottle(args.bottleId)
+                    bottleDetailsViewModel.deleteBottle()
                     findNavController().popBackStack()
                 }
                 .show()

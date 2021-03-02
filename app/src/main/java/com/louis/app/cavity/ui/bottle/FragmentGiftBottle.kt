@@ -53,13 +53,15 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
 
     private fun initChips() {
         lifecycleScope.launch(IO) {
-            ChipLoader(lifecycleScope, layoutInflater).apply {
-                loadChips(
-                    binding.friendsChipGroup,
-                    consumeGiftBottleViewModel.getAllFriendsNotLive(),
-                    preselect = emptyList()
-                )
-            }
+            val friends = consumeGiftBottleViewModel.getAllFriendsNotLive()
+
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .load(friends)
+                .into(binding.friendsChipGroup)
+                .build()
+                .go()
         }
     }
 
