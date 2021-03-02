@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.bottle
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
-import androidx.paging.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.ui.history.HistoryUiModel
@@ -17,10 +16,7 @@ import kotlinx.coroutines.launch
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
-    // TODO: consider removing public part if not necessary in future
-    private val _bottleId = MutableLiveData<Long>()
-    val bottleId: LiveData<Long>
-        get() = _bottleId
+    private val bottleId = MutableLiveData<Long>()
 
     private val _pdfEvent = MutableLiveData<Event<Uri>>()
     val pdfEvent: LiveData<Event<Uri>>
@@ -30,25 +26,29 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    fun setBottle(bottleId: Long) {
-        _bottleId.postValue(bottleId)
+    val bottle = bottleId.switchMap { repository.getBottleById(it) }
+
+    val grapes = bottleId.switchMap { repository.getQGrapesAndGrapeForBottle(it) }
+
+    val reviews = bottleId.switchMap { repository.getFReviewAndReviewForBottle(it) }
+
+    fun start(bottleId: Long) {
+        this.bottleId.postValue(bottleId)
     }
 
     fun getWineById(wineId: Long) = repository.getWineById(wineId)
 
-    fun getBottleById() = bottleId.switchMap { repository.getBottleById(it) }
+    fun deleteBottle() {
+        val bottleId = bottleId.value ?: 0
 
-    fun getQGrapesForBottle() = bottleId.switchMap { repository.getQGrapesAndGrapeForBottle(it) }
-
-    fun getFReviewForBottle() = bottleId.switchMap { repository.getFReviewAndReviewForBottle(it) }
-
-    fun deleteBottle(bottleId: Long) {
         viewModelScope.launch(IO) {
             repository.deleteBottleById(bottleId)
         }
     }
 
-    fun toggleFavorite(bottleId: Long) {
+    fun toggleFavorite() {
+        val bottleId = bottleId.value ?: 0
+
         viewModelScope.launch(IO) {
             repository.run {
                 val bottle = getBottleByIdNotLive(bottleId)
@@ -57,7 +57,9 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun preparePdf(bottleId: Long) {
+    fun preparePdf() {
+        val bottleId = bottleId.value ?: 0
+
         viewModelScope.launch(IO) {
             val bottle = repository.getBottleByIdNotLive(bottleId)
             val path = bottle.pdfPath
@@ -70,7 +72,9 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun revertBottleConsumption(bottleId: Long) {
+    fun revertBottleConsumption() {
+        val bottleId = bottleId.value ?: 0
+
         viewModelScope.launch(IO) {
             repository.revertBottleConsumption(bottleId)
         }

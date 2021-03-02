@@ -1,6 +1,7 @@
 package com.louis.app.cavity.util
 
 import android.util.Log
+import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
 
 class L {
@@ -18,7 +19,7 @@ class L {
         }
 
         fun timestamp(methodName: String, doThings: () -> Unit) {
-            val timestamp = measureTimeMillis(doThings)
+            val timestamp = measureTimeMillis { doThings.invoke() }
             Log.v("________Time to execute $methodName ________", timestamp.toString())
         }
     }

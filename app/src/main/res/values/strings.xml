@@ -8,6 +8,7 @@
     <string name="previous">Précédent</string>
     <string name="unknown">Non renseigné</string>
     <string name="input_error">Saisie non valide.</string>
+    <string name="permissions_denied">Cavity a besoin de ces autorisation pour prendre des photos.</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
@@ -214,6 +215,8 @@
     <string name="show_bottle">Voir la bouteille</string>
     <string name="tasting_label">Participants: </string>
     <string name="consume_label">Bue avec: </string>
+    <string name="go_to">Aller à</string>
+    <string name="nothing"> </string>
 
 
     <!-- Tags -->

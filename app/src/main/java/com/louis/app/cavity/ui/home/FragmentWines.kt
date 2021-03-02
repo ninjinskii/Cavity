@@ -12,8 +12,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.db.Converters
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.WineColor
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
@@ -29,33 +27,26 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     private fun initRecyclerView() {
-        val colors = requireContext().run {
-            listOf(
-                getColor(R.color.wine_white),
-                getColor(R.color.wine_red),
-                getColor(R.color.wine_sweet),
-                getColor(R.color.wine_rose)
-            )
-        }
-
-        val onVintageClick = { wineId: Long, bottle: Bottle ->
-            val action = FragmentHomeDirections.homeToBottleDetails(wineId, bottle.id)
-            findNavController().navigate(action)
-        }
-
-        val wineAdapter = WineRecyclerAdapter(colors, onVintageClick) { wine ->
-            activity?.supportFragmentManager?.let {
-                val action = FragmentHomeDirections.homeToWineOptions(
-                    wine.id,
-                    wine.countyId,
-                    wine.name,
-                    wine.naming,
-                    wine.isOrganic.toBoolean(),
-                    wine.color.ordinal
-                )
+        val wineAdapter = WineRecyclerAdapter(
+            requireContext(),
+            onVintageClickListener = { wineId: Long, bottle: Bottle ->
+                val action = FragmentHomeDirections.homeToBottleDetails(wineId, bottle.id)
                 findNavController().navigate(action)
+            },
+            onShowOptionsListener = { wine ->
+                activity?.supportFragmentManager?.let {
+                    val action = FragmentHomeDirections.homeToWineOptions(
+                        wine.id,
+                        wine.countyId,
+                        wine.name,
+                        wine.naming,
+                        wine.isOrganic.toBoolean(),
+                        wine.color
+                    )
+                    findNavController().navigate(action)
+                }
             }
-        }
+        )
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)

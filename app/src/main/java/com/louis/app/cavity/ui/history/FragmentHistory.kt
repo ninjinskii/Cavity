@@ -20,15 +20,15 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
-import com.louis.app.cavity.model.HistoryEntryType
-import com.louis.app.cavity.model.relation.history.HistoryEntryWithBottleAndTastingAndFriends
+import com.louis.app.cavity.model.relation.history.BoundedHistoryEntry
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.history.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
+import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.toBoolean
 
-class FragmentHistory : Fragment(R.layout.fragment_history) {
+class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
     private lateinit var scroller: LinearSmoothScroller
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var _binding: FragmentHistoryBinding? = null
@@ -52,10 +52,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             isFitToContents = true
         }
 
-        // TODO: uniformize viewmodels initialization
-        if (args.bottleId != -1L) {
-            historyViewModel.setFilter(HistoryFilter.BottleFilter(args.bottleId))
-        }
+        historyViewModel.start(args.bottleId)
 
         initRecyclerView()
         observe()
@@ -118,7 +115,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     private fun showDatePicker() {
         val datePicker = MaterialDatePicker.Builder
             .datePicker()
-            .setTitleText("Naviguer à la date")
+            .setTitleText(R.string.go_to)
             .build()
 
         datePicker.addOnPositiveButtonClickListener {
@@ -127,42 +124,39 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             }
         }
 
-        datePicker.show(childFragmentManager, "random-tag")
+        datePicker.show(childFragmentManager, getString(R.string.tag_date_picker))
     }
 
-    private fun bindBottomSheet(entry: HistoryEntryWithBottleAndTastingAndFriends?) {
+    private fun bindBottomSheet(entry: BoundedHistoryEntry?) {
         if (entry == null) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             val (bottle, wine) = entry.bottleAndWine
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            val label = entry.historyEntry.getResources().label
 
-            val colorAndFriendLabel = when (entry.historyEntry.type) {
-                HistoryEntryType.TYPE_CONSUME -> R.color.cavity_red to R.string.consume_label
-                HistoryEntryType.TYPE_REPLENISHMENT -> R.color.cavity_light_green to null
-                HistoryEntryType.TYPE_GIFTED_TO -> R.color.cavity_red to R.string.gifted_to
-                HistoryEntryType.TYPE_GIFTED_BY ->
-                    R.color.cavity_light_green to R.string.gifted_by
-                HistoryEntryType.TYPE_TASTING -> R.color.cavity_gold to R.string.tasting_label
-            }
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
             with(binding.bottleDetails) {
                 friendChipGroup.removeAllViews()
-                ChipLoader(lifecycleScope, layoutInflater).loadChips(
-                    friendChipGroup,
-                    entry.friends,
-                    emptyList()
-                )
+
+                ChipLoader.Builder()
+                    .with(lifecycleScope)
+                    .useInflater(layoutInflater)
+                    .load(entry.friends)
+                    .into(friendChipGroup)
+                    .selectable(false)
+                    .build()
+                    .go()
 
                 vintage.text = bottle.vintage.toString()
 
-                // wineDetails.wineColorIndicator.setColorFilter(wine.color)
+                wineDetails.wineColorIndicator.setColorFilter(resolveColor(wine.color))
                 wineDetails.wineName.text = wine.name
                 wineDetails.wineNaming.text = wine.naming
                 wineDetails.organicImage.setVisible(wine.isOrganic.toBoolean())
 
                 participants.setVisible(entry.friends.isNotEmpty())
-                participants.text = colorAndFriendLabel.second?.let { getString(it) } ?: ""
+                participants.text = getString(label)
 
                 Glide.with(requireContext())
                     .load(Uri.parse(wine.imgPath))
@@ -190,6 +184,8 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             }
         }
     }
+
+    override fun getOverallContext() = requireContext()
 
     override fun onDestroy() {
         super.onDestroy()

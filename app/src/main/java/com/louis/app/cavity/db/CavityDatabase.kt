@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
         TastingFriendXRef::class,
         FriendHistoryEntryXRef::class,
     ],
-    version = 45,
+    version = 47,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -154,7 +154,7 @@ abstract class CavityDatabase : RoomDatabase() {
                                 0,
                                 wineNames.random(),
                                 wineNamings.random(),
-                                Converters().numberToWineColor(wineColors.random()),
+                                wineColors.random(),
                                 "",
                                 counties.random().toLong(),
                                 (0..1).random(),

@@ -230,11 +230,11 @@ class WineRepository private constructor(app: Application) {
         // TODO: handle tasting here
         return database.withTransaction {
             when (entry.type) {
-                HistoryEntryType.TYPE_CONSUME -> consumeBottle(entry.bottleId)
-                HistoryEntryType.TYPE_REPLENISHMENT -> revertBottleConsumption(entry.bottleId)
-                HistoryEntryType.TYPE_GIFTED_TO -> consumeBottle(entry.bottleId)
-                HistoryEntryType.TYPE_GIFTED_BY -> revertBottleConsumption(entry.bottleId)
-                HistoryEntryType.TYPE_TASTING -> TODO("Waiting for tasting feature")
+                0 -> consumeBottle(entry.bottleId)
+                1 -> revertBottleConsumption(entry.bottleId)
+                2 -> consumeBottle(entry.bottleId)
+                3 -> revertBottleConsumption(entry.bottleId)
+                4 -> TODO("Waiting for tasting feature")
             }
 
             historyDao.insertEntry(entry)

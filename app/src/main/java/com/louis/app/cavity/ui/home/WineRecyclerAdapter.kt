@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.home
 
+import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,17 +14,20 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.model.relation.wine.WineWithBottles
+import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class WineRecyclerAdapter(
-    private val colors: List<Int>,
+    private val _context: Context,
     private val onVintageClickListener: (Long, Bottle) -> Unit,
     private val onShowOptionsListener: (Wine) -> Unit,
 ) :
-    ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()) {
+    ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()),
+    WineColorResolver {
+
+    override fun getOverallContext() = _context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -58,7 +62,7 @@ class WineRecyclerAdapter(
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
                 organicImage.setVisible(wine.isOrganic.toBoolean())
-                wineColorIndicator.setColorFilter(colors[wine.color.ordinal])
+                wineColorIndicator.setColorFilter(resolveColor(wine.color))
                 binding.chipGroup.removeAllViews()
 
                 for (bottle in bottles) {

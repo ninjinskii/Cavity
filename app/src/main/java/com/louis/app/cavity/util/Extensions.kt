@@ -1,8 +1,11 @@
 package com.louis.app.cavity.util
 
 import android.content.Context
+import android.graphics.Color
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -14,6 +17,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import com.louis.app.cavity.R
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.ui.ActivityMain
 
 // Boolean and Int helpers for database compatibility

@@ -15,24 +15,20 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ChipLoader(
+class ChipLoader private constructor(
     private val scope: CoroutineScope,
-    private val layoutInflater: LayoutInflater
+    private val layoutInflater: LayoutInflater,
+    private val items: List<Chipable>,
+    private val chipGroup: ChipGroup,
+    private val preselectedItems: List<Long>,
+    private val selectable: Boolean,
+    private val onCheckedChangeListener: ((btn: CompoundButton, isChecked: Boolean) -> Unit)?
 ) {
-    fun loadChips(
-        into: ChipGroup,
-        items: List<Chipable>,
-        preselect: List<Long>,
-        onCheckedChangeListener: ((btn: CompoundButton, isChecked: Boolean) -> Unit)? = null
-    ) {
+    fun go() {
         scope.launch(Default) {
             for ((index, item) in items.withIndex()) {
-                val chip: Chip =
-                    layoutInflater.inflate(
-                        R.layout.chip_choice,
-                        into,
-                        false
-                    ) as Chip
+                val layout = if (selectable) R.layout.chip_choice else R.layout.chip_action
+                val chip = layoutInflater.inflate(layout, chipGroup, false) as Chip
 
                 chip.apply {
                     setTag(R.string.tag_chip_id, item)
@@ -41,23 +37,75 @@ class ChipLoader(
                 }
 
                 withContext(Main) {
-                    into.addView(chip)
+                    chipGroup.addView(chip)
 
-                    if (index == 0 && into.isSelectionRequired && preselect.isEmpty())
-                        chip.isChecked = true
+                    if (selectable) {
+                        if (index == 0 && chipGroup.isSelectionRequired) {
+                            chip.isChecked = preselectedItems.isEmpty()
+                        }
 
-                    if (item.getItemId() in preselect)
-                        chip.isChecked = true
+                        chip.isChecked = item.getItemId() in preselectedItems
+                    }
                 }
             }
 
-            into.children.firstOrNull { it is Chip && it.isChecked }?.let {
-                val scrollView = into.parent.parent as HorizontalScrollView
+            chipGroup.children.firstOrNull { it is Chip && it.isChecked }?.let {
+                val scrollView = chipGroup.parent.parent as HorizontalScrollView
 
                 scrollView.postDelayed(500) {
                     scrollView.smoothScrollTo(it.left - it.paddingLeft, it.top)
                 }
             }
+        }
+    }
+
+    data class Builder(
+        private var scope: CoroutineScope? = null,
+        private var layoutInflater: LayoutInflater? = null,
+        private var items: List<Chipable> = emptyList(),
+        private var chipGroup: ChipGroup? = null,
+        private var preselectedItems: List<Long> = emptyList(),
+        private var selectable: Boolean = true,
+        private var onCheckedChangeListener: ((btn: CompoundButton, isChecked: Boolean) -> Unit)? = null
+    ) {
+        fun with(scope: CoroutineScope) = apply { this.scope = scope }
+        fun useInflater(inflater: LayoutInflater) = apply { this.layoutInflater = inflater }
+        fun load(items: List<Chipable>) = apply { this.items = items }
+        fun into(chipGroup: ChipGroup) = apply { this.chipGroup = chipGroup }
+        fun preselect(preselect: List<Long>) = apply { this.preselectedItems = preselect }
+        fun preselect(preselect: Long) = apply { this.preselectedItems = listOf(preselect) }
+        fun selectable(selectable: Boolean) = apply { this.selectable = selectable }
+        fun doOnClick(block: (btn: CompoundButton, isChecked: Boolean) -> Unit) = apply {
+            this.onCheckedChangeListener = block
+        }
+
+        fun build(): ChipLoader {
+            when {
+                scope == null ->
+                    throw IllegalStateException(
+                        "Must provide a coroutine scope by calling 'with()'"
+                    )
+
+                layoutInflater == null ->
+                    throw IllegalStateException(
+                        "Must provide a layout inflater by calling 'useInflater()'"
+                    )
+
+                chipGroup == null ->
+                    throw IllegalStateException(
+                        "Must provide a chipgroup by calling 'into()'"
+                    )
+            }
+
+            return ChipLoader(
+                scope!!,
+                layoutInflater!!,
+                items,
+                chipGroup!!,
+                preselectedItems,
+                selectable,
+                onCheckedChangeListener
+            )
         }
     }
 }

@@ -109,11 +109,13 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
             val toInflate = allFriends - alreadyInflated
             alreadyInflated.addAll(toInflate)
 
-            ChipLoader(lifecycleScope, layoutInflater).loadChips(
-                binding.friendChipGroup,
-                toInflate.toMutableList(),
-                preselect = emptyList()
-            )
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .load(toInflate.toMutableList())
+                .into(binding.friendChipGroup)
+                .build()
+                .go()
         }
     }
 

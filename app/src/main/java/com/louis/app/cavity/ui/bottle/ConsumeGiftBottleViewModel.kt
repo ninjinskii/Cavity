@@ -10,9 +10,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.HistoryEntry
-import com.louis.app.cavity.model.HistoryEntryType
-import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
-import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
@@ -28,8 +25,9 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
     var date: Long = System.currentTimeMillis()
 
     fun consumeBottle(bottleId: Long, comment: String, friends: List<Long>) {
+        val typeConsume = 0
         val historyEntry =
-            HistoryEntry(0, date, bottleId, null, comment, HistoryEntryType.TYPE_CONSUME, 0)
+                HistoryEntry(0, date, bottleId, null, comment, typeConsume, 0)
 
         viewModelScope.launch(IO) {
             repository.insertHistoryEntryAndFriends(historyEntry, friends)
@@ -37,8 +35,9 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun giftBottle(bottleId: Long, comment: String, friendId: Long) {
+        val typeGiftTo = 2
         val historyEntry =
-            HistoryEntry(0, date, bottleId, null, comment, HistoryEntryType.TYPE_GIFTED_TO, 0)
+                HistoryEntry(0, date, bottleId, null, comment, typeGiftTo, 0)
 
         viewModelScope.launch(IO) {
             repository.insertHistoryEntryAndFriends(historyEntry, listOf(friendId))

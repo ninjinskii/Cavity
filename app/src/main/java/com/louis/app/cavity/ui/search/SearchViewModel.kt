@@ -11,7 +11,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.WineColor
-import com.louis.app.cavity.model.relation.bottle.BottleAndWineWithQGrapesAndFReviews
+import com.louis.app.cavity.model.relation.bottle.BoundedBottle
 import com.louis.app.cavity.ui.search.filters.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
-    private val bottlesAndWine = mutableListOf<BottleAndWineWithQGrapesAndFReviews>()
+    private val bottlesAndWine = mutableListOf<BoundedBottle>()
 
     private var currentBeyondDate: Long? = null
     private var currentUntilDate: Long? = null
@@ -34,8 +34,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private var grapeFilter: WineFilter = NoFilter
     private var reviewFilter: WineFilter = NoFilter
 
-    private val _results = MutableLiveData<List<BottleAndWineWithQGrapesAndFReviews>>()
-    val results: LiveData<List<BottleAndWineWithQGrapesAndFReviews>>
+    private val _results = MutableLiveData<List<BoundedBottle>>()
+    val results: LiveData<List<BoundedBottle>>
         get() = _results
 
     var counties = emptyList<Long>()
@@ -93,13 +93,13 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         val colorFilters = mutableListOf<WineFilter>()
 
         if (R.id.chipRed in colorCheckedChipIds)
-            colorFilters.add(FilterColor(WineColor.WINE_RED))
+            colorFilters.add(FilterColor(0))
         if (R.id.chipWhite in colorCheckedChipIds)
-            colorFilters.add(FilterColor(WineColor.WINE_WHITE))
+            colorFilters.add(FilterColor(1))
         if (R.id.chipSweet in colorCheckedChipIds)
-            colorFilters.add(FilterColor(WineColor.WINE_SWEET))
+            colorFilters.add(FilterColor(1))
         if (R.id.chipRose in colorCheckedChipIds)
-            colorFilters.add(FilterColor(WineColor.WINE_ROSE))
+            colorFilters.add(FilterColor(3))
 
         colorFilter =
             if (colorFilters.isNotEmpty())

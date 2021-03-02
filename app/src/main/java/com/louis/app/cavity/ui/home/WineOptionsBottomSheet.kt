@@ -11,9 +11,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetWineOptionsBinding
+import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.util.setVisible
 
-class WineOptionsBottomSheet : BottomSheetDialogFragment() {
+class WineOptionsBottomSheet : BottomSheetDialogFragment(), WineColorResolver {
     private var _binding: BottomSheetWineOptionsBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -31,19 +32,10 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val colors = requireContext().run {
-            listOf(
-                getColor(R.color.wine_white),
-                getColor(R.color.wine_red),
-                getColor(R.color.wine_sweet),
-                getColor(R.color.wine_rose)
-            )
-        }
-
         with(binding) {
             currentWine.wineName.text = args.wineName
             currentWine.wineNaming.text = args.wineNaming
-            currentWine.wineColorIndicator.setColorFilter(colors[args.color])
+            currentWine.wineColorIndicator.setColorFilter(resolveColor(args.color))
             currentWine.organicImage.setVisible(args.isOrganic)
 
             addBottle.setOnClickListener {
@@ -54,7 +46,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
                 findNavController().navigate(action)
             }
 
-            binding.editWine.setOnClickListener {
+            editWine.setOnClickListener {
                 dismiss()
 
                 val action = WineOptionsBottomSheetDirections.wineOptionsToEditWine(
@@ -80,6 +72,8 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
             }
         }
     }
+
+    override fun getOverallContext() = requireContext()
 
     override fun onDestroyView() {
         super.onDestroyView()
