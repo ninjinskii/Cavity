@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
+import com.google.android.material.shape.ShapeAppearanceModel
+import com.google.android.material.shape.TriangleEdgeTreatment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.Bottle
@@ -31,6 +33,10 @@ class WineRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        binding.root.shapeAppearanceModel = ShapeAppearanceModel.builder()
+            .setTopEdge(TriangleEdgeTreatment(50f, true))
+            .build()
 
         return WineViewHolder(binding)
     }
