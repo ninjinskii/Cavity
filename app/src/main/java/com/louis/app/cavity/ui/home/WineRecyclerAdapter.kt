@@ -5,19 +5,20 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.shape.ShapeAppearanceModel
-import com.google.android.material.shape.TriangleEdgeTreatment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.wine.WineWithBottles
 import com.louis.app.cavity.ui.WineColorResolver
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -34,9 +35,16 @@ class WineRecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        binding.root.shapeAppearanceModel = ShapeAppearanceModel.builder()
-            .setTopEdge(TriangleEdgeTreatment(50f, true))
-            .build()
+        binding.root.doOnLayout {
+            L.v("${binding.root.measuredHeight.toString()}")
+            binding.root.shapeAppearanceModel = ShapeAppearanceModel.builder()
+                .setAllCornerSizes(150f)
+                .setTopLeftCorner(HexagonalToPointCornerTreatment(binding.root.measuredHeight.toFloat()))
+                .setTopRightCorner(HexagonalToSideCornerTreatment(binding.root.measuredHeight.toFloat()))
+                .setBottomRightCorner(HexagonalToPointCornerTreatment(binding.root.measuredHeight.toFloat()))
+                .setBottomLeftCorner(HexagonalToSideCornerTreatment(binding.root.measuredHeight.toFloat()))
+                .build()
+        }
 
         return WineViewHolder(binding)
     }
