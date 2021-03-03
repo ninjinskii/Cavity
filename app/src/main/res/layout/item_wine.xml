@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.louis.app.cavity.ui.home.widget.HexagonalView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="150dp"
-    android:layout_height="150dp"
+    android:layout_width="180dp"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/small_margin"
     android:clickable="true"
+    android:elevation="1dp"
     android:focusable="true"
-    app:cardCornerRadius="75dp"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardElevation="1dp">
+    android:foreground="?android:attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -101,4 +100,4 @@
             </LinearLayout>
         </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</com.google.android.material.card.MaterialCardView>
+</com.louis.app.cavity.ui.home.widget.HexagonalView>
