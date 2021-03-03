@@ -2,8 +2,12 @@ package com.louis.app.cavity.ui.home.widget
 
 import com.google.android.material.shape.CornerTreatment
 import com.google.android.material.shape.ShapePath
+import com.louis.app.cavity.util.L
 
-class HexagonalCornerTreatment(private val largerSurface: Float, private val toFlatCorner: Boolean) :
+class HexagonalCornerTreatment(
+    private val largerSurface: Float,
+    private val toFlatCorner: Boolean
+) :
     CornerTreatment(), Cloneable {
 
     override fun getCornerPath(
@@ -12,8 +16,11 @@ class HexagonalCornerTreatment(private val largerSurface: Float, private val toF
         interpolation: Float,
         radius: Float
     ) {
-        val interpolatedRadius = radius * interpolation
-        val flatCornerPart = largerSurface / 4
+        // Find a way to remove largerSurface dependency. This would allow to move shapeAppearance init in HexagonalView out of onSizeChanged
+        L.v("largerSurface: $largerSurface, radius: $radius")
+        val interpolatedRadius = (radius * 2f) / 0.866f
+        L.v("interpolatedRadius: $interpolatedRadius")
+        val flatCornerPart = interpolatedRadius / 4
         val firstLine = if (toFlatCorner) flatCornerPart to 0f else 0f to flatCornerPart
 
         shapePath.reset(0f, interpolatedRadius)
@@ -35,7 +42,7 @@ class HexagonalCornerTreatment(private val largerSurface: Float, private val toF
     |           |
     |           |
     _____________
-    /            \
+   /             \
     largerSurface
      */
 }
