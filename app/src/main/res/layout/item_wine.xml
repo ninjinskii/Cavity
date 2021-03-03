@@ -2,28 +2,29 @@
 <com.louis.app.cavity.ui.home.widget.HexagonalView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="180dp"
+    android:layout_width="170dp"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/small_margin"
     android:clickable="true"
-    android:elevation="1dp"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardElevation="1dp"
+    app:flat="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp">
+        android:background="@color/cavity_red"
+        android:layout_height="match_parent">
 
-        <!-- ShapeableImageView ? -->
         <ImageView
             android:id="@+id/wineImage"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/wine_photo"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:src="@drawable/ic_toast_wine" />
 
         <androidx.constraintlayout.widget.Guideline

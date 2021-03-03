@@ -3,7 +3,7 @@ package com.louis.app.cavity.ui.home.widget
 import com.google.android.material.shape.CornerTreatment
 import com.google.android.material.shape.ShapePath
 
-class HexagonalCornerTreatment(private val surfaceWidth: Float, private val toFlatCorner: Boolean) :
+class HexagonalCornerTreatment(private val largerSurface: Float, private val toFlatCorner: Boolean) :
     CornerTreatment(), Cloneable {
 
     override fun getCornerPath(
@@ -13,7 +13,7 @@ class HexagonalCornerTreatment(private val surfaceWidth: Float, private val toFl
         radius: Float
     ) {
         val interpolatedRadius = radius * interpolation
-        val flatCornerPart = surfaceWidth / 4
+        val flatCornerPart = largerSurface / 4
         val firstLine = if (toFlatCorner) flatCornerPart to 0f else 0f to flatCornerPart
 
         shapePath.reset(0f, interpolatedRadius)
@@ -31,5 +31,11 @@ class HexagonalCornerTreatment(private val surfaceWidth: Float, private val toFl
     \           /
      \_________/
 
+    _____________
+    |           |
+    |           |
+    _____________
+    /            \
+    largerSurface
      */
 }
