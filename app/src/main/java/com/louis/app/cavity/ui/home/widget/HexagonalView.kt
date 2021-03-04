@@ -37,14 +37,13 @@ class HexagonalView @JvmOverloads constructor(
             .use {
                 isFlat = it.getBoolean(R.styleable.HexagonalView_flat, false)
             }
+
+        applyShape()
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-
-        val largerSurface = (if (isFlat) w else h).toFloat()
-        val topRightBottomLeftCorners = HexagonalCornerTreatment(largerSurface, !isFlat)
-        val topLeftBottomRightCorners = HexagonalCornerTreatment(largerSurface, isFlat)
+    private fun applyShape() {
+        val topRightBottomLeftCorners = HexagonalCornerTreatment(!isFlat)
+        val topLeftBottomRightCorners = HexagonalCornerTreatment(isFlat)
 
         shapeAppearanceModel = ShapeAppearanceModel.builder()
             .setAllCornerSizes { if (isFlat) it.height() / 2 else it.width() / 2 }
