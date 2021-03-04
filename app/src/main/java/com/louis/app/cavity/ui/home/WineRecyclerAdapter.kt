@@ -19,6 +19,7 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.wine.WineWithBottles
 import com.louis.app.cavity.ui.WineColorResolver
+import com.louis.app.cavity.ui.home.widget.HexagonalCornerTreatment
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -45,6 +46,17 @@ class WineRecyclerAdapter(
 //                .setBottomLeftCorner(HexagonalToSideCornerTreatment(binding.root.measuredHeight.toFloat()))
 //                .build()
 //        }
+
+        val topRightBottomLeftCorners = HexagonalCornerTreatment(true)
+        val topLeftBottomRightCorners = HexagonalCornerTreatment(false)
+
+        binding.wineImage.shapeAppearanceModel = ShapeAppearanceModel.builder()
+            .setAllCornerSizes { it.width() / 2 }
+            .setTopLeftCorner(topLeftBottomRightCorners)
+            .setTopRightCorner(topRightBottomLeftCorners)
+            .setBottomRightCorner(topLeftBottomRightCorners)
+            .setBottomLeftCorner(topRightBottomLeftCorners)
+            .build()
 
         return WineViewHolder(binding)
     }

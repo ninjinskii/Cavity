@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Maybe go for a shapeableimageview instead of cardview if shadow is correctly handled -->
 <com.louis.app.cavity.ui.home.widget.HexagonalView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="170dp"
-    android:layout_height="wrap_content"
+    android:layout_height="196dp"
     android:layout_margin="@dimen/small_margin"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardElevation="1dp"
+    app:cardElevation="4dp"
     app:flat="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/wineImage"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -27,13 +28,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:src="@drawable/ic_toast_wine" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.30" />
-
         <include
             android:id="@+id/wineColorNameNaming"
             layout="@layout/wine_color_name_naming"
@@ -41,33 +35,19 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.90" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/divider_height"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:alpha="0.20"
-            android:background="?attr/colorOnBackground"
-            app:layout_constraintEnd_toEndOf="@+id/guidelineRight"
-            app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.40" />
+<!--        <View-->
+<!--            android:id="@+id/divider"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="@dimen/divider_height"-->
+<!--            android:layout_marginTop="@dimen/medium_margin"-->
+<!--            android:alpha="0.20"-->
+<!--            android:background="?attr/colorOnBackground"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/guidelineLeft"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />-->
 
         <HorizontalScrollView
             android:id="@+id/chipsScrollView"
@@ -76,10 +56,9 @@
             android:layout_marginTop="@dimen/medium_margin"
             android:layout_marginBottom="@dimen/small_margin"
             android:scrollbars="none"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/wineImage"
-            app:layout_constraintTop_toBottomOf="@+id/divider">
+            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming">
 
             <LinearLayout
                 android:layout_width="wrap_content"
