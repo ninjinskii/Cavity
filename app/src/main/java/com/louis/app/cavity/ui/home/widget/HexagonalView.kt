@@ -6,6 +6,7 @@ import android.graphics.Path
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
+import android.view.View.MeasureSpec.*
 import android.view.ViewOutlineProvider
 import androidx.core.content.res.use
 import androidx.core.graphics.toRectF
@@ -88,24 +89,24 @@ class HexagonalView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val w: Int
-        val h: Int
+        var widthSpec = widthMeasureSpec
+        var heightSpec = heightMeasureSpec
 
         if (isFlat) {
-            val minh = suggestedMinimumHeight
-            h = resolveSizeAndState(minh, heightMeasureSpec, 1)
-
             // Force our width based on height to get perfect hexagonal shape
-            w = round(h / HEXAGONAL_SQUARE_RATIO).toInt()
+            widthSpec = makeMeasureSpec(
+                round(getSize(heightMeasureSpec) / HEXAGONAL_SQUARE_RATIO).toInt(),
+                EXACTLY
+            )
         } else {
-            val minw = suggestedMinimumWidth
-            w = resolveSizeAndState(minw, widthMeasureSpec, 1)
-
             // Force our height based on width to get perfect hexagonal shape
-            h = round(w / HEXAGONAL_SQUARE_RATIO).toInt()
+            heightSpec = makeMeasureSpec(
+                round(getSize(widthMeasureSpec) / HEXAGONAL_SQUARE_RATIO).toInt(),
+                EXACTLY
+            )
         }
 
-        setMeasuredDimension(w, h)
+        super.onMeasure(widthSpec, heightSpec)
     }
 
 //    override fun dispatchDraw(canvas: Canvas?) {
