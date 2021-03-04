@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.home.widget
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Outline
 import android.graphics.Path
 import android.graphics.Rect
@@ -14,6 +15,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.shape.ShapeAppearancePathProvider
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.L
 import kotlin.math.round
 
 /**
@@ -21,6 +23,7 @@ import kotlin.math.round
  * height (but never both at the same time) of the view depending on the flat attribute.
  * Doesn't support padding for now, since it could break the perfect hexagonal shape.
  */
+// TODO: Considering inheriting View insted of CardView to get full control on underlying MaterialShapeDrawable and optimize RecyclerViews
 class HexagonalView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -48,7 +51,7 @@ class HexagonalView @JvmOverloads constructor(
             }
 
         applyShape()
-        computeOutline()
+//        computeOutline()
     }
 
     private fun applyShape() {
@@ -64,20 +67,20 @@ class HexagonalView @JvmOverloads constructor(
             .build()
     }
 
-    private fun computeOutline() {
-        val viewOutlineProvider = object : ViewOutlineProvider() {
-            override fun getOutline(view: View?, outline: Outline?) {
-                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R) {
-                    outline?.setConvexPath(path)
-                } else {
-                    outline?.setPath(path)
-                }
-            }
-        }
-
-        outlineProvider = viewOutlineProvider
-        clipToOutline = true
-    }
+//    private fun computeOutline() {
+//        val viewOutlineProvider = object : ViewOutlineProvider() {
+//            override fun getOutline(view: View?, outline: Outline?) {
+//                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R) {
+//                    outline?.setConvexPath(path)
+//                } else {
+//                    outline?.setPath(path)
+//                }
+//            }
+//        }
+//
+//        outlineProvider = viewOutlineProvider
+//        clipToOutline = true
+//    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -109,8 +112,8 @@ class HexagonalView @JvmOverloads constructor(
         super.onMeasure(widthSpec, heightSpec)
     }
 
-//    override fun dispatchDraw(canvas: Canvas?) {
-//        L.v("${canvas?.clipPath(path)}")
-//        super.dispatchDraw(canvas)
-//    }
+    override fun dispatchDraw(canvas: Canvas?) {
+        canvas?.clipPath(path)
+        super.dispatchDraw(canvas)
+    }
 }
