@@ -1,8 +1,8 @@
 package com.louis.app.cavity.ui.home
 
 import android.content.Context
-import androidx.annotation.IntDef
 import androidx.recyclerview.widget.RecyclerView
+import com.louis.app.cavity.util.L
 
 /**
  * Organize the views in a honeycomb fashion
@@ -13,24 +13,53 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class HoneycombLayoutManager(
     context: Context,
-    longRowColsCount: Int,
-    @Orientation private val orientation: Int
+    private val longRowColsCount: Int,
+    private val orientation: Int
 ) :
     RecyclerView.LayoutManager() {
 
-    var scrollOffset = 0
-
     companion object {
-        @IntDef(HORIZONTAL, VERTICAL)
-        annotation class Orientation
-
-        private const val HORIZONTAL = 0
-        private const val VERTICAL = 1
+        const val HORIZONTAL = 0
+        const val VERTICAL = 1
     }
+
+    // Number of items to display in an even row + its child row
+    private val rowCoupleItemCount = (2 * longRowColsCount) - 1
+    private var scrollOffset = 0
 
     private fun fill(recycler: RecyclerView.Recycler, adapterItemCount: Int) {
+        detachAndScrapAttachedViews(recycler)
 
+        for (i in 0 until 3) {
+            val view = recycler.getViewForPosition(i)
+            addView(view)
+
+            if (orientation == VERTICAL) {
+                L.v("layout manager width: $width")
+                measureChild(view, width / longRowColsCount, 0)
+                L.v("measuredChildHeight: ${view.measuredHeight}")
+            }
+
+//            if (orientation == HORIZONTAL) {
+//                measureChild(view, 0, height / longRowColsCount)
+//            }
+
+//            if (isItemInChildRow(i)) {
+//                val left = 0
+//            } else {
+            val left = i * view.measuredWidth
+            val right = left + view.measuredWidth
+            L.v("$left")
+            val top = 0
+            layoutDecorated(view, left, top, right, view.measuredHeight)
+//            }
+
+
+        }
     }
+
+    private fun isItemInChildRow(position: Int) =
+        position % rowCoupleItemCount !in 0..longRowColsCount
 
     private fun doOnScroll(
         d: Int,

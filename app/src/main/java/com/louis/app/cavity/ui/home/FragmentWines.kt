@@ -6,7 +6,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
@@ -48,8 +47,12 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         )
 
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(activity)
-            setHasFixedSize(true)
+            layoutManager = HoneycombLayoutManager(
+                context,
+                longRowColsCount = 2,
+                HoneycombLayoutManager.VERTICAL
+            )
+            // setHasFixedSize(true)
             adapter = wineAdapter
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
