@@ -36,27 +36,17 @@ class WineRecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-//        binding.root.doOnLayout {
-//            L.v("${binding.root.measuredHeight.toString()}")
-//            binding.root.shapeAppearanceModel = ShapeAppearanceModel.builder()
-//                .setAllCornerSizes(150f)
-//                .setTopLeftCorner(HexagonalToPointCornerTreatment(binding.root.measuredHeight.toFloat()))
-//                .setTopRightCorner(HexagonalToSideCornerTreatment(binding.root.measuredHeight.toFloat()))
-//                .setBottomRightCorner(HexagonalToPointCornerTreatment(binding.root.measuredHeight.toFloat()))
-//                .setBottomLeftCorner(HexagonalToSideCornerTreatment(binding.root.measuredHeight.toFloat()))
-//                .build()
-//        }
-
-        val topRightBottomLeftCorners = HexagonalCornerTreatment(true)
-        val topLeftBottomRightCorners = HexagonalCornerTreatment(false)
-
-        binding.wineImage.shapeAppearanceModel = ShapeAppearanceModel.builder()
-            .setAllCornerSizes { it.width() / 2 }
-            .setTopLeftCorner(topLeftBottomRightCorners)
-            .setTopRightCorner(topRightBottomLeftCorners)
-            .setBottomRightCorner(topLeftBottomRightCorners)
-            .setBottomLeftCorner(topRightBottomLeftCorners)
-            .build()
+        // Apply the same background shape to the image view
+//        val topRightBottomLeftCorners = HexagonalCornerTreatment(true)
+//        val topLeftBottomRightCorners = HexagonalCornerTreatment(false)
+//
+//        binding.wineImage.shapeAppearanceModel = ShapeAppearanceModel.builder()
+//            .setAllCornerSizes { it.width() / 2 }
+//            .setTopLeftCorner(topLeftBottomRightCorners)
+//            .setTopRightCorner(topRightBottomLeftCorners)
+//            .setBottomRightCorner(topLeftBottomRightCorners)
+//            .setBottomLeftCorner(topRightBottomLeftCorners)
+//            .build()
 
         return WineViewHolder(binding)
     }

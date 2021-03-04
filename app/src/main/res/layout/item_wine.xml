@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Maybe go for a shapeableimageview instead of cardview if shadow is correctly handled -->
 <com.louis.app.cavity.ui.home.widget.HexagonalView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
