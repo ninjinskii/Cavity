@@ -1,21 +1,17 @@
 package com.louis.app.cavity.ui.home.widget
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Outline
-import android.graphics.Path
-import android.graphics.Rect
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.MeasureSpec.*
-import android.view.ViewOutlineProvider
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import androidx.core.graphics.toRectF
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.shape.ShapeAppearancePathProvider
 import com.louis.app.cavity.R
-import com.louis.app.cavity.util.L
 import kotlin.math.round
 
 /**
@@ -24,6 +20,7 @@ import kotlin.math.round
  * Doesn't support padding for now, since it could break the perfect hexagonal shape.
  */
 // TODO: Considering inheriting View insted of CardView to get full control on underlying MaterialShapeDrawable and optimize RecyclerViews
+// TODO: This would imply to use a ViewOutlineProvider to get clipped ripple and correct shadow
 class HexagonalView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -37,6 +34,13 @@ class HexagonalView @JvmOverloads constructor(
     }
 
     private val path = Path()
+    private val paint by lazy {
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = ContextCompat.getColor(context, android.R.color.white)
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
+        }
+    }
+
     private var isFlat = false
 
     init {
@@ -50,8 +54,8 @@ class HexagonalView @JvmOverloads constructor(
                 isFlat = it.getBoolean(R.styleable.HexagonalView_flat, false)
             }
 
+        setLayerType(View.LAYER_TYPE_HARDWARE, null)
         applyShape()
-//        computeOutline()
     }
 
     private fun applyShape() {
@@ -87,11 +91,12 @@ class HexagonalView @JvmOverloads constructor(
 
         val r = Rect(0, 0, w, h).toRectF()
         ShapeAppearancePathProvider().calculatePath(shapeAppearanceModel, 1f, r, path)
+
+        // Reverse the given path to get correct clipping out of it
+        path.fillType = Path.FillType.INVERSE_WINDING
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
         var widthSpec = widthMeasureSpec
         var heightSpec = heightMeasureSpec
 
@@ -113,7 +118,11 @@ class HexagonalView @JvmOverloads constructor(
     }
 
     override fun dispatchDraw(canvas: Canvas?) {
-        canvas?.clipPath(path)
+        val saveCount = canvas?.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), null)
+
         super.dispatchDraw(canvas)
+
+        canvas?.drawPath(path, paint)
+        canvas?.restoreToCount(saveCount!!)
     }
 }
