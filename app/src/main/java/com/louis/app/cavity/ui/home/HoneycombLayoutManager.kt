@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 class HoneycombLayoutManager(
     context: Context,
     longRowColsCount: Int,
-    @Orientation orientation: Int
+    @Orientation private val orientation: Int
 ) :
     RecyclerView.LayoutManager() {
+
+    var scrollOffset = 0
 
     companion object {
         @IntDef(HORIZONTAL, VERTICAL)
@@ -26,32 +28,48 @@ class HoneycombLayoutManager(
         private const val VERTICAL = 1
     }
 
+    private fun fill(recycler: RecyclerView.Recycler, adapterItemCount: Int) {
 
-    private fun fillBottom(recycler: RecyclerView.Recycler, adapterItemCount: Int) {
-        var top: Int
-        val startPosition: Int
+    }
 
-        if (childCount > 0) {
-            val lastChild = getChildAt(childCount - 1)!!
-            val lastChildPosition = getPosition(lastChild)
-            startPosition = lastChildPosition + 1
-            val lp = lastChild.layoutParams as RecyclerView.LayoutParams // ?
-            top = getDecoratedBottom(lastChild) + lp.bottomMargin
+    private fun doOnScroll(
+        d: Int,
+        recycler: RecyclerView.Recycler,
+        state: RecyclerView.State
+    ): Int {
+        scrollOffset += d
+        fill(recycler, state.itemCount)
+        return d
+    }
+
+    override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
+        if (state.itemCount > 0) {
+            fill(recycler, state.itemCount)
         }
     }
+
+    override fun canScrollHorizontally() = orientation == HORIZONTAL
+
+    override fun canScrollVertically() = orientation == VERTICAL
+
+    override fun scrollHorizontallyBy(
+        dx: Int,
+        recycler: RecyclerView.Recycler,
+        state: RecyclerView.State
+    ) =
+        doOnScroll(dx, recycler, state)
+
+    override fun scrollVerticallyBy(
+        dy: Int,
+        recycler: RecyclerView.Recycler,
+        state: RecyclerView.State
+    ) =
+        doOnScroll(dy, recycler, state)
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
         return RecyclerView.LayoutParams(
             RecyclerView.LayoutParams.MATCH_PARENT,
             RecyclerView.LayoutParams.WRAP_CONTENT
         )
-    }
-
-    override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
-        detachAndScrapAttachedViews(recycler)
-
-        if (state.itemCount > 0) {
-            fillBottom(recycler, state.itemCount)
-        }
     }
 }
