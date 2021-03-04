@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.louis.app.cavity.ui.home.widget.HexagonalView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.louis.app.cavity.ui.home.widget.HexagonalView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="170dp"
@@ -10,9 +9,9 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardElevation="4dp"
+    app:flat="false"
     app:strokeColor="@color/cavity_gold"
-    app:strokeWidth="2dp"
-    app:flat="false">
+    app:strokeWidth="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,11 +22,21 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/wine_photo"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_toast_wine" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.12"
+            android:background="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <include
             android:id="@+id/wineColorNameNaming"
@@ -35,20 +44,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <View-->
-<!--            android:id="@+id/divider"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="@dimen/divider_height"-->
-<!--            android:layout_marginTop="@dimen/medium_margin"-->
-<!--            android:alpha="0.20"-->
-<!--            android:background="?attr/colorOnBackground"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/guidelineLeft"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />-->
+        <!--        <View-->
+        <!--            android:id="@+id/divider"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="@dimen/divider_height"-->
+        <!--            android:layout_marginTop="@dimen/medium_margin"-->
+        <!--            android:alpha="0.20"-->
+        <!--            android:background="?attr/colorOnBackground"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/guidelineLeft"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />-->
 
         <HorizontalScrollView
             android:id="@+id/chipsScrollView"
