@@ -49,7 +49,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         binding.recyclerView.apply {
             layoutManager = HoneycombLayoutManager(
                 context,
-                longRowColsCount = 2,
+                colCount = 2,
                 HoneycombLayoutManager.VERTICAL
             )
             // setHasFixedSize(true)

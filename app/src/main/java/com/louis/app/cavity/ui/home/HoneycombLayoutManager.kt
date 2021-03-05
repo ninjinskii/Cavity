@@ -8,14 +8,14 @@ import kotlin.math.roundToInt
 
 /**
  * Organize the views in a honeycomb fashion
- * Even rows will contain longRowColsCount items
- * Odd rows will contain longRowColsCount - 1 items
+ * Even rows will contain rowCount items , odd rows will contain rowCount - 1 items
+ * Thus rowCount must be at least 1
  *
  * Thinked to be used with HexagonalView
  */
 class HoneycombLayoutManager(
     context: Context,
-    private val longRowColsCount: Int,
+    private val colCount: Int,
     private val orientation: Int
 ) :
     RecyclerView.LayoutManager() {
@@ -24,23 +24,12 @@ class HoneycombLayoutManager(
         const val HORIZONTAL = 0
         const val VERTICAL = 1
 
-        // 3/4 is the pointy bottom of hexagon
+        // 3/4 is the pointy part ratio (compared to its bounds length) of the hexagon
         const val OVERLAPING_FACTOR = 0.75
     }
 
-    // Number of items to display in an even row + its child row
-    private val rowCoupleItemCount = (2 * longRowColsCount) - 1
-
-    init {
-        L.v("test:")
-
-        for (i in 0 until 10) {
-//            L.v("${i % rowCoupleItemCount}")
-
-//            L.v("${isItemInChildRow(position = i)}")
-            L.v("${getPositionInRow(position = i)}")
-        }
-    }
+    // A group is a row with its child, thiner, row
+    private val groupItemCount = (2 * colCount) - 1
 
     private var scrollOffset = 0
 
@@ -51,11 +40,18 @@ class HoneycombLayoutManager(
         detachAndScrapAttachedViews(recycler)
 
         for (i in 0 until adapterItemCount) {
+            L.v("____________________________________________________")
+            L.v("POSITION : $i")
+            L.v("isItemInChildRow: ${isItemInChildRow(position = i)}")
+            L.v("positionInRow: ${getPositionInRow(position = i)}")
+            L.v("isItemOnTopFirstRow:  ${isItemInTopFirstRow(i)}")
+            L.v("rowNumber:  ${getRowNumberForItem(i)}")
+
             val view = recycler.getViewForPosition(i)
             addView(view)
 
             if (orientation == VERTICAL) {
-                measureChild(view, width / longRowColsCount, 0)
+                measureChild(view, width / colCount, 0)
             }
 
 //            if (orientation == HORIZONTAL) {
@@ -63,20 +59,19 @@ class HoneycombLayoutManager(
 //            }
 
             val top =
-                if (isItemInTopFisrtRow(i)) 0 - scrollOffset else (((i - longRowColsCount + 1) * (view.measuredHeight * OVERLAPING_FACTOR)) - scrollOffset).roundToInt()
+                if (isItemInTopFirstRow(i)) 0 - scrollOffset else {
+                    ((getRowNumberForItem(i) * (view.measuredHeight * OVERLAPING_FACTOR)) - scrollOffset).roundToInt()
+                }
 
-            L.v("isItemOnTopFirstRow for pos $i:  ${isItemInTopFisrtRow(i)}")
             if (isItemInChildRow(i)) {
-//                L.v("is in long row")
                 val childRowOffset = view.measuredWidth / 2
-                val left = childRowOffset
+                val left = childRowOffset + view.measuredWidth * getPositionInRow(i)
                 val right = left + view.measuredWidth
                 val bottom = top + view.measuredHeight
 
                 layoutDecorated(view, left, top, right, bottom)
                 logPosition(view, position = i)
             } else {
-//                L.v("is in child row")
                 val left = getPositionInRow(i) * view.measuredWidth // i * getPositionInRow ?
                 val right = left + view.measuredWidth
                 val bottom = top + view.measuredHeight
@@ -88,19 +83,30 @@ class HoneycombLayoutManager(
         }
     }
 
-    // Only works when longRowCols = 2 for now
-    private fun isItemInChildRow(position: Int) =
-        position % rowCoupleItemCount == longRowColsCount
+    private fun isItemInChildRow(position: Int): Boolean {
+        val threshold = colCount - 1
+        return position % groupItemCount > threshold
+    }
 
-    private fun isItemInTopFisrtRow(position: Int) = position <= longRowColsCount - 1
+    // Might be useless if we better compute "top" value
+    private fun isItemInTopFirstRow(position: Int) = position <= colCount - 1
 
     // Only works when longRowCols = 2 for now
     private fun getPositionInRow(position: Int): Int {
         return if (isItemInChildRow(position)) {
-            position % rowCoupleItemCount - longRowColsCount
+            position % groupItemCount - colCount
         } else {
-            position % rowCoupleItemCount + longRowColsCount - 2
+            position % groupItemCount
         }
+    }
+
+    private fun getRowNumberForItem(position: Int): Int {
+        var groupParentRowPosition = (position / groupItemCount) * 2
+        if (isItemInChildRow(position)) {
+            groupParentRowPosition += 1
+        }
+
+        return groupParentRowPosition
     }
 
     private fun doOnScroll(
