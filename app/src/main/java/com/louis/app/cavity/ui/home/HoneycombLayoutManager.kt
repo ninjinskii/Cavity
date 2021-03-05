@@ -37,7 +37,8 @@ class HoneycombLayoutManager(
         for (i in 0 until 10) {
 //            L.v("${i % rowCoupleItemCount}")
 
-            L.v("${isItemInChildRow(position = i)}")
+//            L.v("${isItemInChildRow(position = i)}")
+            L.v("${getPositionInRow(position = i)}")
         }
     }
 
@@ -49,7 +50,7 @@ class HoneycombLayoutManager(
     private fun fill(recycler: RecyclerView.Recycler, adapterItemCount: Int) {
         detachAndScrapAttachedViews(recycler)
 
-        for (i in 0 until 4) {
+        for (i in 0 until adapterItemCount) {
             val view = recycler.getViewForPosition(i)
             addView(view)
 
@@ -76,7 +77,7 @@ class HoneycombLayoutManager(
                 logPosition(view, position = i)
             } else {
 //                L.v("is in child row")
-                val left = i * view.measuredWidth
+                val left = getPositionInRow(i) * view.measuredWidth // i * getPositionInRow ?
                 val right = left + view.measuredWidth
                 val bottom = top + view.measuredHeight
 
@@ -87,10 +88,20 @@ class HoneycombLayoutManager(
         }
     }
 
+    // Only works when longRowCols = 2 for now
     private fun isItemInChildRow(position: Int) =
         position % rowCoupleItemCount == longRowColsCount
 
     private fun isItemInTopFisrtRow(position: Int) = position <= longRowColsCount - 1
+
+    // Only works when longRowCols = 2 for now
+    private fun getPositionInRow(position: Int): Int {
+        return if (isItemInChildRow(position)) {
+            position % rowCoupleItemCount - longRowColsCount
+        } else {
+            position % rowCoupleItemCount + longRowColsCount - 2
+        }
+    }
 
     private fun doOnScroll(
         d: Int,
