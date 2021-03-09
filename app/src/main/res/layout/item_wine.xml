@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardElevation="4dp"
+    app:cardElevation="8dp"
     app:flat="false"
     app:strokeColor="@color/cavity_gold"
     app:strokeWidth="2dp">
