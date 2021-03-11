@@ -2,6 +2,9 @@ package com.louis.app.cavity.ui.home
 
 import android.content.Context
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.util.L
 import kotlin.math.max
@@ -30,10 +33,14 @@ class HoneycombLayoutManager(
         const val OVERLAPING_FACTOR = 0.75
     }
 
+    private lateinit var orientationHelper: OrientationHelper
+
     // A group is a row with its child, thiner, row
     private val groupItemCount = (2 * colCount) - 1
 
+    private var offset = 0
     private var scrollOffset = 0
+    private var toFill = 0 // mAvailable
 
 //    // Since all items will have same width, we can cache this
 //    private var childRowOffset = 0
@@ -42,39 +49,11 @@ class HoneycombLayoutManager(
 
     private fun fillTowardEnd(recycler: RecyclerView.Recycler, adapterItemCount: Int) {
         L.v("fillTowardEnd")
-        detachAndScrapAttachedViews(recycler)
 
-//        var top: Int
-//        val startPosition: Int
-//
-//        if (childCount > 0) {
-//            val lastChild = getChildAt(childCount - 1)!!
-//            val lastChildPosition = getPosition(lastChild)
-//            startPosition = lastChildPosition + 1
-//            val lp = lastChild.layoutParams as ViewGroup.MarginLayoutParams
-//            top = getDecoratedBottom(lastChild) + lp.bottomMargin
-//        } else {
-//            startPosition = 0
-//            top = 0 // parentTop ?
-//        }
-//        val end = height // or width in horizontal
-//        var count = 0
-//        for (i in 0 until adapterItemCount) {
-//            val view = recycler.getViewForPosition(i)
-//            addView(view)
-//
-//            if (orientation == VERTICAL) {
-//                measureChild(view, width / colCount, 0)
-//            }
-//
-////            if (orientation == HORIZONTAL) {
-////                measureChild(view, 0, height / colCount)
-////            }
-
-        var remainingSpace = if (orientation == VERTICAL) height else width
+        toFill = if (orientation == VERTICAL) height else width
         var i = 0
 
-        while (remainingSpace > 0 && i in 0 until adapterItemCount) {
+        while (toFill > 0 && i in 0 until adapterItemCount) {
             val view = recycler.getViewForPosition(i)
             val isInChildRow = isItemInChildRow(i)
             val start = getStartForPosition(i, view, isInChildRow)
@@ -98,7 +77,7 @@ class HoneycombLayoutManager(
 
                 // +1 to get a non zero based index
                 if (positionInRow + 1 == colCount - 1) {
-                    remainingSpace -= (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
+                    toFill -= (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
                 }
             } else {
                 val left = positionInRow * view.measuredWidth
@@ -109,7 +88,7 @@ class HoneycombLayoutManager(
 
                 // +1 to get a non zero based index
                 if (positionInRow + 1 == colCount) {
-                    remainingSpace -= (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
+                    toFill -= (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
                 }
             }
 
@@ -192,9 +171,21 @@ class HoneycombLayoutManager(
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
         L.v("OnLayout")
+        // TODO: Dont run this again and again if the helper is laready instantiated
+        orientationHelper =
+            if (orientation == VERTICAL) createVerticalHelper(this)
+            else OrientationHelper.createHorizontalHelper(this)
+
+        offset = orientationHelper.startAfterPadding
+        toFill = orientationHelper.endAfterPadding - offset
+
+        detachAndScrapAttachedViews(recycler)
+
         if (state.itemCount > 0) {
             fillTowardEnd(recycler, state.itemCount)
         }
+
+        //removeAndRecycleAllViews(recycler) should be removeAndRecycleScrap here but nos sure if we had to do this
     }
 
     override fun canScrollHorizontally() = orientation == HORIZONTAL
