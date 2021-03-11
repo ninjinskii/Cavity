@@ -179,6 +179,8 @@ class HoneycombLayoutManager(
         offset = orientationHelper.startAfterPadding
         toFill = orientationHelper.endAfterPadding - offset
 
+        // find anchor view ?
+
         detachAndScrapAttachedViews(recycler)
 
         if (state.itemCount > 0) {
