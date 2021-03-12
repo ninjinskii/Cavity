@@ -2,10 +2,10 @@ package com.louis.app.cavity.ui.home
 
 import android.content.Context
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.louis.app.cavity.util.L
 import kotlin.math.max
 import kotlin.math.min
@@ -41,6 +41,7 @@ class HoneycombLayoutManager(
     private var offset = 0
     private var scrollOffset = 0
     private var toFill = 0 // mAvailable
+    private val anchor = Anchor(coordinate = 0, valid = false)
 
 //    // Since all items will have same width, we can cache this
 //    private var childRowOffset = 0
@@ -179,7 +180,20 @@ class HoneycombLayoutManager(
         offset = orientationHelper.startAfterPadding
         toFill = orientationHelper.endAfterPadding - offset
 
-        // find anchor view ?
+        if (!anchor.valid && state.itemCount > 0) {
+            anchor.valid = true
+            val view = findReferenceChild(recycler, state, 0, childCount, state.itemCount)
+
+            if (view == null) {
+                anchor.coordinate = orientationHelper.startAfterPadding
+            } else {
+                anchor.coordinate = orientationHelper.getDecoratedStart(view)
+            }
+
+            // Might be necessary to handle some (apparently) edge cases, see rv.png
+        }
+
+
 
         detachAndScrapAttachedViews(recycler)
 
@@ -214,4 +228,42 @@ class HoneycombLayoutManager(
             RecyclerView.LayoutParams.WRAP_CONTENT
         )
     }
+
+    fun findReferenceChild(
+        recycler: Recycler?,
+        state: RecyclerView.State?,
+        start: Int,
+        end: Int,
+        itemCount: Int
+    ): View? {
+        var invalidMatch: View? = null
+        var outOfBoundsMatch: View? = null
+        val boundsStart: Int = orientationHelper.startAfterPadding
+        val boundsEnd: Int = orientationHelper.endAfterPadding
+        val diff = if (end > start) 1 else -1
+        var i = start
+        while (i != end) {
+            val view = getChildAt(i)
+            val position = getPosition(view!!)
+            if (position in 0 until itemCount) {
+                if ((view.layoutParams as RecyclerView.LayoutParams).isItemRemoved) {
+                    if (invalidMatch == null) {
+                        invalidMatch = view // removed item, least preferred
+                    }
+                } else if (orientationHelper.getDecoratedStart(view) >= boundsEnd
+                    || orientationHelper.getDecoratedEnd(view) < boundsStart
+                ) {
+                    if (outOfBoundsMatch == null) {
+                        outOfBoundsMatch = view // item is not visible, less preferred
+                    }
+                } else {
+                    return view
+                }
+            }
+            i += diff
+        }
+        return outOfBoundsMatch ?: invalidMatch
+    }
+
+    private data class Anchor(var coordinate: Int, var valid: Boolean)
 }
