@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.home
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.OrientationHelper.createHorizontalHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
@@ -51,7 +52,7 @@ class HoneycombLayoutManager(
     private fun fillTowardEnd(recycler: RecyclerView.Recycler, adapterItemCount: Int) {
         L.v("fillTowardEnd")
 
-        toFill = if (orientation == VERTICAL) height else width
+        //toFill = if (orientation == VERTICAL) height else width determined in onLayout
         var i = 0
 
         while (toFill > 0 && i in 0 until adapterItemCount) {
@@ -175,7 +176,7 @@ class HoneycombLayoutManager(
         // TODO: Dont run this again and again if the helper is laready instantiated
         orientationHelper =
             if (orientation == VERTICAL) createVerticalHelper(this)
-            else OrientationHelper.createHorizontalHelper(this)
+            else createHorizontalHelper(this)
 
         offset = orientationHelper.startAfterPadding
         toFill = orientationHelper.endAfterPadding - offset
@@ -192,8 +193,6 @@ class HoneycombLayoutManager(
 
             // Might be necessary to handle some (apparently) edge cases, see rv.png
         }
-
-
 
         detachAndScrapAttachedViews(recycler)
 
