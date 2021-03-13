@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.louis.app.cavity.util.L
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -46,8 +47,8 @@ class HoneycombLayoutManager(
     private fun fillTowardEnd(recycler: RecyclerView.Recycler, adapterItemCount: Int): Int {
         val xstart = renderState.toFill
 
-        if (renderState.scrollOffset > 0) {
-            //recycle
+        if (renderState.freeScroll != RenderState.FREE_SCROLL_NAN) {
+            recycleViewsFromStart(recycler, renderState.freeScroll)
         }
 
         while (renderState.toFill > 0 && renderState.hasMore(adapterItemCount)) {
@@ -75,12 +76,13 @@ class HoneycombLayoutManager(
                 L.v("position: ${renderState.currentPosition}, start: $start, left: $left")
                 layoutDecorated(view, left, start, right, bottom)
 
-                // +1 to get a non zero based index
-                if (positionInRow + 1 == colCount - 1) {
+           /*     if (isRowCompleted(positionInRow, isInChildRow = true)) {
                     L.v("Update toFill for postiton ${renderState.currentPosition}")
                     // TODO: Take into account margin
-                    renderState.toFill -= (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
-                }
+                    val consumed = (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
+
+                    onRowCompleted(consumed)
+                }*/
             } else {
                 val left = positionInRow * view.measuredWidth
                 val right = left + view.measuredWidth
@@ -89,11 +91,20 @@ class HoneycombLayoutManager(
                 L.v("position: ${renderState.currentPosition}, start: $start, left: $left")
                 layoutDecorated(view, left, start, right, bottom)
 
-                // +1 to get a non zero based index
-                if (positionInRow + 1 == colCount) {
+            /*    if (isRowCompleted(positionInRow, isInChildRow = false)) {
                     L.v("Update toFill for postiton: ${renderState.currentPosition}")
-                    renderState.toFill -= (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
-                }
+                    val consumed = (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
+
+                    onRowCompleted(consumed)
+                }*/
+            }
+
+            if (isRowCompleted(positionInRow, isInChildRow)) {
+                L.v("Update toFill for postiton ${renderState.currentPosition}")
+                // TODO: Take into account margin
+                val consumed = (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
+
+                onRowCompleted(recycler, consumed)
             }
 
             renderState.currentPosition++
@@ -175,6 +186,8 @@ class HoneycombLayoutManager(
 
         detachAndScrapAttachedViews(recycler)
 
+        renderState.freeScroll = RenderState.FREE_SCROLL_NAN
+
         if (state.itemCount > 0) {
             fillTowardEnd(recycler, state.itemCount)
         }
@@ -244,9 +257,88 @@ class HoneycombLayoutManager(
         return outOfBoundsMatch ?: invalidMatch
     }
 
+    private fun recycleViewsFromStart(recycler: Recycler, dt: Int) {
+        if (dt < 0) {
+            L.v(
+                "Called recycle from start with a negative value. This might happen"
+                        + " during layout changes but may be sign of a bug"
+            )
+            return
+        }
+        val limit: Int = orientationHelper.startAfterPadding + dt
+        val childCount = childCount
+        for (i in 0 until childCount) {
+            val child = getChildAt(i)
+            if (orientationHelper.getDecoratedEnd(child) > limit) { // stop here
+                recycleChildren(recycler, 0, i)
+                return
+            }
+        }
+    }
+
+    private fun recycleChildren(recycler: Recycler, startIndex: Int, endIndex: Int) {
+        if (startIndex == endIndex) {
+            return
+        }
+        L.v("Recycling " + abs(startIndex - endIndex) + " items")
+        if (endIndex > startIndex) {
+            for (i in endIndex - 1 downTo startIndex) {
+                removeAndRecycleViewAt(i, recycler)
+            }
+        } else {
+            for (i in startIndex downTo endIndex + 1) {
+                removeAndRecycleViewAt(i, recycler)
+            }
+        }
+    }
+
+    private fun onRowCompleted(recycler: Recycler, consumed: Int) {
+        with(renderState) {
+            renderState.toFill -= consumed
+
+            if (freeScroll != RenderState.FREE_SCROLL_NAN) {
+                freeScroll += consumed
+
+                if (toFill < 0) {
+                    freeScroll += toFill
+                }
+
+                recycleViewsFromStart(recycler, freeScroll)
+            }
+        }
+    }
+
+    private fun isRowCompleted(positionInRow: Int, isInChildRow: Boolean): Boolean {
+        val limit = if (isInChildRow) colCount - 1 else colCount
+        // +1 to get an non zero based index
+        return positionInRow + 1 == limit
+    }
+
     private data class Anchor(var coordinate: Int, var valid: Boolean)
 
+    private fun updateRenderState(requiredSpace: Int, canUseExistingSpace: Boolean) {
+        val view = getChildAt(0)
+        view?.let {
+            with(renderState) {
+                currentPosition = getPosition(it)
+                offset = orientationHelper.getDecoratedStart(it)
+                freeScroll =
+                    -orientationHelper.getDecoratedStart(it) + orientationHelper.startAfterPadding
+
+                toFill = requiredSpace
+
+                if (canUseExistingSpace) {
+                    toFill -= freeScroll
+                }
+            }
+        }
+    }
+
     private class RenderState(private val colCount: Int) {
+        companion object {
+            const val FREE_SCROLL_NAN = Integer.MIN_VALUE
+        }
+
         val groupItemCount = (2 * colCount) - 1
         val anchor = Anchor(coordinate = 0, valid = false)
         var currentPosition = 0 // current adapter postion
