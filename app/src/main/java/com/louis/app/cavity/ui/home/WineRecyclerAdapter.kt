@@ -106,6 +106,8 @@ class WineRecyclerAdapter(
                         .load(Uri.parse(wine.imgPath))
                         .centerCrop()
                         .into(binding.wineImage)
+                } else {
+                    binding.wineImage.setImageDrawable(null)
                 }
             }
 

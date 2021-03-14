@@ -185,6 +185,7 @@ class HoneycombLayoutManager(
                 var scrolled = 0
 
                 while (scrolled > d) {
+                    L.v("stuck in this shit")
                     val firstChild = getChildAt(0)!!
                     val firstChildTop = oHelper.getDecoratedStart(firstChild)
                     val hangingTop = max(0, toFill - firstChildTop)
@@ -202,6 +203,7 @@ class HoneycombLayoutManager(
                 var scrolled = 0
 
                 while (scrolled < d) {
+                    L.v("stuck in this shit")
                     val lastChild = getChildAt(childCount - 1)!!
                     val lastChildPosition = getPosition(lastChild)
                     val lastChildBottom = oHelper.getDecoratedEnd(lastChild)

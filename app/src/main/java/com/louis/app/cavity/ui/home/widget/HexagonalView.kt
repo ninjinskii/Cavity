@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.home.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -124,5 +125,14 @@ class HexagonalView @JvmOverloads constructor(
 
         canvas?.drawPath(path, paint)
         canvas?.restoreToCount(saveCount!!)
+    }
+
+    // Yeah, this is an ugly fix. Too bad !
+    // We need to eat requestLayout calls to avoid our HoneycombLayoutManager#OnLayouChildren
+    // to be called when we load an image into this view.
+    // Erasing this will cause some RecyclerView madness to happen.
+    @SuppressLint("MissingSuperCall")
+    override fun requestLayout() {
+        //super.requestLayout()
     }
 }
