@@ -63,8 +63,8 @@ class HoneycombLayoutManager(
             val lastChild = getChildAt(childCount - 1)!!
             val lastChildPos = getPosition(lastChild)
             startPos = lastChildPos + 1
-            top = lastChild.bottom //OF, OH
-            filled = lastChild.bottom
+            top = orientationHelper.getDecoratedEnd(lastChild) - (lastChild.measuredHeight apply (1 - OVERLAPING_FACTOR)) //OF, OH
+            filled = top
         } else {
             startPos = 0
             filled = 0
@@ -93,20 +93,19 @@ class HoneycombLayoutManager(
                 val left = childRowOffset + view.measuredWidth * positionInRow // MG
                 val right = left + view.measuredWidth
 
-                layoutDecorated(view, left, top, right, bottom) // MG
+                layoutDecoratedWithMargins(view, left, top, right, bottom) // MG
             } else {
                 bottom = top + view.measuredHeight // OH MG
                 val left = view.measuredWidth * positionInRow // MG
                 val right = left + view.measuredWidth
 
-                layoutDecorated(view, left, top, right, bottom) // MG
+                layoutDecoratedWithMargins(view, left, top, right, bottom) // MG
             }
 
             if (isRowCompleted(positionInRow, isInChildRow, reverse = false)) {
-                top = bottom  // OF
-                filled += view.measuredHeight // OF
+                top = bottom - (view.measuredHeight apply (1 - OVERLAPING_FACTOR))  // OF
+                filled += view.measuredHeight apply (1 - OVERLAPING_FACTOR) // OF
             }
-
         }
 
         L.v("childCount : $childCount")
@@ -118,15 +117,15 @@ class HoneycombLayoutManager(
         if (childCount == 0) return
 
         val firstChild = getChildAt(0)!!
-        val firstChilPos = getPosition(firstChild)
+        val firstChildPos = getPosition(firstChild)
         var filled = firstChild.top
 
-        if (firstChilPos == 0) return
+        if (firstChildPos == 0) return
 
         val toFill = if (clipToPadding) paddingTop else 0
-        bottom = orientationHelper.getDecoratedStart(firstChild)
+        bottom = orientationHelper.getDecoratedStart(firstChild) + (firstChild.measuredHeight apply (1 - OVERLAPING_FACTOR))
 
-        for (i in firstChilPos - 1 downTo 0) {
+        for (i in firstChildPos - 1 downTo 0) {
             if (bottom < toFill) break
 
             val view = recycler.getViewForPosition(i)
@@ -149,16 +148,16 @@ class HoneycombLayoutManager(
                 val left = childRowOffset + view.measuredWidth * positionInRow // MG
                 val right = left + view.measuredWidth
 
-                layoutDecorated(view, left, top, right, bottom)
+                layoutDecoratedWithMargins(view, left, top, right, bottom)
             } else {
                 val left = view.measuredWidth * positionInRow // MG
                 val right = left + view.measuredWidth
 
-                layoutDecorated(view, left, top, right, bottom)
+                layoutDecoratedWithMargins(view, left, top, right, bottom)
             }
 
             if (isRowCompleted(positionInRow, isInChildRow, reverse = true)) {
-                bottom = top  // OF
+                bottom = top + (firstChild.measuredHeight apply (1 - OVERLAPING_FACTOR))  // OF
                 filled += view.measuredHeight // OF
             }
         }
