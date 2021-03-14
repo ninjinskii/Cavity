@@ -12,7 +12,7 @@ import kotlin.math.roundToInt
 /**
  * Organize the views in a honeycomb fashion
  * Even rows will contain rowCount items, odd rows will contain rowCount - 1 items
- * Thus rowCount must be at least 1
+ * Thus rowCount must be at least 2
  *
  * Thinked to be used with HexagonalView
  */
@@ -28,7 +28,7 @@ class HoneycombLayoutManager(
         const val VERTICAL = 1
 
         // 3/4 is the pointy part ratio (compared to its bounds length) of the hexagon
-        const val OVERLAPING_FACTOR = 0.75
+        private const val OVERLAPING_FACTOR = 0.25
     }
 
     private val groupItemCount = (2 * colCount) - 1
@@ -38,6 +38,12 @@ class HoneycombLayoutManager(
 
     private var anchorPosition = 0
     private var anchorOffset = 0
+
+    init {
+        if (colCount < 2) {
+            throw IllegalArgumentException("Honeycomb layout manager require at least two rows.")
+        }
+    }
 
     // TODO: implement onDetachedFromWindow to make the views avalaible for the view pool, since this recycler view will share his viewpool in the future
     // TODO: Predictive animations: see State.itemCount docs
@@ -52,7 +58,6 @@ class HoneycombLayoutManager(
         }
     }
 
-    // LEGEND: OF: might be necessary to consider overlapping factor, MG: marigns, OH: orientation helper
     private fun fillBottom(recycler: RecyclerView.Recycler) {
         val toFill = if (clipToPadding) height - paddingBottom else height
         var filled: Int // Might be necessary to better compute actual scrolled distance in doOnScroll()
@@ -63,7 +68,8 @@ class HoneycombLayoutManager(
             val lastChild = getChildAt(childCount - 1)!!
             val lastChildPos = getPosition(lastChild)
             startPos = lastChildPos + 1
-            top = orientationHelper.getDecoratedEnd(lastChild) - (lastChild.measuredHeight apply (1 - OVERLAPING_FACTOR)) //OF, OH
+            top =
+                orientationHelper.getDecoratedEnd(lastChild) - (lastChild.measuredHeight apply OVERLAPING_FACTOR)
             filled = top
         } else {
             startPos = 0
@@ -78,9 +84,9 @@ class HoneycombLayoutManager(
             addView(view)
 
             if (orientation == VERTICAL) {
-                measureChild(view, width / colCount, 0) // are parameters relevant ? MG
+                measureChild(view, width - (width / colCount), 0)
             } else if (orientation == HORIZONTAL) {
-                measureChild(view, 0, height / colCount) // MG
+                measureChild(view, 0, height - (height / colCount))
             }
 
             val isInChildRow = isItemInChildRow(i)
@@ -89,22 +95,22 @@ class HoneycombLayoutManager(
 
             if (isInChildRow) {
                 val childRowOffset = view.measuredWidth / 2
-                bottom = top + view.measuredHeight // OH MG
-                val left = childRowOffset + view.measuredWidth * positionInRow // MG
+                bottom = top + view.measuredHeight
+                val left = childRowOffset + view.measuredWidth * positionInRow
                 val right = left + view.measuredWidth
 
-                layoutDecoratedWithMargins(view, left, top, right, bottom) // MG
+                layoutDecoratedWithMargins(view, left, top, right, bottom)
             } else {
-                bottom = top + view.measuredHeight // OH MG
-                val left = view.measuredWidth * positionInRow // MG
+                bottom = top + view.measuredHeight
+                val left = view.measuredWidth * positionInRow
                 val right = left + view.measuredWidth
 
-                layoutDecoratedWithMargins(view, left, top, right, bottom) // MG
+                layoutDecoratedWithMargins(view, left, top, right, bottom)
             }
 
             if (isRowCompleted(positionInRow, isInChildRow, reverse = false)) {
-                top = bottom - (view.measuredHeight apply (1 - OVERLAPING_FACTOR))  // OF
-                filled += view.measuredHeight apply (1 - OVERLAPING_FACTOR) // OF
+                top = bottom - (view.measuredHeight apply OVERLAPING_FACTOR)
+                filled += view.measuredHeight apply OVERLAPING_FACTOR
             }
         }
 
@@ -123,7 +129,8 @@ class HoneycombLayoutManager(
         if (firstChildPos == 0) return
 
         val toFill = if (clipToPadding) paddingTop else 0
-        bottom = orientationHelper.getDecoratedStart(firstChild) + (firstChild.measuredHeight apply (1 - OVERLAPING_FACTOR))
+        bottom =
+            orientationHelper.getDecoratedStart(firstChild) + (firstChild.measuredHeight apply OVERLAPING_FACTOR)
 
         for (i in firstChildPos - 1 downTo 0) {
             if (bottom < toFill) break
@@ -134,9 +141,9 @@ class HoneycombLayoutManager(
             anchorPosition--
 
             if (orientation == VERTICAL) {
-                measureChild(view, width / colCount, 0) // are parameters relevant ? MG
+                measureChild(view, width - (width / colCount), 0)
             } else if (orientation == HORIZONTAL) {
-                measureChild(view, 0, height / colCount) // MG
+                measureChild(view, 0, height - (height / colCount))
             }
 
             val top = bottom - view.measuredHeight
@@ -145,20 +152,20 @@ class HoneycombLayoutManager(
 
             if (isInChildRow) {
                 val childRowOffset = view.measuredWidth / 2
-                val left = childRowOffset + view.measuredWidth * positionInRow // MG
+                val left = childRowOffset + view.measuredWidth * positionInRow
                 val right = left + view.measuredWidth
 
                 layoutDecoratedWithMargins(view, left, top, right, bottom)
             } else {
-                val left = view.measuredWidth * positionInRow // MG
+                val left = view.measuredWidth * positionInRow
                 val right = left + view.measuredWidth
 
                 layoutDecoratedWithMargins(view, left, top, right, bottom)
             }
 
             if (isRowCompleted(positionInRow, isInChildRow, reverse = true)) {
-                bottom = top + (firstChild.measuredHeight apply (1 - OVERLAPING_FACTOR))  // OF
-                filled += view.measuredHeight // OF
+                bottom = top + (firstChild.measuredHeight apply OVERLAPING_FACTOR)
+                filled += view.measuredHeight
             }
         }
 
