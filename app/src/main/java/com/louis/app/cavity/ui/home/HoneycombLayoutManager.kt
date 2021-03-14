@@ -1,14 +1,10 @@
 package com.louis.app.cavity.ui.home
 
 import android.content.Context
-import android.view.View
-import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.OrientationHelper.createHorizontalHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.louis.app.cavity.util.L
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -35,83 +31,139 @@ class HoneycombLayoutManager(
         const val OVERLAPING_FACTOR = 0.75
     }
 
-    private lateinit var orientationHelper: OrientationHelper
+    private val groupItemCount = (2 * colCount) - 1
+    private val orientationHelper =
+        if (orientation == VERTICAL) createVerticalHelper(this)
+        else createHorizontalHelper(this)
 
-    private val renderState = RenderState(colCount)
-
-//    // Since all items will have same width, we can cache this
-//    private var childRowOffset = 0
+    private var anchorPosition = 0
+    private var anchorOffset = 0
 
     // TODO: implement onDetachedFromWindow to make the views avalaible for the view pool, since this recycler view will share his viewpool in the future
+    // TODO: Predictive animations: see State.itemCount docs
 
-    private fun fillTowardEnd(recycler: RecyclerView.Recycler, adapterItemCount: Int): Int {
-        val xstart = renderState.toFill
+    override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
+        L.v("OnLayout (isPrelayout: ${state.isPreLayout})")
 
-        if (renderState.freeScroll != RenderState.FREE_SCROLL_NAN) {
-            recycleViewsFromStart(recycler, renderState.freeScroll)
+        detachAndScrapAttachedViews(recycler)
+
+        if (state.itemCount > 0) {
+            fillBottom(recycler)
+        }
+    }
+
+    // LEGEND: OF: might be necessary to consider overlapping factor, MG: marigns, OH: orientation helper
+    private fun fillBottom(recycler: RecyclerView.Recycler) {
+        val toFill = if (clipToPadding) height - paddingBottom else height
+        var filled: Int // Might be necessary to better compute actual scrolled distance in doOnScroll()
+        val startPos: Int
+        var top: Int
+
+        if (childCount > 0) {
+            val lastChild = getChildAt(childCount - 1)!!
+            val lastChildPos = getPosition(lastChild)
+            startPos = lastChildPos + 1
+            top = lastChild.bottom //OF, OH
+            filled = lastChild.bottom
+        } else {
+            startPos = 0
+            filled = 0
+            top = paddingTop
         }
 
-        while (renderState.toFill > 0 && renderState.hasMore(adapterItemCount)) {
-            val view = renderState.next(recycler)
-            val isInChildRow = renderState.isItemInChildRow()
-            val positionInRow = renderState.getPositionInRow(isInChildRow)
+        for (i in startPos until itemCount) {
+            if (top > toFill) break
 
+            val view = recycler.getViewForPosition(i)
             addView(view)
 
             if (orientation == VERTICAL) {
-                measureChild(view, width / colCount, 0)
+                measureChild(view, width / colCount, 0) // are parameters relevant ? MG
             } else if (orientation == HORIZONTAL) {
-                measureChild(view, 0, height / colCount)
+                measureChild(view, 0, height / colCount) // MG
             }
 
-            val start = renderState.getStartForPosition(view, isInChildRow) // rename to top ?
-//            val consumed = orientationHelper.getDecoratedMeasurement(view)
+            val isInChildRow = isItemInChildRow(i)
+            val positionInRow = getPositionInRow(i, isInChildRow)
+            val bottom: Int
 
             if (isInChildRow) {
                 val childRowOffset = view.measuredWidth / 2
-                val left = childRowOffset + view.measuredWidth * positionInRow
+                bottom = top + view.measuredHeight // OH MG
+                val left = childRowOffset + view.measuredWidth * positionInRow // MG
                 val right = left + view.measuredWidth
-                val bottom = start + view.measuredHeight
 
-                L.v("position: ${renderState.currentPosition}, start: $start, left: $left")
-                layoutDecorated(view, left, start, right, bottom)
-
-           /*     if (isRowCompleted(positionInRow, isInChildRow = true)) {
-                    L.v("Update toFill for postiton ${renderState.currentPosition}")
-                    // TODO: Take into account margin
-                    val consumed = (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
-
-                    onRowCompleted(consumed)
-                }*/
+                layoutDecorated(view, left, top, right, bottom) // MG
             } else {
-                val left = positionInRow * view.measuredWidth
+                bottom = top + view.measuredHeight // OH MG
+                val left = view.measuredWidth * positionInRow // MG
                 val right = left + view.measuredWidth
-                val bottom = start + view.measuredHeight
 
-                L.v("position: ${renderState.currentPosition}, start: $start, left: $left")
-                layoutDecorated(view, left, start, right, bottom)
-
-            /*    if (isRowCompleted(positionInRow, isInChildRow = false)) {
-                    L.v("Update toFill for postiton: ${renderState.currentPosition}")
-                    val consumed = (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
-
-                    onRowCompleted(consumed)
-                }*/
+                layoutDecorated(view, left, top, right, bottom) // MG
             }
 
-            if (isRowCompleted(positionInRow, isInChildRow)) {
-                L.v("Update toFill for postiton ${renderState.currentPosition}")
-                // TODO: Take into account margin
-                val consumed = (view.measuredHeight * OVERLAPING_FACTOR).roundToInt()
-
-                onRowCompleted(recycler, consumed)
+            if (isRowCompleted(positionInRow, isInChildRow, reverse = false)) {
+                top = bottom  // OF
+                filled += view.measuredHeight // OF
             }
 
-            renderState.currentPosition++
         }
 
-        return xstart - renderState.toFill
-//        L.v("Layout $i childrens")
+        L.v("childCount : $childCount")
+    }
+
+    private fun fillTop(recycler: RecyclerView.Recycler) {
+        var bottom: Int
+
+        if (childCount == 0) return
+
+        val firstChild = getChildAt(0)!!
+        val firstChilPos = getPosition(firstChild)
+        var filled = firstChild.top
+
+        if (firstChilPos == 0) return
+
+        val toFill = if (clipToPadding) paddingTop else 0
+        bottom = orientationHelper.getDecoratedStart(firstChild)
+
+        for (i in firstChilPos - 1 downTo 0) {
+            if (bottom < toFill) break
+
+            val view = recycler.getViewForPosition(i)
+            addView(view, 0)
+
+            anchorPosition--
+
+            if (orientation == VERTICAL) {
+                measureChild(view, width / colCount, 0) // are parameters relevant ? MG
+            } else if (orientation == HORIZONTAL) {
+                measureChild(view, 0, height / colCount) // MG
+            }
+
+            val top = bottom - view.measuredHeight
+            val isInChildRow = isItemInChildRow(i)
+            val positionInRow = getPositionInRow(i, isInChildRow)
+
+            if (isInChildRow) {
+                val childRowOffset = view.measuredWidth / 2
+                val left = childRowOffset + view.measuredWidth * positionInRow // MG
+                val right = left + view.measuredWidth
+
+                layoutDecorated(view, left, top, right, bottom)
+            } else {
+                val left = view.measuredWidth * positionInRow // MG
+                val right = left + view.measuredWidth
+
+                layoutDecorated(view, left, top, right, bottom)
+            }
+
+            if (isRowCompleted(positionInRow, isInChildRow, reverse = true)) {
+                bottom = top  // OF
+                filled += view.measuredHeight // OF
+            }
+        }
+
+        L.v("childCount : $childCount")
     }
 
     private fun doOnScroll(
@@ -119,80 +171,56 @@ class HoneycombLayoutManager(
         recycler: RecyclerView.Recycler,
         state: RecyclerView.State
     ): Int {
-        if (childCount == 0) {
-            return 0
-        }
-
-        when {
+        return when {
+            childCount == 0 -> 0
             d < 0 -> {
+                val toFill = if (clipToPadding) paddingTop else 0
                 var scrolled = 0
 
                 while (scrolled > d) {
                     val firstChild = getChildAt(0)!!
-                    val firstChildTop = getDecoratedTop(firstChild) // + margin top
-                    val hangingTop = max(0, 0 - firstChildTop)
+                    val firstChildTop = orientationHelper.getDecoratedStart(firstChild)
+                    val hangingTop = max(0, toFill - firstChildTop)
+
                     val scrollBy = min(hangingTop, scrolled - d)
-                    offsetChildrenVertical(-scrollBy)
+                    orientationHelper.offsetChildren(scrollBy)
                     scrolled -= scrollBy
-                    if (renderState.scrollOffset == 0) break
-                    // fillTop
+                    if (anchorPosition == 0) break
+                    fillTop(recycler)
                 }
-
-                return scrolled
+                scrolled
             }
+            d > 0 -> {
+                val availableBottom = if (clipToPadding) height - paddingBottom else height
+                var scrolled = 0
+
+                while (scrolled < d) {
+                    val lastChild = getChildAt(childCount - 1)!!
+                    val lastChildPosition = getPosition(lastChild)
+                    val lastChildBottom = orientationHelper.getDecoratedEnd(lastChild)
+                    val hangingBottom = max(0, lastChildBottom - availableBottom)
+                    val scrollBy = min(hangingBottom, d - scrolled)
+                    orientationHelper.offsetChildren(-scrollBy)
+                    scrolled += scrollBy
+                    if (lastChildPosition == state.itemCount - 1) break
+                    fillBottom(recycler)
+                }
+                scrolled
+            }
+            else -> 0
+        }.also {
+            recycleViewsOutOfBounds(recycler)
+            updateAnchorOffset()
         }
 
-        renderState.scrollOffset += d
-        fillTowardEnd(recycler, state.itemCount)
-        return d
     }
 
-    private fun logPosition(view: View, position: Int) {
-        L.v("View at position $position is set to: ${view.left}, ${view.top}")
-    }
-
-    override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
-        L.v("OnLayout (isPrelayout: ${state.isPreLayout})")
-        // TODO: Dont run this again and again if the helper is laready instantiated
-        orientationHelper =
-            if (orientation == VERTICAL) createVerticalHelper(this)
-            else createHorizontalHelper(this)
-
-        renderState.offset = orientationHelper.startAfterPadding
-        renderState.toFill = orientationHelper.endAfterPadding - renderState.offset
-
-        if (childCount > 0) {
-            val referenceChild = getChildAt(0)!!
-            renderState.currentPosition = getPosition(referenceChild)
-        } else {
-            renderState.currentPosition = 0
-        }
-
-        if (!renderState.anchor.valid && state.itemCount > 0) {
-            renderState.anchor.valid = true
-            // TODO: check if this works after scrolling is ok
-            val view = findReferenceChild(recycler, state, 0, childCount, state.itemCount)
-
-            if (view == null) {
-                renderState.anchor.coordinate = orientationHelper.startAfterPadding
-            } else {
-                renderState.currentPosition = getPosition(view)
-                L.v("currentPosition: ${renderState.currentPosition}")
-                renderState.anchor.coordinate = orientationHelper.getDecoratedStart(view)
-            }
-
-            // Might be necessary to handle some (apparently) edge cases, see rv.png
-        }
-
-        detachAndScrapAttachedViews(recycler)
-
-        renderState.freeScroll = RenderState.FREE_SCROLL_NAN
-
-        if (state.itemCount > 0) {
-            fillTowardEnd(recycler, state.itemCount)
-        }
-
-        //removeAndRecycleAllViews(recycler) should be removeAndRecycleScrap here but nos sure if we had to do this
+    private fun updateAnchorOffset() {
+        anchorOffset =
+            if (childCount > 0) {
+                val view = getChildAt(0)!!
+                orientationHelper.getDecoratedStart(view) - paddingTop
+            } else 0
     }
 
     override fun canScrollHorizontally() = orientation == HORIZONTAL
@@ -220,172 +248,66 @@ class HoneycombLayoutManager(
         )
     }
 
-    private fun findReferenceChild(
-        recycler: Recycler?,
-        state: RecyclerView.State?,
-        start: Int,
-        end: Int,
-        itemCount: Int
-    ): View? {
-        var invalidMatch: View? = null
-        var outOfBoundsMatch: View? = null
-        val boundsStart: Int = orientationHelper.startAfterPadding
-        val boundsEnd: Int = orientationHelper.endAfterPadding
-        val diff = if (end > start) 1 else -1
-        var i = start
-        while (i != end) {
-            val view = getChildAt(i)
-            val position = getPosition(view!!)
-            if (position in 0 until itemCount) {
-                if ((view.layoutParams as RecyclerView.LayoutParams).isItemRemoved) {
-                    if (invalidMatch == null) {
-                        invalidMatch = view // removed item, least preferred
-                    }
-                } else if (
-                    orientationHelper.getDecoratedStart(view) >= boundsEnd ||
-                    orientationHelper.getDecoratedEnd(view) < boundsStart
-                ) {
-                    if (outOfBoundsMatch == null) {
-                        outOfBoundsMatch = view // item is not visible, less preferred
-                    }
-                } else {
-                    return view
-                }
-            }
-            i += diff
-        }
-        return outOfBoundsMatch ?: invalidMatch
-    }
-
-    private fun recycleViewsFromStart(recycler: Recycler, dt: Int) {
-        if (dt < 0) {
-            L.v(
-                "Called recycle from start with a negative value. This might happen"
-                        + " during layout changes but may be sign of a bug"
-            )
-            return
-        }
-        val limit: Int = orientationHelper.startAfterPadding + dt
+    private fun recycleViewsOutOfBounds(recycler: RecyclerView.Recycler) {
+        if (childCount == 0) return
         val childCount = childCount
+
+        var firstVisibleChild = 0
+
         for (i in 0 until childCount) {
-            val child = getChildAt(i)
-            if (orientationHelper.getDecoratedEnd(child) > limit) { // stop here
-                recycleChildren(recycler, 0, i)
-                return
+            val child = getChildAt(i)!!
+            val top = if (clipToPadding) paddingTop else 0
+            if (orientationHelper.getDecoratedEnd(child) < top) {
+                firstVisibleChild++
+            } else {
+                break
             }
         }
+
+        var lastVisibleChild = firstVisibleChild
+
+        for (i in lastVisibleChild until childCount) {
+            val child = getChildAt(i)!!
+            if (orientationHelper.getDecoratedStart(child) <= if (clipToPadding) height - paddingBottom else height) {
+                lastVisibleChild++
+            } else {
+                lastVisibleChild--
+                break
+            }
+        }
+
+        for (i in childCount - 1 downTo lastVisibleChild + 1) removeAndRecycleViewAt(i, recycler)
+        for (i in firstVisibleChild - 1 downTo 0) removeAndRecycleViewAt(i, recycler)
+
+        anchorPosition += firstVisibleChild
     }
 
-    private fun recycleChildren(recycler: Recycler, startIndex: Int, endIndex: Int) {
-        if (startIndex == endIndex) {
-            return
-        }
-        L.v("Recycling " + abs(startIndex - endIndex) + " items")
-        if (endIndex > startIndex) {
-            for (i in endIndex - 1 downTo startIndex) {
-                removeAndRecycleViewAt(i, recycler)
-            }
+    private fun isRowCompleted(
+        positionInRow: Int,
+        isInChildRow: Boolean,
+        reverse: Boolean
+    ): Boolean {
+        return if (reverse) {
+            positionInRow == 0
         } else {
-            for (i in startIndex downTo endIndex + 1) {
-                removeAndRecycleViewAt(i, recycler)
-            }
+            val limit = if (isInChildRow) colCount - 1 else colCount
+            // +1 to get an non zero based index
+            positionInRow + 1 == limit
         }
     }
 
-    private fun onRowCompleted(recycler: Recycler, consumed: Int) {
-        with(renderState) {
-            renderState.toFill -= consumed
+    private fun isItemInChildRow(position: Int): Boolean {
+        val threshold = colCount - 1
+        return position % groupItemCount > threshold
+    }
 
-            if (freeScroll != RenderState.FREE_SCROLL_NAN) {
-                freeScroll += consumed
-
-                if (toFill < 0) {
-                    freeScroll += toFill
-                }
-
-                recycleViewsFromStart(recycler, freeScroll)
-            }
+    private fun getPositionInRow(position: Int, childRow: Boolean): Int {
+        return if (childRow) {
+            position % groupItemCount - colCount
+        } else {
+            position % groupItemCount
         }
     }
 
-    private fun isRowCompleted(positionInRow: Int, isInChildRow: Boolean): Boolean {
-        val limit = if (isInChildRow) colCount - 1 else colCount
-        // +1 to get an non zero based index
-        return positionInRow + 1 == limit
-    }
-
-    private data class Anchor(var coordinate: Int, var valid: Boolean)
-
-    private fun updateRenderState(requiredSpace: Int, canUseExistingSpace: Boolean) {
-        val view = getChildAt(0)
-        view?.let {
-            with(renderState) {
-                currentPosition = getPosition(it)
-                offset = orientationHelper.getDecoratedStart(it)
-                freeScroll =
-                    -orientationHelper.getDecoratedStart(it) + orientationHelper.startAfterPadding
-
-                toFill = requiredSpace
-
-                if (canUseExistingSpace) {
-                    toFill -= freeScroll
-                }
-            }
-        }
-    }
-
-    private class RenderState(private val colCount: Int) {
-        companion object {
-            const val FREE_SCROLL_NAN = Integer.MIN_VALUE
-        }
-
-        val groupItemCount = (2 * colCount) - 1
-        val anchor = Anchor(coordinate = 0, valid = false)
-        var currentPosition = 0 // current adapter postion
-        var offset = 0  // Position where we should begin layout views
-        var scrollOffset = 0 // Children views offset due to scroll position
-        var freeScroll = 0 // Amount of space that we can scroll without creating a new view
-        var toFill = 0 // Distance of available space to fill with views
-
-        fun hasMore(adapterItemCount: Int) =
-            currentPosition in 0 until adapterItemCount
-
-        fun next(recycler: Recycler) = recycler.getViewForPosition(currentPosition)
-
-        fun isItemInChildRow(): Boolean {
-            val threshold = colCount - 1
-            return currentPosition % groupItemCount > threshold
-        }
-
-        // Might be useless if we better compute "top" value
-        fun isItemInTopFirstRow() = currentPosition <= colCount - 1
-
-        fun getPositionInRow(childRow: Boolean): Int {
-            return if (childRow) {
-                currentPosition % groupItemCount - colCount
-            } else {
-                currentPosition % groupItemCount
-            }
-        }
-
-        fun getRowNumberForItem(isInChildRow: Boolean): Int {
-            var groupParentRowPosition = (currentPosition / groupItemCount) * 2
-            if (isInChildRow) {
-                groupParentRowPosition += 1
-            }
-
-            return groupParentRowPosition
-        }
-
-        fun getStartForPosition(view: View, isInChildRow: Boolean): Int {
-            return if (isItemInTopFirstRow()) {
-                0 - scrollOffset
-            } else {
-                val start = view.measuredHeight * OVERLAPING_FACTOR
-                val rowNumber = getRowNumberForItem(isInChildRow)
-                L.v("rowNumber: $rowNumber, start: $start")
-                ((rowNumber * start) - scrollOffset).roundToInt()
-            }.also { L.v("getStartForPosition $currentPosition : $it") }
-        }
-    }
+    private infix fun Int.apply(value: Double) = (this * value).roundToInt()
 }

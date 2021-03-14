@@ -6,7 +6,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
@@ -49,7 +48,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         binding.recyclerView.apply {
             layoutManager = HoneycombLayoutManager(
-                context,
+                requireContext(),
                 colCount = 2,
                 HoneycombLayoutManager.VERTICAL
             )

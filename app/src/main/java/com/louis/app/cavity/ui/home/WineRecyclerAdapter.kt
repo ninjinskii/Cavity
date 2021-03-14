@@ -9,17 +9,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
-import com.google.android.material.shape.CornerFamily
-import com.google.android.material.shape.ShapeAppearanceModel
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.wine.WineWithBottles
 import com.louis.app.cavity.ui.WineColorResolver
-import com.louis.app.cavity.ui.home.widget.HexagonalCornerTreatment
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -35,6 +32,8 @@ class WineRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        L.v("OnCreateViewHolder")
 
         // Apply the same background shape to the image view
 //        val topRightBottomLeftCorners = HexagonalCornerTreatment(true)
