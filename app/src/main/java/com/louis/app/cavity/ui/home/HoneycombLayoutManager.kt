@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.home
 
 import android.content.Context
+import android.view.View
 import androidx.recyclerview.widget.OrientationHelper.createHorizontalHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +33,7 @@ class HoneycombLayoutManager(
     }
 
     private val groupItemCount = (2 * colCount) - 1
-    private val orientationHelper =
+    private val oHelper =
         if (orientation == VERTICAL) createVerticalHelper(this)
         else createHorizontalHelper(this)
 
@@ -54,11 +55,11 @@ class HoneycombLayoutManager(
         detachAndScrapAttachedViews(recycler)
 
         if (state.itemCount > 0) {
-            fillBottom(recycler)
+            fillTowardsEnd(recycler)
         }
     }
 
-    private fun fillBottom(recycler: RecyclerView.Recycler) {
+    private fun fillTowardsEnd(recycler: RecyclerView.Recycler) {
         val toFill = if (clipToPadding) height - paddingBottom else height
         var filled: Int // Might be necessary to better compute actual scrolled distance in doOnScroll()
         val startPos: Int
@@ -69,7 +70,7 @@ class HoneycombLayoutManager(
             val lastChildPos = getPosition(lastChild)
             startPos = lastChildPos + 1
             top =
-                orientationHelper.getDecoratedEnd(lastChild) - (lastChild.measuredHeight apply OVERLAPING_FACTOR)
+                oHelper.getDecoratedEnd(lastChild) - (lastChild.measuredHeight apply OVERLAPING_FACTOR)
             filled = top
         } else {
             startPos = 0
@@ -117,7 +118,7 @@ class HoneycombLayoutManager(
         L.v("childCount : $childCount")
     }
 
-    private fun fillTop(recycler: RecyclerView.Recycler) {
+    private fun fillTowardsStart(recycler: RecyclerView.Recycler) {
         var bottom: Int
 
         if (childCount == 0) return
@@ -130,7 +131,7 @@ class HoneycombLayoutManager(
 
         val toFill = if (clipToPadding) paddingTop else 0
         bottom =
-            orientationHelper.getDecoratedStart(firstChild) + (firstChild.measuredHeight apply OVERLAPING_FACTOR)
+            oHelper.getDecoratedStart(firstChild) + (firstChild.measuredHeight apply OVERLAPING_FACTOR)
 
         for (i in firstChildPos - 1 downTo 0) {
             if (bottom < toFill) break
@@ -185,14 +186,14 @@ class HoneycombLayoutManager(
 
                 while (scrolled > d) {
                     val firstChild = getChildAt(0)!!
-                    val firstChildTop = orientationHelper.getDecoratedStart(firstChild)
+                    val firstChildTop = oHelper.getDecoratedStart(firstChild)
                     val hangingTop = max(0, toFill - firstChildTop)
 
                     val scrollBy = min(hangingTop, scrolled - d)
-                    orientationHelper.offsetChildren(scrollBy)
+                    oHelper.offsetChildren(scrollBy)
                     scrolled -= scrollBy
                     if (anchorPosition == 0) break
-                    fillTop(recycler)
+                    fillTowardsStart(recycler)
                 }
                 scrolled
             }
@@ -203,13 +204,13 @@ class HoneycombLayoutManager(
                 while (scrolled < d) {
                     val lastChild = getChildAt(childCount - 1)!!
                     val lastChildPosition = getPosition(lastChild)
-                    val lastChildBottom = orientationHelper.getDecoratedEnd(lastChild)
+                    val lastChildBottom = oHelper.getDecoratedEnd(lastChild)
                     val hangingBottom = max(0, lastChildBottom - availableBottom)
                     val scrollBy = min(hangingBottom, d - scrolled)
-                    orientationHelper.offsetChildren(-scrollBy)
+                    oHelper.offsetChildren(-scrollBy)
                     scrolled += scrollBy
                     if (lastChildPosition == state.itemCount - 1) break
-                    fillBottom(recycler)
+                    fillTowardsEnd(recycler)
                 }
                 scrolled
             }
@@ -225,7 +226,7 @@ class HoneycombLayoutManager(
         anchorOffset =
             if (childCount > 0) {
                 val view = getChildAt(0)!!
-                orientationHelper.getDecoratedStart(view) - paddingTop
+                oHelper.getDecoratedStart(view) - paddingTop
             } else 0
     }
 
@@ -263,7 +264,7 @@ class HoneycombLayoutManager(
         for (i in 0 until childCount) {
             val child = getChildAt(i)!!
             val top = if (clipToPadding) paddingTop else 0
-            if (orientationHelper.getDecoratedEnd(child) < top) {
+            if (oHelper.getDecoratedEnd(child) < top) {
                 firstVisibleChild++
             } else {
                 break
@@ -274,7 +275,7 @@ class HoneycombLayoutManager(
 
         for (i in lastVisibleChild until childCount) {
             val child = getChildAt(i)!!
-            if (orientationHelper.getDecoratedStart(child) <= if (clipToPadding) height - paddingBottom else height) {
+            if (oHelper.getDecoratedStart(child) <= if (clipToPadding) height - paddingBottom else height) {
                 lastVisibleChild++
             } else {
                 lastVisibleChild--
@@ -316,4 +317,7 @@ class HoneycombLayoutManager(
     }
 
     private infix fun Int.apply(value: Double) = (this * value).roundToInt()
+
+    // Orientation helpers bonus
+    private fun View.measuredDt() = if (orientation == VERTICAL) measuredHeight else measuredWidth
 }
