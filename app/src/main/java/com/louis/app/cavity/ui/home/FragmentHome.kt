@@ -38,6 +38,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 viewPager.adapter =
                     WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
                 viewPager.offscreenPageLimit = 1
+                viewPager.isUserInputEnabled = false
                 tab.setUpWithViewPager(viewPager)
 
                 // Here it seems possible to delay the coroutine a couple of seconds

@@ -50,7 +50,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             layoutManager = HoneycombLayoutManager(
                 requireContext(),
                 colCount = 2,
-                HoneycombLayoutManager.HORIZONTAL
+                HoneycombLayoutManager.VERTICAL
             )
             // setHasFixedSize(true)
             adapter = wineAdapter
