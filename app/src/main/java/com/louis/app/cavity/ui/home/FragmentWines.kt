@@ -47,12 +47,10 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         )
 
         binding.recyclerView.apply {
-            layoutManager = HoneycombLayoutManager(
-                requireContext(),
-                colCount = 2,
-                HoneycombLayoutManager.VERTICAL
-            )
-            // setHasFixedSize(true)
+            layoutManager =
+                HoneycombLayoutManager(colCount = 2, HoneycombLayoutManager.Orientation.VERTICAL)
+
+            setHasFixedSize(true)
             adapter = wineAdapter
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {

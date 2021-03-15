@@ -1,9 +1,12 @@
 package com.louis.app.cavity.ui.home
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.view.View
 import androidx.recyclerview.widget.OrientationHelper.createHorizontalHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.*
 import com.louis.app.cavity.util.L
 import kotlin.math.max
 import kotlin.math.min
@@ -19,15 +22,17 @@ import kotlin.math.roundToInt
  * To get nice patterns, set the HexagoalView's flat attribute to true when using HORIZONTAL
  * orientation otherwise false
  */
-class HoneycombLayoutManager(private val colCount: Int, private val orientation: Int) :
+class HoneycombLayoutManager(private val colCount: Int, private val orientation: Orientation) :
     RecyclerView.LayoutManager() {
 
     companion object {
-        const val HORIZONTAL = 0
-        const val VERTICAL = 1
-
         // 3/4 is the pointy part ratio (compared to its bounds length) of the hexagon
         private const val OVERLAPING_FACTOR = 0.25
+    }
+
+    enum class Orientation {
+        VERTICAL,
+        HORIZONTAL,
     }
 
     private val groupItemCount = (2 * colCount) - 1
@@ -74,9 +79,9 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             start = oHelper.getDecoratedEnd(lastChild) - (towardsEndSide apply OVERLAPING_FACTOR)
             filled = start
         } else {
-            startPos = 0
+            startPos = if (anchorPosition < itemCount) anchorPosition else 0
             filled = 0
-            start = oHelper.startAfterPadding
+            start = oHelper.startAfterPadding + if (anchorPosition < itemCount) anchorOffset else 0
         }
 
         for (i in startPos until itemCount) {
@@ -343,5 +348,30 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         super.onDetachedFromWindow(view, recycler)
         removeAndRecycleAllViews(recycler)
         recycler.clear()
+    }
+
+    data class HoneycombState(val anchorPosition: Int, val anchorOffset: Int) : Parcelable {
+        constructor(parcel: Parcel) : this(parcel.readInt(), parcel.readInt())
+
+        override fun writeToParcel(dest: Parcel, flags: Int) {
+            dest.writeInt(anchorPosition)
+            dest.writeInt(anchorOffset)
+        }
+
+        override fun describeContents(): Int = 0
+
+        companion object CREATOR : Parcelable.Creator<HoneycombState> {
+            override fun createFromParcel(parcel: Parcel): HoneycombState = HoneycombState(parcel)
+            override fun newArray(size: Int): Array<HoneycombState?> = arrayOfNulls(size)
+        }
+    }
+
+    override fun onSaveInstanceState(): Parcelable = HoneycombState(anchorPosition, anchorOffset)
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        (state as? HoneycombState)?.let {
+            anchorPosition = state.anchorPosition
+            anchorOffset = state.anchorOffset
+        }
     }
 }
