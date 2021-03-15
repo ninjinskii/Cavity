@@ -46,7 +46,7 @@ class HoneycombLayoutManager(
         }
     }
 
-    // TODO: implement onDetachedFromWindow to make the views avalaible for the view pool, since this recycler view will share his viewpool in the future
+    // TODO: share viewpool
     // TODO: Predictive animations: see State.itemCount docs
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
@@ -60,7 +60,7 @@ class HoneycombLayoutManager(
     }
 
     private fun fillTowardsEnd(recycler: RecyclerView.Recycler) {
-        val toFill = if (clipToPadding) height - paddingBottom else height
+        val toFill = oHelper.endAfterPadding
         var filled: Int // Might be necessary to better compute actual scrolled distance in doOnScroll()
         val startPos: Int
         var top: Int
@@ -75,13 +75,14 @@ class HoneycombLayoutManager(
         } else {
             startPos = 0
             filled = 0
-            top = paddingTop
+            top = oHelper.startAfterPadding
         }
 
         for (i in startPos until itemCount) {
             if (top > toFill) break
 
             val view = recycler.getViewForPosition(i)
+
             addView(view)
 
             if (orientation == VERTICAL) {
@@ -90,32 +91,81 @@ class HoneycombLayoutManager(
                 measureChild(view, 0, height - (height / colCount))
             }
 
-            val isInChildRow = isItemInChildRow(i)
-            val positionInRow = getPositionInRow(i, isInChildRow)
-            val bottom: Int
+//            val isInChildRow = isItemInChildRow(i)
+//            val positionInRow = getPositionInRow(i, isInChildRow)
+//            val bottom: Int
+//
+//            if (isInChildRow) {
+//                val childRowOffset = view.measuredWidth / 2
+//                bottom = top + view.measuredHeight
+//                val left = childRowOffset + view.measuredWidth * positionInRow
+//                val right = left + view.measuredWidth
+//
+//                layoutDecoratedWithMargins(view, left, top, right, bottom)
+//            } else {
+//                bottom = top + view.measuredHeight
+//                val left = view.measuredWidth * positionInRow
+//                val right = left + view.measuredWidth
+//
+//                layoutDecoratedWithMargins(view, left, top, right, bottom)
+//            }
+//
+//            if (isRowCompleted(positionInRow, isInChildRow, reverse = false)) {
+//                top = bottom - (view.measuredHeight apply OVERLAPING_FACTOR)
+//                filled += view.measuredHeight apply OVERLAPING_FACTOR
+//            }
 
-            if (isInChildRow) {
-                val childRowOffset = view.measuredWidth / 2
-                bottom = top + view.measuredHeight
-                val left = childRowOffset + view.measuredWidth * positionInRow
-                val right = left + view.measuredWidth
-
-                layoutDecoratedWithMargins(view, left, top, right, bottom)
-            } else {
-                bottom = top + view.measuredHeight
-                val left = view.measuredWidth * positionInRow
-                val right = left + view.measuredWidth
-
-                layoutDecoratedWithMargins(view, left, top, right, bottom)
-            }
-
-            if (isRowCompleted(positionInRow, isInChildRow, reverse = false)) {
-                top = bottom - (view.measuredHeight apply OVERLAPING_FACTOR)
-                filled += view.measuredHeight apply OVERLAPING_FACTOR
-            }
+            top += layoutTowardsEndVertically(top, view, i)
         }
 
         L.v("childCount : $childCount")
+    }
+
+    private fun layoutTowardsEndVertically(start: Int, view: View, i: Int) : Int {
+        val isInChildRow = isItemInChildRow(i)
+        val positionInRow = getPositionInRow(i, isInChildRow)
+        val bottom: Int
+
+        if (isInChildRow) {
+            val childRowOffset = view.measuredWidth / 2
+            bottom = start + view.measuredHeight
+            val left = childRowOffset + view.measuredWidth * positionInRow
+            val right = left + view.measuredWidth
+
+            if (orientation == VERTICAL) {
+                layoutDecoratedWithMargins(view, left, start, right, bottom)
+            } else {
+                layoutDecoratedWithMargins(view, bottom, left, start, right)
+            }
+        } else {
+            bottom = start + view.measuredHeight
+            val left = view.measuredWidth * positionInRow
+            val right = left + view.measuredWidth
+
+            if (orientation == VERTICAL) {
+                layoutDecoratedWithMargins(view, left, start, right, bottom)
+            } else {
+                layoutDecoratedWithMargins(view, bottom, left, start, right)
+            }
+        }
+
+        if (isRowCompleted(positionInRow, isInChildRow, reverse = false)) {
+            return bottom - (view.measuredHeight apply OVERLAPING_FACTOR)
+        }
+
+        return 0
+    }
+
+    private fun layoutTowardsEndHorizontally(start: Int, view: View, i: Int) {
+//        val isInChildRow = isItemInChildRow(i)
+//        val positionInRow = getPositionInRow(i, isInChildRow)
+//        val end: Int
+//
+//        if (isInChildRow) {
+//            val childRowOffset = view.measuredHeight / 2
+//            end = start + if (orientation == VERTICAL) view.measuredHeight else view.measuredWidth
+//            val left =
+//        }
     }
 
     private fun fillTowardsStart(recycler: RecyclerView.Recycler) {
@@ -181,11 +231,10 @@ class HoneycombLayoutManager(
         return when {
             childCount == 0 -> 0
             d < 0 -> {
-                val toFill = if (clipToPadding) paddingTop else 0
+                val toFill = oHelper.startAfterPadding
                 var scrolled = 0
 
                 while (scrolled > d) {
-                    L.v("stuck in this shit")
                     val firstChild = getChildAt(0)!!
                     val firstChildTop = oHelper.getDecoratedStart(firstChild)
                     val hangingTop = max(0, toFill - firstChildTop)
@@ -199,15 +248,14 @@ class HoneycombLayoutManager(
                 scrolled
             }
             d > 0 -> {
-                val availableBottom = if (clipToPadding) height - paddingBottom else height
+                val toFill = oHelper.endAfterPadding
                 var scrolled = 0
 
                 while (scrolled < d) {
-                    L.v("stuck in this shit")
                     val lastChild = getChildAt(childCount - 1)!!
                     val lastChildPosition = getPosition(lastChild)
                     val lastChildBottom = oHelper.getDecoratedEnd(lastChild)
-                    val hangingBottom = max(0, lastChildBottom - availableBottom)
+                    val hangingBottom = max(0, lastChildBottom - toFill)
                     val scrollBy = min(hangingBottom, d - scrolled)
                     oHelper.offsetChildren(-scrollBy)
                     scrolled += scrollBy
@@ -320,6 +368,9 @@ class HoneycombLayoutManager(
 
     private infix fun Int.apply(value: Double) = (this * value).roundToInt()
 
-    // Orientation helpers bonus
-    private fun View.measuredDt() = if (orientation == VERTICAL) measuredHeight else measuredWidth
+    override fun onDetachedFromWindow(view: RecyclerView?, recycler: RecyclerView.Recycler) {
+        super.onDetachedFromWindow(view, recycler)
+        removeAndRecycleAllViews(recycler)
+        recycler.clear()
+    }
 }
