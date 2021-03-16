@@ -43,6 +43,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
     private var anchorPosition = 0
     private var anchorOffset = 0
+    private var extra = 0 // Predictive animations
 
     init {
         if (colCount < 2) {
@@ -51,20 +52,20 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     }
 
     // TODO: share viewpool
-    // TODO: Predictive animations: see State.itemCount docs
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
-        L.v("OnLayout (isPrelayout: ${state.isPreLayout})")
-
         detachAndScrapAttachedViews(recycler)
 
+        L.v("isPreLayout: ${state.isPreLayout}")
+
         if (state.itemCount > 0) {
-            fillTowardsEnd(recycler)
+            val extra = if (state.isPreLayout) extra else 0
+            fillTowardsEnd(recycler, extra)
         }
     }
 
-    private fun fillTowardsEnd(recycler: RecyclerView.Recycler) {
-        val toFill = oHelper.endAfterPadding
+    private fun fillTowardsEnd(recycler: RecyclerView.Recycler, extra: Int = 0) {
+        val toFill = oHelper.endAfterPadding + extra
         var filled: Int // No used currently. Might be necessary to better compute actual scrolled distance in doOnScroll()
         val startPos: Int
         var start: Int
@@ -75,6 +76,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             val towardsEndSide =
                 if (orientation == VERTICAL) lastChild.measuredHeight else lastChild.measuredWidth
 
+            this.extra = towardsEndSide
             startPos = lastChildPos + 1
             // Might be a better way to do this. Having to do an orientation check here is annoying
             start = oHelper.getDecoratedEnd(lastChild) - (towardsEndSide apply OVERLAPING_FACTOR)
@@ -278,13 +280,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     ) =
         if (orientation == HORIZONTAL) 0 else doOnScroll(dy, recycler, state)
 
-    override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
-        return RecyclerView.LayoutParams(
-            RecyclerView.LayoutParams.MATCH_PARENT,
-            RecyclerView.LayoutParams.WRAP_CONTENT
-        )
-    }
-
     // TODO: adapt to horizontal layout
     private fun recycleViewsOutOfBounds(recycler: RecyclerView.Recycler) {
         if (childCount == 0) return
@@ -354,6 +349,15 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         removeAndRecycleAllViews(recycler)
         recycler.clear()
     }
+
+    override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
+        return RecyclerView.LayoutParams(
+            RecyclerView.LayoutParams.MATCH_PARENT,
+            RecyclerView.LayoutParams.WRAP_CONTENT
+        )
+    }
+
+    override fun supportsPredictiveItemAnimations() = true
 
     data class HoneycombState(val anchorPosition: Int, val anchorOffset: Int) : Parcelable {
         constructor(parcel: Parcel) : this(parcel.readInt(), parcel.readInt())

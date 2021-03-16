@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
