@@ -7,8 +7,9 @@
     android:layout_margin="@dimen/small_margin"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     app:cardElevation="8dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:elevation="4dp"
     app:flat="false"
     app:strokeColor="@color/cavity_gold"
     app:strokeWidth="2dp">
@@ -28,15 +29,15 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_toast_wine" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0.12"
-            android:background="@android:color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--        <View-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:alpha="0.12"-->
+<!--            android:background="@android:color/black"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <include
             android:id="@+id/wineColorNameNaming"
