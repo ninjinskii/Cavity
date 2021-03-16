@@ -108,20 +108,15 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             val positionInRow = getPositionInRow(i, isInChildRow)
             val isRowCompleted = isRowCompleted(positionInRow, isInChildRow, reverse = false)
 
-            val end: Int
-            val left: Int
-            val right: Int
-
-            if (isInChildRow) {
+            val left = if (isInChildRow) {
                 val childRowOffset = otherSide / 2
-                end = start + towardsEndSide
-                left = childRowOffset + otherSide * positionInRow
-                right = left + otherSide
+                childRowOffset + otherSide * positionInRow
             } else {
-                end = start + towardsEndSide
-                left = otherSide * positionInRow
-                right = left + otherSide
+                otherSide * positionInRow
             }
+
+            val end = start + towardsEndSide
+            val right = left + otherSide
 
             layoutOriented(view, start, end, left, right)
 
@@ -174,18 +169,15 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             val positionInRow = getPositionInRow(i, isInChildRow)
             val isRowCompleted = isRowCompleted(positionInRow, isInChildRow, reverse = true)
 
-            val start = end - towardsEndSide
-            val right: Int
-            val left: Int
-
-            if (isInChildRow) {
+            val left = if (isInChildRow) {
                 val childRowOffset = otherSide / 2
-                left = childRowOffset + otherSide * positionInRow
-                right = left + otherSide
+                childRowOffset + otherSide * positionInRow
             } else {
-                left = otherSide * positionInRow
-                right = left + otherSide
+                otherSide * positionInRow
             }
+
+            val start = end - towardsEndSide
+            val right = left + otherSide
 
             layoutOriented(view, start, end, left, right)
 
@@ -259,6 +251,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
     }
 
+    // TODO: update to horizontal layout
     private fun updateAnchorOffset() {
         anchorOffset =
             if (childCount > 0) {
@@ -292,6 +285,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         )
     }
 
+    // TODO: adapt to horizontal layout
     private fun recycleViewsOutOfBounds(recycler: RecyclerView.Recycler) {
         if (childCount == 0) return
         val childCount = childCount
