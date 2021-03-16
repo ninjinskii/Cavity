@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.home
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
-import androidx.core.view.marginRight
 import androidx.recyclerview.widget.OrientationHelper.createHorizontalHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -66,7 +65,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
     private fun fillTowardsEnd(recycler: RecyclerView.Recycler) {
         val toFill = oHelper.endAfterPadding
-        var filled: Int // Might be necessary to better compute actual scrolled distance in doOnScroll()
+        var filled: Int // No used currently. Might be necessary to better compute actual scrolled distance in doOnScroll()
         val startPos: Int
         var start: Int
 
@@ -118,7 +117,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 end = start + towardsEndSide
                 left = childRowOffset + otherSide * positionInRow
                 right = left + otherSide
-                L.v("${view.marginRight}")
             } else {
                 end = start + towardsEndSide
                 left = otherSide * positionInRow
