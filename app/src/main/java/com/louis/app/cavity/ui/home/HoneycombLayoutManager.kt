@@ -3,10 +3,13 @@ package com.louis.app.cavity.ui.home
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
+import androidx.core.view.marginEnd
+import androidx.core.view.marginRight
 import androidx.recyclerview.widget.OrientationHelper.createHorizontalHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.*
+import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.HORIZONTAL
+import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.VERTICAL
 import com.louis.app.cavity.util.L
 import kotlin.math.max
 import kotlin.math.min
@@ -105,6 +108,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
             val isInChildRow = isItemInChildRow(i)
             val positionInRow = getPositionInRow(i, isInChildRow)
+            val isRowCompleted = isRowCompleted(positionInRow, isInChildRow, reverse = false)
             val end: Int
 
             if (isInChildRow) {
@@ -113,16 +117,16 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 val left = childRowOffset + otherSide * positionInRow
                 val right = left + otherSide
 
-                layoutOriented(view, start, end, left, right)
+                layoutOriented(view, start, end, left, right, isRowCompleted)
             } else {
                 end = start + towardsEndSide
                 val left = otherSide * positionInRow
                 val right = left + otherSide
 
-                layoutOriented(view, start, end, left, right)
+                layoutOriented(view, start, end, left, right, isRowCompleted)
             }
 
-            if (isRowCompleted(positionInRow, isInChildRow, reverse = false)) {
+            if (isRowCompleted) {
                 start = end - (towardsEndSide apply OVERLAPING_FACTOR)
                 filled += towardsEndSide apply OVERLAPING_FACTOR
             }
@@ -170,32 +174,41 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             val start = end - towardsEndSide
             val isInChildRow = isItemInChildRow(i)
             val positionInRow = getPositionInRow(i, isInChildRow)
+            val isRowCompleted = isRowCompleted(positionInRow, isInChildRow, reverse = true)
 
             if (isInChildRow) {
                 val childRowOffset = otherSide / 2
                 val left = childRowOffset + otherSide * positionInRow
                 val right = left + otherSide
 
-                layoutOriented(view, start, end, left, right)
+                layoutOriented(view, start, end, left, right, isRowCompleted)
             } else {
                 val left = otherSide * positionInRow
                 val right = left + otherSide
 
-                layoutOriented(view, start, end, left, right)
+                layoutOriented(view, start, end, left, right, isRowCompleted)
             }
 
-            if (isRowCompleted(positionInRow, isInChildRow, reverse = true)) {
+            if (isRowCompleted) {
                 end = start + (towardsEndSide apply OVERLAPING_FACTOR)
                 filled += towardsEndSide
             }
         }
     }
 
-    private fun layoutOriented(view: View, start: Int, end: Int, left: Int, right: Int) {
+    private fun layoutOriented(
+        view: View,
+        start: Int,
+        end: Int,
+        left: Int,
+        right: Int,
+        removeInnerMargins: Boolean,
+    ) {
         if (orientation == VERTICAL) {
-            layoutDecoratedWithMargins(view, left, start, right, end)
+            val trueRight = if (isRowCompleted) right else right - view.marginRight
+            layoutDecoratedWithMargins(view, left, start, trueRight, end)
         } else {
-            layoutDecoratedWithMargins(view, start, left, end, right)
+            layoutDecorated(view, start, left, end, right)
         }
     }
 
