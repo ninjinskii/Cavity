@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.louis.app.cavity.ui.home.widget.HexagonalView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.louis.app.cavity.ui.home.widget.HexagonalView2 xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -90,4 +90,4 @@
             </LinearLayout>
         </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</com.louis.app.cavity.ui.home.widget.HexagonalView>
+</com.louis.app.cavity.ui.home.widget.HexagonalView2>

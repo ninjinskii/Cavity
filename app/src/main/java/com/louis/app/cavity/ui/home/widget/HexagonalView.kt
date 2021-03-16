@@ -128,11 +128,10 @@ class HexagonalView @JvmOverloads constructor(
     }
 
     // Yeah, this is an ugly fix. Too bad !
-    // We need to eat requestLayout calls to avoid our HoneycombLayoutManager#OnLayouChildren
+    // We need to eat requestLayout calls to avoid our HoneycombLayoutManager#OnLayoutChildren
     // to be called when we load an image into this view.
     // Erasing this will cause some RecyclerView madness to happen.
     @SuppressLint("MissingSuperCall")
     override fun requestLayout() {
-        //super.requestLayout()
     }
 }

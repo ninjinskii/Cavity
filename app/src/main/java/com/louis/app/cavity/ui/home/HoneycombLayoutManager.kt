@@ -213,7 +213,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                     val firstChild = getChildAt(0)!!
                     val firstChildTop = oHelper.getDecoratedStart(firstChild)
                     val hangingTop = max(0, toFill - firstChildTop)
-
                     val scrollBy = min(hangingTop, scrolled - d)
                     oHelper.offsetChildren(scrollBy)
                     scrolled -= scrollBy
@@ -274,7 +273,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     ) =
         if (orientation == HORIZONTAL) 0 else doOnScroll(dy, recycler, state)
 
-    // TODO: adapt to horizontal layout
     private fun recycleViewsOutOfBounds(recycler: RecyclerView.Recycler) {
         if (childCount == 0) return
         val childCount = childCount
