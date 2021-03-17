@@ -12,9 +12,9 @@
         android:contentDescription=""
         tools:tint="@color/wine_red"
         android:src="@drawable/shape_color_wine"
-        app:layout_constraintBottom_toBottomOf="@+id/wineNaming"
+        app:layout_constraintBottom_toBottomOf="@id/wineNaming"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/wineName" />
+        app:layout_constraintTop_toTopOf="@id/wineName" />
 
     <TextView
         android:id="@+id/wineName"
@@ -26,7 +26,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         tools:text="Château la Cour"
-        app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"
+        app:layout_constraintStart_toEndOf="@id/wineColorIndicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,8 +40,8 @@
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="Saint-Émilion"
-        app:layout_constraintStart_toEndOf="@+id/wineColorIndicator"
-        app:layout_constraintTop_toBottomOf="@+id/wineName" />
+        app:layout_constraintStart_toEndOf="@id/wineColorIndicator"
+        app:layout_constraintTop_toBottomOf="@id/wineName" />
 
     <ImageView
         android:id="@+id/organic_image"
@@ -51,8 +51,8 @@
         android:src="@drawable/ic_bio"
         android:visibility="gone"
         tools:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/wineNaming"
+        app:layout_constraintBottom_toBottomOf="@id/wineNaming"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/wineName" />
+        app:layout_constraintTop_toTopOf="@id/wineName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

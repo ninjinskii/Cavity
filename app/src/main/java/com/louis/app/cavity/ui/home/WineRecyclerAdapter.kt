@@ -33,20 +33,6 @@ class WineRecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        L.v("OnCreateViewHolder")
-
-        // Apply the same background shape to the image view
-//        val topRightBottomLeftCorners = HexagonalCornerTreatment(true)
-//        val topLeftBottomRightCorners = HexagonalCornerTreatment(false)
-//
-//        binding.wineImage.shapeAppearanceModel = ShapeAppearanceModel.builder()
-//            .setAllCornerSizes { it.width() / 2 }
-//            .setTopLeftCorner(topLeftBottomRightCorners)
-//            .setTopRightCorner(topRightBottomLeftCorners)
-//            .setBottomRightCorner(topLeftBottomRightCorners)
-//            .setBottomLeftCorner(topRightBottomLeftCorners)
-//            .build()
-
         return WineViewHolder(binding)
     }
 
@@ -72,17 +58,19 @@ class WineRecyclerAdapter(
         // TODO: Might use a different way to filter bottles
         fun bind(wineWithBottles: WineWithBottles) {
             val wine = wineWithBottles.wine
-            val bottles =
-                wineWithBottles.bottles.filter { !it.consumed.toBoolean() }.sortedBy { it.vintage }
+            val bottles = wineWithBottles.bottles
+                    .filter { !it.consumed.toBoolean() }
+                    .sortedBy { it.vintage }
 
-            with(binding.wineColorNameNaming) {
+            with(binding) {
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
-                organicImage.setVisible(wine.isOrganic.toBoolean())
-                wineColorIndicator.setColorFilter(resolveColor(wine.color))
-                binding.chipGroup.removeAllViews()
+                root.strokeColor = if (wine.isOrganic.toBoolean()) _context.getColor(R.color.cavity_green) else _context.getColor(R.color.cavity_gold)
+                //organicImage.setVisible(wine.isOrganic.toBoolean())
+                //wineColorIndicator.setColorFilter(resolveColor(wine.color))
+                //binding.chipGroup.removeAllViews()
 
-                for (bottle in bottles) {
+                /*for (bottle in bottles) {
                     val chip: Chip =
                         LayoutInflater.from(itemView.context).inflate(
                             R.layout.chip_action,
@@ -101,7 +89,7 @@ class WineRecyclerAdapter(
                     }
 
                     binding.chipGroup.addView(chip)
-                }
+                }*/
 
                 if (wine.imgPath.isNotEmpty()) {
                     Glide.with(itemView.context)

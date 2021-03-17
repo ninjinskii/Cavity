@@ -17,7 +17,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     private val recyclePool by lazy {
         RecyclerView.RecycledViewPool().apply {
             // TODO: Adjust this number based on screen size
-            setMaxRecycledViews(R.layout.item_wine, 10)
+            setMaxRecycledViews(R.layout.item_wine, 20) // 10 seems ok
         }
     }
 
@@ -42,6 +42,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 tab.addTabs(it)
                 viewPager.adapter =
                     WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
+
                 tab.setUpWithViewPager(viewPager)
 
                 // Potential delayed coroutine and offscreen limit upgrade

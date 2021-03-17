@@ -7,18 +7,17 @@
     android:layout_margin="@dimen/small_margin"
     android:clickable="true"
     android:focusable="true"
-    app:cardElevation="8dp"
     android:foreground="?attr/selectableItemBackground"
-    android:elevation="4dp"
+    app:cardElevation="4dp"
     app:flat="false"
     app:strokeColor="@color/cavity_gold"
-    app:strokeWidth="2dp">
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.imageview.ShapeableImageView
+        <ImageView
             android:id="@+id/wineImage"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -29,66 +28,55 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_list_check" />
 
-<!--        <View-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:alpha="0.12"-->
-<!--            android:background="@android:color/black"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+        <!--        <View-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:alpha="0.12"-->
+        <!--            android:background="@android:color/black"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-        <include
-            android:id="@+id/wineColorNameNaming"
-            layout="@layout/wine_color_name_naming"
+        <TextView
+            android:id="@+id/wineName"
+            style="@style/TextAppearance.MaterialComponents.Subtitle2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/xsmall_margin"
+            android:ellipsize="end"
+            android:maxLines="2"
+            app:layout_constraintBottom_toTopOf="@id/wineNaming"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Château la Cour" />
+
+        <TextView
+            android:id="@+id/wineNaming"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginTop="@dimen/xsmall_margin"
+            android:ellipsize="end"
+            android:maxLines="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/wineName"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Saint-Émilion" />
 
-        <!--        <View-->
-        <!--            android:id="@+id/divider"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="@dimen/divider_height"-->
-        <!--            android:layout_marginTop="@dimen/medium_margin"-->
-        <!--            android:alpha="0.20"-->
-        <!--            android:background="?attr/colorOnBackground"-->
-        <!--            app:layout_constraintStart_toStartOf="@+id/guidelineLeft"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming" />-->
-
-        <HorizontalScrollView
-            android:id="@+id/chipsScrollView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bottleRecyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            android:scrollbars="none"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/wineImage"
-            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming">
+            app:layout_constraintTop_toBottomOf="@id/wineNaming" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/large_margin"
-                android:orientation="horizontal">
-
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/small_margin"
-                    android:layout_marginEnd="@dimen/small_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/divider"
-                    app:singleLine="true" />
-
-            </LinearLayout>
-        </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.louis.app.cavity.ui.home.widget.HexagonalView>
