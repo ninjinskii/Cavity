@@ -4,23 +4,21 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.util.setupNavigation
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val recyclePool by lazy {
-        RecyclerView.RecycledViewPool()
+        RecyclerView.RecycledViewPool().apply {
+            // TODO: Adjust this number based on screen size
+            setMaxRecycledViews(R.layout.item_wine, 10)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,11 +40,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
             with(binding) {
                 tab.addTabs(it)
-                // viewPager.isSaveEnabled = false // might correct the crash when getting back to home sometimes, but reduce apps perfs a lot
                 viewPager.adapter =
                     WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
                 tab.setUpWithViewPager(viewPager)
-
 
                 // Potential delayed coroutine and offscreen limit upgrade
                 /*viewPager.offscreenPageLimit = 5

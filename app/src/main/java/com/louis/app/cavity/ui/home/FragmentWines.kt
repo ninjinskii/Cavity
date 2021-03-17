@@ -51,7 +51,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                     HoneycombLayoutManager(colCount = 2, HoneycombLayoutManager.Orientation.VERTICAL)
 
             setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
-            recycledViewPool.setMaxRecycledViews(R.layout.item_wine, 10)
             setHasFixedSize(true)
             adapter = wineAdapter
 
