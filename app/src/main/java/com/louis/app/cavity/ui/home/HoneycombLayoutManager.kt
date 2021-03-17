@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.HORIZONTAL
 import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.VERTICAL
-import com.louis.app.cavity.util.L
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -56,8 +55,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
         detachAndScrapAttachedViews(recycler)
-
-        L.v("isPreLayout: ${state.isPreLayout}")
 
         if (state.itemCount > 0) {
             val extra = if (state.isPreLayout) extra else 0

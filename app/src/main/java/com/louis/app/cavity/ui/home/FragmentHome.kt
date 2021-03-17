@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.util.setupNavigation
@@ -13,6 +14,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val recyclePool by lazy {
+        RecyclerView.RecycledViewPool()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,6 +76,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             }
         }
     }
+
+    fun getRecycledViewPool() = recyclePool
 
     override fun onDestroyView() {
         super.onDestroyView()

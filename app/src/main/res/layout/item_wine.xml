@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.louis.app.cavity.ui.home.widget.HexagonalView2 xmlns:android="http://schemas.android.com/apk/res/android"
+<com.louis.app.cavity.ui.home.widget.HexagonalView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_toast_wine" />
+            tools:src="@drawable/ic_list_check" />
 
 <!--        <View-->
 <!--            android:layout_width="0dp"-->
@@ -91,4 +91,4 @@
             </LinearLayout>
         </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</com.louis.app.cavity.ui.home.widget.HexagonalView2>
+</com.louis.app.cavity.ui.home.widget.HexagonalView>

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
@@ -49,8 +48,10 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         binding.recyclerView.apply {
             layoutManager =
-                HoneycombLayoutManager(colCount = 2, HoneycombLayoutManager.Orientation.VERTICAL)
+                    HoneycombLayoutManager(colCount = 2, HoneycombLayoutManager.Orientation.VERTICAL)
 
+            setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
+            recycledViewPool.setMaxRecycledViews(R.layout.item_wine, 10)
             setHasFixedSize(true)
             adapter = wineAdapter
 
@@ -58,8 +59,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     // Show components no matter what if RV can't be scrolled
                     if (
-                        !recyclerView.canScrollVertically(1) &&
-                        !recyclerView.canScrollVertically(-1)
+                            !recyclerView.canScrollVertically(1) &&
+                            !recyclerView.canScrollVertically(-1)
                     ) {
                         homeViewModel.isScrollingToTop.postValue(true)
                     } else {

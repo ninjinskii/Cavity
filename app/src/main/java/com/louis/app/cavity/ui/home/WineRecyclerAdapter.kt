@@ -50,6 +50,8 @@ class WineRecyclerAdapter(
         return WineViewHolder(binding)
     }
 
+    override fun getItemViewType(position: Int) = R.layout.item_wine
+
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
@@ -58,7 +60,7 @@ class WineRecyclerAdapter(
 
     class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {
         override fun areItemsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
-            oldItem.wine.id == newItem.wine.id
+                oldItem.wine.id == newItem.wine.id
 
         override fun areContentsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
             oldItem.wine == newItem.wine && oldItem.bottles == newItem.bottles
