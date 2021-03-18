@@ -76,6 +76,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
     fun getBottleById(bottleId: Long) = bottleDao.getBottleById(bottleId)
     suspend fun getBottleByIdNotLive(bottleId: Long) = bottleDao.getBottleByIdNotLive(bottleId)
+    fun getBottlesForWine(wineId: Long) = bottleDao.getBottlesForWine(wineId)
     suspend fun consumeBottle(bottleId: Long) = bottleDao.consumeBottle(bottleId)
     suspend fun fav(bottleId: Long) = bottleDao.fav(bottleId)
     suspend fun unfav(bottleId: Long) = bottleDao.unfav(bottleId)

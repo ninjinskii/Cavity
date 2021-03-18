@@ -30,7 +30,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
 
-        bottleDetailsViewModel.start(args.bottleId)
+        bottleDetailsViewModel.start(args.wineId, args.bottleId)
 
         initRecyclerView()
         observe()
@@ -53,6 +53,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 reviewAdapter.submitList(it)
             }
         }
+
+        //val bottleAdapter = BottleScrollableTabAdapter()
     }
 
     private fun observe() {

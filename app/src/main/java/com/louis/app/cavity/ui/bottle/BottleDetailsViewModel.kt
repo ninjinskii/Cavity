@@ -39,7 +39,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         if (bottleId != -1L) {
             this.bottleId.postValue(bottleId)
         } else {
-
+            // Future bottle selector will auto select first bottle, maybe
         }
     }
 

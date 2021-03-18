@@ -8,9 +8,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
+import com.louis.app.cavity.model.County
+import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
+    private lateinit var tabAdapter: ScrollableTabAdapter<County>
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -18,7 +21,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         RecyclerView.RecycledViewPool().apply {
             // TODO: Adjust this number based on screen size
             setMaxRecycledViews(R.layout.item_wine, 20) // 10 seems ok
-            setMaxRecycledViews(R.layout.chip_action, 15) // 10 seems ok
+            setMaxRecycledViews(R.layout.chip_action, 15)
         }
     }
 
@@ -34,13 +37,20 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupScrollableTab() {
-        binding.tab.addOnLongClickListener {
-            // TODO: show dialog info for county
-        }
+        tabAdapter = ScrollableTabAdapter(
+            onTabClick = {
+                binding.viewPager.currentItem = it
+            },
+            onLongTabClick = {
+                // TODO: show dialog info for county
+            }
+        )
 
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
             with(binding) {
-                tab.addTabs(it)
+                tab.adapter = tabAdapter
+                tabAdapter.addAll(it)
+
                 viewPager.adapter =
                     WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
 
@@ -57,7 +67,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         var currentCounty = 0L
 
         binding.tab.addOnPageChangeListener {
-            currentCounty = binding.tab.adapter?.getItemId(it) ?: 0
+            currentCounty = tabAdapter.getItemId(it)
         }
 
         binding.fab.setOnClickListener {

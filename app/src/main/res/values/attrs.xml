@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CountyScrollableTab">
+    <declare-styleable name="ScrollableTab">
         <attr name="selectedColor" format="color" />
         <attr name="unSelectedColor" format="color" />
         <attr name="tabTextAppearance" format="reference" />
