@@ -43,7 +43,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                     )
                     findNavController().navigate(action)
                 }
-            }
+            },
+            (parentFragment as FragmentHome).getRecycledViewPool()
         )
 
         binding.recyclerView.apply {

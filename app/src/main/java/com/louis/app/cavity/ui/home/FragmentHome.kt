@@ -18,6 +18,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         RecyclerView.RecycledViewPool().apply {
             // TODO: Adjust this number based on screen size
             setMaxRecycledViews(R.layout.item_wine, 20) // 10 seems ok
+            setMaxRecycledViews(R.layout.chip_action, 15) // 10 seems ok
         }
     }
 
