@@ -19,9 +19,8 @@ import com.louis.app.cavity.util.toBoolean
 
 class WineRecyclerAdapter(
     private val _context: Context,
-    private val onVintageClickListener: (Long, Bottle) -> Unit,
-    private val onShowOptionsListener: (Wine) -> Unit,
-    private val viewPool: RecyclerView.RecycledViewPool,
+    private val onClickListener: (Long) -> Unit,
+    private val onShowOptionsListener: (Wine) -> Unit
 ) :
     ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()),
     WineColorResolver {
@@ -53,38 +52,24 @@ class WineRecyclerAdapter(
     inner class WineViewHolder(private val binding: ItemWineBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.bottleRecyclerView.apply {
-                layoutManager =
-                    LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false).apply {
-                        initialPrefetchItemCount = 4
-                    }
-                setRecycledViewPool(viewPool)
-                adapter = BottleChipAdapter { }
-            }
-        }
+        private val vintageSb = StringBuilder()
 
-        // TODO: Might use a different way to filter bottles
+        // TODO: Add raw sql query to WineDao to filter consumed bottles
         fun bind(wineWithBottles: WineWithBottles) {
             val wine = wineWithBottles.wine
             val bottles = wineWithBottles.bottles
+                .toSet()
                 .filter { !it.consumed.toBoolean() }
                 .sortedBy { it.vintage }
 
             with(binding) {
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
-                root.strokeColor =
-                    if (wine.isOrganic.toBoolean()) _context.getColor(R.color.cavity_green) else _context.getColor(
-                        R.color.cavity_gold
-                    )
                 //organicImage.setVisible(wine.isOrganic.toBoolean())
                 //wineColorIndicator.setColorFilter(resolveColor(wine.color))
 
-                (bottleRecyclerView.adapter as BottleChipAdapter).apply {
-                    notifyDataSetChanged()
-                    submitList(bottles)
-                }
+                vintageSb.clear().append(bottles.map { it.vintage }.toString())
+                binding.vintages.text = vintageSb.toString()
 
                 if (wine.imgPath.isNotEmpty()) {
                     Glide.with(itemView.context)
@@ -94,6 +79,10 @@ class WineRecyclerAdapter(
                 } else {
                     binding.wineImage.setImageDrawable(null)
                 }
+            }
+
+            itemView.setOnClickListener {
+                onClickListener(wine.id)
             }
 
             itemView.setOnLongClickListener {

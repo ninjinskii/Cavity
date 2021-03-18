@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
+    private var wineId = 0L
     private val bottleId = MutableLiveData<Long>()
 
     private val _pdfEvent = MutableLiveData<Event<Uri>>()
@@ -32,14 +33,22 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     val reviews = bottleId.switchMap { repository.getFReviewAndReviewForBottle(it) }
 
-    fun start(bottleId: Long) {
-        this.bottleId.postValue(bottleId)
+    fun start(wineId: Long, bottleId: Long) {
+        this.wineId = wineId
+
+        if (bottleId != -1L) {
+            this.bottleId.postValue(bottleId)
+        } else {
+
+        }
     }
+
+    fun bottles() = repository.getBottlesForWine(wineId)
 
     fun getWineById(wineId: Long) = repository.getWineById(wineId)
 
     fun deleteBottle() {
-        val bottleId = bottleId.value ?: 0
+        val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
             repository.deleteBottleById(bottleId)
@@ -47,7 +56,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun toggleFavorite() {
-        val bottleId = bottleId.value ?: 0
+        val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
             repository.run {
@@ -58,7 +67,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun preparePdf() {
-        val bottleId = bottleId.value ?: 0
+        val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
             val bottle = repository.getBottleByIdNotLive(bottleId)
@@ -73,7 +82,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun revertBottleConsumption() {
-        val bottleId = bottleId.value ?: 0
+        val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
             repository.revertBottleConsumption(bottleId)

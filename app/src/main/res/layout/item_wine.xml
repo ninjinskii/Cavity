@@ -70,10 +70,11 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Saint-Émilion" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bottleRecyclerView"
+        <TextView
+            android:id="@+id/vintages"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/wineNaming" />
