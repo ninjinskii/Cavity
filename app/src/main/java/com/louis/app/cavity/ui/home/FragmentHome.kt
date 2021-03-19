@@ -17,11 +17,10 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
-    private val recyclePool by lazy {
+    private val recyclePool by lazy(LazyThreadSafetyMode.NONE) {
         RecyclerView.RecycledViewPool().apply {
             // TODO: Adjust this number based on screen size
             setMaxRecycledViews(R.layout.item_wine, 20) // 10 seems ok
-            setMaxRecycledViews(R.layout.chip_action, 15)
         }
     }
 
@@ -33,7 +32,6 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
         setupScrollableTab()
         setListeners()
-        observe()
     }
 
     private fun setupScrollableTab() {
@@ -49,17 +47,14 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
             with(binding) {
                 tab.adapter = tabAdapter
+                viewPager.adapter = WinesPagerAdapter(this@FragmentHome, it)
+
                 tabAdapter.addAll(it)
-
-                viewPager.adapter =
-                    WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
-
                 tab.setUpWithViewPager(viewPager)
-
-                // Potential delayed coroutine and offscreen limit upgrade
-                /*viewPager.offscreenPageLimit = 5
-                tab.setUpWithViewPager(viewPager)*/
             }
+            // Potential delayed coroutine and offscreen limit upgrade
+            /*viewPager.offscreenPageLimit = 5
+            tab.setUpWithViewPager(viewPager)*/
         }
     }
 
@@ -73,15 +68,6 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         binding.fab.setOnClickListener {
             val action = FragmentHomeDirections.homeToAddWine(countyId = currentCounty)
             findNavController().navigate(action)
-        }
-    }
-
-    private fun observe() {
-        homeViewModel.isScrollingToTop.observe(viewLifecycleOwner) {
-            with(binding) {
-                if (it) fab.run { if (!isShown) show() }
-                else fab.run { if (isShown) hide() }
-            }
         }
     }
 

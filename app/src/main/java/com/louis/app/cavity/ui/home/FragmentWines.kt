@@ -6,7 +6,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.util.toBoolean
@@ -24,22 +23,22 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     private fun initRecyclerView() {
         val wineAdapter = WineRecyclerAdapter(
-                requireContext(),
-                onClickListener = { wineId: Long ->
-                    val action = FragmentHomeDirections.homeToBottleDetails(wineId)
-                    findNavController().navigate(action)
-                },
-                onShowOptionsListener = { wine ->
-                    val action = FragmentHomeDirections.homeToWineOptions(
-                            wine.id,
-                            wine.countyId,
-                            wine.name,
-                            wine.naming,
-                            wine.isOrganic.toBoolean(),
-                            wine.color
-                    )
-                    findNavController().navigate(action)
-                }
+            requireContext(),
+            onClickListener = { wineId: Long ->
+                val action = FragmentHomeDirections.homeToBottleDetails(wineId)
+                findNavController().navigate(action)
+            },
+            onShowOptionsListener = { wine ->
+                val action = FragmentHomeDirections.homeToWineOptions(
+                    wine.id,
+                    wine.countyId,
+                    wine.name,
+                    wine.naming,
+                    wine.isOrganic.toBoolean(),
+                    wine.color
+                )
+                findNavController().navigate(action)
+            }
         )
 
         binding.recyclerView.apply {
@@ -51,21 +50,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             //setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
             setHasFixedSize(true)
             adapter = wineAdapter
-
-            // TODO: fix recyclerView scroll listener or, choose to always let the fab visible
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    // Show components no matter what if RV can't be scrolled
-                    if (
-                        !recyclerView.canScrollVertically(1) &&
-                        !recyclerView.canScrollVertically(-1)
-                    ) {
-                        homeViewModel.isScrollingToTop.postValue(true)
-                    } else {
-                        homeViewModel.isScrollingToTop.postValue(dy < 0)
-                    }
-                }
-            })
         }
 
         val countyId = arguments?.getLong(COUNTY_ID)
@@ -77,8 +61,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.recyclerView.adapter = null
-        binding.recyclerView.setRecycledViewPool(null)
         _binding = null
     }
 

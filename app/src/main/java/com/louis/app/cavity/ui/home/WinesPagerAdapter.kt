@@ -1,16 +1,16 @@
 package com.louis.app.cavity.ui.home
 
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.louis.app.cavity.model.County
 
 class WinesPagerAdapter(
-    fragmentManager: FragmentManager,
-    scope: Lifecycle,
+    fragment: Fragment,
     private val counties: List<County>
 ) :
-    FragmentStateAdapter(fragmentManager, scope) {
+    FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int = counties.size
 

@@ -25,18 +25,21 @@ class ScrollableTab @JvmOverloads constructor(
 ) :
     RecyclerView(context, attrs, defStyleAttr) {
 
+    private val layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+
+    private var viewPager: ViewPager2? = null
+    private var isRVScrolling = true
+    private var pageChangeListener: ((position: Int) -> Unit)? = null
     private var selectedColor = Color.WHITE
     private var unSelectedColor = Color.GRAY
 
-    //private val tabAdapter = ScrollableTabAdapter<County>(style = tabTextStyle)
-    private val layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-    private var viewPager: ViewPager2? = null
-    private var isRVScrolling = true
-    private var listener: ((position: Int) -> Unit)? = null
-    private var pageChangeListener: ((position: Int) -> Unit)? = null
-
     init {
-        initAttributes(attrs)
+        context.obtainStyledAttributes(attrs, R.styleable.ScrollableTab).use {
+            background = MaterialShapeDrawable.createWithElevationOverlay(context, elevation)
+            selectedColor = it.getColor(R.styleable.ScrollableTab_selectedColor, Color.WHITE)
+            unSelectedColor =
+                it.getColor(R.styleable.ScrollableTab_unSelectedColor, Color.GRAY)
+        }
 
         setLayoutManager(layoutManager)
         setHasFixedSize(true)
@@ -79,28 +82,12 @@ class ScrollableTab @JvmOverloads constructor(
                 }
             }
         })
-
-//        tabAdapter.onTabClick {
-//            isRVScrolling = true
-//            listener?.invoke(it)
-//            smoothScrollToPosition(it)
-//            viewPager?.setCurrentItem(it, true)
-//        }
     }
 
     override fun setElevation(elevation: Float) {
         super.setElevation(elevation)
         val bg = background
         if (bg is MaterialShapeDrawable) bg.z = z
-    }
-
-    private fun initAttributes(set: AttributeSet?) {
-        context.obtainStyledAttributes(set, R.styleable.ScrollableTab).use {
-            background = MaterialShapeDrawable.createWithElevationOverlay(context, elevation)
-            selectedColor = it.getColor(R.styleable.ScrollableTab_selectedColor, Color.WHITE)
-            unSelectedColor =
-                it.getColor(R.styleable.ScrollableTab_unSelectedColor, Color.GRAY)
-        }
     }
 
     private fun createPagerStyle() {
@@ -117,18 +104,6 @@ class ScrollableTab @JvmOverloads constructor(
             isRVScrolling = true
             false
         }
-    }
-
-    fun addTabs(list: List<County>) {
-        //tabAdapter.addAll(list)
-    }
-
-    fun addOnLongClickListener(longClickListener: (county: County) -> Unit) {
-        //tabAdapter.onLongTabClick(longClickListener)
-    }
-
-    fun addOnTabListener(listener: (position: Int) -> Unit) {
-        this.listener = listener
     }
 
     fun addOnPageChangeListener(pageChangeListener: (position: Int) -> Unit) {
@@ -188,8 +163,7 @@ class ScrollableTab @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        //tabAdapter.onTabClick(null)
-        //tabAdapter.onLongTabClick(null)
+        this.pageChangeListener = null
         viewPager = null
     }
 }

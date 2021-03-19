@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Chipable
@@ -14,12 +15,11 @@ class ScrollableTabAdapter<T : Chipable>(
 ) :
     RecyclerView.Adapter<ScrollableTabAdapter<T>.TabViewHolder>() {
 
-    private var onClickListener: ((position: Int) -> Unit)? = null
-    private var onLongClickListener: ((item: T) -> Unit)? = null
     private val tabs = mutableListOf<T>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_county, parent, false)
+        TextViewCompat.setTextAppearance(view.findViewById(R.id.county), R.style.TabTextAppearance)
 
         return TabViewHolder(view)
     }
@@ -43,7 +43,7 @@ class ScrollableTabAdapter<T : Chipable>(
 
         init {
             view.setOnClickListener {
-                onClickListener?.invoke(bindingAdapterPosition)
+                onTabClick(bindingAdapterPosition)
             }
         }
 
@@ -51,7 +51,7 @@ class ScrollableTabAdapter<T : Chipable>(
             textView.text = item.getChipText()
 
             view.setOnLongClickListener {
-                onLongClickListener?.invoke(item)
+                onLongTabClick(item)
                 true
             }
         }
