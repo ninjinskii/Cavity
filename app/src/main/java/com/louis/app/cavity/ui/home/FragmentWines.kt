@@ -24,9 +24,9 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     private fun initRecyclerView() {
         val wineAdapter = WineRecyclerAdapter(
             requireContext(),
-            onClickListener = { wineId: Long ->
-                val action = FragmentHomeDirections.homeToBottleDetails(wineId)
-                findNavController().navigate(action)
+            onClickListener = { wineId: Long, bottleId: Long ->
+                val action = FragmentHomeDirections.homeToBottleDetails(wineId, bottleId)
+                //findNavController().navigate(action)
             },
             onShowOptionsListener = { wine ->
                 val action = FragmentHomeDirections.homeToWineOptions(
@@ -37,7 +37,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                     wine.isOrganic.toBoolean(),
                     wine.color
                 )
-                findNavController().navigate(action)
+                //findNavController().navigate(action)
             }
         )
 
@@ -47,7 +47,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 HoneycombLayoutManager.Orientation.VERTICAL
             )
 
-            //setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
+            // Appear to be causing memory leaks.
+            setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
             setHasFixedSize(true)
             adapter = wineAdapter
         }

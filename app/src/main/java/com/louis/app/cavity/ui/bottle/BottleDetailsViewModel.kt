@@ -5,8 +5,6 @@ import android.net.Uri
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.ui.history.HistoryUiModel
-import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
@@ -35,12 +33,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun start(wineId: Long, bottleId: Long) {
         this.wineId = wineId
-
-        if (bottleId != -1L) {
-            this.bottleId.postValue(bottleId)
-        } else {
-            // Future bottle selector will auto select first bottle, maybe
-        }
+        this.bottleId.postValue(bottleId)
     }
 
     fun bottles() = repository.getBottlesForWine(wineId)

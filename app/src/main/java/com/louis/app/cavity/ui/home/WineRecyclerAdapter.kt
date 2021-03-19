@@ -19,7 +19,7 @@ import com.louis.app.cavity.util.toBoolean
 
 class WineRecyclerAdapter(
     private val _context: Context,
-    private val onClickListener: (Long) -> Unit,
+    private val onClickListener: (Long, Long) -> Unit,
     private val onShowOptionsListener: (Wine) -> Unit
 ) :
     ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()),
@@ -82,7 +82,9 @@ class WineRecyclerAdapter(
             }
 
             itemView.setOnClickListener {
-                onClickListener(wine.id)
+                if (bottles.isNotEmpty()) {
+                    onClickListener(wine.id, bottles[0].id)
+                }
             }
 
             itemView.setOnLongClickListener {

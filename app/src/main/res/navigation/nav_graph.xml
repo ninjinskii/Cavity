@@ -25,6 +25,9 @@
             <argument
                 android:name="wineId"
                 app:argType="long" />
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
         </action>
         <action
             android:id="@+id/homeToWineOptions"
@@ -138,7 +141,6 @@
             app:argType="long" />
         <argument
             android:name="bottleId"
-            android:defaultValue="-1L"
             app:argType="long" />
         <action
             android:id="@+id/bottleDetailsToEditBottle"
