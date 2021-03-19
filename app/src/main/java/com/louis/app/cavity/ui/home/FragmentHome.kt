@@ -89,6 +89,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.viewPager.adapter = null
         _binding = null
     }
 }

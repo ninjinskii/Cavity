@@ -24,24 +24,22 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     private fun initRecyclerView() {
         val wineAdapter = WineRecyclerAdapter(
-            requireContext(),
-            onClickListener = { wineId: Long ->
-                val action = FragmentHomeDirections.homeToBottleDetails(wineId)
-                findNavController().navigate(action)
-            },
-            onShowOptionsListener = { wine ->
-                activity?.supportFragmentManager?.let {
+                requireContext(),
+                onClickListener = { wineId: Long ->
+                    val action = FragmentHomeDirections.homeToBottleDetails(wineId)
+                    findNavController().navigate(action)
+                },
+                onShowOptionsListener = { wine ->
                     val action = FragmentHomeDirections.homeToWineOptions(
-                        wine.id,
-                        wine.countyId,
-                        wine.name,
-                        wine.naming,
-                        wine.isOrganic.toBoolean(),
-                        wine.color
+                            wine.id,
+                            wine.countyId,
+                            wine.name,
+                            wine.naming,
+                            wine.isOrganic.toBoolean(),
+                            wine.color
                     )
                     findNavController().navigate(action)
                 }
-            }
         )
 
         binding.recyclerView.apply {
@@ -50,7 +48,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 HoneycombLayoutManager.Orientation.VERTICAL
             )
 
-            setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
+            //setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
             setHasFixedSize(true)
             adapter = wineAdapter
 
@@ -79,6 +77,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.recyclerView.adapter = null
+        binding.recyclerView.setRecycledViewPool(null)
         _binding = null
     }
 
