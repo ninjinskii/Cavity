@@ -20,8 +20,6 @@ import kotlin.math.round
  * height (but never both at the same time) of the view depending on the flat attribute.
  * Doesn't support padding for now, since it could break the perfect hexagonal shape.
  */
-// TODO: Considering inheriting View insted of CardView to get full control on underlying MaterialShapeDrawable and optimize RecyclerViews
-// TODO: This would imply to use a ViewOutlineProvider to get clipped ripple and correct shadow
 class HexagonalView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -72,21 +70,6 @@ class HexagonalView @JvmOverloads constructor(
             .build()
     }
 
-//    private fun computeOutline() {
-//        val viewOutlineProvider = object : ViewOutlineProvider() {
-//            override fun getOutline(view: View?, outline: Outline?) {
-//                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R) {
-//                    outline?.setConvexPath(path)
-//                } else {
-//                    outline?.setPath(path)
-//                }
-//            }
-//        }
-//
-//        outlineProvider = viewOutlineProvider
-//        clipToOutline = true
-//    }
-
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
@@ -118,13 +101,13 @@ class HexagonalView @JvmOverloads constructor(
         super.onMeasure(widthSpec, heightSpec)
     }
 
-    override fun dispatchDraw(canvas: Canvas?) {
-        val saveCount = canvas?.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), null)
+    override fun dispatchDraw(canvas: Canvas) {
+        val saveCount = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), null)
 
         super.dispatchDraw(canvas)
 
-        canvas?.drawPath(path, paint)
-        canvas?.restoreToCount(saveCount!!)
+        canvas.drawPath(path, paint)
+        canvas.restoreToCount(saveCount)
     }
 
     // Yeah, this is an ugly fix. Too bad !
