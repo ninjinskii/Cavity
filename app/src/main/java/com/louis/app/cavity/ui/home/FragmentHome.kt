@@ -27,7 +27,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
         recyclePool = RecyclerView.RecycledViewPool().apply {
             // TODO: Adjust this number based on screen size
-            setMaxRecycledViews(R.layout.item_wine, 20) // 10 seems ok
+            setMaxRecycledViews(R.layout.item_wine, 15)
         }
 
         setupScrollableTab()

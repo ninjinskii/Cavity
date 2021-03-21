@@ -19,27 +19,26 @@ import com.louis.app.cavity.util.toBoolean
 
 class WineRecyclerAdapter(
     private val _context: Context,
-    private val onClickListener: (Long, Long) -> Unit,
-    private val onShowOptionsListener: (Wine) -> Unit
+    private var listeners: WineAdapterListener?
 ) :
-    ListAdapter<WineWithBottles, WineRecyclerAdapter.WineViewHolder>(WineItemDiffCallback()),
-    WineColorResolver {
+    ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()), WineColorResolver {
 
     override fun getOverallContext() = _context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val result = WineViewHolder(binding)
 
-        return WineViewHolder(binding)
+        return result
     }
-
-    override fun getItemViewType(position: Int) = R.layout.item_wine
 
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
     override fun getItemId(position: Int) = getItem(position).wine.id
+
+    override fun getItemViewType(position: Int) = R.layout.item_wine
 
     class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {
         override fun areItemsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
@@ -49,48 +48,8 @@ class WineRecyclerAdapter(
             oldItem.wine == newItem.wine && oldItem.bottles == newItem.bottles
     }
 
-    inner class WineViewHolder(private val binding: ItemWineBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        private val vintageSb = StringBuilder()
-
-        // TODO: Add raw sql query to WineDao to filter consumed bottles
-        fun bind(wineWithBottles: WineWithBottles) {
-            val wine = wineWithBottles.wine
-            val bottles = wineWithBottles.bottles
-                .toSet()
-                .filter { !it.consumed.toBoolean() }
-                .sortedBy { it.vintage }
-
-            with(binding) {
-                wineName.text = wine.name
-                wineNaming.text = wine.naming
-                //organicImage.setVisible(wine.isOrganic.toBoolean())
-                //wineColorIndicator.setColorFilter(resolveColor(wine.color))
-
-                vintageSb.clear().append(bottles.map { it.vintage }.toString())
-                binding.vintages.text = vintageSb.toString()
-
-                if (wine.imgPath.isNotEmpty()) {
-                    Glide.with(itemView.context)
-                        .load(Uri.parse(wine.imgPath))
-                        .centerCrop()
-                        .into(binding.wineImage)
-                } else {
-                    binding.wineImage.setImageDrawable(null)
-                }
-            }
-
-            itemView.setOnClickListener {
-                if (bottles.isNotEmpty()) {
-                    onClickListener(wine.id, bottles[0].id)
-                }
-            }
-
-            itemView.setOnLongClickListener {
-                onShowOptionsListener(wine)
-                true
-            }
-        }
+    interface WineAdapterListener {
+        fun onItemClick()
+        fun onItemLongClick()
     }
 }

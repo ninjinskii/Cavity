@@ -2,12 +2,15 @@ package com.louis.app.cavity.ui.home
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
+import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
@@ -22,23 +25,28 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     private fun initRecyclerView() {
+        val listeners = object: WineRecyclerAdapter.WineAdapterListener {
+            override fun onItemClick() {
+                L.v("onItemClick")
+//                val action = FragmentHomeDirections.homeToBottleDetails(0, 0)
+//                findNavController().navigate(action)
+            }
+
+            override fun onItemLongClick() {
+//                val action = FragmentHomeDirections.homeToWineOptions(
+//                    wine.id,
+//                    wine.countyId,
+//                    wine.name,
+//                    wine.naming,
+//                    wine.isOrganic.toBoolean(),
+//                    wine.color
+//                )
+//                findNavController().navigate(action)
+            }
+        }
         val wineAdapter = WineRecyclerAdapter(
             requireContext(),
-            onClickListener = { wineId: Long, bottleId: Long ->
-                val action = FragmentHomeDirections.homeToBottleDetails(wineId, bottleId)
-                //findNavController().navigate(action)
-            },
-            onShowOptionsListener = { wine ->
-                val action = FragmentHomeDirections.homeToWineOptions(
-                    wine.id,
-                    wine.countyId,
-                    wine.name,
-                    wine.naming,
-                    wine.isOrganic.toBoolean(),
-                    wine.color
-                )
-                //findNavController().navigate(action)
-            }
+            listeners
         )
 
         binding.recyclerView.apply {
@@ -47,7 +55,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 HoneycombLayoutManager.Orientation.VERTICAL
             )
 
-            // Appear to be causing memory leaks.
             setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
             setHasFixedSize(true)
             adapter = wineAdapter
@@ -62,6 +69,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.recyclerView.adapter = null
         _binding = null
     }
 

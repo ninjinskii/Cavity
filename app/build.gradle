@@ -95,5 +95,6 @@ dependencies {
     // Paging
     implementation "androidx.paging:paging-runtime:$paging_version"
 
-
+    // Leak Canary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.6"
 }
