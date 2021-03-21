@@ -25,29 +25,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     private fun initRecyclerView() {
-        val listeners = object: WineRecyclerAdapter.WineAdapterListener {
-            override fun onItemClick() {
-                L.v("onItemClick")
-//                val action = FragmentHomeDirections.homeToBottleDetails(0, 0)
-//                findNavController().navigate(action)
-            }
-
-            override fun onItemLongClick() {
-//                val action = FragmentHomeDirections.homeToWineOptions(
-//                    wine.id,
-//                    wine.countyId,
-//                    wine.name,
-//                    wine.naming,
-//                    wine.isOrganic.toBoolean(),
-//                    wine.color
-//                )
-//                findNavController().navigate(action)
-            }
-        }
-        val wineAdapter = WineRecyclerAdapter(
-            requireContext(),
-            listeners
-        )
+        val wineAdapter = WineRecyclerAdapter()
 
         binding.recyclerView.apply {
             layoutManager = HoneycombLayoutManager(

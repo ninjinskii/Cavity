@@ -47,7 +47,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
             with(binding) {
                 tab.adapter = tabAdapter
-                viewPager.adapter = WinesPagerAdapter(this@FragmentHome, it)
+                viewPager.adapter = WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
 
                 tabAdapter.addAll(it)
                 tab.setUpWithViewPager(viewPager)

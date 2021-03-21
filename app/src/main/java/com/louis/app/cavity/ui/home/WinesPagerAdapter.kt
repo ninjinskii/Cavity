@@ -7,10 +7,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.louis.app.cavity.model.County
 
 class WinesPagerAdapter(
-    fragment: Fragment,
+    fragment: FragmentManager,
+    lifecycle: Lifecycle,
     private val counties: List<County>
 ) :
-    FragmentStateAdapter(fragment) {
+    FragmentStateAdapter(fragment, lifecycle) {
 
     override fun getItemCount(): Int = counties.size
 
