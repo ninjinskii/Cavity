@@ -28,6 +28,7 @@
             android:id="@id/shaper"
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:translationY="1dp"
             motion:layout_constraintBottom_toBottomOf="parent" />
     </ConstraintSet>
 
@@ -55,6 +56,7 @@
             android:id="@id/shaper"
             android:layout_width="match_parent"
             android:layout_height="-70dp"
+            android:translationY="0dp"
             motion:layout_constraintBottom_toBottomOf="parent" />
         <Constraint
             android:id="@id/bottleVintage"

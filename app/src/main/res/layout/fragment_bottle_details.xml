@@ -70,11 +70,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="2016" />
 
-            <FrameLayout
+            <View
                 android:id="@+id/shaper"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:background="@drawable/shape_curve" />
+                android:layout_height="30dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabEditBottle"
@@ -84,7 +83,7 @@
                 android:layout_marginBottom="@dimen/small_margin"
                 android:contentDescription="@string/edit_bottle"
                 android:src="@drawable/ic_edit"
-                app:layout_constraintBottom_toBottomOf="@id/shaper"
+                app:layout_constraintBottom_toBottomOf="@id/bottleVintage"
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.motion.widget.MotionLayout>
@@ -419,8 +418,8 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/large_margin"
                     android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/large_margin"
                     android:text="@string/delete_bottle"
                     app:icon="@drawable/ic_delete_all"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -433,9 +432,9 @@
                     android:layout_margin="@dimen/small_margin"
                     android:gravity="center"
                     android:text="@string/delete_bottle_warning"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/buttonUltraDelete" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

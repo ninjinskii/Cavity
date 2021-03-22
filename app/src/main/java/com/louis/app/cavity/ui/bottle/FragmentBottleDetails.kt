@@ -6,6 +6,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Checkable
+import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -14,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
@@ -32,9 +36,37 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         bottleDetailsViewModel.start(args.wineId, args.bottleId)
 
+        setupToolbarShape()
         initRecyclerView()
         observe()
         setListeners()
+    }
+
+    private fun setupToolbarShape() {
+        binding.shaper.apply {
+            background = MaterialShapeDrawable.createWithElevationOverlay(context)
+
+            doOnLayout {
+                (it.background as MaterialShapeDrawable).shapeAppearanceModel =
+                    ShapeAppearanceModel.Builder()
+                        .setTopEdge(RoundedEdgeTreatment(it.height.toFloat())).build()
+            }
+        }
+
+        binding.motionLayout.addTransitionListener(object : MotionLayout.TransitionListener {
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+            }
+
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
+                (binding.shaper.background as MaterialShapeDrawable).interpolation = 1 - p3
+            }
+
+            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
+            }
+
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
+            }
+        })
     }
 
     private fun initRecyclerView() {
