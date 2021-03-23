@@ -22,7 +22,10 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
-import com.louis.app.cavity.util.*
+import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.toBoolean
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -43,13 +46,14 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun setupToolbarShape() {
+        val shaper = MaterialShapeDrawable.createWithElevationOverlay(context)
+
         binding.shaper.apply {
-            background = MaterialShapeDrawable.createWithElevationOverlay(context)
+            background = shaper
 
             doOnLayout {
-                (it.background as MaterialShapeDrawable).shapeAppearanceModel =
-                    ShapeAppearanceModel.Builder()
-                        .setTopEdge(RoundedEdgeTreatment(it.height.toFloat())).build()
+                shaper.shapeAppearanceModel = ShapeAppearanceModel.Builder()
+                    .setTopEdge(RoundedEdgeTreatment(it.height.toFloat())).build()
             }
         }
 
@@ -57,11 +61,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
             }
 
-            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
-                (binding.shaper.background as MaterialShapeDrawable).interpolation = 1 - p3
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {
+                shaper.interpolation = 1 - progress
             }
 
-            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
+            override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {
+                if (currentId == R.id.start) shaper.interpolation = 1f
             }
 
             override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
@@ -85,8 +90,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 reviewAdapter.submitList(it)
             }
         }
-
-        //val bottleAdapter = BottleScrollableTabAdapter()
     }
 
     private fun observe() {
