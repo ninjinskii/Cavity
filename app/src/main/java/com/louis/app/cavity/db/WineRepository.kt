@@ -231,9 +231,15 @@ class WineRepository private constructor(app: Application) {
         return database.withTransaction {
             when (entry.type) {
                 0 -> consumeBottle(entry.bottleId)
-                1 -> revertBottleConsumption(entry.bottleId)
+                1 -> {
+                    revertBottleConsumption(entry.bottleId)
+                    historyDao.clearExistingReplenishments(entry.bottleId)
+                }
                 2 -> consumeBottle(entry.bottleId)
-                3 -> revertBottleConsumption(entry.bottleId)
+                3 -> {
+                    revertBottleConsumption(entry.bottleId)
+                    historyDao.clearExistingReplenishments(entry.bottleId)
+                }
                 4 -> TODO("Waiting for tasting feature")
             }
 
