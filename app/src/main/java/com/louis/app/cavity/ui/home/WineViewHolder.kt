@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.relation.wine.WineWithBottles
 import com.louis.app.cavity.ui.WineColorResolver
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHolder(binding.root),
@@ -26,7 +27,7 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
         with(binding) {
             wineName.text = wine.name
             wineNaming.text = wine.naming
-            //organicImage.setVisible(wine.isOrganic.toBoolean())
+            organicImage.setVisible(wine.isOrganic.toBoolean())
             root.setMarkerColor(resolveColor(wine.color))
 
             vintageSb.clear().append(bottles.map { it.vintage }.toString())
