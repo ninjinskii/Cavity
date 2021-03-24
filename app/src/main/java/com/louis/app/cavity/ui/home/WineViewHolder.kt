@@ -14,8 +14,6 @@ import com.louis.app.cavity.util.toBoolean
 class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHolder(binding.root),
     WineColorResolver {
 
-    private val vintageSb = StringBuilder()
-
     // TODO: Add raw sql query to WineDao to filter consumed bottles
     fun bind(wineWithBottles: WineWithBottles) {
         val wine = wineWithBottles.wine
@@ -29,9 +27,7 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
             wineNaming.text = wine.naming
             organicImage.setVisible(wine.isOrganic.toBoolean())
             root.setMarkerColor(resolveColor(wine.color))
-
-            vintageSb.clear().append(bottles.map { it.vintage }.toString())
-            binding.vintages.text = vintageSb.toString()
+            // binding.vintages.text = vintageSb.toString()
 
             if (wine.imgPath.isNotEmpty()) {
                 Glide.with(itemView.context)
