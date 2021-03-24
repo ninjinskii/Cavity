@@ -94,8 +94,8 @@ class HexagonalView @JvmOverloads constructor(
 
         markerPath.run {
             moveTo(w / 2f, h.toFloat())
-            lineTo(w.toFloat(), h * 0.75f)
-            lineTo(w.toFloat(), h.toFloat())
+            lineTo(0f, h * 0.75f)
+            lineTo(0f, h.toFloat())
             close()
         }
 
@@ -139,11 +139,9 @@ class HexagonalView @JvmOverloads constructor(
         }
     }
 
-    // Yeah, this is an ugly fix. Too bad !
-    // We need to eat requestLayout calls to avoid our HoneycombLayoutManager#OnLayoutChildren
-    // to be called when we load an image into this view.
-    // Erasing this will cause some RecyclerView madness to happen.
-    @SuppressLint("MissingSuperCall")
+    // Ignoring super call here would fix a bug for wine's RecyclerView when Glide attempts to load
+    // images. Doesn't seems to be necessary anymore.
     override fun requestLayout() {
+        super.requestLayout()
     }
 }
