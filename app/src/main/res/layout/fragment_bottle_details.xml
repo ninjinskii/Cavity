@@ -27,16 +27,26 @@
 
             <ImageButton
                 android:id="@+id/backButton"
-                android:layout_width="@dimen/medium_icon"
-                android:layout_height="@dimen/medium_icon"
-                android:layout_marginTop="4dp"
+                android:layout_width="@dimen/xsmall_icon"
+                android:layout_height="@dimen/xsmall_icon"
+                android:layout_margin="@dimen/medium_margin"
                 android:background="@drawable/shape_uncover"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?attr/actionBarItemBackground"
                 android:src="@drawable/ic_arrow_back"
-                android:tint="?attr/colorControlNormal"
+                app:tint="?attr/colorControlNormal"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.louis.app.cavity.ui.search.widget.AnimatedCheckBox
+                android:id="@+id/favorite"
+                android:layout_width="@dimen/xsmall_icon"
+                android:layout_height="@dimen/xsmall_icon"
+                android:layout_margin="@dimen/medium_margin"
+                android:background="@drawable/shape_uncover"
+                android:src="@drawable/asl_favorite"
+                app:delayBeforeRepeat="1001"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
@@ -316,17 +326,6 @@
                             app:layout_constraintEnd_toEndOf="@id/buyDate"
                             app:layout_constraintStart_toStartOf="@id/buyLocation"
                             app:layout_constraintTop_toBottomOf="@id/buyLocation" />
-
-                        <com.louis.app.cavity.ui.search.widget.AnimatedCheckBox
-                            android:id="@+id/favorite"
-                            android:layout_width="@dimen/medium_icon"
-                            android:layout_height="@dimen/medium_icon"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/asl_favorite"
-                            app:delayBeforeRepeat="1001"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/cavity_gold" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/buttonShowPdf"
