@@ -1,14 +1,18 @@
 package com.louis.app.cavity.ui.home
 
+import android.content.Context
 import android.net.Uri
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.relation.wine.WineWithBottles
+import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.util.toBoolean
 
-class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHolder(binding.root) {
+class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHolder(binding.root),
+    WineColorResolver {
+
     private val vintageSb = StringBuilder()
 
     // TODO: Add raw sql query to WineDao to filter consumed bottles
@@ -23,7 +27,7 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
             wineName.text = wine.name
             wineNaming.text = wine.naming
             //organicImage.setVisible(wine.isOrganic.toBoolean())
-            //wineColorIndicator.setColorFilter(resolveColor(wine.color))
+            root.setMarkerColor(resolveColor(wine.color))
 
             vintageSb.clear().append(bottles.map { it.vintage }.toString())
             binding.vintages.text = vintageSb.toString()
@@ -59,4 +63,6 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
             true
         }
     }
+
+    override fun getOverallContext(): Context = itemView.context
 }

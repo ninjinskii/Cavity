@@ -2,6 +2,7 @@ package com.louis.app.cavity.util
 
 import android.content.Context
 import android.graphics.Color
+import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.ColorInt
@@ -60,6 +61,10 @@ inline fun View.doOnEachNextLayout(crossinline action: (view: View) -> Unit) {
     addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
         action(view)
     }
+}
+
+fun Context.dpToPx(dp: Float) : Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
 }
 
 // LiveData

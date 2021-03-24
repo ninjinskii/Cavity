@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.home.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
@@ -13,6 +14,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.shape.ShapeAppearancePathProvider
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.dpToPx
 import kotlin.math.round
 
 /**
@@ -32,7 +34,8 @@ class HexagonalView @JvmOverloads constructor(
         private const val HEXAGONAL_SQUARE_RATIO = 0.866
     }
 
-    private val path = Path()
+    private val clipPath = Path()
+    private val markerPath = Path()
     private val clipPaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = ContextCompat.getColor(context, android.R.color.white)
@@ -40,15 +43,16 @@ class HexagonalView @JvmOverloads constructor(
         }
     }
 
-    private val linePaint by lazy {
+    private val markerPaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = ContextCompat.getColor(context, R.color.cavity_red)
-            style = Paint.Style.STROKE
-            strokeWidth = 10f
+            color = markerColor.defaultColor
+            style = Paint.Style.FILL_AND_STROKE
+            strokeWidth = context.dpToPx(16f)
         }
     }
 
     private var isFlat = false
+    private var markerColor: ColorStateList = ColorStateList.valueOf(Color.TRANSPARENT)
 
     init {
         context.theme.obtainStyledAttributes(
@@ -59,10 +63,17 @@ class HexagonalView @JvmOverloads constructor(
         )
             .use {
                 isFlat = it.getBoolean(R.styleable.HexagonalView_flat, false)
+                markerColor = it.getColorStateList(R.styleable.HexagonalView_markerColor)
+                    ?: ColorStateList.valueOf(Color.TRANSPARENT)
             }
 
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         applyShape()
+    }
+
+    fun setMarkerColor(color: Int) {
+        markerPaint.color = color
+        invalidate()
     }
 
     private fun applyShape() {
@@ -81,11 +92,18 @@ class HexagonalView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
+        markerPath.run {
+            moveTo(w / 2f, h.toFloat())
+            lineTo(w.toFloat(), h * 0.75f)
+            lineTo(w.toFloat(), h.toFloat())
+            close()
+        }
+
         val r = Rect(0, 0, w, h).toRectF()
-        ShapeAppearancePathProvider().calculatePath(shapeAppearanceModel, 1f, r, path)
+        ShapeAppearancePathProvider().calculatePath(shapeAppearanceModel, 1f, r, clipPath)
 
         // Reverse the given path to get correct clipping out of it
-        path.fillType = Path.FillType.INVERSE_WINDING
+        clipPath.fillType = Path.FillType.INVERSE_WINDING
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -114,9 +132,11 @@ class HexagonalView @JvmOverloads constructor(
 
         super.dispatchDraw(canvas)
 
-        canvas.drawLine(width/2f, height.toFloat(), 0f, height * 0.75f, linePaint)
-        canvas.drawPath(path, clipPaint)
-        canvas.restoreToCount(saveCount)
+        canvas.run {
+            drawPath(markerPath, markerPaint)
+            drawPath(clipPath, clipPaint)
+            restoreToCount(saveCount)
+        }
     }
 
     // Yeah, this is an ugly fix. Too bad !

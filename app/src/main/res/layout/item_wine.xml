@@ -10,6 +10,7 @@
     android:foreground="?attr/selectableItemBackground"
     app:cardElevation="4dp"
     app:flat="false"
+    app:markerColor="@color/cavity_red"
     app:strokeColor="@color/cavity_gold"
     app:strokeWidth="1dp">
 
@@ -38,6 +39,10 @@
         <!--            app:layout_constraintStart_toStartOf="parent"-->
         <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
+<!--            android:shadowColor="@android:color/black"-->
+<!--            android:shadowDx="2"-->
+<!--            android:shadowDy="2"-->
+<!--            android:shadowRadius="6"-->
         <TextView
             android:id="@+id/wineName"
             style="@style/TextAppearance.MaterialComponents.Subtitle2"
@@ -47,10 +52,6 @@
             android:layout_marginBottom="@dimen/xsmall_margin"
             android:ellipsize="end"
             android:maxLines="2"
-            android:shadowColor="@android:color/black"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="6"
             app:layout_constraintBottom_toTopOf="@id/wineNaming"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,6 +59,10 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Château la Cour" />
 
+<!--            android:shadowColor="@android:color/black"-->
+        <!--            android:shadowDx="2"-->
+        <!--            android:shadowDy="2"-->
+        <!--            android:shadowRadius="6"-->
         <TextView
             android:id="@+id/wineNaming"
             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -67,10 +72,6 @@
             android:layout_marginTop="@dimen/xsmall_margin"
             android:ellipsize="end"
             android:maxLines="1"
-            android:shadowColor="@android:color/black"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="6"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,15 +79,15 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Saint-Émilion" />
 
+<!--            android:shadowColor="@android:color/black"-->
+<!--            android:shadowDx="2"-->
+<!--            android:shadowDy="2"-->
+<!--            android:shadowRadius="6"-->
         <TextView
             android:id="@+id/vintages"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
-            android:shadowColor="@android:color/black"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/wineNaming" />

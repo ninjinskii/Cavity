@@ -32,5 +32,6 @@
 
     <declare-styleable name="HexagonalView">
         <attr name="flat" format="boolean" />
+        <attr name="markerColor" format="reference" />
     </declare-styleable>
 </resources>
