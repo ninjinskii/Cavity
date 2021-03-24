@@ -33,10 +33,18 @@ class HexagonalView @JvmOverloads constructor(
     }
 
     private val path = Path()
-    private val paint by lazy {
+    private val clipPaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = ContextCompat.getColor(context, android.R.color.white)
             xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
+        }
+    }
+
+    private val linePaint by lazy {
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = ContextCompat.getColor(context, R.color.cavity_red)
+            style = Paint.Style.STROKE
+            strokeWidth = 10f
         }
     }
 
@@ -106,7 +114,8 @@ class HexagonalView @JvmOverloads constructor(
 
         super.dispatchDraw(canvas)
 
-        canvas.drawPath(path, paint)
+        canvas.drawLine(width/2f, height.toFloat(), 0f, height * 0.75f, linePaint)
+        canvas.drawPath(path, clipPaint)
         canvas.restoreToCount(saveCount)
     }
 
