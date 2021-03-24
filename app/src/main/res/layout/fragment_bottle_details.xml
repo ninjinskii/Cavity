@@ -325,7 +325,8 @@
                             android:src="@drawable/asl_favorite"
                             app:delayBeforeRepeat="1001"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/cavity_gold" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/buttonShowPdf"
@@ -419,8 +420,8 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/large_margin"
                     android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/large_margin"
                     android:text="@string/delete_bottle"
                     app:icon="@drawable/ic_delete_all"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -433,9 +434,9 @@
                     android:layout_margin="@dimen/small_margin"
                     android:gravity="center"
                     android:text="@string/delete_bottle_warning"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/buttonUltraDelete" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

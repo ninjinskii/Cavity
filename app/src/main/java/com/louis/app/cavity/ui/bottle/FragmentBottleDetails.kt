@@ -56,8 +56,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun observe() {
+        var firstRun = true
+
         bottleDetailsViewModel.bottle.observe(viewLifecycleOwner) {
-            updateUI(it)
+            updateUI(it, firstRun)
+            firstRun = false
         }
 
         bottleDetailsViewModel.grapes.observe(viewLifecycleOwner) {
@@ -185,7 +188,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
     }
 
-    private fun updateUI(bottle: Bottle) {
+    private fun updateUI(bottle: Bottle, firstRun: Boolean) {
         with(binding) {
             val consumed = bottle.consumed.toBoolean()
             buttonGroupInteract.setVisible(!consumed)
@@ -205,6 +208,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             bottleVintage.text = bottle.vintage.toString()
             buttonShowPdf.isEnabled = bottle.hasPdf()
             favorite.isChecked = bottle.isFavorite.toBoolean()
+
+            if (firstRun) favorite.jumpDrawablesToCurrentState()
         }
     }
 
