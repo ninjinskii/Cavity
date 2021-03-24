@@ -19,7 +19,7 @@ import kotlin.math.roundToInt
  *
  * Thinked to be used with HexagonalView
  *
- * To get nice patterns, set the HexagoalView's flat attribute to true when using HORIZONTAL
+ * To get nice patterns, set the HexagonalView's flat attribute to true when using HORIZONTAL
  * orientation otherwise false
  */
 class HoneycombLayoutManager(private val colCount: Int, private val orientation: Orientation) :
