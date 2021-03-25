@@ -40,6 +40,7 @@ class GrapeBar2 @JvmOverloads constructor(
         .map { context.getColor(it) }
         .shuffled()
 
+
     private val strokePaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
@@ -69,8 +70,9 @@ class GrapeBar2 @JvmOverloads constructor(
         }
 
         invalidate()
-        requestLayout()
     }
+
+    fun getGrapes() = grapes.toMutableList()
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         val paddingX = paddingStart + paddingEnd

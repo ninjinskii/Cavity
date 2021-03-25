@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Checkable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
+import com.louis.app.cavity.ui.bottle.widget.GrapeBarAnimation
 import com.louis.app.cavity.util.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
@@ -67,7 +69,14 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             if (it.isEmpty()) {
                 binding.grapesCardView.setVisible(false)
             } else {
+                val animation = GrapeBarAnimation(binding.grapeBar).apply {
+                    duration = 800
+                    interpolator = FastOutSlowInInterpolator()
+                }
+                binding.grapeBar.animation = animation
                 binding.grapeBar.setGrapes(it)
+                binding.grapeBar.startAnimation(animation)
+                animation.start()
             }
         }
 
