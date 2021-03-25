@@ -59,8 +59,8 @@ class GrapeBar2 @JvmOverloads constructor(
         var height = 0
 
         when (heightMode) {
-            MeasureSpec.EXACTLY -> height = MeasureSpec.getSize(height)
-            MeasureSpec.AT_MOST -> height = MeasureSpec.getSize(height)
+            MeasureSpec.EXACTLY -> height = MeasureSpec.getSize(heightMeasureSpec)
+            MeasureSpec.AT_MOST -> height = MeasureSpec.getSize(heightMeasureSpec)
             // TODO: compute height with the longest string
             MeasureSpec.UNSPECIFIED -> height = 50
         }
@@ -87,4 +87,6 @@ class GrapeBar2 @JvmOverloads constructor(
             }
         }
     }
+
+    // Save state for colors ?
 }

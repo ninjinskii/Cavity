@@ -223,7 +223,7 @@
                         <com.louis.app.cavity.ui.bottle.widget.GrapeBar2
                             android:id="@+id/grapeBar"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="40dp"
                             android:layout_margin="@dimen/small_margin"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
