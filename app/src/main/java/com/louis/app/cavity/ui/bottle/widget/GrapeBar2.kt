@@ -54,6 +54,20 @@ class GrapeBar2 @JvmOverloads constructor(
         pixelProgressRatio = (w - paddingX) / 100
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        var height = 0
+
+        when (heightMode) {
+            MeasureSpec.EXACTLY -> height = MeasureSpec.getSize(height)
+            MeasureSpec.AT_MOST -> height = MeasureSpec.getSize(height)
+            // TODO: compute height with the longest string
+            MeasureSpec.UNSPECIFIED -> height = 50
+        }
+
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), height)
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 

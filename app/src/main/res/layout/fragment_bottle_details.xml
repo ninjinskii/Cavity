@@ -223,13 +223,12 @@
                         <com.louis.app.cavity.ui.bottle.widget.GrapeBar2
                             android:id="@+id/grapeBar"
                             android:layout_width="0dp"
-                            android:layout_height="40dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="@dimen/small_margin"
-                            android:paddingStart="40dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toBottomOf="@id/grapeTitleIcon" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
