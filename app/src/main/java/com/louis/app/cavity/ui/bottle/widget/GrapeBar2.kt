@@ -4,13 +4,14 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.text.TextPaint
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.getDimensionOrThrow
-import androidx.core.content.res.use
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
+import com.louis.app.cavity.util.L
+import kotlin.math.sin
 
 class GrapeBar2 @JvmOverloads constructor(
     context: Context,
@@ -22,7 +23,8 @@ class GrapeBar2 @JvmOverloads constructor(
 
     companion object {
         // Maybe set it to val not in companion and use pxToDp
-        private const val BAR_BOTTOM_SPACING = 20f
+        private const val BAR_TOP_SPACING = 20f
+        private const val TEXT_ANGLE = 310f
     }
 
     private val grapes = mutableListOf<QuantifiedGrapeAndGrape>()
@@ -41,34 +43,41 @@ class GrapeBar2 @JvmOverloads constructor(
     private val strokePaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            // TO DO: use dp
-            strokeWidth = 15f
+            // TODO: use dp
+            strokeWidth = 7f
         }
     }
 
     private val textPaint by lazy {
         TextPaint(TextPaint.ANTI_ALIAS_FLAG).apply {
-            textSize = 30f
             color = ContextCompat.getColor(context, R.color.material_on_surface_emphasis_medium)
         }
     }
 
-    private var pixelProgressRatio = 1
+    private var progressUnitPixelSize = 1f
+    private var baseline = 0f
+    private var textMaxLength = 0f
     private var startX = 0f
     private var endX = 0f
+    private var barY = 0f
 
     fun setGrapes(grapes: List<QuantifiedGrapeAndGrape>) {
-        this.grapes.clear()
-        this.grapes.addAll(grapes)
-        // TODO: Maybe requestLayout for text
+        this.grapes.apply {
+            clear()
+            addAll(grapes)
+            sortByDescending { it.qGrape.percentage }
+        }
+
         invalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        val paddingX = paddingStart + paddingEnd
-        pixelProgressRatio = (w - paddingX) / 100
+        progressUnitPixelSize = w / 100f
         startX = paddingStart.toFloat()
         endX = (w - paddingEnd).toFloat()
+        barY = h - (strokePaint.strokeWidth / 2) - paddingBottom
+        baseline = h - strokePaint.strokeWidth - BAR_TOP_SPACING - paddingBottom
+        textMaxLength = baseline / sin(TEXT_ANGLE)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -78,7 +87,6 @@ class GrapeBar2 @JvmOverloads constructor(
         when (heightMode) {
             MeasureSpec.EXACTLY -> height = MeasureSpec.getSize(heightMeasureSpec)
             MeasureSpec.AT_MOST -> height = MeasureSpec.getSize(heightMeasureSpec)
-            // TODO: compute height with the longest string
             MeasureSpec.UNSPECIFIED -> height = 50
         }
 
@@ -90,21 +98,28 @@ class GrapeBar2 @JvmOverloads constructor(
 
         canvas.apply {
             strokePaint.color = backgroundColor
-            drawLine(startX, 0f, endX, 0f, strokePaint)
+            drawLine(startX, barY, endX, barY, strokePaint)
 
             var currentPixel = startX
 
             grapes.forEachIndexed { i, grape ->
                 strokePaint.color = colors[i]
 
-                val progress = grape.qGrape.percentage * pixelProgressRatio
-                drawLine(currentPixel, 0f, currentPixel + progress, 0f, strokePaint)
+                val progress = grape.qGrape.percentage * progressUnitPixelSize
+                drawLine(currentPixel, barY, currentPixel + progress, barY, strokePaint)
 
                 val saveCount = save()
-                val startY = height.toFloat()
-                translate(currentPixel + (progress / 2), startY)
-                rotate(310f)
-                drawText(grape.grapeName, 0f, 0f, textPaint)
+                val text = TextUtils.ellipsize(
+                    grape.grapeName,
+                    textPaint,
+                    textMaxLength,
+                    TextUtils.TruncateAt.END
+                )
+
+                textPaint.textSize = if (grape.qGrape.percentage <= 5) 20f else 30f
+                translate(currentPixel + (progress / 1.8f), baseline)
+                rotate(TEXT_ANGLE)
+                drawText(text.toString(), 0f, 0f, textPaint)
                 restoreToCount(saveCount)
 
                 currentPixel += progress
