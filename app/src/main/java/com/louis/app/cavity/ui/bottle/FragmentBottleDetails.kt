@@ -67,10 +67,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             if (it.isEmpty()) {
                 binding.grapesCardView.setVisible(false)
             } else {
-                binding.grapeBar.apply {
-                    addAllGrapes(it)
-                    triggerAnimation()
-                }
+                binding.grapeBar.setGrapes(it)
             }
         }
 
