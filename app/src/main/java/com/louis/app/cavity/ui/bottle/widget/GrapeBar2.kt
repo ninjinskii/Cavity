@@ -3,8 +3,12 @@ package com.louis.app.cavity.ui.bottle.widget
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.getDimensionOrThrow
+import androidx.core.content.res.use
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
 
@@ -12,8 +16,14 @@ class GrapeBar2 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
 ) :
     View(context, attrs, defStyleAttr) {
+
+    companion object {
+        // Maybe set it to val not in companion and use pxToDp
+        private const val BAR_BOTTOM_SPACING = 20f
+    }
 
     private val grapes = mutableListOf<QuantifiedGrapeAndGrape>()
     private val backgroundColor = context.getColor(R.color.cavity_grey)
@@ -36,6 +46,13 @@ class GrapeBar2 @JvmOverloads constructor(
         }
     }
 
+    private val textPaint by lazy {
+        TextPaint(TextPaint.ANTI_ALIAS_FLAG).apply {
+            textSize = 30f
+            color = ContextCompat.getColor(context, R.color.material_on_surface_emphasis_medium)
+        }
+    }
+
     private var pixelProgressRatio = 1
     private var startX = 0f
     private var endX = 0f
@@ -49,9 +66,9 @@ class GrapeBar2 @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         val paddingX = paddingStart + paddingEnd
+        pixelProgressRatio = (w - paddingX) / 100
         startX = paddingStart.toFloat()
         endX = (w - paddingEnd).toFloat()
-        pixelProgressRatio = (w - paddingX) / 100
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -81,8 +98,15 @@ class GrapeBar2 @JvmOverloads constructor(
                 strokePaint.color = colors[i]
 
                 val progress = grape.qGrape.percentage * pixelProgressRatio
+                drawLine(currentPixel, 0f, currentPixel + progress, 0f, strokePaint)
 
-                drawLine(currentPixel, 0f, currentPixel + (progress), 0f, strokePaint)
+                val saveCount = save()
+                val startY = height.toFloat()
+                translate(currentPixel + (progress / 2), startY)
+                rotate(310f)
+                drawText(grape.grapeName, 0f, 0f, textPaint)
+                restoreToCount(saveCount)
+
                 currentPixel += progress
             }
         }
