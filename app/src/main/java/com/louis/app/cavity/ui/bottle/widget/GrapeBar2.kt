@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
 import kotlin.math.cos
-import kotlin.math.sin
 
 class GrapeBar2 @JvmOverloads constructor(
     context: Context,
@@ -54,6 +53,12 @@ class GrapeBar2 @JvmOverloads constructor(
             color = ContextCompat.getColor(context, R.color.material_on_surface_emphasis_medium)
         }
     }
+
+    var interpolation = 1f
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     private var progressUnitPixelSize = 1f
     private var baseline = 0f
@@ -109,7 +114,7 @@ class GrapeBar2 @JvmOverloads constructor(
             grapes.forEachIndexed { i, grape ->
                 strokePaint.color = colors[i % colors.size]
 
-                val progress = grape.qGrape.percentage * progressUnitPixelSize
+                val progress = grape.qGrape.percentage * progressUnitPixelSize * interpolation
                 drawLine(currentPixel, barY, currentPixel + progress, barY, strokePaint)
 
                 textPaint.textSize = if (grape.qGrape.percentage <= 5) 20f else 30f

@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.bottle
 
+import android.animation.ValueAnimator
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -19,8 +20,10 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
-import com.louis.app.cavity.ui.bottle.widget.GrapeBarAnimation
-import com.louis.app.cavity.util.*
+import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.toBoolean
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -69,14 +72,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             if (it.isEmpty()) {
                 binding.grapesCardView.setVisible(false)
             } else {
-                val animation = GrapeBarAnimation(binding.grapeBar).apply {
+                binding.grapeBar.setGrapes(it)
+                ValueAnimator.ofFloat(0f, 1f).apply {
                     duration = 800
                     interpolator = FastOutSlowInInterpolator()
+                    addUpdateListener { valueAnimator ->
+                        binding.grapeBar.interpolation = valueAnimator.animatedValue as Float
+                    }
+                    start()
                 }
-                binding.grapeBar.animation = animation
-                binding.grapeBar.setGrapes(it)
-                binding.grapeBar.startAnimation(animation)
-                animation.start()
             }
         }
 
