@@ -10,6 +10,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
+import com.louis.app.cavity.util.dpToPx
 import kotlin.math.cos
 
 class GrapeBar2 @JvmOverloads constructor(
@@ -21,8 +22,8 @@ class GrapeBar2 @JvmOverloads constructor(
     View(context, attrs, defStyleAttr) {
 
     companion object {
-        // Maybe set it to val not in companion and use pxToDp
-        private const val BAR_BOTTOM_SPACING = 20f
+        private const val BAR_BOTTOM_SPACING = 8f
+        private const val BAR_HEIGHT = 6f
         private const val TEXT_ANGLE = 50f
     }
 
@@ -39,12 +40,10 @@ class GrapeBar2 @JvmOverloads constructor(
         .map { context.getColor(it) }
         .shuffled()
 
-
     private val strokePaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            // TODO: use dp
-            strokeWidth = 7f
+            strokeWidth = context.dpToPx(BAR_HEIGHT)
         }
     }
 
@@ -81,11 +80,12 @@ class GrapeBar2 @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         val paddingX = paddingStart + paddingEnd
+        val spacing = context.dpToPx(BAR_BOTTOM_SPACING)
         progressUnitPixelSize = (w - paddingX) / 100f
         startX = paddingStart.toFloat()
         endX = (w - paddingEnd).toFloat()
         barY = (strokePaint.strokeWidth / 2) + paddingTop
-        baseline = barY + strokePaint.strokeWidth + BAR_BOTTOM_SPACING
+        baseline = barY + strokePaint.strokeWidth + spacing
         textMaxLength = (h - baseline) / cos(TEXT_ANGLE)
     }
 
@@ -136,6 +136,4 @@ class GrapeBar2 @JvmOverloads constructor(
             }
         }
     }
-
-    // Save state for colors ?
 }

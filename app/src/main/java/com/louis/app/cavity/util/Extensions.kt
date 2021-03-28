@@ -1,11 +1,10 @@
 package com.louis.app.cavity.util
 
 import android.content.Context
-import android.graphics.Color
+import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -60,6 +59,14 @@ inline fun View.doOnEachNextLayout(crossinline action: (view: View) -> Unit) {
     addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
         action(view)
     }
+}
+
+fun Context.dpToPx(dp: Float): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
+}
+
+fun Context.pxToDp(px: Int): Float {
+    return px / (resources.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)
 }
 
 // LiveData
