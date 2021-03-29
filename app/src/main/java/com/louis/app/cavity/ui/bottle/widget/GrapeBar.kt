@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.bottle.widget
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -7,8 +8,8 @@ import android.text.TextPaint
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.Animation
 import androidx.core.content.ContextCompat
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
 import com.louis.app.cavity.util.dpToPx
@@ -24,7 +25,7 @@ class GrapeBar @JvmOverloads constructor(
 
     companion object {
         private const val BAR_BOTTOM_SPACING = 16f
-        private const val BAR_HEIGHT = 6f
+        private const val BAR_WIDTH = 4f
         private const val TEXT_ANGLE = 50f
     }
 
@@ -44,7 +45,7 @@ class GrapeBar @JvmOverloads constructor(
     private val strokePaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            strokeWidth = context.dpToPx(BAR_HEIGHT)
+            strokeWidth = context.dpToPx(BAR_WIDTH)
         }
     }
 
@@ -67,24 +68,25 @@ class GrapeBar @JvmOverloads constructor(
     private var endX = 0f
     private var barY = 0f
 
-    fun setGrapes(grapes: List<QuantifiedGrapeAndGrape>) {
+    fun setGrapes(grapes: List<QuantifiedGrapeAndGrape>, anim: Boolean) {
+        val empty: Boolean
+
         this.grapes.apply {
+            empty = isEmpty()
             clear()
             addAll(grapes)
             sortBy { it.qGrape.percentage }
         }
 
-        invalidate()
-    }
-
-    fun getGrapes() = grapes.toMutableList()
-
-    override fun startAnimation(animation: Animation?) {
-        if (animation is GrapeBarAnimation) {
-            animation.duration = 800
-            animation.start()
+        if (empty && anim) {
+            ObjectAnimator.ofFloat(this, "interpolation", 0f, 1f).apply {
+                duration = 800
+                interpolator = FastOutSlowInInterpolator()
+                start()
+            }
+        } else {
+            invalidate()
         }
-        super.startAnimation(animation)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
