@@ -27,9 +27,8 @@
 
             <ImageButton
                 android:id="@+id/backButton"
-                android:layout_width="@dimen/xsmall_icon"
-                android:layout_height="@dimen/xsmall_icon"
-                android:layout_margin="@dimen/medium_margin"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
                 android:background="?attr/actionBarItemBackground"
                 android:clickable="true"
                 android:focusable="true"
@@ -40,10 +39,10 @@
 
             <com.louis.app.cavity.ui.search.widget.AnimatedCheckBox
                 android:id="@+id/favorite"
-                android:layout_width="@dimen/xsmall_icon"
-                android:layout_height="@dimen/xsmall_icon"
-                android:layout_margin="@dimen/medium_margin"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
                 android:background="?attr/actionBarItemBackground"
+                android:scaleType="centerInside"
                 android:src="@drawable/asl_favorite"
                 app:delayBeforeRepeat="1001"
                 app:layout_constraintEnd_toEndOf="parent"
