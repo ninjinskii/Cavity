@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.CompoundButton
 import android.widget.HorizontalScrollView
 import androidx.core.view.children
@@ -50,12 +51,21 @@ class ChipLoader private constructor(
             }
 
             chipGroup.children.firstOrNull { it is Chip && it.isChecked }?.let {
-                val scrollView = chipGroup.parent.parent as HorizontalScrollView
+                val scrollView = findParentScrollView(chipGroup)
 
-                scrollView.postDelayed(500) {
+                scrollView?.postDelayed(500) {
                     scrollView.smoothScrollTo(it.left - it.paddingLeft, it.top)
                 }
             }
+        }
+    }
+
+    private fun findParentScrollView(view: View) : HorizontalScrollView? {
+        return try {
+            val parent = view.parent
+            if (parent is HorizontalScrollView) parent else findParentScrollView(parent as View)
+        } catch (e: ClassCastException) {
+            null
         }
     }
 

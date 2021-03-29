@@ -79,7 +79,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun setBottomSheetPeekHeight() {
-        val fill = binding.root.height - binding.reviewStubChipGroup.bottom - backdropHeaderHeight
+        val fill = binding.root.height - binding.reviewScrollView.bottom - backdropHeaderHeight
         val peekHeight = max(backdropHeaderHeight, fill)
         bottomSheetBehavior.setPeekHeight(peekHeight, true)
     }
