@@ -73,14 +73,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 binding.grapesCardView.setVisible(false)
             } else {
                 binding.grapeBar.setGrapes(it, anim = true)
-//                ObjectAnimator.ofFloat(0f, 1f).apply {
-//                    duration = 800
-//                    interpolator = FastOutSlowInInterpolator()
-//                    addUpdateListener { valueAnimator ->
-//                        binding.grapeBar.interpolation = valueAnimator.animatedValue as Float
-//                    }
-//                    start()
-//                }
             }
         }
 
