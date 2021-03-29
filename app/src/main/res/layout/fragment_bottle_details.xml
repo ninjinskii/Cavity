@@ -220,7 +220,7 @@
                             app:layout_constraintStart_toEndOf="@id/grapeTitleIcon"
                             app:layout_constraintTop_toTopOf="@id/grapeTitleIcon" />
 
-                        <com.louis.app.cavity.ui.bottle.widget.GrapeBar2
+                        <com.louis.app.cavity.ui.bottle.widget.GrapeBar
                             android:id="@+id/grapeBar"
                             android:layout_width="0dp"
                             android:layout_height="80dp"
