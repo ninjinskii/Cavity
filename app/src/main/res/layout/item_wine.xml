@@ -81,6 +81,11 @@
             android:shadowDx="2"
             android:shadowDy="2"
             android:shadowRadius="3" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bottleRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <ImageView
