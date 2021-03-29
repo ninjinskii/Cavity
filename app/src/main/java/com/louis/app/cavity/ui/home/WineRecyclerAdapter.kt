@@ -4,17 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.model.relation.wine.WineWithBottles
 
-class WineRecyclerAdapter(private val viewPool: RecyclerView.RecycledViewPool) :
-    ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()) {
-
+class WineRecyclerAdapter : ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return WineViewHolder(binding, viewPool)
+        return WineViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) {

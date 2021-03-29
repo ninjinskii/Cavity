@@ -25,7 +25,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     private fun initRecyclerView() {
-        val wineAdapter = WineRecyclerAdapter((parentFragment as FragmentHome).getRecycledViewPool() ?: return)
+        val wineAdapter = WineRecyclerAdapter()
 
         binding.recyclerView.apply {
             layoutManager = HoneycombLayoutManager(
