@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Checkable
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,14 +16,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.util.DateFormatter
@@ -102,7 +99,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             updateUI(it)
         }
 
-        // TODO: remove visibility gone
         bottleDetailsViewModel.grapes.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.grapesCardView.setVisible(false)
@@ -132,17 +128,14 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         bottleDetailsViewModel.bottles().observe(viewLifecycleOwner) {
-            if (binding.bottlesChipGroup.childCount != it.size) {
-                ChipLoader.Builder()
-                    .with(lifecycleScope)
-                    .useInflater(layoutInflater)
-                    .load(it)
-                    .into(binding.bottlesChipGroup)
-                    .selectable(true)
-                    .build()
-                    .go()
-            }
-
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .load(it)
+                .into(binding.bottlesChipGroup)
+                .selectable(true)
+                .build()
+                .go()
         }
     }
 
@@ -158,11 +151,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
-        }
-
-        binding.bottlesChipGroup.setOnCheckedChangeListener { group, checkedId ->
-            val bottle = group.findViewById<Chip>(checkedId).getTag(R.string.tag_chip_id) as Bottle
-            bottleDetailsViewModel.start(args.wineId, bottle.id)
         }
 
         binding.buttonConsume.setOnClickListener {
@@ -233,8 +221,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             setDataAndType(pdf, "application/pdf")
             addFlags(
                 Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                    Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
         }
 
@@ -251,7 +239,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         with(binding) {
             val consumed = bottle.consumed.toBoolean()
             buttonGroupInteract.setVisible(!consumed)
-            buttonGroupInteract.isEnabled = !consumed
             consumedBanner.setVisible(consumed)
 
             apogee.setData(bottle.apogee.toString())

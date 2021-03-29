@@ -4,15 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.HorizontalScrollView
-import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.postDelayed
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.louis.app.cavity.R
-import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Chipable
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
@@ -38,9 +35,6 @@ class ChipLoader private constructor(
                     setTag(R.string.tag_chip_id, item)
                     text = item.getChipText()
                     onCheckedChangeListener?.let { setOnCheckedChangeListener(it) }
-                    chipIcon = item.getIcon()?.let {
-                        ContextCompat.getDrawable(context, it)
-                    }
                 }
 
                 withContext(Main) {
@@ -66,7 +60,7 @@ class ChipLoader private constructor(
         }
     }
 
-    private fun findParentScrollView(view: View): HorizontalScrollView? {
+    private fun findParentScrollView(view: View) : HorizontalScrollView? {
         return try {
             val parent = view.parent
             if (parent is HorizontalScrollView) parent else findParentScrollView(parent as View)
