@@ -2,20 +2,20 @@
 <animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/fav"
-        android:state_checked="true"
-        android:drawable="@drawable/ic_heart" />
+        android:drawable="@drawable/ic_heart"
+        android:state_checked="true" />
 
     <item
         android:id="@+id/unfav"
-        android:drawable="@drawable/ic_favorite_outline" />
+        android:drawable="@drawable/ic_heart_outline" />
 
     <transition
+        android:drawable="@drawable/anim_unfav"
         android:fromId="@id/fav"
-        android:toId="@id/unfav"
-        android:drawable="@drawable/anim_unfav" />
+        android:toId="@id/unfav" />
 
     <transition
+        android:drawable="@drawable/anim_fav"
         android:fromId="@id/unfav"
-        android:toId="@id/fav"
-        android:drawable="@drawable/anim_fav" />
+        android:toId="@id/fav" />
 </animated-selector>
