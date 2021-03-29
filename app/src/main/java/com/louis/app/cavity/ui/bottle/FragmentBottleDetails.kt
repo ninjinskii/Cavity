@@ -126,17 +126,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 binding.coordinator.showSnackbar(stringRes)
             }
         }
-
-        bottleDetailsViewModel.bottles().observe(viewLifecycleOwner) {
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .load(it)
-                .into(binding.bottlesChipGroup)
-                .selectable(true)
-                .build()
-                .go()
-        }
     }
 
     private fun setListeners() {

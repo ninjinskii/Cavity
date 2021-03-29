@@ -98,27 +98,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <HorizontalScrollView
-                    android:id="@+id/bottlesScrollView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/small_margin"
-                    android:clipToPadding="false"
-                    android:paddingHorizontal="@dimen/medium_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/bottlesChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:selectionRequired="true"
-                        app:singleLine="true"
-                        app:singleSelection="true" />
-
-                </HorizontalScrollView>
-
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:id="@+id/buttonGroupInteract"
                     android:layout_width="wrap_content"
@@ -126,7 +105,7 @@
                     android:layout_marginTop="@dimen/small_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/bottlesScrollView">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonConsume"
