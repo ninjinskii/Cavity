@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.HorizontalScrollView
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.postDelayed
 import com.google.android.material.chip.Chip
@@ -35,6 +36,9 @@ class ChipLoader private constructor(
                     setTag(R.string.tag_chip_id, item)
                     text = item.getChipText()
                     onCheckedChangeListener?.let { setOnCheckedChangeListener(it) }
+                    chipIcon = item.getIcon()?.let {
+                        ContextCompat.getDrawable(context, it)
+                    }
                 }
 
                 withContext(Main) {
