@@ -85,12 +85,30 @@
 
     <ImageView
         android:id="@+id/organicImage"
-        android:layout_width="@dimen/small_icon"
-        android:layout_height="@dimen/small_icon"
+        android:layout_width="@dimen/xsmall_icon"
+        android:layout_height="@dimen/xsmall_icon"
         android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="@dimen/small_margin"
         android:contentDescription="@string/bio_wine"
         android:src="@drawable/ic_bio"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/bottles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:contentDescription="@string/bio_wine"
+        android:drawableLeft="@drawable/ic_glass"
+        android:drawableRight="@drawable/ic_bio"
+        tools:visibility="visible" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/medium_margin"
+        android:layout_gravity="bottom|center_horizontal"
+        android:text="3" />
 
 </com.louis.app.cavity.ui.home.widget.HexagonalView>
