@@ -50,7 +50,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         }
     }
 
-    // TODO: share viewpool
     // TODO: fix weird anchor position when scrolling to end and turn phone in horizontal mode
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {

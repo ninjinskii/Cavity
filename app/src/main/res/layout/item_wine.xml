@@ -20,26 +20,19 @@
         android:contentDescription="@string/wine_photo"
         tools:src="@drawable/ic_list_check" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/horizontal_gradient" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/small_margin"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
-        <!--        <View-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="0dp"-->
-        <!--            android:alpha="0.12"-->
-        <!--            android:background="@android:color/black"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-        <!--            android:shadowColor="@android:color/black"-->
-        <!--            android:shadowDx="2"-->
-        <!--            android:shadowDy="2"-->
-        <!--            android:shadowRadius="6"-->
         <TextView
             android:id="@+id/wineNaming"
             style="@style/TextAppearance.MaterialComponents.Caption"
@@ -49,10 +42,6 @@
             android:layout_marginBottom="@dimen/xsmall_margin"
             android:ellipsize="end"
             android:maxLines="1"
-            android:shadowColor="@android:color/black"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="3"
             tools:text="Saint-Émilion" />
 
         <TextView
@@ -64,10 +53,6 @@
             android:layout_marginTop="@dimen/xsmall_margin"
             android:ellipsize="end"
             android:maxLines="2"
-            android:shadowColor="@android:color/black"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="3"
             tools:text="Château la Cour" />
 
         <TextView
@@ -76,39 +61,33 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:shadowColor="@android:color/black"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="3" />
+            android:maxLines="1" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/organicImage"
-        android:layout_width="@dimen/xsmall_icon"
-        android:layout_height="@dimen/xsmall_icon"
+<!--    <ImageView-->
+<!--        android:id="@+id/organicImage"-->
+<!--        android:layout_width="@dimen/xsmall_icon"-->
+<!--        android:layout_height="@dimen/xsmall_icon"-->
+<!--        android:layout_gravity="top|center_horizontal"-->
+<!--        android:layout_marginTop="@dimen/small_margin"-->
+<!--        android:contentDescription="@string/bio_wine"-->
+<!--        android:src="@drawable/ic_bio"-->
+<!--        android:visibility="gone" />-->
+
+    <TextView
+        android:id="@+id/icons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
-        android:layout_marginTop="@dimen/small_margin"
-        android:contentDescription="@string/bio_wine"
-        android:src="@drawable/ic_bio"
-        android:visibility="gone" />
+        android:layout_marginTop="@dimen/medium_margin"
+        android:contentDescription="@string/bio_wine" />
 
     <TextView
         android:id="@+id/bottles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"
-        android:layout_marginTop="@dimen/medium_margin"
-        android:contentDescription="@string/bio_wine"
-        android:drawableLeft="@drawable/ic_glass"
-        android:drawableRight="@drawable/ic_bio"
-        tools:visibility="visible" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/medium_margin"
         android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/medium_margin"
         android:text="3" />
 
 </com.louis.app.cavity.ui.home.widget.HexagonalView>
