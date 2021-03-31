@@ -5,14 +5,19 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
+import com.louis.app.cavity.model.County
+import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
+    private lateinit var tabAdapter: ScrollableTabAdapter<County>
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private var recyclePool: RecyclerView.RecycledViewPool? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -20,34 +25,36 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
         setupNavigation(binding.appBar.toolbar)
 
+        recyclePool = RecyclerView.RecycledViewPool().apply {
+            // TODO: Adjust this number based on screen size
+            setMaxRecycledViews(R.layout.item_wine, 15)
+        }
+
         setupScrollableTab()
         setListeners()
-        observe()
     }
 
     private fun setupScrollableTab() {
-        binding.tab.addOnLongClickListener {
-            // TODO: show dialog info for county
-        }
+        tabAdapter = ScrollableTabAdapter(
+            onTabClick = {
+                binding.viewPager.currentItem = it
+            },
+            onLongTabClick = {
+                // TODO: show dialog info for county
+            }
+        )
 
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
-            // Potential coroutine
             with(binding) {
-                tab.addTabs(it)
-                // viewPager.isSaveEnabled = false // might correct the crash when getting back to home sometimes, but reduce apps perfs a lot
-                viewPager.adapter =
-                    WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
-                viewPager.offscreenPageLimit = 1
-                tab.setUpWithViewPager(viewPager)
+                tab.adapter = tabAdapter
+                viewPager.adapter = WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
 
-                // Here it seems possible to delay the coroutine a couple of seconds
-                // and then set a higher offscreenPageLimit
-                // This doesnt feel great, but does not create a memory overhead also.
-                /* tab.setUpWithViewPager(viewPager)
-                delay(2000)
-                viewPager.offscreenPageLimit = 10 // was 5
-                tab.setUpWithViewPager(viewPager) */
+                tabAdapter.addAll(it)
+                tab.setUpWithViewPager(viewPager)
             }
+            // Potential delayed coroutine and offscreen limit upgrade
+            /*viewPager.offscreenPageLimit = 5
+            tab.setUpWithViewPager(viewPager)*/
         }
     }
 
@@ -55,7 +62,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         var currentCounty = 0L
 
         binding.tab.addOnPageChangeListener {
-            currentCounty = binding.tab.adapter?.getItemId(it) ?: 0
+            currentCounty = tabAdapter.getItemId(it)
         }
 
         binding.fab.setOnClickListener {
@@ -64,17 +71,13 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun observe() {
-        homeViewModel.isScrollingToTop.observe(viewLifecycleOwner) {
-            with(binding) {
-                if (it) fab.run { if (!isShown) show() }
-                else fab.run { if (isShown) hide() }
-            }
-        }
-    }
+    fun getRecycledViewPool() = recyclePool
 
     override fun onDestroyView() {
         super.onDestroyView()
+        recyclePool = null
+        binding.tab.adapter = null
+        binding.viewPager.adapter = null
         _binding = null
     }
 }

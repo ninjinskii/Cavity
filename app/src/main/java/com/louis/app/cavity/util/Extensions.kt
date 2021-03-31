@@ -1,8 +1,8 @@
 package com.louis.app.cavity.util
 
 import android.content.Context
-import android.util.DisplayMetrics
 import android.util.TypedValue
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes

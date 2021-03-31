@@ -66,8 +66,8 @@
                 app:layout_constraintTop_toBottomOf="@id/divider1" />
 
             <com.louis.app.cavity.ui.widget.RuledTextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:id="@+id/consumeDateLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -102,9 +102,9 @@
                     android:id="@+id/tasteComment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="top"
                     android:hint="@string/tasting_comment"
                     android:inputType="textMultiLine"
-                    android:gravity="top"
                     android:lines="7"
                     android:nextFocusDown="@id/buyDate" />
 
@@ -153,26 +153,22 @@
                 android:id="@+id/friendsScrollView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingHorizontal="@dimen/medium_margin"
                 android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/friend">
 
-                <LinearLayout
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/friendsChipGroup"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="@dimen/chip_group_default_height"
+                    android:layout_marginTop="@dimen/small_margin"
+                    app:selectionRequired="false"
+                    app:singleLine="true"
+                    app:singleSelection="false" />
 
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/friendsChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/medium_margin"
-                        android:layout_marginTop="@dimen/small_margin"
-                        app:selectionRequired="false"
-                        app:singleLine="true"
-                        app:singleSelection="false" />
-
-                </LinearLayout>
             </HorizontalScrollView>
 
             <com.google.android.material.button.MaterialButton

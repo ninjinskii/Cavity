@@ -18,8 +18,6 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    val isScrollingToTop = MutableLiveData<Boolean>()
-
     fun deleteWine(wineId: Long) = viewModelScope.launch(IO) { repository.deleteWineById(wineId) }
 
     fun getAllCounties() = repository.getAllCounties()

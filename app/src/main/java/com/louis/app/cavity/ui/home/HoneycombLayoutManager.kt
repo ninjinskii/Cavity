@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.HORIZONTAL
 import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.VERTICAL
-import com.louis.app.cavity.util.L
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -20,7 +19,7 @@ import kotlin.math.roundToInt
  *
  * Thinked to be used with HexagonalView
  *
- * To get nice patterns, set the HexagoalView's flat attribute to true when using HORIZONTAL
+ * To get nice patterns, set the HexagonalView's flat attribute to true when using HORIZONTAL
  * orientation otherwise false
  */
 class HoneycombLayoutManager(private val colCount: Int, private val orientation: Orientation) :
@@ -51,12 +50,10 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         }
     }
 
-    // TODO: share viewpool
+    // TODO: fix weird anchor position when scrolling to end and turn phone in horizontal mode
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
         detachAndScrapAttachedViews(recycler)
-
-        L.v("isPreLayout: ${state.isPreLayout}")
 
         if (state.itemCount > 0) {
             val extra = if (state.isPreLayout) extra else 0
@@ -78,7 +75,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
             this.extra = towardsEndSide
             startPos = lastChildPos + 1
-            // Might be a better way to do this. Having to do an orientation check here is annoying
             start = oHelper.getDecoratedEnd(lastChild) - (towardsEndSide apply OVERLAPING_FACTOR)
             filled = start
         } else {
@@ -190,13 +186,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         }
     }
 
-    private fun layoutOriented(
-        view: View,
-        start: Int,
-        end: Int,
-        left: Int,
-        right: Int,
-    ) {
+    private fun layoutOriented(view: View, start: Int, end: Int, left: Int, right: Int) {
         if (orientation == VERTICAL) {
             layoutDecoratedWithMargins(view, left, start, right, end)
         } else {
@@ -219,7 +209,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                     val firstChild = getChildAt(0)!!
                     val firstChildTop = oHelper.getDecoratedStart(firstChild)
                     val hangingTop = max(0, toFill - firstChildTop)
-
                     val scrollBy = min(hangingTop, scrolled - d)
                     oHelper.offsetChildren(scrollBy)
                     scrolled -= scrollBy
@@ -253,12 +242,12 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
     }
 
-    // TODO: update to horizontal layout
     private fun updateAnchorOffset() {
         anchorOffset =
             if (childCount > 0) {
                 val view = getChildAt(0)!!
-                oHelper.getDecoratedStart(view) - paddingTop
+                val padding = if (orientation == VERTICAL) paddingTop else paddingLeft
+                oHelper.getDecoratedStart(view) - padding
             } else 0
     }
 
@@ -280,7 +269,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     ) =
         if (orientation == HORIZONTAL) 0 else doOnScroll(dy, recycler, state)
 
-    // TODO: adapt to horizontal layout
     private fun recycleViewsOutOfBounds(recycler: RecyclerView.Recycler) {
         if (childCount == 0) return
         val childCount = childCount
@@ -289,7 +277,8 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
         for (i in 0 until childCount) {
             val child = getChildAt(i)!!
-            val top = if (clipToPadding) paddingTop else 0
+            val padding = if (orientation == VERTICAL) paddingTop else paddingLeft
+            val top = if (clipToPadding) padding else 0
             if (oHelper.getDecoratedEnd(child) < top) {
                 firstVisibleChild++
             } else {
@@ -301,7 +290,10 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
         for (i in lastVisibleChild until childCount) {
             val child = getChildAt(i)!!
-            if (oHelper.getDecoratedStart(child) <= if (clipToPadding) height - paddingBottom else height) {
+            val padding = if (orientation == VERTICAL) paddingBottom else paddingRight
+            val limit = if (clipToPadding) oHelper.totalSpace - padding else oHelper.totalSpace
+
+            if (oHelper.getDecoratedStart(child) <= limit) {
                 lastVisibleChild++
             } else {
                 lastVisibleChild--

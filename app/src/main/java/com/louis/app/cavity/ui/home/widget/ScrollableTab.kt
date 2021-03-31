@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
-import androidx.annotation.StyleRes
 import androidx.core.content.res.use
 import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,29 +18,32 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.model.County
 import kotlin.math.pow
 
-class CountyScrollableTab @JvmOverloads constructor(
+class ScrollableTab @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
     RecyclerView(context, attrs, defStyleAttr) {
 
-    private val tabAdapter by lazy { TabAdapter(style = tabTextStyle) }
-    private var selectedColor = Color.WHITE
-    private var unSelectedColor = Color.GRAY
-    private var tabTextStyle = TabStyle(R.style.TabTextAppearance)
     private val layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+
     private var viewPager: ViewPager2? = null
     private var isRVScrolling = true
-    private var listener: ((position: Int) -> Unit)? = null
     private var pageChangeListener: ((position: Int) -> Unit)? = null
+    private var selectedColor = Color.WHITE
+    private var unSelectedColor = Color.GRAY
 
     init {
-        initAttributes(attrs)
+        context.obtainStyledAttributes(attrs, R.styleable.ScrollableTab).use {
+            background = MaterialShapeDrawable.createWithElevationOverlay(context, elevation)
+            selectedColor = it.getColor(R.styleable.ScrollableTab_selectedColor, Color.WHITE)
+            unSelectedColor =
+                it.getColor(R.styleable.ScrollableTab_unSelectedColor, Color.GRAY)
+        }
 
         setLayoutManager(layoutManager)
         setHasFixedSize(true)
-        adapter = tabAdapter
+        //adapter = tabAdapter
 
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(this)
@@ -80,35 +82,12 @@ class CountyScrollableTab @JvmOverloads constructor(
                 }
             }
         })
-
-        tabAdapter.onTabClick {
-            isRVScrolling = true
-            listener?.invoke(it)
-            smoothScrollToPosition(it)
-            viewPager?.setCurrentItem(it, true)
-        }
     }
 
     override fun setElevation(elevation: Float) {
         super.setElevation(elevation)
         val bg = background
         if (bg is MaterialShapeDrawable) bg.z = z
-    }
-
-    private fun initAttributes(set: AttributeSet?) {
-        context.obtainStyledAttributes(set, R.styleable.CountyScrollableTab).use {
-            background = MaterialShapeDrawable.createWithElevationOverlay(context, elevation)
-            selectedColor = it.getColor(R.styleable.CountyScrollableTab_selectedColor, Color.WHITE)
-            unSelectedColor =
-                it.getColor(R.styleable.CountyScrollableTab_unSelectedColor, Color.GRAY)
-            tabTextStyle =
-                TabStyle(
-                    it.getResourceId(
-                        R.styleable.CountyScrollableTab_tabTextAppearance,
-                        R.style.TabTextAppearance
-                    )
-                )
-        }
     }
 
     private fun createPagerStyle() {
@@ -125,18 +104,6 @@ class CountyScrollableTab @JvmOverloads constructor(
             isRVScrolling = true
             false
         }
-    }
-
-    fun addTabs(list: List<County>) {
-        tabAdapter.addAll(list)
-    }
-
-    fun addOnLongClickListener(longClickListener: (county: County) -> Unit) {
-        tabAdapter.onLongTabClick(longClickListener)
-    }
-
-    fun addOnTabListener(listener: (position: Int) -> Unit) {
-        this.listener = listener
     }
 
     fun addOnPageChangeListener(pageChangeListener: (position: Int) -> Unit) {
@@ -196,10 +163,7 @@ class CountyScrollableTab @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        tabAdapter.onTabClick(null)
-        tabAdapter.onLongTabClick(null)
+        this.pageChangeListener = null
         viewPager = null
     }
 }
-
-data class TabStyle(@StyleRes val tabTextStyle: Int)

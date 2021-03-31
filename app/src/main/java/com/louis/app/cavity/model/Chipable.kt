@@ -6,4 +6,5 @@ package com.louis.app.cavity.model
 interface Chipable {
     fun getItemId(): Long
     fun getChipText(): String
+    fun getIcon(): Int? = null
 }

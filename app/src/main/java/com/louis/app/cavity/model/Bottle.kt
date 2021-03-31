@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.louis.app.cavity.R
 import java.util.*
 
 @Entity(
@@ -32,11 +33,16 @@ data class Bottle(
     @ColumnInfo(name = "pdf_path") var pdfPath: String,
     var consumed: Int,
     @ColumnInfo(name = "tasting_id", index = true) var tastingId: Long? = null
-) {
+) : Chipable {
+
     fun isReadyToDrink(): Boolean {
         val year = Calendar.getInstance().get(Calendar.YEAR)
         return year >= apogee
     }
 
     fun hasPdf() = pdfPath.isNotBlank()
+
+    override fun getItemId() = id
+    override fun getChipText() = vintage.toString()
+    override fun getIcon() = R.drawable.ic_glass
 }

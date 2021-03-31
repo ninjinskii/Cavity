@@ -6,17 +6,23 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Checkable
+import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
@@ -33,11 +39,41 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentBottleDetailsBinding.bind(view)
 
-        bottleDetailsViewModel.start(args.bottleId)
+        bottleDetailsViewModel.start(args.wineId, args.bottleId)
 
+        setupToolbarShape()
         initRecyclerView()
         observe()
         setListeners()
+    }
+
+    private fun setupToolbarShape() {
+        val shaper = MaterialShapeDrawable.createWithElevationOverlay(context)
+
+        binding.shaper.apply {
+            background = shaper
+
+            doOnLayout {
+                shaper.shapeAppearanceModel = ShapeAppearanceModel.Builder()
+                    .setTopEdge(RoundedEdgeTreatment(it.height.toFloat())).build()
+            }
+        }
+
+        binding.motionLayout.addTransitionListener(object : MotionLayout.TransitionListener {
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+            }
+
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {
+                shaper.interpolation = 1 - progress
+            }
+
+            override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {
+                if (currentId == R.id.start) shaper.interpolation = 1f
+            }
+
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
+            }
+        })
     }
 
     private fun initRecyclerView() {

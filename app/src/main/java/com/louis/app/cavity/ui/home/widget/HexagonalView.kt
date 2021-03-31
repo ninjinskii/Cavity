@@ -1,18 +1,22 @@
 package com.louis.app.cavity.ui.home.widget
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.*
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.MeasureSpec.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import androidx.core.graphics.toRectF
+import androidx.core.graphics.toRegion
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.shape.ShapeAppearancePathProvider
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.dpToPx
 import kotlin.math.round
 
 /**
@@ -20,8 +24,6 @@ import kotlin.math.round
  * height (but never both at the same time) of the view depending on the flat attribute.
  * Doesn't support padding for now, since it could break the perfect hexagonal shape.
  */
-// TODO: Considering inheriting View insted of CardView to get full control on underlying MaterialShapeDrawable and optimize RecyclerViews
-// TODO: This would imply to use a ViewOutlineProvider to get clipped ripple and correct shadow
 class HexagonalView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -34,15 +36,26 @@ class HexagonalView @JvmOverloads constructor(
         private const val HEXAGONAL_SQUARE_RATIO = 0.866
     }
 
-    private val path = Path()
-    private val paint by lazy {
+    private val clipPath = Path()
+    private val markerPath = Path()
+    private val clipPaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = ContextCompat.getColor(context, android.R.color.white)
             xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
         }
     }
 
+    private val markerPaint by lazy {
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = markerColor.defaultColor
+            style = Paint.Style.FILL_AND_STROKE
+            strokeWidth = context.dpToPx(16f)
+        }
+    }
+
     private var isFlat = false
+    private var markerColor: ColorStateList = ColorStateList.valueOf(Color.TRANSPARENT)
+    private var clickableArea = Region()
 
     init {
         context.theme.obtainStyledAttributes(
@@ -53,10 +66,17 @@ class HexagonalView @JvmOverloads constructor(
         )
             .use {
                 isFlat = it.getBoolean(R.styleable.HexagonalView_flat, false)
+                markerColor = it.getColorStateList(R.styleable.HexagonalView_markerColor)
+                    ?: ColorStateList.valueOf(Color.TRANSPARENT)
             }
 
         setLayerType(View.LAYER_TYPE_HARDWARE, null)
         applyShape()
+    }
+
+    fun setMarkerColor(color: Int) {
+        markerPaint.color = color
+        invalidate()
     }
 
     private fun applyShape() {
@@ -72,29 +92,40 @@ class HexagonalView @JvmOverloads constructor(
             .build()
     }
 
-//    private fun computeOutline() {
-//        val viewOutlineProvider = object : ViewOutlineProvider() {
-//            override fun getOutline(view: View?, outline: Outline?) {
-//                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R) {
-//                    outline?.setConvexPath(path)
-//                } else {
-//                    outline?.setPath(path)
-//                }
-//            }
-//        }
-//
-//        outlineProvider = viewOutlineProvider
-//        clipToOutline = true
-//    }
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x.toInt()
+        val y = event.y.toInt()
+
+        if (!clickableArea.contains(x, y) && event.action == MotionEvent.ACTION_DOWN) {
+            return true
+        }
+
+        return super.dispatchTouchEvent(event)
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
+        markerPath.run {
+            if (isFlat) {
+                moveTo(w * 0.25f, h.toFloat())
+                lineTo(0f, h /2f)
+                lineTo(0f, h.toFloat())
+                close()
+            } else {
+                moveTo(w / 2f, h.toFloat())
+                lineTo(0f, h * 0.75f)
+                lineTo(0f, h.toFloat())
+                close()
+            }
+        }
+
         val r = Rect(0, 0, w, h).toRectF()
-        ShapeAppearancePathProvider().calculatePath(shapeAppearanceModel, 1f, r, path)
+        ShapeAppearancePathProvider().calculatePath(shapeAppearanceModel, 1f, r, clipPath)
+        clickableArea.setPath(clipPath, r.toRegion())
 
         // Reverse the given path to get correct clipping out of it
-        path.fillType = Path.FillType.INVERSE_WINDING
+        clipPath.fillType = Path.FillType.INVERSE_WINDING
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -118,21 +149,21 @@ class HexagonalView @JvmOverloads constructor(
         super.onMeasure(widthSpec, heightSpec)
     }
 
-    override fun dispatchDraw(canvas: Canvas?) {
-        val saveCount = canvas?.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), null)
+    override fun dispatchDraw(canvas: Canvas) {
+        val saveCount = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), null)
 
         super.dispatchDraw(canvas)
 
-        canvas?.drawPath(path, paint)
-        canvas?.restoreToCount(saveCount!!)
+        canvas.run {
+            drawPath(markerPath, markerPaint)
+            drawPath(clipPath, clipPaint)
+            restoreToCount(saveCount)
+        }
     }
 
-    // Yeah, this is an ugly fix. Too bad !
-    // We need to eat requestLayout calls to avoid our HoneycombLayoutManager#OnLayouChildren
-    // to be called when we load an image into this view.
-    // Erasing this will cause some RecyclerView madness to happen.
-    @SuppressLint("MissingSuperCall")
+    // Ignoring super call here would fix a bug for wine's RecyclerView when Glide attempts to load
+    // images. Doesn't seems to be necessary anymore.
     override fun requestLayout() {
-        //super.requestLayout()
+        super.requestLayout()
     }
 }
