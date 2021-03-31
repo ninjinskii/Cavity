@@ -107,10 +107,17 @@ class HexagonalView @JvmOverloads constructor(
         super.onSizeChanged(w, h, oldw, oldh)
 
         markerPath.run {
-            moveTo(w / 2f, h.toFloat())
-            lineTo(0f, h * 0.75f)
-            lineTo(0f, h.toFloat())
-            close()
+            if (isFlat) {
+                moveTo(w * 0.25f, h.toFloat())
+                lineTo(0f, h /2f)
+                lineTo(0f, h.toFloat())
+                close()
+            } else {
+                moveTo(w / 2f, h.toFloat())
+                lineTo(0f, h * 0.75f)
+                lineTo(0f, h.toFloat())
+                close()
+            }
         }
 
         val r = Rect(0, 0, w, h).toRectF()
