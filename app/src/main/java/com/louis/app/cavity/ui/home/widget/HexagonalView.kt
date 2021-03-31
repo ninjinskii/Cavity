@@ -1,19 +1,21 @@
 package com.louis.app.cavity.ui.home.widget
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.view.View.MeasureSpec.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import androidx.core.graphics.toRectF
+import androidx.core.graphics.toRegion
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.shape.ShapeAppearancePathProvider
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.round
 
@@ -53,6 +55,7 @@ class HexagonalView @JvmOverloads constructor(
 
     private var isFlat = false
     private var markerColor: ColorStateList = ColorStateList.valueOf(Color.TRANSPARENT)
+    private var clickableArea = Region()
 
     init {
         context.theme.obtainStyledAttributes(
@@ -89,6 +92,17 @@ class HexagonalView @JvmOverloads constructor(
             .build()
     }
 
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x.toInt()
+        val y = event.y.toInt()
+
+        if (!clickableArea.contains(x, y)) {
+            return true
+        }
+
+        return super.dispatchTouchEvent(event)
+    }
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
@@ -101,6 +115,7 @@ class HexagonalView @JvmOverloads constructor(
 
         val r = Rect(0, 0, w, h).toRectF()
         ShapeAppearancePathProvider().calculatePath(shapeAppearanceModel, 1f, r, clipPath)
+        clickableArea.setPath(clipPath, r.toRegion())
 
         // Reverse the given path to get correct clipping out of it
         clipPath.fillType = Path.FillType.INVERSE_WINDING
