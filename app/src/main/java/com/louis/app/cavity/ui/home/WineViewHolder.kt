@@ -16,11 +16,11 @@ import com.louis.app.cavity.util.toBoolean
 class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHolder(binding.root),
     WineColorResolver {
 
-    val bioIcon by lazy {
+    private val bioIcon by lazy {
         ContextCompat.getDrawable(itemView.context, R.drawable.ic_bio)
     }
 
-    val glassIcon by lazy {
+    private val glassIcon by lazy {
         ContextCompat.getDrawable(itemView.context, R.drawable.ic_glass)
             ?.also { it.setTint(Color.WHITE) }
     }
