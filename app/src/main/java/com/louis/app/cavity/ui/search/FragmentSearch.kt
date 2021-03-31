@@ -100,7 +100,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                     .load(countyList)
                     .into(binding.countyChipGroup)
                     .preselect(preselectedCounties)
-                    .doOnClick { _, _ -> prepareCountyFilters() }
+                    .doOnClick { prepareCountyFilters() }
                     .build()
                     .go()
 
@@ -110,7 +110,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                     .load(grapeList)
                     .into(binding.grapeChipGroup)
                     .preselect(preselectedGrapes)
-                    .doOnClick { _, _ -> prepareGrapeFilters() }
+                    .doOnClick { prepareGrapeFilters() }
                     .build()
                     .go()
 
@@ -120,7 +120,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                     .load(reviewList)
                     .into(binding.reviewChipGroup)
                     .preselect(preselectedReviews)
-                    .doOnClick { _, _ -> prepareReviewFilters() }
+                    .doOnClick { prepareReviewFilters() }
                     .build()
                     .go()
             }

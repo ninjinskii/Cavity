@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/small_margin"
+    android:checkable="true"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardElevation="4dp"
+    app:checkedIcon="@null"
     app:flat="false"
     app:strokeColor="@color/cavity_gold"
     app:strokeWidth="1dp">
@@ -26,12 +28,12 @@
         android:background="@drawable/horizontal_gradient" />
 
     <LinearLayout
+        android:id="@+id/infoLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/small_margin"
         android:gravity="center_vertical"
         android:orientation="vertical">
-
 
         <TextView
             android:id="@+id/wineNaming"
@@ -55,24 +57,25 @@
             android:maxLines="2"
             tools:text="Château la Cour" />
 
-        <TextView
-            android:id="@+id/vintages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
-            android:ellipsize="end"
-            android:maxLines="1" />
     </LinearLayout>
 
-<!--    <ImageView-->
-<!--        android:id="@+id/organicImage"-->
-<!--        android:layout_width="@dimen/xsmall_icon"-->
-<!--        android:layout_height="@dimen/xsmall_icon"-->
-<!--        android:layout_gravity="top|center_horizontal"-->
-<!--        android:layout_marginTop="@dimen/small_margin"-->
-<!--        android:contentDescription="@string/bio_wine"-->
-<!--        android:src="@drawable/ic_bio"-->
-<!--        android:visibility="gone" />-->
+    <HorizontalScrollView
+        android:id="@+id/bottlesScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/bottlesChipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/chip_group_default_height"
+            android:layout_margin="@dimen/small_margin"
+            app:chipSpacingHorizontal="4dp"
+            app:singleLine="true" />
+
+    </HorizontalScrollView>
 
     <TextView
         android:id="@+id/icons"
@@ -83,11 +86,10 @@
         android:contentDescription="@string/bio_wine" />
 
     <TextView
-        android:id="@+id/bottles"
+        android:id="@+id/bottlesCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="@dimen/medium_margin"
-        android:text="3" />
+        android:layout_marginBottom="@dimen/medium_margin" />
 
 </com.louis.app.cavity.ui.home.widget.HexagonalView>

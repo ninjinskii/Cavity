@@ -24,21 +24,32 @@ class ChipLoader private constructor(
     private val chipGroup: ChipGroup,
     private val preselectedItems: List<Long>,
     private val selectable: Boolean,
-    private val onCheckedChangeListener: ((btn: CompoundButton, isChecked: Boolean) -> Unit)?
+    private val minified: Boolean,
+    private val showIconIf: (Chipable) -> Boolean,
+    private val onClickListener: ((View) -> Unit)?
 ) {
     fun go() {
         scope.launch(Default) {
             for ((index, item) in items.withIndex()) {
-                val layout = if (selectable) R.layout.chip_choice else R.layout.chip_action
+                val layout = when {
+                    minified -> R.layout.chip_minified
+                    selectable -> R.layout.chip_choice
+                    else -> R.layout.chip_action
+                }
+
                 val chip = layoutInflater.inflate(layout, chipGroup, false) as Chip
 
                 chip.apply {
                     setTag(R.string.tag_chip_id, item)
                     text = item.getChipText()
-                    onCheckedChangeListener?.let { setOnCheckedChangeListener(it) }
-                    chipIcon = item.getIcon()?.let {
-                        ContextCompat.getDrawable(context, it)
+
+                    if (showIconIf(item)) {
+                        chipIcon = item.getIcon()?.let {
+                            ContextCompat.getDrawable(context, it)
+                        }
                     }
+
+                    onClickListener?.let { setOnClickListener(it) }
                 }
 
                 withContext(Main) {
@@ -80,7 +91,9 @@ class ChipLoader private constructor(
         private var chipGroup: ChipGroup? = null,
         private var preselectedItems: List<Long> = emptyList(),
         private var selectable: Boolean = true,
-        private var onCheckedChangeListener: ((btn: CompoundButton, isChecked: Boolean) -> Unit)? = null
+        private var minified: Boolean = false,
+        private var showIconIf: (Chipable) -> Boolean = { false },
+        private var onClickListener: ((View) -> Unit)? = null
     ) {
         fun with(scope: CoroutineScope) = apply { this.scope = scope }
         fun useInflater(inflater: LayoutInflater) = apply { this.layoutInflater = inflater }
@@ -89,8 +102,10 @@ class ChipLoader private constructor(
         fun preselect(preselect: List<Long>) = apply { this.preselectedItems = preselect }
         fun preselect(preselect: Long) = apply { this.preselectedItems = listOf(preselect) }
         fun selectable(selectable: Boolean) = apply { this.selectable = selectable }
-        fun doOnClick(block: (btn: CompoundButton, isChecked: Boolean) -> Unit) = apply {
-            this.onCheckedChangeListener = block
+        fun minified(minified: Boolean) = apply { this.minified = minified }
+        fun showIconIf(block: (Chipable) -> Boolean) = apply { this.showIconIf = block }
+        fun doOnClick(block: (View) -> Unit) = apply {
+            this.onClickListener = block
         }
 
         fun build(): ChipLoader {
@@ -118,7 +133,9 @@ class ChipLoader private constructor(
                 chipGroup!!,
                 preselectedItems,
                 selectable,
-                onCheckedChangeListener
+                minified,
+                showIconIf,
+                onClickListener
             )
         }
     }

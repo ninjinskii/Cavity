@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.louis.app.cavity.R
 import java.util.*
 
 @Entity(
@@ -43,4 +44,5 @@ data class Bottle(
 
     override fun getItemId() = id
     override fun getChipText() = vintage.toString()
+    override fun getIcon() = R.drawable.ic_glass
 }
