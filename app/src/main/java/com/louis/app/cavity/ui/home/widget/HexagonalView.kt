@@ -96,7 +96,7 @@ class HexagonalView @JvmOverloads constructor(
         val x = event.x.toInt()
         val y = event.y.toInt()
 
-        if (!clickableArea.contains(x, y)) {
+        if (!clickableArea.contains(x, y) && event.action == MotionEvent.ACTION_DOWN) {
             return true
         }
 
