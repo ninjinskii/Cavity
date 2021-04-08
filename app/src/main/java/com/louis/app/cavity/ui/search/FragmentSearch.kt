@@ -185,12 +185,12 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         val beyondTitle = getString(R.string.buying_date_beyond)
         val untilTitle = getString(R.string.buying_date_until)
 
-        DatePicker(childFragmentManager, binding.beyondLayout, beyondTitle).apply {
+        DatePicker(parentFragmentManager, binding.beyondLayout, beyondTitle).apply {
             onEndIconClickListener = { searchViewModel.setBeyondFilter(null) }
             onDateChangedListener = { searchViewModel.setBeyondFilter(it) }
         }
 
-        DatePicker(childFragmentManager, binding.untilLayout, untilTitle).apply {
+        DatePicker(parentFragmentManager, binding.untilLayout, untilTitle).apply {
             onEndIconClickListener = { searchViewModel.setUntilFilter(null) }
             onDateChangedListener = { searchViewModel.setUntilFilter(it) }
         }

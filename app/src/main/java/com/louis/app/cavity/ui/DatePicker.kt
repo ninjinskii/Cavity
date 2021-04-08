@@ -4,11 +4,11 @@ import android.text.InputType
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
-import com.louis.app.cavity.R
 import com.louis.app.cavity.util.DateFormatter
 
+// TODO: this class is leaking
 class DatePicker(
-    childFragmentManager: FragmentManager,
+    fragmentManager: FragmentManager,
     associatedTextLayout: TextInputLayout,
     title: String,
     defaultDate: Long? = null
@@ -36,12 +36,12 @@ class DatePicker(
 
             editText?.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    show(childFragmentManager)
+                    show(fragmentManager)
                 }
             }
 
             editText?.setOnClickListener {
-                show(childFragmentManager)
+                show(fragmentManager)
             }
         }
 
