@@ -12,7 +12,6 @@ import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.relation.bottle.BoundedBottle
 import com.louis.app.cavity.ui.search.filters.*
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -51,7 +50,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             bottlesAndWine.addAll(repository.getWineAndBottleWithQGrapesAndFReviews())
             _results.postValue(bottlesAndWine)
-            L.v("Post list value from db", "DEBUGGING SEARCH")
         }
     }
 
@@ -69,17 +67,13 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             )
 
             val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
-
             val filtered = combinedFilters.meetFilters(bottlesAndWine)
-            // Deleting 'toList()' seems to introduce a bug sometimes, where the observer is not
-            // aware that the data has been changed, the first time you access FragmentSearch
-            L.v("posting value to observer with a list with ${filtered.size} items")
+
             _results.postValue(filtered)
         }
     }
 
     fun setCountiesFilters(filteredCounties: List<County>) {
-        L.v("counties: $filteredCounties")
         counties = filteredCounties.map { it.id }
 
         val countyFilters: List<WineFilter> = counties.map { FilterCounty(it) }

@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
@@ -85,8 +84,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initDynamicChips() {
-        lifecycleScope.launch(IO) {
-            with(searchViewModel) {
+        //searchViewModel // Do not init searchViewModel in IO threads
+
+        with(searchViewModel) {
+            lifecycleScope.launch(IO) {
                 val countyList = getAllCountiesNotLive()
                 val grapeList = getAllGrapesNotLive()
                 val reviewList = getAllReviewsNotLive()
@@ -176,7 +177,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             L.v("observer triggered", "DEBUGGING SEARCH")
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
-            bottlesAdapter.submitList(it.toList())
+            bottlesAdapter.submitList(it.toMutableList())
         }
     }
 
