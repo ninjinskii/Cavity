@@ -35,16 +35,10 @@ class BottleRecyclerAdapter(
     override fun getItemId(position: Int) = currentList[position].bottle.id
 
     class BottleItemDiffCallback : DiffUtil.ItemCallback<BoundedBottle>() {
-        override fun areItemsTheSame(
-            oldItem: BoundedBottle,
-            newItem: BoundedBottle
-        ) =
+        override fun areItemsTheSame(oldItem: BoundedBottle, newItem: BoundedBottle) =
             oldItem.bottle.id == newItem.bottle.id
 
-        override fun areContentsTheSame(
-            oldItem: BoundedBottle,
-            newItem: BoundedBottle
-        ) =
+        override fun areContentsTheSame(oldItem: BoundedBottle, newItem: BoundedBottle) =
             oldItem == newItem
     }
 
