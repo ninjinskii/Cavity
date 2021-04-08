@@ -89,7 +89,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             apogee.value = editedBottle.apogee
             count.setText(editedBottle.count.toString())
             price.setText(formattedPrice)
-            currency.setSelection(0) // TODO: get actual selection
+            currency.setText(editedBottle.currency, false)
             buyLocation.setText(editedBottle.buyLocation)
             buyDate.setText(DateFormatter.formatDate(editedBottle.buyDate))
         }
@@ -97,8 +97,8 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
 
     private fun goToNextPage() {
         val isFormValid = binding.countLayout.validate() &&
-                binding.priceLayout.validate() &&
-                binding.buyDateLayout.validate()
+            binding.priceLayout.validate() &&
+            binding.buyDateLayout.validate()
 
         if (isFormValid) {
             savePartialBottle()

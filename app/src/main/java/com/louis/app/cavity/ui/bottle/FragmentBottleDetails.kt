@@ -10,7 +10,6 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +21,6 @@ import com.google.android.material.shape.ShapeAppearanceModel
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
@@ -210,8 +208,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             setDataAndType(pdf, "application/pdf")
             addFlags(
                 Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                        Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
         }
 
@@ -226,24 +224,29 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private fun updateUI(bottle: Bottle, firstRun: Boolean) {
         with(binding) {
+            val formattedPrice = bottle.price.let { if (it != -1F) it.toString() else "" }
             val consumed = bottle.consumed.toBoolean()
+
             buttonGroupInteract.setVisible(!consumed)
             consumedBanner.setVisible(consumed)
 
             apogee.setData(bottle.apogee.toString())
-            price.setData(
-                getString(
-                    R.string.price_and_currency,
-                    bottle.price.toString(),
-                    bottle.currency
-                )
-            )
             buyLocation.setData(bottle.buyLocation)
             buyDate.setData(DateFormatter.formatDate(bottle.buyDate))
             otherInfo.setData(bottle.otherInfo)
             bottleVintage.text = bottle.vintage.toString()
             buttonShowPdf.isEnabled = bottle.hasPdf()
             favorite.isChecked = bottle.isFavorite.toBoolean()
+
+            if (formattedPrice.isNotEmpty()) {
+                price.setData(
+                    getString(
+                        R.string.price_and_currency,
+                        formattedPrice,
+                        bottle.currency
+                    )
+                )
+            }
 
             if (firstRun) favorite.jumpDrawablesToCurrentState()
         }
