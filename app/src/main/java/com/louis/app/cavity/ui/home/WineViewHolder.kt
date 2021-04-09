@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.home
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -74,16 +73,7 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
             }
 
             if (isChecked) {
-                val bottleAdapter = BottleChipRecyclerAdapter(itemView.context)
-
-                binding.bottleRecyclerView.apply {
-                    adapter = bottleAdapter
-                    layoutManager =
-                        StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL)
-                    setHasFixedSize(false)
-                }
-
-                loadBottles(wine, bottles, bottleAdapter)
+                loadBottles(wine, bottles)
             }
         }
 
@@ -102,14 +92,22 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
         }
     }
 
-    private fun loadBottles(wine: Wine, bottles: List<Bottle>, adapter: BottleChipRecyclerAdapter) {
-        val onClick = { view: View ->
-            val bottle = view.getTag(R.string.tag_chip_id) as Bottle
-            val action = FragmentHomeDirections.homeToBottleDetails(wine.id, bottle.id)
+    private fun loadBottles(wine: Wine, bottles: List<Bottle>) {
+        val onClick = { bottleId: Long ->
+            val action = FragmentHomeDirections.homeToBottleDetails(wine.id, bottleId)
             itemView.findNavController().navigate(action)
         }
 
-        adapter.submitList(bottles)
+        val bottleAdapter = BottleChipRecyclerAdapter(itemView.context, onClick)
+
+        binding.bottleRecyclerView.apply {
+            adapter = bottleAdapter
+            layoutManager =
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL)
+            setHasFixedSize(false)
+        }
+
+        bottleAdapter.submitList(bottles)
     }
 
     override fun getOverallContext(): Context = itemView.context

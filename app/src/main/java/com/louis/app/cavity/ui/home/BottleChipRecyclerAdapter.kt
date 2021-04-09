@@ -12,7 +12,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ChipActionBinding
 import com.louis.app.cavity.model.Bottle
 
-class BottleChipRecyclerAdapter(context: Context) :
+class BottleChipRecyclerAdapter(context: Context, private val onClick: (Long) -> Unit) :
     ListAdapter<Bottle, BottleChipRecyclerAdapter.BottleChipViewHolder>(BottleItemDiffCallback()) {
 
     private val glassIcon by lazy {
@@ -47,6 +47,8 @@ class BottleChipRecyclerAdapter(context: Context) :
             with(binding.root) {
                 text = bottle.vintage.toString()
                 chipIcon = if (bottle.isReadyToDrink()) glassIcon else null
+
+                setOnClickListener { onClick(bottle.id) }
             }
         }
     }
