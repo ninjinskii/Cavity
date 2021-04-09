@@ -59,23 +59,12 @@
 
     </LinearLayout>
 
-    <HorizontalScrollView
-        android:id="@+id/bottlesScrollView"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bottleRecyclerView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:scrollbars="none"
-        android:visibility="gone">
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/bottlesChipGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/chip_group_default_height"
-            android:layout_margin="@dimen/small_margin"
-            app:chipSpacingHorizontal="4dp"
-            app:singleLine="true" />
-
-    </HorizontalScrollView>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/icons"
