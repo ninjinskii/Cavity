@@ -3,6 +3,10 @@ package com.louis.app.cavity.ui.home
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
+import androidx.core.view.marginBottom
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
+import androidx.core.view.marginTop
 import androidx.recyclerview.widget.OrientationHelper.createHorizontalHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -93,13 +97,13 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             addView(view)
 
             if (orientation == VERTICAL) {
-                measureChild(view, width - (width / colCount), 0)
-                towardsEndSide = view.measuredHeight
-                otherSide = view.measuredWidth
+                measureChildWithMargins(view, width - (width / colCount), 0)
+                towardsEndSide = view.measuredHeight + view.marginTop + view.marginBottom
+                otherSide = view.measuredWidth + view.marginLeft + view.marginRight
             } else {
                 measureChild(view, 0, height - (height / colCount))
-                towardsEndSide = view.measuredWidth
-                otherSide = view.measuredHeight
+                towardsEndSide = view.measuredWidth + view.marginLeft + view.marginRight
+                otherSide = view.measuredHeight + view.marginTop + view.marginBottom
             }
 
             val isInChildRow = isItemInChildRow(i)
@@ -155,12 +159,12 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
             if (orientation == VERTICAL) {
                 measureChild(view, width - (width / colCount), 0)
-                towardsEndSide = view.measuredHeight
-                otherSide = view.measuredWidth
+                towardsEndSide = view.measuredHeight + view.marginTop + view.marginBottom
+                otherSide = view.measuredWidth + view.marginLeft + view.marginRight
             } else {
                 measureChild(view, 0, height - (height / colCount))
-                towardsEndSide = view.measuredWidth
-                otherSide = view.measuredHeight
+                towardsEndSide = view.measuredWidth + view.marginLeft + view.marginRight
+                otherSide = view.measuredHeight + view.marginTop + view.marginBottom
             }
 
             val isInChildRow = isItemInChildRow(i)
