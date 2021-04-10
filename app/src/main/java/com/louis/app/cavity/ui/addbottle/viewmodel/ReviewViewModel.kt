@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class ReviewViewModel(
+class ReviewManager(
     private val viewModelScope: CoroutineScope,
     private val repository: WineRepository,
     private val editedBottle: Bottle?,

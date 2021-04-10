@@ -15,15 +15,14 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemReviewMedalBinding
 import com.louis.app.cavity.databinding.ItemReviewRateBinding
 import com.louis.app.cavity.databinding.ItemReviewStarBinding
-import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
-import com.louis.app.cavity.model.relation.review.FilledReviewAndReview
+import com.louis.app.cavity.ui.addbottle.viewmodel.FReviewUiModel
 import com.louis.app.cavity.ui.widget.Rule
 
 class FilledReviewRecyclerAdapter(
-    val onValueChangedListener: (fReview: FilledBottleReviewXRef, checkedButtonIdOrRate: Int) -> Unit,
-    val onDeleteListener: (FilledBottleReviewXRef) -> Unit
+    val onValueChangedListener: (fReview: FReviewUiModel, checkedButtonIdOrRate: Int) -> Unit,
+    val onDeleteListener: (FReviewUiModel) -> Unit
 ) :
-    ListAdapter<FilledReviewAndReview, FilledReviewRecyclerAdapter.BaseReviewViewHolder>(
+    ListAdapter<FReviewUiModel, FilledReviewRecyclerAdapter.BaseReviewViewHolder>(
         ReviewItemDiffCallback()
     ) {
 
@@ -66,12 +65,10 @@ class FilledReviewRecyclerAdapter(
         holder.bind(currentList[position])
     }
 
-    override fun getItemId(position: Int) = currentList[position].getId()
+//    override fun getItemId(position: Int) = currentList[position].getId()
 
     override fun getItemViewType(position: Int): Int {
-        val (_, review) = currentList[position]
-
-        return when (review.type) {
+        return when (currentList[position].type) {
             0 -> TYPE_MEDAL
             1 -> TYPE_RATE
             2 -> TYPE_RATE
@@ -80,17 +77,11 @@ class FilledReviewRecyclerAdapter(
         }
     }
 
-    class ReviewItemDiffCallback : DiffUtil.ItemCallback<FilledReviewAndReview>() {
-        override fun areItemsTheSame(
-            oldItem: FilledReviewAndReview,
-            newItem: FilledReviewAndReview
-        ) =
-            oldItem.getId() == newItem.getId()
+    class ReviewItemDiffCallback : DiffUtil.ItemCallback<FReviewUiModel>() {
+        override fun areItemsTheSame(oldItem: FReviewUiModel, newItem: FReviewUiModel) =
+            oldItem.name == newItem.name
 
-        override fun areContentsTheSame(
-            oldItem: FilledReviewAndReview,
-            newItem: FilledReviewAndReview
-        ) =
+        override fun areContentsTheSame(oldItem: FReviewUiModel, newItem: FReviewUiModel) =
             oldItem == newItem
     }
 
@@ -102,28 +93,26 @@ class FilledReviewRecyclerAdapter(
             ContextCompat.getColor(itemView.context, R.color.medal_gold)
         )
 
-        override fun bind(item: FilledReviewAndReview) = with(medalBinding) {
-            val (fReview, review) = item
-
-            contestName.text = review.contestName
-            medal.setColorFilter(medalColors[fReview.value])
+        override fun bind(item: FReviewUiModel) = with(medalBinding) {
+            contestName.text = item.name
+            medal.setColorFilter(medalColors[item.value])
 
             rbGroupMedal.apply {
                 clearOnButtonCheckedListeners()
 
-                val v = getChildAt(fReview.value)
+                val v = getChildAt(item.value)
                 (v as Checkable).isChecked = true
 
                 addOnButtonCheckedListener { _, checkedId, isChecked ->
                     if (isChecked) {
                         val contestValue = children.indexOfFirst { it.id == checkedId }
-                        onValueChangedListener(fReview, contestValue)
+                        onValueChangedListener(item, contestValue)
                     }
                 }
             }
 
             deleteReview.setOnClickListener {
-                onDeleteListener(fReview)
+                onDeleteListener(item)
             }
         }
     }
@@ -131,26 +120,24 @@ class FilledReviewRecyclerAdapter(
     inner class RateViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
         private val rateBinding = ItemReviewRateBinding.bind(itemView)
 
-        private val watcher = object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
+        override fun bind(item: FReviewUiModel) = with(rateBinding) {
+            val watcher = object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
 
-            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (rateBinding.rateLayout.validate()) {
-                    val fReview = currentList[adapterPosition].fReview
-                    onValueChangedListener(fReview, text.toString().toInt())
+                override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    if (rateBinding.rateLayout.validate()) {
+                        onValueChangedListener(item, text.toString().toInt())
+                    }
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
                 }
             }
 
-            override fun afterTextChanged(p0: Editable?) {
-            }
-        }
+            val total = if (item.type == 1) 20 else 100
 
-        override fun bind(item: FilledReviewAndReview) = with(rateBinding) {
-            val (fReview, review) = item
-            val total = if (review.type == 1) 20 else 100
-
-            contestName.text = review.contestName
+            contestName.text = item.name
 
             rateLayout.apply {
                 val rule = Rule(R.string.base_error) {
@@ -165,13 +152,13 @@ class FilledReviewRecyclerAdapter(
 
             rate.apply {
                 removeTextChangedListener(watcher)
-                setText(fReview.value.toString())
-                setSelection(fReview.value.toString().length)
+                setText(item.value.toString())
+                setSelection(item.value.toString().length)
                 addTextChangedListener(watcher)
             }
 
             deleteReview.setOnClickListener {
-                onDeleteListener(fReview)
+                onDeleteListener(item)
             }
         }
     }
@@ -179,33 +166,31 @@ class FilledReviewRecyclerAdapter(
     inner class StarViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
         private val starBinding = ItemReviewStarBinding.bind(itemView)
 
-        override fun bind(item: FilledReviewAndReview) = with(starBinding) {
-            val (fReview, review) = item
-
-            contestName.text = review.contestName
-            starCount.text = (fReview.value + 1).toString()
+        override fun bind(item: FReviewUiModel) = with(starBinding) {
+            contestName.text = item.name
+            starCount.text = (item.value + 1).toString()
 
             rbGroupStars.apply {
                 clearOnButtonCheckedListeners()
 
-                val v = getChildAt(fReview.value)
+                val v = getChildAt(item.value)
                 (v as Checkable).isChecked = true
 
                 addOnButtonCheckedListener { _, checkedId, isChecked ->
                     if (isChecked) {
                         val contestValue = children.indexOfFirst { it.id == checkedId }
-                        onValueChangedListener(fReview, contestValue)
+                        onValueChangedListener(item, contestValue)
                     }
                 }
             }
 
             deleteReview.setOnClickListener {
-                onDeleteListener(fReview)
+                onDeleteListener(item)
             }
         }
     }
 
     abstract class BaseReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        abstract fun bind(item: FilledReviewAndReview)
+        abstract fun bind(item: FReviewUiModel)
     }
 }
