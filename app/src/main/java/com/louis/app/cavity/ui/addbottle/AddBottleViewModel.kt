@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     // lazy ?
-    private lateinit var dateManager: DateManager
+    lateinit var dateManager: DateManager
     lateinit var grapeManager: GrapeManager
 //    private lateinit var reviewManager: ReviewManager
 //    private lateinit var otherInfoManager: OtherInfoManager

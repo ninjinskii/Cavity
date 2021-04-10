@@ -27,6 +27,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireGrapesBinding.bind(view)
 
+        stepperx = parentFragment as Stepper
         grapeManager = addBottleViewModel.grapeManager
 
         initRecyclerView()

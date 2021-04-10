@@ -10,15 +10,16 @@ import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
-import com.louis.app.cavity.ui.addbottle.viewmodel.DateViewModel
+import com.louis.app.cavity.ui.addbottle.viewmodel.DateManager
 import com.louis.app.cavity.util.DateFormatter
 import java.util.*
 
 class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     private lateinit var stepperx: Stepper
+    private lateinit var dateManager: DateManager
     private var _binding: FragmentInquireDatesBinding? = null
     private val binding get() = _binding!!
-    private val dateViewModel: DateViewModel by viewModels(
+    private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
 
@@ -27,6 +28,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         _binding = FragmentInquireDatesBinding.bind(view)
 
         stepperx = parentFragment as Stepper
+        dateManager = addBottleViewModel.dateManager
 
         initNumberPickers()
         initCurrencyDropdown()
@@ -65,8 +67,8 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             title,
             defaultDate = System.currentTimeMillis()
         ).apply {
-            onEndIconClickListener = { dateViewModel.setTimestamp(System.currentTimeMillis()) }
-            onDateChangedListener = { dateViewModel.setTimestamp(it) }
+            onEndIconClickListener = { dateManager.setBuyDate(System.currentTimeMillis()) }
+            onDateChangedListener = { dateManager.setBuyDate(it) }
         }
 
         with(binding) {
@@ -76,7 +78,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
     }
 
     private fun observe() {
-        dateViewModel.updatedBottle.observe(viewLifecycleOwner) {
+        addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
         }
     }
@@ -114,7 +116,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
             val currency = currency.text.toString()
             val location = buyLocation.text.toString().trim()
 
-            dateViewModel.submitDates(
+            dateManager.submitDates(
                 vintage.value,
                 apogee.value,
                 count,
