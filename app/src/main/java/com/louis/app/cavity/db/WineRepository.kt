@@ -84,6 +84,9 @@ class WineRepository private constructor(app: Application) {
     fun getFReviewAndReviewForBottle(bottleId: Long) =
         fReviewDao.getFReviewAndReviewForBottle(bottleId)
 
+    suspend fun getFReviewAndReviewForBottleNotLive(bottleId: Long) =
+        fReviewDao.getFReviewAndReviewForBottleNotLive(bottleId)
+
     suspend fun getFReviewsForBottleNotLive(bottleId: Long) =
         fReviewDao.getFReviewsForBottleNotLive(bottleId)
 

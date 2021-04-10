@@ -25,6 +25,10 @@ interface FilledReviewDao {
     @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId")
     fun getFReviewAndReviewForBottle(bottleId: Long): LiveData<List<FilledReviewAndReview>>
 
+    @Transaction
+    @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId")
+    suspend fun getFReviewAndReviewForBottleNotLive(bottleId: Long): List<FilledReviewAndReview>
+
     @Query("DELETE FROM f_review WHERE bottle_id=:bottleId AND review_id=:reviewId")
     suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long)
 }

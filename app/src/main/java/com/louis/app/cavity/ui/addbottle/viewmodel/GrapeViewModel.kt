@@ -68,6 +68,7 @@ class GrapeManager(
         val checkedValue = qGrapeManager.requestUpdateQGrape(qGrape.percentage, newValue)
         //val newQGrape = qGrape.copy(percentage = checkedValue)
 
+        // Might just change percentage value of the qgrape ??
         _qGrapes.value?.find { it.name == qGrape.name }?.percentage = checkedValue
 
         // trigger observers ?

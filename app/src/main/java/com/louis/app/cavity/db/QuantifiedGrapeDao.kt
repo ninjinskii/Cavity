@@ -30,5 +30,5 @@ interface QuantifiedGrapeDao {
 
     @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
-    fun getQGrapesAndGrapeForBottleNotLive(bottleId: Long): List<QuantifiedGrapeAndGrape>
+    suspend fun getQGrapesAndGrapeForBottleNotLive(bottleId: Long): List<QuantifiedGrapeAndGrape>
 }
