@@ -65,7 +65,7 @@ class FilledReviewRecyclerAdapter(
         holder.bind(currentList[position])
     }
 
-//    override fun getItemId(position: Int) = currentList[position].getId()
+    override fun getItemId(position: Int) = currentList[position].reviewId
 
     override fun getItemViewType(position: Int): Int {
         return when (currentList[position].type) {

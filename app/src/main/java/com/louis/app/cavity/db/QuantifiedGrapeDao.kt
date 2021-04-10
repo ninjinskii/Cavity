@@ -10,6 +10,9 @@ interface QuantifiedGrapeDao {
     @Insert
     suspend fun insertQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
 
+    @Insert
+    suspend fun insertQuantifiedGrapes(qGrapes: List<QuantifiedBottleGrapeXRef>)
+
     @Update
     suspend fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef)
 
@@ -31,4 +34,7 @@ interface QuantifiedGrapeDao {
     @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
     suspend fun getQGrapesAndGrapeForBottleNotLive(bottleId: Long): List<QuantifiedGrapeAndGrape>
+
+    @Query("DELETE FROM q_grape WHERE bottle_id=:bottleId")
+    suspend fun clearAllQGrapesForBottle(bottleId: Long)
 }

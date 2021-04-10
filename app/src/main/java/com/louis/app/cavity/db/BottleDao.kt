@@ -20,7 +20,7 @@ interface BottleDao {
     fun getBottleById(bottleId: Long): LiveData<Bottle>
 
     @Query("SELECT * FROM bottle WHERE id=:bottleId")
-    suspend fun getBottleByIdNotLive(bottleId: Long): Bottle?
+    suspend fun getBottleByIdNotLive(bottleId: Long): Bottle
 
     @Query("SELECT * FROM bottle WHERE wine_id=:wineId")
     fun getBottlesForWine(wineId: Long): LiveData<List<Bottle>>

@@ -11,6 +11,9 @@ interface FilledReviewDao {
     @Insert
     suspend fun insertFilledReview(fReview: FilledBottleReviewXRef)
 
+    @Insert
+    suspend fun insertFilledReviews(fReview: List<FilledBottleReviewXRef>)
+
     @Update
     suspend fun updateFilledReview(fReview: FilledBottleReviewXRef)
 
@@ -31,4 +34,7 @@ interface FilledReviewDao {
 
     @Query("DELETE FROM f_review WHERE bottle_id=:bottleId AND review_id=:reviewId")
     suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long)
+
+    @Query("DELETE FROM f_review WHERE bottle_id=:bottleId")
+    suspend fun clearAllFReviewsForBottle(bottleId: Long)
 }

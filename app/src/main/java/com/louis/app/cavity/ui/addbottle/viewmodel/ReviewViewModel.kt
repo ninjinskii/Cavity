@@ -43,10 +43,10 @@ class ReviewManager(
         viewModelScope.launch(IO) {
             try {
                 val review = Review(0, contestName, type)
-                repository.insertReview(review)
+                val reviewId = repository.insertReview(review)
 
                 val defaultValue = getDefaultValue(type)
-                _fReviews += FReviewUiModel(contestName, type, defaultValue)
+                _fReviews += FReviewUiModel(reviewId, contestName, type, defaultValue)
             } catch (e: IllegalArgumentException) {
                 postFeedback(R.string.empty_contest_name)
             } catch (e: SQLiteConstraintException) {
@@ -55,8 +55,8 @@ class ReviewManager(
         }
     }
 
-    private fun addFilledReview(contestName: String, type: Int) {
-        _fReviews += FReviewUiModel(contestName, type, getDefaultValue(type))
+    private fun addFilledReview(reviewId: Long, contestName: String, type: Int) {
+        _fReviews += FReviewUiModel(reviewId, contestName, type, getDefaultValue(type))
     }
 
     fun updateFilledReview(fReview: FReviewUiModel, contestValue: Int) {
@@ -78,16 +78,14 @@ class ReviewManager(
 
     fun submitCheckedReviews(checkableReviews: List<ReviewUiModel>) {
         for (checkableReview in checkableReviews) {
-            val contestName = checkableReview.name
-            val type = checkableReview.type
+            val (id, name, type, isChecked) = checkableReview
             val oldOne =
-                _reviewDialogEvent.value?.peekContent()?.find { it.name == contestName }
+                _reviewDialogEvent.value?.peekContent()?.find { it.id == id }
 
             when {
-                checkableReview.isChecked && oldOne?.isChecked != true ->
-                    addFilledReview(contestName, getDefaultValue(type))
-                !checkableReview.isChecked && oldOne?.isChecked != false ->
-                    removeFilledReview(contestName)
+                isChecked && oldOne?.isChecked != true ->
+                    addFilledReview(id, name, getDefaultValue(type))
+                !isChecked && oldOne?.isChecked != false -> removeFilledReview(name)
             }
 
             // Not updating the value of the _grapeDialogEvent LiveData. This will be done
@@ -102,6 +100,7 @@ class ReviewManager(
             val currentCheckedReviews =
                 reviews.map {
                     ReviewUiModel(
+                        it.id,
                         it.contestName,
                         it.type,
                         isChecked = it.contestName in fReviews

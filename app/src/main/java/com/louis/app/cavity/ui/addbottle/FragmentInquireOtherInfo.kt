@@ -78,6 +78,8 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
                         addToFavorite.isChecked,
                         friend
                     )
+
+                    addBottleViewModel.insertBottle()
                 }
             }
 

@@ -156,6 +156,13 @@ class WineRepository private constructor(app: Application) {
         }
     }
 
+    suspend fun replaceQGrapesForBottle(bottleId: Long, qGrapes: List<QuantifiedBottleGrapeXRef>) {
+        database.withTransaction {
+            qGrapeDao.clearAllQGrapesForBottle(bottleId)
+            qGrapeDao.insertQuantifiedGrapes(qGrapes)
+        }
+    }
+
 
     // Review
     suspend fun insertReview(review: Review): Long {
@@ -197,6 +204,12 @@ class WineRepository private constructor(app: Application) {
         }
     }
 
+    suspend fun replaceFReviewsForBottle(bottleId: Long, fReviews: List<FilledBottleReviewXRef>) {
+        database.withTransaction {
+            fReviewDao.clearAllFReviewsForBottle(bottleId)
+            fReviewDao.insertFilledReviews(fReviews)
+        }
+    }
 
     // Friend
     suspend fun insertFriend(friend: Friend) {
