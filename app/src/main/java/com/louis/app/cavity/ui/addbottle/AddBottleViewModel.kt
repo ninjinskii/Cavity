@@ -50,11 +50,10 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
             _editedBottle.postValue(bottle)
 
-            dateManager = DateManager(viewModelScope, repository, bottle) { postFeedback(it) }
-            grapeManager = GrapeManager(viewModelScope, repository, bottle) { postFeedback(it) }
-            reviewManager = ReviewManager(viewModelScope, repository, bottle) { postFeedback(it) }
-            otherInfoManager =
-                OtherInfoManager(viewModelScope, repository, bottle) { postFeedback(it) }
+            dateManager = DateManager(viewModelScope, repository, bottle)
+            grapeManager = GrapeManager(viewModelScope, repository, bottle, _userFeedback)
+            reviewManager = ReviewManager(viewModelScope, repository, bottle, _userFeedback)
+            otherInfoManager = OtherInfoManager(viewModelScope, repository, bottle, _userFeedback)
         }
     }
 

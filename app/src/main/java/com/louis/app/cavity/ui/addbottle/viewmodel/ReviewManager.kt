@@ -19,7 +19,7 @@ class ReviewManager(
     private val viewModelScope: CoroutineScope,
     private val repository: WineRepository,
     private val editedBottle: Bottle?,
-    private val postFeedback: (Int) -> Unit
+    private val _userFeedback: MutableLiveData<Event<Int>>
 ) {
     private val _reviewDialogEvent = MutableLiveData<Event<List<ReviewUiModel>>>()
     val reviewDialogEvent: LiveData<Event<List<ReviewUiModel>>>
@@ -48,9 +48,9 @@ class ReviewManager(
                 val defaultValue = getDefaultValue(type)
                 _fReviews += FReviewUiModel(reviewId, contestName, type, defaultValue)
             } catch (e: IllegalArgumentException) {
-                postFeedback(R.string.empty_contest_name)
+                _userFeedback.postOnce(R.string.empty_contest_name)
             } catch (e: SQLiteConstraintException) {
-                postFeedback(R.string.contest_name_already_exists)
+                _userFeedback.postOnce(R.string.contest_name_already_exists)
             }
         }
     }

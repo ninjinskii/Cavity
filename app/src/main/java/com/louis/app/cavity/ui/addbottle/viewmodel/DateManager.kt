@@ -8,7 +8,6 @@ class DateManager(
     private val viewModelScope: CoroutineScope,
     private val repository: WineRepository,
     private val editedBottle: Bottle?,
-    postFeedback: (Int) -> Unit
 ) {
     private var buyDateTimestamp = System.currentTimeMillis()
 
@@ -33,12 +32,6 @@ class DateManager(
         currency: String,
         location: String
     ) {
-        // These are from other info, should be useless
-        val otherInfo = editedBottle?.otherInfo.orEmpty()
-        val isFavorite = editedBottle?.isFavorite ?: 0
-        val pdfPath = editedBottle?.pdfPath.orEmpty()
-        val tasteComment = editedBottle?.tasteComment.orEmpty()
-
         partialBottle = Step1Bottle(
             editedBottle?.id ?: 0,
             vintage,

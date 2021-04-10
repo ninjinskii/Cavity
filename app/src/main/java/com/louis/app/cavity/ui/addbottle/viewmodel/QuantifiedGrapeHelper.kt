@@ -2,7 +2,7 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
 
-class QuantifiedGrapeManager {
+class QuantifiedGrapeHelper {
 
     companion object {
         const val MAX_PERCENTAGE = 100

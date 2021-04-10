@@ -19,9 +19,9 @@ class GrapeManager(
     private val viewModelScope: CoroutineScope,
     private val repository: WineRepository,
     private val editedBottle: Bottle?,
-    private val postFeedback: (Int) -> Unit
+    private val _userFeedback: MutableLiveData<Event<Int>>
 ) {
-    private val qGrapeManager = QuantifiedGrapeManager()
+    private val qGrapeHelper = QuantifiedGrapeHelper()
 
     private val _grapeDialogEvent = MutableLiveData<Event<List<GrapeUiModel>>>()
     val grapeDialogEvent: LiveData<Event<List<GrapeUiModel>>>
@@ -36,7 +36,7 @@ class GrapeManager(
             viewModelScope.launch(IO) {
                 val qGrapes = repository.getQGrapesAndGrapeForBottleNotLive(editedBottle.id)
                 val uiGrapes = qGrapes.map { QGrapeUiModel.fromQGrape(it) }.toMutableList()
-                qGrapeManager.submitQGrapes(qGrapes)
+                qGrapeHelper.submitQGrapes(qGrapes)
                 _qGrapes.postValue(uiGrapes)
             }
         }
@@ -48,24 +48,24 @@ class GrapeManager(
                 val grape = Grape(0, grapeName)
                 val grapeId = repository.insertGrape(grape)
 
-                val defaultValue = qGrapeManager.requestAddQGrape()
+                val defaultValue = qGrapeHelper.requestAddQGrape()
                 _qGrapes += QGrapeUiModel(grapeId, grapeName, defaultValue)
             } catch (e: IllegalArgumentException) {
-                postFeedback(R.string.empty_grape_name)
+                _userFeedback.postOnce(R.string.empty_grape_name)
             } catch (e: SQLiteConstraintException) {
-                postFeedback(R.string.grape_already_exists)
+                _userFeedback.postOnce(R.string.grape_already_exists)
             }
         }
     }
 
     private fun addQuantifiedGrape(grapeId: Long, grapeName: String) {
-        val defaultValue = qGrapeManager.requestAddQGrape()
+        val defaultValue = qGrapeHelper.requestAddQGrape()
         _qGrapes += QGrapeUiModel(grapeId, grapeName, defaultValue)
     }
 
     // Return true if the value requested is accepted
     fun updateQuantifiedGrape(qGrape: QGrapeUiModel, newValue: Int): Int {
-        val checkedValue = qGrapeManager.requestUpdateQGrape(qGrape.percentage, newValue)
+        val checkedValue = qGrapeHelper.requestUpdateQGrape(qGrape.percentage, newValue)
         //val newQGrape = qGrape.copy(percentage = checkedValue)
 
         // Might just change percentage value of the qgrape ??
@@ -78,7 +78,7 @@ class GrapeManager(
 
     // Delete from recycler view
     fun removeQuantifiedGrape(qGrape: QGrapeUiModel) {
-        qGrapeManager.requestRemoveQGrape(qGrape)
+        qGrapeHelper.requestRemoveQGrape(qGrape)
         _qGrapes -= qGrape
     }
 
