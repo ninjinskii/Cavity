@@ -1,6 +1,6 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
-import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
 
 class QuantifiedGrapeManager {
 
@@ -34,7 +34,11 @@ class QuantifiedGrapeManager {
         }
     }
 
-    fun requestRemoveQGrape(qGrape: QuantifiedBottleGrapeXRef) {
+    fun requestRemoveQGrape(qGrape: QGrapeUiModel) {
         total -= qGrape.percentage
+    }
+
+    fun submitQGrapes(qGrapes: List<QuantifiedGrapeAndGrape>) {
+        total = qGrapes.sumBy { it.qGrape.percentage }
     }
 }

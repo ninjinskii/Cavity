@@ -11,14 +11,15 @@ import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.adapter.QuantifiedGrapeRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
-import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeViewModel
+import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeManager
 import com.louis.app.cavity.util.setVisible
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var stepperx: Stepper
+    private lateinit var grapeManager: GrapeManager
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
-    private val grapeViewModel: GrapeViewModel by viewModels(
+    private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
 
@@ -26,8 +27,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireGrapesBinding.bind(view)
 
-        stepperx = parentFragment as Stepper
-        grapeViewModel.start(stepperx.getBottleId())
+        grapeManager = addBottleViewModel.grapeManager
 
         initRecyclerView()
         observe()
@@ -36,9 +36,9 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
     private fun initRecyclerView() {
         val quantifiedGrapeAdapter = QuantifiedGrapeRecyclerAdapter(
-            onDeleteListener = { grapeViewModel.removeQuantifiedGrape(it.qGrape) },
-            onValueChangeListener = { qGrapeAndGrape, newValue ->
-                grapeViewModel.updateQuantifiedGrape(qGrapeAndGrape.qGrape, newValue)
+            onDeleteListener = { grapeManager.removeQuantifiedGrape(it) },
+            onValueChangeListener = { qGrape, newValue ->
+                grapeManager.updateQuantifiedGrape(qGrape, newValue)
             },
         )
 
@@ -48,19 +48,17 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             adapter = quantifiedGrapeAdapter
         }
 
-        val bottleId = stepperx.getBottleId()
-
-        grapeViewModel.getQGrapesAndGrapeForBottle(bottleId).observe(viewLifecycleOwner) {
+        grapeManager.qGrapes.observe(viewLifecycleOwner) {
             toggleRvPlaceholder(it.isEmpty())
             quantifiedGrapeAdapter.submitList(it)
         }
     }
 
     private fun observe() {
-        grapeViewModel.grapeDialogEvent.observe(viewLifecycleOwner) { event ->
+        grapeManager.grapeDialogEvent.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { checkableGrapes ->
                 val copy = checkableGrapes.map { it.copy() }.toMutableList()
-                val names = checkableGrapes.map { it.grape.name }.toTypedArray()
+                val names = checkableGrapes.map { it.name }.toTypedArray()
                 val bool = checkableGrapes.map { it.isChecked }.toBooleanArray()
 
                 MaterialAlertDialogBuilder(requireContext())
@@ -71,7 +69,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
                     .setNegativeButton(R.string.cancel) { _, _ ->
                     }
                     .setPositiveButton(R.string.submit) { _, _ ->
-                        grapeViewModel.submitCheckedGrapes(copy)
+                        grapeManager.submitCheckedGrapes(copy)
                     }
                     .setCancelable(false)
                     .show()
@@ -81,8 +79,8 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
     private fun setListeners() {
         with(binding) {
-            buttonSelectGrape.setOnClickListener { grapeViewModel.requestGrapeDialog() }
-            buttonSelectGrapeSecondary.setOnClickListener { grapeViewModel.requestGrapeDialog() }
+            buttonSelectGrape.setOnClickListener { grapeManager.requestGrapeDialog() }
+            buttonSelectGrapeSecondary.setOnClickListener { grapeManager.requestGrapeDialog() }
             buttonAddGrape.setOnClickListener { showAddGrapeDialog() }
             buttonSkip.setOnClickListener { stepperx.requestNextPage() }
             stepper.next.setOnClickListener { stepperx.requestNextPage() }
@@ -96,7 +94,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             hint = R.string.grape_name,
             icon = R.drawable.ic_grape
         ) {
-            grapeViewModel.insertGrapeAndQGrape(it)
+            grapeManager.addGrapeAndQGrape(it)
         }
 
         SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)

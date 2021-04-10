@@ -140,6 +140,9 @@ class WineRepository private constructor(app: Application) {
     fun getQGrapesAndGrapeForBottle(bottleId: Long) =
         qGrapeDao.getQGrapesAndGrapeForBottle(bottleId)
 
+    suspend fun getQGrapesAndGrapeForBottleNotLive(bottleId: Long) =
+        qGrapeDao.getQGrapesAndGrapeForBottleNotLive(bottleId)
+
     suspend fun getQGrapesForBottleNotLive(bottleId: Long) =
         qGrapeDao.getQGrapesForBottleNotLive(bottleId)
 

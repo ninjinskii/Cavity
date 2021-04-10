@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.Slider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeBinding
-import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
+import com.louis.app.cavity.ui.addbottle.viewmodel.QGrapeUiModel
 
 class QuantifiedGrapeRecyclerAdapter(
-    val onDeleteListener: (QuantifiedGrapeAndGrape) -> Unit,
-    val onValueChangeListener: (QuantifiedGrapeAndGrape, newValue: Int) -> Int
+    val onDeleteListener: (QGrapeUiModel) -> Unit,
+    val onValueChangeListener: (QGrapeUiModel, newValue: Int) -> Int
 ) :
-    ListAdapter<QuantifiedGrapeAndGrape, QuantifiedGrapeRecyclerAdapter.GrapeViewHolder>(
+    ListAdapter<QGrapeUiModel, QuantifiedGrapeRecyclerAdapter.GrapeViewHolder>(
         GrapeItemDiffCallback()
     ) {
 
@@ -28,29 +28,21 @@ class QuantifiedGrapeRecyclerAdapter(
         holder.bind(getItem(position))
     }
 
-    override fun getItemId(position: Int) = currentList[position].getId()
+//    override fun getItemId(position: Int) = currentList[position].name
 
-    class GrapeItemDiffCallback : DiffUtil.ItemCallback<QuantifiedGrapeAndGrape>() {
-        override fun areItemsTheSame(
-            oldItem: QuantifiedGrapeAndGrape,
-            newItem: QuantifiedGrapeAndGrape
-        ) =
-            oldItem.getId() == newItem.getId()
+    class GrapeItemDiffCallback : DiffUtil.ItemCallback<QGrapeUiModel>() {
+        override fun areItemsTheSame(oldItem: QGrapeUiModel, newItem: QGrapeUiModel) =
+            oldItem.name == newItem.name
 
-        override fun areContentsTheSame(
-            oldItem: QuantifiedGrapeAndGrape,
-            newItem: QuantifiedGrapeAndGrape
-        ) =
+        override fun areContentsTheSame(oldItem: QGrapeUiModel, newItem: QGrapeUiModel) =
             oldItem == newItem
     }
 
     inner class GrapeViewHolder(private val binding: ItemGrapeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(qGrapeAndGrape: QuantifiedGrapeAndGrape) = with(binding) {
-            val (qGrape, name) = qGrapeAndGrape
-
-            grapeName.text = name
+        fun bind(qGrape: QGrapeUiModel) = with(binding) {
+            grapeName.text = qGrape.name
             slider.value = qGrape.percentage.toFloat()
             percent.text = itemView.context.getString(
                 R.string.percentage,
@@ -63,13 +55,13 @@ class QuantifiedGrapeRecyclerAdapter(
                 }
 
                 override fun onStopTrackingTouch(slider: Slider) {
-                    val acceptedVal = onValueChangeListener(qGrapeAndGrape, slider.value.toInt())
+                    val acceptedVal = onValueChangeListener(qGrape, slider.value.toInt())
                     slider.value = acceptedVal.toFloat()
                 }
             })
 
             deleteGrape.setOnClickListener {
-                onDeleteListener(qGrapeAndGrape)
+                onDeleteListener(qGrape)
             }
         }
     }

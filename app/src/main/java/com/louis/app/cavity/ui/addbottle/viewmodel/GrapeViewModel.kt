@@ -1,105 +1,103 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
-import android.app.Application
 import android.database.sqlite.SQLiteConstraintException
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.minusAssign
+import com.louis.app.cavity.util.plusAssign
 import com.louis.app.cavity.util.postOnce
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class GrapeViewModel(app: Application) : AndroidViewModel(app) {
-    private val repository = WineRepository.getInstance(app)
+class GrapeManager(
+    private val viewModelScope: CoroutineScope,
+    private val repository: WineRepository,
+    private val editedBottle: Bottle?,
+    private val postFeedback: (Int) -> Unit
+) {
     private val qGrapeManager = QuantifiedGrapeManager()
 
-    private val _grapeDialogEvent = MutableLiveData<Event<List<CheckableGrape>>>()
-    val grapeDialogEvent: LiveData<Event<List<CheckableGrape>>>
+    private val _grapeDialogEvent = MutableLiveData<Event<List<GrapeUiModel>>>()
+    val grapeDialogEvent: LiveData<Event<List<GrapeUiModel>>>
         get() = _grapeDialogEvent
 
-    private val _userFeedback = MutableLiveData<Event<Int>>()
-    val userFeedback: LiveData<Event<Int>>
-        get() = _userFeedback
+    private val _qGrapes = MutableLiveData<MutableList<QGrapeUiModel>>()
+    val qGrapes: LiveData<MutableList<QGrapeUiModel>>
+        get() = _qGrapes
 
-    private var bottleId = 0L
-
-    fun start(editedBottleId: Long) {
-        bottleId = editedBottleId
-    }
-
-    fun getQGrapesAndGrapeForBottle(bottleId: Long) =
-        repository.getQGrapesAndGrapeForBottle(bottleId)
-
-    fun insertGrapeAndQGrape(grapeName: String) {
-        viewModelScope.launch(IO) {
-            try {
-                val grape = Grape(0, grapeName)
-                val defaultValue = qGrapeManager.requestAddQGrape()
-                repository.insertGrapeAndQGrape(bottleId, grape, defaultValue)
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_grape_name)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.grape_already_exists)
+    init {
+        if (editedBottle != null) {
+            viewModelScope.launch(IO) {
+                val qGrapes = repository.getQGrapesAndGrapeForBottleNotLive(editedBottle.id)
+                val uiGrapes = qGrapes.map { QGrapeUiModel.fromQGrape(it) }.toMutableList()
+                qGrapeManager.submitQGrapes(qGrapes)
+                _qGrapes.postValue(uiGrapes)
             }
         }
     }
 
-    private fun insertQuantifiedGrape(grapeId: Long) {
-        val defaultValue = qGrapeManager.requestAddQGrape()
-        val qGrape = QuantifiedBottleGrapeXRef(bottleId, grapeId, defaultValue)
-
+    fun addGrapeAndQGrape(grapeName: String) {
         viewModelScope.launch(IO) {
-            repository.insertQuantifiedGrape(qGrape)
+            try {
+                val grape = Grape(0, grapeName)
+                repository.insertGrape(grape)
+
+                val defaultValue = qGrapeManager.requestAddQGrape()
+                _qGrapes += QGrapeUiModel(grapeName, defaultValue)
+            } catch (e: IllegalArgumentException) {
+                postFeedback(R.string.empty_grape_name)
+            } catch (e: SQLiteConstraintException) {
+                postFeedback(R.string.grape_already_exists)
+            }
         }
     }
 
-    // Return true if the value requested is accepted
-    fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef, newValue: Int): Int {
-        val checkedValue = qGrapeManager.requestUpdateQGrape(qGrape.percentage, newValue)
-        val newQGrape = qGrape.copy(percentage = checkedValue) // need copy to avoid false positive
+    private fun addQuantifiedGrape(grapeName: String) {
+        val defaultValue = qGrapeManager.requestAddQGrape()
+        _qGrapes += QGrapeUiModel(grapeName, defaultValue)
+    }
 
-        viewModelScope.launch(IO) {
-            repository.updateQuantifiedGrape(newQGrape)
-        }
+    // Return true if the value requested is accepted
+    fun updateQuantifiedGrape(qGrape: QGrapeUiModel, newValue: Int): Int {
+        val checkedValue = qGrapeManager.requestUpdateQGrape(qGrape.percentage, newValue)
+        //val newQGrape = qGrape.copy(percentage = checkedValue)
+
+        _qGrapes.value?.find { it.name == qGrape.name }?.percentage = checkedValue
+
+        // trigger observers ?
 
         return checkedValue
     }
 
     // Delete from recycler view
-    fun removeQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) {
+    fun removeQuantifiedGrape(qGrape: QGrapeUiModel) {
         qGrapeManager.requestRemoveQGrape(qGrape)
-
-        viewModelScope.launch(IO) {
-            repository.deleteQuantifiedGrape(qGrape)
-        }
+        _qGrapes -= qGrape
     }
 
     // Delete from dialog
-    private fun removeQuantifiedGrape(grapeId: Long) {
-        viewModelScope.launch(IO) {
-            val qGrape = repository.getQGrape(bottleId, grapeId)
-            qGrapeManager.requestRemoveQGrape(qGrape)
-            repository.deleteQuantifiedGrape(qGrape)
-        }
+    private fun removeQuantifiedGrape(grapeName: String) {
+        val qGrape = _qGrapes.value?.find { it.name == grapeName } ?: return
+        removeQuantifiedGrape(qGrape)
     }
 
-    fun submitCheckedGrapes(newCheckedGrapes: List<CheckableGrape>) {
-        for (checkableGrape in newCheckedGrapes) {
-            val grapeId = checkableGrape.grape.id
+    fun submitCheckedGrapes(checkableGrapes: List<GrapeUiModel>) {
+        for (checkableGrape in checkableGrapes) {
+            val grapeName = checkableGrape.name
             val oldOne =
-                _grapeDialogEvent.value?.peekContent()?.find { it.grape.id == grapeId }
+                _grapeDialogEvent.value?.peekContent()?.find { it.name == grapeName }
 
             when {
                 checkableGrape.isChecked && oldOne?.isChecked != true ->
-                    insertQuantifiedGrape(grapeId)
+                    addQuantifiedGrape(grapeName)
                 !checkableGrape.isChecked && oldOne?.isChecked != false ->
-                    removeQuantifiedGrape(grapeId)
+                    removeQuantifiedGrape(grapeName)
             }
 
             // Not updating the value of the _grapeDialogEvent LiveData. This will be done
@@ -110,13 +108,11 @@ class GrapeViewModel(app: Application) : AndroidViewModel(app) {
     fun requestGrapeDialog() {
         viewModelScope.launch(IO) {
             val grapes = repository.getAllGrapesNotLive()
-            val qGrapes = repository.getQGrapesForBottleNotLive(bottleId).map { it.grapeId }
+            val qGrapes = _qGrapes.value?.map { it.name } ?: emptyList<QGrapeUiModel>()
             val currentCheckedGrapes =
-                grapes.map { CheckableGrape(it, isChecked = it.id in qGrapes) }
+                grapes.map { GrapeUiModel(it.name, isChecked = it.name in qGrapes) }
 
             _grapeDialogEvent.postOnce(currentCheckedGrapes)
         }
     }
-
-    data class CheckableGrape(val grape: Grape, var isChecked: Boolean)
 }

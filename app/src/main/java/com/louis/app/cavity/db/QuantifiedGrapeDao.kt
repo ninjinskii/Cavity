@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
+
 @Dao
 interface QuantifiedGrapeDao {
     @Insert
@@ -26,4 +27,8 @@ interface QuantifiedGrapeDao {
     @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
     fun getQGrapesAndGrapeForBottle(bottleId: Long): LiveData<List<QuantifiedGrapeAndGrape>>
+
+    @Transaction
+    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
+    fun getQGrapesAndGrapeForBottleNotLive(bottleId: Long): List<QuantifiedGrapeAndGrape>
 }
