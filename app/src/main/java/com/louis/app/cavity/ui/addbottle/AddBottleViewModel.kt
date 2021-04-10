@@ -10,6 +10,7 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.addbottle.viewmodel.DateManager
 import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeManager
+import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.addbottle.viewmodel.ReviewManager
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -21,7 +22,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     lateinit var dateManager: DateManager
     lateinit var grapeManager: GrapeManager
     lateinit var reviewManager: ReviewManager
-//    private lateinit var otherInfoManager: OtherInfoManager
+    lateinit var otherInfoManager: OtherInfoManager
 
     private val repository = WineRepository.getInstance(app)
 
@@ -45,6 +46,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             dateManager = DateManager(viewModelScope, repository, bottle) { postFeedback(it) }
             grapeManager = GrapeManager(viewModelScope, repository, bottle) { postFeedback(it) }
             reviewManager = ReviewManager(viewModelScope, repository, bottle) { postFeedback(it) }
+            otherInfoManager =
+                OtherInfoManager(viewModelScope, repository, bottle) { postFeedback(it) }
         }
     }
 

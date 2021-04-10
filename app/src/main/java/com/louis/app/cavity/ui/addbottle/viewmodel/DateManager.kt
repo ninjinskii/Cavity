@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.CoroutineScope
 
 class DateManager(
@@ -12,7 +11,9 @@ class DateManager(
     postFeedback: (Int) -> Unit
 ) {
     private var buyDateTimestamp = System.currentTimeMillis()
-    var partialBottle: Bottle? = null
+
+    var partialBottle: Step1Bottle? = null
+        private set
 
     init {
         editedBottle?.let {
@@ -38,21 +39,26 @@ class DateManager(
         val pdfPath = editedBottle?.pdfPath.orEmpty()
         val tasteComment = editedBottle?.tasteComment.orEmpty()
 
-        partialBottle = Bottle(
+        partialBottle = Step1Bottle(
             editedBottle?.id ?: 0,
-            0, // Will be replaced by AddBottleViewModel
             vintage,
             apogee,
-            isFavorite,
             count,
             price,
             currency,
-            otherInfo,
             location,
-            buyDateTimestamp,
-            tasteComment,
-            pdfPath,
-            consumed = false.toInt()
+            buyDateTimestamp
         )
     }
+
+    data class Step1Bottle(
+        val id: Long,
+        val vintage: Int,
+        val apogee: Int,
+        val count: Int,
+        val price: Float,
+        val currency: String,
+        val location: String,
+        val buyDate: Long
+    )
 }

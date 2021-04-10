@@ -18,16 +18,17 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
-import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoViewModel
+import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
 
 class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {
     private lateinit var stepperx: Stepper
+    private lateinit var otherInfoManager: OtherInfoManager
     private var _binding: FragmentInquireOtherInfoBinding? = null
     private val binding get() = _binding!!
-    private val otherInfoViewModel: OtherInfoViewModel by viewModels(
+    private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
 
@@ -40,7 +41,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         _binding = FragmentInquireOtherInfoBinding.bind(view)
 
         stepperx = parentFragment as Stepper
-        otherInfoViewModel.start(stepperx.getBottleId())
+        otherInfoManager = addBottleViewModel.otherInfoManager
 
         setListeners()
         observe()
@@ -49,7 +50,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
 
     private fun setListeners() {
         binding.buttonAddPdf.setOnClickListener {
-            if (!otherInfoViewModel.hasPdf) {
+            if (!otherInfoManager.hasPdf) {
                 val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                 fileChooseIntent.apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
@@ -72,7 +73,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
                     val friend =
                         if (giftedBy.isChecked) (findViewById<Chip>(checkedChipId).getTag(R.string.tag_chip_id) as Chipable).getItemId() else null
 
-                    otherInfoViewModel.saveBottle(
+                    otherInfoManager.submitOtherInfo(
                         otherInfo.text.toString(),
                         addToFavorite.isChecked,
                         friend
@@ -93,7 +94,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     }
 
     private fun observe() {
-        otherInfoViewModel.updatedBottle.observe(viewLifecycleOwner) {
+        addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
         }
     }
@@ -102,7 +103,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         val allFriends = mutableSetOf<Friend>()
         val alreadyInflated = mutableSetOf<Friend>()
 
-        otherInfoViewModel.getAllFriends().observe(viewLifecycleOwner) {
+        otherInfoManager.getAllFriends().observe(viewLifecycleOwner) {
             binding.buttonAddFriendIfEmpty.setVisible(it.isEmpty())
 
             allFriends.addAll(it)
@@ -123,9 +124,9 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         with(binding) {
             otherInfo.setText(editedBottle.otherInfo)
             addToFavorite.isChecked = editedBottle.isFavorite.toBoolean()
-            otherInfoViewModel.setPdfPath(editedBottle.pdfPath)
+            otherInfoManager.setPdfPath(editedBottle.pdfPath)
 
-            if (otherInfoViewModel.hasPdf) {
+            if (otherInfoManager.hasPdf) {
                 buttonAddPdf.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
                 buttonAddPdf.text = resources.getString(R.string.remove_pdf)
             }
@@ -147,7 +148,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     }
 
     private fun onPdfRemoved() {
-        otherInfoViewModel.setPdfPath("")
+        otherInfoManager.setPdfPath("")
         binding.buttonAddPdf.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pdf)
         binding.buttonAddPdf.text = resources.getString(R.string.add_pdf)
     }
@@ -156,7 +157,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         requestMediaPersistentPermission(intent)
 
         if (intent != null) {
-            otherInfoViewModel.setPdfPath(intent.data.toString())
+            otherInfoManager.setPdfPath(intent.data.toString())
             binding.buttonAddPdf.icon =
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
             binding.buttonAddPdf.text = resources.getString(R.string.remove_pdf)
@@ -171,7 +172,7 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
             hint = R.string.add_friend_label,
             icon = R.drawable.ic_person,
         ) {
-            otherInfoViewModel.insertFriend(it)
+            otherInfoManager.insertFriend(it)
         }
 
         SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
