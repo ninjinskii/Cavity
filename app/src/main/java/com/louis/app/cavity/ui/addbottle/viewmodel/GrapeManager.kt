@@ -27,7 +27,7 @@ class GrapeManager(
     val grapeDialogEvent: LiveData<Event<List<GrapeUiModel>>>
         get() = _grapeDialogEvent
 
-    private val _qGrapes = MutableLiveData<MutableList<QGrapeUiModel>>()
+    private val _qGrapes = MutableLiveData<MutableList<QGrapeUiModel>>(mutableListOf())
     val qGrapes: LiveData<MutableList<QGrapeUiModel>>
         get() = _qGrapes
 
@@ -83,8 +83,8 @@ class GrapeManager(
     }
 
     // Delete from dialog
-    private fun removeQuantifiedGrape(grapeName: String) {
-        val qGrape = _qGrapes.value?.find { it.name == grapeName } ?: return
+    private fun removeQuantifiedGrape(grapeId: Long) {
+        val qGrape = _qGrapes.value?.find { it.grapeId == grapeId } ?: return
         removeQuantifiedGrape(qGrape)
     }
 
@@ -96,7 +96,7 @@ class GrapeManager(
 
             when {
                 isChecked && oldOne?.isChecked != true -> addQuantifiedGrape(id, name)
-                !isChecked && oldOne?.isChecked != false -> removeQuantifiedGrape(name)
+                !isChecked && oldOne?.isChecked != false -> removeQuantifiedGrape(id)
             }
 
             // Not updating the value of the _grapeDialogEvent LiveData. This will be done
@@ -107,9 +107,9 @@ class GrapeManager(
     fun requestGrapeDialog() {
         viewModelScope.launch(IO) {
             val grapes = repository.getAllGrapesNotLive()
-            val qGrapes = _qGrapes.value?.map { it.name } ?: emptyList<QGrapeUiModel>()
+            val qGrapes = _qGrapes.value?.map { it.grapeId } ?: emptyList()
             val currentCheckedGrapes =
-                grapes.map { GrapeUiModel(it.id, it.name, isChecked = it.name in qGrapes) }
+                grapes.map { GrapeUiModel(it.id, it.name, isChecked = it.id in qGrapes) }
 
             _grapeDialogEvent.postOnce(currentCheckedGrapes)
         }

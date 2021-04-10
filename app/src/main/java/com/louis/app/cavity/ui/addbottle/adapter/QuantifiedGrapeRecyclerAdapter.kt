@@ -28,7 +28,7 @@ class QuantifiedGrapeRecyclerAdapter(
         holder.bind(getItem(position))
     }
 
-//    override fun getItemId(position: Int) = currentList[position].name
+    override fun getItemId(position: Int) = currentList[position].grapeId
 
     class GrapeItemDiffCallback : DiffUtil.ItemCallback<QGrapeUiModel>() {
         override fun areItemsTheSame(oldItem: QGrapeUiModel, newItem: QGrapeUiModel) =
@@ -44,10 +44,7 @@ class QuantifiedGrapeRecyclerAdapter(
         fun bind(qGrape: QGrapeUiModel) = with(binding) {
             grapeName.text = qGrape.name
             slider.value = qGrape.percentage.toFloat()
-            percent.text = itemView.context.getString(
-                R.string.percentage,
-                qGrape.percentage
-            )
+            percent.text = itemView.context.getString(R.string.percentage, qGrape.percentage)
 
             slider.clearOnSliderTouchListeners()
             slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
