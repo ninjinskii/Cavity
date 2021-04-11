@@ -12,6 +12,7 @@ import com.louis.app.cavity.databinding.DialogAddReviewBinding
 import com.louis.app.cavity.databinding.FragmentInquireReviewBinding
 import com.louis.app.cavity.ui.addbottle.adapter.FilledReviewRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
+import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.ReviewManager
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible

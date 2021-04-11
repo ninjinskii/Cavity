@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.addbottle
+package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import android.app.Application
 import androidx.annotation.StringRes
@@ -12,10 +12,6 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
-import com.louis.app.cavity.ui.addbottle.viewmodel.DateManager
-import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeManager
-import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
-import com.louis.app.cavity.ui.addbottle.viewmodel.ReviewManager
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
