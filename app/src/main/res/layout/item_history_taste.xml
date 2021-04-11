@@ -91,11 +91,4 @@
         app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming"
         tools:text="3" />
 
-    <View
-        style="@style/Widget.Cavity.Divider"
-        android:layout_width="0dp"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/marker" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

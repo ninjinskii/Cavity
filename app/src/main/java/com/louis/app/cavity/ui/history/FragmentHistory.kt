@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.marginStart
 import androidx.fragment.app.Fragment
@@ -70,10 +71,16 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
         binding.historyRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = historyAdapter
-            setHasFixedSize(true)
+            setHasFixedSize(false)
+
+            val height = resources.getDimensionPixelSize(R.dimen.divider_height)
+            val color = ContextCompat.getColor(requireContext(), R.color.divider_color)
+
+            addItemDecoration(HistoryDivider(height, color))
             addItemDecoration(StickyItemDecorator(this, isHeader) {
                 showDatePicker()
             })
+
         }
 
         historyViewModel.entries.observe(viewLifecycleOwner) {
