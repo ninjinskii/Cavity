@@ -1,8 +1,8 @@
 package com.louis.app.cavity.util
 
 import android.content.Context
-import android.util.TypedValue
 import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
@@ -85,6 +85,11 @@ operator fun <T> MutableLiveData<MutableList<T>>.minusAssign(item: T) {
         it.remove(item)
         this.value = value // notify observers
     }
+}
+
+fun <T> MutableLiveData<MutableList<T>>.updateSelf() {
+    val value = this.value ?: mutableListOf()
+    this.value = value // notify observers
 }
 
 fun <T> MutableLiveData<MutableList<T>>.clearList() {

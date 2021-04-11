@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
@@ -15,9 +14,6 @@ import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeManager
 import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
     private lateinit var stepperx: Stepper
@@ -55,13 +51,9 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         }
 
         grapeManager.qGrapes.observe(viewLifecycleOwner) {
-            L.v("grpae list size: ${it.size}")
             toggleRvPlaceholder(it.isEmpty())
-            quantifiedGrapeAdapter.submitList(it)
-            lifecycleScope.launch(Main) {
-                delay(700)
-                quantifiedGrapeAdapter.notifyDataSetChanged()
-            }
+            L.v("list from observer: $it")
+            quantifiedGrapeAdapter.submitList(it.toMutableList())
         }
     }
 

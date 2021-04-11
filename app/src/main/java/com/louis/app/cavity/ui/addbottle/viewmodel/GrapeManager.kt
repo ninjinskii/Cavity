@@ -13,7 +13,9 @@ import com.louis.app.cavity.util.plusAssign
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class GrapeManager(
     private val viewModelScope: CoroutineScope,
@@ -47,9 +49,11 @@ class GrapeManager(
             try {
                 val grape = Grape(0, grapeName)
                 val grapeId = repository.insertGrape(grape)
-
                 val defaultValue = qGrapeHelper.requestAddQGrape()
-                _qGrapes += QGrapeUiModel(grapeId, grapeName, defaultValue)
+
+                withContext(Main) {
+                    _qGrapes += QGrapeUiModel(grapeId, grapeName, defaultValue)
+                }
             } catch (e: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.empty_grape_name)
             } catch (e: SQLiteConstraintException) {
@@ -63,15 +67,16 @@ class GrapeManager(
         _qGrapes += QGrapeUiModel(grapeId, grapeName, defaultValue)
     }
 
-    // Return true if the value requested is accepted
+    // Return the checked value to tell the adapter to set the slider value accordingly
     fun updateQuantifiedGrape(qGrape: QGrapeUiModel, newValue: Int): Int {
         val checkedValue = qGrapeHelper.requestUpdateQGrape(qGrape.percentage, newValue)
-        //val newQGrape = qGrape.copy(percentage = checkedValue)
 
-        // Might just change percentage value of the qgrape ??
-        _qGrapes.value?.find { it.name == qGrape.name }?.percentage = checkedValue
+        _qGrapes.run {
+            val index = value?.indexOfFirst { it.grapeId == qGrape.grapeId } ?: return checkedValue
 
-        // trigger observers ?
+            value?.set(index, value!![index].copy(percentage = checkedValue))
+            postValue(value)
+        }
 
         return checkedValue
     }

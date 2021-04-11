@@ -32,7 +32,7 @@ class QuantifiedGrapeRecyclerAdapter(
 
     class GrapeItemDiffCallback : DiffUtil.ItemCallback<QGrapeUiModel>() {
         override fun areItemsTheSame(oldItem: QGrapeUiModel, newItem: QGrapeUiModel) =
-            oldItem.name == newItem.name
+            oldItem.grapeId == newItem.grapeId
 
         override fun areContentsTheSame(oldItem: QGrapeUiModel, newItem: QGrapeUiModel) =
             oldItem == newItem
