@@ -42,6 +42,9 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private var wineId = 0L
 
     fun start(wineId: Long, bottleId: Long) {
+        // Already started
+        if (this.wineId != 0L) return
+
         this.wineId = wineId
 
         viewModelScope.launch(IO) {
