@@ -5,6 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/small_icon"
+        android:layout_height="@dimen/small_icon"
+        android:layout_margin="@dimen/small_margin"
+        android:src="@drawable/ic_grape"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorPrimary" />
+
     <TextView
         android:id="@+id/grapeName"
         style="@style/TextAppearance.MaterialComponents.Headline5"
@@ -15,12 +26,10 @@
         android:drawablePadding="4dp"
         android:ellipsize="end"
         android:maxLines="1"
-        app:drawableStartCompat="@drawable/ic_grape"
-        app:drawableTint="?attr/colorPrimary"
         app:layout_constraintBottom_toTopOf="@id/bottleCount"
         app:layout_constraintEnd_toStartOf="@id/buttonOptions"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/icon"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Syrah" />
 
@@ -31,9 +40,11 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/small_margin"
+        android:ellipsize="end"
+        android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/buttonOptions"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/icon"
         app:layout_constraintTop_toBottomOf="@id/grapeName"
         tools:text="12 bouteilles" />
 

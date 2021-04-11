@@ -14,10 +14,8 @@ import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.ManagerViewModel
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showKeyboard
-import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
     private lateinit var simpleInputDialog: SimpleInputDialog
@@ -38,10 +36,6 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
         _binding = FragmentManageBaseBinding.bind(view)
 
         simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater)
-
-
-        // Ensuring we are scoping our VM to the good fragment
-        L.v("${requireParentFragment()}")
 
         initRecyclerView()
     }

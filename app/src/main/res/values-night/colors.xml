@@ -4,4 +4,6 @@
     <color name="flat_card_background">#12ffffff</color>
 
     <color name="unselected_icon">#86ffffff</color>
+
+    <color name="divider_color">#12ffffff</color>
 </resources>

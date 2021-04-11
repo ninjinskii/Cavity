@@ -27,4 +27,6 @@
     <color name="medal_gold">#d4af37</color>
 
     <color name="unselected_icon">#86000000</color>
+
+    <color name="divider_color">#12000000</color>
 </resources>
