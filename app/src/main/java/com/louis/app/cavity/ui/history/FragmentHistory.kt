@@ -120,6 +120,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    binding.filterChipGroup.clearCheck()
                     historyViewModel.setFilter(HistoryFilter.NoFilter)
                 }
             }
