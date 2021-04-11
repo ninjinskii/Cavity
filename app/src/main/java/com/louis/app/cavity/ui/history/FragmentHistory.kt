@@ -22,8 +22,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.model.relation.history.BoundedHistoryEntry
 import com.louis.app.cavity.ui.ChipLoader
-import com.louis.app.cavity.ui.history.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
 import com.louis.app.cavity.ui.WineColorResolver
+import com.louis.app.cavity.ui.history.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.toBoolean
@@ -100,7 +100,11 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
         }
 
         binding.bottleDetails.buttonCloseBottomSheet.setOnClickListener {
-            historyViewModel.setFilter(HistoryFilter.NoFilter)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.bottleDetails.root.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
         binding.bottleDetails.buttonShowBottle.setOnClickListener {
@@ -110,6 +114,19 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
                 findNavController().navigate(action)
             }
         }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    historyViewModel.setFilter(HistoryFilter.NoFilter)
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
     }
 
     private fun showDatePicker() {
