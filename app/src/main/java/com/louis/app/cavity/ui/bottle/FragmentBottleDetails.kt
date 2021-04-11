@@ -96,8 +96,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         var firstRun = true
 
         bottleDetailsViewModel.bottle.observe(viewLifecycleOwner) {
-            updateUI(it, firstRun)
-            firstRun = false
+            if (it == null) {
+                findNavController().popBackStack()
+            } else {
+                updateUI(it, firstRun)
+                firstRun = false
+            }
         }
 
         bottleDetailsViewModel.grapes.observe(viewLifecycleOwner) {
