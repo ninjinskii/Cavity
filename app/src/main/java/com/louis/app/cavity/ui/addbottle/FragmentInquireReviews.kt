@@ -58,7 +58,7 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
 
         reviewManager.fReviews.observe(viewLifecycleOwner) {
             toggleRvPlaceholder(it.isEmpty())
-            reviewAdapter.submitList(it)
+            reviewAdapter.submitList(it.toMutableList())
         }
     }
 

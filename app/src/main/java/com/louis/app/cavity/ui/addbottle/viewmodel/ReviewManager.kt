@@ -13,7 +13,9 @@ import com.louis.app.cavity.util.plusAssign
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ReviewManager(
     private val viewModelScope: CoroutineScope,
@@ -25,7 +27,7 @@ class ReviewManager(
     val reviewDialogEvent: LiveData<Event<List<ReviewUiModel>>>
         get() = _reviewDialogEvent
 
-    private val _fReviews = MutableLiveData<MutableList<FReviewUiModel>>()
+    private val _fReviews = MutableLiveData<MutableList<FReviewUiModel>>(mutableListOf())
     val fReviews: LiveData<MutableList<FReviewUiModel>>
         get() = _fReviews
 
@@ -44,9 +46,11 @@ class ReviewManager(
             try {
                 val review = Review(0, contestName, type)
                 val reviewId = repository.insertReview(review)
-
                 val defaultValue = getDefaultValue(type)
-                _fReviews += FReviewUiModel(reviewId, contestName, type, defaultValue)
+
+                withContext(Main) {
+                    _fReviews += FReviewUiModel(reviewId, contestName, type, defaultValue)
+                }
             } catch (e: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.empty_contest_name)
             } catch (e: SQLiteConstraintException) {
@@ -60,9 +64,12 @@ class ReviewManager(
     }
 
     fun updateFilledReview(fReview: FReviewUiModel, contestValue: Int) {
-        _fReviews.value?.find { it.name == fReview.name }?.value = contestValue
+        _fReviews.run {
+            val index = value?.indexOfFirst { it.reviewId == fReview.reviewId } ?: return
 
-        // trigger observers ?
+            value?.set(index, value!![index].copy(value = contestValue))
+            postValue(value)
+        }
     }
 
     // Delete from recycler view
@@ -84,7 +91,7 @@ class ReviewManager(
 
             when {
                 isChecked && oldOne?.isChecked != true ->
-                    addFilledReview(id, name, getDefaultValue(type))
+                    addFilledReview(id, name, type)
                 !isChecked && oldOne?.isChecked != false -> removeFilledReview(name)
             }
 

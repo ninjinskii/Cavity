@@ -1,16 +1,15 @@
 package com.louis.app.cavity.ui.addbottle.adapter
 
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Checkable
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemReviewMedalBinding
 import com.louis.app.cavity.databinding.ItemReviewRateBinding
@@ -36,27 +35,9 @@ class FilledReviewRecyclerAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            TYPE_MEDAL -> MedalViewHolder(
-                inflater.inflate(
-                    R.layout.item_review_medal,
-                    parent,
-                    false
-                )
-            )
-            TYPE_RATE -> RateViewHolder(
-                inflater.inflate(
-                    R.layout.item_review_rate,
-                    parent,
-                    false
-                )
-            )
-            TYPE_STAR -> StarViewHolder(
-                inflater.inflate(
-                    R.layout.item_review_star,
-                    parent,
-                    false
-                )
-            )
+            TYPE_MEDAL -> MedalViewHolder(ItemReviewMedalBinding.inflate(inflater, parent, false))
+            TYPE_RATE -> RateViewHolder(ItemReviewRateBinding.inflate(inflater, parent, false))
+            TYPE_STAR -> StarViewHolder(ItemReviewStarBinding.inflate(inflater, parent, false))
             else -> throw IllegalStateException("Unknown view type")
         }
     }
@@ -79,21 +60,22 @@ class FilledReviewRecyclerAdapter(
 
     class ReviewItemDiffCallback : DiffUtil.ItemCallback<FReviewUiModel>() {
         override fun areItemsTheSame(oldItem: FReviewUiModel, newItem: FReviewUiModel) =
-            oldItem.name == newItem.name
+            oldItem.reviewId == newItem.reviewId
 
         override fun areContentsTheSame(oldItem: FReviewUiModel, newItem: FReviewUiModel) =
             oldItem == newItem
     }
 
-    inner class MedalViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
-        private val medalBinding = ItemReviewMedalBinding.bind(itemView)
+    inner class MedalViewHolder(private val binding: ItemReviewMedalBinding) :
+        BaseReviewViewHolder(binding) {
+
         private val medalColors = listOf(
             ContextCompat.getColor(itemView.context, R.color.medal_bronze),
             ContextCompat.getColor(itemView.context, R.color.medal_silver),
             ContextCompat.getColor(itemView.context, R.color.medal_gold)
         )
 
-        override fun bind(item: FReviewUiModel) = with(medalBinding) {
+        override fun bind(item: FReviewUiModel) = with(binding) {
             contestName.text = item.name
             medal.setColorFilter(medalColors[item.value])
 
@@ -117,26 +99,19 @@ class FilledReviewRecyclerAdapter(
         }
     }
 
-    inner class RateViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
-        private val rateBinding = ItemReviewRateBinding.bind(itemView)
+    inner class RateViewHolder(private val binding: ItemReviewRateBinding) :
+        BaseReviewViewHolder(binding) {
 
-        override fun bind(item: FReviewUiModel) = with(rateBinding) {
-            val watcher = object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (rateBinding.rateLayout.validate()) {
-                        onValueChangedListener(item, text.toString().toInt())
-                    }
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                }
+        private val watcher = binding.rate.doAfterTextChanged {
+            if (binding.rateLayout.validate()) {
+                onValueChangedListener(currentList[bindingAdapterPosition], it.toString().toInt())
             }
+        }
 
+        override fun bind(item: FReviewUiModel) = with(binding) {
             val total = if (item.type == 1) 20 else 100
 
+            rate.removeTextChangedListener(watcher)
             contestName.text = item.name
 
             rateLayout.apply {
@@ -151,7 +126,6 @@ class FilledReviewRecyclerAdapter(
             }
 
             rate.apply {
-                removeTextChangedListener(watcher)
                 setText(item.value.toString())
                 setSelection(item.value.toString().length)
                 addTextChangedListener(watcher)
@@ -163,10 +137,10 @@ class FilledReviewRecyclerAdapter(
         }
     }
 
-    inner class StarViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
-        private val starBinding = ItemReviewStarBinding.bind(itemView)
+    inner class StarViewHolder(private val binding: ItemReviewStarBinding) :
+        BaseReviewViewHolder(binding) {
 
-        override fun bind(item: FReviewUiModel) = with(starBinding) {
+        override fun bind(item: FReviewUiModel) = with(binding) {
             contestName.text = item.name
             starCount.text = (item.value + 1).toString()
 
@@ -190,7 +164,9 @@ class FilledReviewRecyclerAdapter(
         }
     }
 
-    abstract class BaseReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    abstract class BaseReviewViewHolder(binding: ViewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
         abstract fun bind(item: FReviewUiModel)
     }
 }
