@@ -35,6 +35,10 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val editedBottle: LiveData<Bottle>
         get() = _editedBottle
 
+    private val _completedEvent = MutableLiveData<Event<Unit>>()
+    val completedEvent: LiveData<Event<Unit>>
+        get() = _completedEvent
+
     private var wineId = 0L
 
     fun start(wineId: Long, bottleId: Long) {
@@ -79,6 +83,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             insertQGrapes(bottleId)
             insertFReviews(bottleId)
             insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
+
+            _completedEvent.postOnce(Unit)
         }
 
     }

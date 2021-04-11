@@ -5,6 +5,7 @@ import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddBottleBinding
@@ -47,7 +48,6 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
             if (binding.viewPager.currentItem != 0) {
                 binding.viewPager.currentItem = binding.viewPager.currentItem - 1
             } else {
-                //addBottleViewModel.onCancel() // TODO find a way to remove uncompleted bottle when straight killing app
                 remove()
                 requireActivity().onBackPressed()
             }
@@ -61,13 +61,17 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
             }
         }
 
-//        otherInfoViewModel.bottleUpdatedEvent.observe(viewLifecycleOwner) {
-//            it.getContentIfNotHandled()?.let { stringRes ->
-//                // Using snackbar provider since we are quitting this fragment
-//                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = true)
-//                findNavController().navigateUp()
-//            }
-//        }
+        addBottleViewModel.completedEvent.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                // Using snackbar provider since we are quitting this fragment
+                snackbarProvider.onShowSnackbarRequested(
+                    R.string.bottle_added,
+                    useAnchorView = true
+                )
+
+                findNavController().popBackStack()
+            }
+        }
     }
 
     override fun requestNextPage() {
