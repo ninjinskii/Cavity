@@ -1,5 +1,8 @@
 package com.louis.app.cavity.ui.manager.friend
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
@@ -18,7 +21,9 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.addwine.FragmentAddWine
 import com.louis.app.cavity.ui.manager.ManagerViewModel
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
     private lateinit var simpleInputDialog: SimpleInputDialog
@@ -27,6 +32,10 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
     private val managerViewModel: ManagerViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
+
+    companion object {
+        const val PICK_IMAGE_RESULT_CODE = 1
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,6 +49,7 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
     private fun initRecyclerView() {
         val friendAdapter = FriendRecyclerAdapter(
             onRename = { friend: Friend -> showEditFriendDialog(friend) },
+            onChangeImage = { friend: Friend -> onChangeImage(friend) },
             onDelete = { friend: Friend -> showConfirmDeleteDialog(friend) }
         )
 
@@ -85,6 +95,54 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
             }
             .show()
     }
+
+    private fun onChangeImage(friend: Friend) {
+        managerViewModel.friendPickingImage = friend
+
+        val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+        }
+
+        try {
+            startActivityForResult(fileChooseIntent, FragmentAddWine.PICK_IMAGE_RESULT_CODE)
+        } catch (e: ActivityNotFoundException) {
+            binding.coordinator.showSnackbar(R.string.no_file_explorer)
+        }
+    }
+
+    private fun requestMediaPersistentPermission(fileBrowserIntent: Intent?) {
+        if (fileBrowserIntent != null) {
+            val flags = (fileBrowserIntent.flags
+                and (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                or Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
+
+            fileBrowserIntent.data?.let {
+                activity?.contentResolver?.takePersistableUriPermission(it, flags)
+            }
+        } else {
+            binding.coordinator.showSnackbar(R.string.base_error)
+        }
+    }
+
+    private fun onImageSelected(data: Intent?) {
+        if (data != null) {
+            val imagePath = data.data.toString()
+            requestMediaPersistentPermission(data)
+            managerViewModel.setImageForCurrentFriend(imagePath)
+        } else {
+            binding.coordinator.showSnackbar(R.string.base_error)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == FragmentAddWine.PICK_IMAGE_RESULT_CODE) onImageSelected(data)
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

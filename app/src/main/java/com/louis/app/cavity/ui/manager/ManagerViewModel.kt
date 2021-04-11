@@ -8,9 +8,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.*
+import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.Friend
+import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -21,6 +23,8 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
+
+    var friendPickingImage: Friend? = null
 
     fun getCountiesWithWines() = repository.getCountiesWithWines()
 
@@ -174,6 +178,16 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             repository.deleteFriend(friend)
             _userFeedback.postOnce(R.string.friend_deleted)
+        }
+    }
+
+    fun setImageForCurrentFriend(imagePath: String) {
+        viewModelScope.launch(IO) {
+            friendPickingImage?.copy(imgPath = imagePath)?.let {
+                repository.updateFriend(it)
+            }
+
+            friendPickingImage = null
         }
     }
 }

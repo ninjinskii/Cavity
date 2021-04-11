@@ -12,12 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemFriendBinding
-import com.louis.app.cavity.databinding.ItemGrapeManagerBinding
 import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.model.Grape
 
 class FriendRecyclerAdapter(
     private val onRename: (Friend) -> Unit,
+    private val onChangeImage: (Friend) -> Unit,
     private val onDelete: (Friend) -> Unit
 ) :
     ListAdapter<Friend, FriendRecyclerAdapter.FriendViewHolder>(
@@ -42,6 +41,7 @@ class FriendRecyclerAdapter(
 
     inner class FriendViewHolder(private val binding: ItemFriendBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         private val context = binding.root.context
 
         init {
@@ -70,11 +70,12 @@ class FriendRecyclerAdapter(
             PopupMenu(context, view).apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) setForceShowIcon(true)
 
-                menuInflater.inflate(R.menu.rename_delete_menu, menu)
+                menuInflater.inflate(R.menu.friend_menu, menu)
 
                 setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.edit_item -> onRename(friend)
+                        R.id.edit_image -> onChangeImage(friend)
                         R.id.delete_item -> onDelete(friend)
                     }
                     true
