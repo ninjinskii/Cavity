@@ -71,6 +71,22 @@ data class HistoryEntry(
         )
         else -> throw IllegalStateException("Unknown history entry type $type")
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as HistoryEntry
+
+        if (id != other.id) return false
+        if (date != other.date) return false
+        if (bottleId != other.bottleId) return false
+        if (tastingId != other.tastingId) return false
+        if (comment != other.comment) return false
+        if (type != other.type) return false
+
+        return true
+    }
 }
 
 data class HistoryEntryResources(

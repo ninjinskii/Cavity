@@ -17,13 +17,13 @@ import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.ui.history.HistoryUiModel
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 
 class HistoryRecyclerAdapter(
     private val _context: Context,
     private val onHeaderClick: () -> Unit,
-    private val onItemClick: (HistoryUiModel.EntryModel) -> Unit
+    private val onItemClick: (HistoryUiModel.EntryModel) -> Unit,
+    private val onSwiped: (HistoryUiModel.EntryModel) -> Unit,
 ) :
     PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(
         HistoryEntryDiffItemCallback()
@@ -90,7 +90,7 @@ class HistoryRecyclerAdapter(
                 && newItem is HistoryUiModel.HeaderModel
                 && DateFormatter.roundToDay(oldItem.date) == DateFormatter.roundToDay(newItem.date)
 
-            return isSameEntry or isSameSeparator
+            return isSameEntry || isSameSeparator
         }
 
         override fun areContentsTheSame(oldItem: HistoryUiModel, newItem: HistoryUiModel) =
@@ -152,8 +152,8 @@ class HistoryRecyclerAdapter(
             }
         }
 
-        override fun onRebounded() {
-            L.v("Rebounded !")
+        override fun onRebounded(position: Int) {
+            onSwiped(getItem(position) as HistoryUiModel.EntryModel)
         }
     }
 

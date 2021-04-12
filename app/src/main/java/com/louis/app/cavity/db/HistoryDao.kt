@@ -13,7 +13,7 @@ interface HistoryDao {
     fun insertEntry(entry: HistoryEntry): Long
 
     @Update
-    fun updateEntry(entry: HistoryEntry)
+    suspend fun updateEntry(entry: HistoryEntry)
 
     @Delete
     fun deleteEntry(entry: HistoryEntry)

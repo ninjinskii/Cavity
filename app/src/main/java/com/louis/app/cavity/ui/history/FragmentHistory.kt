@@ -34,6 +34,7 @@ import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.toBoolean
+import com.louis.app.cavity.util.toggleBoolean
 
 class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
     private lateinit var scroller: LinearSmoothScroller
@@ -78,6 +79,11 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
                 binding.filterChipGroup.clearCheck()
                 historyViewModel.setFilter(HistoryFilter.BottleFilter(it.model.bottleAndWine.bottle.id))
                 historyViewModel.setSelectedHistoryEntry(it.model)
+            },
+            onSwiped = {
+                val entry = it.model.historyEntry
+                val newEntry = entry.copy(favorite = entry.favorite.toggleBoolean())
+                historyViewModel.updateHistoryEntry(newEntry)
             }
         )
 

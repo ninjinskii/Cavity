@@ -4,7 +4,6 @@ import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.card.MaterialCardView
-import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.ui.history.HistoryUiModel
@@ -14,9 +13,6 @@ import kotlin.math.abs
 abstract class ReboundableViewHolder(private val binding: ViewBinding) :
     RecyclerView.ViewHolder(binding.root),
     ReboundingSwipeActionCallback.ReboundableViewHolder {
-
-    private val starredCornerSize = itemView.resources.getDimension(R.dimen.starred_corner_size)
-    private var isStarred = false
 
     override val reboundableView = when (binding) {
         is ItemHistoryUseBinding -> binding.cardView
@@ -34,7 +30,7 @@ abstract class ReboundableViewHolder(private val binding: ViewBinding) :
     open fun bind(entry: HistoryUiModel) {
         if (entry is HistoryUiModel.EntryModel) {
             val isFavorite = entry.model.historyEntry.favorite.toBoolean()
-                .also { isStarred = it; binding.root.isActivated }
+                .also { binding.root.isActivated = it }
 
             updateCorner(if (isFavorite) 1f else 0f)
         }
@@ -51,6 +47,7 @@ abstract class ReboundableViewHolder(private val binding: ViewBinding) :
     ) {
         if (currentTargetHasMetThresholdOnce) return
 
+        val isStarred = binding.root.isActivated
         val interpolation = (currentSwipePercentage / swipeThreshold).coerceIn(0F, 1F)
         val adjustedInterpolation = abs((if (isStarred) 1F else 0F) - interpolation)
         updateCorner(adjustedInterpolation)

@@ -20,7 +20,7 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
     interface ReboundableViewHolder {
         val reboundableView: View
 
-        fun onRebounded()
+        fun onRebounded(position: Int)
 
         fun onReboundOffsetChanged(
             currentSwipePercentage: Float,
@@ -51,7 +51,7 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         if (currentTargetHasMetThresholdOnce && viewHolder is ReboundableViewHolder) {
             currentTargetHasMetThresholdOnce = false
-            viewHolder.onRebounded()
+            viewHolder.onRebounded(viewHolder.absoluteAdapterPosition)
         }
 
         super.clearView(recyclerView, viewHolder)

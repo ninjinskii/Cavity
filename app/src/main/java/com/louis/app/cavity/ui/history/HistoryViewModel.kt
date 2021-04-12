@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import androidx.paging.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.relation.history.BoundedHistoryEntry
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
@@ -89,6 +90,12 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         _selectedEntry.postValue(entry)
     }
 
+    fun updateHistoryEntry(entry: HistoryEntry) {
+        viewModelScope.launch(IO) {
+            repository.updateEntry(entry)
+        }
+    }
+
     private fun shouldSeparate(
         before: HistoryUiModel.EntryModel?,
         after: HistoryUiModel?
@@ -108,7 +115,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun getDataSource(filter: HistoryFilter):
-            PagingSource<Int, BoundedHistoryEntry> {
+        PagingSource<Int, BoundedHistoryEntry> {
         return when (filter) {
             is HistoryFilter.TypeFilter -> when (filter.chipId) {
                 R.id.chipReplenishments -> repository.getEntriesByType(1, 3)
