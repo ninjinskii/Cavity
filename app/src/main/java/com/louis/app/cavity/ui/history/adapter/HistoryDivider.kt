@@ -30,7 +30,7 @@ class HistoryDivider(@Px private val height: Int, @ColorInt private val dividerC
         var previousChild: View? = null
 
         parent.forEach {
-            if (parent.getChildAdapterPosition(it) < state.itemCount - 1 && previousChild != null) {
+            if (parent.getChildAdapterPosition(it) < state.itemCount && previousChild != null) {
                 if (isDecorated(previousChild!!, it, parent)) {
                     val top = it.top.toFloat()
                     points.apply {
