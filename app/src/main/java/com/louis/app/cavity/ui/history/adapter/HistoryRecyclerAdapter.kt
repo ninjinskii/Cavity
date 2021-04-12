@@ -146,7 +146,7 @@ class HistoryRecyclerAdapter(
                     setCompoundDrawablesWithIntrinsicBounds(getDrawable(icon), null, null, null)
                 }
 
-                root.setOnClickListener {
+                cardView.setOnClickListener {
                     onItemClick(entry)
                 }
             }

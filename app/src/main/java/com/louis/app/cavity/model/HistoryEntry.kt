@@ -87,6 +87,17 @@ data class HistoryEntry(
 
         return true
     }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + date.hashCode()
+        result = 31 * result + bottleId.hashCode()
+        result = 31 * result + (tastingId?.hashCode() ?: 0)
+        result = 31 * result + comment.hashCode()
+        result = 31 * result + type
+        result = 31 * result + favorite
+        return result
+    }
 }
 
 data class HistoryEntryResources(
