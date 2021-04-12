@@ -17,6 +17,7 @@ import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.ui.history.HistoryUiModel
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 
 class HistoryRecyclerAdapter(
@@ -100,58 +101,59 @@ class HistoryRecyclerAdapter(
         ReboundableViewHolder(binding) {
 
         fun bind(entry: HistoryUiModel.EntryModel?) {
-            entry?.let {
-                val (markerColor, icon, label, _, showFriends) = it.model.historyEntry.getResources()
-                val (bottle, wine) = it.model.bottleAndWine
-                val resolvedWineColor = resolveColor(wine.color)
-                val resolvedMarkerColor = _context.getColor(markerColor)
+            super.bind(entry ?: return)
 
-                with(binding) {
-                    wineColorNameNaming.wineColorIndicator.setColorFilter(resolvedWineColor)
-                    wineColorNameNaming.wineNaming.text = wine.naming
-                    wineColorNameNaming.wineName.text = wine.name
-                    vintage.text = bottle.vintage.toString()
+            val (markerColor, icon, label, _, showFriends) = entry.model.historyEntry.getResources()
+            val (bottle, wine) = entry.model.bottleAndWine
+            val resolvedWineColor = resolveColor(wine.color)
+            val resolvedMarkerColor = _context.getColor(markerColor)
 
-                    friends.setVisible(showFriends && it.model.friends.isNotEmpty())
-                    friends.text = it.model.friends.size.toString()
+            with(binding) {
+                wineColorNameNaming.wineColorIndicator.setColorFilter(resolvedWineColor)
+                wineColorNameNaming.wineNaming.text = wine.naming
+                wineColorNameNaming.wineName.text = wine.name
+                vintage.text = bottle.vintage.toString()
 
-                    marker.setBackgroundColor(resolvedMarkerColor)
+                friends.setVisible(showFriends && entry.model.friends.isNotEmpty())
+                friends.text = entry.model.friends.size.toString()
 
-                    comment.apply {
-                        // Consume
-                        if (it.model.historyEntry.type == 0) {
-                            val comment = it.model.historyEntry.comment
+                marker.setBackgroundColor(resolvedMarkerColor)
 
-                            if (comment.isBlank()) {
-                                setTypeface(null, Typeface.ITALIC)
-                                text = context.getString(R.string.no_description)
-                            } else {
-                                typeface = Typeface.DEFAULT
-                                text = comment
-                            }
+                comment.apply {
+                    // Consume
+                    if (entry.model.historyEntry.type == 0) {
+                        val comment = entry.model.historyEntry.comment
+
+                        if (comment.isBlank()) {
+                            setTypeface(null, Typeface.ITALIC)
+                            text = context.getString(R.string.no_description)
                         } else {
                             typeface = Typeface.DEFAULT
+                            text = comment
+                        }
+                    } else {
+                        typeface = Typeface.DEFAULT
 
-                            val data = if (it.model.historyEntry.type == 1) {
-                                it.model.bottleAndWine.bottle.buyLocation
-                            } else {
-                                it.model.friends.firstOrNull()?.name ?: ""
-                            }
-
-                            text = context.getString(label, data)
+                        val data = if (entry.model.historyEntry.type == 1) {
+                            entry.model.bottleAndWine.bottle.buyLocation
+                        } else {
+                            entry.model.friends.firstOrNull()?.name ?: ""
                         }
 
-                        setCompoundDrawablesWithIntrinsicBounds(getDrawable(icon), null, null, null)
+                        text = context.getString(label, data)
                     }
 
-                    root.setOnClickListener {
-                        onItemClick(entry)
-                    }
+                    setCompoundDrawablesWithIntrinsicBounds(getDrawable(icon), null, null, null)
+                }
+
+                root.setOnClickListener {
+                    onItemClick(entry)
                 }
             }
         }
 
         override fun onRebounded() {
+            L.v("Rebounded !")
         }
     }
 

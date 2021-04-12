@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="ShapeAppearance.Cavtiy.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">16dp</item>
@@ -14,6 +15,15 @@
     <style name="ShapeAppearenceOverlay.Cavity.Backdrop" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerRadius">16dp</item>
+    </style>
+
+    <!-- Favorite history items -->
+    <style name="ShapeAppearenceOverlay.Cavity.HistoryItems" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSizeTopRight">@dimen/starred_corner_size</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
     </style>
 </resources>
 
