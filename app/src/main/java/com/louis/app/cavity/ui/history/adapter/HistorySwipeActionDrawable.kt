@@ -1,12 +1,9 @@
 package com.louis.app.cavity.ui.history.adapter
 
-import android.animation.ValueAnimator
 import android.content.res.Resources
-import android.graphics.Canvas
-import android.graphics.ColorFilter
-import android.graphics.PixelFormat
-import android.graphics.Rect
+import android.graphics.*
 import android.graphics.drawable.AnimatedStateListDrawable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
@@ -17,11 +14,8 @@ import org.xmlpull.v1.XmlPullParser
 
 class HistorySwipeActionDrawable : Drawable() {
     private lateinit var icon: AnimatedStateListDrawable
-    private lateinit var gradient: Drawable
-    private val dur = 800f
+    private val bg = ColorDrawable(Color.parseColor("#000000"))
     private val iconRect = Rect()
-    private val gradientRect = Rect()
-    private var animator: ValueAnimator? = null
     @Px
     private var iconSize = 0
     @Px
@@ -65,8 +59,7 @@ class HistorySwipeActionDrawable : Drawable() {
     }
 
     fun initResources(r: Resources, theme: Resources.Theme?) {
-        gradient = ResourcesCompat.getDrawable(r, R.drawable.gradient_star, theme)!!
-        iconSize = r.getDimensionPixelSize(R.dimen.small_icon)
+        iconSize = r.getDimensionPixelSize(R.dimen.xsmall_icon)
         iconMargin = r.getDimensionPixelSize(R.dimen.medium_margin)
         colorPrimary = ResourcesCompat.getColor(r, R.color.cavity_gold, theme)
         icon =
@@ -75,7 +68,6 @@ class HistorySwipeActionDrawable : Drawable() {
 
     override fun draw(canvas: Canvas) {
         val w = bounds.width()
-        val h = bounds.height()
 
         with(iconRect) {
             left = w - iconSize - iconMargin
@@ -84,15 +76,8 @@ class HistorySwipeActionDrawable : Drawable() {
             bottom = iconTop + iconSize
         }
 
-        with(gradientRect) {
-            left = w - 30
-            top = 0
-            right = w
-            bottom = h
-        }
-
-        gradient.bounds = gradientRect
-        gradient.draw(canvas)
+        bg.bounds = Rect(0, 0, w, bounds.height())
+        bg.draw(canvas)
 
         icon.bounds = iconRect
         icon.setTint(colorPrimary)
@@ -103,7 +88,7 @@ class HistorySwipeActionDrawable : Drawable() {
 
     override fun setAlpha(alpha: Int) {
         icon.alpha = alpha
-        gradient.alpha = alpha
+        bg.alpha = alpha
     }
 
     override fun setColorFilter(colorFilter: ColorFilter?) {
