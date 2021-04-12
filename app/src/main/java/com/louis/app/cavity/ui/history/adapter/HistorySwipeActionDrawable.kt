@@ -9,12 +9,11 @@ import android.graphics.Rect
 import android.graphics.drawable.AnimatedStateListDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import androidx.annotation.ColorInt
 import androidx.annotation.Px
 import androidx.core.content.res.ResourcesCompat
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import org.xmlpull.v1.XmlPullParser
-import kotlin.math.abs
 
 class HistorySwipeActionDrawable : Drawable() {
     private lateinit var icon: AnimatedStateListDrawable
@@ -24,20 +23,13 @@ class HistorySwipeActionDrawable : Drawable() {
     private val gradientRect = Rect()
     private var animator: ValueAnimator? = null
     @Px
-    private var iconSize: Int = 0
+    private var iconSize = 0
     @Px
-    private var iconMargin: Int = 0
+    private var iconMargin = 0
     @Px
-    private var iconTop: Int = 0
-
-    private var progress = 0F
-        set(value) {
-            val constrained = value.coerceIn(0F, 1F)
-            if (constrained != field) {
-                field = constrained
-                callback?.invalidateDrawable(this)
-            }
-        }
+    private var iconTop = 0
+    @ColorInt
+    private var colorPrimary = 0
 
     override fun onBoundsChange(bounds: Rect?) {
         if (bounds == null) return
@@ -49,26 +41,17 @@ class HistorySwipeActionDrawable : Drawable() {
     override fun isStateful() = true
 
     override fun onStateChange(state: IntArray?): Boolean {
-        val initialProgress = progress
-        val newProgress = if (state?.contains(android.R.attr.state_activated) == true) {
-            icon.state = intArrayOf(android.R.attr.state_checked)
-            1F
+        val shouldRedraw: Boolean
+
+        if (state?.contains(android.R.attr.state_activated) == true) {
+            shouldRedraw = !icon.state.contains(android.R.attr.state_activated)
+            icon.state = intArrayOf(android.R.attr.state_activated)
         } else {
+            shouldRedraw = icon.state.contains(android.R.attr.state_activated)
             icon.state = intArrayOf()
-            0F
         }
 
-        animator?.cancel()
-        animator = ValueAnimator.ofFloat(initialProgress, newProgress).apply {
-            addUpdateListener {
-                progress = animatedValue as Float
-            }
-            interpolator = FastOutSlowInInterpolator()
-            duration = (abs(newProgress - initialProgress) * dur).toLong()
-            start()
-        }
-
-        return newProgress == initialProgress
+        return shouldRedraw
     }
 
     override fun inflate(
@@ -83,8 +66,9 @@ class HistorySwipeActionDrawable : Drawable() {
 
     fun initResources(r: Resources, theme: Resources.Theme?) {
         gradient = ResourcesCompat.getDrawable(r, R.drawable.gradient_star, theme)!!
-        iconSize = r.getDimensionPixelSize(R.dimen.medium_icon)
-        iconMargin = r.getDimensionPixelSize(R.dimen.large_margin)
+        iconSize = r.getDimensionPixelSize(R.dimen.small_icon)
+        iconMargin = r.getDimensionPixelSize(R.dimen.medium_margin)
+        colorPrimary = ResourcesCompat.getColor(r, R.color.cavity_gold, theme)
         icon =
             ResourcesCompat.getDrawable(r, R.drawable.asl_star, theme) as AnimatedStateListDrawable
     }
@@ -101,17 +85,18 @@ class HistorySwipeActionDrawable : Drawable() {
         }
 
         with(gradientRect) {
-            left = w - 400
+            left = w - 30
             top = 0
             right = w
             bottom = h
         }
 
-        icon.bounds = iconRect
-        icon.draw(canvas)
-
         gradient.bounds = gradientRect
         gradient.draw(canvas)
+
+        icon.bounds = iconRect
+        icon.setTint(colorPrimary)
+        icon.draw(canvas)
     }
 
     override fun getOpacity() = PixelFormat.TRANSLUCENT

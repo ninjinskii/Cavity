@@ -4,8 +4,7 @@
 
     <gradient
         android:angle="45"
-        android:centerColor="@color/medal_gold"
-        android:centerX="0.85"
+        android:centerX="0.90"
         android:endColor="@color/cavity_gold"
         android:startColor="?attr/colorSurface"
         android:type="linear" />
