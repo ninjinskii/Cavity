@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.home.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.*
@@ -15,7 +16,6 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.shape.ShapeAppearancePathProvider
 import com.louis.app.cavity.R
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.round
 
@@ -92,15 +92,17 @@ class HexagonalView @JvmOverloads constructor(
             .build()
     }
 
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+    // Oh yeah? And what should I do then ?
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x.toInt()
         val y = event.y.toInt()
 
         if (!clickableArea.contains(x, y) && event.action == MotionEvent.ACTION_DOWN) {
-            return true
+            return false
         }
 
-        return super.dispatchTouchEvent(event)
+        return super.onTouchEvent(event)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
