@@ -33,17 +33,13 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
     private var currentTargetHasMetThresholdOnce: Boolean = false
 
     // Never dismiss item
-    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float = Float.MAX_VALUE
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder) = Float.MAX_VALUE
 
     // Never dismiss item
-    override fun getSwipeVelocityThreshold(defaultValue: Float): Float {
-        return Float.MAX_VALUE
-    }
+    override fun getSwipeVelocityThreshold(defaultValue: Float) = Float.MAX_VALUE
 
     // Never dismiss item
-    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
-        return Float.MAX_VALUE
-    }
+    override fun getSwipeEscapeVelocity(defaultValue: Float) = Float.MAX_VALUE
 
     override fun onMove(
         recyclerView: RecyclerView,
@@ -99,15 +95,12 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
         dX: Float
     ) {
         val swipeDismissDistanceHorizontal = itemView.width * trueSwipeThreshold
-        val dragFraction = ln(
-            (1 + (dX / swipeDismissDistanceHorizontal)).toDouble()
-        ) / ln(
-            3.toDouble()
-        )
+        val dragFraction =
+            ln((1 - (dX / swipeDismissDistanceHorizontal)).toDouble()) / ln(3.toDouble())
 
         val dragTo = dragFraction * swipeDismissDistanceHorizontal * swipeReboundingElasticity
 
-        viewHolder.reboundableView.translationX = dragTo.toFloat()
+        viewHolder.reboundableView.translationX = -dragTo.toFloat()
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
