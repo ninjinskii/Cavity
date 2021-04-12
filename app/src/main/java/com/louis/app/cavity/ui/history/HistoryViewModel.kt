@@ -68,7 +68,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                         headerCount++
                     }
 
-                    if (entry.date <= DateFormatter.roundToDay(timestamp)) {
+                    if (DateFormatter.roundToDay(entry.date) <= timestamp) {
                         _scrollTo.postOnce(position + headerCount - offset)
                         break
                     }

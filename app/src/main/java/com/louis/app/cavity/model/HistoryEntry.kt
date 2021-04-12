@@ -33,6 +33,7 @@ data class HistoryEntry(
             R.color.cavity_red,
             R.drawable.ic_glass,
             R.string.nothing,
+            R.string.consume_label,
             showFriends = true,
             rawType = 0
         )
@@ -40,6 +41,7 @@ data class HistoryEntry(
             R.color.cavity_green,
             R.drawable.ic_bottle,
             R.string.buyed_at,
+            R.string.nothing,
             showFriends = false,
             rawType = 1
         )
@@ -47,6 +49,7 @@ data class HistoryEntry(
             R.color.cavity_red,
             R.drawable.ic_gift,
             R.string.gifted_to_someone,
+            R.string.gifted_to,
             showFriends = false,
             rawType = 2
         )
@@ -54,6 +57,7 @@ data class HistoryEntry(
             R.color.cavity_green,
             R.drawable.ic_gift,
             R.string.gifted_by_someone,
+            R.string.gifted_by,
             showFriends = false,
             rawType = 3
         )
@@ -61,6 +65,7 @@ data class HistoryEntry(
             R.color.cavity_gold,
             R.drawable.ic_toast_wine,
             R.string.tasting_label,
+            R.string.no_negative,
             showFriends = true,
             rawType = 4
         )
@@ -72,6 +77,7 @@ data class HistoryEntryResources(
     @ColorRes val color: Int,
     @DrawableRes val icon: Int,
     @StringRes val label: Int,
+    @StringRes val detailsLabel: Int,
     val showFriends: Boolean,
     val rawType: Int
 )

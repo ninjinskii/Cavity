@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -62,10 +63,15 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
     }
 
     private fun initRecyclerView() {
-        val historyAdapter = HistoryRecyclerAdapter(requireContext(), { showDatePicker() }) {
-            historyViewModel.setFilter(HistoryFilter.BottleFilter(it.model.bottleAndWine.bottle.id))
-            historyViewModel.setSelectedHistoryEntry(it.model)
-        }
+        val historyAdapter = HistoryRecyclerAdapter(
+            requireContext(),
+            onHeaderClick = { showDatePicker() },
+            onItemClick = {
+                binding.filterChipGroup.clearCheck()
+                historyViewModel.setFilter(HistoryFilter.BottleFilter(it.model.bottleAndWine.bottle.id))
+                historyViewModel.setSelectedHistoryEntry(it.model)
+            }
+        )
         val isHeader = { itemPos: Int -> historyAdapter.getItemViewType(itemPos) == TYPE_SEPARATOR }
 
         binding.historyRecyclerView.apply {
@@ -126,9 +132,15 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
             BottomSheetBehavior.BottomSheetCallback() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                val checkedId = binding.filterChipGroup.checkedChipId
+
                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    binding.filterChipGroup.clearCheck()
-                    historyViewModel.setFilter(HistoryFilter.NoFilter)
+                    if (checkedId != ChipGroup.NO_ID) {
+                        historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
+                    } else {
+                        binding.filterChipGroup.clearCheck()
+                        historyViewModel.setFilter(HistoryFilter.NoFilter)
+                    }
                 }
             }
 
@@ -157,7 +169,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             val (bottle, wine) = entry.bottleAndWine
-            val label = entry.historyEntry.getResources().label
+            val label = entry.historyEntry.getResources().detailsLabel
 
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 

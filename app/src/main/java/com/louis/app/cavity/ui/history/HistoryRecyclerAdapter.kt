@@ -100,7 +100,7 @@ class HistoryRecyclerAdapter(
 
         fun bind(entry: HistoryUiModel.EntryModel?) {
             entry?.let {
-                val (markerColor, icon, label, showFriends) = it.model.historyEntry.getResources()
+                val (markerColor, icon, label, _, showFriends) = it.model.historyEntry.getResources()
                 val (bottle, wine) = it.model.bottleAndWine
                 val resolvedWineColor = resolveColor(wine.color)
                 val resolvedMarkerColor = _context.getColor(markerColor)
