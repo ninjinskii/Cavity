@@ -30,4 +30,6 @@
     <dimen name="app_bar_elevation">4dp</dimen>
 
     <dimen name="chip_group_default_height">48dp</dimen>
+
+    <dimen name="starred_corer_size">6dp</dimen>
 </resources>

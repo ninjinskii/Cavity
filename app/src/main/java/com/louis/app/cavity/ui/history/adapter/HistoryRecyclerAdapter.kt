@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.history
+package com.louis.app.cavity.ui.history.adapter
 
 import android.content.Context
 import android.graphics.Typeface
@@ -15,6 +15,7 @@ import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
 import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.ui.WineColorResolver
+import com.louis.app.cavity.ui.history.HistoryUiModel
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
 
@@ -96,7 +97,7 @@ class HistoryRecyclerAdapter(
     }
 
     inner class HistoryEntryViewHolder(private val binding: ItemHistoryUseBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        ReboundableViewHolder(binding) {
 
         fun bind(entry: HistoryUiModel.EntryModel?) {
             entry?.let {
@@ -148,6 +149,9 @@ class HistoryRecyclerAdapter(
                     }
                 }
             }
+        }
+
+        override fun onRebounded() {
         }
     }
 

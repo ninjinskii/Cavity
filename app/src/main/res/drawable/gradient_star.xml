@@ -6,7 +6,7 @@
         android:angle="45"
         android:centerColor="@color/medal_gold"
         android:centerX="0.85"
-        android:endColor="?attr/colorPrimary"
+        android:endColor="@color/cavity_gold"
         android:startColor="?attr/colorSurface"
         android:type="linear" />
 

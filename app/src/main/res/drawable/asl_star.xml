@@ -3,7 +3,7 @@
     <item
         android:id="@+id/starred"
         android:drawable="@drawable/ic_star"
-        android:state_checked="true" />
+        android:state_activated="true" />
 
     <item
         android:id="@+id/unstar"

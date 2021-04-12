@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import com.bumptech.glide.Glide
@@ -25,7 +26,11 @@ import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.model.relation.history.BoundedHistoryEntry
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.WineColorResolver
-import com.louis.app.cavity.ui.history.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
+import com.louis.app.cavity.ui.history.adapter.HistoryDivider
+import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter
+import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
+import com.louis.app.cavity.ui.history.adapter.ReboundingSwipeActionCallback
+import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.toBoolean
@@ -63,6 +68,9 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
     }
 
     private fun initRecyclerView() {
+        val height = resources.getDimensionPixelSize(R.dimen.divider_height)
+        val color = ContextCompat.getColor(requireContext(), R.color.divider_color)
+        val itemTouchHelper = ItemTouchHelper(ReboundingSwipeActionCallback())
         val historyAdapter = HistoryRecyclerAdapter(
             requireContext(),
             onHeaderClick = { showDatePicker() },
@@ -72,21 +80,19 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
                 historyViewModel.setSelectedHistoryEntry(it.model)
             }
         )
-        val isHeader = { itemPos: Int -> historyAdapter.getItemViewType(itemPos) == TYPE_SEPARATOR }
 
+        val isHeader = { itemPos: Int -> historyAdapter.getItemViewType(itemPos) == TYPE_SEPARATOR }
         binding.historyRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = historyAdapter
             setHasFixedSize(false)
-
-            val height = resources.getDimensionPixelSize(R.dimen.divider_height)
-            val color = ContextCompat.getColor(requireContext(), R.color.divider_color)
 
             addItemDecoration(HistoryDivider(height, color))
             addItemDecoration(StickyItemDecorator(this, isHeader) {
                 showDatePicker()
             })
 
+            itemTouchHelper.attachToRecyclerView(this)
         }
 
         historyViewModel.entries.observe(viewLifecycleOwner) {

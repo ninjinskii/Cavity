@@ -56,8 +56,11 @@ class GrapeBar @JvmOverloads constructor(
 
     var interpolation = 1f
         set(value) {
-            field = value
-            invalidate()
+            val constrained = value.coerceIn(0F, 1F)
+            if (constrained != field) {
+                field = constrained
+                invalidate()
+            }
         }
 
     private var progressUnitPixelSize = 1f

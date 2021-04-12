@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.history
+package com.louis.app.cavity.ui.history.adapter
 
 import android.graphics.Canvas
 import android.graphics.Rect
