@@ -18,4 +18,5 @@
         android:drawable="@drawable/anim_unstar"
         android:fromId="@id/starred"
         android:toId="@id/unstar" />
+
 </animated-selector>

@@ -30,8 +30,7 @@ abstract class ReboundableViewHolder(private val binding: ViewBinding) :
     open fun bind(entry: HistoryUiModel) {
         if (entry is HistoryUiModel.EntryModel) {
             val isFavorite = entry.model.historyEntry.favorite.toBoolean()
-                .also { binding.root.isActivated = it }
-
+            binding.root.isActivated = isFavorite
             updateCorner(if (isFavorite) 1f else 0f)
         }
 
