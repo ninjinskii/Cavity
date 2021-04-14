@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.history.adapter
 import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.google.android.material.card.MaterialCardView
 import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.ui.history.HistoryUiModel
@@ -17,7 +16,9 @@ abstract class ReboundableViewHolder(private val binding: ViewBinding) :
     override val reboundableView = when (binding) {
         is ItemHistoryUseBinding -> binding.cardView
         is ItemHistoryTasteBinding -> binding.cardView
-        else -> binding.root
+        else -> throw IllegalArgumentException(
+            "Cannot use this binding instance to make it reboundable."
+        )
     }
 
     init {
@@ -31,6 +32,11 @@ abstract class ReboundableViewHolder(private val binding: ViewBinding) :
         if (entry is HistoryUiModel.EntryModel) {
             val isFavorite = entry.model.historyEntry.favorite.toBoolean()
             binding.root.isActivated = isFavorite
+
+            // Call to Drawable#jumpToCurrentState() isn't necessary here.
+            // View#jumpDrawablesToCurrentState() will be called on our view by the
+            // View#onAttachedToWindow() framework callback when the view is added (recycled).
+
             updateCorner(if (isFavorite) 1f else 0f)
         }
 
@@ -38,7 +44,7 @@ abstract class ReboundableViewHolder(private val binding: ViewBinding) :
     }
 
     private fun updateCorner(interpolation: Float) {
-        (reboundableView as MaterialCardView).progress = interpolation
+        reboundableView.progress = interpolation
     }
 
     override fun onReboundOffsetChanged(
