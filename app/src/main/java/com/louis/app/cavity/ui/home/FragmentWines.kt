@@ -35,8 +35,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         val countyId = arguments?.getLong(COUNTY_ID)
 
-        homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
-            wineAdapter.submitList(it)
+        homeViewModel.getBottlesForCounty(countyId ?: 0).observe(viewLifecycleOwner) {
+            wineAdapter.submitList(it.map { a -> a.winesWithBottles })
         }
     }
 

@@ -5,7 +5,7 @@ import androidx.room.Relation
 import com.louis.app.cavity.model.Bottle
 
 data class WineWithBottles(
-    @Embedded val wine: WineAndNaming,
+    @Embedded val wineAndNaming: WineAndNaming,
     @Relation(
         parentColumn = "id",
         entityColumn = "wine_id"

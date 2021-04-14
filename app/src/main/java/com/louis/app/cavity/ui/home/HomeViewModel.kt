@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.Event
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -22,6 +21,5 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllCounties() = repository.getAllCounties()
 
-    fun getWinesWithBottlesByCounty(countyId: Long) =
-        repository.getWineWithBottlesByCounty(countyId)
+    fun getBottlesForCounty(countyId: Long) = repository.getBottlesForCounty(countyId)
 }

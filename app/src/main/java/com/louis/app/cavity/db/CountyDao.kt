@@ -3,7 +3,7 @@ package com.louis.app.cavity.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.relation.county.CountyWithWines
+import com.louis.app.cavity.model.relation.county.CountyWithNamingsAndWines
 
 @Dao
 interface CountyDao {
@@ -30,5 +30,5 @@ interface CountyDao {
 
     @Transaction
     @Query("SELECT * FROM county ORDER BY pref_order")
-    fun getCountiesWithWines(): LiveData<List<CountyWithWines>>
+    fun getCountiesWithWines(): LiveData<List<CountyWithNamingsAndWines>>
 }

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemCountyManagerBinding
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.relation.county.CountyWithWines
+import com.louis.app.cavity.model.relation.county.CountyWithNamingsAndWines
 import java.util.*
 
 class CountyRecyclerAdapter(
@@ -21,7 +21,7 @@ class CountyRecyclerAdapter(
 ) :
     RecyclerView.Adapter<CountyRecyclerAdapter.CountyViewHolder>() {
 
-    private val counties = mutableListOf<CountyWithWines>()
+    private val counties = mutableListOf<CountyWithNamingsAndWines>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountyViewHolder {
         val binding =
@@ -38,7 +38,7 @@ class CountyRecyclerAdapter(
 
     override fun getItemCount() = counties.size
 
-    fun setCounties(list: List<CountyWithWines>) {
+    fun setCounties(list: List<CountyWithNamingsAndWines>) {
         counties.clear()
         counties.addAll(list)
         notifyDataSetChanged()
@@ -73,7 +73,7 @@ class CountyRecyclerAdapter(
             }
         }
 
-        fun bind(countyWithWines: CountyWithWines) {
+        fun bind(countyWithWines: CountyWithNamingsAndWines) {
             val (county, wines) = countyWithWines
 
             with(binding) {

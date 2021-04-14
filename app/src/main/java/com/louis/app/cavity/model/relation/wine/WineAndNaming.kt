@@ -8,8 +8,8 @@ import com.louis.app.cavity.model.Wine
 data class WineAndNaming(
     @Embedded val wine: Wine,
     @Relation(
-        parentColumn = "id",
-        entityColumn = "naming_id"
+        parentColumn = "naming_id",
+        entityColumn = "id"
     )
     val naming: Naming
 )
