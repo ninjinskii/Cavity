@@ -168,7 +168,9 @@
         </action>
         <action
             android:id="@+id/bottleDetailsToHistory"
-            app:destination="@id/history_dest">
+            app:destination="@id/history_dest"
+            app:popUpTo="@id/history_dest"
+            app:popUpToInclusive="true">
             <argument
                 android:name="bottleId"
                 app:argType="long" />
@@ -192,6 +194,8 @@
             app:argType="long" />
         <action
             android:id="@+id/historyToBottle"
+            app:popUpTo="@id/fragmentBottleDetails"
+            app:popUpToInclusive="true"
             app:destination="@id/fragmentBottleDetails" />
     </fragment>
 
