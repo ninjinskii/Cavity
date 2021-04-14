@@ -3,35 +3,32 @@ package com.louis.app.cavity.model.relation.bottle
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.Grape
+import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
 import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
-import java.util.*
+import com.louis.app.cavity.model.relation.wine.WineAndNaming
 
 data class BoundedBottle(
     @Embedded val bottle: Bottle,
     @Relation(
+        entity = Wine::class,
         parentColumn = "wine_id",
         entityColumn = "id"
     )
-    val wine: Wine,
+    val wineAndNaming: WineAndNaming,
     @Relation(
         entity = QuantifiedBottleGrapeXRef::class,
         parentColumn = "id",
-        entityColumn = "bottle_id",
-        projection = ["bottle_id"]
+        entityColumn = "bottle_id"
     )
-    val qGrapesIds: List<Long>,
+    val grapes: List<Grape>,
     @Relation(
         entity = FilledBottleReviewXRef::class,
         parentColumn = "id",
-        entityColumn = "bottle_id",
-        projection = ["review_id"]
+        entityColumn = "bottle_id"
+        //associateBy = ?
     )
-    val fReviewsIds: List<Long>,
-) {
-    fun isReadyToDrink(): Boolean {
-        val year = Calendar.getInstance().get(Calendar.YEAR)
-        return year >= bottle.apogee
-    }
-}
+    val reviews: List<Review>,
+)

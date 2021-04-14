@@ -40,10 +40,10 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     var counties = emptyList<Long>()
         private set
 
-    var grapes = emptyList<Long>()
+    var grapes = emptyList<Grape>()
         private set
 
-    var reviews = emptyList<Long>()
+    var reviews = emptyList<Review>()
         private set
 
     init {
@@ -162,7 +162,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setGrapeFilters(filteredGrapes: List<Grape>) {
-        grapes = filteredGrapes.map { it.id }
         val grapeFilters: List<WineFilter> = grapes.map { FilterGrape(it) }
 
         grapeFilter =
@@ -174,7 +173,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setReviewFilters(filteredReviews: List<Review>) {
-        reviews = filteredReviews.map { it.id }
         val reviewFilters: List<WineFilter> = reviews.map { FilterReview(it) }
 
         reviewFilter =

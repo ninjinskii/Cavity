@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 @Database(
     entities = [
         County::class,
+        Naming::class,
         Wine::class,
         Bottle::class,
         Grape::class,
@@ -25,17 +26,18 @@ import kotlinx.coroutines.launch
         FilledBottleReviewXRef::class,
         HistoryEntry::class,
         Friend::class,
+        FriendHistoryEntryXRef::class,
         Tasting::class,
         TastingFriendXRef::class,
-        FriendHistoryEntryXRef::class,
     ],
-    version = 47,
+    version = 48,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
+    abstract fun countyDao(): CountyDao
+    abstract fun namingDao(): NamingDao
     abstract fun wineDao(): WineDao
     abstract fun bottleDao(): BottleDao
-    abstract fun countyDao(): CountyDao
     abstract fun grapeDao(): GrapeDao
     abstract fun qGrapeDao(): QuantifiedGrapeDao
     abstract fun reviewDao(): ReviewDao
@@ -71,6 +73,7 @@ abstract class CavityDatabase : RoomDatabase() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 val bottleDao = instance?.bottleDao()
+                val namingDao = instance?.namingDao()
                 val wineDao = instance?.wineDao()
                 val countyDao = instance?.countyDao()
                 val grapeDao = instance?.grapeDao()
@@ -97,7 +100,8 @@ abstract class CavityDatabase : RoomDatabase() {
                         insertCounty(County(10, "Vallée du Rhône", 9))
                     }
 
-                    val counties = 1..10
+                    val counties = 0..9
+                    val namings = 0..10
 
                     val wineNames = arrayOf(
                         "Immelé",
@@ -145,18 +149,13 @@ abstract class CavityDatabase : RoomDatabase() {
                         "Clarinette"
                     )
 
+                    repeat(10) {
+                        namingDao!!.insertNaming(Naming(naming = wineNamings[it], countyId = counties.random().toLong()))
+                    }
+
                     repeat(50) {
                         wineDao!!.insertWine(
-                            Wine(
-                                0,
-                                wineNames.random(),
-                                wineNamings.random(),
-                                wineColors.random(),
-                                "",
-                                counties.random().toLong(),
-                                (0..1).random(),
-                                ""
-                            )
+                            Wine(0, wineNames.random(), wineColors.random(), "", (0..1).random(), "", namings.random().toLong())
                         )
                     }
 
