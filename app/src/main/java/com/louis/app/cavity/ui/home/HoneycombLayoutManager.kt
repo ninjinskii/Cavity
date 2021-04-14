@@ -101,7 +101,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 towardsEndSide = view.measuredHeight + view.marginTop + view.marginBottom
                 otherSide = view.measuredWidth + view.marginLeft + view.marginRight
             } else {
-                measureChild(view, 0, height - (height / colCount))
+                measureChildWithMargins(view, 0, height - (height / colCount))
                 towardsEndSide = view.measuredWidth + view.marginLeft + view.marginRight
                 otherSide = view.measuredHeight + view.marginTop + view.marginBottom
             }
@@ -158,11 +158,11 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             anchorPosition--
 
             if (orientation == VERTICAL) {
-                measureChild(view, width - (width / colCount), 0)
+                measureChildWithMargins(view, width - (width / colCount), 0)
                 towardsEndSide = view.measuredHeight + view.marginTop + view.marginBottom
                 otherSide = view.measuredWidth + view.marginLeft + view.marginRight
             } else {
-                measureChild(view, 0, height - (height / colCount))
+                measureChildWithMargins(view, 0, height - (height / colCount))
                 towardsEndSide = view.measuredWidth + view.marginLeft + view.marginRight
                 otherSide = view.measuredHeight + view.marginTop + view.marginBottom
             }
