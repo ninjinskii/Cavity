@@ -2,9 +2,11 @@ package com.louis.app.cavity.ui.history.adapter
 
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.util.doOnEachNextLayout
 
@@ -13,8 +15,9 @@ class StickyItemDecorator(
     private val isHeader: (itemPosition: Int) -> Boolean,
     private val onHeaderClick: () -> Unit
 ) :
-    RecyclerView.ItemDecoration() {
+    RecyclerView.ItemDecoration(), GestureDetector.OnGestureListener {
 
+    private val detector = GestureDetectorCompat(parent.context, this)
     private var currentHeader: Pair<Int, RecyclerView.ViewHolder>? = null
 
     init {
@@ -33,12 +36,26 @@ class StickyItemDecorator(
         parent.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
             override fun onInterceptTouchEvent(
                 recyclerView: RecyclerView,
-                motionEvent: MotionEvent
+                event: MotionEvent
             ): Boolean {
-                return motionEvent.action == MotionEvent.ACTION_DOWN &&
-                        motionEvent.y <= currentHeader?.second?.itemView?.bottom ?: 0
+                val stickyHeaderBottom = currentHeader?.second?.itemView?.bottom ?: 0
+
+                return if (event.y <= stickyHeaderBottom) {
+                    detector.onTouchEvent(event)
+                } else {
+                    super.onInterceptTouchEvent(recyclerView, event)
+                }
             }
         })
+    }
+
+    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+        onHeaderClick()
+        return true
+    }
+
+    override fun onDown(e: MotionEvent?): Boolean {
+        return false
     }
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
@@ -89,7 +106,6 @@ class StickyItemDecorator(
             currentHeader = headerPosition to headerHolder
         }
 
-        // TODO: add ripple here if really needed
         return headerHolder?.itemView
     }
 
@@ -158,4 +174,14 @@ class StickyItemDecorator(
 
         return headerPosition
     }
+
+    override fun onShowPress(e: MotionEvent?) {
+    }
+
+    override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, dX: Float, dY: Float) = false
+
+    override fun onLongPress(e: MotionEvent?) {
+    }
+
+    override fun onFling(e1: MotionEvent?, e2: MotionEvent?, vX: Float, vY: Float) = false
 }
