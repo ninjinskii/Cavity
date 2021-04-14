@@ -40,11 +40,15 @@ class StickyItemDecorator(
             ): Boolean {
                 val stickyHeaderBottom = currentHeader?.second?.itemView?.bottom ?: 0
 
-                return if (event.y <= stickyHeaderBottom) {
-                    detector.onTouchEvent(event)
-                } else {
-                    super.onInterceptTouchEvent(recyclerView, event)
+                return event.run {
+                    action != MotionEvent.ACTION_MOVE &&
+                        action != MotionEvent.ACTION_UP &&
+                        y <= stickyHeaderBottom
                 }
+            }
+
+            override fun onTouchEvent(recyclerView: RecyclerView, event: MotionEvent) {
+                detector.onTouchEvent(event)
             }
         })
     }
@@ -54,9 +58,7 @@ class StickyItemDecorator(
         return true
     }
 
-    override fun onDown(e: MotionEvent?): Boolean {
-        return false
-    }
+    override fun onDown(e: MotionEvent?) = true
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDrawOver(c, parent, state)

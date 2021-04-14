@@ -95,7 +95,6 @@ data class HistoryEntry(
         result = 31 * result + (tastingId?.hashCode() ?: 0)
         result = 31 * result + comment.hashCode()
         result = 31 * result + type
-        result = 31 * result + favorite
         return result
     }
 }
