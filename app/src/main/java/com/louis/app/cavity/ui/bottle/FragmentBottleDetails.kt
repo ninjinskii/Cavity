@@ -168,6 +168,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             findNavController().navigate(action)
         }
 
+        binding.buttonShowHistory.setOnClickListener {
+            val action = FragmentBottleDetailsDirections.bottleDetailsToHistory(args.bottleId)
+            findNavController().navigate(action)
+        }
+
         binding.favorite.setOnClickListener {
             bottleDetailsViewModel.toggleFavorite()
         }
