@@ -18,16 +18,15 @@ class WineRecyclerAdapter : ListAdapter<WineWithBottles, WineViewHolder>(WineIte
         holder.bind(getItem(position))
     }
 
-    override fun getItemId(position: Int) = getItem(position).wineAndNaming.wine.id
+    override fun getItemId(position: Int) = getItem(position).wine.id
 
     override fun getItemViewType(position: Int) = R.layout.item_wine
 
     class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {
         override fun areItemsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
-            oldItem.wineAndNaming.wine.id == newItem.wineAndNaming.wine.id
+            oldItem.wine.id == newItem.wine.id
 
         override fun areContentsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
-            oldItem.wineAndNaming.wine == newItem.wineAndNaming.wine &&
-                oldItem.bottles == newItem.bottles
+            oldItem.wine == newItem.wine && oldItem.bottles == newItem.bottles
     }
 }

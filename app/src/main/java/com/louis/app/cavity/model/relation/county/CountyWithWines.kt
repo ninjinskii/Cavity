@@ -3,15 +3,13 @@ package com.louis.app.cavity.model.relation.county
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.Naming
-import com.louis.app.cavity.model.relation.NamingWithWines
+import com.louis.app.cavity.model.Wine
 
-data class CountyWithNamingsAndWines(
+data class CountyWithWines(
     @Embedded val county: County,
     @Relation(
-        entity = Naming::class,
         parentColumn = "id",
         entityColumn = "county_id"
     )
-    val namingsWithWines: List<NamingWithWines>
+    val wines: List<Wine>
 )

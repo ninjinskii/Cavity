@@ -26,8 +26,8 @@ interface WineDao {
     suspend fun getWineByIdNotLive(wineId: Long): Wine
 
     @Transaction
-    @Query("SELECT * FROM wine WHERE naming_id =:namingId ORDER BY color, naming_id")
-    fun getWineWithBottlesByNaming(namingId: Long): LiveData<List<WineWithBottles>>
+    @Query("SELECT * FROM wine WHERE county_id =:countyId ORDER BY color, naming")
+    fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
 
 //    @Transaction
 //    @Query("SELECT * FROM wine INNER JOIN bottle ON wine.id = bottle.wine_id WHERE county_id =:countyId AND consumed = 0 ORDER BY color, naming")

@@ -1,7 +1,6 @@
 package com.louis.app.cavity.model.relation.bottle
 
 import androidx.room.Embedded
-import androidx.room.Junction
 import androidx.room.Relation
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Grape
@@ -20,23 +19,16 @@ data class BoundedBottle(
     )
     val wineAndNaming: WineAndNaming,
     @Relation(
+        entity = QuantifiedBottleGrapeXRef::class,
         parentColumn = "id",
-        entityColumn = "id",
-        associateBy = Junction(
-            value = QuantifiedBottleGrapeXRef::class,
-            parentColumn = "bottle_id",
-            entityColumn = "grape_id"
-        )
+        entityColumn = "bottle_id"
     )
     val grapes: List<Grape>,
     @Relation(
+        entity = FilledBottleReviewXRef::class,
         parentColumn = "id",
-        entityColumn = "id",
-        associateBy = Junction(
-            value = FilledBottleReviewXRef::class,
-            parentColumn = "bottle_id",
-            entityColumn = "review_id"
-        )
+        entityColumn = "bottle_id"
+        //associateBy = ?
     )
     val reviews: List<Review>,
 )

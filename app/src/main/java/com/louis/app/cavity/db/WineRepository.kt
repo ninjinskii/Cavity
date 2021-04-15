@@ -20,10 +20,9 @@ class WineRepository private constructor(app: Application) {
 
     private val database = CavityDatabase.getInstance(app)
 
-    private val countyDao = database.countyDao()
-    private val namingDao = database.namingDao()
     private val wineDao = database.wineDao()
     private val bottleDao = database.bottleDao()
+    private val countyDao = database.countyDao()
     private val grapeDao = database.grapeDao()
     private val qGrapeDao = database.qGrapeDao()
     private val reviewDao = database.reviewDao()
@@ -40,7 +39,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun deleteWineById(wineId: Long) = wineDao.deleteWineById(wineId)
     fun getWineById(wineId: Long) = wineDao.getWineById(wineId)
     suspend fun getWineByIdNotLive(wineId: Long) = wineDao.getWineByIdNotLive(wineId)
-    fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByNaming(countyId)
+    fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
     fun getCountiesWithWines() = countyDao.getCountiesWithWines()
 
     suspend fun getWineAndBottleWithQGrapesAndFReviews() =
@@ -68,13 +67,6 @@ class WineRepository private constructor(app: Application) {
     suspend fun getAllCountiesNotLive() = countyDao.getAllCountiesNotLive()
     suspend fun updateCounties(counties: List<County>) = countyDao.updateCounties(counties)
     suspend fun deleteCounty(countyId: Long) = countyDao.deleteCounty(countyId)
-
-
-    // Naming
-    suspend fun insertNaming(naming: Naming) = namingDao.insertNaming(naming)
-    suspend fun updateNaming(naming: Naming) = namingDao.updateNaming(naming)
-    suspend fun deleteNaming(naming: Naming) = namingDao.deleteNaming(naming)
-    fun getBottlesForCounty(countyId: Long) = namingDao.getBottlesForCounty(countyId)
 
 
     // Bottle
