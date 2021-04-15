@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemReviewManagerBinding
+import com.louis.app.cavity.db.dao.ReviewWithFReviews
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.relation.review.ReviewWithFilledReviews
 
 class ReviewRecyclerAdapter(
     private val onRename: (Review) -> Unit,
     private val onDelete: (Review) -> Unit
 ) :
-    ListAdapter<ReviewWithFilledReviews, ReviewRecyclerAdapter.ReviewViewHolder>(
+    ListAdapter<ReviewWithFReviews, ReviewRecyclerAdapter.ReviewViewHolder>(
         ReviewItemDiffCallback()
     ) {
 
@@ -35,20 +35,12 @@ class ReviewRecyclerAdapter(
         holder.bind(getItem(position))
     }
 
-    class ReviewItemDiffCallback : DiffUtil.ItemCallback<ReviewWithFilledReviews>() {
-        override fun areItemsTheSame(
-            oldItem: ReviewWithFilledReviews,
-            newItem: ReviewWithFilledReviews
-        ): Boolean {
-            return oldItem.review.id == newItem.review.id
-        }
+    class ReviewItemDiffCallback : DiffUtil.ItemCallback<ReviewWithFReviews>() {
+        override fun areItemsTheSame(oldItem: ReviewWithFReviews, newItem: ReviewWithFReviews) =
+            oldItem.review.id == newItem.review.id
 
-        override fun areContentsTheSame(
-            oldItem: ReviewWithFilledReviews,
-            newItem: ReviewWithFilledReviews
-        ): Boolean {
-            return oldItem.review == newItem.review && oldItem.fReview.size == newItem.fReview.size
-        }
+        override fun areContentsTheSame(oldItem: ReviewWithFReviews, newItem: ReviewWithFReviews) =
+            oldItem.review == newItem.review && oldItem.fReview.size == newItem.fReview.size
     }
 
     inner class ReviewViewHolder(private val binding: ItemReviewManagerBinding) :
@@ -61,7 +53,7 @@ class ReviewRecyclerAdapter(
             }
         }
 
-        fun bind(reviewWithFilledReviews: ReviewWithFilledReviews) {
+        fun bind(reviewWithFilledReviews: ReviewWithFReviews) {
             val (review, fReview) = reviewWithFilledReviews
 
             with(binding) {

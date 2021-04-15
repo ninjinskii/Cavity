@@ -14,7 +14,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.SimpleInputDialog
-import com.louis.app.cavity.ui.addwine.FragmentAddWine
 import com.louis.app.cavity.ui.manager.ManagerViewModel
 import com.louis.app.cavity.util.showSnackbar
 
@@ -98,7 +97,7 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
         }
 
         try {
-            startActivityForResult(fileChooseIntent, FragmentAddWine.PICK_IMAGE_RESULT_CODE)
+            startActivityForResult(fileChooseIntent, PICK_IMAGE_RESULT_CODE)
         } catch (e: ActivityNotFoundException) {
             binding.coordinator.showSnackbar(R.string.no_file_explorer)
         }
@@ -132,7 +131,7 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == FragmentAddWine.PICK_IMAGE_RESULT_CODE) onImageSelected(data)
+            if (requestCode == PICK_IMAGE_RESULT_CODE) onImageSelected(data)
         }
     }
 

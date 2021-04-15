@@ -1,6 +1,6 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
-import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
+import com.louis.app.cavity.db.dao.QGrapeAndGrape
 
 class QuantifiedGrapeHelper {
 
@@ -38,7 +38,7 @@ class QuantifiedGrapeHelper {
         total -= qGrape.percentage
     }
 
-    fun submitQGrapes(qGrapes: List<QuantifiedGrapeAndGrape>) {
+    fun submitQGrapes(qGrapes: List<QGrapeAndGrape>) {
         total = qGrapes.sumBy { it.qGrape.percentage }
     }
 }

@@ -78,7 +78,7 @@ data class BoundedBottle(
         parentColumn = "id",
         entityColumn = "id",
         associateBy = Junction(
-            value = QuantifiedGrapeDao::class,
+            value = QGrape::class,
             parentColumn = "bottle_id",
             entityColumn = "grape_id"
         )

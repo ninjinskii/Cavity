@@ -9,9 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.HistoryEntry
-import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
-import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
@@ -92,7 +92,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private suspend fun insertQGrapes(bottleId: Long) {
         val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
         val qGrapes = uiQGrapes.map {
-            QuantifiedBottleGrapeXRef(bottleId, it.grapeId, it.percentage)
+            QGrape(bottleId, it.grapeId, it.percentage)
         }
 
         repository.replaceQGrapesForBottle(bottleId, qGrapes)
@@ -101,7 +101,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private suspend fun insertFReviews(bottleId: Long) {
         val uiFReviews = reviewManager.fReviews.value ?: emptyList()
         val fReviews = uiFReviews.map {
-            FilledBottleReviewXRef(bottleId, it.reviewId, it.value)
+            FReview(bottleId, it.reviewId, it.value)
         }
 
         repository.replaceFReviewsForBottle(bottleId, fReviews)

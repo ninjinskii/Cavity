@@ -10,6 +10,7 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemCountyManagerBinding
+import com.louis.app.cavity.db.dao.CountyWithWines
 import com.louis.app.cavity.model.County
 import java.util.*
 

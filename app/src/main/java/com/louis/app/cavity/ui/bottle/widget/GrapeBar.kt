@@ -11,7 +11,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
-import com.louis.app.cavity.model.relation.grape.QuantifiedGrapeAndGrape
+import com.louis.app.cavity.db.dao.QGrapeAndGrape
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.cos
 
@@ -28,7 +28,7 @@ class GrapeBar @JvmOverloads constructor(
         private const val TEXT_ANGLE = 50f
     }
 
-    private val grapes = mutableListOf<QuantifiedGrapeAndGrape>()
+    private val grapes = mutableListOf<QGrapeAndGrape>()
     private val backgroundColor = context.getColor(R.color.cavity_grey)
     private val colors = listOf(
         R.color.cavity_red,
@@ -70,7 +70,7 @@ class GrapeBar @JvmOverloads constructor(
     private var endX = 0f
     private var barY = 0f
 
-    fun setGrapes(grapes: List<QuantifiedGrapeAndGrape>, anim: Boolean) {
+    fun setGrapes(grapes: List<QGrapeAndGrape>, anim: Boolean) {
         val empty: Boolean
 
         this.grapes.apply {

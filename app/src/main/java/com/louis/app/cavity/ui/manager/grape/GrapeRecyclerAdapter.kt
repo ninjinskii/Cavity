@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemGrapeManagerBinding
+import com.louis.app.cavity.db.dao.GrapeWithQGrapes
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.grape.GrapeWithQuantifiedGrapes
 
 class GrapeRecyclerAdapter(
     private val onRename: (Grape) -> Unit,
     private val onDelete: (Grape) -> Unit
 ) :
-    ListAdapter<GrapeWithQuantifiedGrapes, GrapeRecyclerAdapter.GrapeViewHolder>(
+    ListAdapter<GrapeWithQGrapes, GrapeRecyclerAdapter.GrapeViewHolder>(
         GrapeItemDiffCallback()
     ) {
 
@@ -31,19 +31,12 @@ class GrapeRecyclerAdapter(
     override fun onBindViewHolder(holder: GrapeViewHolder, position: Int) =
         holder.bind(getItem(position))
 
-    class GrapeItemDiffCallback : DiffUtil.ItemCallback<GrapeWithQuantifiedGrapes>() {
-        override fun areItemsTheSame(
-            oldItem: GrapeWithQuantifiedGrapes,
-            newItem: GrapeWithQuantifiedGrapes
-        ) =
+    class GrapeItemDiffCallback : DiffUtil.ItemCallback<GrapeWithQGrapes>() {
+        override fun areItemsTheSame(oldItem: GrapeWithQGrapes, newItem: GrapeWithQGrapes) =
             oldItem.grape.id == newItem.grape.id
 
-        override fun areContentsTheSame(
-            oldItem: GrapeWithQuantifiedGrapes,
-            newItem: GrapeWithQuantifiedGrapes
-        ) =
+        override fun areContentsTheSame(oldItem: GrapeWithQGrapes, newItem: GrapeWithQGrapes) =
             oldItem.grape == newItem.grape && oldItem.qGrapes.size == oldItem.qGrapes.size
-
     }
 
     inner class GrapeViewHolder(private val binding: ItemGrapeManagerBinding) :
@@ -56,7 +49,7 @@ class GrapeRecyclerAdapter(
             }
         }
 
-        fun bind(grapeWithQGrape: GrapeWithQuantifiedGrapes) {
+        fun bind(grapeWithQGrape: GrapeWithQGrapes) {
             val (grape, qGrapes) = grapeWithQGrape
 
             with(binding) {

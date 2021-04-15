@@ -6,8 +6,8 @@ import androidx.lifecycle.*
 import androidx.paging.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.model.HistoryEntry
-import com.louis.app.cavity.model.relation.history.BoundedHistoryEntry
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce

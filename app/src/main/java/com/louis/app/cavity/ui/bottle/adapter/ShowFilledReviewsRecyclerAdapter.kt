@@ -11,11 +11,11 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemShowReviewMedalBinding
 import com.louis.app.cavity.databinding.ItemShowReviewRateBinding
 import com.louis.app.cavity.databinding.ItemShowReviewStarBinding
-import com.louis.app.cavity.model.relation.review.FilledReviewAndReview
+import com.louis.app.cavity.db.dao.FReviewAndReview
 
 
 class ShowFilledReviewsRecyclerAdapter :
-    ListAdapter<FilledReviewAndReview, ShowFilledReviewsRecyclerAdapter.BaseReviewViewHolder>(
+    ListAdapter<FReviewAndReview, ShowFilledReviewsRecyclerAdapter.BaseReviewViewHolder>(
         ReviewItemDiffCallback()
     ) {
 
@@ -72,17 +72,11 @@ class ShowFilledReviewsRecyclerAdapter :
         }
     }
 
-    class ReviewItemDiffCallback : DiffUtil.ItemCallback<FilledReviewAndReview>() {
-        override fun areItemsTheSame(
-            oldItem: FilledReviewAndReview,
-            newItem: FilledReviewAndReview
-        ) =
+    class ReviewItemDiffCallback : DiffUtil.ItemCallback<FReviewAndReview>() {
+        override fun areItemsTheSame(oldItem: FReviewAndReview, newItem: FReviewAndReview) =
             oldItem.review.id == newItem.review.id
 
-        override fun areContentsTheSame(
-            oldItem: FilledReviewAndReview,
-            newItem: FilledReviewAndReview
-        ) =
+        override fun areContentsTheSame(oldItem: FReviewAndReview, newItem: FReviewAndReview) =
             oldItem == newItem
     }
 
@@ -94,7 +88,7 @@ class ShowFilledReviewsRecyclerAdapter :
             ContextCompat.getColor(itemView.context, R.color.medal_gold)
         )
 
-        override fun bind(item: FilledReviewAndReview) = with(medalBinding) {
+        override fun bind(item: FReviewAndReview) = with(medalBinding) {
             val (fReview, review) = item
 
             contestName.text = review.contestName
@@ -105,7 +99,7 @@ class ShowFilledReviewsRecyclerAdapter :
     inner class RateViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
         private val rateBinding = ItemShowReviewRateBinding.bind(itemView)
 
-        override fun bind(item: FilledReviewAndReview) = with(rateBinding) {
+        override fun bind(item: FReviewAndReview) = with(rateBinding) {
             val (fReview, review) = item
             val total = if (review.type == 1) 20 else 100
 
@@ -117,7 +111,7 @@ class ShowFilledReviewsRecyclerAdapter :
     inner class StarViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
         private val starBinding = ItemShowReviewStarBinding.bind(itemView)
 
-        override fun bind(item: FilledReviewAndReview) = with(starBinding) {
+        override fun bind(item: FReviewAndReview) = with(starBinding) {
             val (fReview, review) = item
 
             contestName.text = review.contestName
@@ -126,6 +120,6 @@ class ShowFilledReviewsRecyclerAdapter :
     }
 
     abstract class BaseReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        abstract fun bind(item: FilledReviewAndReview)
+        abstract fun bind(item: FReviewAndReview)
     }
 }

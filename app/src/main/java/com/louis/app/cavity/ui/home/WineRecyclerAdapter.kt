@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
-import com.louis.app.cavity.model.relation.wine.WineWithBottles
+import com.louis.app.cavity.db.dao.WineWithBottles
 
 class WineRecyclerAdapter : ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {

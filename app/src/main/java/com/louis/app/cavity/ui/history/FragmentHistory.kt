@@ -23,7 +23,7 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
-import com.louis.app.cavity.model.relation.history.BoundedHistoryEntry
+import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.ui.history.adapter.HistoryDivider
