@@ -72,9 +72,10 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
             naming,
             color,
             cuvee,
-            county.id,
             isOrganic,
-            _image.value ?: ""
+            _image.value ?: "",
+            county.id,
+            0,
         )
 
         viewModelScope.launch(IO) {

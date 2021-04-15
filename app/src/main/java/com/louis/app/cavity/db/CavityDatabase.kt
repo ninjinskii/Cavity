@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
         TastingFriendXRef::class,
         FriendHistoryEntryXRef::class,
     ],
-    version = 47,
+    version = 48,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -101,6 +101,7 @@ abstract class CavityDatabase : RoomDatabase() {
                     }
 
                     val counties = 1..10
+                    val namings = 1..10
 
                     val wineNames = arrayOf(
                         "Immelé",
@@ -148,17 +149,22 @@ abstract class CavityDatabase : RoomDatabase() {
                         "Clarinette"
                     )
 
+                    repeat(10) {
+                        namingDao!!.insertNaming(Naming(naming = wineNamings[it], countyId = counties.random().toLong()))
+                    }
+
                     repeat(50) {
                         wineDao!!.insertWine(
                             Wine(
                                 0,
                                 wineNames.random(),
-                                wineNamings.random(),
+                                "",
                                 wineColors.random(),
                                 "",
-                                counties.random().toLong(),
                                 (0..1).random(),
-                                ""
+                                "",
+                                counties.random().toLong(),
+                                namings.random().toLong()
                             )
                         )
                     }

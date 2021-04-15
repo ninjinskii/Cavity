@@ -17,6 +17,9 @@ interface GrapeDao {
     suspend fun deleteGrape(grape: Grape)
 
     @Query("SELECT * FROM grape")
+    fun getAllGrapes(): LiveData<List<Grape>>
+
+    @Query("SELECT * FROM grape")
     suspend fun getAllGrapesNotLive(): List<Grape>
 
     @Transaction

@@ -42,8 +42,8 @@ class WineRepository private constructor(app: Application) {
     fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
     fun getCountiesWithWines() = countyDao.getCountiesWithWines()
 
-    suspend fun getWineAndBottleWithQGrapesAndFReviews() =
-        bottleDao.getBottleAndWineWithQGrapesAndFReview()
+    fun getBoundedBottles() = bottleDao.getBoundedBottles()
+    suspend fun getBoundedBottlesNotLive() = bottleDao.getBoundedBottlesNotLive()
 
 
     // County
@@ -128,6 +128,7 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun deleteGrape(grape: Grape) = grapeDao.deleteGrape(grape)
     suspend fun getQGrape(bottleId: Long, grapeId: Long) = qGrapeDao.getQGrape(bottleId, grapeId)
+    fun getAllGrapes() = grapeDao.getAllGrapes()
     suspend fun getAllGrapesNotLive() = grapeDao.getAllGrapesNotLive()
     fun getGrapeWithQuantifiedGrapes() = grapeDao.getGrapeWithQuantifiedGrapes()
 
@@ -182,6 +183,7 @@ class WineRepository private constructor(app: Application) {
     }
 
     suspend fun deleteReview(review: Review) = reviewDao.deleteReview(review)
+    fun getAllReviews() = reviewDao.getAllReviews()
     suspend fun getAllReviewsNotLive() = reviewDao.getAllReviewsNotLive()
     fun getReviewWithFilledReviews() = reviewDao.getReviewWithFilledReviews()
 

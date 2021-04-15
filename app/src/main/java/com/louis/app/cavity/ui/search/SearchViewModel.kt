@@ -1,24 +1,32 @@
 package com.louis.app.cavity.ui.search
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.louis.app.cavity.R
+import com.louis.app.cavity.db.BoundedBottle
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.relation.bottle.BoundedBottle
 import com.louis.app.cavity.ui.search.filters.*
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
-    private val bottlesAndWine = mutableListOf<BoundedBottle>()
+    private val dumbEvent = MutableLiveData<Unit>()
+
+    private val _results = MediatorLiveData<List<BoundedBottle>>().apply {
+        addSource(repository.getBoundedBottles()) {
+            bottles = it
+            filter(it)
+        }
+        addSource(dumbEvent) { filter(bottles) }
+    }
+    val results: LiveData<List<BoundedBottle>>
+        get() = _results
+
+    private var bottles = emptyList<BoundedBottle>()
 
     private var currentBeyondDate: Long? = null
     private var currentUntilDate: Long? = null
@@ -33,57 +41,32 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private var grapeFilter: WineFilter = NoFilter
     private var reviewFilter: WineFilter = NoFilter
 
-    private val _results = MutableLiveData<List<BoundedBottle>>()
-    val results: LiveData<List<BoundedBottle>>
-        get() = _results
-
-    var counties = emptyList<Long>()
+    var selectedCounties = emptyList<County>()
         private set
 
-    var grapes = emptyList<Long>()
+    var selectedGrapes = emptyList<Grape>()
         private set
 
-    var reviews = emptyList<Long>()
+    var selectedReviews = emptyList<Review>()
         private set
 
-    init {
-        viewModelScope.launch(IO) {
-            bottlesAndWine.addAll(repository.getWineAndBottleWithQGrapesAndFReviews())
-            _results.postValue(bottlesAndWine)
-        }
-    }
+    fun getAllCounties() = repository.getAllCounties()
 
-    suspend fun getAllCountiesNotLive() = repository.getAllCountiesNotLive()
+    fun getAllGrapes() = repository.getAllGrapes()
 
-    suspend fun getAllGrapesNotLive() = repository.getAllGrapesNotLive()
-
-    suspend fun getAllReviewsNotLive() = repository.getAllReviewsNotLive()
-
-    private fun filter() {
-        viewModelScope.launch(Default) {
-            val filters = listOf(
-                countyFilter, colorFilter, otherFilter, vintageFilter,
-                textFilter, priceFilter, dateFilter, grapeFilter, reviewFilter
-            )
-
-            val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
-            val filtered = combinedFilters.meetFilters(bottlesAndWine)
-
-            _results.postValue(filtered)
-        }
-    }
+    fun getAllReviews() = repository.getAllReviews()
 
     fun setCountiesFilters(filteredCounties: List<County>) {
-        counties = filteredCounties.map { it.id }
+        selectedCounties = filteredCounties
 
-        val countyFilters: List<WineFilter> = counties.map { FilterCounty(it) }
+        val countyFilters: List<WineFilter> = selectedCounties.map { FilterCounty(it) }
 
         countyFilter =
             if (countyFilters.isNotEmpty())
                 countyFilters.reduce { acc, filterCounty -> acc.orCombine(filterCounty) }
             else NoFilter
 
-        filter()
+        dumbEvent.postValue(Unit)
     }
 
     fun setColorFilters(colorCheckedChipIds: List<Int>) {
@@ -103,7 +86,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                 colorFilters.reduce { acc, wineFilter -> acc.orCombine(wineFilter) }
             else NoFilter
 
-        filter()
+        dumbEvent.postValue(Unit)
     }
 
     fun setOtherFilters(otherCheckedChipIds: List<Int>) {
@@ -119,22 +102,22 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                 otherFilters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
             else NoFilter
 
-        filter()
+        dumbEvent.postValue(Unit)
     }
 
     fun setVintageFilter(minValue: Int, maxValue: Int) {
         vintageFilter = FilterVintage(minValue, maxValue)
-        filter()
+        dumbEvent.postValue(Unit)
     }
 
     fun setTextFilter(query: String) {
         textFilter = if (query.isNotEmpty()) FilterText(query) else NoFilter
-        filter()
+        dumbEvent.postValue(Unit)
     }
 
     fun setPriceFilter(minValue: Int, maxValue: Int) {
         priceFilter = if (minValue != -1) FilterPrice(minValue, maxValue) else NoFilter
-        filter()
+        dumbEvent.postValue(Unit)
     }
 
     fun setBeyondFilter(beyond: Long?) {
@@ -146,7 +129,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             else
                 FilterDate(beyond, currentUntilDate)
 
-        filter()
+        dumbEvent.postValue(Unit)
     }
 
     fun setUntilFilter(until: Long?) {
@@ -158,30 +141,52 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             else
                 FilterDate(currentBeyondDate, until)
 
-        filter()
+        dumbEvent.postValue(Unit)
     }
 
     fun setGrapeFilters(filteredGrapes: List<Grape>) {
-        grapes = filteredGrapes.map { it.id }
-        val grapeFilters: List<WineFilter> = grapes.map { FilterGrape(it) }
+        selectedGrapes = filteredGrapes
+
+        val grapeFilters: List<WineFilter> = selectedGrapes.map { FilterGrape(it) }
 
         grapeFilter =
             if (grapeFilters.isNotEmpty())
                 grapeFilters.reduce { acc, filterGrape -> acc.orCombine(filterGrape) }
             else NoFilter
 
-        filter()
+        dumbEvent.postValue(Unit)
     }
 
     fun setReviewFilters(filteredReviews: List<Review>) {
-        reviews = filteredReviews.map { it.id }
-        val reviewFilters: List<WineFilter> = reviews.map { FilterReview(it) }
+        selectedReviews = filteredReviews
+
+        val reviewFilters: List<WineFilter> = selectedReviews.map { FilterReview(it) }
 
         reviewFilter =
             if (reviewFilters.isNotEmpty())
                 reviewFilters.reduce { acc, filterReview -> acc.orCombine(filterReview) }
             else NoFilter
 
-        filter()
+        dumbEvent.postValue(Unit)
+    }
+
+    private fun filter(bottles: List<BoundedBottle>) {
+        viewModelScope.launch(Default) {
+            val filters = listOf(
+                countyFilter, colorFilter, otherFilter, vintageFilter,
+                textFilter, priceFilter, dateFilter, grapeFilter, reviewFilter
+            )
+
+            val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
+            val filtered = combinedFilters.meetFilters(bottles)
+
+            _results.postValue(filtered)
+        }
+    }
+}
+
+class A<T> : MutableLiveData<T>() {
+    fun trigger() {
+        postValue(value)
     }
 }

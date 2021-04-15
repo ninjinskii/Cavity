@@ -2,8 +2,10 @@ package com.louis.app.cavity.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.relation.bottle.BoundedBottle
+import com.louis.app.cavity.model.*
+import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
+import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
+import com.louis.app.cavity.model.relation.wine.WineAndNaming
 
 @Dao
 interface BottleDao {
@@ -44,6 +46,58 @@ interface BottleDao {
     suspend fun revertBottleConsumption(bottleId: Long)
 
     @Transaction
+    @Query("SELECT * FROM bottle WHERE bottle.consumed = 0")
+    fun getBoundedBottles(): LiveData<List<BoundedBottle>>
+
+    @Transaction
     @Query("SELECT bottle.* FROM wine, bottle WHERE wine.id = bottle.wine_id AND bottle.consumed = 0")
-    suspend fun getBottleAndWineWithQGrapesAndFReview(): List<BoundedBottle>
+    suspend fun getBoundedBottlesNotLive(): List<BoundedBottle>
 }
+
+data class BottleAndWine(
+    @Embedded val bottle: Bottle,
+    @Relation(
+        parentColumn = "wine_id",
+        entityColumn = "id"
+    )
+    val wine: Wine,
+)
+
+data class BottleWithHistoryEntries(
+    @Embedded val bottle: Bottle,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "bottle_id"
+    )
+    val historyEntries: List<HistoryEntry>
+)
+
+data class BoundedBottle(
+    @Embedded val bottle: Bottle,
+    @Relation(
+        entity = Wine::class,
+        parentColumn = "wine_id",
+        entityColumn = "id"
+    )
+    val wineAndNaming: WineAndNaming,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(
+            value = QuantifiedBottleGrapeXRef::class,
+            parentColumn = "bottle_id",
+            entityColumn = "grape_id"
+        )
+    )
+    val grapes: List<Grape>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(
+            value = FilledBottleReviewXRef::class,
+            parentColumn = "bottle_id",
+            entityColumn = "review_id"
+        )
+    )
+    val reviews: List<Review>,
+)

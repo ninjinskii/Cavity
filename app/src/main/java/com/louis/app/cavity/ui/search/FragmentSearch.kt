@@ -28,8 +28,6 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.util.*
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.max
 
@@ -65,7 +63,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             setBottomSheetPeekHeight()
         }
 
-        initDynamicChips()
+        observe()
         initColorChips()
         initOtherChips()
         initRecyclerView()
@@ -83,48 +81,45 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         bottomSheetBehavior.setPeekHeight(peekHeight, true)
     }
 
-    private fun initDynamicChips() {
-        //searchViewModel // Do not init searchViewModel in IO threads
+    private fun observe() {
+        searchViewModel.getAllCounties().observe(viewLifecycleOwner) { counties ->
+            val preselectedCounties = searchViewModel.selectedCounties.map { it.id }
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .load(counties)
+                .into(binding.countyChipGroup)
+                .preselect(preselectedCounties)
+                .doOnClick { prepareCountyFilters() }
+                .build()
+                .go()
+        }
 
-        with(searchViewModel) {
-            lifecycleScope.launch(IO) {
-                val countyList = getAllCountiesNotLive()
-                val grapeList = getAllGrapesNotLive()
-                val reviewList = getAllReviewsNotLive()
-                val preselectedCounties = counties
-                val preselectedGrapes = grapes
-                val preselectedReviews = reviews
+        searchViewModel.getAllGrapes().observe(viewLifecycleOwner) { grapes ->
+            val preselectedGrapes = searchViewModel.selectedGrapes.map { it.id }
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .load(grapes)
+                .into(binding.grapeChipGroup)
+                .preselect(preselectedGrapes)
+                .doOnClick { prepareGrapeFilters() }
+                .build()
+                .go()
 
-                ChipLoader.Builder()
-                    .with(lifecycleScope)
-                    .useInflater(layoutInflater)
-                    .load(countyList)
-                    .into(binding.countyChipGroup)
-                    .preselect(preselectedCounties)
-                    .doOnClick { prepareCountyFilters() }
-                    .build()
-                    .go()
+        }
 
-                ChipLoader.Builder()
-                    .with(lifecycleScope)
-                    .useInflater(layoutInflater)
-                    .load(grapeList)
-                    .into(binding.grapeChipGroup)
-                    .preselect(preselectedGrapes)
-                    .doOnClick { prepareGrapeFilters() }
-                    .build()
-                    .go()
-
-                ChipLoader.Builder()
-                    .with(lifecycleScope)
-                    .useInflater(layoutInflater)
-                    .load(reviewList)
-                    .into(binding.reviewChipGroup)
-                    .preselect(preselectedReviews)
-                    .doOnClick { prepareReviewFilters() }
-                    .build()
-                    .go()
-            }
+        searchViewModel.getAllReviews().observe(viewLifecycleOwner) { reviews ->
+            val preselectedReviews = searchViewModel.selectedReviews.map { it.id }
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .load(reviews)
+                .into(binding.reviewChipGroup)
+                .preselect(preselectedReviews)
+                .doOnClick { prepareReviewFilters() }
+                .build()
+                .go()
         }
     }
 
@@ -174,7 +169,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         searchViewModel.results.observe(viewLifecycleOwner) {
-            L.v("observer triggered", "DEBUGGING SEARCH")
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter.submitList(it.toMutableList())
