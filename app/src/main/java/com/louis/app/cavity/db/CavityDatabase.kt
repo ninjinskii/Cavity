@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
     entities = [
         County::class,
         Wine::class,
+        Naming::class,
         Bottle::class,
         Grape::class,
         Review::class,
@@ -33,9 +34,10 @@ import kotlinx.coroutines.launch
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
-    abstract fun wineDao(): WineDao
-    abstract fun bottleDao(): BottleDao
     abstract fun countyDao(): CountyDao
+    abstract fun wineDao(): WineDao
+    abstract fun namingDao(): NamingDao
+    abstract fun bottleDao(): BottleDao
     abstract fun grapeDao(): GrapeDao
     abstract fun qGrapeDao(): QuantifiedGrapeDao
     abstract fun reviewDao(): ReviewDao
@@ -70,9 +72,10 @@ abstract class CavityDatabase : RoomDatabase() {
         private val callback = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                val bottleDao = instance?.bottleDao()
-                val wineDao = instance?.wineDao()
                 val countyDao = instance?.countyDao()
+                val wineDao = instance?.wineDao()
+                val namingDao = instance?.namingDao()
+                val bottleDao = instance?.bottleDao()
                 val grapeDao = instance?.grapeDao()
                 val qGrapeDao = instance?.qGrapeDao()
                 val reviewDao = instance?.reviewDao()
