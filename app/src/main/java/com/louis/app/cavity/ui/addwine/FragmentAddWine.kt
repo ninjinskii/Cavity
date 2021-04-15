@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +17,7 @@ import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.Naming
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
@@ -48,6 +50,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         snackbarProvider = activity as SnackbarProvider
 
         inflateChips()
+        initDropdown()
         setListeners()
         observe()
     }
@@ -69,8 +72,24 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 .load(toInflate.toMutableList())
                 .into(binding.countyChipGroup)
                 .preselect(args.countyId)
+                .doOnClick { v -> setCounty(v) }
                 .build()
                 .go()
+        }
+    }
+
+    private fun initDropdown() {
+        val adapter = ArrayAdapter<Naming>(requireContext(), R.layout.item_naming)
+        binding.naming.setAdapter(adapter)
+        binding.naming.setOnItemClickListener { parent, _, position, _ ->
+            val selected = parent.getItemAtPosition(position) as Naming
+            addWineViewModel.namingId = selected.id
+        }
+
+        addWineViewModel.namings.observe(viewLifecycleOwner) {
+            adapter.clear()
+            adapter.addAll(it)
+            binding.naming.setText("")
         }
     }
 
@@ -82,42 +101,38 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 val valid = nameLayout.validate() and namingLayout.validate()
 
                 if (valid) {
-                    val name = name.text.toString().trim()
-                    val naming = naming.text.toString().trim()
-                    val cuvee = cuvee.text.toString().trim()
-                    val isOrganic = organicWine.isChecked.toInt()
-                    val color = colorChipGroup.checkedChipId
-                    val checkedCountyChipId = countyChipGroup.checkedChipId
-
                     if (countyChipGroup.checkedChipId == View.NO_ID) {
                         coordinator.showSnackbar(R.string.no_county)
                         nestedScrollView.smoothScrollTo(0, 0)
                         return@setOnClickListener
                     }
 
+                    val name = name.text.toString().trim()
+                    val cuvee = cuvee.text.toString().trim()
+                    val isOrganic = organicWine.isChecked.toInt()
+                    val color = colorChipGroup.checkedChipId
+                    val checkedCountyChipId = countyChipGroup.checkedChipId
+
                     val county = countyChipGroup
                         .findViewById<Chip>(checkedCountyChipId)
                         .getTag(R.string.tag_chip_id) as County
 
-                    addWineViewModel.saveWine(
-                        name,
-                        naming,
-                        cuvee,
-                        isOrganic,
-                        color,
-                        county
-                    )
+                    addWineViewModel.saveWine(name, cuvee, isOrganic, color, county)
                 }
             }
         }
 
         binding.buttonAddCounty.setOnClickListener {
-            showDialog()
+            showCountyDialog()
         }
 
 //        binding.buttonAddCountyIfEmpty.setOnClickListener {
 //            showDialog()
 //        }
+
+        binding.namingLayout.setStartIconOnClickListener {
+            showNamingDialog()
+        }
 
         binding.buttonBrowsePhoto.setOnClickListener {
             val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -143,12 +158,23 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
     }
 
-    private fun showDialog() {
+    private fun showCountyDialog() {
         val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.add_county,
             hint = R.string.county
         ) {
-            addWineViewModel.insertCounty(it)
+            addWineViewModel.insertCounty(it.trim())
+        }
+
+        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
+    }
+
+    private fun showNamingDialog() {
+        val dialogResources = SimpleInputDialog.DialogContent(
+            title = R.string.add_naming,
+            hint = R.string.naming
+        ) {
+            addWineViewModel.insertNaming(it.trim())
         }
 
         SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
@@ -156,12 +182,13 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     private fun observe() {
         addWineViewModel.updatedWine.observe(viewLifecycleOwner) {
+            val (wine, _naming) = it
             with(binding) {
-                naming.setText(it.naming)
-                name.setText(it.name)
-                cuvee.setText(it.cuvee)
-                (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
-                organicWine.isChecked = it.isOrganic.toBoolean()
+                naming.setText(_naming.naming)
+                name.setText(wine.name)
+                cuvee.setText(wine.cuvee)
+                (colorChipGroup.getChildAt(wine.color) as Chip).isChecked = true
+                organicWine.isChecked = wine.isOrganic.toBoolean()
             }
         }
 
@@ -194,8 +221,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private fun requestMediaPersistentPermission(fileBrowserIntent: Intent?) {
         if (fileBrowserIntent != null) {
             val flags = (fileBrowserIntent.flags
-                    and (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    or Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
+                and (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                or Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
 
             fileBrowserIntent.data?.let {
                 activity?.contentResolver?.takePersistableUriPermission(it, flags)
@@ -238,6 +265,11 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             textButtonTakePhoto.setVisible(!hasImage)
             textButtonBrowsePhoto.setVisible(!hasImage)
         }
+    }
+
+    private fun setCounty(view: View) {
+        val county = view.getTag(R.string.tag_chip_id) as County
+        addWineViewModel.setCountyId(county.id)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

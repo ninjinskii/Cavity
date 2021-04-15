@@ -44,7 +44,7 @@ class FilterText(private val query: String) : WineFilter {
         return boundedBottle.filter {
             val (wine, naming) = it.wineAndNaming
             val slug =
-                wine.name + naming.naming + wine.cuvee +
+                wine.name + naming + wine.cuvee +
                     it.bottle.buyLocation + it.bottle.otherInfo + it.bottle.tasteComment
 
             return@filter slug.contains(query, ignoreCase = true)

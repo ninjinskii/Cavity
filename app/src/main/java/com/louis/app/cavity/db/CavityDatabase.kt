@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
         TastingXFriend::class,
         HistoryXFriend::class,
     ],
-    version = 48,
+    version = 49,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -155,7 +155,6 @@ abstract class CavityDatabase : RoomDatabase() {
                             Wine(
                                 0,
                                 wineNames.random(),
-                                "",
                                 wineColors.random(),
                                 "",
                                 (0..1).random(),

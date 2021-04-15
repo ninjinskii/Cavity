@@ -24,4 +24,5 @@ data class Naming(
 
     override fun getItemId() = id
     override fun getChipText() = naming
+    override fun toString() = naming
 }

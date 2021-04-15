@@ -23,11 +23,16 @@ interface WineDao {
     @Query("SELECT * FROM wine WHERE id =:wineId")
     fun getWineById(wineId: Long): LiveData<Wine>
 
+    @Transaction
     @Query("SELECT * FROM wine WHERE id =:wineId")
-    suspend fun getWineByIdNotLive(wineId: Long): Wine
+    suspend fun getWineByIdNotLive(wineId: Long): WineAndNaming
 
     @Transaction
-    @Query("SELECT * FROM wine WHERE county_id =:countyId ORDER BY color, naming")
+    @Query("SELECT * FROM wine WHERE id =:wineId")
+    suspend fun getWineFullNamingByIdNotLive(wineId: Long): WineAndFullNaming
+
+    @Transaction
+    @Query("SELECT * FROM wine WHERE county_id =:countyId ORDER BY color, naming_id")
     fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
 
 //    @Transaction
@@ -38,8 +43,19 @@ interface WineDao {
 data class WineAndNaming(
     @Embedded val wine: Wine,
     @Relation(
+        entity = Naming::class,
         parentColumn = "naming_id",
-        entityColumn = "id"
+        entityColumn = "id",
+        projection = ["naming"]
+    )
+    val naming: String
+)
+
+data class WineAndFullNaming(
+    @Embedded val wine: Wine,
+    @Relation(
+        parentColumn = "naming_id",
+        entityColumn = "id",
     )
     val naming: Naming
 )

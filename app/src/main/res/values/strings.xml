@@ -13,7 +13,9 @@
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
     <string name="no_county">Aucune région sélectionnée.</string>
+    <string name="empty_naming">Sélectionnez une appellation.</string>
     <string name="county_already_exists">Cette région existe déjà.</string>
+    <string name="naming_already_exists">Cette appellation existe déjà.</string>
     <string name="no_file_explorer">Aucune application d\'exploration de fichier trouvée.</string>
     <string name="base_error">Une erreur est survenue.</string>
     <string name="required_field">Champ requis.</string>
@@ -62,6 +64,7 @@
     <string name="organic">Bio</string>
     <string name="organic_wine">Vin issu de l\'agriculture biologique</string>
     <string name="add_county">Ajouter une région</string>
+    <string name="add_naming">Ajouter une appellation</string>
     <string name="wine_added">Le vin a été ajouté.</string>
     <string name="wine_updated">Le vin a été modifié.</string>
     <string name="wine_color_white">Blanc</string>
@@ -189,6 +192,9 @@
     <string name="grape_deleted">Cépage supprimé.</string>
     <string name="grape_renamed">Cépage renommé.</string>
     <string name="grape_added">Cépage ajouté.</string>
+    <string name="naming_added">Appellation ajoutée.</string>
+    <string name="naming_updated">Appellation modifiée.</string>
+    <string name="naming_deleted">Appellation supprimée.</string>
     <string name="review_deleted">Avis d\'expert supprimé.</string>
     <string name="review_renamed">Avis d\'expert renommé.</string>
     <string name="review_added">Avis d\'expert créé.</string>

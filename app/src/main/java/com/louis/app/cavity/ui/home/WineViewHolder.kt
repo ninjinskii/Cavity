@@ -44,7 +44,7 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
             bottleRecyclerView.setVisible(false)
 
             wineName.text = wine.name
-            wineNaming.text = wine.naming
+            wineNaming.text = naming
             bottlesCount.text = bottles.size.toString()
 
             val rightIcon = if (wine.isOrganic.toBoolean()) bioIcon else null
@@ -82,7 +82,7 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
                 wine.id,
                 wine.countyId,
                 wine.name,
-                wine.naming,
+                naming,
                 wine.isOrganic.toBoolean(),
                 wine.color
             )

@@ -1,9 +1,7 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.lifecycle.LiveData
+import androidx.room.*
 import com.louis.app.cavity.model.Naming
 
 @Dao
@@ -16,4 +14,10 @@ interface NamingDao {
 
     @Delete
     suspend fun deleteNaming(naming: Naming)
+
+    @Query("SELECT * FROM naming WHERE county_id=:countyId")
+    fun getNamingsForCounty(countyId: Long): LiveData<List<Naming>>
+
+    @Query("SELECT * FROM naming WHERE id=:namingId")
+    suspend fun getNamingById(namingId: Long): Naming
 }

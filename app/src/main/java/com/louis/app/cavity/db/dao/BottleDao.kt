@@ -51,10 +51,11 @@ interface BottleDao {
 data class BottleAndWine(
     @Embedded val bottle: Bottle,
     @Relation(
+        entity = Wine::class,
         parentColumn = "wine_id",
         entityColumn = "id"
     )
-    val wine: Wine, // TODO: wine and naming (probably)
+    val wine: WineAndNaming,
 )
 
 data class BottleWithHistoryEntries(
