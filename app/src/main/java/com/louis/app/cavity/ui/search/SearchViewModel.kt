@@ -3,8 +3,8 @@ package com.louis.app.cavity.ui.search
 import android.app.Application
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.BoundedBottle
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review

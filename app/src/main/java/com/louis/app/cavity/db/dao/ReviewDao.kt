@@ -1,9 +1,9 @@
-package com.louis.app.cavity.db
+package com.louis.app.cavity.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.relation.review.ReviewWithFilledReviews
 
 @Dao
 interface ReviewDao {
@@ -24,5 +24,14 @@ interface ReviewDao {
 
     @Transaction
     @Query("SELECT * FROM review")
-    fun getReviewWithFilledReviews(): LiveData<List<ReviewWithFilledReviews>>
+    fun getReviewWithFilledReviews(): LiveData<List<ReviewWithFReviews>>
 }
+
+data class ReviewWithFReviews(
+    @Embedded val review: Review,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "review_id"
+    )
+    val fReview: List<FReview>
+)

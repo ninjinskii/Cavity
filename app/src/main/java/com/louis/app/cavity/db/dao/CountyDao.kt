@@ -1,9 +1,9 @@
-package com.louis.app.cavity.db
+package com.louis.app.cavity.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.relation.county.CountyWithWines
+import com.louis.app.cavity.model.Wine
 
 @Dao
 interface CountyDao {
@@ -32,3 +32,12 @@ interface CountyDao {
     @Query("SELECT * FROM county ORDER BY pref_order")
     fun getCountiesWithWines(): LiveData<List<CountyWithWines>>
 }
+
+data class CountyWithWines(
+    @Embedded val county: County,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "county_id"
+    )
+    val wines: List<Wine>
+)

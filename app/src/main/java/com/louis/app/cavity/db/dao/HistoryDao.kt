@@ -1,11 +1,8 @@
-package com.louis.app.cavity.db
+package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
-import com.louis.app.cavity.model.HistoryEntry
-import com.louis.app.cavity.model.relation.history.BoundedHistoryEntry
-import com.louis.app.cavity.model.relation.history.HistoryEntryWithFriends
+import com.louis.app.cavity.model.*
 
 @Dao
 interface HistoryDao {
@@ -37,10 +34,6 @@ interface HistoryDao {
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
     fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
 
-    @Transaction
-    @Query("SELECT * FROM history_entry")
-    fun getE(): LiveData<List<HistoryEntryWithFriends>>
-
     @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId")
     suspend fun deleteEntriesForBottle(bottleId: Long)
 
@@ -50,3 +43,44 @@ interface HistoryDao {
     @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND type = 1 OR type = 3")
     suspend fun clearExistingReplenishments(bottleId: Long)
 }
+
+data class BoundedHistoryEntry(
+    @Embedded
+    val historyEntry: HistoryEntry,
+    @Relation(
+        entity = Bottle::class,
+        parentColumn = "bottle_id",
+        entityColumn = "id"
+    )
+    val bottleAndWine: BottleAndWine,
+    @Relation(
+        entity = Tasting::class,
+        parentColumn = "tasting_id",
+        entityColumn = "id"
+    )
+    var tasting: TastingWithBottles?,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(
+            value = HistoryXFriend::class,
+            parentColumn = "history_entry_id",
+            entityColumn = "friend_id"
+        )
+    )
+    val friends: List<Friend>
+)
+
+data class HistoryEntryWithFriends(
+    @Embedded val historyEntry: HistoryEntry,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(
+            value = HistoryXFriend::class,
+            parentColumn = "history_entry_id",
+            entityColumn = "friend_id"
+        )
+    )
+    val friends: List<Friend>
+)

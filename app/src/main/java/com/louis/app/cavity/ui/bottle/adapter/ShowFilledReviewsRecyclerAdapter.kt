@@ -58,7 +58,7 @@ class ShowFilledReviewsRecyclerAdapter :
         holder.bind(currentList[position])
     }
 
-    override fun getItemId(position: Int) = currentList[position].getId()
+    override fun getItemId(position: Int) = currentList[position].review.id
 
     override fun getItemViewType(position: Int): Int {
         val (_, review) = currentList[position]
@@ -77,7 +77,7 @@ class ShowFilledReviewsRecyclerAdapter :
             oldItem: FilledReviewAndReview,
             newItem: FilledReviewAndReview
         ) =
-            oldItem.getId() == newItem.getId()
+            oldItem.review.id == newItem.review.id
 
         override fun areContentsTheSame(
             oldItem: FilledReviewAndReview,

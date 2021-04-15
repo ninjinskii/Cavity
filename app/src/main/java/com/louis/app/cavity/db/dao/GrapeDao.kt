@@ -1,9 +1,9 @@
-package com.louis.app.cavity.db
+package com.louis.app.cavity.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.relation.grape.GrapeWithQuantifiedGrapes
+import com.louis.app.cavity.model.QGrape
 
 @Dao
 interface GrapeDao {
@@ -24,5 +24,14 @@ interface GrapeDao {
 
     @Transaction
     @Query("SELECT * FROM grape")
-    fun getGrapeWithQuantifiedGrapes(): LiveData<List<GrapeWithQuantifiedGrapes>>
+    fun getGrapeWithQuantifiedGrapes(): LiveData<List<GrapeWithQGrapes>>
 }
+
+data class GrapeWithQGrapes(
+    @Embedded val grape: Grape,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "grape_id"
+    )
+    val qGrapes: List<QGrape>
+)

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemBottleBinding
-import com.louis.app.cavity.db.BoundedBottle
+import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean

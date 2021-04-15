@@ -1,9 +1,10 @@
-package com.louis.app.cavity.db
+package com.louis.app.cavity.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.Naming
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.model.relation.wine.WineWithBottles
 
 @Dao
 interface WineDao {
@@ -33,3 +34,21 @@ interface WineDao {
 //    @Query("SELECT * FROM wine INNER JOIN bottle ON wine.id = bottle.wine_id WHERE county_id =:countyId AND consumed = 0 ORDER BY color, naming")
 //    fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
 }
+
+data class WineAndNaming(
+    @Embedded val wine: Wine,
+    @Relation(
+        parentColumn = "naming_id",
+        entityColumn = "id"
+    )
+    val naming: Naming
+)
+
+data class WineWithBottles(
+    @Embedded val wineAndNaming: WineAndNaming,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "wine_id"
+    )
+    val bottles: List<Bottle>
+)

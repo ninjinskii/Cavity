@@ -1,6 +1,6 @@
 package com.louis.app.cavity.ui.search.filters
 
-import com.louis.app.cavity.db.BoundedBottle
+import com.louis.app.cavity.db.dao.BoundedBottle
 
 interface WineFilter {
     fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle>

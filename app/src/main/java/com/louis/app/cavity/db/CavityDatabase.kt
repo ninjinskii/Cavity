@@ -5,11 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.louis.app.cavity.db.dao.*
 import com.louis.app.cavity.model.*
-import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
-import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
-import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
-import com.louis.app.cavity.model.relation.crossref.TastingFriendXRef
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,13 +19,13 @@ import kotlinx.coroutines.launch
         Bottle::class,
         Grape::class,
         Review::class,
-        QuantifiedBottleGrapeXRef::class,
-        FilledBottleReviewXRef::class,
+        QGrape::class,
+        FReview::class,
         HistoryEntry::class,
         Friend::class,
         Tasting::class,
-        TastingFriendXRef::class,
-        FriendHistoryEntryXRef::class,
+        TastingXFriend::class,
+        HistoryXFriend::class,
     ],
     version = 48,
     exportSchema = false
@@ -45,8 +42,8 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun historyDao(): HistoryDao
     abstract fun friendDao(): FriendDao
     abstract fun tastingDao(): TastingDao
-    abstract fun tastingXFriendDao(): TastingFriendXRefDao
-    abstract fun historyXFriendDao(): FriendHistoryEntryXRefDao
+    abstract fun tastingXFriendDao(): TastingXFriendDao
+    abstract fun historyXFriendDao(): HistoryXFriendDao
 
     companion object {
         @Volatile
@@ -210,8 +207,8 @@ abstract class CavityDatabase : RoomDatabase() {
 
                     repeat(300) {
                         try {
-                            qGrapeDao!!.insertQuantifiedGrape(
-                                QuantifiedBottleGrapeXRef(
+                            qGrapeDao!!.insertQGrape(
+                                QGrape(
                                     (0..70).random().toLong(),
                                     (1..4).random().toLong(),
                                     (5..15).random()
@@ -222,8 +219,8 @@ abstract class CavityDatabase : RoomDatabase() {
                         }
 
                         try {
-                            fReviewDao!!.insertFilledReview(
-                                FilledBottleReviewXRef(
+                            fReviewDao!!.insertFReview(
+                                FReview(
                                     (0..70).random().toLong(),
                                     (1..4).random().toLong(),
                                     (0..2).random()

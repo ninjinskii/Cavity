@@ -1,4 +1,4 @@
-package com.louis.app.cavity.db
+package com.louis.app.cavity.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete

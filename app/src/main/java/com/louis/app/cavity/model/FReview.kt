@@ -1,10 +1,8 @@
-package com.louis.app.cavity.model.relation.crossref
+package com.louis.app.cavity.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.Review
 
 @Entity(
     tableName = "f_review",
@@ -24,7 +22,7 @@ import com.louis.app.cavity.model.Review
         )
     ]
 )
-data class FilledBottleReviewXRef(
+data class FReview(
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
     @ColumnInfo(name = "review_id", index = true) val reviewId: Long,
     var value: Int

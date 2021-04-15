@@ -1,10 +1,8 @@
-package com.louis.app.cavity.model.relation.crossref
+package com.louis.app.cavity.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.model.HistoryEntry
 
 @Entity(
     tableName = "friend_history_entry_xref",
@@ -24,7 +22,7 @@ import com.louis.app.cavity.model.HistoryEntry
         )
     ]
 )
-data class FriendHistoryEntryXRef(
+data class HistoryXFriend(
     @ColumnInfo(name = "history_entry_id") val historyEntryId: Long,
     @ColumnInfo(name = "friend_id") val friendId: Long
 )

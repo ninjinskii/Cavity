@@ -1,11 +1,8 @@
-package com.louis.app.cavity.db
+package com.louis.app.cavity.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.*
-import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
-import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
-import com.louis.app.cavity.model.relation.wine.WineAndNaming
 
 @Dao
 interface BottleDao {
@@ -33,9 +30,6 @@ interface BottleDao {
     @Query("UPDATE bottle SET is_favorite = 0 WHERE id=:bottleId")
     suspend fun unfav(bottleId: Long)
 
-    @Query("UPDATE bottle SET count=:count + bottle.count WHERE id=:bottleId")
-    suspend fun addBottles(bottleId: Long, count: Int)
-
     @Query("DELETE FROM bottle WHERE id=:bottleId")
     suspend fun deleteBottleById(bottleId: Long)
 
@@ -60,7 +54,7 @@ data class BottleAndWine(
         parentColumn = "wine_id",
         entityColumn = "id"
     )
-    val wine: Wine,
+    val wine: Wine, // TODO: wine and naming (probably)
 )
 
 data class BottleWithHistoryEntries(
@@ -84,7 +78,7 @@ data class BoundedBottle(
         parentColumn = "id",
         entityColumn = "id",
         associateBy = Junction(
-            value = QuantifiedBottleGrapeXRef::class,
+            value = QuantifiedGrapeDao::class,
             parentColumn = "bottle_id",
             entityColumn = "grape_id"
         )
@@ -94,7 +88,7 @@ data class BoundedBottle(
         parentColumn = "id",
         entityColumn = "id",
         associateBy = Junction(
-            value = FilledBottleReviewXRef::class,
+            value = FReview::class,
             parentColumn = "bottle_id",
             entityColumn = "review_id"
         )

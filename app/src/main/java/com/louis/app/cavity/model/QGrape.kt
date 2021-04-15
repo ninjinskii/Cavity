@@ -1,10 +1,8 @@
-package com.louis.app.cavity.model.relation.crossref
+package com.louis.app.cavity.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.Grape
 
 @Entity(
     tableName = "q_grape",
@@ -24,7 +22,7 @@ import com.louis.app.cavity.model.Grape
         )
     ]
 )
-data class QuantifiedBottleGrapeXRef(
+data class QGrape(
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
     @ColumnInfo(name = "grape_id", index = true) val grapeId: Long,
     var percentage: Int,

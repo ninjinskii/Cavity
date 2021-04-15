@@ -3,9 +3,6 @@ package com.louis.app.cavity.db
 import android.app.Application
 import androidx.room.withTransaction
 import com.louis.app.cavity.model.*
-import com.louis.app.cavity.model.relation.crossref.FilledBottleReviewXRef
-import com.louis.app.cavity.model.relation.crossref.FriendHistoryEntryXRef
-import com.louis.app.cavity.model.relation.crossref.QuantifiedBottleGrapeXRef
 
 class WineRepository private constructor(app: Application) {
     companion object {
@@ -71,7 +68,6 @@ class WineRepository private constructor(app: Application) {
 
     // Bottle
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
-    suspend fun insertBottles(bottleId: Long, count: Int) = bottleDao.addBottles(bottleId, count)
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
     suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
     fun getBottleById(bottleId: Long) = bottleDao.getBottleById(bottleId)
@@ -100,8 +96,8 @@ class WineRepository private constructor(app: Application) {
     suspend fun declareGiftedBottle(entry: HistoryEntry, friendId: Long) {
         database.withTransaction {
             val entryId = historyDao.insertEntry(entry)
-            historyXFriendDao.insertFriendHistoryEntryXRef(
-                FriendHistoryEntryXRef(
+            historyXFriendDao.insertHistoryXFriend(
+                HistoryXFriend(
                     entryId,
                     friendId
                 )
@@ -127,19 +123,12 @@ class WineRepository private constructor(app: Application) {
     }
 
     suspend fun deleteGrape(grape: Grape) = grapeDao.deleteGrape(grape)
-    suspend fun getQGrape(bottleId: Long, grapeId: Long) = qGrapeDao.getQGrape(bottleId, grapeId)
     fun getAllGrapes() = grapeDao.getAllGrapes()
     suspend fun getAllGrapesNotLive() = grapeDao.getAllGrapesNotLive()
     fun getGrapeWithQuantifiedGrapes() = grapeDao.getGrapeWithQuantifiedGrapes()
-
-    suspend fun insertQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
-        qGrapeDao.insertQuantifiedGrape(qGrape)
-
-    suspend fun updateQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
-        qGrapeDao.updateQuantifiedGrape(qGrape)
-
-    suspend fun deleteQuantifiedGrape(qGrape: QuantifiedBottleGrapeXRef) =
-        qGrapeDao.deleteQuantifiedGrape(qGrape)
+    suspend fun insertQGrape(qGrape: QGrape) = qGrapeDao.insertQGrape(qGrape)
+    suspend fun updateQuantifiedGrape(qGrape: QGrape) = qGrapeDao.updateQGrape(qGrape)
+    suspend fun deleteQuantifiedGrape(qGrape: QGrape) = qGrapeDao.deleteQGrape(qGrape)
 
     fun getQGrapesAndGrapeForBottle(bottleId: Long) =
         qGrapeDao.getQGrapesAndGrapeForBottle(bottleId)
@@ -147,20 +136,17 @@ class WineRepository private constructor(app: Application) {
     suspend fun getQGrapesAndGrapeForBottleNotLive(bottleId: Long) =
         qGrapeDao.getQGrapesAndGrapeForBottleNotLive(bottleId)
 
-    suspend fun getQGrapesForBottleNotLive(bottleId: Long) =
-        qGrapeDao.getQGrapesForBottleNotLive(bottleId)
-
     suspend fun insertGrapeAndQGrape(bottleId: Long, grape: Grape, qGrapeValue: Int) {
         database.withTransaction {
             val grapeId = insertGrape(grape)
-            insertQuantifiedGrape(QuantifiedBottleGrapeXRef(bottleId, grapeId, qGrapeValue))
+            insertQGrape(QGrape(bottleId, grapeId, qGrapeValue))
         }
     }
 
-    suspend fun replaceQGrapesForBottle(bottleId: Long, qGrapes: List<QuantifiedBottleGrapeXRef>) {
+    suspend fun replaceQGrapesForBottle(bottleId: Long, qGrapes: List<QGrape>) {
         database.withTransaction {
             qGrapeDao.clearAllQGrapesForBottle(bottleId)
-            qGrapeDao.insertQuantifiedGrapes(qGrapes)
+            qGrapeDao.insertQGrape(qGrapes)
         }
     }
 
@@ -186,30 +172,22 @@ class WineRepository private constructor(app: Application) {
     fun getAllReviews() = reviewDao.getAllReviews()
     suspend fun getAllReviewsNotLive() = reviewDao.getAllReviewsNotLive()
     fun getReviewWithFilledReviews() = reviewDao.getReviewWithFilledReviews()
-
-    suspend fun insertFilledReview(fReview: FilledBottleReviewXRef) =
-        fReviewDao.insertFilledReview(fReview)
-
-    suspend fun updateFilledReview(fReview: FilledBottleReviewXRef) =
-        fReviewDao.updateFilledReview(fReview)
-
-    suspend fun deleteFilledReview(fReview: FilledBottleReviewXRef) =
-        fReviewDao.deleteFilledReview(fReview)
-
-    suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long) =
-        fReviewDao.deleteFReviewByPk(bottleId, reviewId)
+    suspend fun insertFilledReview(fReview: FReview) = fReviewDao.insertFReview(fReview)
+    suspend fun updateFilledReview(fReview: FReview) = fReviewDao.updateFReview(fReview)
+    suspend fun deleteFilledReview(fReview: FReview) = fReviewDao.deleteFReview(fReview)
+    suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long) = fReviewDao.deleteFReviewByPk(bottleId, reviewId)
 
     suspend fun insertReviewAndFReview(bottleId: Long, review: Review, fReviewValue: Int) {
         database.withTransaction {
             val reviewId = insertReview(review)
-            insertFilledReview(FilledBottleReviewXRef(bottleId, reviewId, fReviewValue))
+            insertFilledReview(FReview(bottleId, reviewId, fReviewValue))
         }
     }
 
-    suspend fun replaceFReviewsForBottle(bottleId: Long, fReviews: List<FilledBottleReviewXRef>) {
+    suspend fun replaceFReviewsForBottle(bottleId: Long, fReviews: List<FReview>) {
         database.withTransaction {
             fReviewDao.clearAllFReviewsForBottle(bottleId)
-            fReviewDao.insertFilledReviews(fReviews)
+            fReviewDao.insertFReviews(fReviews)
         }
     }
 
@@ -234,11 +212,11 @@ class WineRepository private constructor(app: Application) {
     fun getAllFriends() = friendDao.getAllFriends()
     suspend fun getAllFriendsNotLive() = friendDao.getAllFriendsNotLive()
 
-    suspend fun insertFriendHistoryXRef(fxh: List<FriendHistoryEntryXRef>) =
-        historyXFriendDao.insertFriendHistoryEntryXRef(fxh)
+    suspend fun insertFriendHistoryXRef(fxh: List<HistoryXFriend>) =
+        historyXFriendDao.insertHistoryXFriend(fxh)
 
-    suspend fun insertFriendHistoryXRef(fxh: FriendHistoryEntryXRef) =
-        historyXFriendDao.insertFriendHistoryEntryXRef(fxh)
+    suspend fun insertFriendHistoryXRef(fxh: HistoryXFriend) =
+        historyXFriendDao.insertHistoryXFriend(fxh)
 
 
     // History
@@ -273,7 +251,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertHistoryEntryAndFriends(entry: HistoryEntry, friends: List<Long>) {
         database.withTransaction {
             val historyId = insertHistoryEntry(entry)
-            val historyXFriends = friends.map { FriendHistoryEntryXRef(historyId, it) }
+            val historyXFriends = friends.map { HistoryXFriend(historyId, it) }
             insertFriendHistoryXRef(historyXFriends)
         }
     }
