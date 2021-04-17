@@ -141,8 +141,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                    app:startIconDrawable="@drawable/ic_add"
-                    app:rule="required">
+                    app:rule="required"
+                    app:startIconDrawable="@drawable/ic_add">
 
                     <AutoCompleteTextView
                         android:id="@+id/naming"
@@ -226,19 +226,19 @@
                         app:singleSelection="true">
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/colorWhite"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="@string/wine_color_white" />
-
-                        <com.google.android.material.chip.Chip
                             android:id="@+id/colorRed"
                             style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:checked="true"
                             android:text="@string/wine_color_red" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/colorWhite"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/wine_color_white" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/colorSweet"
