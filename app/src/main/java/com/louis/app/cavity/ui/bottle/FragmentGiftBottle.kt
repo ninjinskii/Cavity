@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.bottle
 
 import android.os.Bundle
 import android.view.View
-import android.widget.HorizontalScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,8 +15,6 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 
 class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -33,7 +30,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
         snackbarProvider = activity as SnackbarProvider
 
         initDatePicker()
-        initChips()
+        observe()
         setListeners()
     }
 
@@ -52,17 +49,28 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
         }
     }
 
-    private fun initChips() {
-        lifecycleScope.launch(IO) {
-            val friends = consumeGiftBottleViewModel.getAllFriendsNotLive()
+    private fun observe() {
+        val allFriends = mutableSetOf<Friend>()
+        val alreadyInflated = mutableSetOf<Friend>()
+
+        consumeGiftBottleViewModel.getAllFriends().observe(viewLifecycleOwner) {
+            allFriends.addAll(it)
+            val toInflate = allFriends - alreadyInflated
+            alreadyInflated.addAll(toInflate)
 
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
-                .load(friends)
+                .load(toInflate.toList())
                 .into(binding.friendsChipGroup)
                 .build()
                 .go()
+        }
+
+        consumeGiftBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = false)
+            }
         }
     }
 

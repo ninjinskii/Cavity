@@ -57,5 +57,5 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    suspend fun getAllFriendsNotLive() = repository.getAllFriendsNotLive()
+    fun getAllFriends() = repository.getAllFriends()
 }

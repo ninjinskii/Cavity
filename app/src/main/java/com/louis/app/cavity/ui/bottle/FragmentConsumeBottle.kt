@@ -15,8 +15,6 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 
 class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -32,7 +30,7 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
         snackbarProvider = activity as SnackbarProvider
 
         initDatePicker()
-        initChips()
+        observe()
         setListeners()
     }
 
@@ -51,17 +49,28 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
         }
     }
 
-    private fun initChips() {
-        lifecycleScope.launch(IO) {
-            val friends = consumeGiftBottleViewModel.getAllFriendsNotLive()
+    private fun observe() {
+        val allFriends = mutableSetOf<Friend>()
+        val alreadyInflated = mutableSetOf<Friend>()
+
+        consumeGiftBottleViewModel.getAllFriends().observe(viewLifecycleOwner) {
+            allFriends.addAll(it)
+            val toInflate = allFriends - alreadyInflated
+            alreadyInflated.addAll(toInflate)
 
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
-                .load(friends)
+                .load(toInflate.toList())
                 .into(binding.friendsChipGroup)
                 .build()
                 .go()
+        }
+
+        consumeGiftBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = false)
+            }
         }
     }
 
