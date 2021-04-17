@@ -49,6 +49,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         setupNavigation(binding.appBar.toolbar)
         snackbarProvider = activity as SnackbarProvider
 
+        addWineViewModel.setCountyId(args.countyId)
+
         inflateChips()
         initDropdown()
         setListeners()
