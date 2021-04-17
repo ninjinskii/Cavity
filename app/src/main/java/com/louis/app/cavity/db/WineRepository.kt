@@ -76,6 +76,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun deleteNaming(naming: Naming) = namingDao.deleteNaming(naming)
     fun getNamingsForCounty(countyId: Long) = namingDao.getNamingsForCounty(countyId)
     suspend fun getNamingById(namingId: Long) = namingDao.getNamingById(namingId)
+    fun getNamingsWithWines() = namingDao.getNamingsWithWines()
 
 
     // Bottle

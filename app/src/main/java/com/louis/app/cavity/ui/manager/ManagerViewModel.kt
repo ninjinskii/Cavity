@@ -8,10 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.*
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
@@ -27,6 +24,8 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     var friendPickingImage: Friend? = null
 
     fun getCountiesWithWines() = repository.getCountiesWithWines()
+
+    fun getNamingsWithWines() = repository.getNamingsWithWines()
 
     fun getGrapeWithQuantifiedGrapes() = repository.getGrapeWithQuantifiedGrapes()
 
@@ -78,6 +77,22 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             repository.deleteCounty(countyId)
             _userFeedback.postOnce(R.string.county_deleted)
+        }
+    }
+
+    fun updateNaming(naming: Naming) {
+        viewModelScope.launch(IO) {
+            repository.updateNaming(naming)
+        }
+    }
+
+    fun deleteNaming(naming: Naming) {
+        viewModelScope.launch(IO) {
+            try {
+                repository.deleteNaming(naming)
+            } catch (e: SQLiteConstraintException) {
+                _userFeedback.postOnce(R.string.cannot_delete_naming)
+            }
         }
     }
 

@@ -177,8 +177,10 @@
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>
     <string name="counties">Régions</string>
+    <string name="namings">Appellations</string>
     <string name="rename">Renommer</string>
     <string name="rename_county">Renommer la région</string>
+    <string name="rename_naming">Renommer l\'appellation</string>
     <string name="rename_grape">Renommer le cépage</string>
     <string name="rename_review">Renommer l\'avis d\'expert</string>
     <string name="rename_friend">Renommer un ami</string>
@@ -195,6 +197,7 @@
     <string name="naming_added">Appellation ajoutée.</string>
     <string name="naming_updated">Appellation modifiée.</string>
     <string name="naming_deleted">Appellation supprimée.</string>
+    <string name="cannot_delete_naming">Des vins sont rattachés à cette appellation.</string>
     <string name="review_deleted">Avis d\'expert supprimé.</string>
     <string name="review_renamed">Avis d\'expert renommé.</string>
     <string name="review_added">Avis d\'expert créé.</string>
