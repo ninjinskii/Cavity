@@ -55,7 +55,7 @@ data class BottleAndWine(
         parentColumn = "wine_id",
         entityColumn = "id"
     )
-    val wine: WineAndNaming,
+    val wine: Wine,
 )
 
 data class BottleWithHistoryEntries(
@@ -74,7 +74,7 @@ data class BoundedBottle(
         parentColumn = "wine_id",
         entityColumn = "id"
     )
-    val wineAndNaming: WineAndNaming,
+    val wine: Wine,
     @Relation(
         parentColumn = "id",
         entityColumn = "id",

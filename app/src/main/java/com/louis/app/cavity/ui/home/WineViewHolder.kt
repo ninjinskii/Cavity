@@ -32,7 +32,7 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
     // TODO: Add raw sql query to WineDao to filter consumed bottles
     fun bind(wineWithBottles: WineWithBottles) {
         val hexagone = binding.root
-        val (wine, naming) = wineWithBottles.wineAndNaming
+        val (wine) = wineWithBottles
         val bottles = wineWithBottles.bottles
             .toSet()
             .filter { !it.consumed.toBoolean() }
@@ -44,7 +44,7 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
             bottleRecyclerView.setVisible(false)
 
             wineName.text = wine.name
-            wineNaming.text = naming
+            wineNaming.text = wine.naming
             bottlesCount.text = bottles.size.toString()
 
             val rightIcon = if (wine.isOrganic.toBoolean()) bioIcon else null
@@ -82,7 +82,7 @@ class WineViewHolder(private val binding: ItemWineBinding) : RecyclerView.ViewHo
                 wine.id,
                 wine.countyId,
                 wine.name,
-                naming,
+                wine.naming,
                 wine.isOrganic.toBoolean(),
                 wine.color
             )

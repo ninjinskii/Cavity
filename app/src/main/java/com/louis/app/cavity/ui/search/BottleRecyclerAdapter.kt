@@ -46,12 +46,11 @@ class BottleRecyclerAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(boundedBottle: BoundedBottle) {
-            val (bottle, wineAndNaming) = boundedBottle
-            val (wine, naming) = wineAndNaming
+            val (bottle, wine) = boundedBottle
 
             with(binding.wineColorNameNaming) {
                 wineName.text = wine.name
-                wineNaming.text = naming
+                wineNaming.text = wine.naming
                 organicImage.setVisible(wine.isOrganic.toBoolean())
                 wineColorIndicator.setColorFilter(resolveColor(wine.color))
 
