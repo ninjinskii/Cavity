@@ -15,6 +15,8 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
     private var wineId = 0L
+
+    // Might be useful if used to switch dynamivcally bottles
     private val bottleId = MutableLiveData<Long>()
 
     private val _pdfEvent = MutableLiveData<Event<Uri>>()
@@ -35,8 +37,6 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         this.wineId = wineId
         this.bottleId.postValue(bottleId)
     }
-
-    fun bottles() = repository.getBottlesForWine(wineId)
 
     fun getWineById(wineId: Long) = repository.getWineById(wineId)
 

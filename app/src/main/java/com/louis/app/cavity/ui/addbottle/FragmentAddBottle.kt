@@ -62,13 +62,9 @@ class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
         }
 
         addBottleViewModel.completedEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
+            it.getContentIfNotHandled()?.let { stringRes ->
                 // Using snackbar provider since we are quitting this fragment
-                snackbarProvider.onShowSnackbarRequested(
-                    R.string.bottle_added,
-                    useAnchorView = true
-                )
-
+                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = true)
                 findNavController().popBackStack()
             }
         }

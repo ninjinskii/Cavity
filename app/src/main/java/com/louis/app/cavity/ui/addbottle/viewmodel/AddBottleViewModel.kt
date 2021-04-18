@@ -35,8 +35,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val editedBottle: LiveData<Bottle>
         get() = _editedBottle
 
-    private val _completedEvent = MutableLiveData<Event<Unit>>()
-    val completedEvent: LiveData<Event<Unit>>
+    private val _completedEvent = MutableLiveData<Event<Int>>()
+    val completedEvent: LiveData<Event<Int>>
         get() = _completedEvent
 
     private var wineId = 0L
@@ -72,19 +72,22 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             val bottleId: Long
+            @StringRes val message: Int
 
             if (_editedBottle.value == null) {
                 bottleId = repository.insertBottle(bottle)
+                message = R.string.bottle_added
             } else {
                 bottleId = _editedBottle.value!!.id
-                repository.updateBottle(_editedBottle.value!!)
+                repository.updateBottle(bottle)
+                message = R.string.bottle_updated
             }
 
             insertQGrapes(bottleId)
             insertFReviews(bottleId)
             insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
 
-            _completedEvent.postOnce(Unit)
+            _completedEvent.postOnce(message)
         }
 
     }
@@ -143,9 +146,5 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 consumed = editedBottle.value?.consumed ?: false.toInt()
             )
         } else null
-    }
-
-    private fun postFeedback(@StringRes stringRes: Int) {
-        _userFeedback.postOnce(stringRes)
     }
 }
