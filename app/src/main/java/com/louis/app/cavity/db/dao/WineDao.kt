@@ -22,6 +22,9 @@ interface WineDao {
     @Query("SELECT * FROM wine WHERE id =:wineId")
     fun getWineById(wineId: Long): LiveData<Wine>
 
+    @Query("SELECT DISTINCT naming FROM wine WHERE county_id =:countyId ORDER BY naming")
+    fun getNamingsForCounty(countyId: Long): LiveData<List<String>>
+
     @Transaction
     @Query("SELECT * FROM wine WHERE id =:wineId")
     suspend fun getWineByIdNotLive(wineId: Long): Wine

@@ -141,15 +141,14 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                    app:rule="required"
-                    app:startIconDrawable="@drawable/ic_add">
+                    app:rule="required">
 
                     <AutoCompleteTextView
                         android:id="@+id/naming"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/naming"
-                        android:inputType="none" />
+                        android:inputType="textCapSentences" />
 
                 </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 

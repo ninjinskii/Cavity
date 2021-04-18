@@ -80,22 +80,13 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     }
 
     private fun initDropdown() {
-        val adapter = ArrayAdapter<Naming>(requireContext(), R.layout.item_naming)
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_naming)
+
         binding.naming.setAdapter(adapter)
-        binding.naming.setOnItemClickListener { parent, _, position, _ ->
-            val selected = parent.getItemAtPosition(position) as Naming
-            addWineViewModel.namingId = selected.id
-        }
 
         addWineViewModel.namings.observe(viewLifecycleOwner) {
             adapter.clear()
             adapter.addAll(it)
-
-            val text = it.find { n -> n.id == addWineViewModel.namingId }?.let { selected ->
-                selected.naming
-            } ?: ""
-
-            binding.naming.setText(text)
         }
     }
 
@@ -136,10 +127,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 //            showDialog()
 //        }
 
-        binding.namingLayout.setStartIconOnClickListener {
-            showNamingDialog()
-        }
-
         binding.buttonBrowsePhoto.setOnClickListener {
             val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
@@ -175,26 +162,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
     }
 
-    private fun showNamingDialog() {
-        val dialogResources = SimpleInputDialog.DialogContent(
-            title = R.string.add_naming,
-            hint = R.string.naming
-        ) {
-            addWineViewModel.insertNaming(it.trim())
-        }
-
-        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
-    }
-
     private fun observe() {
         addWineViewModel.updatedWine.observe(viewLifecycleOwner) {
-            val (wine, _naming) = it
             with(binding) {
-                naming.setText(_naming.naming)
-                name.setText(wine.name)
-                cuvee.setText(wine.cuvee)
-                (colorChipGroup.getChildAt(wine.color) as Chip).isChecked = true
-                organicWine.isChecked = wine.isOrganic.toBoolean()
+                naming.setText(it.naming)
+                name.setText(it.name)
+                cuvee.setText(it.cuvee)
+                (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
+                organicWine.isChecked = it.isOrganic.toBoolean()
             }
         }
 
