@@ -8,7 +8,7 @@ import com.louis.app.cavity.model.Wine
 @Dao
 interface NamingDao {
     @Insert
-    suspend fun insertNaming(naming: Naming)
+    suspend fun insertNaming(naming: Naming): Long
 
     @Update
     suspend fun updateNaming(naming: Naming)

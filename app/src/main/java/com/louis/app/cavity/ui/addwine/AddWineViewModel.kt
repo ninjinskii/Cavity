@@ -126,7 +126,9 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             try {
                 val countyId = _countyId.value ?: throw IllegalStateException()
-                repository.insertNaming(Naming(naming = naming, countyId = countyId))
+                val id = repository.insertNaming(Naming(naming = naming, countyId = countyId))
+                namingId = id
+
                 _userFeedback.postOnce(R.string.naming_added)
             } catch (e: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.base_error)

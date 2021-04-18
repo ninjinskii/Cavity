@@ -91,7 +91,12 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         addWineViewModel.namings.observe(viewLifecycleOwner) {
             adapter.clear()
             adapter.addAll(it)
-            binding.naming.setText("")
+
+            val text = it.find { n -> n.id == addWineViewModel.namingId }?.let { selected ->
+                selected.naming
+            } ?: ""
+
+            binding.naming.setText(text)
         }
     }
 
