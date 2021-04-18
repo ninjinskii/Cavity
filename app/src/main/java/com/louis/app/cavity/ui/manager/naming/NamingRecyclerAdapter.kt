@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemNamingManagerBinding
 import com.louis.app.cavity.db.dao.NamingWithWines
-import com.louis.app.cavity.model.Naming
 
 class NamingRecyclerAdapter(
     private val onRename: (Naming) -> Unit,

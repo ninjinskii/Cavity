@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
     entities = [
         County::class,
         Wine::class,
-        Naming::class,
         Bottle::class,
         Grape::class,
         Review::class,
@@ -27,13 +26,12 @@ import kotlinx.coroutines.launch
         TastingXFriend::class,
         HistoryXFriend::class,
     ],
-    version = 49,
+    version = 50,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
     abstract fun countyDao(): CountyDao
     abstract fun wineDao(): WineDao
-    abstract fun namingDao(): NamingDao
     abstract fun bottleDao(): BottleDao
     abstract fun grapeDao(): GrapeDao
     abstract fun qGrapeDao(): QuantifiedGrapeDao
@@ -71,7 +69,6 @@ abstract class CavityDatabase : RoomDatabase() {
                 super.onCreate(db)
                 val countyDao = instance?.countyDao()
                 val wineDao = instance?.wineDao()
-                val namingDao = instance?.namingDao()
                 val bottleDao = instance?.bottleDao()
                 val grapeDao = instance?.grapeDao()
                 val qGrapeDao = instance?.qGrapeDao()
@@ -145,10 +142,6 @@ abstract class CavityDatabase : RoomDatabase() {
                         "Simon",
                         "Clarinette"
                     )
-
-                    repeat(10) {
-                        namingDao!!.insertNaming(Naming(naming = wineNamings[it], countyId = counties.random().toLong()))
-                    }
 
                     repeat(50) {
                         wineDao!!.insertWine(

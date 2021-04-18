@@ -3,7 +3,6 @@ package com.louis.app.cavity.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.Naming
 import com.louis.app.cavity.model.Wine
 
 @Dao
@@ -25,14 +24,14 @@ interface WineDao {
 
     @Transaction
     @Query("SELECT * FROM wine WHERE id =:wineId")
-    suspend fun getWineByIdNotLive(wineId: Long): WineAndNaming
+    suspend fun getWineByIdNotLive(wineId: Long): Wine
 
     @Transaction
     @Query("SELECT * FROM wine WHERE id =:wineId")
-    suspend fun getWineFullNamingByIdNotLive(wineId: Long): WineAndFullNaming
+    suspend fun getWineFullNamingByIdNotLive(wineId: Long): Wine
 
     @Transaction
-    @Query("SELECT * FROM wine WHERE county_id =:countyId ORDER BY color, naming_id")
+    @Query("SELECT * FROM wine WHERE county_id =:countyId ORDER BY color, naming")
     fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
 
 //    @Transaction
@@ -40,28 +39,8 @@ interface WineDao {
 //    fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
 }
 
-data class WineAndNaming(
-    @Embedded val wine: Wine,
-    @Relation(
-        entity = Naming::class,
-        parentColumn = "naming_id",
-        entityColumn = "id",
-        projection = ["naming"]
-    )
-    val naming: String
-)
-
-data class WineAndFullNaming(
-    @Embedded val wine: Wine,
-    @Relation(
-        parentColumn = "naming_id",
-        entityColumn = "id",
-    )
-    val naming: Naming
-)
-
 data class WineWithBottles(
-    @Embedded val wineAndNaming: WineAndNaming,
+    @Embedded val wine: Wine,
     @Relation(
         parentColumn = "id",
         entityColumn = "wine_id"

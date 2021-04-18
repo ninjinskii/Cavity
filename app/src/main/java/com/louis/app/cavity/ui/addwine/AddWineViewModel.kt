@@ -5,9 +5,7 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.db.dao.WineAndFullNaming
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.Naming
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -25,8 +23,8 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     val wineUpdatedEvent: LiveData<Event<Int>>
         get() = _wineUpdatedEvent
 
-    private val _updatedWine = MutableLiveData<WineAndFullNaming>()
-    val updatedWine: LiveData<WineAndFullNaming>
+    private val _updatedWine = MutableLiveData<Wine>()
+    val updatedWine: LiveData<Wine>
         get() = _updatedWine
 
     private val _image = MutableLiveData<String>()
@@ -44,19 +42,16 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
 
     private var wineId = 0L
 
-    var namingId = 0L
-
     fun start(wineId: Long) {
         this.wineId = wineId
 
         if (wineId != 0L) {
             viewModelScope.launch(IO) {
-                val wineAndNaming = repository.getWineFullNamingByIdNotLive(wineId)
-                namingId = wineAndNaming.naming.id
+                val wine = repository.getWineByIdNotLive(wineId)
 
-                _countyId.postValue(wineAndNaming.wine.countyId)
-                _updatedWine.postValue(wineAndNaming)
-                _image.postValue(wineAndNaming.wine.imgPath)
+                _countyId.postValue(wine.countyId)
+                _updatedWine.postValue(wine)
+                _image.postValue(wine.imgPath)
             }
         }
     }
@@ -70,11 +65,6 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         colorChipId: Int,
         county: County
     ) {
-        if (namingId == 0L) {
-            _userFeedback.postOnce(R.string.empty_naming)
-            return
-        }
-
         val color = when (colorChipId) {
             R.id.colorRed -> 0
             R.id.colorWhite -> 1
@@ -85,12 +75,12 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         val wine = Wine(
             wineId,
             name,
+            "",
             color,
             cuvee,
             isOrganic,
             _image.value ?: "",
-            county.id,
-            namingId,
+            county.id
         )
 
         viewModelScope.launch(IO) {
@@ -122,31 +112,12 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun insertNaming(naming: String) {
-        viewModelScope.launch(IO) {
-            try {
-                val countyId = _countyId.value ?: throw IllegalStateException()
-                val id = repository.insertNaming(Naming(naming = naming, countyId = countyId))
-                namingId = id
-
-                _userFeedback.postOnce(R.string.naming_added)
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.base_error)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.naming_already_exists)
-            } catch (e: IllegalStateException) {
-                _userFeedback.postOnce(R.string.base_error)
-            }
-        }
-    }
-
     fun setImage(imagePath: String) {
         _image.postValue(imagePath)
     }
 
     fun setCountyId(countyId: Long) {
         _countyId.postValue(countyId)
-        namingId = 0
     }
 
     private fun reset() {
