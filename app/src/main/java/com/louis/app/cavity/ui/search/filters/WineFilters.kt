@@ -14,19 +14,19 @@ class FilterReadyToDrink : WineFilter {
 
 class FilterColor(private val color: Int) : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
-        return boundedBottle.filter { it.wineAndNaming.wine.color == color }
+        return boundedBottle.filter { it.wine.color == color }
     }
 }
 
 class FilterOrganic : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
-        return boundedBottle.filter { it.wineAndNaming.wine.isOrganic.toBoolean() }
+        return boundedBottle.filter { it.wine.isOrganic.toBoolean() }
     }
 }
 
 class FilterCounty(private val county: County) : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
-        return boundedBottle.filter { it.wineAndNaming.wine.countyId == county.id }
+        return boundedBottle.filter { it.wine.countyId == county.id }
     }
 }
 
@@ -42,9 +42,8 @@ class FilterDate(private val beyond: Long?, private val until: Long?) : WineFilt
 class FilterText(private val query: String) : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
         return boundedBottle.filter {
-            val (wine, naming) = it.wineAndNaming
             val slug =
-                wine.name + naming + wine.cuvee +
+                it.wine.name + it.wine.naming + it.wine.cuvee +
                     it.bottle.buyLocation + it.bottle.otherInfo + it.bottle.tasteComment
 
             return@filter slug.contains(query, ignoreCase = true)

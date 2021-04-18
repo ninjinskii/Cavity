@@ -134,9 +134,9 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
 
         binding.bottleDetails.buttonShowBottle.setOnClickListener {
             historyViewModel.selectedEntry.value?.let {
-                val (bottle, wineAndNaming) = it.bottleAndWine
+                val (bottle, wine) = it.bottleAndWine
                 val action =
-                    FragmentHistoryDirections.historyToBottle(wineAndNaming.wine.id, bottle.id)
+                    FragmentHistoryDirections.historyToBottle(wine.id, bottle.id)
 
                 findNavController().navigate(action)
             }
@@ -182,8 +182,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
         if (entry == null) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
-            val (bottle, wineAndNaming) = entry.bottleAndWine
-            val (wine, naming) = wineAndNaming
+            val (bottle, wine) = entry.bottleAndWine
             val label = entry.historyEntry.getResources().detailsLabel
 
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -204,7 +203,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
 
                 wineDetails.wineColorIndicator.setColorFilter(resolveColor(wine.color))
                 wineDetails.wineName.text = wine.name
-                wineDetails.wineNaming.text = naming
+                wineDetails.wineNaming.text = wine.naming
                 wineDetails.organicImage.setVisible(wine.isOrganic.toBoolean())
 
                 participants.setVisible(entry.friends.isNotEmpty())

@@ -5,7 +5,6 @@ import android.view.View
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.louis.app.cavity.R
@@ -38,23 +37,13 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
 
     private fun setupWithViewPager() {
         binding.viewPager.adapter = ManagerPagerAdapter(this@FragmentManager)
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                if (position == 1) {
-                    binding.fab.hide()
-                } else {
-                    binding.fab.show()
-                }
-            }
-        })
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = getString(R.string.counties)
-                1 -> tab.text = getString(R.string.namings)
-                2 -> tab.text = getString(R.string.grapes)
-                3 -> tab.text = getString(R.string.reviews)
-                4 -> tab.text = getString(R.string.friends)
+                1 -> tab.text = getString(R.string.grapes)
+                2 -> tab.text = getString(R.string.reviews)
+                3 -> tab.text = getString(R.string.friends)
             }
         }.attach()
     }

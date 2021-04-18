@@ -95,7 +95,6 @@ abstract class CavityDatabase : RoomDatabase() {
                     }
 
                     val counties = 1..10
-                    val namings = 1..10
 
                     val wineNames = arrayOf(
                         "Immelé",
@@ -148,12 +147,12 @@ abstract class CavityDatabase : RoomDatabase() {
                             Wine(
                                 0,
                                 wineNames.random(),
+                                wineNamings.random(),
                                 wineColors.random(),
                                 "",
                                 (0..1).random(),
                                 "",
                                 counties.random().toLong(),
-                                namings.random().toLong()
                             )
                         )
                     }
