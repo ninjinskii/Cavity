@@ -1,14 +1,8 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
-import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
-import kotlinx.coroutines.CoroutineScope
 
-class DateManager(
-    private val viewModelScope: CoroutineScope,
-    private val repository: WineRepository,
-    private val editedBottle: Bottle?,
-) {
+class DateManager(private val editedBottle: Bottle?) {
     private var buyDateTimestamp = System.currentTimeMillis()
 
     var partialBottle: Step1Bottle? = null

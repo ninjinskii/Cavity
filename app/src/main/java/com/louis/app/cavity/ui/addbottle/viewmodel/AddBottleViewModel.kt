@@ -19,7 +19,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
-    // lazy ?
     lateinit var dateManager: DateManager
     lateinit var grapeManager: GrapeManager
     lateinit var reviewManager: ReviewManager
@@ -53,7 +52,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
             _editedBottle.postValue(bottle)
 
-            dateManager = DateManager(viewModelScope, repository, bottle)
+            dateManager = DateManager(bottle)
             grapeManager = GrapeManager(viewModelScope, repository, bottle, _userFeedback)
             reviewManager = ReviewManager(viewModelScope, repository, bottle, _userFeedback)
             otherInfoManager = OtherInfoManager(viewModelScope, repository, bottle, _userFeedback)
