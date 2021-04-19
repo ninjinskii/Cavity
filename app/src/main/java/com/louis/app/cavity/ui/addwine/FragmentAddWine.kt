@@ -21,6 +21,7 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.util.*
+import java.util.*
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -105,6 +106,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                     }
 
                     val name = name.text.toString().trim()
+                    val naming = naming.text.toString().trim()
                     val cuvee = cuvee.text.toString().trim()
                     val isOrganic = organicWine.isChecked.toInt()
                     val color = colorChipGroup.checkedChipId
@@ -114,7 +116,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                         .findViewById<Chip>(checkedCountyChipId)
                         .getTag(R.string.tag_chip_id) as County
 
-                    addWineViewModel.saveWine(name, cuvee, isOrganic, color, county)
+                    addWineViewModel.saveWine(name, naming, cuvee, isOrganic, color, county)
                 }
             }
         }

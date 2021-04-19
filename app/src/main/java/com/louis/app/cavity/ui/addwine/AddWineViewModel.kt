@@ -60,6 +60,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
 
     fun saveWine(
         name: String,
+        naming: String,
         cuvee: String,
         isOrganic: Int,
         colorChipId: Int,
@@ -75,7 +76,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         val wine = Wine(
             wineId,
             name,
-            "",
+            naming,
             color,
             cuvee,
             isOrganic,
