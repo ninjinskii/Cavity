@@ -33,7 +33,7 @@ class StatsRecyclerAdapter : ListAdapter<StatUiModel, StatsRecyclerAdapter.StatV
         holder.bind(getItem(position))
     }
 
-    override fun getItemCount() = 5
+    override fun getItemCount() = currentList.size
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
         is StatUiModel.Chart -> R.layout.item_stat_chart
@@ -48,9 +48,10 @@ class StatsRecyclerAdapter : ListAdapter<StatUiModel, StatsRecyclerAdapter.StatV
             oldItem == newItem
     }
 
-    inner class PieViewHolder(binding: ItemStatPieBinding) : StatViewHolder(binding) {
+    inner class PieViewHolder(private val binding: ItemStatPieBinding) : StatViewHolder(binding) {
         override fun bind(item: StatUiModel) {
-            TODO("Not yet implemented")
+            val pie = item as StatUiModel.Pie
+            binding.pie.setPieData(pie.slices)
         }
     }
 

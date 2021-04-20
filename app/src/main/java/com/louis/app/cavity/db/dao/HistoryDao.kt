@@ -34,6 +34,9 @@ interface HistoryDao {
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
     fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
 
+    @Query("SELECT * FROM history_entry ORDER BY date DESC")
+    fun getBoundedEntriesNotPagedNotLive(): List<BoundedHistoryEntry>
+
     @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId")
     suspend fun deleteEntriesForBottle(bottleId: Long)
 
