@@ -152,8 +152,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
                     if (checkedId != ChipGroup.NO_ID) {
                         historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
                     } else {
-                        binding.filterChipGroup.clearCheck()
-                        historyViewModel.setFilter(HistoryFilter.NoFilter)
+                        resetFilters()
                     }
                 }
             }
@@ -234,6 +233,11 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
                     .build()
             }
         }
+    }
+
+    private fun resetFilters() {
+        binding.filterChipGroup.clearCheck()
+        historyViewModel.setFilter(HistoryFilter.NoFilter)
     }
 
     override fun getOverallContext() = requireContext()
