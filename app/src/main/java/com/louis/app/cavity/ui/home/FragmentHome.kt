@@ -17,18 +17,18 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
-    private var recyclePool: RecyclerView.RecycledViewPool? = null
+    private val recyclePool by lazy {
+        RecyclerView.RecycledViewPool().apply {
+            // TODO: Adjust this number based on screen size
+            setMaxRecycledViews(R.layout.item_wine, 15)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
         setupNavigation(binding.appBar.toolbar)
-
-        recyclePool = RecyclerView.RecycledViewPool().apply {
-            // TODO: Adjust this number based on screen size
-            setMaxRecycledViews(R.layout.item_wine, 15)
-        }
 
         setupScrollableTab()
         setListeners()
@@ -75,9 +75,6 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        recyclePool = null
-        binding.tab.adapter = null
-        binding.viewPager.adapter = null
         _binding = null
     }
 }

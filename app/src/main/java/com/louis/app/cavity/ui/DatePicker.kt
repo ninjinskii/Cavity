@@ -6,7 +6,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
 import com.louis.app.cavity.util.DateFormatter
 
-// TODO: this class is leaking
 class DatePicker(
     fragmentManager: FragmentManager,
     private val associatedTextLayout: TextInputLayout,
