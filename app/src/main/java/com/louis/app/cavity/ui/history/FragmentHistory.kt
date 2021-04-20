@@ -242,8 +242,8 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
 
     override fun getOverallContext() = requireContext()
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 }

@@ -131,8 +131,6 @@ fun BottomSheetBehavior<ConstraintLayout>.toggleState() {
 fun Fragment.setupNavigation(toolbar: Toolbar) {
     val act = activity as ActivityMain
 
-    act.setSupportActionBar(toolbar)
-
     val navController = findNavController()
     val appBarConfiguration = AppBarConfiguration(navController.graph, act.drawer)
 

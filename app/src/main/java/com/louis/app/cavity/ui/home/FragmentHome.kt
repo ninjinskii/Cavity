@@ -75,6 +75,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.tab.adapter = null
         _binding = null
     }
 }
