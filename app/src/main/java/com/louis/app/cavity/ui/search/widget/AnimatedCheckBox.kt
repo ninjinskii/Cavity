@@ -76,6 +76,11 @@ class AnimatedCheckBox @JvmOverloads constructor(
         super.drawableStateChanged()
     }
 
+    override fun jumpDrawablesToCurrentState() {
+        super.jumpDrawablesToCurrentState()
+        drawable?.jumpToCurrentState()
+    }
+
     override fun onCreateDrawableState(extraSpace: Int): IntArray {
         val drawableState = super.onCreateDrawableState(extraSpace + 1)
         if (isChecked()) {
