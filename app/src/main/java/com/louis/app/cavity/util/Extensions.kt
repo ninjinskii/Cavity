@@ -10,6 +10,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -87,9 +89,24 @@ operator fun <T> MutableLiveData<MutableList<T>>.minusAssign(item: T) {
     }
 }
 
-fun <T> MutableLiveData<MutableList<T>>.updateSelf() {
-    val value = this.value ?: mutableListOf()
-    this.value = value // notify observers
+fun <A, B, Result> LiveData<A>.combine(
+    other: LiveData<B>,
+    combiner: (MutableLiveData<Result>, A, B) -> Unit
+): LiveData<Result> {
+    val result = MediatorLiveData<Result>()
+    result.addSource(this) { a ->
+        val b = other.value
+        if (b != null) {
+            combiner(result, a, b)
+        }
+    }
+    result.addSource(other) { b ->
+        val a = this@combine.value
+        if (a != null) {
+            combiner(result, a, b)
+        }
+    }
+    return result
 }
 
 fun <T> MutableLiveData<MutableList<T>>.clearList() {

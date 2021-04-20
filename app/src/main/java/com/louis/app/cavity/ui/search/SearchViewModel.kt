@@ -1,7 +1,10 @@
 package com.louis.app.cavity.ui.search
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
@@ -9,24 +12,20 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.ui.search.filters.*
+import com.louis.app.cavity.util.combine
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
-    private val dumbEvent = MutableLiveData<Unit>()
 
-    private val _results = MediatorLiveData<List<BoundedBottle>>().apply {
-        addSource(repository.getBoundedBottles()) {
-            bottles = it
-            filter(it)
+    private val globalFilter = MutableLiveData<WineFilter>(NoFilter)
+
+    val results: LiveData<List<BoundedBottle>> = repository
+        .getBoundedBottles()
+        .combine(globalFilter) { receiver, bottles, filter ->
+            filter(receiver, bottles, filter)
         }
-        addSource(dumbEvent) { filter(bottles) }
-    }
-    val results: LiveData<List<BoundedBottle>>
-        get() = _results
-
-    private var bottles = emptyList<BoundedBottle>()
 
     private var currentBeyondDate: Long? = null
     private var currentUntilDate: Long? = null
@@ -66,7 +65,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                 countyFilters.reduce { acc, filterCounty -> acc.orCombine(filterCounty) }
             else NoFilter
 
-        dumbEvent.postValue(Unit)
+        updateFilters()
     }
 
     fun setColorFilters(colorCheckedChipIds: List<Int>) {
@@ -77,7 +76,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         if (R.id.chipWhite in colorCheckedChipIds)
             colorFilters.add(FilterColor(1))
         if (R.id.chipSweet in colorCheckedChipIds)
-            colorFilters.add(FilterColor(1))
+            colorFilters.add(FilterColor(2))
         if (R.id.chipRose in colorCheckedChipIds)
             colorFilters.add(FilterColor(3))
 
@@ -86,7 +85,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                 colorFilters.reduce { acc, wineFilter -> acc.orCombine(wineFilter) }
             else NoFilter
 
-        dumbEvent.postValue(Unit)
+        updateFilters()
     }
 
     fun setOtherFilters(otherCheckedChipIds: List<Int>) {
@@ -102,22 +101,22 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                 otherFilters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
             else NoFilter
 
-        dumbEvent.postValue(Unit)
+        updateFilters()
     }
 
     fun setVintageFilter(minValue: Int, maxValue: Int) {
         vintageFilter = FilterVintage(minValue, maxValue)
-        dumbEvent.postValue(Unit)
+        updateFilters()
     }
 
     fun setTextFilter(query: String) {
         textFilter = if (query.isNotEmpty()) FilterText(query) else NoFilter
-        dumbEvent.postValue(Unit)
+        updateFilters()
     }
 
     fun setPriceFilter(minValue: Int, maxValue: Int) {
         priceFilter = if (minValue != -1) FilterPrice(minValue, maxValue) else NoFilter
-        dumbEvent.postValue(Unit)
+        updateFilters()
     }
 
     fun setBeyondFilter(beyond: Long?) {
@@ -129,7 +128,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             else
                 FilterDate(beyond, currentUntilDate)
 
-        dumbEvent.postValue(Unit)
+        updateFilters()
     }
 
     fun setUntilFilter(until: Long?) {
@@ -141,7 +140,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             else
                 FilterDate(currentBeyondDate, until)
 
-        dumbEvent.postValue(Unit)
+        updateFilters()
     }
 
     fun setGrapeFilters(filteredGrapes: List<Grape>) {
@@ -154,7 +153,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                 grapeFilters.reduce { acc, filterGrape -> acc.orCombine(filterGrape) }
             else NoFilter
 
-        dumbEvent.postValue(Unit)
+        updateFilters()
     }
 
     fun setReviewFilters(filteredReviews: List<Review>) {
@@ -167,26 +166,24 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                 reviewFilters.reduce { acc, filterReview -> acc.orCombine(filterReview) }
             else NoFilter
 
-        dumbEvent.postValue(Unit)
+        updateFilters()
     }
 
-    private fun filter(bottles: List<BoundedBottle>) {
+    private fun updateFilters() {
+        val filters = listOf(
+            countyFilter, colorFilter, otherFilter, vintageFilter,
+            textFilter, priceFilter, dateFilter, grapeFilter, reviewFilter
+        )
+
+        val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
+        globalFilter.value = combinedFilters
+    }
+
+    private fun filter(receiver: MutableLiveData<List<BoundedBottle>>, bottles: List<BoundedBottle>, filter: WineFilter) {
         viewModelScope.launch(Default) {
-            val filters = listOf(
-                countyFilter, colorFilter, otherFilter, vintageFilter,
-                textFilter, priceFilter, dateFilter, grapeFilter, reviewFilter
-            )
-
-            val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
-            val filtered = combinedFilters.meetFilters(bottles)
-
-            _results.postValue(filtered)
+            val filtered = filter.meetFilters(bottles)
+            receiver.postValue(filtered)
         }
     }
 }
 
-class A<T> : MutableLiveData<T>() {
-    fun trigger() {
-        postValue(value)
-    }
-}
