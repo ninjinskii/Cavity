@@ -59,10 +59,19 @@ class PieView @JvmOverloads constructor(
         centerY = rect.centerY()
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
+        val w: Int = resolveSizeAndState(minw, widthMeasureSpec, 1)
+        val h: Int = resolveSizeAndState(MeasureSpec.getSize(w), heightMeasureSpec, 0)
+
+        setMeasuredDimension(w, h)
+    }
+
+
     override fun onDraw(canvas: Canvas) {
         piePaint.color = Color.BLACK
 
-        canvas.drawCircle(centerX, centerY, pieRadius + STROKE_WIDTH, piePaint)
+        canvas.drawCircle(centerX, centerY, pieRadius - STROKE_WIDTH, piePaint)
 
         var previousAngle = -90f
 
