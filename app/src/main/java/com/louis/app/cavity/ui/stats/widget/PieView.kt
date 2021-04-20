@@ -26,7 +26,7 @@ class PieView @JvmOverloads constructor(
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
             strokeWidth = context.dpToPx(STROKE_WIDTH)
-            color = Color.BLUE
+            color = Color.BLACK
         }
     }
 
@@ -60,6 +60,18 @@ class PieView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
+        piePaint.color = Color.BLACK
+
+        canvas.drawCircle(centerX, centerY, pieRadius + STROKE_WIDTH, piePaint)
+
+        var previousAngle = 0f
+
+        pieData.forEach {
+            piePaint.color = it.color
+                ?: Color.BLUE // TODO: get a color on a RandomColorGenerator when fetching data on ViewModel
+            canvas.drawArc(rect, previousAngle, previousAngle + it.angle, false, piePaint)
+
+            previousAngle = it.angle.toFloat()
+        }
     }
 }
