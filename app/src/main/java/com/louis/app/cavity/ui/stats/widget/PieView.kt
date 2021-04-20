@@ -7,9 +7,9 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
-import com.louis.app.cavity.ui.stats.StatUiModel
+import com.louis.app.cavity.ui.stats.StatsUiModel
 import com.louis.app.cavity.util.dpToPx
-import kotlin.math.max
+import kotlin.math.min
 
 class PieView @JvmOverloads constructor(
     context: Context,
@@ -30,14 +30,14 @@ class PieView @JvmOverloads constructor(
         }
     }
 
-    private var pieData: List<StatUiModel.Pie.PieSlice> = mutableListOf()
+    private var pieData: List<StatsUiModel.Pie.PieSlice> = mutableListOf()
 
     private var rect = RectF()
     private var pieRadius = 0f
     private var centerX = 0.0f
     private var centerY = 0.0f
 
-    fun setPieData(data: List<StatUiModel.Pie.PieSlice>) {
+    fun setPieData(data: List<StatsUiModel.Pie.PieSlice>) {
         pieData = data
         invalidate()
     }
@@ -46,13 +46,13 @@ class PieView @JvmOverloads constructor(
         val ww = w + paddingLeft + paddingRight
         val hh = h + paddingTop + paddingBottom
 
-        pieRadius = max(ww, hh) / 2f
+        pieRadius = min(ww, hh) / 2f
 
         rect.set(
             0f + STROKE_WIDTH + paddingLeft,
             0f + STROKE_WIDTH + paddingTop,
-            width - STROKE_WIDTH - paddingRight,
-            height - STROKE_WIDTH - paddingRight
+            pieRadius * 2 - STROKE_WIDTH - paddingRight,
+            pieRadius * 2 - STROKE_WIDTH - paddingBottom
         )
 
         centerX = rect.centerX()
@@ -64,14 +64,15 @@ class PieView @JvmOverloads constructor(
 
         canvas.drawCircle(centerX, centerY, pieRadius + STROKE_WIDTH, piePaint)
 
-        var previousAngle = 0f
+        var previousAngle = -90f
 
         pieData.forEach {
-            piePaint.color = it.color
-                ?: Color.BLUE // TODO: get a color on a RandomColorGenerator when fetching data on ViewModel
-            canvas.drawArc(rect, previousAngle, previousAngle + it.angle, false, piePaint)
+            // TODO: get a color on a RandomColorGenerator when fetching data on ViewModel
+            piePaint.color = it.color ?: Color.BLUE
 
-            previousAngle = it.angle.toFloat()
+            canvas.drawArc(rect, previousAngle, it.angle, false, piePaint)
+
+            previousAngle += it.angle
         }
     }
 }

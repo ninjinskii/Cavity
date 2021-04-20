@@ -11,7 +11,7 @@ import com.louis.app.cavity.databinding.ItemStatChartBinding
 import com.louis.app.cavity.databinding.ItemStatMirrorBinding
 import com.louis.app.cavity.databinding.ItemStatPieBinding
 
-class StatsRecyclerAdapter : ListAdapter<StatUiModel, StatsRecyclerAdapter.StatViewHolder>(StatItemDiffCallback()) {
+class StatsRecyclerAdapter : ListAdapter<StatsUiModel, StatsRecyclerAdapter.StatViewHolder>(StatItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
@@ -36,38 +36,38 @@ class StatsRecyclerAdapter : ListAdapter<StatUiModel, StatsRecyclerAdapter.StatV
     override fun getItemCount() = currentList.size
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
-        is StatUiModel.Chart -> R.layout.item_stat_chart
-        is StatUiModel.Pie -> R.layout.item_stat_pie
-        is StatUiModel.Mirror -> R.layout.item_stat_mirror
+        is StatsUiModel.Chart -> R.layout.item_stat_chart
+        is StatsUiModel.Pie -> R.layout.item_stat_pie
+        is StatsUiModel.Mirror -> R.layout.item_stat_mirror
     }
 
-    class StatItemDiffCallback : DiffUtil.ItemCallback<StatUiModel>() {
-        override fun areItemsTheSame(oldItem: StatUiModel, newItem: StatUiModel) = true
+    class StatItemDiffCallback : DiffUtil.ItemCallback<StatsUiModel>() {
+        override fun areItemsTheSame(oldItem: StatsUiModel, newItem: StatsUiModel) = false
 
-        override fun areContentsTheSame(oldItem: StatUiModel, newItem: StatUiModel) =
+        override fun areContentsTheSame(oldItem: StatsUiModel, newItem: StatsUiModel) =
             oldItem == newItem
     }
 
     inner class PieViewHolder(private val binding: ItemStatPieBinding) : StatViewHolder(binding) {
-        override fun bind(item: StatUiModel) {
-            val pie = item as StatUiModel.Pie
+        override fun bind(item: StatsUiModel) {
+            val pie = item as StatsUiModel.Pie
             binding.pie.setPieData(pie.slices)
         }
     }
 
     inner class ChartViewHolder(binding: ItemStatChartBinding) : StatViewHolder(binding) {
-        override fun bind(item: StatUiModel) {
+        override fun bind(item: StatsUiModel) {
             TODO("Not yet implemented")
         }
     }
 
     inner class MirrorViewHolder(binding: ItemStatMirrorBinding) : StatViewHolder(binding) {
-        override fun bind(item: StatUiModel) {
+        override fun bind(item: StatsUiModel) {
             TODO("Not yet implemented")
         }
     }
 
     abstract class StatViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        abstract fun bind(item: StatUiModel)
+        abstract fun bind(item: StatsUiModel)
     }
 }

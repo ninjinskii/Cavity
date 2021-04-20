@@ -12,7 +12,7 @@ import com.louis.app.cavity.util.setupNavigation
 class FragmentStats : Fragment(R.layout.fragment_stats) {
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
-    private val statViewModel: StatViewModel by viewModels()
+    private val statsViewModel: StatsViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,8 +33,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             setHasFixedSize(true)
         }
 
-        statViewModel.getConsumedWinesByColor().observe(viewLifecycleOwner) {
-            statAdapter.submitList(listOf(StatUiModel.Pie(it)))
+        statsViewModel.getConsumedWinesByColor().observe(viewLifecycleOwner) {
+            statAdapter.submitList(listOf(StatsUiModel.Pie(it)))
         }
 
     }
