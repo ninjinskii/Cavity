@@ -251,8 +251,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     }
 
     private fun setCounty(view: View) {
-        val county = view.getTag(R.string.tag_chip_id) as County
-        addWineViewModel.setCountyId(county.id)
+        val county = view.getTag(R.string.tag_chip_id) as County?
+        addWineViewModel.setCountyId(county?.id)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

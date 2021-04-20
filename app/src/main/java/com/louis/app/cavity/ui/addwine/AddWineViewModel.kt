@@ -32,8 +32,6 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         get() = _image
 
     private val _countyId = MutableLiveData<Long>()
-    val countyId: LiveData<Long>
-        get() = _countyId
 
     private val isEditMode: Boolean
         get() = wineId != 0L
@@ -117,8 +115,10 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         _image.postValue(imagePath)
     }
 
-    fun setCountyId(countyId: Long) {
-        _countyId.postValue(countyId)
+    fun setCountyId(countyId: Long?) {
+        countyId?.let {
+            _countyId.postValue(it)
+        }
     }
 
     private fun reset() {
