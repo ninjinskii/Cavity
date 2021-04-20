@@ -9,15 +9,10 @@ import com.louis.app.cavity.util.DateFormatter
 // TODO: this class is leaking
 class DatePicker(
     fragmentManager: FragmentManager,
-    associatedTextLayout: TextInputLayout,
-    title: String,
-    defaultDate: Long? = null
+    private val associatedTextLayout: TextInputLayout,
+    private val title: String,
+    private val defaultDate: Long? = null
 ) {
-    private val datePicker = MaterialDatePicker.Builder
-        .datePicker()
-        .setTitleText(title)
-        .build()
-
     var isDatePickerDisplayed = false
         private set
 
@@ -36,26 +31,12 @@ class DatePicker(
 
             editText?.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    show(fragmentManager)
+                    show(fragmentManager, createDatePicker())
                 }
             }
 
             editText?.setOnClickListener {
-                show(fragmentManager)
-            }
-        }
-
-        datePicker.apply {
-            addOnDismissListener {
-                associatedTextLayout.editText?.clearFocus()
-                isDatePickerDisplayed = false
-            }
-
-            addOnPositiveButtonClickListener {
-                val date = if (DateFormatter.isToday(it)) System.currentTimeMillis() else it
-                val formattedDate = DateFormatter.formatDate(date ?: defaultDate)
-                associatedTextLayout.editText?.setText(formattedDate)
-                date?.let { d -> onDateChangedListener?.invoke(d) }
+                show(fragmentManager, createDatePicker())
             }
         }
 
@@ -66,7 +47,29 @@ class DatePicker(
         }
     }
 
-    private fun show(childFragmentManager: FragmentManager) {
+    private fun createDatePicker(): MaterialDatePicker<Long> {
+        val picker = MaterialDatePicker.Builder
+            .datePicker()
+            .setTitleText(title)
+            .build()
+
+        picker.addOnDismissListener {
+            associatedTextLayout.editText?.clearFocus()
+            isDatePickerDisplayed = false
+        }
+
+        picker.addOnPositiveButtonClickListener {
+            val date = if (DateFormatter.isToday(it)) System.currentTimeMillis() else it
+            val formattedDate = DateFormatter.formatDate(date ?: defaultDate)
+            associatedTextLayout.editText?.setText(formattedDate)
+            date?.let { d -> onDateChangedListener?.invoke(d) }
+        }
+
+        return picker
+    }
+
+
+    private fun show(childFragmentManager: FragmentManager, datePicker: MaterialDatePicker<Long>) {
         if (!isDatePickerDisplayed) {
             isDatePickerDisplayed = true
 
