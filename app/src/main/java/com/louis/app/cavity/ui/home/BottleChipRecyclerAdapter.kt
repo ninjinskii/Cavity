@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.ChipActionBinding
+import com.louis.app.cavity.databinding.ChipSpacedBinding
 import com.louis.app.cavity.model.Bottle
 
 class BottleChipRecyclerAdapter(context: Context, private val onClick: (Long) -> Unit) :
@@ -25,7 +25,7 @@ class BottleChipRecyclerAdapter(context: Context, private val onClick: (Long) ->
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottleChipViewHolder {
-        val binding = ChipActionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ChipSpacedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return BottleChipViewHolder(binding)
     }
 
@@ -40,7 +40,7 @@ class BottleChipRecyclerAdapter(context: Context, private val onClick: (Long) ->
         override fun areContentsTheSame(oldItem: Bottle, newItem: Bottle) = oldItem == newItem
     }
 
-    inner class BottleChipViewHolder(private val binding: ChipActionBinding) :
+    inner class BottleChipViewHolder(private val binding: ChipSpacedBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(bottle: Bottle) {

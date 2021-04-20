@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui
 
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.HorizontalScrollView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -24,19 +23,13 @@ class ChipLoader private constructor(
     private val chipGroup: ChipGroup,
     private val preselectedItems: List<Long>,
     private val selectable: Boolean,
-    private val minified: Boolean,
     private val showIconIf: (Chipable) -> Boolean,
     private val onClickListener: ((View) -> Unit)?
 ) {
     fun go() {
         scope.launch(Default) {
             for ((index, item) in items.withIndex()) {
-                val layout = when {
-                    minified -> R.layout.chip_minified
-                    selectable -> R.layout.chip_choice
-                    else -> R.layout.chip_action
-                }
-
+                val layout = if (selectable) R.layout.chip_choice else R.layout.chip_action
                 val chip = layoutInflater.inflate(layout, chipGroup, false) as Chip
 
                 chip.apply {
@@ -102,7 +95,6 @@ class ChipLoader private constructor(
         fun preselect(preselect: List<Long>) = apply { this.preselectedItems = preselect }
         fun preselect(preselect: Long) = apply { this.preselectedItems = listOf(preselect) }
         fun selectable(selectable: Boolean) = apply { this.selectable = selectable }
-        fun minified(minified: Boolean) = apply { this.minified = minified }
         fun showIconIf(block: (Chipable) -> Boolean) = apply { this.showIconIf = block }
         fun doOnClick(block: (View) -> Unit) = apply {
             this.onClickListener = block
@@ -133,7 +125,6 @@ class ChipLoader private constructor(
                 chipGroup!!,
                 preselectedItems,
                 selectable,
-                minified,
                 showIconIf,
                 onClickListener
             )
