@@ -27,6 +27,11 @@
             android:title="@string/history" />
 
         <item
+            android:id="@+id/stats_dest"
+            android:icon="@drawable/ic_chart"
+            android:title="@string/stats" />
+
+        <item
             android:id="@+id/settings_dest"
             android:icon="@drawable/ic_settings"
             android:title="@string/settings" />

@@ -228,6 +228,8 @@
     <string name="go_to">Aller à</string>
     <string name="nothing"> </string>
 
+    <!-- Stats -->
+    <string name="stats">Statistiques</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>
