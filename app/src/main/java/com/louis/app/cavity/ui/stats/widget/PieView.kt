@@ -140,14 +140,24 @@ class PieView @JvmOverloads constructor(
             val sweepAngle = (it.angle - sliceSpace) * interpolation
 
             textPath.reset()
+
+            // Might reverse arc to avoid drawing text upside-down
+            /*val verticalOffset = if (startAngle + sweepAngle in 0f..180f) {
+                textPath.addArc(rect, startAngle + sweepAngle, -sweepAngle)
+                -10f
+            } else {*/
             textPath.addArc(rect, startAngle, sweepAngle)
+            /*30f
+        }*/
 
             val text = TextUtils.ellipsize(
+                // TODO: this temporary
                 try {
+                    // Is this ok in onDraw ?
                     context.getString(it.name)
                 } catch (e: Exception) {
                     it.name.toString()
-                }, // Is this ok in onDraw ?
+                },
                 textPaint,
                 getArcLength(sweepAngle),
                 TextUtils.TruncateAt.END
