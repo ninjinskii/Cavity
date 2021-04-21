@@ -14,6 +14,7 @@ import com.louis.app.cavity.ui.addbottle.adapter.FilledReviewRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.ReviewManager
+import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard
@@ -41,10 +42,10 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
 
     private fun initRecyclerView() {
         val reviewAdapter = FilledReviewRecyclerAdapter(
+            ColorUtil(requireContext()),
             onValueChangedListener = { fReview, value ->
                 reviewManager.updateFilledReview(fReview, value)
             },
-
             onDeleteListener = {
                 reviewManager.removeFilledReview(it)
             }

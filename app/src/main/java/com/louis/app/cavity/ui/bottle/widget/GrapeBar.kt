@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.QGrapeAndGrape
+import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.cos
 
@@ -30,16 +31,7 @@ class GrapeBar @JvmOverloads constructor(
 
     private val grapes = mutableListOf<QGrapeAndGrape>()
     private val backgroundColor = context.getColor(R.color.cavity_grey)
-    private val colors = listOf(
-        R.color.cavity_red,
-        R.color.cavity_brown,
-        R.color.cavity_light_green,
-        R.color.cavity_indigo,
-        R.color.cavity_purple,
-        R.color.cavity_yellow
-    )
-        .map { context.getColor(it) }
-        .shuffled()
+    private val colors = ColorUtil(context).randomSet()
 
     private val strokePaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {

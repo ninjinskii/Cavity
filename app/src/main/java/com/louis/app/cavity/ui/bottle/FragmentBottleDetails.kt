@@ -22,10 +22,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
-import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.showSnackbar
-import com.louis.app.cavity.util.toBoolean
+import com.louis.app.cavity.util.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
@@ -75,7 +72,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun initRecyclerView() {
-        val reviewAdapter = ShowFilledReviewsRecyclerAdapter()
+        val colorUtil = ColorUtil(requireContext())
+        val reviewAdapter = ShowFilledReviewsRecyclerAdapter(colorUtil)
 
         binding.reviewRecyclerView.apply {
             layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)

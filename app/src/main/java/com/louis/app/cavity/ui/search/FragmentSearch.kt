@@ -146,7 +146,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initRecyclerView() {
-        bottlesAdapter = BottleRecyclerAdapter(requireContext()) { wineId, bottleId ->
+        bottlesAdapter = BottleRecyclerAdapter(ColorUtil(requireContext())) { wineId, bottleId ->
             val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
             binding.searchView.hideKeyboard()
             findNavController().navigate(action)

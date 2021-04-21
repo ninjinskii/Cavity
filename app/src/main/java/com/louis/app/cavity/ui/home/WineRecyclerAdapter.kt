@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.home
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,11 +8,17 @@ import androidx.recyclerview.widget.ListAdapter
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
+import com.louis.app.cavity.util.ColorUtil
 
-class WineRecyclerAdapter : ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()) {
+class WineRecyclerAdapter(
+    private val colorUtil: ColorUtil,
+    private val drawables: Pair<Drawable, Drawable>
+) :
+    ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return WineViewHolder(binding)
+        return WineViewHolder(binding, colorUtil, drawables)
     }
 
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) {

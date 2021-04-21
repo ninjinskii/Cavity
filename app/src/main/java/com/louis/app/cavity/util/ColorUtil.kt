@@ -5,10 +5,11 @@ import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.louis.app.cavity.R
+import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.addbottle.viewmodel.FReviewUiModel
 
-class ColorHelper(context: Context) {
+class ColorUtil(context: Context) {
     enum class ColorCategory {
         WINES,
         MEDALS,
@@ -56,7 +57,21 @@ class ColorHelper(context: Context) {
     }
 
     @ColorInt
-    fun getReviewColor(fReview: FReviewUiModel) = try {
+    fun getWineColor(colorInt: Int) = try {
+        wineColors.map { it.second }[colorInt]
+    } catch (e: IndexOutOfBoundsException) {
+        colorPrimary
+    }
+
+    @ColorInt
+    fun getMedalColor(fReview: FReviewUiModel) = try {
+        medalColors.map { it.second }[fReview.value]
+    } catch (e: IndexOutOfBoundsException) {
+        colorPrimary
+    }
+
+    @ColorInt
+    fun getMedalColor(fReview: FReview) = try {
         medalColors.map { it.second }[fReview.value]
     } catch (e: IndexOutOfBoundsException) {
         colorPrimary

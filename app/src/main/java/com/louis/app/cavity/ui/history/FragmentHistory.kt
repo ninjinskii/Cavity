@@ -25,20 +25,17 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.ui.ChipLoader
-import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.ui.history.adapter.HistoryDivider
 import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter
 import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
 import com.louis.app.cavity.ui.history.adapter.ReboundingSwipeActionCallback
 import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
-import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupNavigation
-import com.louis.app.cavity.util.toBoolean
-import com.louis.app.cavity.util.toggleBoolean
+import com.louis.app.cavity.util.*
 
-class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
+class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var scroller: LinearSmoothScroller
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var colorUtil: ColorUtil
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private val historyViewModel: HistoryViewModel by viewModels()
@@ -53,6 +50,8 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
         scroller = object : LinearSmoothScroller(context) {
             override fun getVerticalSnapPreference() = SNAP_TO_START
         }
+
+        colorUtil = ColorUtil(requireContext())
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
@@ -74,6 +73,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
         val itemTouchHelper = ItemTouchHelper(ReboundingSwipeActionCallback())
         val historyAdapter = HistoryRecyclerAdapter(
             requireContext(),
+            colorUtil,
             onHeaderClick = { showDatePicker() },
             onItemClick = {
                 binding.filterChipGroup.clearCheck()
@@ -200,7 +200,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
 
                 vintage.text = bottle.vintage.toString()
 
-                wineDetails.wineColorIndicator.setColorFilter(resolveColor(wine.color))
+                wineDetails.wineColorIndicator.setColorFilter(colorUtil.getWineColor(wine))
                 wineDetails.wineName.text = wine.name
                 wineDetails.wineNaming.text = wine.naming
                 wineDetails.organicImage.setVisible(wine.isOrganic.toBoolean())
@@ -239,8 +239,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history), WineColorResolver {
         binding.filterChipGroup.clearCheck()
         historyViewModel.setFilter(HistoryFilter.NoFilter)
     }
-
-    override fun getOverallContext() = requireContext()
 
     override fun onDestroyView() {
         super.onDestroyView()
