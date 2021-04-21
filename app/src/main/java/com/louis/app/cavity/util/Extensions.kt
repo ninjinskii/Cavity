@@ -91,6 +91,26 @@ operator fun <T> MutableLiveData<MutableList<T>>.minusAssign(item: T) {
 
 fun <A, B, Result> LiveData<A>.combine(
     other: LiveData<B>,
+    combiner: (A, B) -> Result
+): LiveData<Result> {
+    val result = MediatorLiveData<Result>()
+    result.addSource(this) { a ->
+        val b = other.value
+        if (b != null) {
+            result.postValue(combiner(a, b))
+        }
+    }
+    result.addSource(other) { b ->
+        val a = this@combine.value
+        if (a != null) {
+            result.postValue(combiner(a, b))
+        }
+    }
+    return result
+}
+
+fun <A, B, Result> LiveData<A>.combineAsync(
+    other: LiveData<B>,
     combiner: (MutableLiveData<Result>, A, B) -> Unit
 ): LiveData<Result> {
     val result = MediatorLiveData<Result>()
@@ -101,7 +121,7 @@ fun <A, B, Result> LiveData<A>.combine(
         }
     }
     result.addSource(other) { b ->
-        val a = this@combine.value
+        val a = this@combineAsync.value
         if (a != null) {
             combiner(result, a, b)
         }
