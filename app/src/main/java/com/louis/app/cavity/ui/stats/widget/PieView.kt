@@ -143,7 +143,11 @@ class PieView @JvmOverloads constructor(
             textPath.addArc(rect, startAngle, sweepAngle)
 
             val text = TextUtils.ellipsize(
-                context.getString(it.name), // Is this ok in onDraw ?
+                try {
+                    context.getString(it.name)
+                } catch (e: Exception) {
+                    it.name.toString()
+                }, // Is this ok in onDraw ?
                 textPaint,
                 getArcLength(sweepAngle),
                 TextUtils.TruncateAt.END

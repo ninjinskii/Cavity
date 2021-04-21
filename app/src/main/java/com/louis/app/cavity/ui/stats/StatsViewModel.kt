@@ -18,9 +18,11 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
     private val year = MutableLiveData(DateFormatter.roundToYear(System.currentTimeMillis()))
 
-    val consumedWinesByColor = year.switchMap { getConsumedWinesByColor(it) }
+    val consumedBottlesByColor = year.switchMap { getConsumedBottlesByColor(it) }
 
-    private fun getConsumedWinesByColor(year: Long) = liveData(IO) {
+    val consumedBottlesByVintage = year.switchMap { getConsumedBottlesByVintage(it) }
+
+    private fun getConsumedBottlesByColor(year: Long) = liveData(IO) {
         // TODO: consider adding a History - BottleAndWine relation instead of BOundedEntry
         // TODO: consider merging year source and entries source and use switchMap to vaoir requesting bounded entries every time
         val entries = repository.getBoundedEntriesNotPagedNotLive()
@@ -32,7 +34,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
                 .also { max = it.size.toFloat() }
                 .groupBy { it.bottleAndWine.wine.color }
 
-            val consumedWinesByColor = grouped.keys.map {
+            val consumedBottlesByColor = grouped.keys.map {
                 PieSlice(
                     name = ColorUtil.getStringResForWineColor(it),
                     angle = (grouped[it]!!.size / max) * 360f,
@@ -40,7 +42,29 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
                 )
             }
 
-            emit(consumedWinesByColor)
+            emit(consumedBottlesByColor)
+        }
+    }
+
+    private fun getConsumedBottlesByVintage(year: Long) = liveData(IO) {
+        val entries = repository.getBoundedEntriesNotPagedNotLive()
+
+        withContext(Default) {
+            val max: Float
+            val grouped = entries
+                .filter { it.historyEntry.date > year && it.historyEntry.type == 0 }
+                .also { max = it.size.toFloat() }
+                .groupBy { it.bottleAndWine.bottle.vintage }
+
+            val consumedBottlesByVintage = grouped.keys.map {
+                PieSlice(
+                    name = it,
+                    angle = (grouped[it]!!.size / max) * 360f,
+                    color = null
+                )
+            }
+
+            emit(consumedBottlesByVintage)
         }
     }
 

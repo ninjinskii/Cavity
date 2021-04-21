@@ -33,7 +33,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             setHasFixedSize(true)
         }
 
-        statsViewModel.consumedWinesByColor.observe(viewLifecycleOwner) {
+        statsViewModel.consumedBottlesByVintage.observe(viewLifecycleOwner) {
             statAdapter.submitList(listOf(StatsUiModel.Pie(it)))
         }
 
