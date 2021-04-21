@@ -26,6 +26,14 @@ class ColorUtil(context: Context) {
             3 -> R.color.wine_rose
             else -> throw IllegalArgumentException("Wine color $wineColor does not exists")
         }
+
+        fun getStringResForWineColor(wineColor: Int) = when (wineColor) {
+            0 -> R.string.wine_color_red
+            1 -> R.string.wine_color_white
+            2 -> R.string.wine_color_sweet
+            3 -> R.string.wine_color_rose
+            else -> throw IllegalArgumentException("Wine color $wineColor does not exists")
+        }
     }
 
     private val wineColors by lazy {

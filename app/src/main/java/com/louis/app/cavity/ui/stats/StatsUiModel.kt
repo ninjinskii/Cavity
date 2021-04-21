@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.stats
 
 import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
 
 sealed class StatsUiModel {
     data class Chart(val points: List<ChartPoint>) : StatsUiModel() {
@@ -8,7 +9,7 @@ sealed class StatsUiModel {
     }
 
     data class Pie(val slices: List<PieSlice>) : StatsUiModel() {
-        data class PieSlice(val name: String, val angle: Float, @ColorRes val color: Int?)
+        data class PieSlice(@StringRes val name: Int, val angle: Float, @ColorRes val color: Int?)
     }
 
     data class Mirror(

@@ -29,6 +29,8 @@ class PieView @JvmOverloads constructor(
     private val strokeWidth = context.dpToPx(6f)
     private val sliceSpace = context.dpToPx(1f)
 
+    private val backgroundColor = Color.BLACK
+    private val transparent = Color.TRANSPARENT
     private val textColor = ContextCompat.getColor(
         context,
         R.color.material_on_surface_emphasis_medium
@@ -51,13 +53,14 @@ class PieView @JvmOverloads constructor(
 
     private var pieData: List<StatsUiModel.Pie.PieSlice> = mutableListOf()
     private var colors = colorUtil.randomSet()
+    private var labels = mutableListOf<String>()
 
     private var rect = RectF()
     private var pieRadius = 0f
     private var centerX = 0.0f
     private var centerY = 0.0f
 
-    var interpolation = 1f
+    private var interpolation = 1f
         set(value) {
             val constrained = value.coerceIn(0F, 1F)
             if (constrained != field) {
@@ -69,16 +72,20 @@ class PieView @JvmOverloads constructor(
     fun setPieData(data: List<StatsUiModel.Pie.PieSlice>, anim: Boolean) {
         pieData = data
 
-        colors = if (data.any { it.color == null }) {
-            colorUtil.randomSet()
-        } else {
-            data.map { ContextCompat.getColor(context, it.color!!) }
-        }
+        colors = resolveColors()
 
         if (anim) {
             triggerAnimation()
         } else {
             invalidate()
+        }
+    }
+
+    private fun resolveColors(): List<Int> {
+        return if (pieData.any { it.color == null }) {
+            colorUtil.randomSet()
+        } else {
+            pieData.map { ContextCompat.getColor(context, it.color!!) }
         }
     }
 
@@ -119,7 +126,7 @@ class PieView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        piePaint.color = Color.BLACK
+        piePaint.color = backgroundColor
 
         canvas.drawCircle(centerX, centerY, pieRadius - strokeWidth, piePaint)
 
@@ -127,7 +134,7 @@ class PieView @JvmOverloads constructor(
 
         pieData.forEachIndexed { index, it ->
             piePaint.color = colors[index % colors.size]
-            textPaint.color = ColorUtils.blendARGB(Color.TRANSPARENT, textColor, interpolation)
+            textPaint.color = ColorUtils.blendARGB(transparent, textColor, interpolation)
 
             val startAngle = (previousAngle + sliceSpace) * interpolation
             val sweepAngle = (it.angle - sliceSpace) * interpolation
@@ -136,7 +143,7 @@ class PieView @JvmOverloads constructor(
             textPath.addArc(rect, startAngle, sweepAngle)
 
             val text = TextUtils.ellipsize(
-                it.name,
+                context.getString(it.name), // Is this ok in onDraw ?
                 textPaint,
                 getArcLength(sweepAngle),
                 TextUtils.TruncateAt.END

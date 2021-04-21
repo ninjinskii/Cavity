@@ -26,7 +26,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
             val consumedWinesByColor = grouped.keys.map {
                 PieSlice(
-                    name = "Name",
+                    name = ColorUtil.getStringResForWineColor(it),
                     angle = (grouped[it]!!.size / max) * 360f,
                     color = ColorUtil.getColorResForWineColor(it)
                 )
