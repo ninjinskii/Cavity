@@ -23,6 +23,7 @@ class PieView @JvmOverloads constructor(
     View(context, attrs, defStyleAttr) {
 
     private val colorUtil = ColorUtil(context)
+//    private val
 
     private val strokeWidth = context.dpToPx(6f)
     private val sliceSpace = context.dpToPx(1f)
@@ -67,7 +68,7 @@ class PieView @JvmOverloads constructor(
         }
     }
 
-    fun triggerAnimation() {
+    private fun triggerAnimation() {
         ObjectAnimator.ofFloat(this, "interpolation", 0f, 1f).apply {
             duration = 800
             interpolator = FastOutSlowInInterpolator()
@@ -99,7 +100,6 @@ class PieView @JvmOverloads constructor(
 
         setMeasuredDimension(w, h)
     }
-
 
     override fun onDraw(canvas: Canvas) {
         piePaint.color = Color.BLACK

@@ -49,7 +49,7 @@ class ColorUtil(context: Context) {
         listOf(
             R.color.cavity_red,
             R.color.cavity_brown,
-            R.color.cavity_light_green,
+            R.color.cavity_green,
             R.color.cavity_indigo,
             R.color.cavity_purple,
             R.color.cavity_yellow
@@ -97,7 +97,7 @@ class ColorUtil(context: Context) {
             ColorCategory.OTHER -> colors.find { it.first == colorRes }?.second
         }
 
-        return color ?: throw IllegalArgumentException("Color $colorRes absent of $cat")
+        return color ?: throw IllegalArgumentException("Color $colorRes absent of $cat category")
     }
 
     fun randomSet() = colors.map { it.second }.shuffled()
