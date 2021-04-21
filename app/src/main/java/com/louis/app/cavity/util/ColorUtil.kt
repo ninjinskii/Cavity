@@ -17,6 +17,17 @@ class ColorUtil(context: Context) {
         OTHER,
     }
 
+    companion object {
+        @ColorRes
+        fun getColorResForWineColor(wineColor: Int) = when (wineColor) {
+            0 -> R.color.wine_red
+            1 -> R.color.wine_white
+            2 -> R.color.wine_sweet
+            3 -> R.color.wine_rose
+            else -> throw IllegalArgumentException("Wine color $wineColor does not exists")
+        }
+    }
+
     private val wineColors by lazy {
         listOf(
             R.color.wine_red,

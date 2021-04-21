@@ -2,13 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/cavity_light_green"
     android:layout_margin="@dimen/small_margin">
 
     <com.louis.app.cavity.ui.stats.widget.PieView
         android:id="@+id/pie"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

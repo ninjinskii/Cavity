@@ -7,7 +7,9 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.louis.app.cavity.ui.stats.StatsUiModel
+import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.min
 
@@ -18,6 +20,8 @@ class PieView @JvmOverloads constructor(
 ) :
     View(context, attrs, defStyleAttr) {
 
+    private val colorUtil = ColorUtil(context)
+
     private val strokeWidth = context.dpToPx(6f)
     private val sliceSpace = context.dpToPx(1f)
 
@@ -25,11 +29,11 @@ class PieView @JvmOverloads constructor(
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
             strokeWidth = this@PieView.strokeWidth
-            color = Color.BLACK
         }
     }
 
     private var pieData: List<StatsUiModel.Pie.PieSlice> = mutableListOf()
+    private var colors = colorUtil.randomSet()
 
     private var rect = RectF()
     private var pieRadius = 0f
@@ -38,6 +42,13 @@ class PieView @JvmOverloads constructor(
 
     fun setPieData(data: List<StatsUiModel.Pie.PieSlice>) {
         pieData = data
+
+        colors = if (data.any { it.color == null }) {
+            colorUtil.randomSet()
+        } else {
+            data.map { ContextCompat.getColor(context, it.color!!) }
+        }
+
         invalidate()
     }
 
@@ -74,9 +85,8 @@ class PieView @JvmOverloads constructor(
 
         var previousAngle = -90f
 
-        pieData.forEach {
-            // TODO: get a color on a RandomColorGenerator when fetching data on ViewModel
-            piePaint.color = it.color ?: Color.BLUE
+        pieData.forEachIndexed { index, it ->
+            piePaint.color = colors[index % colors.size]
 
             val startAngle = previousAngle + sliceSpace
             val sweepAngle = it.angle - sliceSpace
