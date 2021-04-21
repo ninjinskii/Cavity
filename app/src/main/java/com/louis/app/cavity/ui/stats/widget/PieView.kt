@@ -18,14 +18,13 @@ class PieView @JvmOverloads constructor(
 ) :
     View(context, attrs, defStyleAttr) {
 
-    companion object {
-        private const val STROKE_WIDTH = 6f
-    }
+    private val strokeWidth = context.dpToPx(6f)
+    private val sliceSpace = context.dpToPx(1f)
 
     private val piePaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            strokeWidth = context.dpToPx(STROKE_WIDTH)
+            strokeWidth = this@PieView.strokeWidth
             color = Color.BLACK
         }
     }
@@ -49,10 +48,10 @@ class PieView @JvmOverloads constructor(
         pieRadius = min(ww, hh) / 2f
 
         rect.set(
-            0f + STROKE_WIDTH + paddingLeft,
-            0f + STROKE_WIDTH + paddingTop,
-            pieRadius * 2 - STROKE_WIDTH - paddingRight,
-            pieRadius * 2 - STROKE_WIDTH - paddingBottom
+            0f + strokeWidth + paddingLeft,
+            0f + strokeWidth + paddingTop,
+            pieRadius * 2 - strokeWidth - paddingRight,
+            pieRadius * 2 - strokeWidth - paddingBottom
         )
 
         centerX = rect.centerX()
@@ -71,7 +70,7 @@ class PieView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         piePaint.color = Color.BLACK
 
-        canvas.drawCircle(centerX, centerY, pieRadius - STROKE_WIDTH, piePaint)
+        canvas.drawCircle(centerX, centerY, pieRadius - strokeWidth, piePaint)
 
         var previousAngle = -90f
 
@@ -79,7 +78,10 @@ class PieView @JvmOverloads constructor(
             // TODO: get a color on a RandomColorGenerator when fetching data on ViewModel
             piePaint.color = it.color ?: Color.BLUE
 
-            canvas.drawArc(rect, previousAngle, it.angle, false, piePaint)
+            val startAngle = previousAngle + sliceSpace
+            val sweepAngle = it.angle - sliceSpace
+
+            canvas.drawArc(rect, startAngle, sweepAngle, false, piePaint)
 
             previousAngle += it.angle
         }

@@ -8,7 +8,6 @@ sealed class StatsUiModel {
     }
 
     data class Pie(val slices: List<PieSlice>) : StatsUiModel() {
-        // To compute angle: (380 * percentage) / 100
         data class PieSlice(val name: String, val angle: Float, @ColorRes val color: Int?)
     }
 

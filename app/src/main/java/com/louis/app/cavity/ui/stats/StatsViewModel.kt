@@ -26,7 +26,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
             val colors = listOf(Color.BLUE, Color.RED, Color.GREEN, Color.MAGENTA)
 
             val consumedWinesByColor = grouped.keys.mapIndexed { index, it ->
-                PieSlice("Name", angle = (grouped[it]!!.size / max) * 380f, color = colors[index])
+                PieSlice("Name", angle = (grouped[it]!!.size / max) * 360f, color = colors[index])
             }
 
             emit(consumedWinesByColor)
