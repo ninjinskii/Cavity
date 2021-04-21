@@ -90,6 +90,7 @@ class GrapeBar @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         val paddingX = paddingStart + paddingEnd
         val spacing = context.dpToPx(BAR_BOTTOM_SPACING)
+
         progressUnitPixelSize = (w - paddingX) / 100f
         startX = paddingStart.toFloat()
         endX = (w - paddingEnd).toFloat()
