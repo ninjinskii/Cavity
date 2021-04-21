@@ -13,6 +13,7 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.stats.StatsUiModel
 import com.louis.app.cavity.util.ColorUtil
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.PI
 import kotlin.math.min
@@ -100,6 +101,8 @@ class PieView @JvmOverloads constructor(
     private fun getArcLength(sweepAngle: Float) =
         ((2f * PI.toFloat() * pieRadius) / 360f) * sweepAngle
 
+    private fun getAngle(textLength: Float) = (360f * textLength) / (2 * PI.toFloat() * pieRadius)
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         val ww = w + paddingLeft + paddingRight
         val hh = h + paddingTop + paddingBottom
@@ -141,14 +144,16 @@ class PieView @JvmOverloads constructor(
 
             textPath.reset()
 
-            // Might reverse arc to avoid drawing text upside-down
-            /*val verticalOffset = if (startAngle + sweepAngle in 0f..180f) {
-                textPath.addArc(rect, startAngle + sweepAngle, -sweepAngle)
-                -10f
-            } else {*/
-            textPath.addArc(rect, startAngle, sweepAngle)
-            /*30f
-        }*/
+            // Might reverse arc to avoid drawing upside-down text
+            val verticalOffset = if (startAngle in 0f..180f) {
+                val angleForText = getAngle(textPaint.measureText(it.name.toString()))
+                L.v("angle presumed: $angleForText")
+                textPath.addArc(rect, startAngle + angleForText, -angleForText)
+                -15f
+            } else {
+                textPath.addArc(rect, startAngle, sweepAngle)
+                30f
+            }
 
             val text = TextUtils.ellipsize(
                 // TODO: this temporary
@@ -163,7 +168,7 @@ class PieView @JvmOverloads constructor(
                 TextUtils.TruncateAt.END
             )
 
-            canvas.drawTextOnPath(text.toString(), textPath, 0f, 30f, textPaint)
+            canvas.drawTextOnPath(text.toString(), textPath, 0f, verticalOffset, textPaint)
             canvas.drawArc(rect, startAngle, sweepAngle, false, piePaint)
 
             previousAngle += it.angle

@@ -54,6 +54,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
             val grouped = entries
                 .filter { it.historyEntry.date > year && it.historyEntry.type == 0 }
                 .also { max = it.size.toFloat() }
+                .sortedBy { it.bottleAndWine.bottle.vintage }
                 .groupBy { it.bottleAndWine.bottle.vintage }
 
             val consumedBottlesByVintage = grouped.keys.map {
