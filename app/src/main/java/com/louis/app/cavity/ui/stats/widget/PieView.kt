@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.stats.widget
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -8,6 +9,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.ui.stats.StatsUiModel
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
@@ -40,7 +42,16 @@ class PieView @JvmOverloads constructor(
     private var centerX = 0.0f
     private var centerY = 0.0f
 
-    fun setPieData(data: List<StatsUiModel.Pie.PieSlice>) {
+    var interpolation = 1f
+        set(value) {
+            val constrained = value.coerceIn(0F, 1F)
+            if (constrained != field) {
+                field = constrained
+                invalidate()
+            }
+        }
+
+    fun setPieData(data: List<StatsUiModel.Pie.PieSlice>, anim: Boolean) {
         pieData = data
 
         colors = if (data.any { it.color == null }) {
@@ -49,7 +60,19 @@ class PieView @JvmOverloads constructor(
             data.map { ContextCompat.getColor(context, it.color!!) }
         }
 
-        invalidate()
+        if (anim) {
+            triggerAnimation()
+        } else {
+            invalidate()
+        }
+    }
+
+    fun triggerAnimation() {
+        ObjectAnimator.ofFloat(this, "interpolation", 0f, 1f).apply {
+            duration = 800
+            interpolator = FastOutSlowInInterpolator()
+            start()
+        }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -88,8 +111,8 @@ class PieView @JvmOverloads constructor(
         pieData.forEachIndexed { index, it ->
             piePaint.color = colors[index % colors.size]
 
-            val startAngle = previousAngle + sliceSpace
-            val sweepAngle = it.angle - sliceSpace
+            val startAngle = (previousAngle + sliceSpace) * interpolation
+            val sweepAngle = (it.angle - sliceSpace) * interpolation
 
             canvas.drawArc(rect, startAngle, sweepAngle, false, piePaint)
 

@@ -73,13 +73,17 @@ class GrapeBar @JvmOverloads constructor(
         }
 
         if (empty && anim) {
-            ObjectAnimator.ofFloat(this, "interpolation", 0f, 1f).apply {
-                duration = 800
-                interpolator = FastOutSlowInInterpolator()
-                start()
-            }
+            triggerAnimation()
         } else {
             invalidate()
+        }
+    }
+
+    private fun triggerAnimation() {
+        ObjectAnimator.ofFloat(this, "interpolation", 0f, 1f).apply {
+            duration = 800
+            interpolator = FastOutSlowInInterpolator()
+            start()
         }
     }
 
