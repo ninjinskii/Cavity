@@ -26,7 +26,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun prepareResults(entries: List<BoundedHistoryEntry>) = liveData(Default) {
         val results = mutableListOf<StatsUiModel>()
-
+// move entires.filter here eventually
         withContext(Default) {
             val consumedBottlesByColor = async { getConsumedBottlesByColor(entries) }
             val consumedBottlesByVintage = async { getConsumedBottlesByVintage(entries) }
@@ -40,6 +40,10 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
             emit(results)
         }
+    }
+
+    private fun getConsumedBottles(entries: List<BoundedHistoryEntry>): List<ChartPoint> {
+
     }
 
     private fun getConsumedBottlesByColor(
