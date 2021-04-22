@@ -34,7 +34,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         }
 
         statsViewModel.consumedBottlesByVintage.observe(viewLifecycleOwner) {
-            statAdapter.submitList(listOf(StatsUiModel.Pie(it)))
+            val resolved = it.map { slice -> slice.resolve(requireContext()) }
+            statAdapter.submitList(listOf(StatsUiModel.Pie(resolved)))
         }
 
     }

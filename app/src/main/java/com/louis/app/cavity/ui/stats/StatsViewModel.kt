@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.ui.stats.StatsUiModel.Pie.PieSlice
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.DateFormatter
 import kotlinx.coroutines.Dispatchers.Default
@@ -35,7 +34,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
                 .groupBy { it.bottleAndWine.wine.color }
 
             val consumedBottlesByColor = grouped.keys.map {
-                PieSlice(
+                UnresolvedPieSlice(
                     name = ColorUtil.getStringResForWineColor(it),
                     angle = (grouped[it]!!.size / max) * 360f,
                     color = ColorUtil.getColorResForWineColor(it)
@@ -58,8 +57,8 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
                 .groupBy { it.bottleAndWine.bottle.vintage }
 
             val consumedBottlesByVintage = grouped.keys.map {
-                PieSlice(
-                    name = it,
+                UnresolvedColorPieSlice(
+                    name = it.toString(),
                     angle = (grouped[it]!!.size / max) * 360f,
                     color = null
                 )

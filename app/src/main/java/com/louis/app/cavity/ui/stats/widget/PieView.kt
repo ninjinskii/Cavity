@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
-import com.louis.app.cavity.ui.stats.StatsUiModel
+import com.louis.app.cavity.ui.stats.PieSlice
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.PI
@@ -51,9 +51,8 @@ class PieView @JvmOverloads constructor(
         }
     }
 
-    private var pieData: List<StatsUiModel.Pie.PieSlice> = mutableListOf()
+    private var pieData: List<PieSlice> = mutableListOf()
     private var colors = colorUtil.randomSet()
-    private var labels = mutableListOf<String>()
 
     private var rect = RectF()
     private var pieRadius = 0f
@@ -69,7 +68,7 @@ class PieView @JvmOverloads constructor(
             }
         }
 
-    fun setPieData(data: List<StatsUiModel.Pie.PieSlice>, anim: Boolean) {
+    fun setPieData(data: List<PieSlice>, anim: Boolean) {
         pieData = data
 
         colors = resolveColors()
@@ -85,7 +84,7 @@ class PieView @JvmOverloads constructor(
         return if (pieData.any { it.color == null }) {
             colorUtil.randomSet()
         } else {
-            pieData.map { ContextCompat.getColor(context, it.color!!) }
+            pieData.map { it.color!! }
         }
     }
 
@@ -145,8 +144,8 @@ class PieView @JvmOverloads constructor(
 
             // Might reverse arc to avoid drawing upside-down text
             val verticalOffset = if (startAngle in 0f..180f) {
-                val angleForText = min(getAngle(textPaint.measureText(it.name.toString())), sweepAngle)
-                textPath.addArc(rect, startAngle + angleForText, -angleForText)
+                val sweepSpaceForText = min(sweepAngle, getAngle(textPaint.measureText(it.name)))
+                textPath.addArc(rect, startAngle + sweepSpaceForText, -sweepSpaceForText)
                 -13f
             } else {
                 textPath.addArc(rect, startAngle, sweepAngle)
@@ -154,13 +153,7 @@ class PieView @JvmOverloads constructor(
             }
 
             val text = TextUtils.ellipsize(
-                // TODO: this temporary
-                try {
-                    // Is this ok in onDraw ?
-                    context.getString(it.name)
-                } catch (e: Exception) {
-                    it.name.toString()
-                },
+                it.name,
                 textPaint,
                 getArcLength(sweepAngle),
                 TextUtils.TruncateAt.END
