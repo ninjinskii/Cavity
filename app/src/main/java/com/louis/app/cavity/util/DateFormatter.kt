@@ -32,6 +32,14 @@ object DateFormatter {
         return timestamp - exceed.roundToLong()
     }
 
+    fun getYearBounds(timestamp: Long): Pair<Long, Long> {
+        val exceed = timestamp % YEAR_IN_MILLIS
+        val start = timestamp - exceed.roundToLong()
+        val end = timestamp + YEAR_IN_MILLIS.roundToLong()
+
+        return start to end
+    }
+
     fun isToday(timestamp: Long?): Boolean {
         val currentTime = System.currentTimeMillis()
         val startOfDay = roundToDay(currentTime)

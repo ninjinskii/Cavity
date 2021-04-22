@@ -17,4 +17,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBar" />
 
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/toggleAnyYear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Toutes années confondues"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

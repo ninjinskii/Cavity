@@ -6,70 +6,87 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.DateFormatter
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 
 class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
-    private val year = MutableLiveData(DateFormatter.roundToYear(System.currentTimeMillis()))
+    private val year = MutableLiveData(DateFormatter.getYearBounds(System.currentTimeMillis()))
 
-    val consumedBottlesByColor = year.switchMap { getConsumedBottlesByColor(it) }
+    private val entries = year.switchMap {
+        repository.getBoundedEntriesBetween(it.first, it.second)
+    }
 
-    val consumedBottlesByVintage = year.switchMap { getConsumedBottlesByVintage(it) }
+    val display = entries.switchMap { prepareResults(it) }
 
-    private fun getConsumedBottlesByColor(year: Long) = liveData(IO) {
-        // TODO: consider adding a History - BottleAndWine relation instead of BOundedEntry
-        // TODO: consider merging year source and entries source and use switchMap to vaoir requesting bounded entries every time
-        val entries = repository.getBoundedEntriesNotPagedNotLive()
+    private fun prepareResults(entries: List<BoundedHistoryEntry>) = liveData(Default) {
+        val results = mutableListOf<StatsUiModel>()
 
         withContext(Default) {
-            val max: Float
-            val grouped = entries
-                .filter { it.historyEntry.date > year && it.historyEntry.type == 0 }
-                .also { max = it.size.toFloat() }
-                .groupBy { it.bottleAndWine.wine.color }
+            val consumedBottlesByColor = async { getConsumedBottlesByColor(entries) }
+            val consumedBottlesByVintage = async { getConsumedBottlesByVintage(entries) }
 
-            val consumedBottlesByColor = grouped.keys.map {
-                UnresolvedPieSlice(
-                    name = ColorUtil.getStringResForWineColor(it),
-                    angle = (grouped[it]!!.size / max) * 360f,
-                    color = ColorUtil.getColorResForWineColor(it)
+            results.addAll(
+                listOf(
+                    StatsUiModel.Pie(consumedBottlesByColor.await()),
+                    StatsUiModel.Pie(consumedBottlesByVintage.await())
                 )
-            }
+            )
 
-            emit(consumedBottlesByColor)
+            emit(results)
         }
     }
 
-    private fun getConsumedBottlesByVintage(year: Long) = liveData(IO) {
-        val entries = repository.getBoundedEntriesNotPagedNotLive()
+    private fun getConsumedBottlesByColor(
+        entries: List<BoundedHistoryEntry>
+    ): List<PieSlice> {
 
-        withContext(Default) {
-            val max: Float
-            val grouped = entries
-                .filter { it.historyEntry.date > year && it.historyEntry.type == 0 }
-                .also { max = it.size.toFloat() }
-                .sortedBy { it.bottleAndWine.bottle.vintage }
-                .groupBy { it.bottleAndWine.bottle.vintage }
+        val max: Float
+        val grouped = entries
+            .filter { it.historyEntry.type == 0 }
+            .also { max = it.size.toFloat() }
+            .sortedBy { it.bottleAndWine.wine.color }
+            .groupBy { it.bottleAndWine.wine.color }
 
-            val consumedBottlesByVintage = grouped.keys.map {
-                UnresolvedColorPieSlice(
-                    name = it.toString(),
-                    angle = (grouped[it]!!.size / max) * 360f,
-                    color = null
-                )
-            }
-
-            emit(consumedBottlesByVintage)
+        return grouped.keys.map {
+            ResPieSlice(
+                name = ColorUtil.getStringResForWineColor(it),
+                angle = (grouped[it]!!.size / max) * 360f,
+                color = ColorUtil.getColorResForWineColor(it)
+            )
         }
     }
 
-    fun setYear(timestamp: Long) {
-        val yearStart = DateFormatter.roundToYear(timestamp)
-        year.value = yearStart
+    private fun getConsumedBottlesByVintage(
+        entries: List<BoundedHistoryEntry>
+    ): List<PieSlice> {
+
+        val max: Float
+        val grouped = entries
+            .filter { it.historyEntry.type == 0 }
+            .also { max = it.size.toFloat() }
+            .sortedBy { it.bottleAndWine.bottle.vintage }
+            .groupBy { it.bottleAndWine.bottle.vintage }
+
+        return grouped.keys.map {
+            StringPieSlice(
+                name = it.toString(),
+                angle = (grouped[it]!!.size / max) * 360f,
+                color = null
+            )
+        }
+    }
+
+    fun setYear(timestamp: Long?) {
+        year.value = if (timestamp != null) {
+            DateFormatter.getYearBounds(timestamp)
+        } else {
+            0L to System.currentTimeMillis()
+        }
     }
 }

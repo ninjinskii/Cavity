@@ -21,6 +21,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         setupNavigation(binding.appBar.toolbar)
 
         initRecyclerView()
+        setListener()
     }
 
     private fun initRecyclerView() {
@@ -33,11 +34,16 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             setHasFixedSize(true)
         }
 
-        statsViewModel.consumedBottlesByVintage.observe(viewLifecycleOwner) {
-            val resolved = it.map { slice -> slice.resolve(requireContext()) }
-            statAdapter.submitList(listOf(StatsUiModel.Pie(resolved)))
+        statsViewModel.display.observe(viewLifecycleOwner) {
+            statAdapter.submitList(it)
         }
 
+    }
+
+    private fun setListener() {
+        binding.toggleAnyYear.setOnCheckedChangeListener { _, isChecked ->
+            statsViewModel.setYear(if (isChecked) null else System.currentTimeMillis())
+        }
     }
 
     override fun onDestroyView() {

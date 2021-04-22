@@ -231,6 +231,9 @@ class WineRepository private constructor(app: Application) {
     fun getFavoriteEntries() = historyDao.getFavoriteEntries()
     fun getAllEntriesNotPagedNotLive() = historyDao.getAllEntriesNotPagedNotLive()
 
+    fun getBoundedEntriesBetween(start: Long, end: Long) =
+        historyDao.getBoundedEntriesBetween(start, end)
+
     suspend fun insertHistoryEntry(entry: HistoryEntry): Long {
         // TODO: handle tasting here
         return database.withTransaction {

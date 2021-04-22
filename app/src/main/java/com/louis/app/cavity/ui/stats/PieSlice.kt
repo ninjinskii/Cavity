@@ -1,44 +1,24 @@
 package com.louis.app.cavity.ui.stats
 
-import android.content.Context
-import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 
-data class PieSlice(val name: String, val angle: Float, @ColorInt val color: Int?)
 
-/**
- * This class is used by ViewModels since they should not resolve resources themselves
- */
-data class UnresolvedPieSlice(
-    @StringRes val name: Int,
-    val angle: Float,
-    @ColorRes val color: Int?
-) :
-    Resolver {
-
-    override fun resolve(context: Context) = PieSlice(
-        context.getString(name),
-        angle,
-        color?.let { ContextCompat.getColor(context, it) }
-    )
+interface PieSlice {
+    val angle: Float
+    val color: Int?
 }
 
-data class UnresolvedColorPieSlice(
+data class StringPieSlice(
     val name: String,
-    val angle: Float,
-    @ColorRes val color: Int?
-) :
-    Resolver {
+    override val angle: Float,
+    @ColorRes override val color: Int?
+) : PieSlice
 
-    override fun resolve(context: Context) = PieSlice(
-        name,
-        angle,
-        color?.let { ContextCompat.getColor(context, it) }
-    )
-}
+data class ResPieSlice(
+    @StringRes val name: Int,
+    override val angle: Float,
+    @ColorRes override val color: Int?
+) : PieSlice
 
-interface Resolver {
-    fun resolve(context: Context): PieSlice
-}
+
