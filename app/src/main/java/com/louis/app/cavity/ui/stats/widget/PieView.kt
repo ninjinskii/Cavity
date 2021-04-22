@@ -13,7 +13,6 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.stats.StatsUiModel
 import com.louis.app.cavity.util.ColorUtil
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.PI
 import kotlin.math.min
@@ -146,10 +145,9 @@ class PieView @JvmOverloads constructor(
 
             // Might reverse arc to avoid drawing upside-down text
             val verticalOffset = if (startAngle in 0f..180f) {
-                val angleForText = getAngle(textPaint.measureText(it.name.toString()))
-                L.v("angle presumed: $angleForText")
+                val angleForText = min(getAngle(textPaint.measureText(it.name.toString())), sweepAngle)
                 textPath.addArc(rect, startAngle + angleForText, -angleForText)
-                -15f
+                -13f
             } else {
                 textPath.addArc(rect, startAngle, sweepAngle)
                 30f
