@@ -7,13 +7,12 @@ import android.text.TextPaint
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
-import com.louis.app.cavity.ui.stats.PieSlice
-import com.louis.app.cavity.ui.stats.ResPieSlice
-import com.louis.app.cavity.ui.stats.StringPieSlice
+import com.louis.app.cavity.ui.stats.Stat
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.PI
@@ -55,7 +54,6 @@ class PieView @JvmOverloads constructor(
 
     private var pieData: List<PieSlice> = mutableListOf()
     private var colors = colorUtil.randomSet()
-    private var labels = listOf<String>()
 
     private var rect = RectF()
     private var pieRadius = 0f
@@ -71,11 +69,8 @@ class PieView @JvmOverloads constructor(
             }
         }
 
-    fun setPieData(data: List<PieSlice>, anim: Boolean) {
-        pieData = data
-
-        colors = resolveColors()
-        labels = resolveStrings()
+    fun setPieData(data: Stat, anim: Boolean) {
+        pieData = prepareSlices(data)
 
         if (anim) {
             triggerAnimation()
@@ -84,22 +79,17 @@ class PieView @JvmOverloads constructor(
         }
     }
 
-    private fun resolveColors(): List<Int> {
-        return if (pieData.any { it.color == null }) {
-            colorUtil.randomSet()
-        } else {
-            pieData.map { ContextCompat.getColor(context, it.color!!) }
-        }
-    }
+    private fun prepareSlices(stat: Stat): List<PieSlice> {
+        val total = stat.total
 
-    private fun resolveStrings(): List<String> {
-        return pieData.map {
-            when (it) {
-                is StringPieSlice -> it.name
-                is ResPieSlice -> context.getString(it.name)
-                else -> throw IllegalArgumentException("Unknown PieSlice")
-            }
+        return stat.statItems.map {
+            val resolved = it.resolveIfNotDone(context)
+            val angle = (it.count.toFloat() / total.toFloat()) * 360f
+            PieSlice(resolved.name, angle, resolved.color?.let { c ->
+                ContextCompat.getColor(context, c)
+            })
         }
+
     }
 
     private fun triggerAnimation() {
@@ -148,10 +138,10 @@ class PieView @JvmOverloads constructor(
         var previousAngle = -90f
 
         pieData.forEachIndexed { index, it ->
-            piePaint.color = colors[index % colors.size]
+            piePaint.color = it.color ?: colors[index % colors.size]
             textPaint.color = ColorUtils.blendARGB(transparent, textColor, interpolation)
 
-            val label = labels[index]
+            val label = it.name
             val startAngle = (previousAngle + sliceSpace) * interpolation
             val sweepAngle = (it.angle - sliceSpace) * interpolation
 
@@ -180,4 +170,6 @@ class PieView @JvmOverloads constructor(
             previousAngle += it.angle
         }
     }
+
+    data class PieSlice(val name: String, val angle: Float, @ColorInt val color: Int?)
 }

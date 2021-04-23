@@ -7,16 +7,17 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
+import com.louis.app.cavity.ui.stats.StatsViewModel.StatType.CONSUMED_BOTTLES_BY_COLORS
+import com.louis.app.cavity.ui.stats.StatsViewModel.StatType.CONSUMED_BOTTLES_BY_VINTAGE
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.DateFormatter
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
 
 class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
-    private val year = MutableLiveData(DateFormatter.getYearBounds(System.currentTimeMillis()))
+    private val currentYear = DateFormatter.getYearBounds(System.currentTimeMillis())
+    private val year = MutableLiveData(currentYear)
 
     private val entries = year.switchMap {
         repository.getBoundedEntriesBetween(it.first, it.second)
@@ -24,64 +25,59 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
     val display = entries.switchMap { prepareResults(it) }
 
-    private fun prepareResults(entries: List<BoundedHistoryEntry>) = liveData(Default) {
-        val results = mutableListOf<StatsUiModel>()
-// move entires.filter here eventually
-        withContext(Default) {
-            val consumedBottlesByColor = async { getConsumedBottlesByColor(entries) }
-            val consumedBottlesByVintage = async { getConsumedBottlesByVintage(entries) }
+    fun getStat(stat: StatType) = liveData(Default) {
+        val entries = entries.value ?: emptyList()
 
-            results.addAll(
-                listOf(
-                    StatsUiModel.Pie(consumedBottlesByColor.await()),
-                    StatsUiModel.Pie(consumedBottlesByVintage.await())
-                )
-            )
-
-            emit(results)
-        }
+        emit(
+            when (stat) {
+                CONSUMED_BOTTLES_BY_COLORS -> getConsumedBottlesByColor(entries)
+                CONSUMED_BOTTLES_BY_VINTAGE -> getConsumedBottlesByVintage(entries)
+            }
+        )
     }
 
-    private fun getConsumedBottles(entries: List<BoundedHistoryEntry>): List<ChartPoint> {
-
+    private fun prepareResults(entries: List<BoundedHistoryEntry>) = liveData(Default) {
+// move entires.filter here eventually
+        emit(
+            listOf(
+                StatsUiModel.Pie(Stat(getConsumedBottlesByColor(entries))),
+                StatsUiModel.Pie(Stat(getConsumedBottlesByVintage(entries)))
+            )
+        )
     }
 
     private fun getConsumedBottlesByColor(
         entries: List<BoundedHistoryEntry>
-    ): List<PieSlice> {
-
-        val max: Float
+    ): List<StatItem> {
         val grouped = entries
             .filter { it.historyEntry.type == 0 }
-            .also { max = it.size.toFloat() }
             .sortedBy { it.bottleAndWine.wine.color }
             .groupBy { it.bottleAndWine.wine.color }
 
         return grouped.keys.map {
-            ResPieSlice(
+            StringResStatItem(
                 name = ColorUtil.getStringResForWineColor(it),
-                angle = (grouped[it]!!.size / max) * 360f,
-                color = ColorUtil.getColorResForWineColor(it)
+                count = grouped[it]!!.size,
+                color = ColorUtil.getColorResForWineColor(it),
+                icon = null
             )
         }
     }
 
     private fun getConsumedBottlesByVintage(
         entries: List<BoundedHistoryEntry>
-    ): List<PieSlice> {
-
-        val max: Float
+    ): List<StatItem> {
         val grouped = entries
             .filter { it.historyEntry.type == 0 }
-            .also { max = it.size.toFloat() }
             .sortedBy { it.bottleAndWine.bottle.vintage }
             .groupBy { it.bottleAndWine.bottle.vintage }
 
         return grouped.keys.map {
-            StringPieSlice(
+            StringStatItem(
                 name = it.toString(),
-                angle = (grouped[it]!!.size / max) * 360f,
-                color = null
+                count = grouped[it]!!.size,
+                color = null,
+                icon = null
             )
         }
     }
@@ -92,5 +88,10 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         } else {
             0L to System.currentTimeMillis()
         }
+    }
+
+    enum class StatType {
+        CONSUMED_BOTTLES_BY_COLORS,
+        CONSUMED_BOTTLES_BY_VINTAGE,
     }
 }

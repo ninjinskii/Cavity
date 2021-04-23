@@ -95,6 +95,7 @@ abstract class CavityDatabase : RoomDatabase() {
                     }
 
                     val counties = 1..10
+                    val bottles = 1..299
 
                     val wineNames = arrayOf(
                         "Immelé",
@@ -142,7 +143,7 @@ abstract class CavityDatabase : RoomDatabase() {
                         "Clarinette"
                     )
 
-                    repeat(50) {
+                    repeat(100) {
                         wineDao!!.insertWine(
                             Wine(
                                 0,
@@ -157,7 +158,7 @@ abstract class CavityDatabase : RoomDatabase() {
                         )
                     }
 
-                    repeat(150) {
+                    repeat(500) {
                         try {
                             bottleDao!!.insertBottle(
                                 Bottle(
@@ -223,13 +224,49 @@ abstract class CavityDatabase : RoomDatabase() {
                     }
 
                     repeat(8) {
-                        friendDao!!.insertFriend(
-                            Friend(
-                                0,
-                                "${friends.random()} ${friends.random()}",
-                                ""
+                        try {
+                            friendDao!!.insertFriend(
+                                Friend(
+                                    0,
+                                    "${friends.random()} ${friends.random()}",
+                                    ""
+                                )
                             )
-                        )
+                        } catch (e: Exception) {
+                        }
+                    }
+
+                    with(historyDao!!) {
+                        val historyBottles = 300L..400L
+                        val twenyone = 1609459200000..System.currentTimeMillis()
+                        val tweny = 1577836800000L..1609459199000L
+                        val historyBottlesLastYear = 401L..499L
+                        val types = listOf(0, 0, 0, 1, 1, 1, 2, 3)
+
+                        // 2021 and more
+                        historyBottles.forEach {
+                            val type = types.random()
+                            insertEntry(HistoryEntry(0, twenyone.random(), it, null, "Commentaire", type, 0))
+
+                            if (type == 0) {
+                                val bottle = bottleDao!!.getBottleByIdNotLive(it)
+                                bottleDao.updateBottle(bottle.copy(consumed = 1))
+                            }
+                        }
+
+                        // 2020
+                        historyBottlesLastYear.forEach {
+                            try {
+                                val type = types.random()
+                                insertEntry(HistoryEntry(0, tweny.random(), it, null, "Commentaire", type, 0))
+
+                                if (type == 0) {
+                                    val bottle = bottleDao!!.getBottleByIdNotLive(it)
+                                    bottleDao.updateBottle(bottle.copy(consumed = 1))
+                                }
+                            } catch (e: Exception) {
+                            }
+                        }
                     }
                 }
             }
