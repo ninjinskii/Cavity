@@ -225,6 +225,6 @@
     <fragment
         android:id="@+id/stats_dest"
         android:name="com.louis.app.cavity.ui.stats.FragmentStats"
-        android:label="FragmentSettings"
+        android:label="FragmentStats"
         tools:layout="@layout/fragment_stats" />
 </navigation>
