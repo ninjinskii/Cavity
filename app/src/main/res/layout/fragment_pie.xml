@@ -36,7 +36,9 @@
         app:layout_constraintBottom_toTopOf="@id/buttonCompare"
         app:layout_constraintEnd_toEndOf="@id/pieView"
         app:layout_constraintStart_toStartOf="@id/pieView"
-        app:layout_constraintTop_toBottomOf="@id/label">
+        app:layout_constraintTop_toBottomOf="@id/label"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonStock"

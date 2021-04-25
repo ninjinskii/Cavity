@@ -7,9 +7,8 @@ import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
-import com.louis.app.cavity.model.Chipable
 
-class ScrollableTabAdapter<T : Chipable>(
+class ScrollableTabAdapter<T>(
     private val onTabClick: (Int) -> Unit,
     private val onLongTabClick: (T) -> Unit,
 ) :
@@ -30,7 +29,7 @@ class ScrollableTabAdapter<T : Chipable>(
 
     override fun getItemCount() = tabs.size
 
-    override fun getItemId(position: Int) = (tabs[position] as? Chipable)?.getItemId() ?: 0
+    //override fun getItemId(position: Int) = (tabs[position] as? Chipable)?.getItemId() ?: 0
 
     fun addAll(list: List<T>) {
         tabs.clear()
@@ -48,7 +47,7 @@ class ScrollableTabAdapter<T : Chipable>(
         }
 
         fun bind(item: T) {
-            textView.text = item.getChipText()
+            textView.text = item.toString()
 
             view.setOnLongClickListener {
                 onLongTabClick(item)

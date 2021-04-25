@@ -27,6 +27,7 @@ class WineRepository private constructor(app: Application) {
     private val historyDao = database.historyDao()
     private val friendDao = database.friendDao()
     private val historyXFriendDao = database.historyXFriendDao()
+    private val statsDao = database.statsDao()
 
 
     // Wine
@@ -225,6 +226,7 @@ class WineRepository private constructor(app: Application) {
     // History
     suspend fun updateEntry(entry: HistoryEntry) = historyDao.updateEntry(entry)
     fun getAllEntries() = historyDao.getAllEntries()
+    fun getYears() = historyDao.getYears()
     fun getBoundedEntriesNotPagedNotLive() = historyDao.getBoundedEntriesNotPagedNotLive()
     fun getEntriesByType(type1: Int, type2: Int) = historyDao.getEntriesByType(type1, type2)
     fun getEntriesForBottle(bottleId: Long) = historyDao.getEntriesForBottle(bottleId)
@@ -262,4 +264,13 @@ class WineRepository private constructor(app: Application) {
             insertFriendHistoryXRef(historyXFriends)
         }
     }
+
+
+    // Stats
+    suspend fun getStockByColor() = statsDao.getStockByColor()
+    suspend fun getReplenishmentsByColor(start: Long, end: Long) =
+        statsDao.getReplenishmentsByColor(start, end)
+
+    suspend fun getConsumptionsByColor(start: Long, end: Long) =
+        statsDao.getConsumptionsByColor(start, end)
 }

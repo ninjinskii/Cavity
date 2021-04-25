@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
+import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentStats : Fragment(R.layout.fragment_stats) {
@@ -20,8 +21,30 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 
         setupNavigation(binding.appBar.toolbar)
 
+        setupScrollableTab()
+        setupViewPager()
         initRecyclerView()
         setListener()
+    }
+
+    private fun setupScrollableTab() {
+        val tabAdapter = ScrollableTabAdapter<String>(
+            onTabClick = {
+            },
+            onLongTabClick = {
+            }
+        )
+
+        statsViewModel.years.observe(viewLifecycleOwner) {
+            tabAdapter.addAll(it)
+        }
+
+        binding.years.adapter = tabAdapter
+
+    }
+
+    private fun setupViewPager() {
+        binding.viewPager.adapter = StatsPagerAdapter(this)
     }
 
     private fun initRecyclerView() {
@@ -29,21 +52,20 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 
         binding.recyclerView.apply {
             adapter = statAdapter
-            // TODO: adapt to screen
-            layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+            layoutManager = GridLayoutManager(requireContext(), 1)
             setHasFixedSize(true)
         }
 
-        statsViewModel.display.observe(viewLifecycleOwner) {
-            statAdapter.submitList(it)
-        }
+//        statsViewModel.display.observe(viewLifecycleOwner) {
+//            statAdapter.submitList(it)
+//        }
 
     }
 
     private fun setListener() {
-        binding.toggleAnyYear.setOnCheckedChangeListener { _, isChecked ->
-            statsViewModel.setYear(if (isChecked) null else System.currentTimeMillis())
-        }
+//        binding.toggleAnyYear.setOnCheckedChangeListener { _, isChecked ->
+//            statsViewModel.setYear(if (isChecked) null else System.currentTimeMillis())
+//        }
     }
 
     override fun onDestroyView() {

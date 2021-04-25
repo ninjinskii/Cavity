@@ -8,10 +8,10 @@ object DateFormatter {
     private const val DAY_IN_MILLIS = 1000 * 60 * 60 * 24
     private const val YEAR_IN_MILLIS = 1000 * 60 * 60 * 24 * 365.25f
 
-    fun formatDate(timestamp: Long?): String {
+    fun formatDate(timestamp: Long?, pattern: String = "dd MMM yyyy"): String {
         return if (timestamp != null && timestamp > 0L) {
             // TODO: i18n
-            val formatter = SimpleDateFormat("dd MMM yyyy", Locale.FRENCH)
+            val formatter = SimpleDateFormat(pattern, Locale.FRENCH)
             val calendar = Calendar.getInstance()
 
             calendar.timeInMillis = timestamp

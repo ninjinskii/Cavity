@@ -42,6 +42,7 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun tastingDao(): TastingDao
     abstract fun tastingXFriendDao(): TastingXFriendDao
     abstract fun historyXFriendDao(): HistoryXFriendDao
+    abstract fun statsDao(): StatsDao
 
     companion object {
         @Volatile
@@ -95,7 +96,7 @@ abstract class CavityDatabase : RoomDatabase() {
                     }
 
                     val counties = 1..10
-                    val bottles = 1..299
+                    val bottles = 1..29999
 
                     val wineNames = arrayOf(
                         "Immelé",
@@ -158,7 +159,7 @@ abstract class CavityDatabase : RoomDatabase() {
                         )
                     }
 
-                    repeat(500) {
+                    repeat(30000) {
                         try {
                             bottleDao!!.insertBottle(
                                 Bottle(
@@ -168,7 +169,7 @@ abstract class CavityDatabase : RoomDatabase() {
                                     "20${(21..35).random()}".toInt(),
                                     (0..1).random(),
                                     1,
-                                    (0..300).random().toFloat(),
+                                    bottles.random().toFloat(),
                                     "€",
                                     "",
                                     buyLocations.random(),
@@ -197,11 +198,11 @@ abstract class CavityDatabase : RoomDatabase() {
                         insertReview(Review(0, "Les étoiles", 3))
                     }
 
-                    repeat(300) {
+                    repeat(500) {
                         try {
                             qGrapeDao!!.insertQGrape(
                                 QGrape(
-                                    (0..70).random().toLong(),
+                                    bottles.random().toLong(),
                                     (1..4).random().toLong(),
                                     (5..15).random()
                                 )
@@ -213,7 +214,7 @@ abstract class CavityDatabase : RoomDatabase() {
                         try {
                             fReviewDao!!.insertFReview(
                                 FReview(
-                                    (0..70).random().toLong(),
+                                    bottles.random().toLong(),
                                     (1..4).random().toLong(),
                                     (0..2).random()
                                 )
@@ -240,13 +241,23 @@ abstract class CavityDatabase : RoomDatabase() {
                         val historyBottles = 300L..400L
                         val twenyone = 1609459200000..System.currentTimeMillis()
                         val tweny = 1577836800000L..1609459199000L
-                        val historyBottlesLastYear = 401L..499L
+                        val historyBottlesLastYear = 401L..29999L
                         val types = listOf(0, 0, 0, 1, 1, 1, 2, 3)
 
                         // 2021 and more
                         historyBottles.forEach {
                             val type = types.random()
-                            insertEntry(HistoryEntry(0, twenyone.random(), it, null, "Commentaire", type, 0))
+                            insertEntry(
+                                HistoryEntry(
+                                    0,
+                                    twenyone.random(),
+                                    it,
+                                    null,
+                                    "Commentaire",
+                                    type,
+                                    0
+                                )
+                            )
 
                             if (type == 0) {
                                 val bottle = bottleDao!!.getBottleByIdNotLive(it)
@@ -258,7 +269,17 @@ abstract class CavityDatabase : RoomDatabase() {
                         historyBottlesLastYear.forEach {
                             try {
                                 val type = types.random()
-                                insertEntry(HistoryEntry(0, tweny.random(), it, null, "Commentaire", type, 0))
+                                insertEntry(
+                                    HistoryEntry(
+                                        0,
+                                        tweny.random(),
+                                        it,
+                                        null,
+                                        "Commentaire",
+                                        type,
+                                        0
+                                    )
+                                )
 
                                 if (type == 0) {
                                     val bottle = bottleDao!!.getBottleByIdNotLive(it)
