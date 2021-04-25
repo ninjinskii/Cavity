@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.louis.app.cavity.ui.stats.widget.PieView
+        android:id="@+id/pieView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/large_margin"
+        android:layout_marginVertical="@dimen/small_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/label"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        app:layout_constraintBottom_toTopOf="@id/buttonGroupSwitchStat"
+        app:layout_constraintEnd_toEndOf="@id/pieView"
+        app:layout_constraintStart_toStartOf="@id/pieView"
+        app:layout_constraintTop_toTopOf="@id/pieView"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Régions" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/buttonGroupSwitchStat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        app:layout_constraintBottom_toTopOf="@id/buttonCompare"
+        app:layout_constraintEnd_toEndOf="@id/pieView"
+        app:layout_constraintStart_toStartOf="@id/pieView"
+        app:layout_constraintTop_toBottomOf="@id/label">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonStock"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stock" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonReplenishments"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/replenishments" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonConsumptions"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/consumptions" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonCompare"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:text="Comparer"
+        app:layout_constraintBottom_toBottomOf="@id/pieView"
+        app:layout_constraintEnd_toEndOf="@id/pieView"
+        app:layout_constraintStart_toStartOf="@id/pieView"
+        app:layout_constraintTop_toBottomOf="@id/buttonGroupSwitchStat" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
