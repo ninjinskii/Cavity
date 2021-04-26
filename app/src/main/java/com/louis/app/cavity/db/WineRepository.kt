@@ -179,7 +179,8 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertFilledReview(fReview: FReview) = fReviewDao.insertFReview(fReview)
     suspend fun updateFilledReview(fReview: FReview) = fReviewDao.updateFReview(fReview)
     suspend fun deleteFilledReview(fReview: FReview) = fReviewDao.deleteFReview(fReview)
-    suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long) = fReviewDao.deleteFReviewByPk(bottleId, reviewId)
+    suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long) =
+        fReviewDao.deleteFReviewByPk(bottleId, reviewId)
 
     suspend fun insertReviewAndFReview(bottleId: Long, review: Review, fReviewValue: Int) {
         database.withTransaction {
@@ -268,9 +269,16 @@ class WineRepository private constructor(app: Application) {
 
     // Stats
     suspend fun getStockByColor() = statsDao.getStockByColor()
-    suspend fun getReplenishmentsByColor(start: Long, end: Long) =
+    fun getReplenishmentsByColor(start: Long, end: Long) =
         statsDao.getReplenishmentsByColor(start, end)
 
     suspend fun getConsumptionsByColor(start: Long, end: Long) =
         statsDao.getConsumptionsByColor(start, end)
+
+    suspend fun getStockByVintage() = statsDao.getStockByVintage()
+    suspend fun getReplenishmentsByVintage(start: Long, end: Long) =
+        statsDao.getReplenishmentsByVintage(start, end)
+
+    suspend fun getConsumptionsByVintage(start: Long, end: Long) =
+        statsDao.getConsumptionsByVintage(start, end)
 }

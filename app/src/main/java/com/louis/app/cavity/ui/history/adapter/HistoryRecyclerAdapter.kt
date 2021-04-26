@@ -67,6 +67,7 @@ class HistoryRecyclerAdapter(
         }
     }
 
+    // TODO: handle null item (might happen when navigating too far far away date on lower end devices)
     override fun getItemViewType(position: Int): Int {
         return when (val item = getItem(position)) {
             is HistoryUiModel.HeaderModel -> TYPE_SEPARATOR

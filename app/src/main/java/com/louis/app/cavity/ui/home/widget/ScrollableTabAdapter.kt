@@ -29,6 +29,8 @@ class ScrollableTabAdapter<T>(
 
     override fun getItemCount() = tabs.size
 
+    fun getItem(position: Int) = tabs[position]
+
     //override fun getItemId(position: Int) = (tabs[position] as? Chipable)?.getItemId() ?: 0
 
     fun addAll(list: List<T>) {

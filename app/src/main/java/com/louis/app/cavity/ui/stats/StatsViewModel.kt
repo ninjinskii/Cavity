@@ -4,27 +4,41 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
-import com.louis.app.cavity.db.dao.IntStat
+import com.louis.app.cavity.db.dao.ColorStat
+import com.louis.app.cavity.db.dao.VintageStat
+import com.louis.app.cavity.db.dao.Year
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
 class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
-    private val currentYear = DateFormatter.getYearBounds(System.currentTimeMillis())
-
-    private val year = MutableLiveData(currentYear)
+    private val year = MutableLiveData(DateFormatter.getCurrentYear())
     private val statType = MutableLiveData(StatType.STOCK)
 
-    val colorStats = MediatorLiveData<List<IntStat>>().apply {
+    val years = repository.getYears()
+
+//    val replenishmentsByColor = year.switchMap { repository.getReplenishmentsByColor(it.first, it.second) }
+
+    val colorStats = MediatorLiveData<List<ColorStat>>().apply {
         addSource(year) {
             fetchColorStats(it, statType.value!!)
         }
         addSource(statType) {
             fetchColorStats(year.value!!, it)
+        }
+    }
+
+    val vintageStats = MediatorLiveData<List<VintageStat>>().apply {
+        addSource(year) {
+            fetchVintageStats(it, statType.value!!)
+        }
+        addSource(statType) {
+            fetchVintageStats(year.value!!, it)
         }
     }
 
@@ -36,22 +50,15 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         repository.getBoundedEntriesBetween(it.first, it.second)
     }
 
-    val years = repository.getYears().switchMap { getYears(it) }
     private val replenishments = entries.switchMap { filterReplenishments(it) }
     private val consumptions = entries.switchMap { filterConsumptions(it) }
 
     //val display = entries.switchMap { prepareResults(it) }
 
-    private fun getYears(timestamps: List<Long>) = liveData(Default) {
-        emit(
-            timestamps.map { DateFormatter.formatDate(it, pattern = "yyyy") }.distinct()
-        )
-    }
-
-    private fun fetchColorStats(year: Pair<Long, Long>, statType: StatType) = liveData(IO) {
-        L.v("statType: ${statType.name}")
-        emit(
-            when (statType) {
+    private fun fetchColorStats(year: Pair<Long, Long>, statType: StatType) {
+        L.v("year: $year")
+        viewModelScope.launch(IO) {
+            val result = when (statType) {
                 StatType.STOCK -> repository.getStockByColor()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByColor(
                     year.first,
@@ -59,7 +66,27 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
                 )
                 StatType.CONSUMPTIONS -> repository.getConsumptionsByColor(year.first, year.second)
             }
-        )
+
+            colorStats.postValue(result)
+        }
+    }
+
+    private fun fetchVintageStats(year: Pair<Long, Long>, statType: StatType) {
+        viewModelScope.launch(IO) {
+            val result = when (statType) {
+                StatType.STOCK -> repository.getStockByVintage()
+                StatType.REPLENISHMENTS -> repository.getReplenishmentsByVintage(
+                    year.first,
+                    year.second
+                )
+                StatType.CONSUMPTIONS -> repository.getConsumptionsByVintage(
+                    year.first,
+                    year.second
+                )
+            }
+
+            vintageStats.postValue(result)
+        }
     }
 
 
@@ -120,17 +147,11 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         emit(entries.filter { it.historyEntry.type == 0 && it.historyEntry.type == 2 })
     }
 
-    fun setYear(timestamp: Long?) {
-        L.v("setYear: $timestamp")
-        year.value = if (timestamp != null) {
-            DateFormatter.getYearBounds(timestamp)
-        } else {
-            0L to System.currentTimeMillis()
-        }
+    fun setYear(year: Year) {
+        this.year.value = year.yearStart to year.yearEnd
     }
 
     fun setStatType(statType: StatType) {
-        L.v("statType: ${statType.name}")
         this.statType.value = statType
     }
 }

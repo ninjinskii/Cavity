@@ -2,11 +2,9 @@ package com.louis.app.cavity.util
 
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.roundToLong
 
 object DateFormatter {
     private const val DAY_IN_MILLIS = 1000 * 60 * 60 * 24
-    private const val YEAR_IN_MILLIS = 1000 * 60 * 60 * 24 * 365.25f
 
     fun formatDate(timestamp: Long?, pattern: String = "dd MMM yyyy"): String {
         return if (timestamp != null && timestamp > 0L) {
@@ -27,17 +25,22 @@ object DateFormatter {
         return timestamp - exceed
     }
 
-    fun roundToYear(timestamp: Long): Long {
-        val exceed = timestamp % YEAR_IN_MILLIS
-        return timestamp - exceed.roundToLong()
-    }
+    fun getCurrentYear(): Pair<Long, Long> {
+        return Calendar.getInstance().run {
+            time = Date(System.currentTimeMillis())
+            set(Calendar.DAY_OF_YEAR, 1)
+            set(Calendar.HOUR_OF_DAY, 0)
 
-    fun getYearBounds(timestamp: Long): Pair<Long, Long> {
-        val exceed = timestamp % YEAR_IN_MILLIS
-        val start = timestamp - exceed.roundToLong()
-        val end = timestamp + YEAR_IN_MILLIS.roundToLong()
+            val start = timeInMillis
 
-        return start to end
+            set(Calendar.MONTH, 11)
+            set(Calendar.DAY_OF_MONTH, 31)
+            set(Calendar.HOUR_OF_DAY, 23)
+
+            val end = timeInMillis
+
+            start to end
+        }
     }
 
     fun isToday(timestamp: Long?): Boolean {

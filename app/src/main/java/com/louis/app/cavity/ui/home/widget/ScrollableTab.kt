@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.louis.app.cavity.R
-import com.louis.app.cavity.model.County
 import kotlin.math.pow
 
 class ScrollableTab @JvmOverloads constructor(
@@ -30,6 +29,7 @@ class ScrollableTab @JvmOverloads constructor(
     private var viewPager: ViewPager2? = null
     private var isRVScrolling = true
     private var pageChangeListener: ((position: Int) -> Unit)? = null
+    private var tabChangeListener: ((position: Int) -> Unit)? = null
     private var selectedColor = Color.WHITE
     private var unSelectedColor = Color.GRAY
 
@@ -75,10 +75,11 @@ class ScrollableTab @JvmOverloads constructor(
 
                 if (newState == SCROLL_STATE_IDLE) {
                     val child = snapHelper.findSnapView(layoutManager) ?: return
-                    if (isRVScrolling) viewPager?.setCurrentItem(
-                        layoutManager.getPosition(child),
-                        true
-                    )
+                    if (isRVScrolling) {
+                        val position = layoutManager.getPosition(child)
+                        viewPager?.setCurrentItem(position, true)
+                        tabChangeListener?.invoke(position)
+                    }
                 }
             }
         })
@@ -104,6 +105,10 @@ class ScrollableTab @JvmOverloads constructor(
             isRVScrolling = true
             false
         }
+    }
+
+    fun addOnTabChangeListener(tabChangeListener: ((position: Int) -> Unit)) {
+        this.tabChangeListener = tabChangeListener
     }
 
     fun addOnPageChangeListener(pageChangeListener: (position: Int) -> Unit) {

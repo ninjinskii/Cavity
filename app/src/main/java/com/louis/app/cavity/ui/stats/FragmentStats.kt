@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
+import com.louis.app.cavity.db.dao.Year
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.setupNavigation
 
@@ -28,7 +29,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     }
 
     private fun setupScrollableTab() {
-        val tabAdapter = ScrollableTabAdapter<String>(
+        val tabAdapter = ScrollableTabAdapter<Year>(
             onTabClick = {
             },
             onLongTabClick = {
@@ -36,11 +37,15 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         )
 
         statsViewModel.years.observe(viewLifecycleOwner) {
+            statsViewModel.setYear(it.first())
             tabAdapter.addAll(it)
         }
 
         binding.years.adapter = tabAdapter
 
+        binding.years.addOnTabChangeListener {
+            statsViewModel.setYear(tabAdapter.getItem(it))
+        }
     }
 
     private fun setupViewPager() {
@@ -66,6 +71,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 //        binding.toggleAnyYear.setOnCheckedChangeListener { _, isChecked ->
 //            statsViewModel.setYear(if (isChecked) null else System.currentTimeMillis())
 //        }
+
+
     }
 
     override fun onDestroyView() {

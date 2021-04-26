@@ -28,8 +28,15 @@ interface HistoryDao {
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
     fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
 
-    @Query("SELECT date FROM history_entry ORDER BY date ASC")
-    fun getYears(): LiveData<List<Long>>
+    // Divide by 1000 to convert Java milliseconds timestamps to unix timestamp (seconds)
+    @Query(
+        """SELECT DISTINCT strftime('%Y', date / 1000, 'unixepoch') as year,
+                strftime('%s', date / 1000, 'unixepoch', 'start of year') * 1000 as yearStart, 
+                strftime('%s', date / 1000, 'unixepoch', '+1 year', 'start of year') * 1000 as yearEnd
+                FROM history_entry 
+                ORDER BY date ASC"""
+    )
+    fun getYears(): LiveData<List<Year>>
 
     @Transaction
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
@@ -54,6 +61,10 @@ interface HistoryDao {
     @Transaction
     @Query("SELECT * FROM history_entry WHERE date BETWEEN :start AND :end ORDER BY date DESC")
     fun getBoundedEntriesBetween(start: Long, end: Long): LiveData<List<BoundedHistoryEntry>>
+}
+
+data class Year(val year: String, val yearStart: Long, val yearEnd: Long) {
+    override fun toString() = year
 }
 
 data class BoundedHistoryEntry(

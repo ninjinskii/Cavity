@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
 import com.louis.app.cavity.util.ColorUtil
-import com.louis.app.cavity.util.L
 
 class FragmentPie : Fragment(R.layout.fragment_pie) {
     private var _binding: FragmentPieBinding? = null
@@ -41,14 +40,11 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
             ?.getSerializable("com.louis.app.cavity.ui.home.FragmentWines.STAT_TYPE_ID")
                 as StatGlobalType
 
-        L.v(statType.name)
-
         when (statType) {
             StatGlobalType.COUNTY -> {
             }
 
             StatGlobalType.COLOR -> statsViewModel.colorStats.observe(viewLifecycleOwner) {
-                L.v("observe")
                 val stat = Stat(it.map { s ->
                     StringResStatItem(
                         name = ColorUtil.getStringResForWineColor(s.color),
@@ -60,7 +56,16 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
                 setPieData(stat)
             }
 
-            StatGlobalType.VINTAGE -> {
+            StatGlobalType.VINTAGE -> statsViewModel.vintageStats.observe(viewLifecycleOwner) {
+                val stat = Stat(it.map { s ->
+                    StringStatItem(
+                        name = s.vintage,
+                        count = s.count,
+                        color = null,
+                        icon = null
+                    )
+                })
+                setPieData(stat)
             }
             StatGlobalType.NAMING -> {
             }
@@ -69,7 +74,8 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     companion object {
-        private const val STAT_TYPE_ID = "com.louis.app.cavity.ui.home.FragmentWines.STAT_TYPE_ID"
+        private const val STAT_TYPE_ID =
+            "com.louis.app.cavity.ui.home.FragmentWines.STAT_TYPE_ID"
 
         // Used by WinesPagerAdapter
         fun newInstance(statGlobalType: StatGlobalType): FragmentPie {

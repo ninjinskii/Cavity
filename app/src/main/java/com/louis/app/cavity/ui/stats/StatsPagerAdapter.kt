@@ -8,8 +8,8 @@ class StatsPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
     override fun createFragment(position: Int) = when (position) {
         0 -> FragmentPie.newInstance(StatGlobalType.COLOR)
-        1 -> FragmentPie.newInstance(StatGlobalType.COLOR)
+        1 -> FragmentPie.newInstance(StatGlobalType.VINTAGE)
         2 -> FragmentPie.newInstance(StatGlobalType.COLOR)
-        else -> FragmentPie.newInstance(StatGlobalType.COLOR)
+        else -> FragmentPie.newInstance(StatGlobalType.VINTAGE)
     }
 }
