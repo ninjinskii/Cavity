@@ -268,17 +268,17 @@ class WineRepository private constructor(app: Application) {
 
 
     // Stats
-    suspend fun getStockByColor() = statsDao.getStockByColor()
+    fun getStockByColor() = statsDao.getStockByColor()
     fun getReplenishmentsByColor(start: Long, end: Long) =
         statsDao.getReplenishmentsByColor(start, end)
 
-    suspend fun getConsumptionsByColor(start: Long, end: Long) =
+    fun getConsumptionsByColor(start: Long, end: Long) =
         statsDao.getConsumptionsByColor(start, end)
 
-    suspend fun getStockByVintage() = statsDao.getStockByVintage()
-    suspend fun getReplenishmentsByVintage(start: Long, end: Long) =
+    fun getStockByVintage() = statsDao.getStockByVintage()
+    fun getReplenishmentsByVintage(start: Long, end: Long) =
         statsDao.getReplenishmentsByVintage(start, end)
 
-    suspend fun getConsumptionsByVintage(start: Long, end: Long) =
+    fun getConsumptionsByVintage(start: Long, end: Long) =
         statsDao.getConsumptionsByVintage(start, end)
 }

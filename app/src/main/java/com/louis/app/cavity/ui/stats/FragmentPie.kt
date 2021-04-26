@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
+import com.louis.app.cavity.db.dao.ColorStat
 import com.louis.app.cavity.util.ColorUtil
 
 class FragmentPie : Fragment(R.layout.fragment_pie) {
@@ -40,11 +41,8 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
             ?.getSerializable("com.louis.app.cavity.ui.home.FragmentWines.STAT_TYPE_ID")
                 as StatGlobalType
 
-        when (statType) {
-            StatGlobalType.COUNTY -> {
-            }
-
-            StatGlobalType.COLOR -> statsViewModel.colorStats.observe(viewLifecycleOwner) {
+        if (statType == StatGlobalType.COLOR) {
+            statsViewModel.results<ColorStat>(statType).observe(viewLifecycleOwner) {
                 val stat = Stat(it.map { s ->
                     StringResStatItem(
                         name = ColorUtil.getStringResForWineColor(s.color),
@@ -53,23 +51,10 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
                         icon = null
                     )
                 })
-                setPieData(stat)
-            }
-
-            StatGlobalType.VINTAGE -> statsViewModel.vintageStats.observe(viewLifecycleOwner) {
-                val stat = Stat(it.map { s ->
-                    StringStatItem(
-                        name = s.vintage,
-                        count = s.count,
-                        color = null,
-                        icon = null
-                    )
-                })
-                setPieData(stat)
-            }
-            StatGlobalType.NAMING -> {
+                binding.pieView.setPieData(stat, anim = true)
             }
         }
+
         binding.buttonStock.isChecked = true
     }
 

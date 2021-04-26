@@ -1,5 +1,6 @@
 package com.louis.app.cavity.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 
@@ -12,7 +13,7 @@ interface StatsDao {
                 WHERE bottle.consumed = 0
                 GROUP BY color"""
     )
-    suspend fun getStockByColor(): List<ColorStat>
+    fun getStockByColor(): LiveData<List<ColorStat>>
 
     @Query(
         """SELECT COUNT (*) as count, color
@@ -21,7 +22,7 @@ interface StatsDao {
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE date BETWEEN :start AND :end AND type = 1 OR type = 3 GROUP BY color"""
     )
-    fun getReplenishmentsByColor(start: Long, end: Long): List<ColorStat>
+    fun getReplenishmentsByColor(start: Long, end: Long): LiveData<List<ColorStat>>
 
     @Query(
         """SELECT COUNT (*) as count, color
@@ -30,7 +31,7 @@ interface StatsDao {
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE date BETWEEN :start AND :end AND type = 0 OR type = 2 GROUP BY color"""
     )
-    suspend fun getConsumptionsByColor(start: Long, end: Long): List<ColorStat>
+    fun getConsumptionsByColor(start: Long, end: Long): LiveData<List<ColorStat>>
 
     @Query(
         """SELECT COUNT (*) as count, vintage
@@ -38,7 +39,7 @@ interface StatsDao {
                 WHERE bottle.consumed = 0
                 GROUP BY vintage"""
     )
-    suspend fun getStockByVintage(): List<VintageStat>
+    fun getStockByVintage(): LiveData<List<VintageStat>>
 
     @Query(
         """SELECT COUNT (*) as count, vintage
@@ -46,7 +47,7 @@ interface StatsDao {
                 INNER JOIN bottle ON bottle_id = bottle.id
                 WHERE date BETWEEN :start AND :end AND type = 1 OR type = 3 GROUP BY vintage"""
     )
-    suspend fun getReplenishmentsByVintage(start: Long, end: Long): List<VintageStat>
+    fun getReplenishmentsByVintage(start: Long, end: Long): LiveData<List<VintageStat>>
 
     @Query(
         """SELECT COUNT (*) as count, vintage
@@ -54,11 +55,10 @@ interface StatsDao {
                 INNER JOIN bottle ON bottle_id = bottle.id
                 WHERE date BETWEEN :start AND :end AND type = 0 OR type = 2 GROUP BY vintage"""
     )
-    suspend fun getConsumptionsByVintage(start: Long, end: Long): List<VintageStat>
+    fun getConsumptionsByVintage(start: Long, end: Long): LiveData<List<VintageStat>>
 
 
 }
 
 data class ColorStat(val count: Int, val color: Int)
 data class VintageStat(val count: Int, val vintage: String)
-data class StringStat(val count: Int, val stringValue: String)
