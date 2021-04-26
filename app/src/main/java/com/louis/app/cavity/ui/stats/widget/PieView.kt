@@ -7,7 +7,9 @@ import android.text.TextPaint
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import androidx.annotation.ColorInt
+import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -70,11 +72,16 @@ class PieView @JvmOverloads constructor(
         }
 
     fun setPieData(data: Stat, anim: Boolean) {
-        pieData = prepareSlices(data)
-
         if (anim) {
-            triggerAnimation()
+            val slices = prepareSlices(data)
+            if (pieData.isNotEmpty()) {
+                replaceData(slices)
+            } else {
+                pieData = prepareSlices(data)
+                triggerAnimation()
+            }
         } else {
+            pieData = prepareSlices(data)
             invalidate()
         }
     }
@@ -93,9 +100,20 @@ class PieView @JvmOverloads constructor(
     }
 
     private fun triggerAnimation() {
+        this.alpha = 1f
+
         ObjectAnimator.ofFloat(this, "interpolation", 0f, 1f).apply {
             duration = 800
             interpolator = FastOutSlowInInterpolator()
+            start()
+        }
+    }
+
+    private fun replaceData(slices: List<PieSlice>) {
+        ObjectAnimator.ofFloat(this, "alpha", 1f, 0f).apply {
+            duration = 300
+            interpolator = DecelerateInterpolator()
+            addListener(onEnd = { pieData = slices; triggerAnimation() })
             start()
         }
     }
