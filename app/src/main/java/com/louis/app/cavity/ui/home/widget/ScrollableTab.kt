@@ -32,6 +32,7 @@ class ScrollableTab @JvmOverloads constructor(
     private var tabChangeListener: ((position: Int) -> Unit)? = null
     private var selectedColor = Color.WHITE
     private var unSelectedColor = Color.GRAY
+    private var position = 0
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.ScrollableTab).use {
@@ -78,7 +79,11 @@ class ScrollableTab @JvmOverloads constructor(
                     if (isRVScrolling) {
                         val position = layoutManager.getPosition(child)
                         viewPager?.setCurrentItem(position, true)
-                        tabChangeListener?.invoke(position)
+
+                        if (this@ScrollableTab.position != position) {
+                            this@ScrollableTab.position = position
+                            tabChangeListener?.invoke(position)
+                        }
                     }
                 }
             }
