@@ -47,7 +47,11 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setYear(year: Year) {
+        val currentYear = statRequest.value?.year ?: Year("null", 0L, System.currentTimeMillis())
         val statType = statRequest.value?.statType ?: StatType.STOCK
+
+        if (currentYear == year) return
+
         statRequest.value = StatRequest(statType, year)
     }
 
