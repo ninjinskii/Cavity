@@ -8,9 +8,10 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
 import com.louis.app.cavity.db.dao.Year
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
-class FragmentStats : Fragment(R.layout.fragment_stats) {
+class FragmentStats : Fragment(R.layout.fragment_stats), YearPicker {
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
     private val statsViewModel: StatsViewModel by viewModels()
@@ -40,10 +41,12 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             tabAdapter.addAll(it)
         }
 
-        binding.years.adapter = tabAdapter
-
-        binding.years.addOnTabChangeListener {
-            statsViewModel.setYear(tabAdapter.getItem(it))
+        with(binding.years) {
+            background = null // Remove MaterialShapeDrawable for elegant disapear animation
+            adapter = tabAdapter
+            addOnTabChangeListener {
+                statsViewModel.setYear(tabAdapter.getItem(it))
+            }
         }
     }
 
@@ -72,6 +75,10 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 //        }
 
 
+    }
+
+    override fun setPickYearAllowed(allowed: Boolean) {
+        binding.years.setVisible(allowed)
     }
 
     override fun onDestroyView() {
