@@ -31,5 +31,7 @@
 
     <dimen name="chip_group_default_height">48dp</dimen>
 
+    <dimen name="small_item">48dp</dimen>
+
     <dimen name="starred_corner_size">24dp</dimen>
 </resources>

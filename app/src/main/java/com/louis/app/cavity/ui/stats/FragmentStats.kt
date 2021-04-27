@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
@@ -64,18 +65,23 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     }
 
     private fun initRecyclerView() {
-        //val statAdapter = StatsRecyclerAdapter()
+        val statAdapter = StatsRecyclerAdapter()
+        val layoutManager = GridLayoutManager(requireContext(), 1)
 
-//        binding.recyclerView.apply {
-//            adapter = statAdapter
-//            layoutManager = GridLayoutManager(requireContext(), 1)
-//            setHasFixedSize(true)
+        binding.recyclerView.apply {
+            adapter = statAdapter
+            this.layoutManager = layoutManager
+            setHasFixedSize(true)
+        }
+
+//        lifecycleScope.launch(Main) {
+//            delay(4000)
+//            layoutManager.spanCount = 2
 //        }
 
-//        statsViewModel.display.observe(viewLifecycleOwner) {
-//            statAdapter.submitList(it)
-//        }
-
+        statsViewModel.getNamingStats(StatType.STOCK).observe(viewLifecycleOwner) {
+            statAdapter.submitList(it)
+        }
     }
 
     private fun observe() {
