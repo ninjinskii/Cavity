@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
     <com.louis.app.cavity.ui.stats.widget.PieView
         android:id="@+id/pieView"
@@ -15,18 +15,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/textStart"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/textEnd"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
+
     <TextView
         android:id="@+id/label"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
-        android:layout_width="wrap_content"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
+        android:layout_marginVertical="@dimen/medium_margin"
+        android:gravity="center_horizontal"
+        android:text="Bouteilles par régions texte"
         app:layout_constraintBottom_toTopOf="@id/buttonGroupSwitchStat"
-        app:layout_constraintEnd_toEndOf="@id/pieView"
-        app:layout_constraintStart_toStartOf="@id/pieView"
+        app:layout_constraintEnd_toEndOf="@id/textEnd"
+        app:layout_constraintStart_toStartOf="@id/textStart"
         app:layout_constraintTop_toTopOf="@id/pieView"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="Régions" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/buttonGroupSwitchStat"
@@ -45,24 +60,24 @@
             style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:text="Stock" />
+            android:text="Stock"
+            android:textSize="12sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonReplenishments"
             style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:text="@string/replenishments" />
+            android:text="@string/replenishments"
+            android:textSize="12sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonConsumptions"
             style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textSize="12sp"
-            android:text="@string/consumptions" />
+            android:text="@string/consumptions"
+            android:textSize="12sp" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
