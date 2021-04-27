@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.stats
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import com.louis.app.cavity.db.WineRepository
@@ -14,6 +15,10 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         MutableLiveData(StatRequest(StatType.STOCK, Year("null", 0L, System.currentTimeMillis())))
 
     val years = repository.getYears()
+
+    private val _currentItemPosition = MutableLiveData<Int>()
+    val currentItemPosition: LiveData<Int>
+        get() = _currentItemPosition
 
     fun results(globalStatType: StatGlobalType) = statRequest.switchMap {
         val start = it.year?.yearStart ?: 0
@@ -65,6 +70,10 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
                 )
             }
         }
+    }
+
+    fun notifyPageChanged(position: Int) {
+        _currentItemPosition.value = position
     }
 
     fun setYear(year: Year) {

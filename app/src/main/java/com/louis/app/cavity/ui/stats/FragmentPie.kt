@@ -30,6 +30,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
 
         setListeners()
         observe()
+        maybeShowYearPicker()
     }
 
     private fun setListeners() {
@@ -73,18 +74,30 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
 
         }
 
+        statsViewModel.currentItemPosition.observe(viewLifecycleOwner) {
+            if (it == arguments?.getInt(POSITION)) {
+                maybeShowYearPicker()
+            }
+        }
+
 
         binding.buttonStock.isChecked = true
     }
 
+    private fun maybeShowYearPicker() {
+        yearPicker.setPickYearAllowed(
+            binding.buttonGroupSwitchStat.checkedButtonId != R.id.buttonStock
+        )
+    }
+
     companion object {
-        private const val STAT_TYPE_ID =
-            "com.louis.app.cavity.ui.home.FragmentWines.STAT_TYPE_ID"
+        private const val STAT_TYPE_ID = "com.louis.app.cavity.ui.home.FragmentWines.STAT_TYPE_ID"
+        private const val POSITION = "com.louis.app.cavity.ui.home.FragmentWines.POSITION"
 
         // Used by WinesPagerAdapter
-        fun newInstance(statGlobalType: StatGlobalType): FragmentPie {
+        fun newInstance(statGlobalType: StatGlobalType, position: Int): FragmentPie {
             return FragmentPie().apply {
-                arguments = bundleOf(STAT_TYPE_ID to statGlobalType)
+                arguments = bundleOf(STAT_TYPE_ID to statGlobalType, POSITION to position)
             }
         }
     }
