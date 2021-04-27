@@ -43,7 +43,6 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         )
 
         statsViewModel.years.observe(viewLifecycleOwner) {
-            statsViewModel.setYear(it.first())
             tabAdapter.addAll(it)
         }
 

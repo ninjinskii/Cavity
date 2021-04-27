@@ -47,6 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
+        app:checkedButton="@id/buttonStock"
         app:layout_constraintBottom_toTopOf="@id/buttonCompare"
         app:layout_constraintEnd_toEndOf="@id/pieView"
         app:layout_constraintStart_toStartOf="@id/pieView"

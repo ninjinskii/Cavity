@@ -13,9 +13,7 @@ import com.louis.app.cavity.databinding.FragmentPieBinding
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.ui.stats.widget.PieView
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FragmentPie : Fragment(R.layout.fragment_pie) {
     lateinit var globalStatType: StatGlobalType
@@ -56,9 +54,6 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
                 maybeShowYearPicker()
             }
         }
-
-
-        binding.buttonStock.isChecked = true
     }
 
     private fun switchData(checkedId: Int) = when (checkedId) {
@@ -81,17 +76,17 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     private fun updatePieData(stats: List<Stat>) {
+        val total = stats.sumBy { stat -> stat.count }
+        val slices = stats.map { stat ->
+            stat.resolve(context)
+            val angle = (stat.count.toFloat() / total.toFloat()) * 360f
+            PieView.PieSlice(stat.label, angle, stat.color)
+        }
+        binding.pieView.setPieData(slices, anim = true)
         lifecycleScope.launch(Default) {
-            val total = stats.sumBy { stat -> stat.count }
-            val slices = stats.map { stat ->
-                stat.resolve(context)
-                val angle = (stat.count.toFloat() / total.toFloat()) * 360f
-                PieView.PieSlice(stat.label, angle, stat.color)
-            }
 
-            withContext(Main) {
-                binding.pieView.setPieData(slices, anim = true)
-            }
+//            withContext(Main) {
+//            }
         }
     }
 
