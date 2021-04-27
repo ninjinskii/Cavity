@@ -84,6 +84,8 @@ class PieView @JvmOverloads constructor(
         }
     }
 
+    fun getPieData() = pieData
+
     private fun triggerAnimation() {
         this.alpha = 1f
 

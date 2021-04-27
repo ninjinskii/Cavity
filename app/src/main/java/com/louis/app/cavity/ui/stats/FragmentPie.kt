@@ -12,6 +12,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.ui.stats.widget.PieView
+import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -52,12 +53,28 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         }
 
         binding.buttonStock.isChecked = true
+
+        binding.buttonCompare.setOnClickListener {
+            statsViewModel.toggleComparison()
+        }
     }
 
     private fun observe() {
         statsViewModel.currentItemPosition.observe(viewLifecycleOwner) {
             if (it == arguments?.getInt(POSITION)) {
                 maybeShowYearPicker()
+            }
+        }
+
+        statsViewModel.comparison.observe(viewLifecycleOwner) {
+            with(binding) {
+                comparisonPieView.setVisible(it)
+                buttonGroupSwitchStat.setVisible(!it)
+                label.setVisible(!it)
+                buttonCompare.text = if (it) "Retour" else "Comparer"
+
+                val data = if (it) pieView.getPieData() else emptyList()
+                comparisonPieView.setPieData(data, anim = it)
             }
         }
     }

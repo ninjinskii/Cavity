@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.stats
 import android.app.Application
 import androidx.lifecycle.*
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.db.dao.Year
 
 class StatsViewModel(app: Application) : AndroidViewModel(app) {
@@ -10,6 +11,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
     private val groupedYears = Year("Combiner", 0L, System.currentTimeMillis())
     private val year = MutableLiveData(groupedYears)
+    private val comparisonYear = MutableLiveData(groupedYears)
 
     val years: LiveData<List<Year>> = repository.getYears().map {
         it.toMutableList().apply {
@@ -26,12 +28,31 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     val showYearPicker: LiveData<Boolean>
         get() = _showYearPicker
 
+    private val _comparison = MutableLiveData(false)
+    val comparison: LiveData<Boolean>
+        get() = _comparison
+
+    val comparisonStats: LiveData<List<Stat>> = comparisonYear.switchMap {
+        MediatorLiveData<List<Stat>>().apply {
+            addSource(repository.getConsumptionsByCounty(it.yearStart, it.yearEnd)) { value = it }
+            addSource(repository.getReplenishmentsByCounty(it.yearStart, it.yearEnd)) { value = it }
+            addSource(repository.getConsumptionsByColor(it.yearStart, it.yearEnd)) { value = it }
+            addSource(repository.getReplenishmentsByColor(it.yearStart, it.yearEnd)) { value = it }
+            addSource(repository.getConsumptionsByVintage(it.yearStart, it.yearEnd)) { value = it }
+            addSource(repository.getReplenishmentsByVintage(it.yearStart, it.yearEnd)) {
+                value = it
+            }
+            addSource(repository.getConsumptionsByNaming(it.yearStart, it.yearEnd)) { value = it }
+            addSource(repository.getReplenishmentsByNaming(it.yearStart, it.yearEnd)) { value = it }
+        }
+    }
+
     fun getCountyStats(statType: StatType) = year.switchMap {
         val start = it?.yearStart ?: 0
         val end = it?.yearEnd ?: System.currentTimeMillis()
 
         when (statType) {
-            StatType.STOCK -> repository.getStockByCounty()
+            StatType.STOCK -> repository.getStockByCounty() // post null to comparison
             StatType.REPLENISHMENTS -> repository.getReplenishmentsByCounty(start, end)
             StatType.CONSUMPTIONS -> repository.getConsumptionsByCounty(start, end)
         }
@@ -88,6 +109,10 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         if (show != currentValue) {
             _showYearPicker.value = show
         }
+    }
+
+    fun toggleComparison() {
+        _comparison.value = !comparison.value!!
     }
 }
 

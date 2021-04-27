@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/small_item">
+    android:layout_height="64dp"
+    android:animateLayoutChanges="true">
 
     <TextView
         android:id="@+id/label"
@@ -35,6 +36,29 @@
         android:layout_height="@dimen/xsmall_icon"
         android:layout_margin="@dimen/small_margin"
         android:src="@drawable/ic_bottle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/comparisonCount"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorOnBackground" />
+
+    <TextView
+        android:id="@+id/comparisonCount"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/comparisonIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="15" />
+
+    <ImageView
+        android:id="@+id/comparisonIcon"
+        android:layout_width="@dimen/xsmall_icon"
+        android:layout_height="@dimen/xsmall_icon"
+        android:layout_margin="@dimen/small_margin"
+        android:src="@drawable/ic_bottle"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

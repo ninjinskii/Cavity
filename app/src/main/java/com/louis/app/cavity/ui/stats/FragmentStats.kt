@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
@@ -12,6 +13,9 @@ import com.louis.app.cavity.db.dao.Year
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class FragmentStats : Fragment(R.layout.fragment_stats) {
     private lateinit var statsPagerAdapter: StatsPagerAdapter
@@ -27,7 +31,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 
         setupScrollableTab()
         setupViewPager()
-        initRecyclerView()
+        initRecyclerViews()
         observe()
         maybeAnimateViewPager()
     }
@@ -59,28 +63,45 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         binding.viewPager.adapter = statsPagerAdapter
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+
                 statsViewModel.notifyPageChanged(position)
             }
         })
     }
 
-    private fun initRecyclerView() {
-        val statAdapter = StatsRecyclerAdapter()
-        val layoutManager = GridLayoutManager(requireContext(), 1)
+    private fun initRecyclerViews() {
+        val statsAdapter = StatsRecyclerAdapter()
 
         binding.recyclerView.apply {
-            adapter = statAdapter
-            this.layoutManager = layoutManager
+            adapter = statsAdapter
+            layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
         }
 
-//        lifecycleScope.launch(Main) {
-//            delay(4000)
-//            layoutManager.spanCount = 2
-//        }
-
         statsViewModel.getNamingStats(StatType.STOCK).observe(viewLifecycleOwner) {
-            statAdapter.submitList(it)
+            statsAdapter.submitList(it)
+        }
+
+        statsViewModel.comparison.observe(viewLifecycleOwner) {
+            lifecycleScope.launch(Main) {
+                delay(300)
+                statsAdapter.comparisonMode = it
+
+                with(binding.recyclerView) {
+                    val animator = itemAnimator
+                    itemAnimator = null
+                    statsAdapter.notifyItemRangeChanged(0, statsAdapter.itemCount - 1)
+
+                    lifecycleScope.launch(Main) {
+                        delay(200)
+                        itemAnimator = animator
+                    }
+                }
+            }
+        }
+
+        statsViewModel.comparisonStats.observe(viewLifecycleOwner) {
+            statsAdapter.comparisonList = it.map { v -> v.count }
         }
     }
 
@@ -88,6 +109,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         statsViewModel.showYearPicker.observe(viewLifecycleOwner) {
             binding.years.setVisible(it)
         }
+
     }
 
     private fun maybeAnimateViewPager() {
