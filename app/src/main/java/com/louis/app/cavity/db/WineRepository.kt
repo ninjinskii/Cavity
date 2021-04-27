@@ -268,6 +268,13 @@ class WineRepository private constructor(app: Application) {
 
 
     // Stats
+    fun getStockByCounty() = statsDao.getStockByCounty()
+    fun getReplenishmentsByCounty(start: Long, end: Long) =
+        statsDao.getReplenishmentsByCounty(start, end)
+
+    fun getConsumptionsByCounty(start: Long, end: Long) =
+        statsDao.getConsumptionsByCounty(start, end)
+
     fun getStockByColor() = statsDao.getStockByColor()
     fun getReplenishmentsByColor(start: Long, end: Long) =
         statsDao.getReplenishmentsByColor(start, end)
@@ -281,4 +288,11 @@ class WineRepository private constructor(app: Application) {
 
     fun getConsumptionsByVintage(start: Long, end: Long) =
         statsDao.getConsumptionsByVintage(start, end)
+
+    fun getStockByNaming() = statsDao.getStockByNaming()
+    fun getReplenishmentsByNaming(start: Long, end: Long) =
+        statsDao.getReplenishmentsByNaming(start, end)
+
+    fun getConsumptionsByNaming(start: Long, end: Long) =
+        statsDao.getConsumptionsByNaming(start, end)
 }

@@ -5,10 +5,14 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
-import com.louis.app.cavity.db.dao.ColorStat
-import com.louis.app.cavity.util.ColorUtil
+import com.louis.app.cavity.ui.stats.widget.PieView
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FragmentPie : Fragment(R.layout.fragment_pie) {
     private var _binding: FragmentPieBinding? = null
@@ -36,24 +40,27 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     private fun observe() {
-        val setPieData = { stat: Stat -> binding.pieView.setPieData(stat, anim = true) }
         val statType = arguments
             ?.getSerializable("com.louis.app.cavity.ui.home.FragmentWines.STAT_TYPE_ID")
                 as StatGlobalType
 
-        if (statType == StatGlobalType.COLOR) {
-            statsViewModel.results<ColorStat>(statType).observe(viewLifecycleOwner) {
-                val stat = Stat(it.map { s ->
-                    StringResStatItem(
-                        name = ColorUtil.getStringResForWineColor(s.color),
-                        count = s.count,
-                        color = ColorUtil.getColorResForWineColor(s.color),
-                        icon = null
-                    )
-                })
-                binding.pieView.setPieData(stat, anim = true)
+
+        statsViewModel.results(statType).observe(viewLifecycleOwner) {
+            lifecycleScope.launch(Default) {
+                val total = it.sumBy { stat -> stat.count }
+                val slices = it.map { stat ->
+                    stat.resolve(context)
+                    val angle = (stat.count.toFloat() / total.toFloat()) * 360f
+                    PieView.PieSlice(stat.label, angle, stat.color)
+                }
+
+                withContext(Main) {
+                    binding.pieView.setPieData(slices, anim = true)
+                }
             }
+
         }
+
 
         binding.buttonStock.isChecked = true
     }

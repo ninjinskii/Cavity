@@ -71,17 +71,16 @@ class PieView @JvmOverloads constructor(
             }
         }
 
-    fun setPieData(data: Stat, anim: Boolean) {
+    fun setPieData(slices: List<PieSlice>, anim: Boolean) {
         if (anim) {
-            val slices = prepareSlices(data)
             if (pieData.isNotEmpty()) {
-                replaceData(slices)
+                replaceData(slices) // Will take care of updating pieData
             } else {
-                pieData = prepareSlices(data)
+                pieData = slices
                 triggerAnimation()
             }
         } else {
-            pieData = prepareSlices(data)
+            pieData = slices
             invalidate()
         }
     }

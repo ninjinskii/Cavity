@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.stats
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import com.louis.app.cavity.db.WineRepository
@@ -16,32 +15,54 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
     val years = repository.getYears()
 
-    fun <T> results(globalStatType: StatGlobalType) = statRequest.switchMap {
+    fun results(globalStatType: StatGlobalType) = statRequest.switchMap {
         val start = it.year?.yearStart ?: 0
         val end = it.year?.yearEnd ?: 0
 
         when (globalStatType) {
+            StatGlobalType.COUNTY -> when (it.statType) {
+                StatType.STOCK -> repository.getStockByCounty()
+                StatType.REPLENISHMENTS -> repository.getReplenishmentsByCounty(
+                    start,
+                    end
+                )
+                StatType.CONSUMPTIONS -> repository.getConsumptionsByCounty(
+                    start,
+                    end
+                )
+            }
             StatGlobalType.COLOR -> when (it.statType) {
-                StatType.STOCK -> repository.getStockByColor() as LiveData<List<T>>
+                StatType.STOCK -> repository.getStockByColor()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByColor(
                     start,
                     end
-                ) as LiveData<List<T>>
+                )
                 StatType.CONSUMPTIONS -> repository.getConsumptionsByColor(
                     start,
                     end
-                ) as LiveData<List<T>>
+                )
             }
-            else -> when (it.statType) {
-                StatType.STOCK -> repository.getStockByVintage() as LiveData<List<T>>
+            StatGlobalType.VINTAGE -> when (it.statType) {
+                StatType.STOCK -> repository.getStockByVintage()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByVintage(
                     start,
                     end
-                ) as LiveData<List<T>>
+                )
                 StatType.CONSUMPTIONS -> repository.getConsumptionsByVintage(
                     start,
                     end
-                ) as LiveData<List<T>>
+                )
+            }
+            StatGlobalType.NAMING -> when (it.statType) {
+                StatType.STOCK -> repository.getStockByNaming()
+                StatType.REPLENISHMENTS -> repository.getReplenishmentsByNaming(
+                    start,
+                    end
+                )
+                StatType.CONSUMPTIONS -> repository.getConsumptionsByNaming(
+                    start,
+                    end
+                )
             }
         }
     }

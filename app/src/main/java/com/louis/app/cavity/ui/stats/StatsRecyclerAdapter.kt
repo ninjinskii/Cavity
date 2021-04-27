@@ -51,7 +51,7 @@ class StatsRecyclerAdapter : ListAdapter<StatsUiModel, StatsRecyclerAdapter.Stat
     inner class PieViewHolder(private val binding: ItemStatPieBinding) : StatViewHolder(binding) {
         override fun bind(item: StatsUiModel) {
             val pie = item as StatsUiModel.Pie
-            binding.pie.setPieData(pie.data, anim = true)
+            //binding.pie.setPieData(pie.data, anim = true)
         }
     }
 

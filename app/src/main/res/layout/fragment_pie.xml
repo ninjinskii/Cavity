@@ -42,23 +42,26 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonStock"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="Stock" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonReplenishments"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@string/replenishments" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonConsumptions"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:textSize="12sp"
             android:text="@string/consumptions" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
