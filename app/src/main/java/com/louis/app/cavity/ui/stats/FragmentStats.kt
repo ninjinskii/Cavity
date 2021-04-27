@@ -14,7 +14,7 @@ import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
-class FragmentStats : Fragment(R.layout.fragment_stats), YearPicker {
+class FragmentStats : Fragment(R.layout.fragment_stats) {
     private lateinit var statsPagerAdapter: StatsPagerAdapter
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
@@ -29,6 +29,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats), YearPicker {
         setupScrollableTab()
         setupViewPager()
         initRecyclerView()
+        observe()
         setListener()
         maybeAnimateViewPager()
     }
@@ -81,6 +82,12 @@ class FragmentStats : Fragment(R.layout.fragment_stats), YearPicker {
 
     }
 
+    private fun observe() {
+        statsViewModel.showYearPicker.observe(viewLifecycleOwner) {
+            binding.years.setVisible(it)
+        }
+    }
+
     private fun setListener() {
 //        binding.toggleAnyYear.setOnCheckedChangeListener { _, isChecked ->
 //            statsViewModel.setYear(if (isChecked) null else System.currentTimeMillis())
@@ -90,21 +97,13 @@ class FragmentStats : Fragment(R.layout.fragment_stats), YearPicker {
     }
 
     private fun maybeAnimateViewPager() {
-        if (!isStateSaved) {
-            binding.viewPager.doOnLayout {
-                it as ViewPager2
-                it.setCurrentItem(statsPagerAdapter.itemCount - 1, false)
-
-                it.postDelayed(200L) {
-                    it.setCurrentItem(0, true)
-                }
+        binding.viewPager.doOnLayout {
+            it as ViewPager2
+            it.setCurrentItem(statsPagerAdapter.itemCount - 1, false)
+            it.postDelayed(200L) {
+                it.setCurrentItem(0, true)
             }
-
         }
-    }
-
-    override fun setPickYearAllowed(allowed: Boolean) {
-        binding.years.setVisible(allowed)
     }
 
     override fun onDestroyView() {

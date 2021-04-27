@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class FragmentPie : Fragment(R.layout.fragment_pie) {
-    private lateinit var yearPicker: YearPicker
     private var _binding: FragmentPieBinding? = null
     private val binding get() = _binding!!
     private val statsViewModel: StatsViewModel by viewModels(
@@ -26,8 +25,6 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPieBinding.bind(view)
 
-        yearPicker = parentFragment as YearPicker
-
         setListeners()
         observe()
         maybeShowYearPicker()
@@ -35,20 +32,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
 
     private fun setListeners() {
         binding.buttonGroupSwitchStat.addOnButtonCheckedListener { _, checkedId, _ ->
-            when (checkedId) {
-                R.id.buttonStock -> {
-                    statsViewModel.setStatType(StatType.STOCK)
-                    yearPicker.setPickYearAllowed(allowed = false)
-                }
-                R.id.buttonReplenishments -> {
-                    statsViewModel.setStatType(StatType.REPLENISHMENTS)
-                    yearPicker.setPickYearAllowed(allowed = true)
-                }
-                R.id.buttonConsumptions -> {
-                    statsViewModel.setStatType(StatType.CONSUMPTIONS)
-                    yearPicker.setPickYearAllowed(allowed = true)
-                }
-            }
+            triggerChecked(checkedId)
         }
     }
 
@@ -84,8 +68,16 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         binding.buttonStock.isChecked = true
     }
 
+    private fun triggerChecked(checkedId: Int) {
+        when (checkedId) {
+            R.id.buttonStock -> statsViewModel.setStatType(StatType.STOCK)
+            R.id.buttonReplenishments -> statsViewModel.setStatType(StatType.REPLENISHMENTS)
+            R.id.buttonConsumptions -> statsViewModel.setStatType(StatType.CONSUMPTIONS)
+        }
+    }
+
     private fun maybeShowYearPicker() {
-        yearPicker.setPickYearAllowed(
+        statsViewModel.setShouldShowYearPicker(
             binding.buttonGroupSwitchStat.checkedButtonId != R.id.buttonStock
         )
     }

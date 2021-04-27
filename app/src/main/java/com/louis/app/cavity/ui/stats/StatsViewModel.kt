@@ -20,6 +20,36 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     val currentItemPosition: LiveData<Int>
         get() = _currentItemPosition
 
+    private val _showYearPicker = MutableLiveData<Boolean>()
+    val showYearPicker: LiveData<Boolean>
+        get() = _showYearPicker
+
+//    fun getCountyStats() = statRequest.switchMap {
+//        val start = it.year?.yearStart ?: 0
+//        val end = it.year?.yearEnd ?: 0
+//
+//        when (it.statType) {
+//            StatType.STOCK -> repository.getStockByCounty()
+//            StatType.REPLENISHMENTS -> repository.getReplenishmentsByCounty(start, end)
+//            StatType.CONSUMPTIONS -> repository.getConsumptionsByCounty(start, end)
+//        }
+//    }
+//
+//    fun getColorStats() = statRequest.switchMap {
+//        val start = it.year?.yearStart ?: 0
+//        val end = it.year?.yearEnd ?: 0
+//
+//        when (it.statType) {
+//            StatType.STOCK -> repository.getStockByColor()
+//            StatType.REPLENISHMENTS -> repository.getReplenishmentsByColor(start, end)
+//            StatType.CONSUMPTIONS -> repository.getConsumptionsByColor(start, end)
+//        }
+//    }
+
+//    fun getVintageStats() = statRequest.switchMap {
+//
+//    }
+
     fun results(globalStatType: StatGlobalType) = statRequest.switchMap {
         val start = it.year?.yearStart ?: 0
         val end = it.year?.yearEnd ?: 0
@@ -88,6 +118,11 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     fun setStatType(statType: StatType) {
         val year = statRequest.value?.year ?: Year("null", 0L, System.currentTimeMillis())
         statRequest.value = StatRequest(statType, year)
+        _showYearPicker.value = statType != StatType.STOCK
+    }
+
+    fun setShouldShowYearPicker(show: Boolean) {
+        _showYearPicker.value = show
     }
 }
 
