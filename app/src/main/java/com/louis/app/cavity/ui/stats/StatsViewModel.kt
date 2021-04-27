@@ -30,7 +30,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         val start = it?.yearStart ?: 0
         val end = it?.yearEnd ?: System.currentTimeMillis()
 
-        setShouldShowYearPicker(statType != StatType.STOCK)
+        //setShouldShowYearPicker(statType != StatType.STOCK)
 
         when (statType) {
             StatType.STOCK -> repository.getStockByCounty()
@@ -43,7 +43,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         val start = it?.yearStart ?: 0
         val end = it?.yearEnd ?: System.currentTimeMillis()
 
-        setShouldShowYearPicker(statType != StatType.STOCK)
+        //setShouldShowYearPicker(statType != StatType.STOCK)
 
         when (statType) {
             StatType.STOCK -> repository.getStockByColor()
@@ -56,7 +56,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         val start = it?.yearStart ?: 0
         val end = it?.yearEnd ?: System.currentTimeMillis()
 
-        setShouldShowYearPicker(statType != StatType.STOCK)
+        //setShouldShowYearPicker(statType != StatType.STOCK)
 
         when (statType) {
             StatType.STOCK -> repository.getStockByVintage()
@@ -69,7 +69,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         val start = it?.yearStart ?: 0
         val end = it?.yearEnd ?: System.currentTimeMillis()
 
-        setShouldShowYearPicker(statType != StatType.STOCK)
+        //setShouldShowYearPicker(statType != StatType.STOCK)
 
         when (statType) {
             StatType.STOCK -> repository.getStockByNaming()

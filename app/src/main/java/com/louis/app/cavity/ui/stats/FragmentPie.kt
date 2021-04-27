@@ -7,13 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.ui.stats.widget.PieView
-import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.launch
 
 class FragmentPie : Fragment(R.layout.fragment_pie) {
     lateinit var globalStatType: StatGlobalType
@@ -41,11 +38,15 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         }
 
         binding.buttonGroupSwitchStat.addOnButtonCheckedListener { _, checkedId, _ ->
+            statsViewModel.setShouldShowYearPicker(checkedId != R.id.buttonStock)
+
             observedData?.removeObserver(observer)
             observedData = switchData(checkedId).also {
                 it.observe(viewLifecycleOwner, observer)
             }
         }
+
+        binding.buttonStock.isChecked = true
     }
 
     private fun observe() {
@@ -83,11 +84,12 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
             PieView.PieSlice(stat.label, angle, stat.color)
         }
         binding.pieView.setPieData(slices, anim = true)
-        lifecycleScope.launch(Default) {
 
+        // Memory leak hunt
+//        lifecycleScope.launch(Default) {
 //            withContext(Main) {
 //            }
-        }
+//        }
     }
 
     override fun onDestroyView() {

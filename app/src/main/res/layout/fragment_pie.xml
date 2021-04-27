@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -47,13 +48,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
-        app:checkedButton="@id/buttonStock"
         app:layout_constraintBottom_toTopOf="@id/buttonCompare"
         app:layout_constraintEnd_toEndOf="@id/pieView"
         app:layout_constraintStart_toStartOf="@id/pieView"
         app:layout_constraintTop_toBottomOf="@id/label"
         app:selectionRequired="true"
-        app:singleSelection="true">
+        app:singleSelection="true"
+        tools:checkedButton="@id/buttonStock">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonStock"
