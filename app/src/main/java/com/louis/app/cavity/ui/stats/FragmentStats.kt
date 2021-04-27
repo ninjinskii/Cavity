@@ -28,7 +28,6 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         setupViewPager()
         initRecyclerView()
         observe()
-        setListener()
         maybeAnimateViewPager()
     }
 
@@ -45,7 +44,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         }
 
         with(binding.years) {
-            background = null // Remove MaterialShapeDrawable for elegant disapear animation
+            background = null // Remove background for elegant disapear animation
             adapter = tabAdapter
             addOnTabChangeListener {
                 statsViewModel.setYear(tabAdapter.getItem(it))
@@ -85,15 +84,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         }
     }
 
-    private fun setListener() {
-//        binding.toggleAnyYear.setOnCheckedChangeListener { _, isChecked ->
-//            statsViewModel.setYear(if (isChecked) null else System.currentTimeMillis())
-//        }
-
-
-    }
-
     private fun maybeAnimateViewPager() {
+        // This cause a memory leak
 //        binding.viewPager.doOnLayout {
 //            it as ViewPager2
 //            it.setCurrentItem(statsPagerAdapter.itemCount - 1, false)
