@@ -5,9 +5,12 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
+import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.ui.stats.widget.PieView
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
@@ -15,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class FragmentPie : Fragment(R.layout.fragment_pie) {
+    lateinit var globalStatType: StatGlobalType
     private var _binding: FragmentPieBinding? = null
     private val binding get() = _binding!!
     private val statsViewModel: StatsViewModel by viewModels(
@@ -25,39 +29,28 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPieBinding.bind(view)
 
+        globalStatType = arguments?.getSerializable(STAT_TYPE_ID) as StatGlobalType
+
         setListeners()
         observe()
         maybeShowYearPicker()
     }
 
     private fun setListeners() {
+        var observedData: LiveData<out List<Stat>>? = null
+        val observer = Observer<List<Stat>> {
+            updatePieData(it)
+        }
+
         binding.buttonGroupSwitchStat.addOnButtonCheckedListener { _, checkedId, _ ->
-            triggerChecked(checkedId)
+            observedData?.removeObserver(observer)
+            observedData = switchData(checkedId).also {
+                it.observe(viewLifecycleOwner, observer)
+            }
         }
     }
 
     private fun observe() {
-        val statType = arguments
-            ?.getSerializable("com.louis.app.cavity.ui.home.FragmentWines.STAT_TYPE_ID")
-                as StatGlobalType
-
-
-        statsViewModel.results(statType).observe(viewLifecycleOwner) {
-            lifecycleScope.launch(Default) {
-                val total = it.sumBy { stat -> stat.count }
-                val slices = it.map { stat ->
-                    stat.resolve(context)
-                    val angle = (stat.count.toFloat() / total.toFloat()) * 360f
-                    PieView.PieSlice(stat.label, angle, stat.color)
-                }
-
-                withContext(Main) {
-                    binding.pieView.setPieData(slices, anim = true)
-                }
-            }
-
-        }
-
         statsViewModel.currentItemPosition.observe(viewLifecycleOwner) {
             if (it == arguments?.getInt(POSITION)) {
                 maybeShowYearPicker()
@@ -68,18 +61,43 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         binding.buttonStock.isChecked = true
     }
 
-    private fun triggerChecked(checkedId: Int) {
-        when (checkedId) {
-            R.id.buttonStock -> statsViewModel.setStatType(StatType.STOCK)
-            R.id.buttonReplenishments -> statsViewModel.setStatType(StatType.REPLENISHMENTS)
-            R.id.buttonConsumptions -> statsViewModel.setStatType(StatType.CONSUMPTIONS)
-        }
+    private fun switchData(checkedId: Int) = when (checkedId) {
+        R.id.buttonReplenishments -> chooseData(StatType.REPLENISHMENTS)
+        R.id.buttonConsumptions -> chooseData(StatType.CONSUMPTIONS)
+        else /* R.id.buttonStock */ -> chooseData(StatType.STOCK)
+    }
+
+    private fun chooseData(statType: StatType) = when (globalStatType) {
+        StatGlobalType.COUNTY -> statsViewModel.getCountyStats(statType)
+        StatGlobalType.COLOR -> statsViewModel.getColorStats(statType)
+        StatGlobalType.VINTAGE -> statsViewModel.getVintageStats(statType)
+        StatGlobalType.NAMING -> statsViewModel.getNamingStats(statType)
     }
 
     private fun maybeShowYearPicker() {
         statsViewModel.setShouldShowYearPicker(
             binding.buttonGroupSwitchStat.checkedButtonId != R.id.buttonStock
         )
+    }
+
+    private fun updatePieData(stats: List<Stat>) {
+        lifecycleScope.launch(Default) {
+            val total = stats.sumBy { stat -> stat.count }
+            val slices = stats.map { stat ->
+                stat.resolve(context)
+                val angle = (stat.count.toFloat() / total.toFloat()) * 360f
+                PieView.PieSlice(stat.label, angle, stat.color)
+            }
+
+            withContext(Main) {
+                binding.pieView.setPieData(slices, anim = true)
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
@@ -92,11 +110,6 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
                 arguments = bundleOf(STAT_TYPE_ID to statGlobalType, POSITION to position)
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
 

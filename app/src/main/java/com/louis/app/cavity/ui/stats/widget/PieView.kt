@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
-import com.louis.app.cavity.ui.stats.Stat
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.PI
@@ -83,19 +82,6 @@ class PieView @JvmOverloads constructor(
             pieData = slices
             invalidate()
         }
-    }
-
-    private fun prepareSlices(stat: Stat): List<PieSlice> {
-        val total = stat.total
-
-        return stat.statItems.map {
-            val resolved = it.resolveIfNotDone(context)
-            val angle = (it.count.toFloat() / total.toFloat()) * 360f
-            PieSlice(resolved.name, angle, resolved.color?.let { c ->
-                ContextCompat.getColor(context, c)
-            })
-        }
-
     }
 
     private fun triggerAnimation() {

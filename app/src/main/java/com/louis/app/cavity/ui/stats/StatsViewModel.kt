@@ -1,20 +1,21 @@
 package com.louis.app.cavity.ui.stats
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.Year
 
 class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
-    private val statRequest =
-        MutableLiveData(StatRequest(StatType.STOCK, Year("null", 0L, System.currentTimeMillis())))
+    private val year = MutableLiveData(Year("null", 0L, System.currentTimeMillis()))
 
-    val years = repository.getYears()
+    val years: LiveData<List<Year>> = repository.getYears().map {
+        it.toMutableList().apply {
+            add(0, Year("Toutes années confondues", 0L, System.currentTimeMillis()))
+            add(Year("Toutes années confondues", 0L, System.currentTimeMillis()))
+        }
+    }
 
     private val _currentItemPosition = MutableLiveData<Int>()
     val currentItemPosition: LiveData<Int>
@@ -24,38 +25,64 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     val showYearPicker: LiveData<Boolean>
         get() = _showYearPicker
 
-//    fun getCountyStats() = statRequest.switchMap {
-//        val start = it.year?.yearStart ?: 0
-//        val end = it.year?.yearEnd ?: 0
-//
-//        when (it.statType) {
-//            StatType.STOCK -> repository.getStockByCounty()
-//            StatType.REPLENISHMENTS -> repository.getReplenishmentsByCounty(start, end)
-//            StatType.CONSUMPTIONS -> repository.getConsumptionsByCounty(start, end)
-//        }
-//    }
-//
-//    fun getColorStats() = statRequest.switchMap {
-//        val start = it.year?.yearStart ?: 0
-//        val end = it.year?.yearEnd ?: 0
-//
-//        when (it.statType) {
-//            StatType.STOCK -> repository.getStockByColor()
-//            StatType.REPLENISHMENTS -> repository.getReplenishmentsByColor(start, end)
-//            StatType.CONSUMPTIONS -> repository.getConsumptionsByColor(start, end)
-//        }
-//    }
+    fun getCountyStats(statType: StatType) = year.switchMap {
+        val start = it?.yearStart ?: 0
+        val end = it?.yearEnd ?: System.currentTimeMillis()
 
-//    fun getVintageStats() = statRequest.switchMap {
-//
-//    }
+        setShouldShowYearPicker(statType != StatType.STOCK)
 
-    fun results(globalStatType: StatGlobalType) = statRequest.switchMap {
-        val start = it.year?.yearStart ?: 0
-        val end = it.year?.yearEnd ?: 0
+        when (statType) {
+            StatType.STOCK -> repository.getStockByCounty()
+            StatType.REPLENISHMENTS -> repository.getReplenishmentsByCounty(start, end)
+            StatType.CONSUMPTIONS -> repository.getConsumptionsByCounty(start, end)
+        }
+    }
+
+    fun getColorStats(statType: StatType) = year.switchMap {
+        val start = it?.yearStart ?: 0
+        val end = it?.yearEnd ?: System.currentTimeMillis()
+
+        setShouldShowYearPicker(statType != StatType.STOCK)
+
+        when (statType) {
+            StatType.STOCK -> repository.getStockByColor()
+            StatType.REPLENISHMENTS -> repository.getReplenishmentsByColor(start, end)
+            StatType.CONSUMPTIONS -> repository.getConsumptionsByColor(start, end)
+        }
+    }
+
+    fun getVintageStats(statType: StatType) = year.switchMap {
+        val start = it?.yearStart ?: 0
+        val end = it?.yearEnd ?: System.currentTimeMillis()
+
+        setShouldShowYearPicker(statType != StatType.STOCK)
+
+        when (statType) {
+            StatType.STOCK -> repository.getStockByVintage()
+            StatType.REPLENISHMENTS -> repository.getConsumptionsByVintage(start, end)
+            StatType.CONSUMPTIONS -> repository.getConsumptionsByVintage(start, end)
+        }
+    }
+
+    fun getNamingStats(statType: StatType) = year.switchMap {
+        val start = it?.yearStart ?: 0
+        val end = it?.yearEnd ?: System.currentTimeMillis()
+
+        setShouldShowYearPicker(statType != StatType.STOCK)
+
+        when (statType) {
+            StatType.STOCK -> repository.getStockByNaming()
+            StatType.REPLENISHMENTS -> repository.getConsumptionsByNaming(start, end)
+            StatType.CONSUMPTIONS -> repository.getConsumptionsByNaming(start, end)
+        }
+    }
+
+    fun results(globalStatType: StatGlobalType, statType: StatType) = year.switchMap {
+        val start = it?.yearStart ?: 0
+        val end = it?.yearEnd ?: System.currentTimeMillis()
 
         when (globalStatType) {
-            StatGlobalType.COUNTY -> when (it.statType) {
+            StatGlobalType.COUNTY -> when (statType) {
                 StatType.STOCK -> repository.getStockByCounty()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByCounty(
                     start,
@@ -66,7 +93,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
                     end
                 )
             }
-            StatGlobalType.COLOR -> when (it.statType) {
+            StatGlobalType.COLOR -> when (statType) {
                 StatType.STOCK -> repository.getStockByColor()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByColor(
                     start,
@@ -77,7 +104,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
                     end
                 )
             }
-            StatGlobalType.VINTAGE -> when (it.statType) {
+            StatGlobalType.VINTAGE -> when (statType) {
                 StatType.STOCK -> repository.getStockByVintage()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByVintage(
                     start,
@@ -88,7 +115,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
                     end
                 )
             }
-            StatGlobalType.NAMING -> when (it.statType) {
+            StatGlobalType.NAMING -> when (statType) {
                 StatType.STOCK -> repository.getStockByNaming()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByNaming(
                     start,
@@ -107,26 +134,17 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setYear(year: Year) {
-        val currentYear = statRequest.value?.year ?: Year("null", 0L, System.currentTimeMillis())
-        val statType = statRequest.value?.statType ?: StatType.STOCK
+        val currentYear = this.year.value ?: Year("null", 0L, System.currentTimeMillis())
 
-        if (currentYear == year) return
-
-        statRequest.value = StatRequest(statType, year)
-    }
-
-    fun setStatType(statType: StatType) {
-        val year = statRequest.value?.year ?: Year("null", 0L, System.currentTimeMillis())
-        statRequest.value = StatRequest(statType, year)
-        _showYearPicker.value = statType != StatType.STOCK
+        if (currentYear != year) {
+            this.year.value = currentYear
+        }
     }
 
     fun setShouldShowYearPicker(show: Boolean) {
         _showYearPicker.value = show
     }
 }
-
-data class StatRequest(val statType: StatType, val year: Year?)
 
 enum class StatType {
     STOCK,
