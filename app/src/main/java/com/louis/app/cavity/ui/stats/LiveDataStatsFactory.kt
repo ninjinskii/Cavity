@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.stats
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import com.louis.app.cavity.db.WineRepository
@@ -10,8 +11,10 @@ import com.louis.app.cavity.db.dao.Year
 class LiveDataStatsFactory(
     private val repository: WineRepository,
     private val year: MutableLiveData<Year>,
-    private val comparisonYear: MutableLiveData<Year>
+    private val comparisonYear: MutableLiveData<Year>,
+    private val currentItemPostion: LiveData<Int>
 ) {
+
     private val statTypes = MutableList(4) {
         MutableLiveData(StatType.STOCK)
     }
@@ -21,6 +24,20 @@ class LiveDataStatsFactory(
     }
     val results: List<LiveData<List<Stat>>>
         get() = _results
+
+    private val _details = MediatorLiveData<List<Stat>>().apply {
+        addSource(currentItemPostion) {
+            value = _results[it].value
+        }
+
+//        _results.forEach {
+//            addSource(it) { last ->
+//                value = last
+//            }
+//        }
+    }
+    val details: LiveData<List<Stat>>
+        get() = _details
 
     fun addStat(): LiveData<List<Stat>> {
         statTypes.add(MutableLiveData(StatType.STOCK))

@@ -63,7 +63,6 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         binding.viewPager.adapter = statsPagerAdapter
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-
                 statsViewModel.notifyPageChanged(position)
             }
         })
@@ -82,6 +81,10 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 //            statsAdapter.submitList(it)
 //        }
 
+        statsViewModel.details.observe(viewLifecycleOwner) {
+            statsAdapter.submitList(it)
+        }
+
         statsViewModel.comparison.observe(viewLifecycleOwner) {
             lifecycleScope.launch(Main) {
                 delay(300)
@@ -99,10 +102,6 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
                 }
             }
         }
-
-//        statsViewModel.comparisonStats.observe(viewLifecycleOwner) {
-//            statsAdapter.comparisonList = it.map { v -> v.count }
-//        }
     }
 
     private fun observe() {

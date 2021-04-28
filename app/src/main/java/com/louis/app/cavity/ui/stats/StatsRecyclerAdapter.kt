@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemStatBinding
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.util.L
-import com.louis.app.cavity.util.setVisible
 
 class StatsRecyclerAdapter :
     ListAdapter<Stat, StatsRecyclerAdapter.StatViewHolder>(StatItemDiffCallback()) {
@@ -28,10 +27,10 @@ class StatsRecyclerAdapter :
     override fun getItemCount() = currentList.size
 
     class StatItemDiffCallback : DiffUtil.ItemCallback<Stat>() {
-        override fun areItemsTheSame(oldItem: Stat, newItem: Stat) = oldItem.label == oldItem.label
+        override fun areItemsTheSame(oldItem: Stat, newItem: Stat) = oldItem.label == newItem.label
 
         override fun areContentsTheSame(oldItem: Stat, newItem: Stat) =
-            oldItem.count == newItem.count && oldItem.label == newItem.label
+            oldItem.count == newItem.count
     }
 
     inner class StatViewHolder(private val binding: ItemStatBinding) :
@@ -42,9 +41,9 @@ class StatsRecyclerAdapter :
                 label.text = stat.label
                 count.text = stat.count.toString()
                 L.v("$comparisonList")
-                comparisonCount.text = comparisonList[adapterPosition].toString()
-                comparisonCount.setVisible(comparisonMode)
-                comparisonIcon.setVisible(comparisonMode)
+//                comparisonCount.text = comparisonList[adapterPosition].toString()
+//                comparisonCount.setVisible(comparisonMode)
+//                comparisonIcon.setVisible(comparisonMode)
             }
         }
     }

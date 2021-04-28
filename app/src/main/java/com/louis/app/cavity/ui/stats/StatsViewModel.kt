@@ -1,10 +1,7 @@
 package com.louis.app.cavity.ui.stats
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.*
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.Year
 
@@ -15,7 +12,6 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val year = MutableLiveData(groupedYears)
     private val comparisonYear = MutableLiveData(groupedYears)
 
-    private val statFactory = LiveDataStatsFactory(repository, year, comparisonYear)
 
     val years: LiveData<List<Year>> = repository.getYears().map {
         it.toMutableList().apply {
@@ -24,11 +20,12 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    val results = statFactory.results
 
     private val _currentItemPosition = MutableLiveData<Int>()
     val currentItemPosition: LiveData<Int>
         get() = _currentItemPosition
+
+    val details = currentItemPosition.switchMap { results[it] }
 
     private val _showYearPicker = MutableLiveData(false)
     val showYearPicker: LiveData<Boolean>
@@ -37,6 +34,13 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val _comparison = MutableLiveData(false)
     val comparison: LiveData<Boolean>
         get() = _comparison
+
+    private val statFactory =
+        LiveDataStatsFactory(repository, year, comparisonYear, currentItemPosition)
+
+    val results = statFactory.results
+
+    //val details = statFactory.details
 
     fun statType(viewPagerPos: Int) = statFactory.getLiveStatType(viewPagerPos)
 
