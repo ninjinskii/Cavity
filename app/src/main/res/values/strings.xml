@@ -231,7 +231,10 @@
     <!-- Stats -->
     <string name="stats">Statistiques</string>
     <string name="show_more">En savoir plus</string>
-    <string name="consumed_by_colors">Bouteilles consommées par couleur</string>
+    <string name="pie_title_county">Bouteilles par régions</string>
+    <string name="pie_title_color">Bouteilles par couleurs</string>
+    <string name="pie_title_vintage">Bouteilles par millésimes</string>
+    <string name="pie_title_naming">Bouteilles par appellations</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

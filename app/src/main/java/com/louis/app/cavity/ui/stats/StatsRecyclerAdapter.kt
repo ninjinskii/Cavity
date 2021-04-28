@@ -39,9 +39,6 @@ class StatsRecyclerAdapter :
                 label.text = stat.label
                 count.text = stat.count.toString()
                 color.setBackgroundColor(resolvedColor)
-//                comparisonCount.text = comparisonList[adapterPosition].toString()
-//                comparisonCount.setVisible(comparisonMode)
-//                comparisonIcon.setVisible(comparisonMode)
             }
         }
     }

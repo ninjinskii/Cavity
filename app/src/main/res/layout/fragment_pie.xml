@@ -21,6 +21,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/large_margin"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/pieView"
         app:layout_constraintEnd_toEndOf="@id/pieView"
         app:layout_constraintStart_toStartOf="@id/pieView"
@@ -41,28 +42,27 @@
         app:layout_constraintGuide_percent="0.8" />
 
     <TextView
-        android:id="@+id/label"
+        android:id="@+id/title"
         style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/small_margin"
         android:layout_marginVertical="@dimen/medium_margin"
         android:gravity="center_horizontal"
-        android:text="Bouteilles par régions texte"
         app:layout_constraintBottom_toTopOf="@id/buttonGroupSwitchStat"
         app:layout_constraintEnd_toEndOf="@id/textEnd"
         app:layout_constraintStart_toStartOf="@id/textStart"
-        app:layout_constraintTop_toTopOf="@id/pieView"
-        app:layout_constraintVertical_chainStyle="packed" />
+        tools:text="@string/pie_title_color" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/buttonGroupSwitchStat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
-        app:layout_constraintBottom_toTopOf="@id/buttonCompare"
+        app:layout_constraintBottom_toBottomOf="@id/pieView"
         app:layout_constraintEnd_toEndOf="@id/pieView"
         app:layout_constraintStart_toStartOf="@id/pieView"
-        app:layout_constraintTop_toBottomOf="@id/label"
+        app:layout_constraintTop_toTopOf="@id/pieView"
         app:selectionRequired="true"
         app:singleSelection="true"
         tools:checkedButton="@id/buttonStock">
@@ -92,18 +92,4 @@
             android:textSize="12sp" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonCompare"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
-        android:text="Comparer"
-        app:layout_constraintBottom_toBottomOf="@id/pieView"
-        app:layout_constraintEnd_toEndOf="@id/pieView"
-        app:layout_constraintStart_toStartOf="@id/pieView"
-        app:layout_constraintTop_toBottomOf="@id/buttonGroupSwitchStat" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

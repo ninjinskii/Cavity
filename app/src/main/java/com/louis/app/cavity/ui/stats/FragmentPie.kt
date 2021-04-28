@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.stats
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,6 +13,7 @@ import com.louis.app.cavity.db.dao.ColorStat
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.ui.stats.widget.PieView
 import com.louis.app.cavity.util.ColorUtil
+import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -29,7 +31,8 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPieBinding.bind(view)
 
-        viewPagerPosition = arguments?.getInt(VIEW_PAGER_POSITION) ?: 0
+        viewPagerPosition = requireArguments().getInt(VIEW_PAGER_POSITION)
+        binding.title.text = requireContext().getString(requireArguments().getInt(TITLE_RES))
 
         setListeners()
         observe()
@@ -37,6 +40,8 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     private fun setListeners() {
+        binding.buttonStock.isChecked = true
+
         binding.buttonGroupSwitchStat.addOnButtonCheckedListener { _, checkedId, _ ->
             statsViewModel.setShouldShowYearPicker(checkedId != R.id.buttonStock)
 
@@ -49,24 +54,26 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
             statsViewModel.setStatType(viewPagerPosition, stockType)
         }
 
-        binding.buttonStock.isChecked = true
-
-        binding.buttonCompare.setOnClickListener {
-            statsViewModel.toggleComparison()
-        }
     }
 
     private fun observe() {
-        val position = arguments?.getInt(VIEW_PAGER_POSITION) ?: 0
-
         statsViewModel.currentItemPosition.observe(viewLifecycleOwner) {
-            if (it == position) {
+            if (it == viewPagerPosition) {
                 maybeShowYearPicker()
             }
         }
 
-        statsViewModel.results[position].observe(viewLifecycleOwner) {
-            updatePieData(it)
+        statsViewModel.results[viewPagerPosition].observe(viewLifecycleOwner) {
+            updatePieData(binding.pieView, it)
+        }
+
+        statsViewModel.comparison.observe(viewLifecycleOwner) {
+            binding.comparisonPieView.setVisible(it)
+            binding.buttonGroupSwitchStat.setVisible(!it)
+        }
+
+        statsViewModel.comparisonDetails.observe(viewLifecycleOwner) {
+            updatePieData(binding.comparisonPieView, it)
         }
     }
 
@@ -76,7 +83,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         )
     }
 
-    private fun updatePieData(stats: List<Stat>) {
+    private fun updatePieData(pieView: PieView, stats: List<Stat>) {
         lifecycleScope.launch(Default) {
             val total = stats.sumBy { stat -> stat.count }
             val slices = stats.map { stat ->
@@ -92,7 +99,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
             }
 
             withContext(Main) {
-                binding.pieView.setPieData(slices, anim = true)
+                pieView.setPieData(slices, anim = true)
             }
         }
     }
@@ -103,13 +110,17 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     companion object {
+        private const val TITLE_RES = "com.louis.app.cavity.ui.home.FragmentWines.TITLE_RES"
         private const val VIEW_PAGER_POSITION =
             "com.louis.app.cavity.ui.home.FragmentWines.VIEW_PAGER_POSITION"
 
         // Used by StatsPagerAdapter
-        fun newInstance(pagerPosition: Int): FragmentPie {
+        fun newInstance(pagerPosition: Int, @StringRes titleRes: Int): FragmentPie {
             return FragmentPie().apply {
-                arguments = bundleOf(VIEW_PAGER_POSITION to pagerPosition)
+                arguments = bundleOf(
+                    VIEW_PAGER_POSITION to pagerPosition,
+                    TITLE_RES to titleRes
+                )
             }
         }
     }

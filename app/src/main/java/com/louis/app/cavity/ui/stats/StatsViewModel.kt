@@ -29,6 +29,10 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
     val details = currentItemPosition.switchMap { results[it] }
 
+    val comparisonDetails by lazy {
+        currentItemPosition.switchMap { statFactory.comparisons[it] }
+    }
+
     private val _showYearPicker = MutableLiveData(false)
     val showYearPicker: LiveData<Boolean>
         get() = _showYearPicker
@@ -53,16 +57,25 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun setComparisonYear(year: Year) {
+        this._comparison.value = true
+        this.comparisonYear.value = year
+    }
+
     fun setShouldShowYearPicker(show: Boolean) {
         val currentValue = _showYearPicker.value!!
 
         if (show != currentValue) {
             _showYearPicker.value = show
+
+            if (!show) {
+                stopComparison()
+            }
         }
     }
 
-    fun toggleComparison() {
-        _comparison.value = !comparison.value!!
+    fun stopComparison() {
+        _comparison.value = false
     }
 }
 

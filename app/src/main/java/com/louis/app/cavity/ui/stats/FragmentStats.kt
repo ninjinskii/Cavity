@@ -37,6 +37,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             onTabClick = {
             },
             onLongTabClick = {
+                statsViewModel.setComparisonYear(it)
             }
         )
 
@@ -73,18 +74,15 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             setHasFixedSize(true)
         }
 
-//        statsViewModel.getNamingStats(StatType.STOCK).observe(viewLifecycleOwner) {
-//            statsAdapter.submitList(it)
-//        }
-
         statsViewModel.details.observe(viewLifecycleOwner) {
             statsAdapter.submitList(it)
         }
 
 //        statsViewModel.comparison.observe(viewLifecycleOwner) {
+//            if (!it) statsAdapter.comparisonDetails = emptyList()
+//
 //            lifecycleScope.launch(Main) {
 //                delay(300)
-//                statsAdapter.comparisonMode = it
 //
 //                with(binding.recyclerView) {
 //                    val animator = itemAnimator

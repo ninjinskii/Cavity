@@ -17,6 +17,12 @@ class LiveDataStatsFactory(
         MutableLiveData(StatType.STOCK)
     }
 
+    private val _comparisons: MutableList<LiveData<List<Stat>>> = MutableList(4) {
+        createComparisonLiveStat(it)
+    }
+    val comparisons: List<LiveData<List<Stat>>>
+        get() = _comparisons
+
     private val _results: MutableList<LiveData<List<Stat>>> = MutableList(4) {
         createLiveStat(it)
     }
@@ -42,6 +48,12 @@ class LiveDataStatsFactory(
     private fun createLiveStat(position: Int) = year.switchMap { year ->
         statTypes[position].switchMap { statType ->
             getStat(position, year, statType)
+        }
+    }
+
+    private fun createComparisonLiveStat(position: Int) = comparisonYear.switchMap { comparisonY ->
+        statTypes[position].switchMap { statType ->
+            getStat(position, comparisonY, statType)
         }
     }
 

@@ -11,6 +11,7 @@ import com.louis.app.cavity.R
 class ScrollableTabAdapter<T>(
     private val onTabClick: (Int) -> Unit,
     private val onLongTabClick: (T) -> Unit,
+    private val selectable: Boolean = false
 ) :
     RecyclerView.Adapter<ScrollableTabAdapter<T>.TabViewHolder>() {
 
