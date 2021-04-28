@@ -12,6 +12,9 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val year = MutableLiveData(groupedYears)
     private val comparisonYear = MutableLiveData(groupedYears)
 
+    private val statFactory = LiveDataStatsFactory(repository, year, comparisonYear)
+
+    val results = statFactory.results
 
     val years: LiveData<List<Year>> = repository.getYears().map {
         it.toMutableList().apply {
@@ -19,7 +22,6 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
             add(groupedYears)
         }
     }
-
 
     private val _currentItemPosition = MutableLiveData<Int>()
     val currentItemPosition: LiveData<Int>
@@ -34,17 +36,6 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val _comparison = MutableLiveData(false)
     val comparison: LiveData<Boolean>
         get() = _comparison
-
-    private val statFactory =
-        LiveDataStatsFactory(repository, year, comparisonYear, currentItemPosition)
-
-    val results = statFactory.results
-
-    //val details = statFactory.details
-
-    fun statType(viewPagerPos: Int) = statFactory.getLiveStatType(viewPagerPos)
-
-    fun getStatType(viewPagerPos: Int) = statFactory.getStatType(viewPagerPos)
 
     fun setStatType(viewPagerPos: Int, statType: StatType) {
         statFactory.applyStatType(viewPagerPos, statType)
