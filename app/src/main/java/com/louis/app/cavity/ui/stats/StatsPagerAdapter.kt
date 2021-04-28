@@ -7,9 +7,9 @@ class StatsPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount() = 4
 
     override fun createFragment(position: Int) = when (position) {
-        0 -> FragmentPie.newInstance(StatGlobalType.COUNTY, position)
-        1 -> FragmentPie.newInstance(StatGlobalType.COLOR, position)
-        2 -> FragmentPie.newInstance(StatGlobalType.VINTAGE, position)
-        else -> FragmentPie.newInstance(StatGlobalType.NAMING, position)
+        0 -> FragmentPie.newInstance(position)
+        1 -> FragmentPie.newInstance(position)
+        2 -> FragmentPie.newInstance(position)
+        else -> FragmentPie.newInstance(position)
     }
 }

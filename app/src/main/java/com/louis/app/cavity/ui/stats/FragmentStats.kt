@@ -78,9 +78,9 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             setHasFixedSize(true)
         }
 
-        statsViewModel.getNamingStats(StatType.STOCK).observe(viewLifecycleOwner) {
-            statsAdapter.submitList(it)
-        }
+//        statsViewModel.getNamingStats(StatType.STOCK).observe(viewLifecycleOwner) {
+//            statsAdapter.submitList(it)
+//        }
 
         statsViewModel.comparison.observe(viewLifecycleOwner) {
             lifecycleScope.launch(Main) {
@@ -100,9 +100,9 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             }
         }
 
-        statsViewModel.comparisonStats.observe(viewLifecycleOwner) {
-            statsAdapter.comparisonList = it.map { v -> v.count }
-        }
+//        statsViewModel.comparisonStats.observe(viewLifecycleOwner) {
+//            statsAdapter.comparisonList = it.map { v -> v.count }
+//        }
     }
 
     private fun observe() {

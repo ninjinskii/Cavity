@@ -5,32 +5,29 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.ui.stats.widget.PieView
-import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class FragmentPie : Fragment(R.layout.fragment_pie) {
-    lateinit var globalStatType: StatGlobalType
     private var _binding: FragmentPieBinding? = null
     private val binding get() = _binding!!
     private val statsViewModel: StatsViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
+    private var viewPagerPosition: Int = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPieBinding.bind(view)
 
-        globalStatType = arguments?.getSerializable(STAT_TYPE_ID) as StatGlobalType
+        viewPagerPosition = arguments?.getInt(VIEW_PAGER_POSITION) ?: 0
 
         setListeners()
         observe()
@@ -38,18 +35,16 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     private fun setListeners() {
-        var observedData: LiveData<out List<Stat>>? = null
-        val observer = Observer<List<Stat>> {
-            updatePieData(it)
-        }
-
         binding.buttonGroupSwitchStat.addOnButtonCheckedListener { _, checkedId, _ ->
             statsViewModel.setShouldShowYearPicker(checkedId != R.id.buttonStock)
 
-            observedData?.removeObserver(observer)
-            observedData = switchData(checkedId).also {
-                it.observe(viewLifecycleOwner, observer)
+            val stockType = when (checkedId) {
+                R.id.buttonReplenishments -> StatType.REPLENISHMENTS
+                R.id.buttonConsumptions -> StatType.CONSUMPTIONS
+                else /* R.id.buttonStock */ -> StatType.STOCK
             }
+
+            statsViewModel.setStatType(viewPagerPosition, stockType)
         }
 
         binding.buttonStock.isChecked = true
@@ -60,36 +55,17 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     private fun observe() {
+        val position = arguments?.getInt(VIEW_PAGER_POSITION) ?: 0
+
         statsViewModel.currentItemPosition.observe(viewLifecycleOwner) {
-            if (it == arguments?.getInt(POSITION)) {
+            if (it == position) {
                 maybeShowYearPicker()
             }
         }
 
-        statsViewModel.comparison.observe(viewLifecycleOwner) {
-            with(binding) {
-                comparisonPieView.setVisible(it)
-                buttonGroupSwitchStat.setVisible(!it)
-                label.setVisible(!it)
-                buttonCompare.text = if (it) "Retour" else "Comparer"
-
-                val data = if (it) pieView.getPieData() else emptyList()
-                comparisonPieView.setPieData(data, anim = it)
-            }
+        statsViewModel.results[position].observe(viewLifecycleOwner) {
+            updatePieData(it)
         }
-    }
-
-    private fun switchData(checkedId: Int) = when (checkedId) {
-        R.id.buttonReplenishments -> chooseData(StatType.REPLENISHMENTS)
-        R.id.buttonConsumptions -> chooseData(StatType.CONSUMPTIONS)
-        else /* R.id.buttonStock */ -> chooseData(StatType.STOCK)
-    }
-
-    private fun chooseData(statType: StatType) = when (globalStatType) {
-        StatGlobalType.COUNTY -> statsViewModel.getCountyStats(statType)
-        StatGlobalType.COLOR -> statsViewModel.getColorStats(statType)
-        StatGlobalType.VINTAGE -> statsViewModel.getVintageStats(statType)
-        StatGlobalType.NAMING -> statsViewModel.getNamingStats(statType)
     }
 
     private fun maybeShowYearPicker() {
@@ -118,22 +94,15 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     companion object {
-        private const val STAT_TYPE_ID = "com.louis.app.cavity.ui.home.FragmentWines.STAT_TYPE_ID"
-        private const val POSITION = "com.louis.app.cavity.ui.home.FragmentWines.POSITION"
+        private const val VIEW_PAGER_POSITION =
+            "com.louis.app.cavity.ui.home.FragmentWines.VIEW_PAGER_POSITION"
 
-        // Used by WinesPagerAdapter
-        fun newInstance(statGlobalType: StatGlobalType, position: Int): FragmentPie {
+        // Used by StatsPagerAdapter
+        fun newInstance(pagerPosition: Int): FragmentPie {
             return FragmentPie().apply {
-                arguments = bundleOf(STAT_TYPE_ID to statGlobalType, POSITION to position)
+                arguments = bundleOf(VIEW_PAGER_POSITION to pagerPosition)
             }
         }
     }
-}
-
-enum class StatGlobalType {
-    COUNTY,
-    COLOR,
-    VINTAGE,
-    NAMING
 }
 

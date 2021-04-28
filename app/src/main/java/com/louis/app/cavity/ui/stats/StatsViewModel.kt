@@ -1,9 +1,11 @@
 package com.louis.app.cavity.ui.stats
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.db.dao.Year
 
 class StatsViewModel(app: Application) : AndroidViewModel(app) {
@@ -13,12 +15,16 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val year = MutableLiveData(groupedYears)
     private val comparisonYear = MutableLiveData(groupedYears)
 
+    private val statFactory = LiveDataStatsFactory(repository, year, comparisonYear)
+
     val years: LiveData<List<Year>> = repository.getYears().map {
         it.toMutableList().apply {
             add(0, groupedYears)
             add(groupedYears)
         }
     }
+
+    val results = statFactory.results
 
     private val _currentItemPosition = MutableLiveData<Int>()
     val currentItemPosition: LiveData<Int>
@@ -32,63 +38,12 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     val comparison: LiveData<Boolean>
         get() = _comparison
 
-    val comparisonStats: LiveData<List<Stat>> = comparisonYear.switchMap {
-        MediatorLiveData<List<Stat>>().apply {
-            addSource(repository.getConsumptionsByCounty(it.yearStart, it.yearEnd)) { value = it }
-            addSource(repository.getReplenishmentsByCounty(it.yearStart, it.yearEnd)) { value = it }
-            addSource(repository.getConsumptionsByColor(it.yearStart, it.yearEnd)) { value = it }
-            addSource(repository.getReplenishmentsByColor(it.yearStart, it.yearEnd)) { value = it }
-            addSource(repository.getConsumptionsByVintage(it.yearStart, it.yearEnd)) { value = it }
-            addSource(repository.getReplenishmentsByVintage(it.yearStart, it.yearEnd)) {
-                value = it
-            }
-            addSource(repository.getConsumptionsByNaming(it.yearStart, it.yearEnd)) { value = it }
-            addSource(repository.getReplenishmentsByNaming(it.yearStart, it.yearEnd)) { value = it }
-        }
-    }
+    fun statType(viewPagerPos: Int) = statFactory.getLiveStatType(viewPagerPos)
 
-    fun getCountyStats(statType: StatType) = year.switchMap {
-        val start = it?.yearStart ?: 0
-        val end = it?.yearEnd ?: System.currentTimeMillis()
+    fun getStatType(viewPagerPos: Int) = statFactory.getStatType(viewPagerPos)
 
-        when (statType) {
-            StatType.STOCK -> repository.getStockByCounty() // post null to comparison
-            StatType.REPLENISHMENTS -> repository.getReplenishmentsByCounty(start, end)
-            StatType.CONSUMPTIONS -> repository.getConsumptionsByCounty(start, end)
-        }
-    }
-
-    fun getColorStats(statType: StatType) = year.switchMap {
-        val start = it?.yearStart ?: 0
-        val end = it?.yearEnd ?: System.currentTimeMillis()
-
-        when (statType) {
-            StatType.STOCK -> repository.getStockByColor()
-            StatType.REPLENISHMENTS -> repository.getReplenishmentsByColor(start, end)
-            StatType.CONSUMPTIONS -> repository.getConsumptionsByColor(start, end)
-        }
-    }
-
-    fun getVintageStats(statType: StatType) = year.switchMap {
-        val start = it?.yearStart ?: 0
-        val end = it?.yearEnd ?: System.currentTimeMillis()
-
-        when (statType) {
-            StatType.STOCK -> repository.getStockByVintage()
-            StatType.REPLENISHMENTS -> repository.getConsumptionsByVintage(start, end)
-            StatType.CONSUMPTIONS -> repository.getConsumptionsByVintage(start, end)
-        }
-    }
-
-    fun getNamingStats(statType: StatType) = year.switchMap {
-        val start = it?.yearStart ?: 0
-        val end = it?.yearEnd ?: System.currentTimeMillis()
-
-        when (statType) {
-            StatType.STOCK -> repository.getStockByNaming()
-            StatType.REPLENISHMENTS -> repository.getConsumptionsByNaming(start, end)
-            StatType.CONSUMPTIONS -> repository.getConsumptionsByNaming(start, end)
-        }
+    fun setStatType(viewPagerPos: Int, statType: StatType) {
+        statFactory.applyStatType(viewPagerPos, statType)
     }
 
     fun notifyPageChanged(position: Int) {
