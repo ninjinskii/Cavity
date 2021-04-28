@@ -1,10 +1,9 @@
 package com.louis.app.cavity.db.dao
 
-import android.content.Context
-import android.content.res.Resources
-import androidx.core.content.ContextCompat
+import androidx.annotation.ColorRes
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Ignore
 import androidx.room.Query
 import com.louis.app.cavity.util.ColorUtil
 
@@ -124,46 +123,41 @@ interface Stat {
     val count: Int
     var label: String
     var color: Int?
-
-    // Used to get string / color from R resources
-    fun resolve(context: Context?): Stat = this
+    val safeColor: Int
 }
 
 data class CountyStat(
     override val count: Int,
     override var label: String = "",
-    override var color: Int? = null
-) : Stat
+    @ColorRes override var color: Int?
+) : Stat {
+    @Ignore
+    override val safeColor = color ?: ColorUtil.next()
+}
 
 data class ColorStat(
     override val count: Int,
-    override var color: Int?,
     override var label: String = "",
+    @ColorRes override var color: Int?
 ) : Stat {
-    override fun resolve(context: Context?): Stat {
-        color?.let {
-            label = context?.getString(ColorUtil.getStringResForWineColor(it)) ?: ""
-            color = context?.let { ctx ->
-                try {
-                    ContextCompat.getColor(ctx, ColorUtil.getColorResForWineColor(it))
-                } catch (e: Resources.NotFoundException) {
-                    null
-                }
-            }
-        }
-
-        return this
-    }
+    @Ignore
+    override val safeColor = ColorUtil.getColorResForWineColor(color ?: 0)
 }
 
 data class VintageStat(
     override val count: Int,
     override var label: String = "",
-    override var color: Int? = null
-) : Stat
+    @ColorRes override var color: Int?
+) : Stat {
+    @Ignore
+    override val safeColor = color ?: ColorUtil.next()
+}
 
 data class NamingStat(
     override val count: Int,
     override var label: String = "",
-    override var color: Int? = null
-) : Stat
+    @ColorRes override var color: Int?
+) : Stat {
+    @Ignore
+    override val safeColor = color ?: ColorUtil.next()
+}

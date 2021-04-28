@@ -18,6 +18,20 @@ class ColorUtil(context: Context) {
     }
 
     companion object {
+        private val colorsRes = listOf(
+            R.color.cavity_red,
+            R.color.cavity_brown,
+            R.color.cavity_green,
+            R.color.cavity_indigo,
+            R.color.cavity_purple,
+            R.color.cavity_yellow
+        ).shuffled()
+
+        var index = 0
+
+        @ColorRes
+        fun next() = colorsRes[index++ % colorsRes.size]
+
         @ColorRes
         fun getColorResForWineColor(wineColor: Int) = when (wineColor) {
             0 -> R.color.wine_red

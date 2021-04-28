@@ -7,13 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemStatBinding
 import com.louis.app.cavity.db.dao.Stat
-import com.louis.app.cavity.util.L
 
 class StatsRecyclerAdapter :
     ListAdapter<Stat, StatsRecyclerAdapter.StatViewHolder>(StatItemDiffCallback()) {
-
-    var comparisonMode = false
-    var comparisonList = emptyList<Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatViewHolder {
         val binding = ItemStatBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -37,10 +33,12 @@ class StatsRecyclerAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(stat: Stat) {
+            val resolvedColor = itemView.context.getColor(stat.safeColor)
+
             with(binding) {
                 label.text = stat.label
                 count.text = stat.count.toString()
-                L.v("$comparisonList")
+                color.setBackgroundColor(resolvedColor)
 //                comparisonCount.text = comparisonList[adapterPosition].toString()
 //                comparisonCount.setVisible(comparisonMode)
 //                comparisonIcon.setVisible(comparisonMode)

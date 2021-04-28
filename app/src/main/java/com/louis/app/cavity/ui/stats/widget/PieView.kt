@@ -9,12 +9,12 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
-import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.PI
 import kotlin.math.min
@@ -26,7 +26,7 @@ class PieView @JvmOverloads constructor(
 ) :
     View(context, attrs, defStyleAttr) {
 
-    private val colorUtil = ColorUtil(context)
+    private var colors = emptyList<@ColorInt Int>()
 
     private val strokeWidth = context.dpToPx(6f)
     private val sliceSpace = context.dpToPx(1f)
@@ -54,7 +54,6 @@ class PieView @JvmOverloads constructor(
     }
 
     private var pieData: List<PieSlice> = mutableListOf()
-    private var colors = colorUtil.randomSet()
 
     private var rect = RectF()
     private var pieRadius = 0f
@@ -71,6 +70,8 @@ class PieView @JvmOverloads constructor(
         }
 
     fun setPieData(slices: List<PieSlice>, anim: Boolean) {
+        colors = slices.map { context.getColor(it.color) }
+
         if (anim) {
             if (pieData.isNotEmpty()) {
                 replaceData(slices) // Will take care of updating pieData
@@ -83,8 +84,6 @@ class PieView @JvmOverloads constructor(
             invalidate()
         }
     }
-
-    fun getPieData() = pieData
 
     private fun triggerAnimation() {
         this.alpha = 1f
@@ -142,8 +141,8 @@ class PieView @JvmOverloads constructor(
 
         var previousAngle = -90f
 
-        pieData.forEachIndexed { index, it ->
-            piePaint.color = it.color ?: colors[index % colors.size]
+        pieData.forEach {
+            piePaint.color = context.getColor(it.color)
             textPaint.color = ColorUtils.blendARGB(transparent, textColor, interpolation)
 
             val label = it.name
@@ -176,5 +175,5 @@ class PieView @JvmOverloads constructor(
         }
     }
 
-    data class PieSlice(val name: String, val angle: Float, @ColorInt val color: Int?)
+    data class PieSlice(val name: String, val angle: Float, @ColorRes val color: Int)
 }

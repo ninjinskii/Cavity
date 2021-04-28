@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
@@ -13,9 +12,6 @@ import com.louis.app.cavity.db.dao.Year
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class FragmentStats : Fragment(R.layout.fragment_stats) {
     private lateinit var statsPagerAdapter: StatsPagerAdapter
@@ -85,23 +81,23 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             statsAdapter.submitList(it)
         }
 
-        statsViewModel.comparison.observe(viewLifecycleOwner) {
-            lifecycleScope.launch(Main) {
-                delay(300)
-                statsAdapter.comparisonMode = it
-
-                with(binding.recyclerView) {
-                    val animator = itemAnimator
-                    itemAnimator = null
-                    statsAdapter.notifyItemRangeChanged(0, statsAdapter.itemCount - 1)
-
-                    lifecycleScope.launch(Main) {
-                        delay(200)
-                        itemAnimator = animator
-                    }
-                }
-            }
-        }
+//        statsViewModel.comparison.observe(viewLifecycleOwner) {
+//            lifecycleScope.launch(Main) {
+//                delay(300)
+//                statsAdapter.comparisonMode = it
+//
+//                with(binding.recyclerView) {
+//                    val animator = itemAnimator
+//                    itemAnimator = null
+//                    statsAdapter.notifyItemRangeChanged(0, statsAdapter.itemCount - 1)
+//
+//                    lifecycleScope.launch(Main) {
+//                        delay(200)
+//                        itemAnimator = animator
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun observe() {
