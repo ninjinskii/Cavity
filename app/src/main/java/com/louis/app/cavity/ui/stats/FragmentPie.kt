@@ -68,12 +68,19 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         }
 
         statsViewModel.comparison.observe(viewLifecycleOwner) {
-            binding.comparisonPieView.setVisible(it)
-            binding.buttonGroupSwitchStat.setVisible(!it)
+            with(binding) {
+                comparisonPieView.setVisible(it)
+                comparisonText.setVisible(it)
+                buttonGroupSwitchStat.setVisible(!it)
+            }
         }
 
         statsViewModel.comparisonDetails.observe(viewLifecycleOwner) {
             updatePieData(binding.comparisonPieView, it)
+        }
+
+        statsViewModel.comparisonText.observe(viewLifecycleOwner) {
+            binding.comparisonText.text = it
         }
     }
 

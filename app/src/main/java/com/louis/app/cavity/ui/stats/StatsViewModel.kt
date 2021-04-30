@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.Year
+import com.louis.app.cavity.util.combine
 
 class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
@@ -13,6 +14,10 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     private val comparisonYear = MutableLiveData(groupedYears)
 
     private val statFactory = LiveDataStatsFactory(repository, year, comparisonYear)
+
+    val comparisonText = year.combine(comparisonYear) { year, cYear ->
+        "$year <> $cYear"
+    }
 
     val results = statFactory.results
 
@@ -76,6 +81,10 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun stopComparison() {
         _comparison.value = false
+    }
+
+    fun getComparisonString(): String {
+        return "${year.value} - ${comparisonYear.value}"
     }
 }
 

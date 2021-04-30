@@ -92,4 +92,18 @@
             android:textSize="12sp" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <TextView
+        android:id="@+id/comparisonText"
+        style="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:layout_marginVertical="@dimen/medium_margin"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/textEnd"
+        app:layout_constraintStart_toStartOf="@id/textStart"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="@string/pie_title_color" />
 </androidx.constraintlayout.widget.ConstraintLayout>
