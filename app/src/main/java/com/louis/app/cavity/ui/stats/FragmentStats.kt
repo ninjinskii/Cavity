@@ -71,7 +71,6 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         binding.recyclerView.apply {
             adapter = statsAdapter
             layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
         }
 
         statsViewModel.details.observe(viewLifecycleOwner) {
