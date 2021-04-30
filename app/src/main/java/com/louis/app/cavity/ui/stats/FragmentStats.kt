@@ -34,7 +34,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 
     private fun setupScrollableTab() {
         val tabAdapter = ScrollableTabAdapter<Year>(
-            onTabClick = {
+            onTabClick = { view, _ ->
+                binding.years.moveToView(view)
             },
             onLongTabClick = {
                 statsViewModel.setComparisonYear(it)

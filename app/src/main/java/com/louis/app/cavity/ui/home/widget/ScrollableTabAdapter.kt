@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 
 class ScrollableTabAdapter<T>(
-    private val onTabClick: (Int) -> Unit,
-    private val onLongTabClick: (T) -> Unit,
-    private val selectable: Boolean = false
+    private val onTabClick: (View, Int) -> Unit,
+    private val onLongTabClick: (T) -> Unit
 ) :
     RecyclerView.Adapter<ScrollableTabAdapter<T>.TabViewHolder>() {
 
@@ -45,7 +44,7 @@ class ScrollableTabAdapter<T>(
 
         init {
             view.setOnClickListener {
-                onTabClick(bindingAdapterPosition)
+                onTabClick(it, bindingAdapterPosition)
             }
         }
 

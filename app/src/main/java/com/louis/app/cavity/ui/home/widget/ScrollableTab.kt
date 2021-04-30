@@ -24,6 +24,7 @@ class ScrollableTab @JvmOverloads constructor(
 ) :
     RecyclerView(context, attrs, defStyleAttr) {
 
+    private lateinit var snapHelper: LinearSnapHelper
     private val layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
 
     private var viewPager: ViewPager2? = null
@@ -46,7 +47,7 @@ class ScrollableTab @JvmOverloads constructor(
         setHasFixedSize(true)
         //adapter = tabAdapter
 
-        val snapHelper = LinearSnapHelper()
+        snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(this)
 
         createPagerStyle()
@@ -146,6 +147,14 @@ class ScrollableTab @JvmOverloads constructor(
                 pageChangeListener?.invoke(position)
             }
         })
+    }
+
+    fun moveToView(view: View) {
+        val d = snapHelper.calculateDistanceToFinalSnap(layoutManager, view)
+
+        if (d != null && d[0] != 0) {
+            smoothScrollBy(d[0], 0)
+        }
     }
 
     private fun colorView(child: View, scaleValue: Float) {

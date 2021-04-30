@@ -36,8 +36,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     private fun setupScrollableTab() {
         tabAdapter = ScrollableTabAdapter(
-            onTabClick = {
-                binding.viewPager.currentItem = it
+            onTabClick = { _, position ->
+                binding.viewPager.currentItem = position
             },
             onLongTabClick = {
                 // TODO: show dialog info for county
