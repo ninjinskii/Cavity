@@ -25,11 +25,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.ui.ChipLoader
-import com.louis.app.cavity.ui.history.adapter.HistoryDivider
-import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter
+import com.louis.app.cavity.ui.history.adapter.*
 import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
-import com.louis.app.cavity.ui.history.adapter.ReboundingSwipeActionCallback
-import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
 import com.louis.app.cavity.util.*
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
