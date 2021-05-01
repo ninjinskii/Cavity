@@ -76,7 +76,7 @@ class HistoryRecyclerAdapter(
             is HistoryUiModel.EntryModel ->
                 if (item.model.historyEntry.type == 4)
                     TYPE_TASTING else TYPE_NORMAL
-            else -> throw IllegalStateException("Unknown view type")
+            null -> TYPE_NORMAL
         }
     }
 
