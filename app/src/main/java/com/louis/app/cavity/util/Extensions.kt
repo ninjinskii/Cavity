@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.switchMap
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -89,7 +90,38 @@ operator fun <T> MutableLiveData<MutableList<T>>.minusAssign(item: T) {
     }
 }
 
+fun <A, B, Result> LiveData<A>.nestedSwitchMap(
+    innerTarget: LiveData<B>,
+    value: (A, B) -> LiveData<Result>
+): LiveData<Result> {
+    return this.switchMap { a ->
+        innerTarget.switchMap { b ->
+            value(a, b)
+        }
+    }
+}
+
 fun <A, B, Result> LiveData<A>.combine(
+    other: LiveData<B>,
+    combiner: (A, B) -> Result
+): LiveData<Result> {
+    val result = MediatorLiveData<Result>()
+    result.addSource(this) { a ->
+        val b = other.value
+        if (b != null) {
+            result.value = combiner(a, b)
+        }
+    }
+    result.addSource(other) { b ->
+        val a = this@combine.value
+        if (a != null) {
+            result.value = combiner(a, b)
+        }
+    }
+    return result
+}
+
+fun <A, B, Result> LiveData<A>.combineAsync(
     other: LiveData<B>,
     combiner: (MutableLiveData<Result>, A, B) -> Unit
 ): LiveData<Result> {
@@ -101,7 +133,7 @@ fun <A, B, Result> LiveData<A>.combine(
         }
     }
     result.addSource(other) { b ->
-        val a = this@combine.value
+        val a = this@combineAsync.value
         if (a != null) {
             combiner(result, a, b)
         }

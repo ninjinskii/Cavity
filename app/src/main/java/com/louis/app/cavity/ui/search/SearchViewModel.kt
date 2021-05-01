@@ -12,7 +12,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.ui.search.filters.*
-import com.louis.app.cavity.util.combine
+import com.louis.app.cavity.util.combineAsync
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
@@ -23,7 +23,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     val results: LiveData<List<BoundedBottle>> = repository
         .getBoundedBottles()
-        .combine(globalFilter) { receiver, bottles, filter ->
+        .combineAsync(globalFilter) { receiver, bottles, filter ->
             filter(receiver, bottles, filter)
         }
 

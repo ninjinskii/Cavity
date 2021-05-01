@@ -1,5 +1,6 @@
 package com.louis.app.cavity.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
 import com.louis.app.cavity.model.*
@@ -14,6 +15,28 @@ interface HistoryDao {
 
     @Delete
     fun deleteEntry(entry: HistoryEntry)
+
+    @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId")
+    suspend fun deleteEntriesForBottle(bottleId: Long)
+
+    @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND type = 0 OR type = 2 OR type = 4")
+    suspend fun onBottleConsumptionReverted(bottleId: Long)
+
+    @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND type = 1 OR type = 3")
+    suspend fun clearExistingReplenishments(bottleId: Long)
+
+    @Query("SELECT * FROM history_entry ORDER BY date DESC")
+    fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
+
+    // Divide by 1000 to convert Java milliseconds timestamps to unix timestamp (seconds)
+    @Query(
+        """SELECT DISTINCT strftime('%Y', date / 1000, 'unixepoch') as year,
+                strftime('%s', date / 1000, 'unixepoch', 'start of year') * 1000 as yearStart, 
+                strftime('%s', date / 1000, 'unixepoch', '+1 year', 'start of year') * 1000 as yearEnd
+                FROM history_entry 
+                ORDER BY date ASC"""
+    )
+    fun getYears(): LiveData<List<Year>>
 
     @Transaction
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
@@ -31,17 +54,17 @@ interface HistoryDao {
     @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId ORDER BY date DESC")
     fun getEntriesForBottle(bottleId: Long): PagingSource<Int, BoundedHistoryEntry>
 
+    @Transaction
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
-    fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
+    fun getBoundedEntriesNotPagedNotLive(): List<BoundedHistoryEntry>
 
-    @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId")
-    suspend fun deleteEntriesForBottle(bottleId: Long)
+    @Transaction
+    @Query("SELECT * FROM history_entry WHERE date BETWEEN :start AND :end ORDER BY date DESC")
+    fun getBoundedEntriesBetween(start: Long, end: Long): LiveData<List<BoundedHistoryEntry>>
+}
 
-    @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND type = 0 OR type = 2 OR type = 4")
-    suspend fun onBottleConsumptionReverted(bottleId: Long)
-
-    @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND type = 1 OR type = 3")
-    suspend fun clearExistingReplenishments(bottleId: Long)
+data class Year(val year: String, val yearStart: Long, val yearEnd: Long) {
+    override fun toString() = year
 }
 
 data class BoundedHistoryEntry(

@@ -68,14 +68,21 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     private fun fillTowardsEnd(recycler: RecyclerView.Recycler, extra: Int = 0) {
         val toFill = oHelper.endAfterPadding + extra
         var filled: Int // No used currently. Might be necessary to better compute actual scrolled distance in doOnScroll()
+        val marginX: Int
+        val marginY: Int
         val startPos: Int
         var start: Int
 
         if (childCount > 0) {
             val lastChild = getChildAt(childCount - 1)!!
             val lastChildPos = getPosition(lastChild)
+
+            marginX = lastChild.marginLeft + lastChild.marginRight
+            marginY = lastChild.marginTop + lastChild.marginBottom
+
             val towardsEndSide =
-                if (orientation == VERTICAL) lastChild.measuredHeight else lastChild.measuredWidth
+                if (orientation == VERTICAL) lastChild.measuredHeight + marginY
+                else lastChild.measuredWidth + marginX
 
             this.extra = towardsEndSide
             startPos = lastChildPos + 1
@@ -130,19 +137,30 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     }
 
     private fun fillTowardsStart(recycler: RecyclerView.Recycler) {
+        val marginX: Int
+        val marginY: Int
         var end: Int
+
 
         if (childCount == 0) return
 
         val firstChild = getChildAt(0)!!
         val firstChildPos = getPosition(firstChild)
-        var filled = oHelper.getDecoratedStart(firstChild)
+
+
 
         if (firstChildPos == 0) return
 
+        var filled = oHelper.getDecoratedStart(firstChild)
+
+        marginX = firstChild.marginLeft + firstChild.marginRight
+        marginY = firstChild.marginTop + firstChild.marginBottom
+
         val toFill = oHelper.startAfterPadding
+
         val towardsEndLastSide =
-            if (orientation == VERTICAL) firstChild.measuredHeight else firstChild.measuredWidth
+            if (orientation == VERTICAL) firstChild.measuredHeight + marginY
+            else firstChild.measuredWidth + marginX
 
         end = oHelper.getDecoratedStart(firstChild) + (towardsEndLastSide apply OVERLAPING_FACTOR)
 

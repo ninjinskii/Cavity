@@ -1,12 +1,15 @@
 package com.louis.app.cavity.ui.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
+import com.louis.app.cavity.util.ColorUtil
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
@@ -20,7 +23,13 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     private fun initRecyclerView() {
-        val wineAdapter = WineRecyclerAdapter()
+        val colorUtil = ColorUtil(requireContext())
+        val icons = ContextCompat.getDrawable(requireContext(), R.drawable.ic_bio)!! to
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_glass)!!.also {
+                it.setTint(Color.WHITE)
+            }
+
+        val wineAdapter = WineRecyclerAdapter(colorUtil, icons)
 
         binding.recyclerView.apply {
             layoutManager = HoneycombLayoutManager(

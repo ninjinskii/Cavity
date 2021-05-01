@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.QGrapeAndGrape
+import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.cos
 
@@ -30,16 +31,7 @@ class GrapeBar @JvmOverloads constructor(
 
     private val grapes = mutableListOf<QGrapeAndGrape>()
     private val backgroundColor = context.getColor(R.color.cavity_grey)
-    private val colors = listOf(
-        R.color.cavity_red,
-        R.color.cavity_brown,
-        R.color.cavity_light_green,
-        R.color.cavity_indigo,
-        R.color.cavity_purple,
-        R.color.cavity_yellow
-    )
-        .map { context.getColor(it) }
-        .shuffled()
+    private val colors = ColorUtil(context).randomSet()
 
     private val strokePaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -81,19 +73,24 @@ class GrapeBar @JvmOverloads constructor(
         }
 
         if (empty && anim) {
-            ObjectAnimator.ofFloat(this, "interpolation", 0f, 1f).apply {
-                duration = 800
-                interpolator = FastOutSlowInInterpolator()
-                start()
-            }
+            triggerAnimation()
         } else {
             invalidate()
+        }
+    }
+
+    private fun triggerAnimation() {
+        ObjectAnimator.ofFloat(this, "interpolation", 0f, 1f).apply {
+            duration = 800
+            interpolator = FastOutSlowInInterpolator()
+            start()
         }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         val paddingX = paddingStart + paddingEnd
         val spacing = context.dpToPx(BAR_BOTTOM_SPACING)
+
         progressUnitPixelSize = (w - paddingX) / 100f
         startX = paddingStart.toFloat()
         endX = (w - paddingEnd).toFloat()

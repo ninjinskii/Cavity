@@ -11,10 +11,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetWineOptionsBinding
-import com.louis.app.cavity.ui.WineColorResolver
+import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.setVisible
 
-class WineOptionsBottomSheet : BottomSheetDialogFragment(), WineColorResolver {
+class WineOptionsBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetWineOptionsBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -32,10 +32,12 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment(), WineColorResolver {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val colorUtil = ColorUtil(requireContext())
+
         with(binding) {
             currentWine.wineName.text = args.wineName
             currentWine.wineNaming.text = args.wineNaming
-            currentWine.wineColorIndicator.setColorFilter(resolveColor(args.color))
+            currentWine.wineColorIndicator.setColorFilter(colorUtil.getWineColor(args.color))
             currentWine.organicImage.setVisible(args.isOrganic)
 
             addBottle.setOnClickListener {
@@ -72,8 +74,6 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment(), WineColorResolver {
             }
         }
     }
-
-    override fun getOverallContext() = requireContext()
 
     override fun onDestroyView() {
         super.onDestroyView()

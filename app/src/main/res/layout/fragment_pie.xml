@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <com.louis.app.cavity.ui.stats.widget.PieView
+        android:id="@+id/pieView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/large_margin"
+        android:layout_marginVertical="@dimen/small_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.louis.app.cavity.ui.stats.widget.PieView
+        android:id="@+id/comparisonPieView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/large_margin"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/pieView"
+        app:layout_constraintEnd_toEndOf="@id/pieView"
+        app:layout_constraintStart_toStartOf="@id/pieView"
+        app:layout_constraintTop_toTopOf="@id/pieView" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/textStart"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/textEnd"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:layout_marginVertical="@dimen/medium_margin"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@id/buttonGroupSwitchStat"
+        app:layout_constraintEnd_toEndOf="@id/textEnd"
+        app:layout_constraintStart_toStartOf="@id/textStart"
+        tools:text="@string/pie_title_color" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/buttonGroupSwitchStat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        app:layout_constraintBottom_toBottomOf="@id/pieView"
+        app:layout_constraintEnd_toEndOf="@id/pieView"
+        app:layout_constraintStart_toStartOf="@id/pieView"
+        app:layout_constraintTop_toTopOf="@id/pieView"
+        app:selectionRequired="true"
+        app:singleSelection="true"
+        tools:checkedButton="@id/buttonStock">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonStock"
+            style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stock"
+            android:textSize="12sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonReplenishments"
+            style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/replenishments"
+            android:textSize="12sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonConsumptions"
+            style="@style/Widget.Cavity.Button.OutlinedButton.IconOnly"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/consumptions"
+            android:textSize="12sp" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <TextView
+        android:id="@+id/comparisonText"
+        style="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:layout_marginVertical="@dimen/medium_margin"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/textEnd"
+        app:layout_constraintStart_toStartOf="@id/textStart"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="@string/pie_title_color" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

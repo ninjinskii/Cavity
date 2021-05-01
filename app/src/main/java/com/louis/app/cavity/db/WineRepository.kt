@@ -27,6 +27,7 @@ class WineRepository private constructor(app: Application) {
     private val historyDao = database.historyDao()
     private val friendDao = database.friendDao()
     private val historyXFriendDao = database.historyXFriendDao()
+    private val statsDao = database.statsDao()
 
 
     // Wine
@@ -178,7 +179,8 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertFilledReview(fReview: FReview) = fReviewDao.insertFReview(fReview)
     suspend fun updateFilledReview(fReview: FReview) = fReviewDao.updateFReview(fReview)
     suspend fun deleteFilledReview(fReview: FReview) = fReviewDao.deleteFReview(fReview)
-    suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long) = fReviewDao.deleteFReviewByPk(bottleId, reviewId)
+    suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long) =
+        fReviewDao.deleteFReviewByPk(bottleId, reviewId)
 
     suspend fun insertReviewAndFReview(bottleId: Long, review: Review, fReviewValue: Int) {
         database.withTransaction {
@@ -225,10 +227,15 @@ class WineRepository private constructor(app: Application) {
     // History
     suspend fun updateEntry(entry: HistoryEntry) = historyDao.updateEntry(entry)
     fun getAllEntries() = historyDao.getAllEntries()
+    fun getYears() = historyDao.getYears()
+    fun getBoundedEntriesNotPagedNotLive() = historyDao.getBoundedEntriesNotPagedNotLive()
     fun getEntriesByType(type1: Int, type2: Int) = historyDao.getEntriesByType(type1, type2)
     fun getEntriesForBottle(bottleId: Long) = historyDao.getEntriesForBottle(bottleId)
     fun getFavoriteEntries() = historyDao.getFavoriteEntries()
     fun getAllEntriesNotPagedNotLive() = historyDao.getAllEntriesNotPagedNotLive()
+
+    fun getBoundedEntriesBetween(start: Long, end: Long) =
+        historyDao.getBoundedEntriesBetween(start, end)
 
     suspend fun insertHistoryEntry(entry: HistoryEntry): Long {
         // TODO: handle tasting here
@@ -258,4 +265,34 @@ class WineRepository private constructor(app: Application) {
             insertFriendHistoryXRef(historyXFriends)
         }
     }
+
+
+    // Stats
+    fun getStockByCounty() = statsDao.getStockByCounty()
+    fun getReplenishmentsByCounty(start: Long, end: Long) =
+        statsDao.getReplenishmentsByCounty(start, end)
+
+    fun getConsumptionsByCounty(start: Long, end: Long) =
+        statsDao.getConsumptionsByCounty(start, end)
+
+    fun getStockByColor() = statsDao.getStockByColor()
+    fun getReplenishmentsByColor(start: Long, end: Long) =
+        statsDao.getReplenishmentsByColor(start, end)
+
+    fun getConsumptionsByColor(start: Long, end: Long) =
+        statsDao.getConsumptionsByColor(start, end)
+
+    fun getStockByVintage() = statsDao.getStockByVintage()
+    fun getReplenishmentsByVintage(start: Long, end: Long) =
+        statsDao.getReplenishmentsByVintage(start, end)
+
+    fun getConsumptionsByVintage(start: Long, end: Long) =
+        statsDao.getConsumptionsByVintage(start, end)
+
+    fun getStockByNaming() = statsDao.getStockByNaming()
+    fun getReplenishmentsByNaming(start: Long, end: Long) =
+        statsDao.getReplenishmentsByNaming(start, end)
+
+    fun getConsumptionsByNaming(start: Long, end: Long) =
+        statsDao.getConsumptionsByNaming(start, end)
 }

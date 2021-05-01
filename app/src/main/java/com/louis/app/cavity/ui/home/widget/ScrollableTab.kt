@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.louis.app.cavity.R
-import com.louis.app.cavity.model.County
 import kotlin.math.pow
 
 class ScrollableTab @JvmOverloads constructor(
@@ -25,13 +24,16 @@ class ScrollableTab @JvmOverloads constructor(
 ) :
     RecyclerView(context, attrs, defStyleAttr) {
 
+    private lateinit var snapHelper: LinearSnapHelper
     private val layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
 
     private var viewPager: ViewPager2? = null
     private var isRVScrolling = true
     private var pageChangeListener: ((position: Int) -> Unit)? = null
+    private var tabChangeListener: ((position: Int) -> Unit)? = null
     private var selectedColor = Color.WHITE
     private var unSelectedColor = Color.GRAY
+    private var position = 0
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.ScrollableTab).use {
@@ -45,7 +47,7 @@ class ScrollableTab @JvmOverloads constructor(
         setHasFixedSize(true)
         //adapter = tabAdapter
 
-        val snapHelper = LinearSnapHelper()
+        snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(this)
 
         createPagerStyle()
@@ -75,10 +77,15 @@ class ScrollableTab @JvmOverloads constructor(
 
                 if (newState == SCROLL_STATE_IDLE) {
                     val child = snapHelper.findSnapView(layoutManager) ?: return
-                    if (isRVScrolling) viewPager?.setCurrentItem(
-                        layoutManager.getPosition(child),
-                        true
-                    )
+                    if (isRVScrolling) {
+                        val position = layoutManager.getPosition(child)
+                        viewPager?.setCurrentItem(position, true)
+
+                        if (this@ScrollableTab.position != position) {
+                            this@ScrollableTab.position = position
+                            tabChangeListener?.invoke(position)
+                        }
+                    }
                 }
             }
         })
@@ -104,6 +111,10 @@ class ScrollableTab @JvmOverloads constructor(
             isRVScrolling = true
             false
         }
+    }
+
+    fun addOnTabChangeListener(tabChangeListener: ((position: Int) -> Unit)) {
+        this.tabChangeListener = tabChangeListener
     }
 
     fun addOnPageChangeListener(pageChangeListener: (position: Int) -> Unit) {
@@ -136,6 +147,14 @@ class ScrollableTab @JvmOverloads constructor(
                 pageChangeListener?.invoke(position)
             }
         })
+    }
+
+    fun moveToView(view: View) {
+        val d = snapHelper.calculateDistanceToFinalSnap(layoutManager, view)
+
+        if (d != null && d[0] != 0) {
+            smoothScrollBy(d[0], 0)
+        }
     }
 
     private fun colorView(child: View, scaleValue: Float) {

@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.addbottle.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Checkable
-import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
@@ -16,8 +15,10 @@ import com.louis.app.cavity.databinding.ItemReviewRateBinding
 import com.louis.app.cavity.databinding.ItemReviewStarBinding
 import com.louis.app.cavity.ui.addbottle.viewmodel.FReviewUiModel
 import com.louis.app.cavity.ui.widget.Rule
+import com.louis.app.cavity.util.ColorUtil
 
 class FilledReviewRecyclerAdapter(
+    val colorUtil: ColorUtil,
     val onValueChangedListener: (fReview: FReviewUiModel, checkedButtonIdOrRate: Int) -> Unit,
     val onDeleteListener: (FReviewUiModel) -> Unit
 ) :
@@ -69,15 +70,9 @@ class FilledReviewRecyclerAdapter(
     inner class MedalViewHolder(private val binding: ItemReviewMedalBinding) :
         BaseReviewViewHolder(binding) {
 
-        private val medalColors = listOf(
-            ContextCompat.getColor(itemView.context, R.color.medal_bronze),
-            ContextCompat.getColor(itemView.context, R.color.medal_silver),
-            ContextCompat.getColor(itemView.context, R.color.medal_gold)
-        )
-
         override fun bind(item: FReviewUiModel) = with(binding) {
             contestName.text = item.name
-            medal.setColorFilter(medalColors[item.value])
+            medal.setColorFilter(colorUtil.getMedalColor(item))
 
             rbGroupMedal.apply {
                 clearOnButtonCheckedListeners()

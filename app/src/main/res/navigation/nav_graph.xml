@@ -38,6 +38,9 @@
         <action
             android:id="@+id/homeToHistory"
             app:destination="@id/history_dest" />
+        <action
+            android:id="@+id/homeToStats"
+            app:destination="@id/stats_dest" />
     </fragment>
 
     <dialog
@@ -218,4 +221,10 @@
             android:name="bottleId"
             app:argType="long" />
     </fragment>
+
+    <fragment
+        android:id="@+id/stats_dest"
+        android:name="com.louis.app.cavity.ui.stats.FragmentStats"
+        android:label="FragmentStats"
+        tools:layout="@layout/fragment_stats" />
 </navigation>

@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.bottle.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,9 +11,10 @@ import com.louis.app.cavity.databinding.ItemShowReviewMedalBinding
 import com.louis.app.cavity.databinding.ItemShowReviewRateBinding
 import com.louis.app.cavity.databinding.ItemShowReviewStarBinding
 import com.louis.app.cavity.db.dao.FReviewAndReview
+import com.louis.app.cavity.util.ColorUtil
 
 
-class ShowFilledReviewsRecyclerAdapter :
+class ShowFilledReviewsRecyclerAdapter(private val colorUtil: ColorUtil) :
     ListAdapter<FReviewAndReview, ShowFilledReviewsRecyclerAdapter.BaseReviewViewHolder>(
         ReviewItemDiffCallback()
     ) {
@@ -82,17 +82,12 @@ class ShowFilledReviewsRecyclerAdapter :
 
     inner class MedalViewHolder(itemView: View) : BaseReviewViewHolder(itemView) {
         private val medalBinding = ItemShowReviewMedalBinding.bind(itemView)
-        private val medalColors = listOf(
-            ContextCompat.getColor(itemView.context, R.color.medal_bronze),
-            ContextCompat.getColor(itemView.context, R.color.medal_silver),
-            ContextCompat.getColor(itemView.context, R.color.medal_gold)
-        )
 
         override fun bind(item: FReviewAndReview) = with(medalBinding) {
             val (fReview, review) = item
 
             contestName.text = review.contestName
-            medal.setColorFilter(medalColors[fReview.value])
+            medal.setColorFilter(colorUtil.getMedalColor(fReview))
         }
     }
 

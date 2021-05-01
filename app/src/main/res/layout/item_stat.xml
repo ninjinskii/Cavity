@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:animateLayoutChanges="true">
+
+    <View
+        android:id="@+id/color"
+        android:layout_width="@dimen/history_marker_width"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/medium_margin"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        tools:background="?attr/colorPrimary" />
+
+    <TextView
+        android:id="@+id/label"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/count"
+        app:layout_constraintStart_toEndOf="@id/color"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Alsace" />
+
+    <TextView
+        android:id="@+id/count"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="15" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/xsmall_icon"
+        android:layout_height="@dimen/xsmall_icon"
+        android:layout_margin="@dimen/small_margin"
+        android:src="@drawable/ic_bottle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/comparisonCount"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorOnBackground" />
+
+    <TextView
+        android:id="@+id/comparisonCount"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/comparisonIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="15" />
+
+    <ImageView
+        android:id="@+id/comparisonIcon"
+        android:layout_width="@dimen/xsmall_icon"
+        android:layout_height="@dimen/xsmall_icon"
+        android:layout_margin="@dimen/small_margin"
+        android:src="@drawable/ic_bottle"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorOnBackground" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

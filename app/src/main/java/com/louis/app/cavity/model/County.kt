@@ -14,4 +14,6 @@ data class County(
 ) : Chipable {
     override fun getItemId() = id
     override fun getChipText() = name
+
+    override fun toString() = name
 }

@@ -14,20 +14,19 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
 import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
-import com.louis.app.cavity.ui.WineColorResolver
 import com.louis.app.cavity.ui.history.HistoryUiModel
+import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.setVisible
 
 class HistoryRecyclerAdapter(
-    private val _context: Context,
+    private val context: Context,
+    private val colorUtil: ColorUtil,
     private val onHeaderClick: () -> Unit,
     private val onItemClick: (HistoryUiModel.EntryModel) -> Unit,
     private val onSwiped: (HistoryUiModel.EntryModel) -> Unit,
 ) :
-    PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(
-        HistoryEntryDiffItemCallback()
-    ), WineColorResolver {
+    PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(HistoryEntryDiffItemCallback()) {
 
     companion object {
         const val TYPE_SEPARATOR = 0
@@ -39,10 +38,8 @@ class HistoryRecyclerAdapter(
     private val drawables = mutableMapOf<@DrawableRes Int, Drawable>()
 
     private fun getDrawable(@DrawableRes id: Int): Drawable? {
-        return drawables[id] ?: ContextCompat.getDrawable(_context, id)?.also { drawables[id] = it }
+        return drawables[id] ?: ContextCompat.getDrawable(context, id)?.also { drawables[id] = it }
     }
-
-    override fun getOverallContext() = _context
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
@@ -70,6 +67,7 @@ class HistoryRecyclerAdapter(
         }
     }
 
+    // TODO: handle null item (might happen when navigating too far far away date on lower end devices)
     override fun getItemViewType(position: Int): Int {
         return when (val item = getItem(position)) {
             is HistoryUiModel.HeaderModel -> TYPE_SEPARATOR
@@ -105,8 +103,8 @@ class HistoryRecyclerAdapter(
 
             val (markerColor, icon, label, _, showFriends) = entry.model.historyEntry.getResources()
             val (bottle, wine) = entry.model.bottleAndWine
-            val resolvedWineColor = resolveColor(wine.color)
-            val resolvedMarkerColor = _context.getColor(markerColor)
+            val resolvedWineColor = colorUtil.getWineColor(wine)
+            val resolvedMarkerColor = colorUtil.getColor(markerColor, ColorUtil.ColorCategory.OTHER)
 
             with(binding) {
                 wineColorNameNaming.wineColorIndicator.setColorFilter(resolvedWineColor)
