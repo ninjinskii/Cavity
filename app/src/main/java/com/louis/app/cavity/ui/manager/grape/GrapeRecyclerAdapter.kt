@@ -36,7 +36,7 @@ class GrapeRecyclerAdapter(
             oldItem.grape.id == newItem.grape.id
 
         override fun areContentsTheSame(oldItem: GrapeWithQGrapes, newItem: GrapeWithQGrapes) =
-            oldItem.grape == newItem.grape && oldItem.qGrapes.size == oldItem.qGrapes.size
+            oldItem.grape == newItem.grape && oldItem.qGrapes.size == newItem.qGrapes.size
     }
 
     inner class GrapeViewHolder(private val binding: ItemGrapeManagerBinding) :
