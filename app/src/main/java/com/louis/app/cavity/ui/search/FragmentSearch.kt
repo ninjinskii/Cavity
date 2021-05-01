@@ -160,10 +160,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     // Add shadow when RV is not on top
-                    if (!recyclerView.canScrollVertically(-1))
-                        setHeaderShadow(false)
-                    else
-                        setHeaderShadow(true)
+                    setHeaderShadow(recyclerView.canScrollVertically(-1))
                 }
             })
         }
@@ -401,6 +398,12 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun loadHideShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.hide_elevation)
+
+    override fun onResume() {
+        super.onResume()
+
+        setHeaderShadow(binding.recyclerView.canScrollVertically(-1))
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
