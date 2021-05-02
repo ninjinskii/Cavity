@@ -60,6 +60,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
             withContext(Default) {
                 var headerCount = 0
                 var currentDay = -1L
+                var dateFounded = false
 
                 for ((position, entry) in entries.withIndex()) {
                     val day = DateFormatter.roundToDay(entry.date)
@@ -69,13 +70,16 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                         headerCount++
                     }
 
-                    if (DateFormatter.roundToDay(entry.date) <= timestamp) {
+                    if (day <= timestamp) {
+                        dateFounded = true
                         _scrollTo.postOnce(position + headerCount - offset)
                         break
                     }
 
-                    // No date founded, scroll to bottom
-                    _scrollTo.postOnce(position + headerCount)
+                }
+
+                if (!dateFounded) {
+                    _scrollTo.postOnce(entries.size + headerCount)
                 }
             }
         }
@@ -115,7 +119,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun getDataSource(filter: HistoryFilter):
-        PagingSource<Int, BoundedHistoryEntry> {
+            PagingSource<Int, BoundedHistoryEntry> {
         return when (filter) {
             is HistoryFilter.TypeFilter -> when (filter.chipId) {
                 R.id.chipReplenishments -> repository.getEntriesByType(1, 3)

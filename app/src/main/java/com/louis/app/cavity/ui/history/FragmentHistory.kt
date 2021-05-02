@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSmoothScroller
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.ChipGroup
@@ -30,7 +29,6 @@ import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter.Companion.
 import com.louis.app.cavity.util.*
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
-    private lateinit var scroller: LinearSmoothScroller
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var colorUtil: ColorUtil
     private var _binding: FragmentHistoryBinding? = null
@@ -43,8 +41,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         _binding = FragmentHistoryBinding.bind(view)
 
         setupNavigation(binding.toolbar)
-
-        scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 20)
 
         colorUtil = ColorUtil(requireContext())
 
@@ -104,11 +100,12 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     private fun observe() {
         historyViewModel.scrollTo.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { pos ->
+                L.v("Start scrolling to position: $pos")
+                val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 5)
                 scroller.targetPosition = pos
                 binding.historyRecyclerView.layoutManager?.startSmoothScroll(scroller)
             }
         }
-
         historyViewModel.selectedEntry.observe(viewLifecycleOwner) {
             bindBottomSheet(it)
         }
