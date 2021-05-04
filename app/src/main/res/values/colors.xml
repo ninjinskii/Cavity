@@ -2,6 +2,7 @@
 <resources>
     <color name="colorTest">#972940</color>
 
+    <!-- #d6aa50 -->
     <color name="cavity_gold">#a37e2c</color>
     <color name="cavity_green">#81c784</color>
     <color name="cavity_light_green">#aed581</color>
