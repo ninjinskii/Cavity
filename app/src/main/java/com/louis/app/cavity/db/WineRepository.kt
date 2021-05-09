@@ -231,6 +231,7 @@ class WineRepository private constructor(app: Application) {
     fun getBoundedEntriesNotPagedNotLive() = historyDao.getBoundedEntriesNotPagedNotLive()
     fun getEntriesByType(type1: Int, type2: Int) = historyDao.getEntriesByType(type1, type2)
     fun getEntriesForBottle(bottleId: Long) = historyDao.getEntriesForBottle(bottleId)
+    fun getEntriesForDate(date: Long) = historyDao.getEntriesForDate(date)
     fun getFavoriteEntries() = historyDao.getFavoriteEntries()
     fun getAllEntriesNotPagedNotLive() = historyDao.getAllEntriesNotPagedNotLive()
 

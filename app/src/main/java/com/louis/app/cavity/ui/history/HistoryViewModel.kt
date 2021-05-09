@@ -13,12 +13,15 @@ import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val repository = WineRepository.getInstance(app)
 
+    // Reuse when find a way to jump scroll into paged list
     private val _scrollTo = MutableLiveData<Event<Int>>()
     val scrollTo: LiveData<Event<Int>>
         get() = _scrollTo
@@ -52,6 +55,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    // Reuse when find a way to jump scroll into paged list
     fun requestScrollToDate(timestamp: Long) {
         viewModelScope.launch(IO) {
             val entries = repository.getAllEntriesNotPagedNotLive()
@@ -131,6 +135,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                 else -> repository.getAllEntries()
             }
             is HistoryFilter.BottleFilter -> repository.getEntriesForBottle(filter.bottleId)
+            is HistoryFilter.DateFilter -> repository.getEntriesForDate(filter.date)
             else -> repository.getAllEntries()
         }
     }
@@ -138,6 +143,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 }
 
 sealed class HistoryFilter {
+    class DateFilter(val date: Long): HistoryFilter() /* Workaround for paging fast scroll */
     class TypeFilter(@IdRes val chipId: Int) : HistoryFilter()
     class BottleFilter(val bottleId: Long) : HistoryFilter()
     object NoFilter : HistoryFilter()

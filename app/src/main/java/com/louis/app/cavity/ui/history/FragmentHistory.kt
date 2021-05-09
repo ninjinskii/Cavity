@@ -98,14 +98,16 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun observe() {
-        historyViewModel.scrollTo.observe(viewLifecycleOwner) {
+        // Reuse when find a way to jump scroll into paged list
+        /*historyViewModel.scrollTo.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { pos ->
                 L.v("Start scrolling to position: $pos")
                 val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 5)
                 scroller.targetPosition = pos
                 binding.historyRecyclerView.layoutManager?.startSmoothScroll(scroller)
             }
-        }
+        }*/
+
         historyViewModel.selectedEntry.observe(viewLifecycleOwner) {
             bindBottomSheet(it)
         }
@@ -162,7 +164,10 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         datePicker.addOnPositiveButtonClickListener {
             it?.let { timestamp ->
-                historyViewModel.requestScrollToDate(timestamp)
+                // TODO: Reuse when find a way to jump scroll into paged list
+                //historyViewModel.requestScrollToDate(timestamp)
+
+                historyViewModel.setFilter(HistoryFilter.DateFilter(timestamp))
             }
         }
 
