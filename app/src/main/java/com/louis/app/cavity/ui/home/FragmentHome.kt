@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
@@ -11,6 +12,9 @@ import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.setupNavigation
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
     private lateinit var tabAdapter: ScrollableTabAdapter<County>
@@ -28,7 +32,10 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
-        setupNavigation(binding.appBar.toolbar)
+        // Hack. On app launch, top bar is not bounded if not doing this
+        lifecycleScope.launch(Main) {
+            setupNavigation(binding.appBar.toolbar)
+        }
 
         setupScrollableTab()
         setListeners()

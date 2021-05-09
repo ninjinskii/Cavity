@@ -4,30 +4,30 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
 import com.louis.app.cavity.util.showSnackbar
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
-    lateinit var navView: NavigationView
-    lateinit var drawer: DrawerLayout
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
-        exposeNavigationStuff()
-    }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment)
+        val navController = navHostFragment?.findNavController()
 
-    private fun exposeNavigationStuff() {
-        navView = binding.navView
-        drawer = binding.drawer
+        binding.navView.setupWithNavController(navController ?: return)
     }
 
     override fun onBackPressed() {
         if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START)
+            binding.drawer.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }

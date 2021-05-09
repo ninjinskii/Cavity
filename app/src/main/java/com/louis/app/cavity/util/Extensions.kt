@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -19,6 +20,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.ActivityMain
 
 // Boolean and Int helpers for database compatibility
@@ -161,13 +163,9 @@ fun BottomSheetBehavior<ConstraintLayout>.toggleState() {
 
 // Navigation
 fun Fragment.setupNavigation(toolbar: Toolbar) {
-    val act = activity as ActivityMain
-
+    val drawer = (activity as ActivityMain).findViewById<DrawerLayout>(R.id.drawer)
     val navController = findNavController()
-    val appBarConfiguration = AppBarConfiguration(navController.graph, act.drawer)
-
-    toolbar.setupWithNavController(navController, appBarConfiguration)
-    act.navView.setupWithNavController(navController)
+    toolbar.setupWithNavController(navController, drawer)
 }
 
 // String
