@@ -162,12 +162,12 @@ abstract class CavityDatabase : RoomDatabase() {
                     val bottlesList = List(30000) {
                         Bottle(
                             0,
-                            (0..50).random().toLong(),
+                            (1..50).random().toLong(),
                             "20${(10..21).random()}".toInt(),
                             "20${(21..35).random()}".toInt(),
                             (0..1).random(),
                             1,
-                            bottles.random().toFloat(),
+                            price = bottles.random().toFloat(),
                             "€",
                             "",
                             buyLocations.random(),
@@ -255,20 +255,20 @@ abstract class CavityDatabase : RoomDatabase() {
 
                         insertEntry(entries2021)
 
-                        List(20000) {
+                        val otherEntries = List(20000) {
                             val type = types.random()
-                            insertEntry(
-                                HistoryEntry(
-                                    0,
-                                    tweny.random(),
-                                    it.toLong() + 110,
-                                    null,
-                                    "Commentaire",
-                                    type,
-                                    0
-                                )
+                            HistoryEntry(
+                                0,
+                                tweny.random(),
+                                it.toLong() + 110,
+                                null,
+                                "Commentaire",
+                                type,
+                                0
                             )
                         }
+
+                        insertEntry(otherEntries)
                     }
                 }
             }
