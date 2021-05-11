@@ -10,6 +10,9 @@ interface WineDao {
     @Insert
     suspend fun insertWine(wine: Wine)
 
+    @Insert
+    suspend fun insertWine(wine: List<Wine>)
+
     @Update
     suspend fun updateWine(wine: Wine)
 

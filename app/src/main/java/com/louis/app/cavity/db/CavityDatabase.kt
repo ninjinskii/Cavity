@@ -144,45 +144,41 @@ abstract class CavityDatabase : RoomDatabase() {
                         "Clarinette"
                     )
 
-                    repeat(100) {
-                        wineDao!!.insertWine(
-                            Wine(
-                                0,
-                                wineNames.random(),
-                                wineNamings.random(),
-                                wineColors.random(),
-                                "",
-                                (0..1).random(),
-                                "",
-                                counties.random().toLong(),
-                            )
+                    val wines = List(100) {
+                        Wine(
+                            0,
+                            wineNames.random(),
+                            wineNamings.random(),
+                            wineColors.random(),
+                            "",
+                            (0..1).random(),
+                            "",
+                            counties.random().toLong(),
                         )
                     }
 
-                    repeat(30000) {
-                        try {
-                            bottleDao!!.insertBottle(
-                                Bottle(
-                                    0,
-                                    (0..50).random().toLong(),
-                                    "20${(10..21).random()}".toInt(),
-                                    "20${(21..35).random()}".toInt(),
-                                    (0..1).random(),
-                                    1,
-                                    bottles.random().toFloat(),
-                                    "€",
-                                    "",
-                                    buyLocations.random(),
-                                    (1486149968..System.currentTimeMillis()).random(),
-                                    "",
-                                    "",
-                                    0
-                                )
-                            )
-                        } catch (e: Exception) {
-                            // Do nothing
-                        }
+                    wineDao!!.insertWine(wines)
+
+                    val bottlesList = List(30000) {
+                        Bottle(
+                            0,
+                            (0..50).random().toLong(),
+                            "20${(10..21).random()}".toInt(),
+                            "20${(21..35).random()}".toInt(),
+                            (0..1).random(),
+                            1,
+                            bottles.random().toFloat(),
+                            "€",
+                            "",
+                            buyLocations.random(),
+                            (1486149968..System.currentTimeMillis()).random(),
+                            "",
+                            "",
+                            0
+                        )
                     }
+
+                    bottleDao!!.insertBottle(bottlesList)
 
                     with(grapeDao!!) {
                         insertGrape(Grape(0, "Syrah"))
@@ -244,49 +240,34 @@ abstract class CavityDatabase : RoomDatabase() {
                         val historyBottlesLastYear = 401L..29999L
                         val types = listOf(0, 0, 0, 1, 1, 1, 2, 3)
 
-                        // 2021 and more
-                        historyBottles.forEach {
+                        val entries2021 = List(99) {
+                            val type = types.random()
+                            HistoryEntry(
+                                0,
+                                twenyone.random(),
+                                it.toLong() + 1,
+                                null,
+                                "Commentaire",
+                                type,
+                                0
+                            )
+                        }
+
+                        insertEntry(entries2021)
+
+                        List(20000) {
                             val type = types.random()
                             insertEntry(
                                 HistoryEntry(
                                     0,
-                                    twenyone.random(),
-                                    it,
+                                    tweny.random(),
+                                    it.toLong() + 110,
                                     null,
                                     "Commentaire",
                                     type,
                                     0
                                 )
                             )
-
-                            if (type == 0) {
-                                val bottle = bottleDao!!.getBottleByIdNotLive(it)
-                                bottleDao.updateBottle(bottle.copy(consumed = 1))
-                            }
-                        }
-
-                        // 2020
-                        historyBottlesLastYear.forEach {
-                            try {
-                                val type = types.random()
-                                insertEntry(
-                                    HistoryEntry(
-                                        0,
-                                        tweny.random(),
-                                        it,
-                                        null,
-                                        "Commentaire",
-                                        type,
-                                        0
-                                    )
-                                )
-
-                                if (type == 0) {
-                                    val bottle = bottleDao!!.getBottleByIdNotLive(it)
-                                    bottleDao.updateBottle(bottle.copy(consumed = 1))
-                                }
-                            } catch (e: Exception) {
-                            }
                         }
                     }
                 }

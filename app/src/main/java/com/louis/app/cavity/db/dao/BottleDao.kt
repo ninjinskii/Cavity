@@ -9,6 +9,9 @@ interface BottleDao {
     @Insert
     suspend fun insertBottle(bottle: Bottle): Long
 
+    @Insert
+    suspend fun insertBottle(bottle: List<Bottle>)
+
     @Update
     suspend fun updateBottle(bottle: Bottle)
 
