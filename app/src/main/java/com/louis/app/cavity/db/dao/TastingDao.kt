@@ -21,8 +21,8 @@ interface TastingDao {
 data class TastingWithBottles(
     @Embedded var tasting: Tasting,
     @Relation(
-        parentColumn = "tasting_id",
-        entityColumn = "id"
+        parentColumn = "id",
+        entityColumn = "tasting_id"
     )
     var bottles: List<Bottle>
 )
