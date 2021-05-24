@@ -10,8 +10,7 @@ data class Tasting(
     val id: Long = 0,
     val date: Long,
     val opportunity: String,
-    @ColumnInfo(name = "wine_temp") val wineTemp: Int = -1,
-    @ColumnInfo(name = "cellar_temp") val cellarTemp: Int = -1,
-    @ColumnInfo(name = "fridge_temp") val fridgeTemp: Int = -1,
-    @ColumnInfo(name = "tasting_id") val tastingId: Long? = null
+    @ColumnInfo(name = "cellar_temp") val cellarTemp: Int = 15,
+    @ColumnInfo(name = "fridge_temp") val fridgeTemp: Int = 5,
+    @ColumnInfo(name = "freezer_temp") val freezerTemp: Int = -18,
 )
