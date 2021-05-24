@@ -36,7 +36,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         get() = _filter
 
     val entries: LiveData<PagingData<HistoryUiModel>> = filter.switchMap {
-        Pager(PagingConfig(pageSize = 100, prefetchDistance = 10, enablePlaceholders = true)) {
+        Pager(PagingConfig(pageSize = 50, prefetchDistance = 20, enablePlaceholders = true)) {
             getDataSource(it)
         }.liveData.map { pagingData ->
             pagingData

@@ -72,8 +72,7 @@ class HistoryRecyclerAdapter(
         return when (val item = getItem(position)) {
             is HistoryUiModel.HeaderModel -> TYPE_SEPARATOR
             is HistoryUiModel.EntryModel ->
-                if (item.model.historyEntry.type == 4)
-                    TYPE_TASTING else TYPE_NORMAL
+                if (item.model.historyEntry.type == 4) TYPE_TASTING else TYPE_NORMAL
             null -> TYPE_NORMAL
         }
     }

@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.ChipGroup
@@ -27,6 +28,9 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.history.adapter.*
 import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
 import com.louis.app.cavity.util.*
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -104,6 +108,16 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 L.v("Start scrolling to position: $pos")
                 val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 5)
                 scroller.targetPosition = pos
+                val item = (binding.historyRecyclerView.adapter as HistoryRecyclerAdapter)
+
+
+                lifecycleScope.launch(Main) {
+                    repeat(20) {
+                        delay(100)
+                        item.refresh()
+                    }
+                }
+
                 binding.historyRecyclerView.layoutManager?.startSmoothScroll(scroller)
             }
         }*/

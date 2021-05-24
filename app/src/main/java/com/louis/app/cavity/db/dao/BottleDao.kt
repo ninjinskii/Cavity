@@ -10,7 +10,7 @@ interface BottleDao {
     suspend fun insertBottle(bottle: Bottle): Long
 
     @Insert
-    fun insertBottle(bottle: List<Bottle>)
+    suspend fun insertBottle(bottle: List<Bottle>)
 
     @Update
     suspend fun updateBottle(bottle: Bottle)
@@ -43,7 +43,7 @@ interface BottleDao {
     suspend fun revertBottleConsumption(bottleId: Long)
 
     @Transaction
-    @Query("SELECT * FROM bottle WHERE bottle.consumed = 0")
+    @Query("SELECT * FROM bottle WHERE consumed = 0")
     fun getBoundedBottles(): LiveData<List<BoundedBottle>>
 
     @Transaction
