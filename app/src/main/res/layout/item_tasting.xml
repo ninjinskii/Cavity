@@ -5,44 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <include
-        android:id="@+id/wineColorNameNaming"
-        layout="@layout/wine_color_name_naming"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/opportunity"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
-        app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Anniversaire Jean-Paul" />
 
     <TextView
-        android:id="@+id/vintage"
+        android:id="@+id/date"
+        style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
-        app:layout_constraintEnd_toEndOf="@id/wineColorNameNaming"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toStartOf="@id/wineColorNameNaming"
-        app:layout_constraintTop_toBottomOf="@+id/wineColorNameNaming"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="2015" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/opportunity"
+        tools:text="05/12/20" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
+    <TextView
+        android:id="@+id/bottleCount"
+        style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.60" />
+        android:layout_margin="@dimen/small_margin"
+        app:drawableEndCompat="@drawable/ic_bottle"
+        app:drawableTint="?attr/colorOnBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="5" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/consumed"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+    <TextView
+        android:id="@+id/friendCount"
+        style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/consumed"
+        android:layout_margin="@dimen/small_margin"
+        app:drawableEndCompat="@drawable/ic_person"
+        app:drawableTint="?attr/colorOnBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guideline"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/bottleCount"
+        tools:text="3" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
