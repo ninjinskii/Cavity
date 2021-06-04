@@ -26,8 +26,8 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val scrollTo: LiveData<Event<Int>>
         get() = _scrollTo
 
-    private val _selectedEntry = MutableLiveData<BoundedHistoryEntry>(null)
-    val selectedEntry: LiveData<BoundedHistoryEntry>
+    private val _selectedEntry = MutableLiveData<BoundedHistoryEntry?>()
+    val selectedEntry: LiveData<BoundedHistoryEntry?>
         get() = _selectedEntry
 
     // TODO: consider removing public part if not needed
@@ -135,7 +135,6 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                 else -> repository.getAllEntries()
             }
             is HistoryFilter.BottleFilter -> repository.getEntriesForBottle(filter.bottleId)
-            is HistoryFilter.DateFilter -> repository.getEntriesForDate(filter.date)
             else -> repository.getAllEntries()
         }
     }
@@ -143,7 +142,6 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 }
 
 sealed class HistoryFilter {
-    class DateFilter(val date: Long): HistoryFilter() /* Workaround for paging fast scroll */
     class TypeFilter(@IdRes val chipId: Int) : HistoryFilter()
     class BottleFilter(val bottleId: Long) : HistoryFilter()
     object NoFilter : HistoryFilter()

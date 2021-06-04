@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSmoothScroller
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.ChipGroup
@@ -102,25 +101,21 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun observe() {
-        // Reuse when find a way to jump scroll into paged list
-        /*historyViewModel.scrollTo.observe(viewLifecycleOwner) {
+        historyViewModel.scrollTo.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { pos ->
                 L.v("Start scrolling to position: $pos")
                 val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 5)
                 scroller.targetPosition = pos
-                val item = (binding.historyRecyclerView.adapter as HistoryRecyclerAdapter)
-
+//                val adapter = (binding.historyRecyclerView.adapter as HistoryRecyclerAdapter)
+//                adapter.triggerLoadForPosition(pos)
 
                 lifecycleScope.launch(Main) {
-                    repeat(20) {
-                        delay(100)
-                        item.refresh()
-                    }
+                    delay(1000)
+                    binding.historyRecyclerView.layoutManager?.startSmoothScroll(scroller)
                 }
 
-                binding.historyRecyclerView.layoutManager?.startSmoothScroll(scroller)
             }
-        }*/
+        }
 
         historyViewModel.selectedEntry.observe(viewLifecycleOwner) {
             bindBottomSheet(it)
@@ -178,10 +173,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         datePicker.addOnPositiveButtonClickListener {
             it?.let { timestamp ->
-                // TODO: Reuse when find a way to jump scroll into paged list
-                //historyViewModel.requestScrollToDate(timestamp)
-
-                historyViewModel.setFilter(HistoryFilter.DateFilter(timestamp))
+                historyViewModel.requestScrollToDate(timestamp)
             }
         }
 
