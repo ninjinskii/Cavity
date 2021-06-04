@@ -152,7 +152,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
             findNavController().navigate(action)
         }
 
-        binding.recyclerView.apply {
+        binding.bottleList.apply {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
             adapter = bottlesAdapter
@@ -305,7 +305,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun setListeners() {
         binding.bottomSheet.setOnClickListener {
             if (bottomSheetBehavior.isCollapsed()) {
-                binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+                binding.bottleList.removeOnItemTouchListener(recyclerViewDisabler)
                 binding.toggleBackdrop.toggle()
             }
         }
@@ -344,12 +344,12 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                 isExpanded() -> {
                     toggleState()
                     binding.scrim.alpha = 0.76f
-                    binding.recyclerView.addOnItemTouchListener(recyclerViewDisabler)
+                    binding.bottleList.addOnItemTouchListener(recyclerViewDisabler)
                 }
                 isCollapsed() -> {
                     toggleState()
                     binding.scrim.alpha = 0f
-                    binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+                    binding.bottleList.removeOnItemTouchListener(recyclerViewDisabler)
                 }
             }
         }
@@ -402,7 +402,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     override fun onResume() {
         super.onResume()
 
-        setHeaderShadow(binding.recyclerView.canScrollVertically(-1))
+        setHeaderShadow(binding.bottleList.canScrollVertically(-1))
     }
 
     override fun onDestroyView() {

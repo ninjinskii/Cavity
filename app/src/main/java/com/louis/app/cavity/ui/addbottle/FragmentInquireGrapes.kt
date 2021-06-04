@@ -45,7 +45,7 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             },
         )
 
-        binding.recyclerView.apply {
+        binding.grapeList.apply {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
             adapter = quantifiedGrapeAdapter

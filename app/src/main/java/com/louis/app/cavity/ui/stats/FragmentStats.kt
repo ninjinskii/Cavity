@@ -69,7 +69,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     private fun initRecyclerViews() {
         val statsAdapter = StatsRecyclerAdapter()
 
-        binding.recyclerView.apply {
+        binding.statDetailsList.apply {
             adapter = statsAdapter
             layoutManager = LinearLayoutManager(context)
         }

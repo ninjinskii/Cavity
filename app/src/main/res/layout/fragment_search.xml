@@ -509,7 +509,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/bottleList"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@color/surface_elevation_4dp"

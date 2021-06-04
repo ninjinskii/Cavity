@@ -51,7 +51,7 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
             }
         )
 
-        binding.recyclerView.apply {
+        binding.reviewList.apply {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
             adapter = reviewAdapter

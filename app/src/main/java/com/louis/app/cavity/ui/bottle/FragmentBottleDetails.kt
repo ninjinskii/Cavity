@@ -75,7 +75,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         val colorUtil = ColorUtil(requireContext())
         val reviewAdapter = ShowFilledReviewsRecyclerAdapter(colorUtil)
 
-        binding.reviewRecyclerView.apply {
+        binding.reviewList.apply {
             layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
             adapter = reviewAdapter

@@ -396,7 +396,7 @@
                             app:layout_constraintTop_toTopOf="@id/reviewTitleIcon" />
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/reviewRecyclerView"
+                            android:id="@+id/reviewList"
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
                             android:layout_margin="@dimen/small_margin"
