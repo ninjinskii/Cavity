@@ -135,6 +135,12 @@
     </fragment>
 
     <fragment
+        android:id="@+id/tasting_dest"
+        android:name="com.louis.app.cavity.ui.tasting.FragmentTastings"
+        android:label="FragmentTasting"
+        tools:layout="@layout/fragment_tastings" />
+
+    <fragment
         android:id="@+id/fragmentBottleDetails"
         android:name="com.louis.app.cavity.ui.bottle.FragmentBottleDetails"
         android:label="FragmentBottleDetails"
@@ -197,9 +203,9 @@
             app:argType="long" />
         <action
             android:id="@+id/historyToBottle"
+            app:destination="@id/fragmentBottleDetails"
             app:popUpTo="@id/fragmentBottleDetails"
-            app:popUpToInclusive="true"
-            app:destination="@id/fragmentBottleDetails" />
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
