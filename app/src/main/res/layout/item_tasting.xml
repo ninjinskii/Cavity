@@ -21,7 +21,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/opportunity"
         tools:text="05/12/20" />
@@ -34,22 +33,23 @@
         android:layout_margin="@dimen/small_margin"
         app:drawableEndCompat="@drawable/ic_bottle"
         app:drawableTint="?attr/colorOnBackground"
+        app:layout_constraintBottom_toBottomOf="@id/date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="5" />
 
-    <TextView
-        android:id="@+id/friendCount"
-        style="@style/TextAppearance.MaterialComponents.Body2"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/friendList"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
-        app:drawableEndCompat="@drawable/ic_person"
-        app:drawableTint="?attr/colorOnBackground"
+        android:clipToPadding="true"
+        android:orientation="horizontal"
+        android:padding="@dimen/small_margin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottleCount"
-        tools:text="3" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date"
+        tools:listitem="@layout/chip_action" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

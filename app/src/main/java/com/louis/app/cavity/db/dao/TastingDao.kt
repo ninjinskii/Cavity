@@ -36,3 +36,18 @@ data class TastingWithFriends(
     )
     val friends: List<Friend>
 )
+
+data class BoundedTasting(
+    @Embedded val tasting: Tasting,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "tasting_id"
+    )
+    var bottles: List<Bottle>,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "tasting_id",
+        associateBy = Junction(TastingXFriend::class)
+    )
+    val friends: List<Friend>
+)
