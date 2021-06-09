@@ -28,6 +28,7 @@ class WineRepository private constructor(app: Application) {
     private val friendDao = database.friendDao()
     private val historyXFriendDao = database.historyXFriendDao()
     private val statsDao = database.statsDao()
+    private val tastingDao = database.tastingDao()
 
 
     // Wine
@@ -296,4 +297,8 @@ class WineRepository private constructor(app: Application) {
 
     fun getConsumptionsByNaming(start: Long, end: Long) =
         statsDao.getConsumptionsByNaming(start, end)
+
+
+    // Tastings
+    fun getFutureTastings() = tastingDao.getFutureTastings()
 }

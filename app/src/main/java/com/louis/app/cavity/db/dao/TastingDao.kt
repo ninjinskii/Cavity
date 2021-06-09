@@ -1,5 +1,6 @@
 package com.louis.app.cavity.db.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Friend
@@ -16,6 +17,9 @@ interface TastingDao {
 
     @Delete
     suspend fun deleteTasting(tasting: Tasting)
+
+    @Query("SELECT * FROM tasting WHERE date >= :beyond")
+    fun getFutureTastings(beyond: Long = System.currentTimeMillis()): LiveData<List<BoundedTasting>>
 }
 
 data class TastingWithBottles(

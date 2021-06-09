@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
+import com.louis.app.cavity.util.setupNavigation
 
 class FragmentTastings : Fragment(R.layout.fragment_tastings) {
     private var _binding: FragmentTastingsBinding? = null
@@ -18,6 +19,8 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTastingsBinding.bind(view)
+
+        setupNavigation(binding.appBar.toolbar)
 
         initRecyclerView()
     }
