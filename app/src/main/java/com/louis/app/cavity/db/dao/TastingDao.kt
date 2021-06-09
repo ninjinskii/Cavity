@@ -18,8 +18,9 @@ interface TastingDao {
     @Delete
     suspend fun deleteTasting(tasting: Tasting)
 
+    @Transaction
     @Query("SELECT * FROM tasting WHERE date >= :beyond")
-    fun getFutureTastings(beyond: Long = System.currentTimeMillis()): LiveData<List<BoundedTasting>>
+    fun getFutureTastings(beyond: Long = 0L): LiveData<List<BoundedTasting>>
 }
 
 data class TastingWithBottles(
@@ -50,8 +51,12 @@ data class BoundedTasting(
     var bottles: List<Bottle>,
     @Relation(
         parentColumn = "id",
-        entityColumn = "tasting_id",
-        associateBy = Junction(TastingXFriend::class)
+        entityColumn = "id",
+        associateBy = Junction(
+            value = TastingXFriend::class,
+            parentColumn = "tasting_id",
+            entityColumn = "friend_id",
+        )
     )
     val friends: List<Friend>
 )

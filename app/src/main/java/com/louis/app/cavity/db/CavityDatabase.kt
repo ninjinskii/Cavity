@@ -38,11 +38,11 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun reviewDao(): ReviewDao
     abstract fun fReviewDao(): FilledReviewDao
     abstract fun historyDao(): HistoryDao
+    abstract fun historyXFriendDao(): HistoryXFriendDao
     abstract fun friendDao(): FriendDao
+    abstract fun statsDao(): StatsDao
     abstract fun tastingDao(): TastingDao
     abstract fun tastingXFriendDao(): TastingXFriendDao
-    abstract fun historyXFriendDao(): HistoryXFriendDao
-    abstract fun statsDao(): StatsDao
 
     companion object {
         @Volatile
@@ -269,6 +269,37 @@ abstract class CavityDatabase : RoomDatabase() {
                         }
 
                         insertEntry(otherEntries)
+                    }
+
+                    with(tastingDao!!) {
+                        val opportunities =
+                            listOf(
+                                "Anniversaire Jean",
+                                "Pot de départ Guy",
+                                "Fête",
+                                "Fête des voisins"
+                            )
+                        val time = System.currentTimeMillis()
+                        val tastings = List(10) {
+                            Tasting(0, time + 100000, opportunities.random())
+                        }
+
+                        val tastingsXFriends = listOf(
+                            TastingXFriend(1, 1),
+                            TastingXFriend(1, 2),
+                            TastingXFriend(1, 3),
+                            TastingXFriend(1, 4),
+                            TastingXFriend(1, 5),
+                            TastingXFriend(2, 2)
+                        )
+
+                        tastings.forEach {
+                            insertTasting(it)
+                        }
+
+                        tastingsXFriends.forEach {
+                            tastingFriendXRefDao?.insertTastingXFriend(it)
+                        }
                     }
                 }
             }
