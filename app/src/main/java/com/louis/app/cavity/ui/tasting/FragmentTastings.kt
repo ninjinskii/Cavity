@@ -16,7 +16,7 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
     private val binding get() = _binding!!
     private val tastingViewModel: TastingViewModel by viewModels()
     private val friendViewPool = RecyclerView.RecycledViewPool().apply {
-        setMaxRecycledViews(R.layout.item_friend_chip, 8)
+        setMaxRecycledViews(R.layout.chip_friend, 8)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

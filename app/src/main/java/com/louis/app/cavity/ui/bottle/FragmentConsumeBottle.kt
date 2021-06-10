@@ -61,8 +61,10 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
+                .toInflate(R.layout.chip_friend_entry)
                 .load(toInflate.toList())
                 .into(binding.friendsChipGroup)
+                .useAvatar(true)
                 .build()
                 .go()
         }

@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.HorizontalScrollView
+import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.postDelayed
@@ -10,6 +11,8 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Chipable
+import com.louis.app.cavity.model.Friend
+import com.louis.app.cavity.util.AvatarLoader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
@@ -19,7 +22,9 @@ import kotlinx.coroutines.withContext
 class ChipLoader private constructor(
     private val scope: CoroutineScope,
     private val layoutInflater: LayoutInflater,
+    @LayoutRes private val layout: Int,
     private val items: List<Chipable>,
+    private val avatar: Boolean,
     private val chipGroup: ChipGroup,
     private val preselectedItems: List<Long>,
     private val selectable: Boolean,
@@ -29,7 +34,6 @@ class ChipLoader private constructor(
     fun go() {
         scope.launch(Default) {
             for ((index, item) in items.withIndex()) {
-                val layout = if (selectable) R.layout.chip_choice else R.layout.chip_action
                 val chip = layoutInflater.inflate(layout, chipGroup, false) as Chip
 
                 chip.apply {
@@ -39,6 +43,10 @@ class ChipLoader private constructor(
                     if (showIconIf(item)) {
                         chipIcon = item.getIcon()?.let {
                             ContextCompat.getDrawable(context, it)
+                        }
+                    } else if (avatar && item is Friend) {
+                        AvatarLoader.requestAvatar(context, item.imgPath) { avatar ->
+                            chipIcon = avatar
                         }
                     }
 
@@ -58,17 +66,21 @@ class ChipLoader private constructor(
                 }
             }
 
-            chipGroup.children.firstOrNull { it is Chip && it.isChecked }?.let {
-                val scrollView = findParentScrollView(chipGroup)
+            scrollToCheckedChip()
+        }
+    }
 
-                scrollView?.postDelayed(500) {
-                    scrollView.smoothScrollTo(it.left - it.paddingLeft, it.top)
-                }
+    private fun scrollToCheckedChip() {
+        chipGroup.children.firstOrNull { it is Chip && it.isChecked }?.let {
+            val scrollView = findParentScrollView(chipGroup)
+
+            scrollView?.postDelayed(500) {
+                scrollView.smoothScrollTo(it.left - it.paddingLeft, it.top)
             }
         }
     }
 
-    private fun findParentScrollView(view: View) : HorizontalScrollView? {
+    private fun findParentScrollView(view: View): HorizontalScrollView? {
         return try {
             val parent = view.parent
             if (parent is HorizontalScrollView) parent else findParentScrollView(parent as View)
@@ -80,7 +92,9 @@ class ChipLoader private constructor(
     data class Builder(
         private var scope: CoroutineScope? = null,
         private var layoutInflater: LayoutInflater? = null,
+        @LayoutRes private var layout: Int = R.layout.chip_choice,
         private var items: List<Chipable> = emptyList(),
+        private var avatar: Boolean = false,
         private var chipGroup: ChipGroup? = null,
         private var preselectedItems: List<Long> = emptyList(),
         private var selectable: Boolean = true,
@@ -90,7 +104,9 @@ class ChipLoader private constructor(
     ) {
         fun with(scope: CoroutineScope) = apply { this.scope = scope }
         fun useInflater(inflater: LayoutInflater) = apply { this.layoutInflater = inflater }
+        fun toInflate(@LayoutRes layout: Int) = apply { this.layout = layout }
         fun load(items: List<Chipable>) = apply { this.items = items }
+        fun useAvatar(useAvatar: Boolean) = apply { this.avatar = useAvatar }
         fun into(chipGroup: ChipGroup) = apply { this.chipGroup = chipGroup }
         fun preselect(preselect: List<Long>) = apply { this.preselectedItems = preselect }
         fun preselect(preselect: Long) = apply { this.preselectedItems = listOf(preselect) }
@@ -121,7 +137,9 @@ class ChipLoader private constructor(
             return ChipLoader(
                 scope!!,
                 layoutInflater!!,
+                layout,
                 items,
+                avatar,
                 chipGroup!!,
                 preselectedItems,
                 selectable,

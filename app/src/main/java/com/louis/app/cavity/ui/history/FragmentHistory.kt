@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSmoothScroller
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.ChipGroup
@@ -25,12 +24,12 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.ui.ChipLoader
-import com.louis.app.cavity.ui.history.adapter.*
+import com.louis.app.cavity.ui.history.adapter.HistoryDivider
+import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter
 import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
+import com.louis.app.cavity.ui.history.adapter.ReboundingSwipeActionCallback
+import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
 import com.louis.app.cavity.util.*
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -203,8 +202,10 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 ChipLoader.Builder()
                     .with(lifecycleScope)
                     .useInflater(layoutInflater)
+                    .toInflate(R.layout.chip_friend)
                     .load(entry.friends)
                     .into(friendChipGroup)
+                    .useAvatar(true)
                     .selectable(false)
                     .build()
                     .go()

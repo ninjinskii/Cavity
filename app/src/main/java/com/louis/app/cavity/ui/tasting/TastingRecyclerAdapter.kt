@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemTastingBinding
 import com.louis.app.cavity.db.dao.BoundedTasting
 import com.louis.app.cavity.util.DateFormatter
@@ -36,7 +37,7 @@ class TastingRecyclerAdapter(private val childViewPool: RecyclerView.RecycledVie
 
         fun bind(boundedTasting: BoundedTasting) {
             val (tasting, bottles, friends) = boundedTasting
-            val friendAdapter = FriendRecyclerAdapter()
+            val friendAdapter = FriendChipRecyclerAdapter()
             val childLayoutManager = LinearLayoutManager(
                 itemView.context,
                 LinearLayoutManager.HORIZONTAL,
@@ -49,13 +50,23 @@ class TastingRecyclerAdapter(private val childViewPool: RecyclerView.RecycledVie
                 opportunity.text = tasting.opportunity
                 date.text = DateFormatter.formatDate(tasting.date)
                 bottleCount.text = bottles.size.toString()
-
-                friendList.adapter = friendAdapter
-                friendList.layoutManager = childLayoutManager
-                friendList.setRecycledViewPool(childViewPool)
-
-                friendAdapter.submitList(friends)
             }
+
+            with(binding.friendList) {
+                adapter = friendAdapter
+                layoutManager = childLayoutManager
+                setRecycledViewPool(childViewPool)
+
+                if (itemDecorationCount == 0) {
+                    addItemDecoration(
+                        SpaceItemDecoration(
+                            itemView.resources.getDimensionPixelSize(R.dimen.small_margin)
+                        )
+                    )
+                }
+            }
+
+            friendAdapter.submitList(friends)
         }
     }
 }

@@ -116,8 +116,10 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
+                .toInflate(R.layout.chip_friend_entry)
                 .load(toInflate.toMutableList())
                 .into(binding.friendChipGroup)
+                .useAvatar(true)
                 .build()
                 .go()
         }
@@ -139,8 +141,8 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     private fun requestMediaPersistentPermission(fileBrowserIntent: Intent?) {
         if (fileBrowserIntent != null) {
             val flags = (fileBrowserIntent.flags
-                    and (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    or Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
+                and (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                or Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
 
             fileBrowserIntent.data?.let {
                 activity?.contentResolver?.takePersistableUriPermission(it, flags)

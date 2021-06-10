@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/opportunity"
-        style="@style/TextAppearance.MaterialComponents.Body1"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
@@ -42,14 +42,12 @@
         android:id="@+id/friendList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:clipToPadding="true"
-        android:orientation="horizontal"
-        android:padding="@dimen/small_margin"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/small_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/date"
-        tools:listitem="@layout/chip_action" />
+        tools:listitem="@layout/chip_friend" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

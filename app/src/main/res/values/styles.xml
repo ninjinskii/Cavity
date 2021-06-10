@@ -51,4 +51,23 @@
     <style name="RoundedImage">
         <item name="cornerSize">50%</item>
     </style>
+
+    <!-- Chips -->
+    <style name="Widget.Cavity.Chip.Friend" parent="">
+        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Action</item>
+        <item name="chipIconSize">@dimen/small_icon</item>
+        <item name="chipIcon">@drawable/ic_person</item>
+        <item name="closeIconEnabled">false</item>
+        <item name="closeIconSize">0dp</item>
+        <item name="chipStartPadding">0dp</item>
+        <item name="android:clickable">false</item>
+        <item name="android:checkable">false</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="Widget.Cavity.Chip.Friend.Entry">
+        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Entry</item>
+        <item name="android:clickable">true</item>
+        <item name="android:checkable">true</item>
+    </style>
 </resources>
