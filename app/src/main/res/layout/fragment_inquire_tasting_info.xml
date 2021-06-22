@@ -152,13 +152,13 @@
                     app:layout_constraintTop_toBottomOf="@id/divider2" />
 
                 <TextView
-                    android:id="@+id/basementLabel"
+                    android:id="@+id/cellarLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/basement"
-                    app:layout_constraintEnd_toEndOf="@id/basementTemp"
-                    app:layout_constraintStart_toStartOf="@id/basementTemp"
+                    android:text="@string/cellar"
+                    app:layout_constraintEnd_toEndOf="@id/cellarTemp"
+                    app:layout_constraintStart_toStartOf="@id/cellarTemp"
                     app:layout_constraintTop_toBottomOf="@id/tempTitle" />
 
                 <TextView
@@ -182,13 +182,13 @@
                     app:layout_constraintTop_toBottomOf="@id/tempTitle" />
 
                 <NumberPicker
-                    android:id="@+id/basementTemp"
+                    android:id="@+id/cellarTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     app:layout_constraintEnd_toStartOf="@id/fridgeTemp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/basementLabel" />
+                    app:layout_constraintTop_toBottomOf="@id/cellarLabel" />
 
                 <NumberPicker
                     android:id="@+id/fridgeTemp"
@@ -196,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     app:layout_constraintEnd_toStartOf="@id/freezerTemp"
-                    app:layout_constraintStart_toEndOf="@id/basementTemp"
+                    app:layout_constraintStart_toEndOf="@id/cellarTemp"
                     app:layout_constraintTop_toBottomOf="@id/fridgeLabel" />
 
                 <NumberPicker

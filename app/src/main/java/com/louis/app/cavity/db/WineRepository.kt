@@ -301,4 +301,5 @@ class WineRepository private constructor(app: Application) {
 
     // Tastings
     fun getFutureTastings() = tastingDao.getFutureTastings()
+    fun getLastTasting() = tastingDao.getLastTasting()
 }

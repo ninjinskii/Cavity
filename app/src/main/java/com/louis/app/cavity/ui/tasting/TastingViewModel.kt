@@ -8,4 +8,6 @@ class TastingViewModel(app: Application): AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
     val futureTastings = repository.getFutureTastings()
+
+    val lastTasting = repository.getLastTasting()
 }
