@@ -236,6 +236,15 @@
     <string name="pie_title_naming">Bouteilles par appellations</string>
     <string name="stock">Stock</string>
 
+    <!-- Tasting -->
+    <string name="opportunity">Occasion</string>
+    <string name="tasting_date">Date</string>
+    <string name="participants">Participants</string>
+    <string name="temperatures">Températures</string>
+    <string name="basement">Cave</string>
+    <string name="fridge">Frigo</string>
+    <string name="freezer">Congèlateur</string>
+
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>
     <string name="tag_modal_sheet_id">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>

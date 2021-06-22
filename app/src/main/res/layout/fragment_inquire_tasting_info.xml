@@ -1,11 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/appBar"
-        layout="@layout/app_bar" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <include
+            android:id="@+id/appBar"
+            layout="@layout/app_bar" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tastingTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/tasting"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                    android:id="@+id/opportunityLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tastingTitle"
+                    app:rule="required"
+                    app:startIconDrawable="@drawable/ic_cake">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/opportunity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/opportunity"
+                        android:inputType="textCapSentences"
+                        android:nextFocusDown="@id/date"
+                        tools:text="Anniversaire Jean" />
+
+                </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+                <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                    android:id="@+id/dateLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/opportunityLayout"
+                    app:rule="required"
+                    app:startIconDrawable="@drawable/ic_calendar">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/tasting_date"
+                        android:inputType="none" />
+
+                </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+                <View
+                    android:id="@+id/divider1"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dateLayout" />
+
+                <TextView
+                    android:id="@+id/friendTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/participants"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+                <ImageButton
+                    android:id="@+id/buttonAddFriend"
+                    android:layout_width="@dimen/medium_icon"
+                    android:layout_height="@dimen/medium_icon"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/add_county"
+                    android:src="@drawable/ic_add"
+                    android:tint="?attr/colorOnBackground"
+                    app:layout_constraintBottom_toBottomOf="@+id/friendTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/friendTitle" />
+
+                <HorizontalScrollView
+                    android:id="@+id/friendScrollView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="@dimen/medium_margin"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/friendTitle">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/countyChipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/chip_group_default_height"
+                        android:layout_marginTop="@dimen/medium_margin"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
+                        app:selectionRequired="true"
+                        app:singleLine="true" />
+
+                </HorizontalScrollView>
+
+                <View
+                    android:id="@+id/divider2"
+                    style="@style/Widget.Cavity.Divider.Start"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/friendScrollView" />
+
+                <TextView
+                    android:id="@+id/tempTitle"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/temperatures"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                <TextView
+                    android:id="@+id/basementLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/basement"
+                    app:layout_constraintEnd_toEndOf="@id/basementTemp"
+                    app:layout_constraintStart_toStartOf="@id/basementTemp"
+                    app:layout_constraintTop_toBottomOf="@id/tempTitle" />
+
+                <TextView
+                    android:id="@+id/fridgeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/fridge"
+                    app:layout_constraintEnd_toEndOf="@id/fridgeTemp"
+                    app:layout_constraintStart_toStartOf="@id/fridgeTemp"
+                    app:layout_constraintTop_toBottomOf="@id/tempTitle" />
+
+                <TextView
+                    android:id="@+id/freezerLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/freezer"
+                    app:layout_constraintEnd_toEndOf="@id/freezerTemp"
+                    app:layout_constraintStart_toStartOf="@id/freezerTemp"
+                    app:layout_constraintTop_toBottomOf="@id/tempTitle" />
+
+                <NumberPicker
+                    android:id="@+id/basementTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:layout_constraintEnd_toStartOf="@id/fridgeTemp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/basementLabel" />
+
+                <NumberPicker
+                    android:id="@+id/fridgeTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:layout_constraintEnd_toStartOf="@id/freezerTemp"
+                    app:layout_constraintStart_toEndOf="@id/basementTemp"
+                    app:layout_constraintTop_toBottomOf="@id/fridgeLabel" />
+
+                <NumberPicker
+                    android:id="@+id/freezerTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/fridgeTemp"
+                    app:layout_constraintTop_toBottomOf="@id/freezerLabel" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/submit"
+                    app:icon="@drawable/ic_check"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/freezerTemp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

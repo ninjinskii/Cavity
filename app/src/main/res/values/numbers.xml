@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="default_basement_temp">15</integer>
+    <integer name="default_freezer_temp">-18</integer>
+    <integer name="default_fridge_temp">5</integer>
+    <integer name="default_day_temp">20</integer>
+</resources>
