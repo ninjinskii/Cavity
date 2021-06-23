@@ -5,7 +5,6 @@ import androidx.room.*
 import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.Review
 
-// Testing ssh
 @Dao
 interface FilledReviewDao {
     @Insert
