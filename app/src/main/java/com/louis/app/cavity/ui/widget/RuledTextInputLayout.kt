@@ -13,7 +13,7 @@ class RuledTextInputLayout @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
-    TextInputLayout(context, attrs, defStyleAttr) {
+    TextInputLayout(context, attrs, defStyleAttr), TextInputLayout.OnEditTextAttachedListener {
 
     companion object {
         const val RULE_ABSENT = 0x0
@@ -36,17 +36,13 @@ class RuledTextInputLayout @JvmOverloads constructor(
             flags = it.getInteger(R.styleable.RuledTextInputLayout_rule, RULE_ABSENT)
             setDefaultRules()
         }
-
-        onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) validate()
-        }
     }
 
     fun addRules(vararg newRules: Rule) {
         rules.addAll(newRules)
     }
 
-    fun validate(): Boolean {
+    fun validate(requestFocusIfFail: Boolean = true): Boolean {
         val input = editText?.text.toString().trim()
 
         if (!containsFlag(RULE_REQUIRED) && input.isBlank())
@@ -54,14 +50,14 @@ class RuledTextInputLayout @JvmOverloads constructor(
 
         if (containsFlag(RULE_REQUIRED) && input.isBlank()) {
             error = context.getString(R.string.required_field)
-            requestFocus()
+            if (requestFocusIfFail) requestFocus()
             return false
         }
 
         for (rule in rules) {
             if (!rule.test(input)) {
                 error = context.getString(rule.onTestFailed)
-                requestFocus()
+                if (requestFocusIfFail) requestFocus()
                 return false
             }
         }
@@ -102,6 +98,12 @@ class RuledTextInputLayout @JvmOverloads constructor(
 
     private fun clearError() {
         error = null
+    }
+
+    override fun onEditTextAttached(textInputLayout: TextInputLayout) {
+        textInputLayout.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) validate(requestFocusIfFail = false)
+        }
     }
 
     override fun onDetachedFromWindow() {
