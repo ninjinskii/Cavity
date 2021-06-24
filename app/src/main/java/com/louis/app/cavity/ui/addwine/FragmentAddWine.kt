@@ -101,7 +101,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 if (valid) {
                     if (countyChipGroup.checkedChipId == View.NO_ID) {
                         coordinator.showSnackbar(R.string.no_county)
-                        nestedScrollView.smoothScrollTo(0, 0)
+                        //nestedScrollView.smoothScrollTo(0, 0)
                         return@setOnClickListener
                     }
 

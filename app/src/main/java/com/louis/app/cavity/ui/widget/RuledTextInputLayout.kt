@@ -1,21 +1,15 @@
 package com.louis.app.cavity.ui.widget
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Paint.ANTI_ALIAS_FLAG
-import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.util.AttributeSet
-import android.view.View
-import androidx.annotation.RequiresApi
+import android.view.View.OnFocusChangeListener
+import android.widget.ScrollView
 import androidx.annotation.StringRes
 import androidx.core.content.res.use
-import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textfield.TextInputLayout
 import com.louis.app.cavity.R
-import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.dpToPx
+import java.lang.Integer.max
 
 class RuledTextInputLayout @JvmOverloads constructor(
     context: Context,
@@ -45,13 +39,17 @@ class RuledTextInputLayout @JvmOverloads constructor(
             flags = it.getInteger(R.styleable.RuledTextInputLayout_rule, RULE_ABSENT)
             setDefaultRules()
         }
+
+        onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) validate()
+        }
     }
 
     fun addRules(vararg newRules: Rule) {
         rules.addAll(newRules)
     }
 
-    fun validate(): Boolean {
+    fun validate(parentScrollView: ScrollView? = null): Boolean {
         val input = editText?.text.toString().trim()
 
         if (!containsFlag(RULE_REQUIRED) && input.isBlank())
@@ -59,6 +57,8 @@ class RuledTextInputLayout @JvmOverloads constructor(
 
         if (containsFlag(RULE_REQUIRED) && input.isBlank()) {
             error = context.getString(R.string.required_field)
+            requestFocus()
+            //parentScrollView?.let { showSelf(it) }
             return false
         }
 
@@ -66,6 +66,7 @@ class RuledTextInputLayout @JvmOverloads constructor(
             if (!rule.test(input)) {
                 error = context.getString(rule.onTestFailed)
                 requestFocus()
+                //parentScrollView?.let { showSelf(it) }
                 return false
             }
         }
@@ -106,6 +107,12 @@ class RuledTextInputLayout @JvmOverloads constructor(
 
     private fun clearError() {
         error = null
+    }
+
+    private fun showSelf(scrollView: ScrollView) {
+        val offset = context.dpToPx(resources.getDimension(R.dimen.medium_margin))
+        val y = max(0, y.toInt() - offset.toInt())
+        scrollView.smoothScrollTo(0, y)
     }
 
     override fun onDetachedFromWindow() {

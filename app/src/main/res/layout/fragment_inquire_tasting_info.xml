@@ -16,6 +16,7 @@
             layout="@layout/app_bar" />
 
         <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -105,10 +106,10 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/add_county"
                     android:src="@drawable/ic_add"
-                    android:tint="?attr/colorOnBackground"
                     app:layout_constraintBottom_toBottomOf="@+id/friendTitle"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/friendTitle" />
+                    app:layout_constraintTop_toTopOf="@+id/friendTitle"
+                    app:tint="?attr/colorOnBackground" />
 
                 <HorizontalScrollView
                     android:id="@+id/friendScrollView"
@@ -122,7 +123,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/friendTitle">
 
                     <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/countyChipGroup"
+                        android:id="@+id/friendsChipGroup"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/chip_group_default_height"
                         android:layout_marginTop="@dimen/medium_margin"
@@ -209,10 +210,11 @@
                     app:layout_constraintTop_toBottomOf="@id/freezerLabel" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonSubmit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/next"
+                    android:text="@string/select_bottles"
                     app:icon="@drawable/ic_check"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
