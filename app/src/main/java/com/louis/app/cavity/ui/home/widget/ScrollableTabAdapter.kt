@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.NO_ID
 import com.louis.app.cavity.R
+import com.louis.app.cavity.model.Chipable
 
 class ScrollableTabAdapter<T>(
     private val onTabClick: (View, Int) -> Unit,
@@ -29,9 +31,9 @@ class ScrollableTabAdapter<T>(
 
     override fun getItemCount() = tabs.size
 
-    fun getItem(position: Int) = tabs[position]
+    override fun getItemId(position: Int) = (tabs[position] as? Chipable)?.getItemId() ?: NO_ID
 
-    //override fun getItemId(position: Int) = (tabs[position] as? Chipable)?.getItemId() ?: 0
+    fun getItem(position: Int) = tabs[position]
 
     fun addAll(list: List<T>) {
         tabs.clear()
