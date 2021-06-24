@@ -8,7 +8,7 @@
     <string name="previous">Précédent</string>
     <string name="unknown">Non renseigné</string>
     <string name="input_error">Saisie non valide.</string>
-    <string name="permissions_denied">Cavity a besoin de ces autorisation pour prendre des photos.</string>
+    <string name="permissions_denied">Cavity a besoin de ces autorisations pour prendre des photos.</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
