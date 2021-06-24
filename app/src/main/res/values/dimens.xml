@@ -34,4 +34,9 @@
     <dimen name="small_item">48dp</dimen>
 
     <dimen name="starred_corner_size">24dp</dimen>
+
+    <dimen name="pie_text_space">-6dp</dimen>
+    <dimen name="pie_upside_down_text_space">14dp</dimen>
+    <dimen name="pie_text_size">12dp</dimen>
+    <dimen name="pie_stroke_width">6dp</dimen>
 </resources>

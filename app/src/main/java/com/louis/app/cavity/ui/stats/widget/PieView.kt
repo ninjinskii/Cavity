@@ -28,8 +28,10 @@ class PieView @JvmOverloads constructor(
 
     private var colors = emptyList<@ColorInt Int>()
 
-    private val strokeWidth = context.dpToPx(6f)
-    private val sliceSpace = context.dpToPx(1f)
+    private val sliceSpace = resources.getDimension(R.dimen.divider_height) / 2
+    private val strokeWidth = resources.getDimension(R.dimen.pie_stroke_width)
+    private val textSpace = resources.getDimension(R.dimen.pie_text_space)
+    private val upsideDownTextSpace = resources.getDimension(R.dimen.pie_upside_down_text_space)
 
     private val backgroundColor = Color.BLACK
     private val transparent = Color.TRANSPARENT
@@ -49,7 +51,7 @@ class PieView @JvmOverloads constructor(
 
     private val textPaint by lazy {
         TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-            textSize = 25f
+            textSize = context.dpToPx(12f)
         }
     }
 
@@ -155,10 +157,10 @@ class PieView @JvmOverloads constructor(
             val verticalOffset = if (startAngle in 0f..180f) {
                 val sweepSpaceForText = min(sweepAngle, getAngle(textPaint.measureText(label)))
                 textPath.addArc(rect, startAngle + sweepSpaceForText, -sweepSpaceForText)
-                -13f
+                textSpace
             } else {
                 textPath.addArc(rect, startAngle, sweepAngle)
-                30f
+                upsideDownTextSpace
             }
 
             val text = TextUtils.ellipsize(
