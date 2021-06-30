@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.home
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -25,6 +26,7 @@ class WineViewHolder(
     fun bind(wineWithBottles: WineWithBottles) {
         val hexagone = binding.root
         val (wine) = wineWithBottles
+        val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
         val bottles = wineWithBottles.bottles
             .toSet()
             .filter { !it.consumed.toBoolean() }
@@ -43,7 +45,7 @@ class WineViewHolder(
             val leftIcon = if (bottles.any { it.isReadyToDrink() }) drawables.second else null
             icons.setCompoundDrawablesWithIntrinsicBounds(leftIcon, null, rightIcon, null)
 
-            hexagone.setMarkerColor(colorUtil.getWineColor(wine))
+            hexagone.setMarkerColor(wineColor)
 
             if (wine.imgPath.isNotEmpty()) {
                 Glide.with(itemView.context)

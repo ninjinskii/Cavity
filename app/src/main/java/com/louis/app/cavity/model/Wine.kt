@@ -19,9 +19,10 @@ data class Wine(
     val id: Long = 0,
     val name: String,
     val naming: String,
-    val color: Int,
+    val color: WineColor,
     val cuvee: String,
     @ColumnInfo(name = "is_organic") val isOrganic: Int,
     @ColumnInfo(name = "img_path") val imgPath: String,
     @ColumnInfo(name = "county_id", index = true) val countyId: Long
-)
+) {
+}

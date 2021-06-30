@@ -193,12 +193,11 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         } else {
             val (bottle, wine) = entry.bottleAndWine
             val label = entry.historyEntry.getResources().detailsLabel
+            val wineColor = ContextCompat.getColor(requireContext(), wine.color.colorRes)
 
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
             with(binding.bottleDetails) {
-//                friendChipGroup.removeAllViews()
-
                 ChipLoader.Builder()
                     .with(lifecycleScope)
                     .useInflater(layoutInflater)
@@ -212,7 +211,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
                 vintage.text = bottle.vintage.toString()
 
-                wineDetails.wineColorIndicator.setColorFilter(colorUtil.getWineColor(wine))
+                wineDetails.wineColorIndicator.setColorFilter(wineColor)
                 wineDetails.wineName.text = wine.name
                 wineDetails.wineNaming.text = wine.naming
                 wineDetails.organicImage.setVisible(wine.isOrganic.toBoolean())

@@ -102,11 +102,11 @@ class HistoryRecyclerAdapter(
 
             val (markerColor, icon, label, _, showFriends) = entry.model.historyEntry.getResources()
             val (bottle, wine) = entry.model.bottleAndWine
-            val resolvedWineColor = colorUtil.getWineColor(wine)
+            val wineColor = ContextCompat.getColor(context, wine.color.colorRes)
             val resolvedMarkerColor = colorUtil.getColor(markerColor, ColorUtil.ColorCategory.OTHER)
 
             with(binding) {
-                wineColorNameNaming.wineColorIndicator.setColorFilter(resolvedWineColor)
+                wineColorNameNaming.wineColorIndicator.setColorFilter(wineColor)
                 wineColorNameNaming.wineNaming.text = wine.naming
                 wineColorNameNaming.wineName.text = wine.name
                 vintage.text = bottle.vintage.toString()

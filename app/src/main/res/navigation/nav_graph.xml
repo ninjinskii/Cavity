@@ -67,7 +67,8 @@
             app:argType="boolean" />
         <argument
             android:name="color"
-            app:argType="integer" />
+            android:defaultValue="WHITE"
+            app:argType="com.louis.app.cavity.model.WineColor" />
         <action
             android:id="@+id/wineOptionsToEditWine"
             app:destination="@+id/add_wine_dest" />

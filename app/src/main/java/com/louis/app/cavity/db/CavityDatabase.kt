@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
         TastingXFriend::class,
         HistoryXFriend::class,
     ],
-    version = 50,
+    version = 51,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -134,7 +134,8 @@ abstract class CavityDatabase : RoomDatabase() {
                         "Cavavin"
                     )
 
-                    val wineColors = 0..3
+                    val wineColors =
+                        listOf(WineColor.RED, WineColor.WHITE, WineColor.ROSE, WineColor.SWEET)
 
                     val friends = arrayOf(
                         "Jean",

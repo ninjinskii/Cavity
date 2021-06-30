@@ -166,7 +166,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 naming.setText(it.naming)
                 name.setText(it.name)
                 cuvee.setText(it.cuvee)
-                (colorChipGroup.getChildAt(it.color) as Chip).isChecked = true
+                (colorChipGroup.getChildAt(it.color.ordinal) as Chip).isChecked = true
                 organicWine.isChecked = it.isOrganic.toBoolean()
             }
         }

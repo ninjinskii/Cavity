@@ -11,6 +11,7 @@ import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.util.combineAsync
 import kotlinx.coroutines.Dispatchers.Default
@@ -72,13 +73,13 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         val colorFilters = mutableListOf<WineFilter>()
 
         if (R.id.chipRed in colorCheckedChipIds)
-            colorFilters.add(FilterColor(0))
+            colorFilters.add(FilterColor(WineColor.RED))
         if (R.id.chipWhite in colorCheckedChipIds)
-            colorFilters.add(FilterColor(1))
+            colorFilters.add(FilterColor(WineColor.WHITE))
         if (R.id.chipSweet in colorCheckedChipIds)
-            colorFilters.add(FilterColor(2))
+            colorFilters.add(FilterColor(WineColor.SWEET))
         if (R.id.chipRose in colorCheckedChipIds)
-            colorFilters.add(FilterColor(3))
+            colorFilters.add(FilterColor(WineColor.ROSE))
 
         colorFilter =
             if (colorFilters.isNotEmpty())

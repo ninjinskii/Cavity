@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -42,13 +43,13 @@ class BottleRecyclerAdapter(
 
         fun bind(boundedBottle: BoundedBottle) {
             val (bottle, wine) = boundedBottle
+            val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
             with(binding.wineColorNameNaming) {
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
                 organicImage.setVisible(wine.isOrganic.toBoolean())
-                wineColorIndicator.setColorFilter(colorUtil.getWineColor(wine))
-
+                wineColorIndicator.setColorFilter(wineColor)
             }
 
             binding.root.setOnClickListener {

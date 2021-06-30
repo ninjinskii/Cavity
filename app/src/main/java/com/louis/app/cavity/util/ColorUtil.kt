@@ -6,7 +6,6 @@ import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.FReview
-import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.addbottle.viewmodel.FReviewUiModel
 
 class ColorUtil(context: Context) {
@@ -80,13 +79,6 @@ class ColorUtil(context: Context) {
 
     private val colorPrimary by lazy {
         ContextCompat.getColor(context, R.color.cavity_gold)
-    }
-
-    @ColorInt
-    fun getWineColor(wine: Wine) = try {
-        wineColors.map { it.second }[wine.color]
-    } catch (e: IndexOutOfBoundsException) {
-        colorPrimary
     }
 
     @ColorInt
