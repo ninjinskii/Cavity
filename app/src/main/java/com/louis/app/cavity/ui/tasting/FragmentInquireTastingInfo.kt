@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.tasting
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.louis.app.cavity.R
@@ -12,10 +13,12 @@ import com.louis.app.cavity.model.Temperature
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.manager.AddItemViewModel
 
 class FragmentInquireTastingInfo : Fragment(R.layout.fragment_inquire_tasting_info) {
     private var _binding: FragmentInquireTastingInfoBinding? = null
     private val binding get() = _binding!!
+    private val addItemViewModel: AddItemViewModel by activityViewModels()
     private val tastingViewModel: TastingViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -109,7 +112,7 @@ class FragmentInquireTastingInfo : Fragment(R.layout.fragment_inquire_tasting_in
             hint = R.string.add_friend_label,
             icon = R.drawable.ic_person,
         ) {
-            tastingViewModel.insertFriend(it)
+            addItemViewModel.insertFriend(it)
         }
 
         SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)

@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.app.Application
-import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
@@ -99,21 +98,6 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
             reset()
         }
 
-    }
-
-    fun insertCounty(countyName: String) {
-        viewModelScope.launch(IO) {
-            val counties = repository.getAllCountiesNotLive()
-
-            try {
-                repository.insertCounty(County(name = countyName, prefOrder = counties.size))
-                _userFeedback.postOnce(R.string.county_added)
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_county_name)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.county_already_exists)
-            }
-        }
     }
 
     fun setImage(imagePath: String) {

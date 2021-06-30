@@ -34,21 +34,6 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllFriends() = repository.getAllFriends()
 
-    fun insertCounty(countyName: String) {
-        viewModelScope.launch(IO) {
-            val counties = repository.getAllCountiesNotLive()
-
-            try {
-                repository.insertCounty(County(name = countyName, prefOrder = counties.size))
-                _userFeedback.postOnce(R.string.county_added)
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_county_name)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.county_already_exists)
-            }
-        }
-    }
-
     fun updateCounty(county: County) {
         viewModelScope.launch(IO) {
             try {
@@ -81,19 +66,6 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun insertGrape(grapeName: String) {
-        viewModelScope.launch(IO) {
-            try {
-                repository.insertGrape(Grape(0, grapeName))
-                _userFeedback.postOnce(R.string.grape_added)
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_grape_name)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.grape_already_exists)
-            }
-        }
-    }
-
     fun updateGrape(grape: Grape) {
         viewModelScope.launch(IO) {
             try {
@@ -114,19 +86,6 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun insertReview(contestName: String, type: Int) {
-        viewModelScope.launch(IO) {
-            try {
-                repository.insertReview(Review(0, contestName, type))
-                _userFeedback.postOnce(R.string.review_added)
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_contest_name)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.contest_name_already_exists)
-            }
-        }
-    }
-
     fun updateReview(review: Review) {
         viewModelScope.launch(IO) {
             try {
@@ -144,19 +103,6 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             repository.deleteReview(review)
             _userFeedback.postOnce(R.string.review_deleted)
-        }
-    }
-
-    fun insertFriend(nameLastName: String) {
-        viewModelScope.launch(IO) {
-            try {
-                repository.insertFriend(Friend(0, nameLastName, ""))
-                _userFeedback.postOnce(R.string.friend_added)
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.input_error)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.friend_already_exists)
-            }
         }
     }
 

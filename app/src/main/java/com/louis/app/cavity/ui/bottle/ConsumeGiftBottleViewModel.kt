@@ -1,17 +1,13 @@
 package com.louis.app.cavity.ui.bottle
 
 import android.app.Application
-import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -41,19 +37,6 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             repository.insertHistoryEntryAndFriends(historyEntry, listOf(friendId))
-        }
-    }
-
-    fun insertFriend(nameLastName: String) {
-        viewModelScope.launch(IO) {
-            try {
-                repository.insertFriend(Friend(0, nameLastName, ""))
-                _userFeedback.postOnce(R.string.friend_added)
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.input_error)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.friend_already_exists)
-            }
         }
     }
 

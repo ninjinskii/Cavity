@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -20,12 +21,14 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
+import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.util.*
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
+    private val addItemViewModel: AddItemViewModel by activityViewModels()
     private val addWineViewModel: AddWineViewModel by viewModels()
     private val args: FragmentAddWineArgs by navArgs()
 
@@ -151,7 +154,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             title = R.string.add_county,
             hint = R.string.county
         ) {
-            addWineViewModel.insertCounty(it.trim())
+            addItemViewModel.insertCounty(it.trim())
         }
 
         SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)

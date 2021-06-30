@@ -16,7 +16,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     private var wineId = 0L
 
-    // Might be useful if used to switch dynamivcally bottles
+    // Might be useful if used to switch dynamically bottles
     private val bottleId = MutableLiveData<Long>()
 
     private val _pdfEvent = MutableLiveData<Event<Uri>>()

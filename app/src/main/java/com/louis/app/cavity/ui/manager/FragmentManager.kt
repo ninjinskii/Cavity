@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
@@ -21,6 +22,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
     private var _binding: FragmentManagerBinding? = null
     private val binding get() = _binding!!
     private val managerViewModel: ManagerViewModel by viewModels()
+    private val addItemViewModel: AddItemViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,7 +74,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
             title = R.string.add_county,
             hint = R.string.county
         ) {
-            managerViewModel.insertCounty(it)
+            addItemViewModel.insertCounty(it)
         }
 
         simpleInputDialog.show(dialogResources)
@@ -84,7 +86,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
             hint = R.string.grape_name,
             icon = R.drawable.ic_grape
         ) {
-            managerViewModel.insertGrape(it)
+            addItemViewModel.insertGrape(it)
         }
 
         simpleInputDialog.show(dialogResources)
@@ -101,7 +103,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
                 val name = dialogBinding.contestName.text.toString().trim()
                 val type = getReviewType(dialogBinding.rbGroupType.checkedButtonId)
 
-                managerViewModel.insertReview(name, type)
+                addItemViewModel.insertReview(name, type)
             }
             .setView(dialogBinding.root)
             .setOnDismissListener { dialogBinding.root.hideKeyboard() }
@@ -117,7 +119,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
             hint = R.string.add_friend_label,
             icon = R.drawable.ic_person,
         ) {
-            managerViewModel.insertFriend(it)
+            addItemViewModel.insertFriend(it)
         }
 
         SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
