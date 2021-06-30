@@ -109,15 +109,15 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         otherInfoManager.getAllFriends().observe(viewLifecycleOwner) {
             binding.buttonAddFriendIfEmpty.setVisible(it.isEmpty())
 
-            allFriends.addAll(it)
-            val toInflate = allFriends - alreadyInflated
-            alreadyInflated.addAll(toInflate)
+//            allFriends.addAll(it)
+//            val toInflate = allFriends - alreadyInflated
+//            alreadyInflated.addAll(toInflate)
 
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
                 .toInflate(R.layout.chip_friend_entry)
-                .load(toInflate.toMutableList())
+                .load(it)
                 .into(binding.friendChipGroup)
                 .useAvatar(true)
                 .build()

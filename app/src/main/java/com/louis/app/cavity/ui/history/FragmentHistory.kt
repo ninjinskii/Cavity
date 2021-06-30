@@ -197,7 +197,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
             with(binding.bottleDetails) {
-                friendChipGroup.removeAllViews()
+//                friendChipGroup.removeAllViews()
 
                 ChipLoader.Builder()
                     .with(lifecycleScope)

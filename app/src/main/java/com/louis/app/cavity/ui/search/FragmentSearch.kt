@@ -83,6 +83,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun observe() {
         searchViewModel.getAllCounties().observe(viewLifecycleOwner) { counties ->
+            L.timestamp("map") {
+                searchViewModel.selectedCounties.map { it.id }
+            }
             val preselectedCounties = searchViewModel.selectedCounties.map { it.id }
             ChipLoader.Builder()
                 .with(lifecycleScope)

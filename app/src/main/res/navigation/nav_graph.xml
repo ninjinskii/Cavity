@@ -41,6 +41,9 @@
         <action
             android:id="@+id/homeToStats"
             app:destination="@id/stats_dest" />
+        <action
+            android:id="@+id/homeToTasting"
+            app:destination="@id/tasting_dest" />
     </fragment>
 
     <dialog
@@ -138,7 +141,11 @@
         android:id="@+id/tasting_dest"
         android:name="com.louis.app.cavity.ui.tasting.FragmentTastings"
         android:label="FragmentTasting"
-        tools:layout="@layout/fragment_tastings" />
+        tools:layout="@layout/fragment_tastings">
+        <action
+            android:id="@+id/tastingToAddTasting"
+            app:destination="@id/fragmentInquireTastingInfo" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragmentBottleDetails"
@@ -233,4 +240,10 @@
         android:name="com.louis.app.cavity.ui.stats.FragmentStats"
         android:label="FragmentStats"
         tools:layout="@layout/fragment_stats" />
+
+    <fragment
+        android:id="@+id/fragmentInquireTastingInfo"
+        android:name="com.louis.app.cavity.ui.tasting.FragmentInquireTastingInfo"
+        android:label="FragmentInquireTastingInfo"
+        tools:layout="@layout/fragment_inquire_tasting_info" />
 </navigation>

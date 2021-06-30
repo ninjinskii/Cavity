@@ -244,7 +244,10 @@
     <string name="cellar">Cave</string>
     <string name="fridge">Frigo</string>
     <string name="freezer">Congèlateur</string>
-    <string name="select_bottles">Choisir les bouteilles</string>
+    <string name="celsius">\u2103</string>
+    <string name="fahrenheit">\u2109</string>
+    <string name="temp_celsius">%1$d \u2103</string>
+    <string name="temp_fahrenheit">%1$d \u2109</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

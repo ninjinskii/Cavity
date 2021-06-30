@@ -281,7 +281,7 @@ abstract class CavityDatabase : RoomDatabase() {
                             )
                         val time = System.currentTimeMillis()
                         val tastings = List(10) {
-                            Tasting(0, time + 100000, opportunities.random())
+                            Tasting(0, time + 100000, opportunities.random(), 15, 15, 15, 15)
                         }
 
                         val tastingsXFriends = listOf(

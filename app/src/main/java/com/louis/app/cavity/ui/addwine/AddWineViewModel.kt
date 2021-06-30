@@ -62,8 +62,13 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         cuvee: String,
         isOrganic: Int,
         colorChipId: Int,
-        county: County
+        county: County?
     ) {
+        if (county == null) {
+            _userFeedback.postOnce(R.string.no_county)
+            return
+        }
+
         val color = when (colorChipId) {
             R.id.colorRed -> 0
             R.id.colorWhite -> 1

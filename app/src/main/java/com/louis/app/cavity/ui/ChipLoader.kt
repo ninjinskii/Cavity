@@ -6,6 +6,7 @@ import android.widget.HorizontalScrollView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import androidx.core.view.forEach
 import androidx.core.view.postDelayed
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -33,7 +34,9 @@ class ChipLoader private constructor(
 ) {
     fun go() {
         scope.launch(Default) {
-            for ((index, item) in items.withIndex()) {
+            val itemsToInflate = clearChipGroup()
+
+            for ((index, item) in itemsToInflate.withIndex()) {
                 val chip = layoutInflater.inflate(layout, chipGroup, false) as Chip
 
                 chip.apply {
@@ -68,6 +71,23 @@ class ChipLoader private constructor(
 
             scrollToCheckedChip()
         }
+    }
+
+    private suspend fun clearChipGroup(): List<Chipable> {
+        val currentList = chipGroup.children.map { it.getTag(R.string.tag_chip_id) as Chipable }
+        val toInflate = items.filter { it !in currentList }
+        val toRemove = mutableSetOf<View>()
+
+        chipGroup.forEach {
+            val item = it.getTag(R.string.tag_chip_id) as Chipable
+            if (item !in items) toRemove.add(it)
+        }
+
+        withContext(Main) {
+            toRemove.forEach { chipGroup.removeView(it) }
+        }
+
+        return toInflate
     }
 
     private fun scrollToCheckedChip() {

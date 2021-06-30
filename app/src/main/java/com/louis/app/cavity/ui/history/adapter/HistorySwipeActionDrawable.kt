@@ -10,31 +10,25 @@ import androidx.annotation.Px
 import androidx.core.content.res.ResourcesCompat
 import com.louis.app.cavity.R
 
-class HistorySwipeActionDrawable : Drawable() {
-    private lateinit var icon: AnimatedStateListDrawable
-    private val bg = ColorDrawable(Color.parseColor("#000000"))
-    private val iconRect = Rect()
-    private val bgRect = Rect()
+class HistorySwipeActionDrawable(resources: Resources, theme: Resources.Theme?) : Drawable() {
+    private val icon = ResourcesCompat.getDrawable(resources, R.drawable.asl_star, theme)
+        as AnimatedStateListDrawable
 
     @Px
-    private var iconSize = 0
+    private val iconSize = resources.getDimensionPixelSize(R.dimen.xsmall_icon)
 
     @Px
-    private var iconMargin = 0
+    private val iconMargin = resources.getDimensionPixelSize(R.dimen.medium_margin)
 
     @Px
     private var iconTop = 0
 
     @ColorInt
-    private var colorPrimary = 0
+    private val colorPrimary = ResourcesCompat.getColor(resources, R.color.cavity_gold, theme)
 
-    fun initResources(r: Resources, theme: Resources.Theme?) {
-        iconSize = r.getDimensionPixelSize(R.dimen.xsmall_icon)
-        iconMargin = r.getDimensionPixelSize(R.dimen.medium_margin)
-        colorPrimary = ResourcesCompat.getColor(r, R.color.cavity_gold, theme)
-        icon = ResourcesCompat.getDrawable(r, R.drawable.asl_star, theme)
-                as AnimatedStateListDrawable
-    }
+    private val bg = ColorDrawable(Color.BLACK)
+    private val iconRect = Rect()
+    private val bgRect = Rect()
 
     override fun onBoundsChange(bounds: Rect?) {
         if (bounds == null) return
@@ -49,15 +43,8 @@ class HistorySwipeActionDrawable : Drawable() {
         icon.jumpToCurrentState()
     }
 
-    override fun onStateChange(state: IntArray?): Boolean {
-        val isActivated = state?.contains(android.R.attr.state_activated) == true
-
-        if (isActivated) {
-            icon.state = icon.state + android.R.attr.state_activated
-        } else {
-            icon.state = icon.state.filter { it != android.R.attr.state_activated }.toIntArray()
-        }
-
+    override fun onStateChange(state: IntArray): Boolean {
+        icon.state = state
         return false
     }
 

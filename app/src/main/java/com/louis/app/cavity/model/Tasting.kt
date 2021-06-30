@@ -10,9 +10,9 @@ data class Tasting(
     val id: Long = 0,
     val date: Long,
     val opportunity: String,
-    @ColumnInfo(name = "cellar_temp") val cellarTemp: Int = 15,
-    @ColumnInfo(name = "fridge_temp") val fridgeTemp: Int = 5,
-    @ColumnInfo(name = "freezer_temp") val freezerTemp: Int = -18,
-    @ColumnInfo(name = "ambient_temp") val ambientTemp: Int = 18,
+    @ColumnInfo(name = "cellar_temp") val cellarTemp: Int,
+    @ColumnInfo(name = "fridge_temp") val fridgeTemp: Int,
+    @ColumnInfo(name = "freezer_temp") val freezerTemp: Int,
+    @ColumnInfo(name = "ambient_temp") val ambientTemp: Int = Temperature.DEFAULT_DAY_TEMP,
     @ColumnInfo(name = "is_default_ambient_temp") val isDefaultAmbientTemp: Boolean = true, // Used to suggest user to inquire temp ambient in his home the d day
 )

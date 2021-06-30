@@ -21,7 +21,6 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.util.*
-import java.util.*
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -64,14 +63,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         addWineViewModel.getAllCounties().observe(viewLifecycleOwner) {
             binding.buttonAddCountyIfEmpty.setVisible(it.isEmpty())
 
-            allCounties.addAll(it)
-            val toInflate = allCounties - alreadyInflated
-            alreadyInflated.addAll(toInflate)
+//            allCounties.addAll(it)
+//            val toInflate = allCounties - alreadyInflated
+//            alreadyInflated.addAll(toInflate)
 
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
-                .load(toInflate.toMutableList())
+                .load(it)
                 .into(binding.countyChipGroup)
                 .preselect(args.countyId)
                 .doOnClick { v -> setCounty(v) }
@@ -96,15 +95,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             with(binding) {
                 root.hideKeyboard()
 
-                val valid = nameLayout.validate() and namingLayout.validate()
+                val valid = namingLayout.validate() and nameLayout.validate()
 
                 if (valid) {
-                    if (countyChipGroup.checkedChipId == View.NO_ID) {
-                        coordinator.showSnackbar(R.string.no_county)
-                        //nestedScrollView.smoothScrollTo(0, 0)
-                        return@setOnClickListener
-                    }
-
                     val name = name.text.toString().trim()
                     val naming = naming.text.toString().trim()
                     val cuvee = cuvee.text.toString().trim()
@@ -114,7 +107,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
                     val county = countyChipGroup
                         .findViewById<Chip>(checkedCountyChipId)
-                        .getTag(R.string.tag_chip_id) as County
+                        ?.getTag(R.string.tag_chip_id) as County?
 
                     addWineViewModel.saveWine(name, naming, cuvee, isOrganic, color, county)
                 }
@@ -125,9 +118,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             showCountyDialog()
         }
 
-//        binding.buttonAddCountyIfEmpty.setOnClickListener {
-//            showDialog()
-//        }
+        binding.buttonAddCountyIfEmpty.setOnClickListener {
+            showCountyDialog()
+        }
 
         binding.buttonBrowsePhoto.setOnClickListener {
             val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -196,9 +189,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             .currentBackStackEntry
             ?.savedStateHandle
             ?.getLiveData<String>(TAKEN_PHOTO_URI)
-            ?.observe(viewLifecycleOwner) {
-                addWineViewModel.setImage(it)
-            }
+            ?.observe(viewLifecycleOwner) { addWineViewModel.setImage(it) }
     }
 
     private fun requestMediaPersistentPermission(fileBrowserIntent: Intent?) {

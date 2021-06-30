@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireTastingInfoBinding
 import com.louis.app.cavity.model.Friend
+import com.louis.app.cavity.model.Temperature
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
@@ -28,20 +29,32 @@ class FragmentInquireTastingInfo : Fragment(R.layout.fragment_inquire_tasting_in
     }
 
     private fun initNumberPickers() {
+        // Number picker doesn't support negative values
+        val freezerMaxValue = Temperature.MAX_FREEZER_TEMP.toLocaleTemp()
+        val freezerMinValue = Temperature.MIN_FREEZER_TEMP.toLocaleTemp()
+        val freezerMinPositive = freezerMinValue - freezerMinValue
+        val freezerMaxPositive = freezerMaxValue - freezerMinValue
+
         with(binding) {
-            cellarTemp.maxValue = resources.getInteger(R.integer.max_cellar_temp)
-            cellarTemp.minValue = resources.getInteger(R.integer.min_cellar_temp)
-            fridgeTemp.maxValue = resources.getInteger(R.integer.max_fridge_temp)
-            fridgeTemp.minValue = resources.getInteger(R.integer.min_fridge_temp)
-            freezerTemp.maxValue = resources.getInteger(R.integer.max_freezer_temp)
-            freezerTemp.minValue = resources.getInteger(R.integer.min_freezer_temp)
+            cellarTemp.maxValue = Temperature.MAX_CELLAR_TEMP.toLocaleTemp()
+            cellarTemp.minValue = Temperature.MIN_CELLAR_TEMP.toLocaleTemp()
+            fridgeTemp.maxValue = Temperature.MAX_FRIDGE_TEMP.toLocaleTemp()
+            fridgeTemp.minValue = Temperature.MIN_FRIDGE_TEMP.toLocaleTemp()
+            freezerTemp.minValue = freezerMinPositive
+            freezerTemp.maxValue = freezerMaxPositive
+            freezerTemp.setFormatter { "${it + freezerMinValue}" }
         }
 
         tastingViewModel.lastTasting.observe(viewLifecycleOwner) {
             with(binding) {
-                cellarTemp.value = it.cellarTemp
-                fridgeTemp.value = it.fridgeTemp
-                freezerTemp.value = it.freezerTemp
+                cellarTemp.value = (it?.cellarTemp ?: Temperature.DEFAULT_CELLAR_TEMP)
+                    .toLocaleTemp()
+
+                fridgeTemp.value = (it?.fridgeTemp ?: Temperature.DEFAULT_FRIDGE_TEMP)
+                    .toLocaleTemp()
+
+                freezerTemp.value = (it?.freezerTemp ?: Temperature.DEFAULT_FREEZER_TEMP)
+                    .toLocaleTemp() - freezerMinValue
             }
         }
     }
@@ -51,15 +64,15 @@ class FragmentInquireTastingInfo : Fragment(R.layout.fragment_inquire_tasting_in
         val alreadyInflated = mutableSetOf<Friend>()
 
         tastingViewModel.friends.observe(viewLifecycleOwner) {
-            allFriends.addAll(it)
-            val toInflate = allFriends - alreadyInflated
-            alreadyInflated.addAll(toInflate)
+//            allFriends.addAll(it)
+//            val toInflate = allFriends - alreadyInflated
+//            alreadyInflated.addAll(toInflate)
 
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
                 .toInflate(R.layout.chip_friend_entry)
-                .load(toInflate.toList())
+                .load(it)
                 .into(binding.friendsChipGroup)
                 .useAvatar(true)
                 .selectable(true)
@@ -103,12 +116,25 @@ class FragmentInquireTastingInfo : Fragment(R.layout.fragment_inquire_tasting_in
     }
 
     private fun submit() {
-        tastingViewModel
-            .submit(binding.opportunityLayout.validate() && binding.dateLayout.validate())
-        if (binding.opportunityLayout.validate() && binding.dateLayout.validate()) {
-            // save to view model, navigate
-        } else {
+        val valid = binding.dateLayout.validate() and binding.opportunityLayout.validate()
+
+        if (valid) {
+            with(binding) {
+                val opportunity = opportunity.text.toString().trim()
+
+                tastingViewModel.submit(
+                    opportunity,
+                    cellarTemp.value,
+                    fridgeTemp.value,
+                    freezerTemp.value
+                )
+            }
         }
+    }
+
+    private fun Int.toLocaleTemp() = when (tastingViewModel.temperatureUnit) {
+        0 -> Temperature.Celsius(this).value
+        else -> Temperature.Fahrenheit(this).value
     }
 
     override fun onDestroyView() {

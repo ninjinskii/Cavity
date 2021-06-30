@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentTastings : Fragment(R.layout.fragment_tastings) {
@@ -26,6 +26,7 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
         setupNavigation(binding.appBar.toolbar)
 
         initRecyclerView()
+        setListener()
     }
 
     private fun initRecyclerView() {
@@ -38,8 +39,14 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
         }
 
         tastingViewModel.futureTastings.observe(viewLifecycleOwner) {
-            L.v("$it")
             tastingAdapter.submitList(it)
+        }
+    }
+
+    private fun setListener() {
+        binding.buttonAddTasting.setOnClickListener {
+            val action = FragmentTastingsDirections.tastingToAddTasting()
+            findNavController().navigate(action)
         }
     }
 

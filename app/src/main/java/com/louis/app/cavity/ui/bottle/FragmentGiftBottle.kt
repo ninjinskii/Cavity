@@ -54,15 +54,15 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
         val alreadyInflated = mutableSetOf<Friend>()
 
         consumeGiftBottleViewModel.getAllFriends().observe(viewLifecycleOwner) {
-            allFriends.addAll(it)
-            val toInflate = allFriends - alreadyInflated
-            alreadyInflated.addAll(toInflate)
+//            allFriends.addAll(it)
+//            val toInflate = allFriends - alreadyInflated
+//            alreadyInflated.addAll(toInflate)
 
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
                 .toInflate(R.layout.chip_friend_entry)
-                .load(toInflate.toList())
+                .load(it)
                 .into(binding.friendsChipGroup)
                 .useAvatar(true)
                 .build()
