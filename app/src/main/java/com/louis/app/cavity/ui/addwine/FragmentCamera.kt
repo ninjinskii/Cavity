@@ -182,10 +182,8 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             if (hasPermissions()) {
                 startCamera()
             } else {
-                snackbarProvider.onShowSnackbarRequested(
-                    R.string.permissions_denied, useAnchorView = false
-                )
                 findNavController().navigateUp()
+                snackbarProvider.onShowSnackbarRequested(R.string.permissions_denied)
             }
         }
     }

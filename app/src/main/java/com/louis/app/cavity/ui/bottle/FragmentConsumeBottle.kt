@@ -74,7 +74,7 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
 
         consumeGiftBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = false)
+                snackbarProvider.onShowSnackbarRequested(stringRes)
             }
         }
     }
@@ -94,11 +94,8 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
                 consumeGiftBottleViewModel.consumeBottle(args.bottleId, comment, friends)
             }
 
-            snackbarProvider.onShowSnackbarRequested(
-                R.string.bottle_consumed,
-                useAnchorView = false
-            )
             findNavController().navigateUp()
+            snackbarProvider.onShowSnackbarRequested(R.string.bottle_consumed)
         }
 
         binding.buttonClose.setOnClickListener {
