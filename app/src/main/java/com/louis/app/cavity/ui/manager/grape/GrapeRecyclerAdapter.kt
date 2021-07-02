@@ -64,7 +64,7 @@ class GrapeRecyclerAdapter(
         }
 
         private fun showPopup(view: View) {
-            val grape = getItem(adapterPosition).grape
+            val grape = getItem(bindingAdapterPosition).grape
 
             PopupMenu(context, view).apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) setForceShowIcon(true)

@@ -1,10 +1,10 @@
 package com.louis.app.cavity.ui.addbottle
 
-import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,6 +16,7 @@ import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Chipable
 import com.louis.app.cavity.model.Friend
+import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
@@ -36,8 +37,10 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         ownerProducer = { requireParentFragment() }
     )
 
-    companion object {
-        const val PICK_PDF_RESULT_CODE = 2
+    private val pickPdf by lazy {
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { pdfUri ->
+            onPdfSelected(pdfUri)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,14 +58,8 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
     private fun setListeners() {
         binding.buttonAddPdf.setOnClickListener {
             if (!otherInfoManager.hasPdf) {
-                val fileChooseIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                fileChooseIntent.apply {
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "application/pdf"
-                }
-
                 try {
-                    startActivityForResult(fileChooseIntent, PICK_PDF_RESULT_CODE)
+                    pickPdf.launch(arrayOf("application/pdf"))
                 } catch (e: ActivityNotFoundException) {
                     binding.coordinator.showSnackbar(R.string.no_file_explorer)
                 }
@@ -141,37 +138,23 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         }
     }
 
-    private fun requestMediaPersistentPermission(fileBrowserIntent: Intent?) {
-        if (fileBrowserIntent != null) {
-            val flags = (fileBrowserIntent.flags
-                and (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                or Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
-
-            fileBrowserIntent.data?.let {
-                activity?.contentResolver?.takePersistableUriPermission(it, flags)
-            }
-        } else {
-            binding.coordinator.showSnackbar(R.string.base_error)
-        }
-    }
-
     private fun onPdfRemoved() {
         otherInfoManager.setPdfPath("")
         binding.buttonAddPdf.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_pdf)
         binding.buttonAddPdf.text = resources.getString(R.string.add_pdf)
     }
 
-    private fun onPdfSelected(intent: Intent?) {
-        requestMediaPersistentPermission(intent)
-
-        if (intent != null) {
-            otherInfoManager.setPdfPath(intent.data.toString())
-            binding.buttonAddPdf.icon =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
-            binding.buttonAddPdf.text = resources.getString(R.string.remove_pdf)
-        } else {
+    private fun onPdfSelected(pdfUri: Uri?) {
+        if (pdfUri == null) {
             binding.coordinator.showSnackbar(R.string.base_error)
+            return
         }
+
+        (activity as ActivityMain).requestMediaPersistentPermission(pdfUri)
+
+        otherInfoManager.setPdfPath(pdfUri.toString())
+        binding.buttonAddPdf.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
+        binding.buttonAddPdf.text = getString(R.string.remove_pdf)
     }
 
     private fun showAddFriendDialog() {
@@ -184,14 +167,6 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         }
 
         SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == PICK_PDF_RESULT_CODE) onPdfSelected(data)
-        }
     }
 
     override fun onDestroyView() {

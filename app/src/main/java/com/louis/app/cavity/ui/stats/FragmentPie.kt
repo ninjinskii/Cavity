@@ -92,7 +92,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
 
     private fun updatePieData(pieView: PieView, stats: List<Stat>) {
         lifecycleScope.launch(Default) {
-            val total = stats.sumBy { stat -> stat.count }
+            val total = stats.sumOf { stat -> stat.count }
             val slices = stats.map { stat ->
                 val angle = (stat.count.toFloat() / total.toFloat()) * 360f
 

@@ -24,9 +24,8 @@ class ScrollableTab @JvmOverloads constructor(
 ) :
     RecyclerView(context, attrs, defStyleAttr) {
 
-    private lateinit var snapHelper: LinearSnapHelper
+    private val snapHelper: LinearSnapHelper
     private val layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-
     private var viewPager: ViewPager2? = null
     private var isRVScrolling = true
     private var pageChangeListener: ((position: Int) -> Unit)? = null

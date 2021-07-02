@@ -1,5 +1,7 @@
 package com.louis.app.cavity.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +36,19 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
             it.getContentIfNotHandled()?.let { stringRes ->
                 onShowSnackbarRequested(stringRes)
             }
+        }
+    }
+
+    fun requestMediaPersistentPermission(mediaUri: Uri) {
+        val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+
+        try {
+            contentResolver?.takePersistableUriPermission(mediaUri, flags)
+                ?: throw NullPointerException()
+        } catch (e: SecurityException) {
+            onShowSnackbarRequested(R.string.persistent_permission_error)
+        } catch (e: NullPointerException) {
+            onShowSnackbarRequested(R.string.base_error)
         }
     }
 

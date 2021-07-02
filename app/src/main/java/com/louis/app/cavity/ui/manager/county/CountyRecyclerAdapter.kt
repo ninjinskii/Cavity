@@ -84,7 +84,7 @@ class CountyRecyclerAdapter(
         }
 
         private fun showPopup(view: View) {
-            val county = counties[adapterPosition].county
+            val county = counties[bindingAdapterPosition].county
 
             PopupMenu(context, view).apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) setForceShowIcon(true)

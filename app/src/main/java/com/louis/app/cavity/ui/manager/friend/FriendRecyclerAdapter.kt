@@ -65,7 +65,7 @@ class FriendRecyclerAdapter(
         }
 
         private fun showPopup(view: View) {
-            val friend = getItem(adapterPosition)
+            val friend = getItem(bindingAdapterPosition)
 
             PopupMenu(context, view).apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) setForceShowIcon(true)
