@@ -12,6 +12,7 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
     ItemTouchHelper.LEFT
 ) {
 
+    // TODO: update values for larger screens
     companion object {
         private const val swipeReboundingElasticity = 0.8f
         private const val trueSwipeThreshold = 0.4f
