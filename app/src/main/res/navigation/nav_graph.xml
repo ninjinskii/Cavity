@@ -243,8 +243,8 @@
         tools:layout="@layout/fragment_stats" />
 
     <fragment
-        android:id="@+id/fragmentInquireTastingInfo"
-        android:name="com.louis.app.cavity.ui.addtasting.FragmentInquireTastingInfo"
-        android:label="FragmentInquireTastingInfo"
+        android:id="@+id/fragmentAddTasting"
+        android:name="com.louis.app.cavity.ui.addtasting.FragmentAddTasting"
+        android:label="FragmentAddTasting"
         tools:layout="@layout/fragment_inquire_tasting_info" />
 </navigation>
