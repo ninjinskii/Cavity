@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.tasting
+package com.louis.app.cavity.ui.addtasting
 
 import android.os.Bundle
 import android.view.View
@@ -14,6 +14,7 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.tasting.TastingViewModel
 
 class FragmentInquireTastingInfo : Fragment(R.layout.fragment_inquire_tasting_info) {
     private var _binding: FragmentInquireTastingInfoBinding? = null

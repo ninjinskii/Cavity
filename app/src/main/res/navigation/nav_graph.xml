@@ -244,7 +244,7 @@
 
     <fragment
         android:id="@+id/fragmentInquireTastingInfo"
-        android:name="com.louis.app.cavity.ui.tasting.FragmentInquireTastingInfo"
+        android:name="com.louis.app.cavity.ui.addtasting.FragmentInquireTastingInfo"
         android:label="FragmentInquireTastingInfo"
         tools:layout="@layout/fragment_inquire_tasting_info" />
 </navigation>
