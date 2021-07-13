@@ -8,15 +8,18 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemBottleBinding
 import com.louis.app.cavity.db.dao.BoundedBottle
-import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class BottleRecyclerAdapter(
-    private val colorUtil: ColorUtil,
+    private val pickMode: Boolean,
     private val onClickListener: (Long, Long) -> Unit
 ) :
     ListAdapter<BoundedBottle, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
+
+    // Pick mode only
+    // TODO: Move into view model
+    private val selectedBottles = mutableListOf<Long>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottleViewHolder {
         val binding = ItemBottleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -45,6 +48,8 @@ class BottleRecyclerAdapter(
             val (bottle, wine) = boundedBottle
             val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
+            binding.root.isSelected = bottle.id in selectedBottles
+
             with(binding.wineColorNameNaming) {
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
@@ -53,10 +58,27 @@ class BottleRecyclerAdapter(
             }
 
             binding.root.setOnClickListener {
-                onClickListener(wine.id, bottle.id)
+                if (pickMode) {
+                    handlePickModeClick(bottle.id)
+                } else {
+                    onClickListener(wine.id, bottle.id)
+                }
             }
 
             binding.vintage.text = bottle.vintage.toString()
+        }
+
+        private fun handlePickModeClick(clickedBottle: Long) {
+            with(binding.root) {
+                isSelected = !isSelected
+
+                if (isSelected) {
+                    selectedBottles.add(clickedBottle)
+                } else {
+                    selectedBottles.remove(clickedBottle)
+                }
+            }
+
         }
     }
 }

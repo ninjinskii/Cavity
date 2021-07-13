@@ -32,6 +32,10 @@ import java.util.*
 import kotlin.math.max
 
 class FragmentSearch : Fragment(R.layout.fragment_search) {
+    companion object {
+        const val PICK_MODE = "com.louis.app.cavity.ui.search.FragmentSearch.PICK_MODE"
+    }
+
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var _binding: FragmentSearchBinding? = null
@@ -149,7 +153,9 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initRecyclerView() {
-        bottlesAdapter = BottleRecyclerAdapter(ColorUtil(requireContext())) { wineId, bottleId ->
+        val isPickMode = arguments?.getBoolean(PICK_MODE) ?: false
+
+        bottlesAdapter = BottleRecyclerAdapter(isPickMode) { wineId, bottleId ->
             val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
             binding.searchView.hideKeyboard()
             findNavController().navigate(action)
