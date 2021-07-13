@@ -8,23 +8,23 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.FragmentAddBottleBinding
+import com.louis.app.cavity.databinding.FragmentStepperBinding
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.stepper.AddBottlesPagerAdapter
 import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.*
 import com.louis.app.cavity.util.showSnackbar
 
-class FragmentAddBottle : Fragment(R.layout.fragment_add_bottle), Stepper {
+class FragmentAddBottle : Fragment(R.layout.fragment_stepper), Stepper {
     lateinit var snackbarProvider: SnackbarProvider
-    private var _binding: FragmentAddBottleBinding? = null
+    private var _binding: FragmentStepperBinding? = null
     private val binding get() = _binding!!
     private val addBottleViewModel: AddBottleViewModel by viewModels()
     private val args: FragmentAddBottleArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentAddBottleBinding.bind(view)
+        _binding = FragmentStepperBinding.bind(view)
 
         snackbarProvider = activity as SnackbarProvider
 
