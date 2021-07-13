@@ -9,7 +9,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.DatePicker
-import com.louis.app.cavity.ui.addbottle.stepper.Stepper
+import com.louis.app.cavity.ui.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.DateManager
 import com.louis.app.cavity.util.DateFormatter

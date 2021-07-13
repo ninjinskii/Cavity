@@ -19,7 +19,7 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
-import com.louis.app.cavity.ui.addbottle.stepper.Stepper
+import com.louis.app.cavity.ui.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel

@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.addbottle.stepper
+package com.louis.app.cavity.ui
 
 interface Stepper {
     fun requestNextPage()

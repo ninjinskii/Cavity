@@ -9,8 +9,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.Stepper
 import com.louis.app.cavity.ui.addbottle.adapter.QuantifiedGrapeRecyclerAdapter
-import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeManager
 import com.louis.app.cavity.util.L
