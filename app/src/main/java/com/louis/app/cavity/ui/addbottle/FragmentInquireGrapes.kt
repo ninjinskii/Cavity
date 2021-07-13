@@ -2,22 +2,19 @@ package com.louis.app.cavity.ui.addbottle
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
-import com.louis.app.cavity.ui.Stepper
 import com.louis.app.cavity.ui.addbottle.adapter.QuantifiedGrapeRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.GrapeManager
-import com.louis.app.cavity.util.L
+import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.setVisible
 
-class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
-    private lateinit var stepperx: Stepper
+class FragmentInquireGrapes : Step(R.layout.fragment_inquire_grapes) {
     private lateinit var grapeManager: GrapeManager
     private var _binding: FragmentInquireGrapesBinding? = null
     private val binding get() = _binding!!
@@ -29,7 +26,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireGrapesBinding.bind(view)
 
-        stepperx = parentFragment as Stepper
         grapeManager = addBottleViewModel.grapeManager
 
         initRecyclerView()
@@ -53,7 +49,6 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
 
         grapeManager.qGrapes.observe(viewLifecycleOwner) {
             toggleRvPlaceholder(it.isEmpty())
-            L.v("list from observer: $it")
             quantifiedGrapeAdapter.submitList(it.toMutableList())
         }
     }
@@ -86,9 +81,9 @@ class FragmentInquireGrapes : Fragment(R.layout.fragment_inquire_grapes) {
             buttonSelectGrape.setOnClickListener { grapeManager.requestGrapeDialog() }
             buttonSelectGrapeSecondary.setOnClickListener { grapeManager.requestGrapeDialog() }
             buttonAddGrape.setOnClickListener { showAddGrapeDialog() }
-            buttonSkip.setOnClickListener { stepperx.requestNextPage() }
-            stepper.next.setOnClickListener { stepperx.requestNextPage() }
-            stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
+            buttonSkip.setOnClickListener { stepperFragment.requestNextPage() }
+            stepper.next.setOnClickListener { stepperFragment.requestNextPage() }
+            stepper.previous.setOnClickListener { stepperFragment.requestPreviousPage() }
         }
     }
 

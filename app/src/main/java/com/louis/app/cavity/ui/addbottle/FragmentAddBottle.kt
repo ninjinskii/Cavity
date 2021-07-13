@@ -5,15 +5,22 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.louis.app.cavity.ui.FragmentStepper
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
+import com.louis.app.cavity.ui.stepper.Stepper
 import com.louis.app.cavity.util.showSnackbar
 
-class FragmentAddBottle : FragmentStepper() {
+class FragmentAddBottle : Stepper() {
     lateinit var snackbarProvider: SnackbarProvider
     private val addBottleViewModel: AddBottleViewModel by viewModels()
     private val args: FragmentAddBottleArgs by navArgs()
+
+    override val steps = setOf(
+        FragmentInquireDates(),
+        FragmentInquireGrapes(),
+        FragmentInquireReviews(),
+        FragmentInquireOtherInfo()
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,6 +48,4 @@ class FragmentAddBottle : FragmentStepper() {
             }
         }
     }
-
-    override fun getPagerAdapter() = AddBottlesPagerAdapter(this)
 }

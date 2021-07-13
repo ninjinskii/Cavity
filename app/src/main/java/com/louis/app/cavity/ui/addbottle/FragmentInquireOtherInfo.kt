@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,16 +18,15 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
-import com.louis.app.cavity.ui.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
 
-class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) {
-    private lateinit var stepperx: Stepper
+class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     private lateinit var otherInfoManager: OtherInfoManager
     private var _binding: FragmentInquireOtherInfoBinding? = null
     private val binding get() = _binding!!
@@ -47,7 +45,6 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireOtherInfoBinding.bind(view)
 
-        stepperx = parentFragment as Stepper
         otherInfoManager = addBottleViewModel.otherInfoManager
 
         setListeners()
@@ -84,8 +81,8 @@ class FragmentInquireOtherInfo : Fragment(R.layout.fragment_inquire_other_info) 
                 }
             }
 
-            stepper.next.setOnClickListener { stepperx.requestNextPage() }
-            stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
+            stepper.next.setOnClickListener { stepperFragment.requestNextPage() }
+            stepper.previous.setOnClickListener { stepperFragment.requestPreviousPage() }
 
             giftedBy.setOnCheckedChangeListener { _, isChecked ->
                 friendScrollView.setVisible(isChecked)

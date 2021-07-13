@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.addtasting
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,9 +13,10 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.tasting.TastingViewModel
 
-class FragmentInquireTastingInfo : Fragment(R.layout.fragment_inquire_tasting_info) {
+class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) {
     private var _binding: FragmentInquireTastingInfoBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()

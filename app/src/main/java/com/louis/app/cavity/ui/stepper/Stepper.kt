@@ -1,19 +1,20 @@
-package com.louis.app.cavity.ui
+package com.louis.app.cavity.ui.stepper
 
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
 
-abstract class FragmentStepper : Fragment(R.layout.fragment_stepper) {
+abstract class Stepper : Fragment(R.layout.fragment_stepper) {
 
     // Sublcasses would be confusing to read
     @Suppress("PropertyName")
     protected var _binding: FragmentStepperBinding? = null
     val binding get() = _binding!!
+
+    abstract val steps: Set<Step>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -24,10 +25,13 @@ abstract class FragmentStepper : Fragment(R.layout.fragment_stepper) {
     }
 
     private fun init() {
+        val pagerAdapter = StepperPagerAdapter(this, steps)
+
         binding.viewPager.apply {
-            adapter = getPagerAdapter()
+            adapter = pagerAdapter
             isUserInputEnabled = false
         }
+
     }
 
     private fun setupCustomBackNav() {
@@ -46,17 +50,11 @@ abstract class FragmentStepper : Fragment(R.layout.fragment_stepper) {
         _binding = null
     }
 
-    protected fun registerAdapter(adapter: FragmentStateAdapter) {
-        binding.viewPager.adapter = adapter
-    }
-
-    protected fun requestNextPage(): Int {
+    fun requestNextPage(): Int {
         return ++binding.viewPager.currentItem
     }
 
-    protected fun requestPreviousPage(): Int {
+    fun requestPreviousPage(): Int {
         return --binding.viewPager.currentItem
     }
-
-    abstract fun getPagerAdapter(): FragmentStateAdapter
 }
