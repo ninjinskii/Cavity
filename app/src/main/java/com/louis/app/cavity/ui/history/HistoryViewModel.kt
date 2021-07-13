@@ -13,8 +13,6 @@ import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -122,8 +120,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         } else false
     }
 
-    private fun getDataSource(filter: HistoryFilter):
-            PagingSource<Int, BoundedHistoryEntry> {
+    private fun getDataSource(filter: HistoryFilter): PagingSource<Int, BoundedHistoryEntry> {
         return when (filter) {
             is HistoryFilter.TypeFilter -> when (filter.chipId) {
                 R.id.chipReplenishments -> repository.getEntriesByType(1, 3)
@@ -135,10 +132,9 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                 else -> repository.getAllEntries()
             }
             is HistoryFilter.BottleFilter -> repository.getEntriesForBottle(filter.bottleId)
-            else -> repository.getAllEntries()
+            /* is NoFilter */ else -> repository.getAllEntries()
         }
     }
-
 }
 
 sealed class HistoryFilter {

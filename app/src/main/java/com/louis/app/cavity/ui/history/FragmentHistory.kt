@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.ChipGroup
@@ -24,12 +25,12 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.ui.ChipLoader
-import com.louis.app.cavity.ui.history.adapter.*
+import com.louis.app.cavity.ui.history.adapter.HistoryDivider
+import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter
 import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
+import com.louis.app.cavity.ui.history.adapter.ReboundingSwipeActionCallback
+import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
 import com.louis.app.cavity.util.*
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -103,17 +104,9 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     private fun observe() {
         historyViewModel.scrollTo.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { pos ->
-                L.v("Start scrolling to position: $pos")
-                val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 5)
+                val scroller = LinearSmoothScroller(requireContext())
                 scroller.targetPosition = pos
-//                val adapter = (binding.historyRecyclerView.adapter as HistoryRecyclerAdapter)
-//                adapter.triggerLoadForPosition(pos)
-
-                lifecycleScope.launch(Main) {
-                    delay(1000)
-                    binding.historyRecyclerView.layoutManager?.startSmoothScroll(scroller)
-                }
-
+                binding.historyRecyclerView.layoutManager?.startSmoothScroll(scroller)
             }
         }
 
@@ -138,8 +131,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         binding.bottleDetails.buttonShowBottle.setOnClickListener {
             historyViewModel.selectedEntry.value?.let {
                 val (bottle, wine) = it.bottleAndWine
-                val action =
-                    FragmentHistoryDirections.historyToBottle(wine.id, bottle.id)
+                val action = FragmentHistoryDirections.historyToBottle(wine.id, bottle.id)
 
                 findNavController().navigate(action)
             }

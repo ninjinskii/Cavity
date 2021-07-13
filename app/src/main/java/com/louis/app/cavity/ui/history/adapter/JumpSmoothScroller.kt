@@ -18,13 +18,19 @@ class JumpSmoothScroller(
     override fun onSeekTargetStep(dx: Int, dy: Int, state: RecyclerView.State, action: Action) {
         val layoutManager = layoutManager as? LinearLayoutManager
         if (layoutManager != null) {
-            if (targetPosition + jumpThreshold < layoutManager.findFirstVisibleItemPosition()) {
-                action.jumpTo(targetPosition + jumpThreshold)
-                return
-            }
-            if (targetPosition - jumpThreshold > layoutManager.findLastVisibleItemPosition()) {
-                action.jumpTo(targetPosition - jumpThreshold)
-                return
+            val first = layoutManager.findFirstVisibleItemPosition()
+            val last = layoutManager.findLastVisibleItemPosition()
+
+            when {
+                targetPosition + jumpThreshold < first -> {
+                    action.jumpTo(targetPosition + jumpThreshold)
+                    return
+                }
+                targetPosition - jumpThreshold > last -> {
+                    action.jumpTo(targetPosition - jumpThreshold)
+                    return
+                }
+
             }
         }
 
