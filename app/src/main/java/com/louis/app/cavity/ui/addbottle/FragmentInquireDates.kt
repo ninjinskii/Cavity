@@ -71,7 +71,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
         with(binding) {
             stepper.next.setOnClickListener { goToNextPage() }
-            stepper.previous.setOnClickListener { stepperFragment.requestPreviousPage() }
+            stepper.previous.setOnClickListener { stepperFragment?.requestPreviousPage() }
         }
     }
 
@@ -102,7 +102,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
         if (isFormValid) {
             savePartialBottle()
-            stepperFragment.requestNextPage()
+            stepperFragment?.requestNextPage()
         }
     }
 

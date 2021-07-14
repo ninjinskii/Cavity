@@ -15,6 +15,7 @@ import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.tasting.TastingViewModel
+import com.louis.app.cavity.util.setupNavigation
 
 class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) {
     private var _binding: FragmentInquireTastingInfoBinding? = null
@@ -25,6 +26,8 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireTastingInfoBinding.bind(view)
+
+        setupNavigation(binding.appBar.toolbar)
 
         initNumberPickers()
         initFriendChips()
@@ -132,6 +135,8 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
                     fridgeTemp.value,
                     freezerTemp.value
                 )
+
+                stepperFragment?.requestNextPage()
             }
         }
     }

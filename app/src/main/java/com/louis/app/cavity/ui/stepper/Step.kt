@@ -6,7 +6,7 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 
 abstract class Step(@LayoutRes layout: Int) : Fragment(layout) {
-    protected lateinit var stepperFragment: Stepper
+    protected var stepperFragment: Stepper? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -15,9 +15,7 @@ abstract class Step(@LayoutRes layout: Int) : Fragment(layout) {
             stepperFragment = parentFragment as Stepper
         } catch (e: ClassCastException) {
             if (parentFragment == null) {
-                throw IllegalStateException("Parent is null")
-            } else {
-                throw IllegalStateException("Step should be a child of stepper. Parent is: ${parentFragment!!::class.java.name}")
+                throw IllegalStateException("Parent fragment is null")
             }
         }
     }

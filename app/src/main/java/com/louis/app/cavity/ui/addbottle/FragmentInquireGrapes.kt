@@ -81,9 +81,9 @@ class FragmentInquireGrapes : Step(R.layout.fragment_inquire_grapes) {
             buttonSelectGrape.setOnClickListener { grapeManager.requestGrapeDialog() }
             buttonSelectGrapeSecondary.setOnClickListener { grapeManager.requestGrapeDialog() }
             buttonAddGrape.setOnClickListener { showAddGrapeDialog() }
-            buttonSkip.setOnClickListener { stepperFragment.requestNextPage() }
-            stepper.next.setOnClickListener { stepperFragment.requestNextPage() }
-            stepper.previous.setOnClickListener { stepperFragment.requestPreviousPage() }
+            buttonSkip.setOnClickListener { stepperFragment?.requestNextPage() }
+            stepper.next.setOnClickListener { stepperFragment?.requestNextPage() }
+            stepper.previous.setOnClickListener { stepperFragment?.requestPreviousPage() }
         }
     }
 

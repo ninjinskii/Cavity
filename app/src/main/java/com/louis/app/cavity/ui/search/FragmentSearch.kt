@@ -10,7 +10,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -27,11 +26,15 @@ import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
+import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.*
 import java.util.*
 import kotlin.math.max
 
-class FragmentSearch : Fragment(R.layout.fragment_search) {
+/**
+ * This fragment is used as step when adding tasting
+ */
+class FragmentSearch : Step(R.layout.fragment_search) {
     companion object {
         const val PICK_MODE = "com.louis.app.cavity.ui.search.FragmentSearch.PICK_MODE"
     }
@@ -46,12 +49,15 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
+    private var isPickMode = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
 
         setupNavigation(binding.fakeToolbar)
+
+        isPickMode = arguments?.getBoolean(PICK_MODE) ?: false
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_EXPANDED
@@ -60,7 +66,11 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         binding.fakeToolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            if (isPickMode) {
+                stepperFragment?.requestPreviousPage()
+            } else {
+                findNavController().navigateUp()
+            }
         }
 
         binding.root.doOnLayout {
@@ -153,7 +163,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initRecyclerView() {
-        val isPickMode = arguments?.getBoolean(PICK_MODE) ?: false
+        binding.next.setVisible(isPickMode)
 
         bottlesAdapter = BottleRecyclerAdapter(isPickMode) { wineId, bottleId ->
             val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
@@ -175,7 +185,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         searchViewModel.results.observe(viewLifecycleOwner) {
-            L.v("received event")
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter.submitList(it.toMutableList())
@@ -332,6 +341,10 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                     searchViewModel.setPriceFilter(minPrice, values[1].toInt())
                 }
             }
+        }
+
+        binding.next.setOnClickListener {
+
         }
     }
 

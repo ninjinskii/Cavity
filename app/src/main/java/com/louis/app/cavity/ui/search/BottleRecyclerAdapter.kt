@@ -17,10 +17,6 @@ class BottleRecyclerAdapter(
 ) :
     ListAdapter<BoundedBottle, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
 
-    // Pick mode only
-    // TODO: Move into view model
-    private val selectedBottles = mutableListOf<Long>()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottleViewHolder {
         val binding = ItemBottleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
@@ -48,7 +44,7 @@ class BottleRecyclerAdapter(
             val (bottle, wine) = boundedBottle
             val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
-            binding.root.isSelected = bottle.id in selectedBottles
+            binding.root.isSelected = bottle.isSelected
 
             with(binding.wineColorNameNaming) {
                 wineName.text = wine.name
@@ -59,26 +55,14 @@ class BottleRecyclerAdapter(
 
             binding.root.setOnClickListener {
                 if (pickMode) {
-                    handlePickModeClick(bottle.id)
+                    bottle.isSelected = !bottle.isSelected
+                    it.isSelected = bottle.isSelected
                 } else {
                     onClickListener(wine.id, bottle.id)
                 }
             }
 
             binding.vintage.text = bottle.vintage.toString()
-        }
-
-        private fun handlePickModeClick(clickedBottle: Long) {
-            with(binding.root) {
-                isSelected = !isSelected
-
-                if (isSelected) {
-                    selectedBottles.add(clickedBottle)
-                } else {
-                    selectedBottles.remove(clickedBottle)
-                }
-            }
-
         }
     }
 }

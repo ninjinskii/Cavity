@@ -28,6 +28,11 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             filter(receiver, bottles, filter)
         }
 
+    // Pick mode only
+//    private val _selectedBottles = MutableLiveData<MutableList<Bottle>>(mutableListOf())
+//    val selectedBottles: LiveData<MutableList<Bottle>>
+//        get() = _selectedBottles
+
     private var currentBeyondDate: Long? = null
     private var currentUntilDate: Long? = null
 
@@ -170,6 +175,14 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         updateFilters()
     }
 
+//    fun selectBottle(bottle: Bottle) {
+//        _selectedBottles += bottle
+//    }
+//
+//    fun unselectBottle(bottle: Bottle) {
+//        _selectedBottles -= bottle
+//    }
+
     private fun updateFilters() {
         val filters = listOf(
             countyFilter, colorFilter, otherFilter, vintageFilter,
@@ -180,7 +193,11 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         globalFilter.value = combinedFilters
     }
 
-    private fun filter(receiver: MutableLiveData<List<BoundedBottle>>, bottles: List<BoundedBottle>, filter: WineFilter) {
+    private fun filter(
+        receiver: MutableLiveData<List<BoundedBottle>>,
+        bottles: List<BoundedBottle>,
+        filter: WineFilter
+    ) {
         viewModelScope.launch(Default) {
             val filtered = filter.meetFilters(bottles)
             receiver.postValue(filtered)

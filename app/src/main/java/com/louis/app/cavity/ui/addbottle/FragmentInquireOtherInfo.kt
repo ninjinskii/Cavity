@@ -81,8 +81,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 }
             }
 
-            stepper.next.setOnClickListener { stepperFragment.requestNextPage() }
-            stepper.previous.setOnClickListener { stepperFragment.requestPreviousPage() }
+            stepper.next.setOnClickListener { stepperFragment?.requestNextPage() }
+            stepper.previous.setOnClickListener { stepperFragment?.requestPreviousPage() }
 
             giftedBy.setOnCheckedChangeListener { _, isChecked ->
                 friendScrollView.setVisible(isChecked)

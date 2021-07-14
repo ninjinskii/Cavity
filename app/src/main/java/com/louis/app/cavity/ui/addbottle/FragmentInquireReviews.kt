@@ -87,9 +87,9 @@ class FragmentInquireReviews : Step(R.layout.fragment_inquire_review) {
             buttonAddReview.setOnClickListener { showAddReviewDialog() }
             buttonSelectReview.setOnClickListener { reviewManager.requestReviewDialog() }
             buttonSelectReviewSecondary.setOnClickListener { reviewManager.requestReviewDialog() }
-            buttonSkip.setOnClickListener { stepperFragment.requestNextPage() }
-            stepper.next.setOnClickListener { stepperFragment.requestNextPage() }
-            stepper.previous.setOnClickListener { stepperFragment.requestPreviousPage() }
+            buttonSkip.setOnClickListener { stepperFragment?.requestNextPage() }
+            stepper.next.setOnClickListener { stepperFragment?.requestNextPage() }
+            stepper.previous.setOnClickListener { stepperFragment?.requestPreviousPage() }
         }
     }
 

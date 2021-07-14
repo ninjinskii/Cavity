@@ -1,9 +1,6 @@
 package com.louis.app.cavity.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.louis.app.cavity.R
 import java.util.*
 
@@ -32,8 +29,11 @@ data class Bottle(
     @ColumnInfo(name = "taste_comment") val tasteComment: String, // might disappear
     @ColumnInfo(name = "pdf_path") var pdfPath: String,
     var consumed: Int,
-    @ColumnInfo(name = "tasting_id", index = true) var tastingId: Long? = null
+    @ColumnInfo(name = "tasting_id", index = true) var tastingId: Long? = null,
 ) : Chipable {
+
+    @Ignore
+    var isSelected: Boolean = false
 
     fun isReadyToDrink(): Boolean {
         val year = Calendar.getInstance().get(Calendar.YEAR)

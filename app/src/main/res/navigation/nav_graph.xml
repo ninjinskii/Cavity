@@ -145,7 +145,7 @@
         tools:layout="@layout/fragment_tastings">
         <action
             android:id="@+id/tastingToAddTasting"
-            app:destination="@id/fragmentInquireTastingInfo" />
+            app:destination="@id/fragmentAddTasting" />
     </fragment>
 
     <fragment
