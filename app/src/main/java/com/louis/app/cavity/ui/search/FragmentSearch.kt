@@ -152,6 +152,13 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun initOtherChips() {
+        binding.chipSelected.apply {
+            setVisible(isPickMode)
+            setOnCheckedChangeListener { _, isChecked ->
+                searchViewModel.setSelectedFilter(isChecked)
+            }
+        }
+
         binding.otherChipGroup.apply {
             clearCheck()
             children.forEach {
@@ -346,6 +353,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         binding.next.setOnClickListener {
 
         }
+
     }
 
     private fun setHeaderShadow(setVisible: Boolean) {

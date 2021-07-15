@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.search
 
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -44,7 +45,7 @@ class BottleRecyclerAdapter(
             val (bottle, wine) = boundedBottle
             val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
-            binding.root.isSelected = bottle.isSelected
+            binding.checkedIcon.setVisible(bottle.isSelected)
 
             with(binding.wineColorNameNaming) {
                 wineName.text = wine.name
@@ -56,7 +57,8 @@ class BottleRecyclerAdapter(
             binding.root.setOnClickListener {
                 if (pickMode) {
                     bottle.isSelected = !bottle.isSelected
-                    it.isSelected = bottle.isSelected
+                    TransitionManager.beginDelayedTransition(it as ViewGroup)
+                    binding.checkedIcon.setVisible(bottle.isSelected)
                 } else {
                     onClickListener(wine.id, bottle.id)
                 }

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    style="@style/Widget.MaterialComponents.Chip.Choice"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
@@ -25,10 +24,23 @@
         android:layout_marginVertical="@dimen/small_margin"
         android:layout_marginEnd="@dimen/medium_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/checkedIcon"
         app:layout_constraintStart_toEndOf="@id/wineColorNameNaming"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="2015" />
+
+    <ImageView
+        android:id="@+id/checkedIcon"
+        android:layout_width="@dimen/medium_icon"
+        android:layout_height="@dimen/medium_icon"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_check"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/vintage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorPrimary" />
 
     <!--    <View-->
     <!--        android:layout_width="0dp"-->

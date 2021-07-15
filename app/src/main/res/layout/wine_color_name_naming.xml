@@ -33,13 +33,14 @@
     <TextView
         android:id="@+id/wineNaming"
         style="@style/TextAppearance.MaterialComponents.Caption"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/small_margin"
         android:layout_marginTop="@dimen/xsmall_margin"
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="Saint-Émilion"
+        app:layout_constraintEnd_toStartOf="@id/organic_image"
         app:layout_constraintStart_toEndOf="@id/wineColorIndicator"
         app:layout_constraintTop_toBottomOf="@id/wineName" />
 
