@@ -97,9 +97,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun observe() {
         searchViewModel.getAllCounties().observe(viewLifecycleOwner) { counties ->
-            L.timestamp("map") {
-                searchViewModel.selectedCounties.map { it.id }
-            }
             val preselectedCounties = searchViewModel.selectedCounties.map { it.id }
             ChipLoader.Builder()
                 .with(lifecycleScope)
@@ -138,6 +135,11 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .build()
                 .go()
         }
+
+        searchViewModel.selectedBottles.observe(viewLifecycleOwner) {
+            binding.buttonSubmit.isEnabled = it.isNotEmpty()
+            binding.chipSelected.text = resources.getString(R.string.selected_bottles, it.size)
+        }
     }
 
     private fun initColorChips() {
@@ -170,13 +172,17 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun initRecyclerView() {
-        binding.next.setVisible(isPickMode)
-
-        bottlesAdapter = BottleRecyclerAdapter(isPickMode) { wineId, bottleId ->
-            val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
-            binding.searchView.hideKeyboard()
-            findNavController().navigate(action)
-        }
+        bottlesAdapter = BottleRecyclerAdapter(
+            isPickMode,
+            onPicked = { bottle, isChecked ->
+                searchViewModel.onBottleStateChanged(bottle, isChecked)
+            },
+            onClickListener = { wineId, bottleId ->
+                val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
+                binding.searchView.hideKeyboard()
+                findNavController().navigate(action)
+            }
+        )
 
         binding.bottleList.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -281,7 +287,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     // Kwown issue: bottom sheet might and the toggle button might misbehave
-    // if for some reason the keyboard doesn't show up when calling showKeyboard()
+// if for some reason the keyboard doesn't show up when calling showKeyboard()
     private fun setupMenu() {
         binding.motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(motionLayout: MotionLayout?, p0: Int, p1: Int) {
@@ -335,8 +341,11 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
         }
 
-        binding.currentQuery.setOnClickListener {
-            binding.searchButton.performClick()
+        binding.currentQuery.apply {
+            setVisible(!isPickMode)
+            setOnClickListener {
+                binding.searchButton.performClick()
+            }
         }
 
         binding.togglePrice.setOnCheckedChangeListener { _, isChecked ->
@@ -350,10 +359,12 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
         }
 
-        binding.next.setOnClickListener {
-
+        binding.buttonSubmit.apply {
+            setVisible(isPickMode)
+            setOnClickListener {
+                stepperFragment?.requestNextPage()
+            }
         }
-
     }
 
     private fun setHeaderShadow(setVisible: Boolean) {

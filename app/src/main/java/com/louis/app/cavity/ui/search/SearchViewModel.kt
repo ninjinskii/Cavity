@@ -14,6 +14,8 @@ import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.util.combineAsync
+import com.louis.app.cavity.util.minusAssign
+import com.louis.app.cavity.util.plusAssign
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
@@ -21,6 +23,10 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
     private val globalFilter = MutableLiveData<WineFilter>(NoFilter)
+
+    private val _selectedBottles = MutableLiveData<MutableList<BoundedBottle>>(mutableListOf())
+    val selectedBottles: LiveData<MutableList<BoundedBottle>>
+        get() = _selectedBottles
 
     val results: LiveData<List<BoundedBottle>> = repository
         .getBoundedBottles()
@@ -181,13 +187,12 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         updateFilters()
     }
 
-//    fun selectBottle(bottle: Bottle) {
-//        _selectedBottles += bottle
-//    }
-//
-//    fun unselectBottle(bottle: Bottle) {
-//        _selectedBottles -= bottle
-//    }
+    // Pick mode only
+    fun onBottleStateChanged(bottle: BoundedBottle, isSelected: Boolean) {
+        _selectedBottles.let {
+            if (isSelected) it += bottle else it -= bottle
+        }
+    }
 
     private fun updateFilters() {
         val filters = listOf(

@@ -14,6 +14,7 @@ import com.louis.app.cavity.util.toBoolean
 
 class BottleRecyclerAdapter(
     private val pickMode: Boolean,
+    private val onPicked: (BoundedBottle, Boolean) -> Unit,
     private val onClickListener: (Long, Long) -> Unit
 ) :
     ListAdapter<BoundedBottle, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
@@ -46,6 +47,7 @@ class BottleRecyclerAdapter(
             val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
             binding.checkedIcon.setVisible(bottle.isSelected)
+            binding.vintage.text = bottle.vintage.toString()
 
             with(binding.wineColorNameNaming) {
                 wineName.text = wine.name
@@ -59,12 +61,11 @@ class BottleRecyclerAdapter(
                     bottle.isSelected = !bottle.isSelected
                     TransitionManager.beginDelayedTransition(it as ViewGroup)
                     binding.checkedIcon.setVisible(bottle.isSelected)
+                    onPicked(boundedBottle, bottle.isSelected)
                 } else {
                     onClickListener(wine.id, bottle.id)
                 }
             }
-
-            binding.vintage.text = bottle.vintage.toString()
         }
     }
 }
