@@ -10,12 +10,12 @@
         android:drawable="@drawable/ic_filter" />
 
     <transition
-        android:drawable="@drawable/anim_filter_close"
+        android:drawable="@drawable/anim_close_filter"
         android:fromId="@id/close"
         android:toId="@id/filter" />
 
     <transition
-        android:drawable="@drawable/anim_close_filter"
+        android:drawable="@drawable/anim_filter_close"
         android:fromId="@id/filter"
         android:toId="@id/close" />
 </animated-selector>
