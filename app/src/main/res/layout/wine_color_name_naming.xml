@@ -27,7 +27,7 @@
         android:maxLines="2"
         tools:text="Château la Cour"
         app:layout_constraintStart_toEndOf="@id/wineColorIndicator"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/organic_image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

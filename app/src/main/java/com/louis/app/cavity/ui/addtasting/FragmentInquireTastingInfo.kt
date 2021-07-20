@@ -5,6 +5,8 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireTastingInfoBinding
 import com.louis.app.cavity.model.Friend
@@ -14,14 +16,17 @@ import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
-import com.louis.app.cavity.ui.tasting.TastingViewModel
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) {
     private var _binding: FragmentInquireTastingInfoBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
-    private val tastingViewModel: TastingViewModel by viewModels()
+    private val addTastingViewModel: AddTastingViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+
+    private lateinit var datePicker: DatePicker
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,7 +57,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
             freezerTemp.setFormatter { "${it + freezerMinValue}" }
         }
 
-        tastingViewModel.lastTasting.observe(viewLifecycleOwner) {
+        addTastingViewModel.lastTasting.observe(viewLifecycleOwner) {
             with(binding) {
                 cellarTemp.value = (it?.cellarTemp ?: Temperature.DEFAULT_CELLAR_TEMP)
                     .toLocaleTemp()
@@ -70,7 +75,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         val allFriends = mutableSetOf<Friend>()
         val alreadyInflated = mutableSetOf<Friend>()
 
-        tastingViewModel.friends.observe(viewLifecycleOwner) {
+        addTastingViewModel.friends.observe(viewLifecycleOwner) {
 //            allFriends.addAll(it)
 //            val toInflate = allFriends - alreadyInflated
 //            alreadyInflated.addAll(toInflate)
@@ -89,15 +94,18 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
     }
 
     private fun initDatePicker() {
-        DatePicker(
+        val constraint = CalendarConstraints.Builder()
+            .setValidator(DateValidatorPointForward.now())
+            .build()
+
+        datePicker = DatePicker(
             childFragmentManager,
             associatedTextLayout = binding.dateLayout,
             title = getString(R.string.tasting_date),
-            defaultDate = System.currentTimeMillis()
-        ).apply {
-            onEndIconClickListener = { tastingViewModel.date = System.currentTimeMillis() }
-            onDateChangedListener = { tastingViewModel.date = it }
-        }
+            clearable = false,
+            defaultDate = System.currentTimeMillis(),
+            constraint
+        )
     }
 
     private fun setListeners() {
@@ -129,11 +137,12 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
             with(binding) {
                 val opportunity = opportunity.text.toString().trim()
 
-                tastingViewModel.submit(
+                addTastingViewModel.submitTasting(
                     opportunity,
                     cellarTemp.value,
                     fridgeTemp.value,
-                    freezerTemp.value
+                    freezerTemp.value,
+                    datePicker.getDate() ?: System.currentTimeMillis()
                 )
 
                 stepperFragment?.requestNextPage()
@@ -141,7 +150,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         }
     }
 
-    private fun Int.toLocaleTemp() = when (tastingViewModel.temperatureUnit) {
+    private fun Int.toLocaleTemp() = when (/*addTastingViewModel.temperatureUnit*/ 0) {
         0 -> Temperature.Celsius(this).value
         else -> Temperature.Fahrenheit(this).value
     }

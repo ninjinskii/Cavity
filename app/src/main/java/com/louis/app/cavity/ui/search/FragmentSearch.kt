@@ -25,6 +25,7 @@ import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
+import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.*
@@ -43,7 +44,12 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+
     private val searchViewModel: SearchViewModel by viewModels()
+    private val addTastingViewModel: AddTastingViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+
     private val recyclerViewDisabler = RecyclerViewDisabler { binding.toggleBackdrop.toggle() }
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
@@ -136,9 +142,11 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .go()
         }
 
-        searchViewModel.selectedBottles.observe(viewLifecycleOwner) {
-            binding.buttonSubmit.isEnabled = it.isNotEmpty()
-            binding.chipSelected.text = resources.getString(R.string.selected_bottles, it.size)
+        if (isPickMode) {
+            addTastingViewModel.selectedBottles.observe(viewLifecycleOwner) {
+                binding.buttonSubmit.isEnabled = it.isNotEmpty()
+                binding.chipSelected.text = resources.getString(R.string.selected_bottles, it.size)
+            }
         }
     }
 
@@ -175,7 +183,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         bottlesAdapter = BottleRecyclerAdapter(
             isPickMode,
             onPicked = { bottle, isChecked ->
-                searchViewModel.onBottleStateChanged(bottle, isChecked)
+                addTastingViewModel.onBottleStateChanged(bottle, isChecked)
             },
             onClickListener = { wineId, bottleId ->
                 val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
@@ -341,16 +349,13 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
         }
 
-        binding.currentQuery.apply {
-            setVisible(!isPickMode)
-            setOnClickListener {
-                binding.searchButton.performClick()
-            }
+        binding.currentQuery.setOnClickListener {
+            binding.searchButton.performClick()
         }
 
         binding.togglePrice.setOnCheckedChangeListener { _, isChecked ->
             binding.priceSlider.apply {
-                // Making sure the view has its chance to restore it state before grabbing values
+                // Making sure the view has its chance to restore its state before grabbing values
                 doOnLayout {
                     isEnabled = isChecked
                     val minPrice = if (isChecked) values[0].toInt() else -1

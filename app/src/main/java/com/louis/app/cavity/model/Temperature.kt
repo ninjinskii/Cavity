@@ -22,6 +22,9 @@ sealed class Temperature(val value: Int) {
 
     abstract fun getUnitString(context: Context): String
 
+    // abstract fun getDefaultCellarTemp()
+    // ...
+
     // Celsius is considered as base unit. Every other unit should be translated from Celsius.
     class Celsius(value: Int) : Temperature(value) {
         override fun getUnitString(context: Context) =

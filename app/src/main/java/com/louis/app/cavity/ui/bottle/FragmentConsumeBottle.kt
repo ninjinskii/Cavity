@@ -44,6 +44,7 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
             childFragmentManager,
             binding.consumeDateLayout,
             title,
+            clearable = true,
             System.currentTimeMillis()
         ).apply {
             onEndIconClickListener =

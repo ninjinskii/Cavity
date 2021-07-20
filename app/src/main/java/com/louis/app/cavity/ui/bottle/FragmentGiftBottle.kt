@@ -44,6 +44,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
             childFragmentManager,
             binding.giftDateLayout,
             title,
+            clearable = true,
             System.currentTimeMillis()
         ).apply {
             onEndIconClickListener =

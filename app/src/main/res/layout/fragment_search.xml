@@ -7,7 +7,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimarySurface"
+    android:background="?attr/colorSurface"
     android:orientation="vertical">
 
     <androidx.constraintlayout.motion.widget.MotionLayout
@@ -497,10 +497,13 @@
 
                 <TextView
                     android:id="@+id/matchingWines"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/currentQuery"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="12 résultats" />
@@ -514,7 +517,7 @@
                     android:maxWidth="100dp"
                     android:maxLines="1"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/buttonSubmit"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="'Barolo'" />
 
@@ -523,6 +526,7 @@
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
                     android:text="@string/submit"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -2,24 +2,34 @@ package com.louis.app.cavity.ui
 
 import android.text.InputType
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
 import com.louis.app.cavity.util.DateFormatter
 
 class DatePicker(
     fragmentManager: FragmentManager,
     private val associatedTextLayout: TextInputLayout,
     private val title: String,
-    private val defaultDate: Long? = null
+    private val clearable: Boolean = false,
+    private val defaultDate: Long? = null,
+    private val constraint: CalendarConstraints? = null,
 ) {
     var isDatePickerDisplayed = false
         private set
+
+    private var picker: MaterialDatePicker<Long>? = null
 
     var onDateChangedListener: ((Long) -> Unit)? = null
     var onEndIconClickListener: (() -> Unit)? = null
 
     init {
         associatedTextLayout.apply {
+            if (!clearable) {
+                endIconMode = END_ICON_NONE
+            }
+
             editText?.inputType = InputType.TYPE_NULL
 
             setEndIconOnClickListener {
@@ -46,10 +56,13 @@ class DatePicker(
         }
     }
 
+    fun getDate() = picker?.selection
+
     private fun createDatePicker(): MaterialDatePicker<Long> {
         val picker = MaterialDatePicker.Builder
             .datePicker()
             .setTitleText(title)
+            .setCalendarConstraints(constraint)
             .build()
 
         picker.addOnDismissListener {
@@ -64,7 +77,7 @@ class DatePicker(
             date?.let { d -> onDateChangedListener?.invoke(d) }
         }
 
-        return picker
+        return picker.also { this.picker = picker }
     }
 
 
