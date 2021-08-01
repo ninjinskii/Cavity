@@ -14,6 +14,7 @@ class FragmentAddTasting : Stepper() {
     override val steps = setOf(
         FragmentInquireTastingInfo(),
         FragmentSearch().apply { arguments = bundleOf(PICK_MODE to true) },
+        FragmentInquireSchedule()
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
