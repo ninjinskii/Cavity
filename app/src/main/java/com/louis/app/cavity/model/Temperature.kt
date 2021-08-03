@@ -18,6 +18,10 @@ sealed class Temperature(val value: Int) {
         const val MIN_FRIDGE_TEMP = 1
         const val MIN_FREEZER_TEMP = -35
         const val MIN_DAY_TEMP = -15
+        const val DEFAULT_RED_TEMP = 15
+        const val DEFAULT_WHITE_TEMP = 10
+        const val DEFAULT_SWEET_TEMP = 5
+        const val DEFAULT_ROSE_TEMP = 6
     }
 
     abstract fun getUnitString(context: Context): String
@@ -33,6 +37,6 @@ sealed class Temperature(val value: Int) {
 
     class Fahrenheit(celsius: Int) : Temperature((celsius * (9 / 5)) + 32) {
         override fun getUnitString(context: Context) =
-            context.getString(R.string.temp_celsius, value)
+            context.getString(R.string.temp_fahrenheit, value)
     }
 }

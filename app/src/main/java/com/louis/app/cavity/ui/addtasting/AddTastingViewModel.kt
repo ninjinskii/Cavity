@@ -1,14 +1,14 @@
 package com.louis.app.cavity.ui.addtasting
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.Tasting
+import com.louis.app.cavity.model.TastingBottle
 import com.louis.app.cavity.util.minusAssign
 import com.louis.app.cavity.util.plusAssign
+import kotlinx.coroutines.Dispatchers.Default
 
 class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     val repository = WineRepository.getInstance(app)
@@ -16,6 +16,8 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     private val _selectedBottles = MutableLiveData<MutableList<BoundedBottle>>(mutableListOf())
     val selectedBottles: LiveData<MutableList<BoundedBottle>>
         get() = _selectedBottles
+
+    val tastingBottles = _selectedBottles.switchMap { updateTastingBottles(it) }
 
     val lastTasting = repository.getLastTasting()
     val friends = repository.getAllFriends()
@@ -38,5 +40,19 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    private fun updateTastingBottles(selectedBottles: List<BoundedBottle>) =
+        liveData(Default) {
+            val result = selectedBottles.map {
+                TastingBottle(
+                    it.bottle.id,
+                    it.wine,
+                    it.bottle.vintage,
+                    it.wine.color.defaultTemperature,
+                    jugTime = null,
+                    isSelected = false
+                )
+            }
 
+            emit(result)
+        }
 }
