@@ -24,11 +24,14 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
 
     private fun initRecylerView() {
         val tastingBottleAdapter = TastingBottleAdapter()
+        val spanCount = 2
+        val space = requireContext().resources.getDimension(R.dimen.small_margin)
 
         binding.tastingBottleList.apply {
             adapter = tastingBottleAdapter
-            layoutManager = GridLayoutManager(requireContext(), 2)
+            layoutManager = GridLayoutManager(requireContext(), spanCount)
             setHasFixedSize(true)
+            addItemDecoration(SpaceGridItemDecoration(space.toInt()))
         }
 
         addTastingViewModel.tastingBottles.observe(viewLifecycleOwner) {
