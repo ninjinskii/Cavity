@@ -57,7 +57,7 @@ class TastingBottleAdapter :
                 vintage.text = bottle.vintage.toString()
                 temp.text = bottle.drinkTemp.getUnitString(itemView.context)
 
-                val showJug = bottle.jugTime == null
+                val showJug = bottle.jugTime != null
                 jugTime.setVisible(showJug)
                 jug.setVisible(showJug)
                 separator.setVisible(showJug)
