@@ -1,7 +1,5 @@
 package com.louis.app.cavity.ui.addtasting
 
-import android.animation.AnimatorInflater
-import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,18 +14,12 @@ import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemTastingBottleBinding
 import com.louis.app.cavity.model.TastingBottle
-import com.louis.app.cavity.util.AnimUtil
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
-class TastingBottleAdapter(context: Context) :
+class TastingBottleAdapter :
     ListAdapter<TastingBottle, TastingBottleAdapter.TastingBottleViewHolder>
         (TastingBottleItemDiffCallback()) {
-
-    private val flipLeftIn = AnimatorInflater.loadAnimator(context, R.animator.flip_left_in)
-    private val flipLeftOut = AnimatorInflater.loadAnimator(context, R.animator.flip_left_out)
-    private val flipRightIn = AnimatorInflater.loadAnimator(context, R.animator.flip_right_in)
-    private val flipRightOut = AnimatorInflater.loadAnimator(context, R.animator.flip_right_out)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TastingBottleViewHolder {
         val binding =
@@ -54,15 +46,7 @@ class TastingBottleAdapter(context: Context) :
             if (bottle.isSelected) bindSelected(bottle) else bindStandard(bottle)
 
             binding.root.setOnClickListener {
-                val flippedViews = listOf(binding.front, binding.back).apply {
-                    if (bottle.isSelected) reversed()
-                }
-
-                AnimUtil.flipContainer(flippedViews[0], flippedViews[1])
-
                 bottle.isSelected = !bottle.isSelected
-
-
                 bind(bottle)
             }
         }
