@@ -7,6 +7,7 @@
     android:background="?attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/front"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -112,5 +113,53 @@
                 tools:text="2h" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+            android:id="@+id/backTemp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/backJugTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:rule="required|integer|positive"
+            app:startIconDrawable="@drawable/ic_thermometer">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+            android:id="@+id/backJugTime"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/backTemp"
+            app:rule="required"
+            app:startIconDrawable="@drawable/ic_jug"
+            app:suffixText="heure(s)">
+
+            <AutoCompleteTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+
+        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -48,7 +48,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
                     it.wine,
                     it.bottle.vintage,
                     it.wine.color.defaultTemperature,
-                    jugTime = null,
+                    jugTime = 0,
                     isSelected = false
                 )
             }
