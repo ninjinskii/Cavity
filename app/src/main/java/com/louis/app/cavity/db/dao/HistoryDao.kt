@@ -68,6 +68,9 @@ interface HistoryDao {
     @Transaction
     @Query("SELECT * FROM history_entry WHERE date BETWEEN :start AND :end ORDER BY date DESC")
     fun getBoundedEntriesBetween(start: Long, end: Long): LiveData<List<BoundedHistoryEntry>>
+
+    @Query("DELETE FROM history_entry")
+    fun deleteAll()
 }
 
 data class Year(val year: String, val yearStart: Long, val yearEnd: Long) {

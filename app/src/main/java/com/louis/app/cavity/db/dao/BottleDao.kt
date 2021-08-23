@@ -49,6 +49,9 @@ interface BottleDao {
     @Transaction
     @Query("SELECT bottle.* FROM wine, bottle WHERE wine.id = bottle.wine_id AND bottle.consumed = 0")
     suspend fun getBoundedBottlesNotLive(): List<BoundedBottle>
+
+    @Query("DELETE FROM bottle")
+    fun deleteAll()
 }
 
 data class BottleAndWine(

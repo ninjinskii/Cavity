@@ -13,6 +13,10 @@ class WineRepository private constructor(app: Application) {
             instance ?: synchronized(this) {
                 instance ?: WineRepository(app).also { instance = it }
             }
+
+        fun importDbFromExternalDir(app: Application) {
+            CavityDatabase.getInstance(app).importDbFromExternalDir(app)
+        }
     }
 
     private val database = CavityDatabase.getInstance(app)

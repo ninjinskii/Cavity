@@ -43,6 +43,9 @@ interface WineDao {
 //    @Transaction
 //    @Query("SELECT * FROM wine INNER JOIN bottle ON wine.id = bottle.wine_id WHERE county_id =:countyId AND consumed = 0 ORDER BY color, naming")
 //    fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
+
+    @Query("DELETE FROM wine")
+    fun deleteAll()
 }
 
 data class WineWithBottles(

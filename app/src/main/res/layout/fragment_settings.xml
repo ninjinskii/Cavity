@@ -8,10 +8,11 @@
         android:id="@+id/appBar"
         layout="@layout/app_bar" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonImportDb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="this is default settings"
+        android:text="Importer la bd"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
