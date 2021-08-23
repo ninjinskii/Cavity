@@ -40,8 +40,8 @@ function makeWines(counties) {
 
     wines.push({
       id: wine.id,
-      name: wine.name,
-      naming: wine.naming,
+      name: wine.nom,
+      naming: wine.appellation,
       color,
       cuvee: "",
       is_organic: isOrganic ? 1 : 0,
@@ -183,7 +183,7 @@ function makeBottles() {
 function getWineColor(wine) {
   let color = null;
 
-  switch (wine.color) {
+  switch (wine.couleur) {
     case "#A60000":
       color = "RED";
       break;

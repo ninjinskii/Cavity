@@ -31,7 +31,7 @@ import java.io.*
         TastingXFriend::class,
         HistoryXFriend::class,
     ],
-    version = 52,
+    version = 53,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -55,7 +55,7 @@ abstract class CavityDatabase : RoomDatabase() {
 
     fun importDbFromExternalDir(app: Application) {
         L.v(app.applicationContext.getExternalFilesDir(null)!!.toString())
-        L.v(app.applicationContext.getExternalFilesDir(null)!!.path.toString())
+        L.v(app.applicationContext.getExternalFilesDir(null)!!.path)
         val extStorage = app.applicationContext.getExternalFilesDir(null)!!.path
         val file = File("$extStorage/db.json")
         L.v(file.exists().toString())

@@ -95,4 +95,7 @@ dependencies {
 
     // Leak Canary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:2.6"
+
+    // Moshi
+    implementation"com.squareup.moshi:moshi-kotlin:1.11.0"
 }
