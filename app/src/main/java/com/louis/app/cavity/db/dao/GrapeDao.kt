@@ -27,7 +27,7 @@ interface GrapeDao {
     fun getGrapeWithQuantifiedGrapes(): LiveData<List<GrapeWithQGrapes>>
 
     @Query("DELETE FROM grape")
-    fun deleteAll()
+    suspend fun deleteAll()
 }
 
 data class GrapeWithQGrapes(

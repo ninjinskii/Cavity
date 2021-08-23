@@ -21,7 +21,7 @@ function makeCounties() {
       counties.push({
         id: index,
         name: wine.region,
-        pref_order: index++,
+        prefOrder: index++,
       });
     }
   }
@@ -44,9 +44,9 @@ function makeWines(counties) {
       naming: wine.appellation,
       color,
       cuvee: "",
-      is_organic: isOrganic ? 1 : 0,
-      image,
-      county_id: county.id,
+      isOrganic: isOrganic ? 1 : 0,
+      imgPath: image,
+      countyId: county.id,
     });
   }
 
@@ -55,24 +55,24 @@ function makeWines(counties) {
 
 function makeReviews() {
   const reviews = [
-    { contest_name: "Parker", type: 2 },
-    { contest_name: "Figaro", type: 1 },
-    { contest_name: "Hachette", type: 3 },
-    { contest_name: "James Suckling", type: 2 },
-    { contest_name: "Bordeaux", type: 0 },
-    { contest_name: "Féminalise", type: 0 },
-    { contest_name: "Paris", type: 0 },
-    { contest_name: "Yves Beck", type: 2 },
-    { contest_name: "Vignerons indépendants", type: 0 },
-    { contest_name: "Revue des vins de France", type: 1 },
-    { contest_name: "Bicchieri Gambero Rosso", type: 3 },
-    { contest_name: "Challenge International", type: 0 },
-    { contest_name: "Bettane & Dessauve", type: 2 },
-    { contest_name: "Jeb Dunnuck", type: 2 },
-    { contest_name: "Guide des meilleurs vins de France", type: 1 },
-    { contest_name: "Decanter", type: 2 },
-    { contest_name: "Wine enthusiast", type: 2 },
-    { contest_name: "Lyon", type: 0 },
+    { contestName: "Parker", type: 2 },
+    { contestName: "Figaro", type: 1 },
+    { contestName: "Hachette", type: 3 },
+    { contestName: "James Suckling", type: 2 },
+    { contestName: "Bordeaux", type: 0 },
+    { contestName: "Féminalise", type: 0 },
+    { contestName: "Paris", type: 0 },
+    { contestName: "Yves Beck", type: 2 },
+    { contestName: "Vignerons indépendants", type: 0 },
+    { contestName: "Revue des vins de France", type: 1 },
+    { contestName: "Bicchieri Gambero Rosso", type: 3 },
+    { contestName: "Challenge International", type: 0 },
+    { contestName: "Bettane & Dessauve", type: 2 },
+    { contestName: "Jeb Dunnuck", type: 2 },
+    { contestName: "Guide des meilleurs vins de France", type: 1 },
+    { contestName: "Decanter", type: 2 },
+    { contestName: "Wine enthusiast", type: 2 },
+    { contestName: "Lyon", type: 0 },
   ];
 
   reviews.forEach((r, index) => (r.id = index + 1));
@@ -91,7 +91,7 @@ function makeFReviews(reviews) {
     const comment = bottle.commentaireNote.trim().toLowerCase().split("/")[0];
 
     for (const r of reviews) {
-      const contest = r.contest_name.toLowerCase();
+      const contest = r.contestName.toLowerCase();
 
       if (comment.includes(contest)) {
         // MEDALS
@@ -107,15 +107,15 @@ function makeFReviews(reviews) {
           }
 
           if (value) {
-            fReviews.push({ bottle_id: bottle.id, review_id: r.id, value });
+            fReviews.push({ bottleId: bottle.id, reviewId: r.id, value });
           }
         }
 
         // RATE & STARS
         if (r.type === 1 || r.type === 2 || r.type === 3) {
           fReviews.push({
-            bottle_id: bottle.id,
-            review_id: r.id,
+            bottleId: bottle.id,
+            reviewId: r.id,
             value: bottle.distinction.substring(1),
           });
         }
@@ -130,9 +130,24 @@ function makeFReviews(reviews) {
         secondaryContest.includes(r.contest_name.toLowerCase())
       );
 
-      fReviews.push({ bottle_id: bottle.id, review_id: contest.id, value });
+      fReviews.push({ bottleId: bottle.id, reviewId: contest.id, value });
     }
   }
+
+  // sanity primary key check
+  fReviews.forEach((checkedFReview) => {
+    if (
+      fReviews.filter(
+        (fReview) =>
+          fReview.bottleId === checkedFReview.bottleId &&
+          fReview.reviewId === checkedFReview.reviewId
+      ).length > 1
+    ) {
+      throw Error(
+        `Primary key constraint failed with review ${checkedFReview.reviewId} and bottle ${checkedFReview.bottleId}`
+      );
+    }
+  });
 
   return fReviews;
 }
@@ -153,26 +168,23 @@ function makeBottles() {
   for (const bottle of oldBottles) {
     const newBottle = {
       id: bottle.id,
-      wine_id: bottle.vin_id,
+      wineId: bottle.vin_id,
       vintage: bottle.millesime,
       apogee: bottle.apogee,
-      is_favorite: bottle.fav,
-      price: bottle.prixAchat,
+      isFavorite: bottle.fav,
+      count: 0,
+      price: parseFloat(bottle.prixAchat + ".0"),
       currency: "€",
-      buy_location: bottle.lieuxAchat,
-      buy_date: getBottleBuyDate(bottle),
-      taste_comment: bottle.commentaire,
-      pdf_path: bottle.pdf_path,
-      consumed: 0,
-      other_info: "",
-      tasting_id: null,
+      buyLocation: bottle.lieuxAchat,
+      buyDate: getBottleBuyDate(bottle),
+      tasteComment: bottle.commentaire,
+      pdfPath: bottle.pdf_path || "",
+      consumed: bottle.consumed,
+      otherInfo: "",
+      tastingId: null,
     };
 
     historyEntries.push(...getGenericHistoryEntries(bottle));
-
-    if (bottle.noHistory) {
-      newBottle.consumed = 1;
-    }
 
     bottles.push(newBottle);
   }
@@ -227,22 +239,28 @@ function getBottlesForWine(wine) {
 
 function flattenOldBottles() {
   const bottles = [];
+  let id = 1;
 
-  for (bottle of oldBottles) {
-    if (bottle.nombre === 0) {
-      bottle.noHistory = true;
+  for (const bottle of oldBottles) {
+    bottle.id = id++;
+    bottle.consumed = 0;
+
+    if (parseInt(bottle.nombre) === 0) {
+      bottle.consumed = 1;
       bottles.push(bottle);
     }
 
-    if (bottle.nombre === 1) {
+    if (parseInt(bottle.nombre) === 1) {
       bottles.push(bottle);
     }
 
-    if (bottle.nombre > 1) {
+    if (parseInt(bottle.nombre) > 1) {
       let index = 0;
 
-      while (index < bottle.nombre - 1) {
-        bottles.push(bottle);
+      while (index < bottle.nombre) {
+        const copy = { ...bottle, id };
+        id++;
+        bottles.push(copy);
         index++;
       }
     }
@@ -257,8 +275,8 @@ function getGenericHistoryEntries(bottle) {
   const entry = {
     id: lastHistoryEntryId++,
     date: 1577836800001, // 1 january 2020 00h00
-    bottle_id: bottle.id,
-    tasting_id: null,
+    bottleId: bottle.id,
+    tastingId: null,
     comment: "La date exacte n'est pas connue.",
     type: 1, // replenishment
     favorite: 0,
@@ -266,7 +284,7 @@ function getGenericHistoryEntries(bottle) {
 
   const result = [entry];
 
-  if (bottle.noHistory) {
+  if (bottle.consumed === 1) {
     result.push({
       ...entry,
       id: lastHistoryEntryId++,
@@ -279,8 +297,12 @@ function getGenericHistoryEntries(bottle) {
 }
 
 function getBottleBuyDate(bottle) {
-  const [day, month, year] = bottle.dateAchat.split("/");
-  return Date.parse(`20${year}-${month}-${day}`);
+  if (bottle.dateAchat.length > 0) {
+    const [day, month, year] = bottle.dateAchat.split("/");
+    return Date.parse(`20${year}-${month}-${day}`);
+  } else {
+    return 1577836800001; // 1 january 2020 00h00
+  }
 }
 
 function run(counties, wines, reviews, fReviews, grapes, bottles) {
@@ -296,7 +318,7 @@ function run(counties, wines, reviews, fReviews, grapes, bottles) {
   };
 
   try {
-    const data = fs.writeFileSync("data.json", JSON.stringify(content));
+    const data = fs.writeFileSync("db.json", JSON.stringify(content));
   } catch (error) {
     console.log(error);
   }

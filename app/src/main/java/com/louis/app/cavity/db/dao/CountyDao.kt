@@ -33,7 +33,7 @@ interface CountyDao {
     fun getCountiesWithWines(): LiveData<List<CountyWithWines>>
 
     @Query("DELETE FROM county")
-    fun deleteAll()
+    suspend fun deleteAll()
 }
 
 data class CountyWithWines(

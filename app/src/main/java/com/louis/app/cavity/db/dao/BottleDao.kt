@@ -51,7 +51,7 @@ interface BottleDao {
     suspend fun getBoundedBottlesNotLive(): List<BoundedBottle>
 
     @Query("DELETE FROM bottle")
-    fun deleteAll()
+    suspend fun deleteAll()
 }
 
 data class BottleAndWine(

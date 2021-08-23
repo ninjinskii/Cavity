@@ -2,6 +2,7 @@ package com.louis.app.cavity.db
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -12,8 +13,10 @@ import com.louis.app.cavity.util.L
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.*
 
 @Database(
@@ -83,30 +86,34 @@ abstract class CavityDatabase : RoomDatabase() {
             throw IllegalStateException("Cannot read data from json file")
         }
 
-        doImportDbFromExternal(adapter.fromJson(data.toString()))
+        doImportDbFromExternal(adapter.fromJson(data.toString()), app)
     }
 
-    private fun doImportDbFromExternal(tables: DbTablesJsonAdapter?) {
+    private fun doImportDbFromExternal(tables: DbTablesJsonAdapter?, app: Application) {
         if (tables == null) {
             throw IllegalStateException("Moshi returned a null object")
         }
 
-        countyDao().deleteAll()
-        wineDao().deleteAll()
-        reviewDao().deleteAll()
-        fReviewDao().deleteAll()
-        grapeDao().deleteAll()
-        bottleDao().deleteAll()
-        historyDao().deleteAll()
-
         GlobalScope.launch(IO) {
-            tables.conties.forEach { countyDao().insertCounty(it) }
+            countyDao().deleteAll()
+            wineDao().deleteAll()
+            reviewDao().deleteAll()
+            fReviewDao().deleteAll()
+            grapeDao().deleteAll()
+            bottleDao().deleteAll()
+            historyDao().deleteAll()
+
+            tables.counties.forEach { countyDao().insertCounty(it) }
             wineDao().insertWine(tables.wines)
             tables.reviews.forEach { reviewDao().insertReview(it) }
+            bottleDao().insertBottle(tables.bottles)
             fReviewDao().insertFReviews(tables.fReviews)
             tables.grapes.forEach { grapeDao().insertGrape(it) }
-            bottleDao().insertBottle(tables.bottles)
             historyDao().insertEntry(tables.historyEntries)
+
+            withContext(Main) {
+                Toast.makeText(app, "Fini", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -375,7 +382,7 @@ abstract class CavityDatabase : RoomDatabase() {
 }
 
 class DbTablesJsonAdapter(
-    val conties: List<County>,
+    val counties: List<County>,
     val wines: List<Wine>,
     val reviews: List<Review>,
     val fReviews: List<FReview>,

@@ -70,7 +70,7 @@ interface HistoryDao {
     fun getBoundedEntriesBetween(start: Long, end: Long): LiveData<List<BoundedHistoryEntry>>
 
     @Query("DELETE FROM history_entry")
-    fun deleteAll()
+    suspend fun deleteAll()
 }
 
 data class Year(val year: String, val yearStart: Long, val yearEnd: Long) {

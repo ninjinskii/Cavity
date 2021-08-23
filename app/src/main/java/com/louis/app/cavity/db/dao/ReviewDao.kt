@@ -27,7 +27,7 @@ interface ReviewDao {
     fun getReviewWithFilledReviews(): LiveData<List<ReviewWithFReviews>>
 
     @Query("DELETE FROM review")
-    fun deleteAll()
+    suspend fun deleteAll()
 }
 
 data class ReviewWithFReviews(

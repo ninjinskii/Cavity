@@ -38,7 +38,7 @@ interface FilledReviewDao {
     suspend fun clearAllFReviewsForBottle(bottleId: Long)
 
     @Query("DELETE FROM f_review")
-    fun deleteAll()
+    suspend fun deleteAll()
 }
 
 data class FReviewAndReview(

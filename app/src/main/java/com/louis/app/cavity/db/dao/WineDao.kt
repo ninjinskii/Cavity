@@ -45,7 +45,7 @@ interface WineDao {
 //    fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
 
     @Query("DELETE FROM wine")
-    fun deleteAll()
+    suspend fun deleteAll()
 }
 
 data class WineWithBottles(
