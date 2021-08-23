@@ -158,7 +158,7 @@ abstract class CavityDatabase : RoomDatabase() {
                         )
                     }
 
-                    wineDao!!.insertWine(wines)
+                    wineDao!!.insertWines(wines)
 
                     val bottlesList = List(30000) {
                         Bottle(
@@ -179,7 +179,7 @@ abstract class CavityDatabase : RoomDatabase() {
                         )
                     }
 
-                    bottleDao!!.insertBottle(bottlesList)
+                    bottleDao!!.insertBottles(bottlesList)
 
                     with(grapeDao!!) {
                         insertGrape(Grape(0, "Syrah"))
