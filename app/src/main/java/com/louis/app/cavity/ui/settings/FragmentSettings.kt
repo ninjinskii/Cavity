@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSettingsBinding
 import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentSettings : Fragment(R.layout.fragment_settings) {
     private var _binding: FragmentSettingsBinding? = null
@@ -19,7 +20,16 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
 
         setupNavigation(binding.appBar.toolbar)
 
+        observe()
         setListeners()
+    }
+
+    private fun observe() {
+        settingsViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
     }
 
     private fun setListeners() {

@@ -197,7 +197,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun getAllReviewsNotLive() = reviewDao.getAllReviewsNotLive()
     fun getReviewWithFilledReviews() = reviewDao.getReviewWithFilledReviews()
     suspend fun insertFilledReview(fReview: FReview) = fReviewDao.insertFReview(fReview)
-    suspend fun insertFilledReviews(fReviews: List<FReview>) = fReviewDao.insertFReviews(fReview)
+    suspend fun insertFilledReviews(fReviews: List<FReview>) = fReviewDao.insertFReviews(fReviews)
     suspend fun updateFilledReview(fReview: FReview) = fReviewDao.updateFReview(fReview)
     suspend fun deleteFilledReview(fReview: FReview) = fReviewDao.deleteFReview(fReview)
     suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long) =
