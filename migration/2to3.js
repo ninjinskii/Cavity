@@ -14,10 +14,9 @@ run(counties, wines, reviews, fReviews, grapes, bottles);
 
 function makeCounties() {
   const counties = [];
+  let index = 1;
 
   for (const wine of oldWines) {
-    let index = 1;
-
     if (counties.find((c) => c.name === wine.region) === undefined) {
       counties.push({
         id: index,
@@ -50,6 +49,8 @@ function makeWines(counties) {
       county_id: county.id,
     });
   }
+
+  return wines;
 }
 
 function makeReviews() {
@@ -121,8 +122,8 @@ function makeFReviews(reviews) {
       }
     }
 
-    // Secondary constests
-    if (comment.contains("/")) {
+    // Secondary constests. Expected to be located right after a "/" with the value as the first two chars
+    if (comment.includes("/")) {
       const secondaryContest = comment.split("/")[1].trim().toLowerCase();
       const value = parseInt(secondaryContest.substring(0, 2));
       const contest = reviews.find((r) =>
@@ -132,6 +133,8 @@ function makeFReviews(reviews) {
       fReviews.push({ bottle_id: bottle.id, review_id: contest.id, value });
     }
   }
+
+  return fReviews;
 }
 
 function makeGrapes() {
@@ -202,15 +205,16 @@ function getIsOrganic(wine) {
 
   return bottles.some(
     (b) =>
-      b.commentaireNote.toLowerCase().contains("bio") &&
-      !b.commentaireNote.toLowerCase().contains("nebiolo")
+      b.commentaireNote.toLowerCase().includes("bio") &&
+      !b.commentaireNote.toLowerCase().includes("nebiolo")
   );
 }
 
 function getImage(wine) {
   const bottles = getBottlesForWine(wine);
+  const imagedBottle = bottles.find((b) => b.imgPath);
 
-  return bottles.find((b) => b.imgPath);
+  return imagedBottle ? imagedBottle.imgPath : "";
 }
 
 function getCountyForWine(counties, wine) {
@@ -218,26 +222,26 @@ function getCountyForWine(counties, wine) {
 }
 
 function getBottlesForWine(wine) {
-  oldBottles.filter((b) => b.vin_id === wine.id);
+  return oldBottles.filter((b) => b.vin_id === wine.id);
 }
 
 function flattenOldBottles() {
   const bottles = [];
 
   for (bottle of oldBottles) {
-    if (bottle.count === 0) {
+    if (bottle.nombre === 0) {
       bottle.noHistory = true;
       bottles.push(bottle);
     }
 
-    if (bottle.count === 1) {
+    if (bottle.nombre === 1) {
       bottles.push(bottle);
     }
 
-    if (bottle.count > 1) {
+    if (bottle.nombre > 1) {
       let index = 0;
 
-      while (index < count - 1) {
+      while (index < bottle.nombre - 1) {
         bottles.push(bottle);
         index++;
       }
@@ -280,5 +284,20 @@ function getBottleBuyDate(bottle) {
 }
 
 function run(counties, wines, reviews, fReviews, grapes, bottles) {
-  
+  const fs = require("fs");
+  const content = {
+    counties,
+    wines,
+    reviews,
+    fReviews,
+    grapes,
+    bottles: bottles.bottles,
+    historyEntries: bottles.historyEntries,
+  };
+
+  try {
+    const data = fs.writeFileSync("data.json", JSON.stringify(content));
+  } catch (error) {
+    console.log(error);
+  }
 }
