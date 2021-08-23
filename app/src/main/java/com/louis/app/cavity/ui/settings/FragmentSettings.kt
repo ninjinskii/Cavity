@@ -24,7 +24,8 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
 
     private fun setListeners() {
         binding.buttonImportDb.setOnClickListener {
-            settingsViewModel.importDbFromExternalDir()
+            val externalDir = requireContext().getExternalFilesDir(null)!!.path
+            settingsViewModel.importDbFromExternalDir(externalDir)
         }
     }
 

@@ -1,23 +1,15 @@
 package com.louis.app.cavity.db
 
-import android.app.Application
 import android.content.Context
-import android.widget.Toast
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.db.dao.*
 import com.louis.app.cavity.model.*
-import com.louis.app.cavity.util.L
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.*
 
 @Database(
     entities = [
@@ -51,71 +43,6 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun statsDao(): StatsDao
     abstract fun tastingDao(): TastingDao
     abstract fun tastingXFriendDao(): TastingXFriendDao
-
-    private val moshi by lazy {
-        Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-    }
-
-    fun importDbFromExternalDir(app: Application) {
-        L.v(app.applicationContext.getExternalFilesDir(null)!!.toString())
-        L.v(app.applicationContext.getExternalFilesDir(null)!!.path)
-        val extStorage = app.applicationContext.getExternalFilesDir(null)!!.path
-        val file = File("$extStorage/db.json")
-        L.v(file.exists().toString())
-        val adapter = moshi.adapter(DbTablesJsonAdapter::class.java)
-
-        val data = StringBuffer("")
-
-        try {
-            val fIn = FileInputStream(file)
-            val isr = InputStreamReader(fIn)
-            val buffreader = BufferedReader(isr)
-            var readString: String? = buffreader.readLine()
-
-            while (readString != null) {
-                L.v("read line")
-                data.append(readString)
-                readString = buffreader.readLine()
-            }
-            isr.close()
-        } catch (ioe: IOException) {
-            ioe.printStackTrace()
-        }
-
-        if (data.isEmpty()) {
-            throw IllegalStateException("Cannot read data from json file")
-        }
-
-        doImportDbFromExternal(adapter.fromJson(data.toString()), app)
-    }
-
-    private fun doImportDbFromExternal(tables: DbTablesJsonAdapter?, app: Application) {
-        if (tables == null) {
-            throw IllegalStateException("Moshi returned a null object")
-        }
-
-        GlobalScope.launch(IO) {
-            countyDao().deleteAll()
-            wineDao().deleteAll()
-            reviewDao().deleteAll()
-            fReviewDao().deleteAll()
-            grapeDao().deleteAll()
-            bottleDao().deleteAll()
-            historyDao().deleteAll()
-
-            tables.counties.forEach { countyDao().insertCounty(it) }
-            wineDao().insertWine(tables.wines)
-            tables.reviews.forEach { reviewDao().insertReview(it) }
-            bottleDao().insertBottle(tables.bottles)
-            fReviewDao().insertFReviews(tables.fReviews)
-            tables.grapes.forEach { grapeDao().insertGrape(it) }
-            historyDao().insertEntry(tables.historyEntries)
-
-            withContext(Main) {
-                Toast.makeText(app, "Fini", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
 
     companion object {
         @Volatile
@@ -380,14 +307,3 @@ abstract class CavityDatabase : RoomDatabase() {
         }
     }
 }
-
-class DbTablesJsonAdapter(
-    val counties: List<County>,
-    val wines: List<Wine>,
-    val reviews: List<Review>,
-    val fReviews: List<FReview>,
-    val grapes: List<Grape>,
-    val bottles: List<Bottle>,
-    val historyEntries: List<HistoryEntry>
-)
-

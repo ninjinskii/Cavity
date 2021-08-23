@@ -11,7 +11,7 @@ interface WineDao {
     suspend fun insertWine(wine: Wine)
 
     @Insert
-    suspend fun insertWine(wine: List<Wine>)
+    suspend fun insertWines(wine: List<Wine>)
 
     @Update
     suspend fun updateWine(wine: Wine)
