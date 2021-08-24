@@ -369,22 +369,24 @@ class WineRepository private constructor(app: Application) {
             throw IllegalStateException("Moshi returned a null object")
         }
 
-        deleteAllCounties()
-        deleteAllWines()
-        deleteAllReviews()
-        deleteAllFReviews()
-        deleteAllGrapes()
-        deleteAllBottles()
-        deleteAllHistoryEntries()
+        database.withTransaction {
+            deleteAllCounties()
+            deleteAllWines()
+            deleteAllReviews()
+            deleteAllFReviews()
+            deleteAllGrapes()
+            deleteAllBottles()
+            deleteAllHistoryEntries()
 
-        with(tables) {
-            counties.forEach { insertCounty(it) }
-            insertWines(wines)
-            reviews.forEach { insertReview(it) }
-            grapes.forEach { insertGrape(it) }
-            insertBottles(bottles)
-            insertFilledReviews(fReviews)
-            historyEntries.forEach { insertHistoryEntry(it) }
+            with(tables) {
+                counties.forEach { insertCounty(it) }
+                insertWines(wines)
+                reviews.forEach { insertReview(it) }
+                grapes.forEach { insertGrape(it) }
+                insertBottles(bottles)
+                insertFilledReviews(fReviews)
+                historyEntries.forEach { insertHistoryEntry(it) }
+            }
         }
     }
 
