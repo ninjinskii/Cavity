@@ -199,9 +199,11 @@ function getWineColor(wine) {
     case "#A60000":
       color = "RED";
       break;
+    case "#FFB400":
     case "#FFA727":
       color = "SWEET";
       break;
+    case "#FFDE40":
     case "#fff176":
       color = "WHITE";
       break;
