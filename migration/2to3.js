@@ -184,7 +184,7 @@ function makeBottles() {
       tastingId: null,
     };
 
-    historyEntries.push(...getGenericHistoryEntries(bottle), newBottle.buyDate);
+    historyEntries.push(...getGenericHistoryEntries(bottle, newBottle.buyDate));
 
     bottles.push(newBottle);
   }
@@ -249,6 +249,7 @@ function flattenOldBottles() {
 
     if (parseInt(bottle.nombre) === 0) {
       bottle.consumed = 1;
+      console.log("bottle: consumed");
       bottles.push(bottle);
     }
 
