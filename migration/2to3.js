@@ -40,12 +40,12 @@ function makeWines(counties) {
 
     wines.push({
       id: wine.id,
-      name: wine.nom,
-      naming: wine.appellation,
+      name: wine.nom.trim(),
+      naming: wine.appellation.trim(),
       color,
       cuvee: "",
       isOrganic: isOrganic ? 1 : 0,
-      imgPath: image,
+      imgPath: image.trim(),
       countyId: county.id,
     });
   }
@@ -175,9 +175,9 @@ function makeBottles() {
       count: 0,
       price: parseFloat(bottle.prixAchat + ".0"),
       currency: "€",
-      buyLocation: bottle.lieuxAchat,
+      buyLocation: bottle.lieuxAchat.trim(),
       buyDate: getBottleBuyDate(bottle),
-      tasteComment: bottle.commentaire,
+      tasteComment: bottle.commentaire.trim(),
       pdfPath: bottle.pdf_path || "",
       consumed: bottle.consumed,
       otherInfo: "",
