@@ -184,7 +184,7 @@ function makeBottles() {
       tastingId: null,
     };
 
-    historyEntries.push(...getGenericHistoryEntries(bottle));
+    historyEntries.push(...getGenericHistoryEntries(bottle), newBottle.buyDate);
 
     bottles.push(newBottle);
   }
@@ -271,10 +271,10 @@ function flattenOldBottles() {
   return bottles;
 }
 
-function getGenericHistoryEntries(bottle) {
+function getGenericHistoryEntries(bottle, date) {
   const entry = {
     id: lastHistoryEntryId++,
-    date: 1577836800001, // 1 january 2020 00h00
+    date,
     bottleId: bottle.id,
     tastingId: null,
     comment: "La date exacte n'est pas connue.",
@@ -288,7 +288,7 @@ function getGenericHistoryEntries(bottle) {
     result.push({
       ...entry,
       id: lastHistoryEntryId++,
-      date: 1577836800002,
+      date: date + 1,
       type: 0, // consumption
     });
   }
