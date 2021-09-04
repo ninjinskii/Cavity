@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -20,14 +21,17 @@ import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
     private lateinit var simpleInputDialog: SimpleInputDialog
+    private lateinit var pickImage: ActivityResultLauncher<Array<String>>
     private var _binding: FragmentManageBaseBinding? = null
     private val binding get() = _binding!!
     private val managerViewModel: ManagerViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
 
-    private val pickImage by lazy {
-        registerForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri ->
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        pickImage = registerForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri ->
             onImageSelected(imageUri)
         }
     }
@@ -55,7 +59,7 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
 
             val inset =
                 resources.getDimensionPixelSize(R.dimen.medium_margin) * 2 +
-                    resources.getDimensionPixelSize(R.dimen.large_icon)
+                        resources.getDimensionPixelSize(R.dimen.large_icon)
 
             val height = resources.getDimensionPixelSize(R.dimen.divider_height)
             val color = ContextCompat.getColor(requireContext(), R.color.divider_color)

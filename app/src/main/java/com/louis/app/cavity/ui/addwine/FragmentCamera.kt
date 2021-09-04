@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -31,20 +32,24 @@ import kotlin.math.min
 class FragmentCamera : Fragment(R.layout.fragment_camera) {
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var snackbarProvider: SnackbarProvider
+    private lateinit var askPermissions: ActivityResultLauncher<Array<String>>
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
-
-    private val askPermissions by lazy {
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            handlePermisionResults(it)
-        }
-    }
 
     companion object {
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
         private val REQUIRED_PERMISSIONS =
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        askPermissions =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+                handlePermisionResults(it)
+            }
     }
 
 

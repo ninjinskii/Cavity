@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -28,6 +29,7 @@ import com.louis.app.cavity.util.toBoolean
 
 class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     private lateinit var otherInfoManager: OtherInfoManager
+    private lateinit var pickPdf: ActivityResultLauncher<Array<String>>
     private var _binding: FragmentInquireOtherInfoBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
@@ -35,8 +37,10 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         ownerProducer = { requireParentFragment() }
     )
 
-    private val pickPdf by lazy {
-        registerForActivityResult(ActivityResultContracts.OpenDocument()) { pdfUri ->
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        pickPdf = registerForActivityResult(ActivityResultContracts.OpenDocument()) { pdfUri ->
             onPdfSelected(pdfUri)
         }
     }

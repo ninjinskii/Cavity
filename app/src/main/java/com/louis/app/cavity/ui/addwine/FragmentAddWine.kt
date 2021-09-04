@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -26,17 +27,12 @@ import com.louis.app.cavity.util.*
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
+    private lateinit var pickImage: ActivityResultLauncher<Array<String>>
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
     private val addWineViewModel: AddWineViewModel by viewModels()
     private val args: FragmentAddWineArgs by navArgs()
-
-    private val pickImage by lazy {
-        registerForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri ->
-            onImageSelected(imageUri)
-        }
-    }
 
     companion object {
         const val TAKEN_PHOTO_URI = "com.louis.app.cavity.ui.TAKEN_PHOTO_URI"
@@ -45,8 +41,13 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (savedInstanceState == null)
+        pickImage = registerForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri ->
+            onImageSelected(imageUri)
+        }
+
+        if (savedInstanceState == null) {
             addWineViewModel.start(args.editedWineId)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
