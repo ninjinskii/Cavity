@@ -3,15 +3,11 @@ package com.louis.app.cavity.ui.addtasting
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemTastingBottleBinding
 import com.louis.app.cavity.model.TastingBottle
 import com.louis.app.cavity.util.setVisible
@@ -43,7 +39,7 @@ class TastingBottleAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(bottle: TastingBottle) {
-            if (bottle.isSelected) bindSelected(bottle) else bindStandard(bottle)
+            bindStandard(bottle)
 
             binding.root.setOnClickListener {
                 bottle.isSelected = !bottle.isSelected
@@ -68,39 +64,31 @@ class TastingBottleAdapter :
                 wineColorNameNaming.wineNaming.text = wine.naming
 
                 vintage.text = bottle.vintage.toString()
-                temp.text = bottle.drinkTemp.getUnitString(itemView.context)
-
-                val showJug = bottle.jugTime != 0
-                jugTime.setVisible(showJug)
-                jug.setVisible(showJug)
-                separator.setVisible(showJug)
-
-                if (showJug) {
-                    jugTime.text = bottle.jugTime.toString()
-                }
+                temp.setText(bottle.drinkTemp.getUnitString(itemView.context))
+                jugTime.setText(bottle.jugTime.toString())
             }
         }
 
-        fun bindSelected(bottle: TastingBottle) {
-            binding.backTemp.editText?.apply {
-                setText(bottle.drinkTemp.toString())
-                doAfterTextChanged {
-                    if (binding.backTemp.validate(requestFocusIfFail = false)) {
-                        // change bottle drink temp on view model
-                    }
-                }
-            }
-
-            val jugTimes = listOf(0, 1, 2, 3, 4)
-            val adapter = ArrayAdapter(itemView.context, R.layout.item_naming, jugTimes)
-
-            (binding.backJugTime.editText as? AutoCompleteTextView)?.apply {
-                setText(bottle.jugTime.toString())
-                setAdapter(adapter)
-                doAfterTextChanged {
-                    // change botte jug time
-                }
-            }
-        }
+//        fun bindSelected(bottle: TastingBottle) {
+//            binding.backTemp.editText?.apply {
+//                setText(bottle.drinkTemp.toString())
+//                doAfterTextChanged {
+//                    if (binding.backTemp.validate(requestFocusIfFail = false)) {
+//                        // change bottle drink temp on view model
+//                    }
+//                }
+//            }
+//
+//            val jugTimes = listOf(0, 1, 2, 3, 4)
+//            val adapter = ArrayAdapter(itemView.context, R.layout.item_naming, jugTimes)
+//
+//            (binding.backJugTime.editText as? AutoCompleteTextView)?.apply {
+//                setText(bottle.jugTime.toString())
+//                setAdapter(adapter)
+//                doAfterTextChanged {
+//                    // change botte jug time
+//                }
+//            }
+//        }
     }
 }

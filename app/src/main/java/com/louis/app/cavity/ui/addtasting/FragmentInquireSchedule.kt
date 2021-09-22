@@ -29,7 +29,7 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
 
         binding.tastingBottleList.apply {
             adapter = tastingBottleAdapter
-            layoutManager = GridLayoutManager(requireContext(), spanCount)
+            layoutManager = GridLayoutManager(requireContext(), 1)
             setHasFixedSize(true)
             addItemDecoration(SpaceGridItemDecoration(space.toInt()))
         }
