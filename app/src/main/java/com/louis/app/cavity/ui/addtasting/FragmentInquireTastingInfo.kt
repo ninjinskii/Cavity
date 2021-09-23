@@ -38,6 +38,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         initFriendChips()
         initDatePicker()
         setListeners()
+        binding.buttonSubmit.performClick()
     }
 
     private fun initNumberPickers() {

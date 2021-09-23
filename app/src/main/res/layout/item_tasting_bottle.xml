@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/front"
@@ -17,8 +16,10 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <View
             android:id="@+id/scrim"
@@ -27,11 +28,11 @@
             android:background="@color/scrim"
             android:rotation="20"
             android:scaleY="10"
-            android:translationX="-35dp"
+            android:translationX="-40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.55" />
+            app:layout_constraintWidth_percent="0.65" />
 
         <include
             android:id="@+id/wineColorNameNaming"
@@ -54,110 +55,111 @@
             app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming"
             tools:text="2016" />
 
-        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
-            android:id="@+id/tempLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/medium_margin"
-            android:layout_marginLeft="@dimen/medium_margin"
-            app:layout_constraintEnd_toEndOf="@id/jugTimeLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vintage"
-            app:rule="required|integer|positive"
-            app:startIconDrawable="@drawable/ic_thermometer">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/temp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number" />
-
-        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
-
-        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
-            android:id="@+id/jugTimeLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        <TextView
+            android:id="@+id/tempTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:text="@string/temperature"
+            app:layout_constraintStart_toStartOf="@id/temp"
+            app:layout_constraintTop_toBottomOf="@id/vintage" />
+
+        <ImageView
+            android:id="@+id/tempIcon"
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:src="@drawable/ic_thermometer"
+            app:layout_constraintBottom_toBottomOf="@id/temp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tempLayout"
-            app:rule="required"
-            app:startIconDrawable="@drawable/ic_jug"
-            app:suffixText="heure(s)">
+            app:layout_constraintTop_toTopOf="@id/temp" />
 
-            <AutoCompleteTextView
-                android:id="@+id/jugTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="none" />
+        <com.google.android.material.slider.Slider
+            android:id="@+id/temp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:stepSize="1.0"
+            android:valueFrom="4.0"
+            android:valueTo="18.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tempIcon"
+            app:layout_constraintTop_toBottomOf="@id/tempTitle" />
 
-        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+        <TextView
+            android:id="@+id/jugTimeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:text="@string/jug_time"
+            app:layout_constraintStart_toStartOf="@id/temp"
+            app:layout_constraintTop_toBottomOf="@id/tempIcon" />
 
-        <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+        <ImageView
+            android:id="@+id/jugTimeIcon"
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:src="@drawable/ic_jug"
+            app:layout_constraintBottom_toBottomOf="@id/jugTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/jugTime" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/jugTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:stepSize="1.0"
+            android:valueFrom="0.0"
+            android:valueTo="4.0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/jugTimeIcon"
+            app:layout_constraintTop_toBottomOf="@id/jugTimeTitle" />
+
+
+        <!--        <com.louis.app.cavity.ui.widget.RuledTextInputLayout-->
+        <!--            android:id="@+id/tempLayout"-->
+        <!--            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"-->
         <!--            android:layout_width="0dp"-->
         <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_margin="@dimen/medium_margin"-->
+        <!--            android:hint="@string/temperature"-->
         <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/vintage"-->
-        <!--            app:layout_constraintEnd_toEndOf="@id/wineImage"-->
-        <!--            app:layout_constraintStart_toStartOf="parent">-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/vintage"-->
+        <!--            app:rule="required|integer|positive"-->
+        <!--            app:startIconDrawable="@drawable/ic_thermometer">-->
 
-        <!--            <ImageView-->
-        <!--                android:layout_width="@dimen/small_icon"-->
-        <!--                android:layout_height="@dimen/small_icon"-->
-        <!--                android:layout_marginVertical="@dimen/small_margin"-->
-        <!--                android:src="@drawable/ic_thermometer"-->
-        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--                app:layout_constraintEnd_toStartOf="@id/temp"-->
-        <!--                app:layout_constraintTop_toTopOf="parent"-->
-        <!--                app:tint="?attr/colorOnSurface" />-->
-
-        <!--            <TextView-->
+        <!--            <com.google.android.material.textfield.TextInputEditText-->
         <!--                android:id="@+id/temp"-->
-        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_width="match_parent"-->
         <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginEnd="@dimen/small_margin"-->
-        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--                app:layout_constraintEnd_toStartOf="@id/separator"-->
-        <!--                app:layout_constraintTop_toTopOf="parent"-->
-        <!--                tools:text="4 C°" />-->
+        <!--                android:inputType="number" />-->
 
-        <!--            <TextView-->
-        <!--                android:id="@+id/separator"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_margin="@dimen/small_margin"-->
-        <!--                android:text="·"-->
-        <!--                android:textSize="25sp"-->
-        <!--                android:textStyle="bold"-->
-        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toTopOf="parent" />-->
+        <!--        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>-->
 
-        <!--            <ImageView-->
-        <!--                android:id="@+id/jug"-->
-        <!--                android:layout_width="@dimen/small_icon"-->
-        <!--                android:layout_height="@dimen/small_icon"-->
-        <!--                android:layout_marginStart="@dimen/small_margin"-->
-        <!--                android:src="@drawable/ic_jug"-->
-        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--                app:layout_constraintStart_toEndOf="@id/separator"-->
-        <!--                app:layout_constraintTop_toTopOf="parent"-->
-        <!--                app:tint="?attr/colorOnSurface" />-->
+        <!--        <com.louis.app.cavity.ui.widget.RuledTextInputLayout-->
+        <!--            android:id="@+id/jugTimeLayout"-->
+        <!--            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_margin="@dimen/medium_margin"-->
+        <!--            android:hint="@string/jug_time"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/tempLayout"-->
+        <!--            app:rule="required"-->
+        <!--            app:startIconDrawable="@drawable/ic_jug"-->
+        <!--            app:suffixText="@string/hour">-->
 
-        <!--            <TextView-->
+        <!--            <AutoCompleteTextView-->
         <!--                android:id="@+id/jugTime"-->
         <!--                android:layout_width="wrap_content"-->
         <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginStart="@dimen/xsmall_margin"-->
-        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--                app:layout_constraintStart_toEndOf="@id/jug"-->
-        <!--                app:layout_constraintTop_toTopOf="parent"-->
-        <!--                tools:text="2h" />-->
+        <!--                android:inputType="none" />-->
 
-        <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+        <!--        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
