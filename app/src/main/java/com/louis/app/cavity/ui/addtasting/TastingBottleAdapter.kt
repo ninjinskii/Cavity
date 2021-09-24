@@ -3,14 +3,17 @@ package com.louis.app.cavity.ui.addtasting
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.slider.Slider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemTastingBottleBinding
 import com.louis.app.cavity.model.TastingBottle
+import com.louis.app.cavity.model.Temperature
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -40,13 +43,18 @@ class TastingBottleAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.temp.setLabelFormatter {
-                // TODO: handle multiple units
-                itemView.context.getString(R.string.temp_celsius, it.toInt())
-            }
+            with(binding) {
+                temp.setLabelFormatter {
+                    itemView.context.getString(R.string.temp_celsius, it.toInt())
+                }
 
-            binding.jugTime.setLabelFormatter {
-                "${it.toInt()} ${itemView.context.getString(R.string.hour)}"
+                jugTime.setLabelFormatter {
+                    "${it.toInt()} ${itemView.context.getString(R.string.hour)}"
+                }
+
+                warn.setOnClickListener {
+                    it.performLongClick()
+                }
             }
         }
 
@@ -68,8 +76,32 @@ class TastingBottleAdapter :
 
                 vintage.text = bottle.vintage.toString()
 
+                warn.setVisible(bottle.showOccupiedWarning)
+                TooltipCompat.setTooltipText(
+                    warn,
+                    "Cette bouteille est déjà utilisée dans une autre dégustation"
+                )
+
                 temp.value = bottle.drinkTemp.value.toFloat()
                 jugTime.value = bottle.jugTime.toFloat()
+
+                temp.clearOnSliderTouchListeners()
+                temp.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+                    override fun onStartTrackingTouch(slider: Slider) = Unit
+
+                    override fun onStopTrackingTouch(slider: Slider) {
+                        bottle.drinkTemp = Temperature.Celsius(slider.value.toInt())
+                    }
+                })
+
+                jugTime.clearOnSliderTouchListeners()
+                jugTime.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+                    override fun onStartTrackingTouch(slider: Slider) = Unit
+
+                    override fun onStopTrackingTouch(slider: Slider) {
+                        bottle.jugTime = slider.value.toInt()
+                    }
+                })
             }
         }
     }

@@ -34,6 +34,17 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.65" />
 
+        <ImageView
+            android:id="@+id/warn"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:layout_margin="@dimen/medium_margin"
+            android:src="@drawable/ic_warning"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorError" />
+
         <include
             android:id="@+id/wineColorNameNaming"
             layout="@layout/wine_color_name_naming"

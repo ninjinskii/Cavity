@@ -125,6 +125,12 @@ class WineRepository private constructor(app: Application) {
         }
     }
 
+    suspend fun getTastingBottleIdsIn(bottlesIds: List<Long>) =
+        bottleDao.getTastingBottleIdsIn(bottlesIds)
+
+    suspend fun boundBottlesToTasting(tastingId: Long, bottleIds: List<Long>) =
+        bottleDao.boundBottlesToTasting(tastingId, bottleIds)
+
     suspend fun deleteAllBottles() = bottleDao.deleteAll()
 
     // Grape
@@ -325,6 +331,7 @@ class WineRepository private constructor(app: Application) {
 
 
     // Tastings
+    suspend fun insertTasting(tasting: Tasting) = tastingDao.insertTasting(tasting)
     fun getFutureTastings() = tastingDao.getFutureTastings()
     fun getLastTasting() = tastingDao.getLastTasting()
 

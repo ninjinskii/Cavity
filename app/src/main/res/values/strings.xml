@@ -6,6 +6,7 @@
     <string name="delete">Supprimer</string>
     <string name="next">Suivant</string>
     <string name="previous">Précédent</string>
+    <string name="ok">OK</string>
     <string name="unknown">Non renseigné</string>
     <string name="input_error">Saisie non valide.</string>
     <string name="permissions_denied">Cavity a besoin de ces autorisations pour prendre des photos.</string>
@@ -254,6 +255,8 @@
     <string name="fahrenheit">\u2109</string>
     <string name="temp_celsius">%1$d \u2103</string>
     <string name="temp_fahrenheit">%1$d \u2109</string>
+    <string name="tasting_bottle_already_in_use">La bouteille est déjà utilisée dans une autre dégustation.</string>
+    <string name="confirm_switch_tasting">Les bouteilles signalées seront déplacées de leurs dégustations respectives à cette dégustation. Continuer ?</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

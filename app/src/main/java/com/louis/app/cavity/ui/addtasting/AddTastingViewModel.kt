@@ -2,16 +2,24 @@ package com.louis.app.cavity.ui.addtasting
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingBottle
+import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.minusAssign
 import com.louis.app.cavity.util.plusAssign
-import kotlinx.coroutines.Dispatchers.Default
+import com.louis.app.cavity.util.postOnce
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
 class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     val repository = WineRepository.getInstance(app)
+
+    private val _userFeedback = MutableLiveData<Event<Int>>()
+    val userFeedback: LiveData<Event<Int>>
+        get() = _userFeedback
 
     private val _selectedBottles = MutableLiveData<MutableList<BoundedBottle>>(mutableListOf())
     val selectedBottles: LiveData<MutableList<BoundedBottle>>
@@ -34,6 +42,21 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
         currentTasting = Tasting(0, date, opportunity, cellarTemp, fridgeTemp, freezerTemp)
     }
 
+    fun saveTasting() {
+        val tasting = currentTasting
+
+        if (tasting == null) {
+            _userFeedback.postOnce(R.string.base_error)
+            return
+        }
+
+        viewModelScope.launch(IO) {
+            val bottleIds = _selectedBottles.value?.map { it.bottle.id } ?: emptyList()
+            val tastingId = repository.insertTasting(tasting)
+            repository.boundBottlesToTasting(tastingId, bottleIds)
+        }
+    }
+
     fun onBottleStateChanged(bottle: BoundedBottle, isSelected: Boolean) {
         _selectedBottles.let {
             if (isSelected) it += bottle else it -= bottle
@@ -41,7 +64,10 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun updateTastingBottles(selectedBottles: List<BoundedBottle>) =
-        liveData(Default) {
+        liveData(IO) {
+            val bottleIds = selectedBottles.map { it.bottle.id }
+            val occupiedBottles = repository.getTastingBottleIdsIn(bottleIds)
+
             val result = selectedBottles.map {
                 TastingBottle(
                     it.bottle.id,
@@ -49,7 +75,8 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
                     it.bottle.vintage,
                     it.wine.color.defaultTemperature,
                     jugTime = 0,
-                    isSelected = false
+                    isSelected = false,
+                    showOccupiedWarning = it.bottle.id in occupiedBottles
                 )
             }
 

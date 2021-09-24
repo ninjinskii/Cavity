@@ -10,7 +10,7 @@ import com.louis.app.cavity.model.TastingXFriend
 @Dao
 interface TastingDao {
     @Insert
-    suspend fun insertTasting(tasting: Tasting)
+    suspend fun insertTasting(tasting: Tasting): Long
 
     @Update
     suspend fun updateTasting(tasting: Tasting)
