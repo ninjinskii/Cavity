@@ -28,6 +28,7 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
             HistoryEntry(0, date, bottleId, null, comment, typeConsume, 0)
 
         viewModelScope.launch(IO) {
+            repository.removeTastingForBottle(bottleId)
             repository.insertHistoryEntryAndFriends(historyEntry, friendIds)
         }
     }
@@ -38,6 +39,7 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
                 HistoryEntry(0, date, bottleId, null, comment, typeGiftTo, 0)
 
         viewModelScope.launch(IO) {
+            repository.removeTastingForBottle(bottleId)
             repository.insertHistoryEntryAndFriends(historyEntry, listOf(friendId))
         }
     }

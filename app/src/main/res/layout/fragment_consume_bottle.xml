@@ -135,10 +135,10 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/add_county"
                 android:src="@drawable/ic_add"
-                android:tint="?attr/colorOnBackground"
                 app:layout_constraintBottom_toBottomOf="@id/friendTitle"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/friendTitle" />
+                app:layout_constraintTop_toTopOf="@id/friendTitle"
+                app:tint="?attr/colorOnBackground" />
 
             <TextView
                 android:id="@+id/friend"

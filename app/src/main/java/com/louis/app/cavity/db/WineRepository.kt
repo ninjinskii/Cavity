@@ -97,6 +97,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun consumeBottle(bottleId: Long) = bottleDao.consumeBottle(bottleId)
     suspend fun fav(bottleId: Long) = bottleDao.fav(bottleId)
     suspend fun unfav(bottleId: Long) = bottleDao.unfav(bottleId)
+    suspend fun removeTastingForBottle(bottleId: Long) = bottleDao.removeTastingForBottle(bottleId)
 
     fun getFReviewAndReviewForBottle(bottleId: Long) =
         fReviewDao.getFReviewAndReviewForBottle(bottleId)
