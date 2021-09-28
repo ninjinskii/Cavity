@@ -16,9 +16,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.ActivityMain
@@ -73,6 +74,13 @@ fun Context.dpToPx(dp: Float): Float {
 fun Context.pxToDp(px: Int): Float {
     return px / (resources.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)
 }
+
+fun <T> ChipGroup.collectAs() = checkedChipIds.map {
+    findViewById<Chip>(it).getTag(R.string.tag_chip_id) as T
+}
+
+fun <T> ChipGroup.collectAsSingle() =
+    findViewById<Chip>(checkedChipId).getTag(R.string.tag_chip_id) as T
 
 // LiveData
 fun <T> MutableLiveData<Event<T>>.postOnce(value: T) {

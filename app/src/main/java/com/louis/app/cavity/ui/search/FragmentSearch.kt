@@ -266,10 +266,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun prepareCountyFilters() {
         binding.countyChipGroup.apply {
-            val counties = checkedChipIds.map {
-                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as County
-            }
-
+            val counties = collectAs<County>()
             searchViewModel.setCountiesFilters(counties)
         }
     }

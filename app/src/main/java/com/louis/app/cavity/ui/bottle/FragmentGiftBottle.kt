@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentGiftBottleBinding
 import com.louis.app.cavity.model.Friend
@@ -17,6 +16,7 @@ import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.util.collectAsSingle
 
 class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -87,10 +87,9 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
             }
 
             binding.friendsChipGroup.apply {
-                val friend =
-                    (findViewById<Chip>(checkedChipId).getTag(R.string.tag_chip_id) as Friend).id
+                val friend = collectAsSingle<Friend>()
 
-                consumeGiftBottleViewModel.giftBottle(args.bottleId, "", friend)
+                consumeGiftBottleViewModel.giftBottle(args.bottleId, "", friend.id)
             }
 
             findNavController().navigateUp()

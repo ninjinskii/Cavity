@@ -126,11 +126,11 @@ class WineRepository private constructor(app: Application) {
         }
     }
 
-    suspend fun getTastingBottleIdsIn(bottlesIds: List<Long>) =
-        bottleDao.getTastingBottleIdsIn(bottlesIds)
+    suspend fun getTastingBottleIdsIn(bottles: List<Long>) =
+        bottleDao.getTastingBottleIdsIn(bottles)
 
-    suspend fun boundBottlesToTasting(tastingId: Long, bottleIds: List<Long>) =
-        bottleDao.boundBottlesToTasting(tastingId, bottleIds)
+    suspend fun boundBottlesToTasting(tastingId: Long, bottles: List<Long>) =
+        bottleDao.boundBottlesToTasting(tastingId, bottles)
 
     suspend fun deleteAllBottles() = bottleDao.deleteAll()
 
@@ -335,9 +335,9 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertTasting(tasting: Tasting) = tastingDao.insertTasting(tasting)
     fun getFutureTastings() = tastingDao.getFutureTastings()
     fun getLastTasting() = tastingDao.getLastTasting()
-    suspend fun insertTastingFriendXRef(tastingId: Long, friendIds: List<Long>) {
+    suspend fun insertTastingFriendXRef(tastingId: Long, friends: List<Long>) {
         database.withTransaction {
-            friendIds.forEach {
+            friends.forEach {
                 tastingXFriendDao.insertTastingXFriend(TastingXFriend(tastingId, it))
             }
         }

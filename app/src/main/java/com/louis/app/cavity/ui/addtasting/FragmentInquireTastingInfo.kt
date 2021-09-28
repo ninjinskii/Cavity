@@ -5,7 +5,6 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.louis.app.cavity.R
@@ -17,6 +16,7 @@ import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
+import com.louis.app.cavity.util.collectAs
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) {
@@ -137,9 +137,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         if (valid) {
             with(binding) {
                 val opportunity = opportunity.text.toString().trim()
-                val friends = friendsChipGroup.checkedChipIds.map {
-                    friendsChipGroup.findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Friend
-                }
+                val friends = friendsChipGroup.collectAs<Friend>()
 
                 addTastingViewModel.submitTasting(
                     opportunity,

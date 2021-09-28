@@ -42,11 +42,11 @@ interface BottleDao {
     @Query("UPDATE bottle SET consumed = 0 WHERE id=:bottleId")
     suspend fun revertBottleConsumption(bottleId: Long)
 
-    @Query("SELECT id FROM bottle WHERE id IN (:bottleIds) AND tasting_id IS NOT NULL")
-    suspend fun getTastingBottleIdsIn(bottleIds: List<Long>): List<Long>
+    @Query("SELECT id FROM bottle WHERE id IN (:bottles) AND tasting_id IS NOT NULL")
+    suspend fun getTastingBottleIdsIn(bottles: List<Long>): List<Long>
 
-    @Query("UPDATE bottle SET tasting_id=:tastingId WHERE bottle.id IN (:bottleIds)")
-    suspend fun boundBottlesToTasting(tastingId: Long, bottleIds: List<Long>)
+    @Query("UPDATE bottle SET tasting_id=:tastingId WHERE bottle.id IN (:bottles)")
+    suspend fun boundBottlesToTasting(tastingId: Long, bottles: List<Long>)
 
     @Transaction
     @Query("SELECT * FROM bottle WHERE consumed = 0")

@@ -10,11 +10,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.Chipable
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.ChipLoader
@@ -23,6 +21,7 @@ import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
+import com.louis.app.cavity.util.collectAsSingle
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.toBoolean
@@ -72,8 +71,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         with(binding) {
             submitAddBottle.setOnClickListener {
                 friendChipGroup.apply {
-                    val friend =
-                        if (giftedBy.isChecked) (findViewById<Chip>(checkedChipId).getTag(R.string.tag_chip_id) as Chipable).getItemId() else null
+                    val friend = if (giftedBy.isChecked) collectAsSingle<Friend>().id else null
 
                     otherInfoManager.submitOtherInfo(
                         otherInfo.text.toString(),
