@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
+import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingBottle
 import com.louis.app.cavity.util.Event
@@ -31,15 +32,18 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     val friends = repository.getAllFriends()
 
     var currentTasting: Tasting? = null
+    var selectedFriends: List<Long> = emptyList()
 
     fun submitTasting(
         opportunity: String,
         cellarTemp: Int,
         fridgeTemp: Int,
         freezerTemp: Int,
-        date: Long
+        date: Long,
+        friends: List<Friend>
     ) {
         currentTasting = Tasting(0, date, opportunity, cellarTemp, fridgeTemp, freezerTemp)
+        selectedFriends = friends.map { it.id }
     }
 
     fun saveTasting() {
@@ -53,7 +57,9 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             val bottleIds = _selectedBottles.value?.map { it.bottle.id } ?: emptyList()
             val tastingId = repository.insertTasting(tasting)
+
             repository.boundBottlesToTasting(tastingId, bottleIds)
+            repository.insertTastingFriendXRef(tastingId, selectedFriends)
         }
     }
 

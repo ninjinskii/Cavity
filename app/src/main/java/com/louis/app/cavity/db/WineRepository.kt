@@ -33,6 +33,7 @@ class WineRepository private constructor(app: Application) {
     private val historyDao = database.historyDao()
     private val friendDao = database.friendDao()
     private val historyXFriendDao = database.historyXFriendDao()
+    private val tastingXFriendDao = database.tastingXFriendDao()
     private val statsDao = database.statsDao()
     private val tastingDao = database.tastingDao()
 
@@ -334,6 +335,13 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertTasting(tasting: Tasting) = tastingDao.insertTasting(tasting)
     fun getFutureTastings() = tastingDao.getFutureTastings()
     fun getLastTasting() = tastingDao.getLastTasting()
+    suspend fun insertTastingFriendXRef(tastingId: Long, friendIds: List<Long>) {
+        database.withTransaction {
+            friendIds.forEach {
+                tastingXFriendDao.insertTastingXFriend(TastingXFriend(tastingId, it))
+            }
+        }
+    }
 
     suspend fun importDbFromExternalDir(externalDirPath: String) {
         val file = File("$externalDirPath/db.json")
