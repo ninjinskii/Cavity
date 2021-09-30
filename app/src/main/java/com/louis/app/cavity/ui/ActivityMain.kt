@@ -13,6 +13,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.util.showSnackbar
+import leakcanary.LeakCanary
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private lateinit var binding: ActivityMainBinding

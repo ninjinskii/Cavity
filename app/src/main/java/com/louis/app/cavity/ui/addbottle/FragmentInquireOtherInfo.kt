@@ -50,6 +50,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         otherInfoManager = addBottleViewModel.otherInfoManager
 
+        binding.autoAnimate.layoutTransition.setAnimateParentHierarchy(false);
+
         setListeners()
         observe()
         initFriendsChips()

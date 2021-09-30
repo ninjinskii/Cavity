@@ -88,7 +88,7 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
 
             binding.friendsChipGroup.apply {
                 val comment = binding.tasteComment.text.toString()
-                val friends = collectAs<Friend>().map { it.id }
+                val friends = collectAs<Friend>()
 
                 consumeGiftBottleViewModel.consumeBottle(args.bottleId, comment, friends)
             }
