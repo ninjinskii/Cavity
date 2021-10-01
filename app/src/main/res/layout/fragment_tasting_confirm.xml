@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <TextView
+      android:id="@+id/friendTitle"
+      style="@style/TextAppearance.MaterialComponents.Subtitle1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/medium_margin"
+      android:text="@string/friends"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <ImageButton
+      android:id="@+id/buttonAddFriend"
+      android:layout_width="@dimen/medium_icon"
+      android:layout_height="@dimen/medium_icon"
+      android:layout_margin="@dimen/medium_margin"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:contentDescription="@string/add_county"
+      android:src="@drawable/ic_add"
+      app:layout_constraintBottom_toBottomOf="@id/friendTitle"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="@id/friendTitle"
+      app:tint="?attr/colorOnBackground" />
+
+  <HorizontalScrollView
+      android:id="@+id/friendsScrollView"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:clipToPadding="false"
+      android:paddingHorizontal="@dimen/medium_margin"
+      android:scrollbars="none"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/friendTitle">
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/friendsChipGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/chip_group_default_height"
+        android:layout_marginTop="@dimen/small_margin"
+        app:selectionRequired="false"
+        app:singleLine="true"
+        app:singleSelection="false" />
+
+  </HorizontalScrollView>
+
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/bottleTastingActionsList"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_marginTop="@dimen/small_margin"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/friendsScrollView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
