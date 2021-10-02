@@ -73,8 +73,30 @@ data class BottleAndWine(
     val wine: Wine,
 )
 
+data class BottleWithTastingActions(
+    @Embedded val bottle: Bottle,
+    @Relation(
+        entity = Wine::class,
+        parentColumn = "wine_id",
+        entityColumn = "id"
+    )
+    val wine: Wine,
+    @Relation(
+        entity = TastingAction::class,
+        parentColumn = "id",
+        entityColumn = "bottle_id"
+    )
+    val tastingActions: List<TastingAction>,
+)
+
 data class BottleWithHistoryEntries(
     @Embedded val bottle: Bottle,
+    @Relation(
+        entity = Wine::class,
+        parentColumn = "wine_id",
+        entityColumn = "id"
+    )
+    val wine: Wine,
     @Relation(
         parentColumn = "id",
         entityColumn = "bottle_id"

@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
-import com.louis.app.cavity.databinding.FragmentTastingsBinding
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentTastingOverview: Fragment(R.layout.fragment_tasting_overview) {
@@ -20,5 +19,25 @@ class FragmentTastingOverview: Fragment(R.layout.fragment_tasting_overview) {
         _binding = FragmentTastingOverviewBinding.bind(view)
 
         setupNavigation(binding.appBar.toolbar)
+
+        initRecyclerView()
+//        observe()
+    }
+
+    private fun initRecyclerView() {
+        val tastingOverviewAdapter = BottleActionAdapter (
+            onActionCheckedChange = { actionId, isChecked ->
+                tastingOverviewViewModel.setActionIsChecked(actionId, isChecked)
+            }
+        )
+
+        binding.bottleTastingActionsList.apply {
+            adapter = tastingOverviewAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        tastingOverviewViewModel.bottles.observe(viewLifecycleOwner) {
+//            tastingOverviewAdapter.
+        }
     }
 }

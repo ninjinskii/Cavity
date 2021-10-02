@@ -345,6 +345,9 @@ class WineRepository private constructor(app: Application) {
         }
     }
 
+    fun getBottlesWithTastingActionsForTasting(tastingId: Long) =
+        tastingDao.getBottlesWithTastingActionsForTasting(tastingId)
+
 
     // Tasting actions
     suspend fun insertTastingActions(tastingActions: List<TastingAction>) =

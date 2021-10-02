@@ -2,10 +2,7 @@ package com.louis.app.cavity.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.model.Tasting
-import com.louis.app.cavity.model.TastingXFriend
+import com.louis.app.cavity.model.*
 
 @Dao
 interface TastingDao {
@@ -24,6 +21,10 @@ interface TastingDao {
     @Transaction
     @Query("SELECT * FROM tasting WHERE date >= :beyond")
     fun getFutureTastings(beyond: Long = 0L): LiveData<List<BoundedTasting>>
+
+    @Transaction
+    @Query("SELECT * FROM bottle WHERE bottle.id=:bottleId")
+    fun getBottlesWithTastingActionsForTasting(bottleId: Long): LiveData<List<BottleWithTastingActions>>
 }
 
 data class TastingWithBottles(
@@ -33,6 +34,15 @@ data class TastingWithBottles(
         entityColumn = "tasting_id"
     )
     var bottles: List<Bottle>
+)
+
+data class TastingWithBottlesAndTastingActions(
+    @Embedded var tasting: Tasting,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "tasting_id"
+    )
+    var bottles: List<BottleWithTastingActions>,
 )
 
 data class TastingWithFriends(
