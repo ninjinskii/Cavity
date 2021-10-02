@@ -25,8 +25,9 @@ import kotlinx.coroutines.launch
         Tasting::class,
         TastingXFriend::class,
         HistoryXFriend::class,
+        TastingAction::class,
     ],
-    version = 53,
+    version = 54,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -43,6 +44,7 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun statsDao(): StatsDao
     abstract fun tastingDao(): TastingDao
     abstract fun tastingXFriendDao(): TastingXFriendDao
+    abstract fun tastingActionDao(): TastingActionDao
 
     companion object {
         @Volatile

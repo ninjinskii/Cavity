@@ -60,6 +60,8 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
 
             repository.boundBottlesToTasting(tastingId, bottleIds)
             repository.insertTastingFriendXRef(tastingId, selectedFriends)
+
+            generateTastingActions(tastingId, tastingBottles.value)
         }
     }
 
@@ -88,4 +90,11 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
 
             emit(result)
         }
+
+    private suspend fun generateTastingActions(
+        tastingId: Long,
+        tastingBottles: List<TastingBottle>?
+    ) {
+
+    }
 }

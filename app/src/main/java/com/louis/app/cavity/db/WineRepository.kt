@@ -36,6 +36,7 @@ class WineRepository private constructor(app: Application) {
     private val tastingXFriendDao = database.tastingXFriendDao()
     private val statsDao = database.statsDao()
     private val tastingDao = database.tastingDao()
+    private val tastingActionDao = database.tastingActionDao()
 
     // Only used for db migration from Cavity 2 for now.
     private val moshi by lazy {
@@ -343,6 +344,20 @@ class WineRepository private constructor(app: Application) {
             }
         }
     }
+
+
+    // Tasting actions
+    suspend fun isertTastingActions(tastingActions: List<TastingAction>) =
+        tastingActionDao.insertTastingActions(tastingActions)
+
+    suspend fun updateTastingAction(tastingAction: TastingAction) =
+        tastingActionDao.updateTastingAction(tastingAction)
+
+    suspend fun deleteTastingAction(tastingAction: TastingAction) =
+        tastingActionDao.deleteTastingAction(tastingAction)
+
+    suspend fun deleteTastingActionsForBottle(bottleId: Long) =
+        tastingActionDao.deleteTastingActionsForBottle(bottleId)
 
     suspend fun importDbFromExternalDir(externalDirPath: String) {
         val file = File("$externalDirPath/db.json")
