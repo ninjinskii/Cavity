@@ -15,6 +15,8 @@ import androidx.room.ForeignKey
 )
 data class TastingAction(
     val id: Long,
+    val type: String,
+    val time: Int,
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
     val checked: Boolean
 )

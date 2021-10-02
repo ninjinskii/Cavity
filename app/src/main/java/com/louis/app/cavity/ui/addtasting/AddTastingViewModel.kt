@@ -7,6 +7,7 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Tasting
+import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.TastingBottle
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.minusAssign
@@ -95,6 +96,49 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
         tastingId: Long,
         tastingBottles: List<TastingBottle>?
     ) {
+        if (tastingBottles == null) {
+            return
+        }
 
+        val actions = mutableListOf<TastingAction>()
+
+        for (tastingBottle in tastingBottles) {
+            val randomFridgeTime: Int = (5..30).random()
+            val randomOutFridgeTime: Int = (5..10).random()
+
+            if (tastingBottle.drinkTemp.value < 10) {
+                val setToFridgeAction = TastingAction(
+                    0,
+                    "Mettre votre bouteille au frigo",
+                    randomFridgeTime,
+                    tastingBottle.bottleId,
+                    false
+                )
+
+                val outOfFridgeAction = TastingAction(
+                    0,
+                    "Sortez votre bouteille du frigo",
+                    randomOutFridgeTime,
+                    tastingBottle.bottleId,
+                    false
+
+                )
+
+                actions.add(setToFridgeAction)
+                actions.add(outOfFridgeAction)
+            } else {
+                val outOfCellarAction = TastingAction(
+                    0,
+                    "Sortez votre bouteille de la cave",
+                    0,
+                    tastingBottle.bottleId,
+                    false
+                )
+
+                actions.add(outOfCellarAction)
+            }
+        }
+
+        repository.insertTastingActions(actions)
     }
 }

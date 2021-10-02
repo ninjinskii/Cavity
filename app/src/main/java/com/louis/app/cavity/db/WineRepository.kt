@@ -347,7 +347,7 @@ class WineRepository private constructor(app: Application) {
 
 
     // Tasting actions
-    suspend fun isertTastingActions(tastingActions: List<TastingAction>) =
+    suspend fun insertTastingActions(tastingActions: List<TastingAction>) =
         tastingActionDao.insertTastingActions(tastingActions)
 
     suspend fun updateTastingAction(tastingAction: TastingAction) =
