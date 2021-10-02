@@ -257,6 +257,10 @@
     <string name="temp_fahrenheit">%1$d \u2109</string>
     <string name="tasting_bottle_already_in_use">La bouteille est déjà utilisée dans une autre dégustation.</string>
     <string name="confirm_switch_tasting">Les bouteilles signalées seront déplacées de leurs dégustations respectives à cette dégustation. Continuer ?</string>
+    <string name="out_of_cellar">Sortez la bouteille de votre cave</string>
+    <string name="out_of_fridge">Sortez la bouteille de votre frigo</string>
+    <string name="set_to_fridge">Mettez la bouteille au frigo</string>
+    <string name="set_to_jug">Carafez la bouteille</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

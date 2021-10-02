@@ -17,8 +17,15 @@ import androidx.room.PrimaryKey
 data class TastingAction(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
-    val type: String,
+    val type: Action,
     val time: Int,
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
     var checked: Int
-)
+) {
+    enum class Action {
+        OUT_OF_FRIDGE,
+        OUT_OF_CELLAR,
+        SET_TO_FRIDGE,
+        SET_TO_JUG
+    }
+}

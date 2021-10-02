@@ -36,8 +36,6 @@ class BottleActionAdapter(private val onActionCheckedChange: (TastingAction, Boo
         holder.bind(getItem(position))
     }
 
-    override fun getItemViewType(position: Int) = R.layout.chip_friend
-
     class BottleWithTastingActionsItemDiffCallback :
         DiffUtil.ItemCallback<BottleWithTastingActions>() {
         override fun areItemsTheSame(
@@ -82,8 +80,15 @@ class BottleActionAdapter(private val onActionCheckedChange: (TastingAction, Boo
             binding.actions.removeAllViews()
 
             actions.forEach {
+                val actionText = when(it.type) {
+                    TastingAction.Action.OUT_OF_CELLAR -> R.string.out_of_cellar
+                    TastingAction.Action.OUT_OF_FRIDGE -> R.string.out_of_fridge
+                    TastingAction.Action.SET_TO_FRIDGE -> R.string.set_to_fridge
+                    TastingAction.Action.SET_TO_JUG -> R.string.set_to_jug
+                }
+
                 val checkbox = CheckBox(itemView.context).apply {
-                    text = it.type
+                    text = itemView.context.getString(actionText)
                     isChecked = it.checked.toBoolean()
                     setOnCheckedChangeListener { _, isChecked ->
                         onActionCheckedChange(it, isChecked)

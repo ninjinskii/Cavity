@@ -109,7 +109,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             if (tastingBottle.drinkTemp.value < 10) {
                 val setToFridgeAction = TastingAction(
                     0,
-                    "Mettre votre bouteille au frigo",
+                    TastingAction.Action.SET_TO_FRIDGE,
                     randomFridgeTime,
                     tastingBottle.bottleId,
                     0
@@ -117,7 +117,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
 
                 val outOfFridgeAction = TastingAction(
                     0,
-                    "Sortez votre bouteille du frigo",
+                    TastingAction.Action.OUT_OF_FRIDGE,
                     randomOutFridgeTime,
                     tastingBottle.bottleId,
                     0
@@ -129,7 +129,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             } else {
                 val outOfCellarAction = TastingAction(
                     0,
-                    "Sortez votre bouteille de la cave",
+                    TastingAction.Action.OUT_OF_CELLAR,
                     0,
                     tastingBottle.bottleId,
                     0
