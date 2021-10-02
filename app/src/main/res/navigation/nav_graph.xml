@@ -146,6 +146,13 @@
         <action
             android:id="@+id/tastingToAddTasting"
             app:destination="@id/fragmentAddTasting" />
+        <action
+            android:id="@+id/tastingToTastingOverview"
+            app:destination="@id/fragmentTastingOverview">
+            <argument
+                android:name="tastingId"
+                app:argType="long" />
+        </action>
     </fragment>
 
     <fragment
@@ -247,4 +254,14 @@
         android:name="com.louis.app.cavity.ui.addtasting.FragmentAddTasting"
         android:label="FragmentAddTasting"
         tools:layout="@layout/fragment_inquire_tasting_info" />
+
+    <fragment
+        android:id="@+id/fragmentTastingOverview"
+        android:name="com.louis.app.cavity.ui.tasting.FragmentTastingOverview"
+        android:label="FragmentTastingOverview"
+        tools:layout="@layout/fragment_tasting_overview" >
+        <argument
+            android:name="tastingId"
+            app:argType="long" />
+    </fragment>
 </navigation>

@@ -112,7 +112,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
                     "Mettre votre bouteille au frigo",
                     randomFridgeTime,
                     tastingBottle.bottleId,
-                    false
+                    0
                 )
 
                 val outOfFridgeAction = TastingAction(
@@ -120,7 +120,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
                     "Sortez votre bouteille du frigo",
                     randomOutFridgeTime,
                     tastingBottle.bottleId,
-                    false
+                    0
 
                 )
 
@@ -132,7 +132,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
                     "Sortez votre bouteille de la cave",
                     0,
                     tastingBottle.bottleId,
-                    false
+                    0
                 )
 
                 actions.add(outOfCellarAction)

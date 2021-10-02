@@ -23,8 +23,8 @@ interface TastingDao {
     fun getFutureTastings(beyond: Long = 0L): LiveData<List<BoundedTasting>>
 
     @Transaction
-    @Query("SELECT * FROM bottle WHERE bottle.id=:bottleId")
-    fun getBottlesWithTastingActionsForTasting(bottleId: Long): LiveData<List<BottleWithTastingActions>>
+    @Query("SELECT * FROM bottle WHERE bottle.tasting_id=:tastingId")
+    fun getBottlesWithTastingActionsForTasting(tastingId: Long): LiveData<List<BottleWithTastingActions>>
 }
 
 data class TastingWithBottles(

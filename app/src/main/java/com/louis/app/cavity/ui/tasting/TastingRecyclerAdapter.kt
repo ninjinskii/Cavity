@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.tasting
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -67,6 +68,11 @@ class TastingRecyclerAdapter(private val childViewPool: RecyclerView.RecycledVie
             }
 
             friendAdapter.submitList(friends)
+
+            binding.root.setOnClickListener {
+                val action = FragmentTastingsDirections.tastingToTastingOverview(tasting.id)
+                itemView.findNavController().navigate(action)
+            }
         }
     }
 }

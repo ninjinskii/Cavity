@@ -3,6 +3,7 @@ package com.louis.app.cavity.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "tasting_action",
@@ -14,9 +15,10 @@ import androidx.room.ForeignKey
     )]
 )
 data class TastingAction(
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
     val type: String,
     val time: Int,
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
-    val checked: Boolean
+    var checked: Int
 )

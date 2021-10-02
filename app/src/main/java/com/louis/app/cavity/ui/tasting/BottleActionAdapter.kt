@@ -18,7 +18,7 @@ import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
-class BottleActionAdapter(private val onActionCheckedChange: (Long, Boolean) -> Unit) :
+class BottleActionAdapter(private val onActionCheckedChange: (TastingAction, Boolean) -> Unit) :
     ListAdapter<BottleWithTastingActions, BottleActionAdapter.BottleActionViewHolder>
         (BottleWithTastingActionsItemDiffCallback()) {
 
@@ -82,8 +82,16 @@ class BottleActionAdapter(private val onActionCheckedChange: (Long, Boolean) -> 
             binding.actions.removeAllViews()
 
             actions.forEach {
+                val checkbox = CheckBox(itemView.context).apply {
+                    text = it.type
+                    isChecked = it.checked.toBoolean()
+                    setOnCheckedChangeListener { _, isChecked ->
+                        onActionCheckedChange(it, isChecked)
+                    }
+                }
+
                 binding.actions.addView(
-                    CheckBox(itemView.context).apply { text = it.type; isChecked = it.checked },
+                    checkbox,
                     ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
                 )
             }
