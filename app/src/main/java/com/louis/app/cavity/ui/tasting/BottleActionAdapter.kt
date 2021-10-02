@@ -50,7 +50,7 @@ class BottleActionAdapter(private val onActionCheckedChange: (TastingAction, Boo
             oldItem: BottleWithTastingActions,
             newItem: BottleWithTastingActions
         ) =
-            oldItem == newItem
+            true
     }
 
     inner class BottleActionViewHolder(private val binding: ItemTastingBottleActionsBinding) :
