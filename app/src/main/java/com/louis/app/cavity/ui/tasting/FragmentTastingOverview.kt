@@ -8,9 +8,11 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
+import com.louis.app.cavity.db.dao.BottleWithTastingActions
+import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.util.setupNavigation
 
-class FragmentTastingOverview: Fragment(R.layout.fragment_tasting_overview) {
+class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
     private var _binding: FragmentTastingOverviewBinding? = null
     private val binding get() = _binding!!
     private val tastingOverviewViewModel: TastingOverviewViewModel by viewModels()
@@ -27,7 +29,7 @@ class FragmentTastingOverview: Fragment(R.layout.fragment_tasting_overview) {
     }
 
     private fun initRecyclerView() {
-        val tastingOverviewAdapter = BottleActionAdapter (
+        val tastingOverviewAdapter = BottleActionAdapter(
             onActionCheckedChange = { tastingAction, isChecked ->
                 tastingOverviewViewModel.setActionIsChecked(tastingAction, isChecked)
             }
@@ -39,6 +41,7 @@ class FragmentTastingOverview: Fragment(R.layout.fragment_tasting_overview) {
         }
 
         tastingOverviewViewModel.bottles.observe(viewLifecycleOwner) {
+            tastingOverviewViewModel.notify(requireContext(), it)
             tastingOverviewAdapter.submitList(it)
         }
     }

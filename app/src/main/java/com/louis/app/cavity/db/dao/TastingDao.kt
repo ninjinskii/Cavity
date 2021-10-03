@@ -18,6 +18,9 @@ interface TastingDao {
     @Query("SELECT * FROM tasting WHERE date < julianday(\"now\") ORDER BY date DESC LIMIT 1")
     fun getLastTasting(): LiveData<Tasting>
 
+    @Query("SELECT * FROM tasting WHERE id=:tastingId")
+    suspend fun getTastingByIdNotLive(tastingId: Long): Tasting
+
     @Transaction
     @Query("SELECT * FROM tasting WHERE date >= :beyond")
     fun getFutureTastings(beyond: Long = 0L): LiveData<List<BoundedTasting>>
