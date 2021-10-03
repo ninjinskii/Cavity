@@ -31,7 +31,11 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
     private fun initRecyclerView() {
         val tastingOverviewAdapter = BottleActionAdapter(
             onActionCheckedChange = { tastingAction, isChecked ->
-                tastingOverviewViewModel.setActionIsChecked(tastingAction, isChecked)
+                tastingOverviewViewModel.setActionIsChecked(
+                    requireContext(),
+                    tastingAction,
+                    isChecked
+                )
             }
         )
 
@@ -41,7 +45,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         }
 
         tastingOverviewViewModel.bottles.observe(viewLifecycleOwner) {
-            tastingOverviewViewModel.notify(requireContext(), it)
+            tastingOverviewViewModel.notify(requireContext())
             tastingOverviewAdapter.submitList(it)
         }
     }

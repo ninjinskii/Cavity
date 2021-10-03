@@ -11,6 +11,7 @@ import com.louis.app.cavity.db.dao.BottleWithTastingActions
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.ui.Cavity
+import com.louis.app.cavity.util.toBoolean
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -27,23 +28,28 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
         this.tastingId.value = tastingId
     }
 
-    fun setActionIsChecked(tastingAction: TastingAction, isChecked: Boolean) {
+    fun setActionIsChecked(context: Context, tastingAction: TastingAction, isChecked: Boolean) {
         tastingAction.checked = isChecked.toInt()
 
         viewModelScope.launch(IO) {
             repository.updateTastingAction(tastingAction)
         }
+
+        // TODO: add a notification event chennel, and send notifocation form fragment
+        notify(context)
     }
 
-    fun notify(context: Context, bottleWithActions: List<BottleWithTastingActions>) {
+    fun notify(context: Context) {
         viewModelScope.launch(IO) {
             val tasting = repository.getLastTastingByIdNotLive(tastingId.value ?: return@launch)
 
-            bottleWithActions.forEach { bottle ->
-                bottle.tastingActions.forEach { action ->
-                    val notification = TastingNotifier.buildNotification(context, tasting, action)
-                    TastingNotifier.notify(context, notification)
-                }
+            bottles.value?.forEach { bottle ->
+                bottle.tastingActions
+                    .firstOrNull { action -> !action.checked.toBoolean() }
+                    ?.let {
+                        val notification = TastingNotifier.buildNotification(context, tasting, it)
+                        TastingNotifier.notify(context, notification)
+                    }
             }
         }
     }
