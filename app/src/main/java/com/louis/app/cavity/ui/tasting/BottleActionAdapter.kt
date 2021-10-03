@@ -80,7 +80,7 @@ class BottleActionAdapter(private val onActionCheckedChange: (TastingAction, Boo
             binding.actions.removeAllViews()
 
             actions.forEach {
-                val actionText = when(it.type) {
+                val actionText = when (it.type) {
                     TastingAction.Action.OUT_OF_CELLAR -> R.string.out_of_cellar
                     TastingAction.Action.OUT_OF_FRIDGE -> R.string.out_of_fridge
                     TastingAction.Action.SET_TO_FRIDGE -> R.string.set_to_fridge
@@ -88,7 +88,7 @@ class BottleActionAdapter(private val onActionCheckedChange: (TastingAction, Boo
                 }
 
                 val checkbox = CheckBox(itemView.context).apply {
-                    text = itemView.context.getString(actionText)
+                    text = itemView.context.getString(actionText, it.time.toString())
                     isChecked = it.checked.toBoolean()
                     setOnCheckedChangeListener { _, isChecked ->
                         onActionCheckedChange(it, isChecked)
