@@ -45,4 +45,9 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
             tastingOverviewAdapter.submitList(it)
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
