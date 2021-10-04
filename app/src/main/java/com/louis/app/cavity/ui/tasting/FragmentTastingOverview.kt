@@ -8,8 +8,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
-import com.louis.app.cavity.db.dao.BottleWithTastingActions
-import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
@@ -26,16 +24,13 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         tastingOverviewViewModel.start(args.tastingId)
 
         initRecyclerView()
+        observe()
     }
 
     private fun initRecyclerView() {
         val tastingOverviewAdapter = BottleActionAdapter(
             onActionCheckedChange = { tastingAction, isChecked ->
-                tastingOverviewViewModel.setActionIsChecked(
-                    requireContext(),
-                    tastingAction,
-                    isChecked
-                )
+                tastingOverviewViewModel.setActionIsChecked(tastingAction, isChecked)
             }
         )
 
@@ -45,8 +40,23 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         }
 
         tastingOverviewViewModel.bottles.observe(viewLifecycleOwner) {
-            tastingOverviewViewModel.notify(requireContext())
             tastingOverviewAdapter.submitList(it)
+        }
+    }
+
+    private fun observe() {
+        tastingOverviewViewModel.notificationEvent.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { pair ->
+                pair.second.forEach { action ->
+                    val notification = TastingNotifier.buildNotification(
+                        requireContext(),
+                        tasting = pair.first,
+                        action
+                    )
+
+                    TastingNotifier.notify(requireContext(), notification)
+                }
+            }
         }
     }
 
