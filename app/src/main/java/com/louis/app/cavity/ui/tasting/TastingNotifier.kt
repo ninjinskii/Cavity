@@ -13,7 +13,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.ui.ActivityMain
-import kotlin.jvm.Throws
+import com.louis.app.cavity.util.L
 
 object TastingNotifier {
     private const val CHANNEL_ID = "com.louis.app.cavity.TASTING_CHANNEL"
@@ -42,14 +42,13 @@ object TastingNotifier {
         return TastingActionNotification(tastingAction.id, notification)
     }
 
-    @Throws(ArithmeticException::class)
     fun notify(context: Context, notification: TastingActionNotification) {
         NotificationManagerCompat.from(context).run {
-            if (notification.tastingActionId > Int.MAX_VALUE) {
-                throw ArithmeticException("Too much actions in database, cannot perform notify")
+            if (notification.tastingActionId <= Int.MAX_VALUE) {
+                notify(notification.tastingActionId.toInt(), notification.notification)
+            } else {
+                L.v("Too much actions in database, cannot perform notify")
             }
-
-            notify(notification.tastingActionId.toInt(), notification.notification)
         }
     }
 
