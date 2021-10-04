@@ -23,8 +23,6 @@ data class TastingAction(
     var checked: Int
 ) {
     enum class Action {
-        OUT_OF_FRIDGE,
-        OUT_OF_CELLAR,
         SET_TO_FRIDGE,
         SET_TO_JUG
     }

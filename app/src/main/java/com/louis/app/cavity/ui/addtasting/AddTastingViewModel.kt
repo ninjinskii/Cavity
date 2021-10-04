@@ -9,12 +9,10 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.TastingBottle
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.minusAssign
-import com.louis.app.cavity.util.plusAssign
-import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     val repository = WineRepository.getInstance(app)
@@ -45,6 +43,8 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     ) {
         currentTasting = Tasting(0, date, opportunity, cellarTemp, fridgeTemp, freezerTemp)
         selectedFriends = friends.map { it.id }
+
+        L.v(computeCoolingTime(20, 4, 5).toString())
     }
 
     fun saveTasting() {
@@ -62,7 +62,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             repository.boundBottlesToTasting(tastingId, bottleIds)
             repository.insertTastingFriendXRef(tastingId, selectedFriends)
 
-            generateTastingActions(tastingId, tastingBottles.value)
+            generateTastingActions(tasting, tastingBottles.value)
         }
     }
 
@@ -93,7 +93,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
         }
 
     private suspend fun generateTastingActions(
-        tastingId: Long,
+        tasting: Tasting,
         tastingBottles: List<TastingBottle>?
     ) {
         if (tastingBottles == null) {
@@ -103,42 +103,33 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
         val actions = mutableListOf<TastingAction>()
 
         for (tastingBottle in tastingBottles) {
-            val randomFridgeTime: Int = (5..30).random()
-            val randomOutFridgeTime: Int = (5..10).random()
+            val fridgeTime = computeCoolingTime(
+                tasting.cellarTemp,
+                tasting.fridgeTemp,
+                tastingBottle.drinkTemp.value
+            )
 
-            if (tastingBottle.drinkTemp.value < 10) {
-                val setToFridgeAction = TastingAction(
-                    0,
-                    TastingAction.Action.SET_TO_FRIDGE,
-                    randomFridgeTime,
-                    tastingBottle.bottleId,
-                    0
-                )
+            val setToFridgeAction = TastingAction(
+                0,
+                TastingAction.Action.SET_TO_FRIDGE,
+                fridgeTime.toInt(),
+                tastingBottle.bottleId,
+                0
+            )
 
-                val outOfFridgeAction = TastingAction(
-                    0,
-                    TastingAction.Action.OUT_OF_FRIDGE,
-                    randomOutFridgeTime,
-                    tastingBottle.bottleId,
-                    0
-
-                )
-
-                actions.add(setToFridgeAction)
-                actions.add(outOfFridgeAction)
-            } else {
-                val outOfCellarAction = TastingAction(
-                    0,
-                    TastingAction.Action.OUT_OF_CELLAR,
-                    0,
-                    tastingBottle.bottleId,
-                    0
-                )
-
-                actions.add(outOfCellarAction)
-            }
+            actions.add(setToFridgeAction)
         }
 
         repository.insertTastingActions(actions)
+    }
+
+    private fun computeCoolingTime(ambientTemp: Int, fridgeTemp: Int, desiredTemp: Int): Float {
+        val k = 0.002768
+
+        return (-log(
+            (desiredTemp.toDouble() - fridgeTemp.toDouble()) /
+                (ambientTemp.toDouble() - fridgeTemp.toDouble()),
+            10.0
+        ) / k).toFloat()
     }
 }

@@ -81,8 +81,6 @@ class BottleActionAdapter(private val onActionCheckedChange: (TastingAction, Boo
 
             actions.forEach {
                 val actionText = when (it.type) {
-                    TastingAction.Action.OUT_OF_CELLAR -> R.string.out_of_cellar
-                    TastingAction.Action.OUT_OF_FRIDGE -> R.string.out_of_fridge
                     TastingAction.Action.SET_TO_FRIDGE -> R.string.set_to_fridge
                     TastingAction.Action.SET_TO_JUG -> R.string.set_to_jug
                 }
