@@ -27,9 +27,10 @@ data class Bottle(
     @ColumnInfo(name = "buy_location") val buyLocation: String,
     @ColumnInfo(name = "buy_date") val buyDate: Long,
     @ColumnInfo(name = "taste_comment") val tasteComment: String, // might disappear
+    @ColumnInfo(name = "bottle_size") val bottleSize: BottleSize,
     @ColumnInfo(name = "pdf_path") var pdfPath: String,
     var consumed: Int,
-    @ColumnInfo(name = "tasting_id", index = true) var tastingId: Long? = null,
+    @ColumnInfo(name = "tasting_id", index = true) var tastingId: Long? = null
 ) : Chipable {
 
     @Ignore

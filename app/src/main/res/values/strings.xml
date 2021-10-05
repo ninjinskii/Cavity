@@ -127,6 +127,9 @@
     <string name="add_pdf">Associer un fichier PDF</string>
     <string name="pdf">PDF</string>
     <string name="medal_color">Couleur de la médaille</string>
+    <string name="size_slim">37.5 cL</string>
+    <string name="size_normal">75 cL</string>
+    <string name="size_magnum">1.5 L</string>
     <string name="gifted_by_friend">Offerte par un ami</string>
     <string name="add_friend">Ajouter un ami</string>
     <string name="add_friend_label">Nom prénom</string>

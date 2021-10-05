@@ -50,7 +50,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         otherInfoManager = addBottleViewModel.otherInfoManager
 
-        binding.autoAnimate.layoutTransition.setAnimateParentHierarchy(false);
+        binding.autoAnimate.layoutTransition.setAnimateParentHierarchy(false)
+        binding.rbNormal.isChecked = true
 
         setListeners()
         observe()
@@ -77,6 +78,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
                     otherInfoManager.submitOtherInfo(
                         otherInfo.text.toString(),
+                        rbGroupSize.checkedButtonId,
                         addToFavorite.isChecked,
                         friend
                     )
