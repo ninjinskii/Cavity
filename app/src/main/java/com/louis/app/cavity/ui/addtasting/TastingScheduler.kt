@@ -20,22 +20,28 @@ class TastingScheduler(
         val actions = mutableListOf<TastingAction>()
 
         for (tastingBottle in tastingBottles) {
-            val fridgeTime = getCoolingTime(
-                tastingBottle.size,
-                tasting.cellarTemp,
-                tasting.fridgeTemp,
-                tastingBottle.drinkTemp.value
-            )
+            if (tastingBottle.drinkTemp.value < tasting.cellarTemp) {
+                val fridgeTime = getCoolingTime(
+                    tastingBottle.size,
+                    tasting.cellarTemp,
+                    tasting.fridgeTemp,
+                    tastingBottle.drinkTemp.value
+                )
 
-            val setToFridgeAction = TastingAction(
-                0,
-                TastingAction.Action.SET_TO_FRIDGE,
-                fridgeTime.toInt(),
-                tastingBottle.bottleId,
-                0
-            )
+                val setToFridgeAction = TastingAction(
+                    0,
+                    TastingAction.Action.SET_TO_FRIDGE,
+                    fridgeTime.toInt(),
+                    tastingBottle.bottleId,
+                    0
+                )
 
-            actions.add(setToFridgeAction)
+                actions.add(setToFridgeAction)
+            }
+
+            if (tastingBottle.jugTime > 0) {
+
+            }
         }
 
         return actions
