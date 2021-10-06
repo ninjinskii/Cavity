@@ -131,7 +131,7 @@
                 android:id="@+id/buttonAddFriend"
                 android:layout_width="@dimen/medium_icon"
                 android:layout_height="@dimen/medium_icon"
-                android:layout_margin="@dimen/medium_margin"
+                android:layout_marginEnd="@dimen/medium_margin"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/add_county"
                 android:src="@drawable/ic_add"
