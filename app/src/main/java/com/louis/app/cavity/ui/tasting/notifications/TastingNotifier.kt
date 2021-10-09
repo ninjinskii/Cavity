@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.tasting
+package com.louis.app.cavity.ui.tasting.notifications
 
 import android.app.Notification
 import android.app.NotificationChannel

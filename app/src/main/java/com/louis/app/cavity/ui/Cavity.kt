@@ -5,8 +5,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
-import com.louis.app.cavity.ui.tasting.TastingNotifier
-import java.io.File
+import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
 
 class Cavity : Application() {
 
