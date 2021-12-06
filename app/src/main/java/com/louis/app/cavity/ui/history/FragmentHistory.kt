@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.history
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcel
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -30,6 +32,8 @@ import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter.Companion.
 import com.louis.app.cavity.ui.history.adapter.ReboundingSwipeActionCallback
 import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
 import com.louis.app.cavity.util.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -68,7 +72,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         val historyAdapter = HistoryRecyclerAdapter(
             requireContext(),
             colorUtil,
-            onHeaderClick = { showDatePicker() },
+            onHeaderClick = { historyViewModel.requestDatePicker() },
             onItemClick = {
                 binding.filterChipGroup.clearCheck()
                 historyViewModel.setFilter(HistoryFilter.BottleFilter(it.model.bottleAndWine.bottle.id))
@@ -89,7 +93,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
             addItemDecoration(HistoryDivider(height, color))
             addItemDecoration(StickyItemDecorator(this, isHeader) {
-                showDatePicker()
+                historyViewModel.requestDatePicker()
             })
 
             itemTouchHelper.attachToRecyclerView(this)
@@ -97,6 +101,13 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         historyViewModel.entries.observe(viewLifecycleOwner) {
             historyAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+
+            if (historyViewModel.filter.value is HistoryFilter.DateFilter) {
+                lifecycleScope.launch {
+                    delay(1000)
+                    historyViewModel.setFilter(HistoryFilter.NoFilter)
+                }
+            }
         }
     }
 
@@ -123,6 +134,12 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         historyViewModel.selectedEntry.observe(viewLifecycleOwner) {
             bindBottomSheet(it)
+        }
+
+        historyViewModel.showDatePicker.observe(viewLifecycleOwner) {
+            it?.getContentIfNotHandled()?.let { oldestEntryDate ->
+                showDatePicker(oldestEntryDate)
+            }
         }
     }
 
@@ -169,9 +186,23 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         })
     }
 
-    private fun showDatePicker() {
+    private fun showDatePicker(startDate: Long) {
+        val today = MaterialDatePicker.todayInUtcMilliseconds()
+        val constraint = CalendarConstraints.Builder()
+            .setEnd(today)
+            .setStart(startDate)
+            .setValidator(object : CalendarConstraints.DateValidator {
+                override fun describeContents() = -1
+
+                override fun writeToParcel(p0: Parcel?, p1: Int) = Unit
+
+                override fun isValid(date: Long) = date in startDate..today
+            })
+            .build()
+
         val datePicker = MaterialDatePicker.Builder
             .datePicker()
+            .setCalendarConstraints(constraint)
             .setTitleText(R.string.go_to)
             .build()
 

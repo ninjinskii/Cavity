@@ -13,8 +13,6 @@ import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -26,14 +24,18 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val scrollTo: LiveData<Event<Int>>
         get() = _scrollTo
 
-    private val _selectedEntry = MutableLiveData<BoundedHistoryEntry>(null)
-    val selectedEntry: LiveData<BoundedHistoryEntry>
+    private val _selectedEntry = MutableLiveData<BoundedHistoryEntry?>(null)
+    val selectedEntry: LiveData<BoundedHistoryEntry?>
         get() = _selectedEntry
 
     // TODO: consider removing public part if not needed
     private val _filter = MutableLiveData<HistoryFilter>(HistoryFilter.NoFilter)
     val filter: LiveData<HistoryFilter>
         get() = _filter
+
+    private val _showDatePicker = MutableLiveData<Event<Long>>(null)
+    val showDatePicker: LiveData<Event<Long>>
+        get() = _showDatePicker
 
     val entries: LiveData<PagingData<HistoryUiModel>> = filter.switchMap {
         Pager(PagingConfig(pageSize = 50, prefetchDistance = 20, enablePlaceholders = true)) {
@@ -89,6 +91,13 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun requestDatePicker() {
+        viewModelScope.launch(IO) {
+            val oldestEntryDate = repository.getOldestEntryDate()
+            _showDatePicker.postOnce(oldestEntryDate)
+        }
+    }
+
     fun setFilter(filter: HistoryFilter) {
         _selectedEntry.postValue(null)
         _filter.postValue(filter)
@@ -139,7 +148,6 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
             else -> repository.getAllEntries()
         }
     }
-
 }
 
 sealed class HistoryFilter {
