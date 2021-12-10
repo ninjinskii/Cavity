@@ -34,15 +34,8 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     var currentTasting: Tasting? = null
     var selectedFriends: List<Long> = emptyList()
 
-    fun submitTasting(
-        opportunity: String,
-        cellarTemp: Int,
-        fridgeTemp: Int,
-        freezerTemp: Int,
-        date: Long,
-        friends: List<Friend>
-    ) {
-        currentTasting = Tasting(0, date, opportunity, cellarTemp, fridgeTemp, freezerTemp)
+    fun submitTasting(opportunity: String, isMidday: Boolean, date: Long, friends: List<Friend>) {
+        currentTasting = Tasting(0, date, isMidday, opportunity)
         selectedFriends = friends.map { it.id }
     }
 
@@ -82,9 +75,6 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
                     it.wine,
                     it.bottle.vintage,
                     it.bottle.bottleSize,
-                    it.wine.color.defaultTemperature,
-                    jugTime = 0,
-                    isSelected = false,
                     showOccupiedWarning = it.bottle.id in occupiedBottles
                 )
             }
@@ -100,9 +90,8 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             return
         }
 
-        val tastingScheduler = TastingScheduler(tasting, tastingBottles)
-        val actions = tastingScheduler.getTastingActions()
+        // todo: make actions
 
-        repository.insertTastingActions(actions)
+        // repository.insertTastingActions(actions)
     }
 }

@@ -86,7 +86,7 @@ class BottleActionAdapter(private val onActionCheckedChange: (TastingAction, Boo
                 }
 
                 val checkbox = CheckBox(itemView.context).apply {
-                    text = itemView.context.getString(actionText, it.time.toString())
+                    text = itemView.context.getString(actionText) // todo: update action string
                     isChecked = it.checked.toBoolean()
                     setOnCheckedChangeListener { _, isChecked ->
                         onActionCheckedChange(it, isChecked)

@@ -35,41 +35,9 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
 
         setupNavigation(binding.appBar.toolbar)
 
-        initNumberPickers()
         initFriendChips()
         initDatePicker()
         setListeners()
-    }
-
-    private fun initNumberPickers() {
-        // Number picker doesn't support negative values
-        val freezerMaxValue = Temperature.MAX_FREEZER_TEMP.toLocaleTemp()
-        val freezerMinValue = Temperature.MIN_FREEZER_TEMP.toLocaleTemp()
-        val freezerMinPositive = freezerMinValue - freezerMinValue
-        val freezerMaxPositive = freezerMaxValue - freezerMinValue
-
-        with(binding) {
-            cellarTemp.maxValue = Temperature.MAX_CELLAR_TEMP.toLocaleTemp()
-            cellarTemp.minValue = Temperature.MIN_CELLAR_TEMP.toLocaleTemp()
-            fridgeTemp.maxValue = Temperature.MAX_FRIDGE_TEMP.toLocaleTemp()
-            fridgeTemp.minValue = Temperature.MIN_FRIDGE_TEMP.toLocaleTemp()
-            freezerTemp.minValue = freezerMinPositive
-            freezerTemp.maxValue = freezerMaxPositive
-            freezerTemp.setFormatter { "${it + freezerMinValue}" }
-        }
-
-        addTastingViewModel.lastTasting.observe(viewLifecycleOwner) {
-            with(binding) {
-                cellarTemp.value = (it?.cellarTemp ?: Temperature.DEFAULT_CELLAR_TEMP)
-                    .toLocaleTemp()
-
-                fridgeTemp.value = (it?.fridgeTemp ?: Temperature.DEFAULT_FRIDGE_TEMP)
-                    .toLocaleTemp()
-
-                freezerTemp.value = (it?.freezerTemp ?: Temperature.DEFAULT_FREEZER_TEMP)
-                    .toLocaleTemp() - freezerMinValue
-            }
-        }
     }
 
     private fun initFriendChips() {
@@ -141,9 +109,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
 
                 addTastingViewModel.submitTasting(
                     opportunity,
-                    cellarTemp.value,
-                    fridgeTemp.value,
-                    freezerTemp.value,
+                    false, // todo: add UI checkbox
                     datePicker.getDate() ?: System.currentTimeMillis(),
                     friends
                 )

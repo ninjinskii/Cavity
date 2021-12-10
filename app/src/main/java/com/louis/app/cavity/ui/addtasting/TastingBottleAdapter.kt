@@ -9,11 +9,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.material.slider.Slider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemTastingBottleBinding
 import com.louis.app.cavity.model.TastingBottle
-import com.louis.app.cavity.model.Temperature
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -81,27 +79,6 @@ class TastingBottleAdapter :
                     warn,
                     "Cette bouteille est déjà utilisée dans une autre dégustation"
                 )
-
-                temp.value = bottle.drinkTemp.value.toFloat()
-                jugTime.value = bottle.jugTime.toFloat()
-
-                temp.clearOnSliderTouchListeners()
-                temp.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-                    override fun onStartTrackingTouch(slider: Slider) = Unit
-
-                    override fun onStopTrackingTouch(slider: Slider) {
-                        bottle.drinkTemp = Temperature.Celsius(slider.value.toInt())
-                    }
-                })
-
-                jugTime.clearOnSliderTouchListeners()
-                jugTime.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-                    override fun onStartTrackingTouch(slider: Slider) = Unit
-
-                    override fun onStopTrackingTouch(slider: Slider) {
-                        bottle.jugTime = slider.value.toInt()
-                    }
-                })
             }
         }
     }
