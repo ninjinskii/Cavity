@@ -18,7 +18,6 @@ data class TastingAction(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val type: Action,
-    val time: Int,
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
     var checked: Int
 ) {

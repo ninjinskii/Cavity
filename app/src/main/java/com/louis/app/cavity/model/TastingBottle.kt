@@ -5,8 +5,8 @@ data class TastingBottle(
     val wine: Wine,
     val vintage: Int,
     val size: BottleSize,
-    var drinkTemp: Temperature,
-    var jugTime: Int = 0,
+    var shouldFridge: Int = 0,
+    var shouldJug: Int = 0,
     var isSelected: Boolean = false,
     var showOccupiedWarning: Boolean = false
 )
