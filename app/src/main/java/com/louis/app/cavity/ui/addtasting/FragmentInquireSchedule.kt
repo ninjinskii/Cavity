@@ -38,8 +38,15 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     }
 
     private fun initRecylerView() {
-        val tastingBottleAdapter = TastingBottleAdapter()
-        val spanCount = 2
+        val tastingBottleAdapter = TastingBottleAdapter(
+            onFridgeChecked = { bottleId, shouldFridge ->
+                addTastingViewModel.onBottleShouldFridgeChanged(bottleId, shouldFridge)
+            },
+            onJugChecked = { bottleId, shouldJug ->
+                addTastingViewModel.onBottleShouldJugChanged(bottleId, shouldJug)
+            }
+        )
+
         val space = requireContext().resources.getDimension(R.dimen.small_margin)
 
         binding.tastingBottleList.apply {

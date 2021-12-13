@@ -52,6 +52,7 @@
             app:layout_constraintTop_toBottomOf="@id/vintage" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/fridge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/medium_margin"

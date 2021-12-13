@@ -8,10 +8,7 @@ import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingBottle
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.minusAssign
-import com.louis.app.cavity.util.plusAssign
-import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -61,6 +58,20 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     fun onBottleStateChanged(bottle: BoundedBottle, isSelected: Boolean) {
         _selectedBottles.let {
             if (isSelected) it += bottle else it -= bottle
+        }
+    }
+
+    fun onBottleShouldJugChanged(bottleId: Long, shouldJug: Boolean) {
+        tastingBottles.value?.let { bottles ->
+            val tastingBottle = bottles.find { it.bottleId == bottleId }
+            tastingBottle?.shouldJug = shouldJug.toInt()
+        }
+    }
+
+    fun onBottleShouldFridgeChanged(bottleId: Long, shouldFridge: Boolean) {
+        tastingBottles.value?.let { bottles ->
+            val tastingBottle = bottles.find { it.bottleId == bottleId }
+            tastingBottle?.shouldJug = shouldFridge.toInt()
         }
     }
 

@@ -15,7 +15,10 @@ import com.louis.app.cavity.model.TastingBottle
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
-class TastingBottleAdapter :
+class TastingBottleAdapter(
+    private val onJugChecked: (Long, Boolean) -> Unit,
+    private val onFridgeChecked: (Long, Boolean) -> Unit
+) :
     ListAdapter<TastingBottle, TastingBottleAdapter.TastingBottleViewHolder>
         (TastingBottleItemDiffCallback()) {
 
@@ -69,6 +72,14 @@ class TastingBottleAdapter :
                     warn,
                     itemView.context.getString(R.string.tasting_bottle_already_in_use)
                 )
+
+                jug.setOnCheckedChangeListener { _, isChecked ->
+                    onJugChecked(bottle.bottleId, isChecked)
+                }
+
+                fridge.setOnCheckedChangeListener { _, isChecked ->
+                    onFridgeChecked(bottle.bottleId, isChecked)
+                }
             }
         }
     }
