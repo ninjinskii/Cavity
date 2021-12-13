@@ -10,7 +10,6 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireTastingInfoBinding
 import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.model.Temperature
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
@@ -41,14 +40,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
     }
 
     private fun initFriendChips() {
-        val allFriends = mutableSetOf<Friend>()
-        val alreadyInflated = mutableSetOf<Friend>()
-
         addTastingViewModel.friends.observe(viewLifecycleOwner) {
-//            allFriends.addAll(it)
-//            val toInflate = allFriends - alreadyInflated
-//            alreadyInflated.addAll(toInflate)
-
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
@@ -105,23 +97,14 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         if (valid) {
             with(binding) {
                 val opportunity = opportunity.text.toString().trim()
+                val date = datePicker.getDate() ?: System.currentTimeMillis()
+                val isMidday = rbMidday.isChecked
                 val friends = friendsChipGroup.collectAs<Friend>()
 
-                addTastingViewModel.submitTasting(
-                    opportunity,
-                    false, // todo: add UI checkbox
-                    datePicker.getDate() ?: System.currentTimeMillis(),
-                    friends
-                )
-
+                addTastingViewModel.submitTasting(opportunity, isMidday, date, friends)
                 stepperFragment?.requestNextPage()
             }
         }
-    }
-
-    private fun Int.toLocaleTemp() = when (/*addTastingViewModel.temperatureUnit*/ 0) {
-        0 -> Temperature.Celsius(this).value
-        else -> Temperature.Fahrenheit(this).value
     }
 
     override fun onDestroyView() {

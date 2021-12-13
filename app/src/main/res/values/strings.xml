@@ -259,6 +259,8 @@
     <string name="temp_celsius">%1$d \u2103</string>
     <string name="temp_fahrenheit">%1$d \u2109</string>
     <string name="tasting_bottle_already_in_use">La bouteille est déjà utilisée dans une autre dégustation.</string>
+    <string name="midday_meal">Midi</string>
+    <string name="evening_meal">Soir</string>
     <string name="confirm_switch_tasting">Les bouteilles signalées seront déplacées de leurs dégustations respectives à cette dégustation. Continuer ?</string>
     <string name="out_of_cellar">Sortez la bouteille de votre cave %1$s avant de la boire</string><!-- 15 min -->
     <string name="out_of_fridge">Sortez la bouteille de votre frigo %1$s avant de la boire</string><!-- 25 min -->

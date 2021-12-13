@@ -17,7 +17,8 @@
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -78,12 +79,37 @@
 
                 </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
+                <RadioGroup
+                    android:id="@+id/rbGroupMeal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dateLayout">
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/rbMidday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/medium_margin"
+                        android:text="@string/midday_meal" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/rbEvening"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/medium_margin"
+                        android:text="@string/evening_meal" />
+                </RadioGroup>
+
+
                 <View
                     android:id="@+id/divider1"
                     style="@style/Widget.Cavity.Divider.Start"
                     android:layout_marginTop="@dimen/medium_margin"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dateLayout" />
+                    app:layout_constraintTop_toBottomOf="@id/rbGroupMeal" />
 
                 <TextView
                     android:id="@+id/friendTitle"
@@ -132,80 +158,6 @@
 
                 </HorizontalScrollView>
 
-                <View
-                    android:id="@+id/divider2"
-                    style="@style/Widget.Cavity.Divider.Start"
-                    android:layout_marginTop="@dimen/medium_margin"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/friendScrollView" />
-
-                <TextView
-                    android:id="@+id/tempTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/temperatures"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider2" />
-
-                <TextView
-                    android:id="@+id/cellarLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/cellar"
-                    app:layout_constraintEnd_toEndOf="@id/cellarTemp"
-                    app:layout_constraintStart_toStartOf="@id/cellarTemp"
-                    app:layout_constraintTop_toBottomOf="@id/tempTitle" />
-
-                <TextView
-                    android:id="@+id/fridgeLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/fridge"
-                    app:layout_constraintEnd_toEndOf="@id/fridgeTemp"
-                    app:layout_constraintStart_toStartOf="@id/fridgeTemp"
-                    app:layout_constraintTop_toBottomOf="@id/tempTitle" />
-
-                <TextView
-                    android:id="@+id/freezerLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/freezer"
-                    app:layout_constraintEnd_toEndOf="@id/freezerTemp"
-                    app:layout_constraintStart_toStartOf="@id/freezerTemp"
-                    app:layout_constraintTop_toBottomOf="@id/tempTitle" />
-
-                <NumberPicker
-                    android:id="@+id/cellarTemp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    app:layout_constraintEnd_toStartOf="@id/fridgeTemp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cellarLabel" />
-
-                <NumberPicker
-                    android:id="@+id/fridgeTemp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    app:layout_constraintEnd_toStartOf="@id/freezerTemp"
-                    app:layout_constraintStart_toEndOf="@id/cellarTemp"
-                    app:layout_constraintTop_toBottomOf="@id/fridgeLabel" />
-
-                <NumberPicker
-                    android:id="@+id/freezerTemp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/fridgeTemp"
-                    app:layout_constraintTop_toBottomOf="@id/freezerLabel" />
-
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonSubmit"
                     android:layout_width="match_parent"
@@ -215,8 +167,7 @@
                     app:icon="@drawable/ic_check"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/freezerTemp" />
+                    app:layout_constraintStart_toStartOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
