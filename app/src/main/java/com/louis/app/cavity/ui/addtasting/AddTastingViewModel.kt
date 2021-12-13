@@ -101,6 +101,14 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             return
         }
 
+        val occupiedBottles = tastingBottles
+            .filter { it.showOccupiedWarning }
+            .map { it.bottleId }
+
+        if (occupiedBottles.isNotEmpty()) {
+            cleanObsoleteTastingActions(occupiedBottles)
+        }
+
         withContext(Default) {
             val actions = mutableListOf<TastingAction>()
 
@@ -130,6 +138,14 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
 
             withContext(IO) {
                 repository.insertTastingActions(actions)
+            }
+        }
+    }
+
+    private suspend fun cleanObsoleteTastingActions(tastingBottleIds: List<Long>) {
+        withContext(IO) {
+            tastingBottleIds.forEach {
+                repository.deleteTastingActionsForBottle(it)
             }
         }
     }
