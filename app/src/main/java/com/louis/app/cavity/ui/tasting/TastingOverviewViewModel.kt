@@ -28,7 +28,7 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setActionIsChecked(tastingAction: TastingAction, isChecked: Boolean) {
-        tastingAction.checked = isChecked.toInt()
+        tastingAction.done = isChecked.toInt()
 
         viewModelScope.launch(IO) {
             repository.updateTastingAction(tastingAction)

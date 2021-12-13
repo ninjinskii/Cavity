@@ -22,6 +22,10 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
+    private val _notificationEvent = MutableLiveData<Event<Tasting>>()
+    val notificationEvent: LiveData<Event<Tasting>>
+        get() = _notificationEvent
+
     private val _selectedBottles = MutableLiveData<MutableList<BoundedBottle>>(mutableListOf())
     val selectedBottles: LiveData<MutableList<BoundedBottle>>
         get() = _selectedBottles
@@ -54,7 +58,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             repository.boundBottlesToTasting(tastingId, bottleIds)
             repository.insertTastingFriendXRef(tastingId, selectedFriends)
 
-            generateTastingActions(tastingBottles.value)
+            generateTastingActions(tasting, tastingBottles.value)
         }
     }
 
@@ -96,7 +100,10 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             emit(result)
         }
 
-    private suspend fun generateTastingActions(tastingBottles: List<TastingBottle>?) {
+    private suspend fun generateTastingActions(
+        tasting: Tasting,
+        tastingBottles: List<TastingBottle>?
+    ) {
         if (tastingBottles == null) {
             return
         }
@@ -138,6 +145,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
 
             withContext(IO) {
                 repository.insertTastingActions(actions)
+                _notificationEvent.postOnce(tasting)
             }
         }
     }

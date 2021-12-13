@@ -2,7 +2,10 @@ package com.louis.app.cavity.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.louis.app.cavity.model.*
+import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.Friend
+import com.louis.app.cavity.model.Tasting
+import com.louis.app.cavity.model.TastingXFriend
 
 @Dao
 interface TastingDao {
@@ -14,6 +17,9 @@ interface TastingDao {
 
     @Delete
     suspend fun deleteTasting(tasting: Tasting)
+
+    @Query("SELECT * FROM tasting WHERE id=:tastingId")
+    fun getTastingById(tastingId: Long): Tasting
 
     @Query("SELECT * FROM tasting WHERE date < julianday(\"now\") ORDER BY date DESC LIMIT 1")
     fun getLastTasting(): LiveData<Tasting>
