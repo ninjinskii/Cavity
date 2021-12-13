@@ -7,10 +7,13 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Tasting
+import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.TastingBottle
 import com.louis.app.cavity.util.*
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     val repository = WineRepository.getInstance(app)
@@ -51,7 +54,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             repository.boundBottlesToTasting(tastingId, bottleIds)
             repository.insertTastingFriendXRef(tastingId, selectedFriends)
 
-            generateTastingActions(tasting, tastingBottles.value)
+            generateTastingActions(tastingBottles.value)
         }
     }
 
@@ -93,16 +96,41 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             emit(result)
         }
 
-    private suspend fun generateTastingActions(
-        tasting: Tasting,
-        tastingBottles: List<TastingBottle>?
-    ) {
+    private suspend fun generateTastingActions(tastingBottles: List<TastingBottle>?) {
         if (tastingBottles == null) {
             return
         }
 
-        // todo: make actions
+        withContext(Default) {
+            val actions = mutableListOf<TastingAction>()
 
-        // repository.insertTastingActions(actions)
+            for (tastingBottle in tastingBottles) {
+                if (tastingBottle.shouldFridge.toBoolean()) {
+                    val action = TastingAction(
+                        0,
+                        TastingAction.Action.SET_TO_FRIDGE,
+                        tastingBottle.bottleId,
+                        false.toInt()
+                    )
+
+                    actions += action
+                }
+
+                if (tastingBottle.shouldJug.toBoolean()) {
+                    val action = TastingAction(
+                        0,
+                        TastingAction.Action.SET_TO_JUG,
+                        tastingBottle.bottleId,
+                        false.toInt()
+                    )
+
+                    actions += action
+                }
+            }
+
+            withContext(IO) {
+                repository.insertTastingActions(actions)
+            }
+        }
     }
 }

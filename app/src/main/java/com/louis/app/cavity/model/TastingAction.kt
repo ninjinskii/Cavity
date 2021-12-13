@@ -19,7 +19,7 @@ data class TastingAction(
     val id: Long,
     val type: Action,
     @ColumnInfo(name = "bottle_id") val bottleId: Long,
-    var checked: Int
+    var done: Int
 ) {
     enum class Action {
         SET_TO_FRIDGE,

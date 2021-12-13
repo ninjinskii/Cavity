@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
         HistoryXFriend::class,
         TastingAction::class,
     ],
-    version = 56,
+    version = 57,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
