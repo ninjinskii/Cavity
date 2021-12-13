@@ -104,7 +104,6 @@
                         android:text="@string/evening_meal" />
                 </RadioGroup>
 
-
                 <View
                     android:id="@+id/divider1"
                     style="@style/Widget.Cavity.Divider.Start"
