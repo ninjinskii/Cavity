@@ -11,36 +11,12 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/wineImage"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <View
-            android:id="@+id/scrim"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/scrim"
-            android:rotation="20"
-            android:scaleY="10"
-            android:translationX="-40dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.65" />
-
-        <ImageView
             android:id="@+id/warn"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
             android:layout_margin="@dimen/medium_margin"
             android:src="@drawable/ic_warning"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="?attr/colorError" />
@@ -51,10 +27,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
-            app:layout_constraintEnd_toEndOf="@id/scrim"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.35" />
+            app:layout_constraintVertical_bias="0.35"
+            app:layout_constraintWidth_percent="0.6" />
 
         <TextView
             android:id="@+id/vintage"
@@ -66,111 +42,42 @@
             app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming"
             tools:text="2016" />
 
-        <TextView
-            android:id="@+id/tempTitle"
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/jug"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:text="@string/temperature"
-            app:layout_constraintStart_toStartOf="@id/temp"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/jug_time"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/vintage" />
 
-        <ImageView
-            android:id="@+id/tempIcon"
-            android:layout_width="@dimen/small_icon"
-            android:layout_height="@dimen/small_icon"
-            android:layout_marginLeft="@dimen/small_margin"
-            android:src="@drawable/ic_thermometer"
-            app:layout_constraintBottom_toBottomOf="@id/temp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/temp" />
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/temp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/small_margin"
-            android:stepSize="1.0"
-            android:valueFrom="4.0"
-            android:valueTo="18.0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tempIcon"
-            app:layout_constraintTop_toBottomOf="@id/tempTitle" />
-
-        <TextView
-            android:id="@+id/jugTimeTitle"
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:text="@string/jug_time"
-            app:layout_constraintStart_toStartOf="@id/temp"
-            app:layout_constraintTop_toBottomOf="@id/tempIcon" />
-
-        <ImageView
-            android:id="@+id/jugTimeIcon"
-            android:layout_width="@dimen/small_icon"
-            android:layout_height="@dimen/small_icon"
-            android:layout_marginLeft="@dimen/small_margin"
-            android:src="@drawable/ic_jug"
-            app:layout_constraintBottom_toBottomOf="@id/jugTime"
+            android:layout_marginHorizontal="@dimen/medium_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:text="@string/fridge"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/jugTime" />
+            app:layout_constraintTop_toBottomOf="@id/jug" />
 
-        <com.google.android.material.slider.Slider
-            android:id="@+id/jugTime"
+        <com.louis.app.cavity.ui.home.widget.HexagonalView
+            android:id="@+id/wineHexagonalView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/small_margin"
-            android:layout_marginBottom="@dimen/medium_margin"
-            android:stepSize="1.0"
-            android:valueFrom="0.0"
-            android:valueTo="4.0"
+            android:layout_margin="@dimen/medium_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/jugTimeIcon"
-            app:layout_constraintTop_toBottomOf="@id/jugTimeTitle" />
+            app:layout_constraintStart_toEndOf="@id/wineColorNameNaming"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:id="@+id/wineImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/wine_photo"
+                tools:src="@drawable/ic_list_check" />
 
-        <!--        <com.louis.app.cavity.ui.widget.RuledTextInputLayout-->
-        <!--            android:id="@+id/tempLayout"-->
-        <!--            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_margin="@dimen/medium_margin"-->
-        <!--            android:hint="@string/temperature"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/vintage"-->
-        <!--            app:rule="required|integer|positive"-->
-        <!--            app:startIconDrawable="@drawable/ic_thermometer">-->
-
-        <!--            <com.google.android.material.textfield.TextInputEditText-->
-        <!--                android:id="@+id/temp"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:inputType="number" />-->
-
-        <!--        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>-->
-
-        <!--        <com.louis.app.cavity.ui.widget.RuledTextInputLayout-->
-        <!--            android:id="@+id/jugTimeLayout"-->
-        <!--            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_margin="@dimen/medium_margin"-->
-        <!--            android:hint="@string/jug_time"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintStart_toEndOf="@+id/tempLayout"-->
-        <!--            app:rule="required"-->
-        <!--            app:startIconDrawable="@drawable/ic_jug"-->
-        <!--            app:suffixText="@string/hour">-->
-
-        <!--            <AutoCompleteTextView-->
-        <!--                android:id="@+id/jugTime"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:inputType="none" />-->
-
-        <!--        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>-->
+        </com.louis.app.cavity.ui.home.widget.HexagonalView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

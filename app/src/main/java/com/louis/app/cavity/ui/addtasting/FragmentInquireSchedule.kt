@@ -81,11 +81,7 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     }
 
     private fun needConfirmDialog(): Boolean {
-        if (addTastingViewModel.tastingBottles.value?.any { it.showOccupiedWarning } == true) {
-            return true
-        }
-
-        return false
+        return addTastingViewModel.tastingBottles.value?.any { it.showOccupiedWarning } == true
     }
 
     override fun onDestroyView() {

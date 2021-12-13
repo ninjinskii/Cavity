@@ -41,18 +41,8 @@ class TastingBottleAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            with(binding) {
-                temp.setLabelFormatter {
-                    itemView.context.getString(R.string.temp_celsius, it.toInt())
-                }
-
-                jugTime.setLabelFormatter {
-                    "${it.toInt()} ${itemView.context.getString(R.string.hour)}"
-                }
-
-                warn.setOnClickListener {
-                    it.performLongClick()
-                }
+            binding.warn.setOnClickListener {
+                it.performLongClick()
             }
         }
 
@@ -77,7 +67,7 @@ class TastingBottleAdapter :
                 warn.setVisible(bottle.showOccupiedWarning)
                 TooltipCompat.setTooltipText(
                     warn,
-                    "Cette bouteille est déjà utilisée dans une autre dégustation"
+                    itemView.context.getString(R.string.tasting_bottle_already_in_use)
                 )
             }
         }
