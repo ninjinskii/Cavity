@@ -2,8 +2,10 @@ package com.louis.app.cavity.ui.tasting.notifications
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import com.louis.app.cavity.model.Tasting
 import java.util.*
@@ -31,6 +33,19 @@ object TastingAlarmScheduler {
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         val alarmIntent = getTastingAlarmIntent(context, tasting)
         alarmMgr?.cancel(alarmIntent)
+    }
+
+    fun setIsBootCompletedReceiverEnabled(context: Context, isEnabled: Boolean) {
+        val receiver = ComponentName(context, BootCompletedReceiver::class.java)
+        val state =
+            if (isEnabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+
+        context.packageManager.setComponentEnabledSetting(
+            receiver,
+            state,
+            PackageManager.DONT_KILL_APP
+        )
     }
 
     private fun getTastingAlarmIntent(context: Context, tasting: Tasting): PendingIntent {

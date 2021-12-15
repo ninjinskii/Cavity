@@ -16,7 +16,4 @@ class TastingViewModel(app: Application) : AndroidViewModel(app) {
 
     val futureTastings = repository.getFutureTastings()
     val friends = repository.getAllFriends()
-
-    // TODO: use Settings
-    val temperatureUnit = 0
 }
