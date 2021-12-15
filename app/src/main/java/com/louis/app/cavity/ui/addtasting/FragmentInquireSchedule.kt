@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -77,6 +76,14 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
                 findNavController().popBackStack()
             }
         }
+
+        addTastingViewModel.cancelTastingAlarms.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { tastingsToCancel ->
+                tastingsToCancel.forEach { tasting ->
+                    cancelTastingAlarm(tasting)
+                }
+            }
+        }
     }
 
     private fun setListener() {
@@ -109,12 +116,7 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
 
         return Intent(context, TastingReceiver::class.java).let { intent ->
             intent.putExtra(EXTRA_TASTING_ID, tasting.id)
-            PendingIntent.getBroadcast(
-                context,
-                tasting.id.hashCode(),
-                intent,
-                flags
-            )
+            PendingIntent.getBroadcast(context, tasting.id.hashCode(), intent, flags)
         }
     }
 
@@ -123,18 +125,13 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
         val alarmIntent = getTastingAlarmIntent(tasting)
 
         val calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis() + 1000 * 5
+            timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, if (tasting.isMidday) 9 else 16)
         }
 
-        alarmMgr?.set(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + 20 * 1000,
-            alarmIntent
-        )
+        alarmMgr?.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
     }
 
-    // TODO: check if it works, not sure rn
     private fun cancelTastingAlarm(tasting: Tasting) {
         val alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         val alarmIntent = getTastingAlarmIntent(tasting)

@@ -18,6 +18,9 @@ interface TastingDao {
     @Delete
     suspend fun deleteTasting(tasting: Tasting)
 
+    @Delete
+    suspend fun deleteTastings(tastings: List<Tasting>)
+
     @Query("SELECT * FROM tasting WHERE id=:tastingId")
     fun getTastingById(tastingId: Long): Tasting
 
@@ -27,8 +30,8 @@ interface TastingDao {
     @Query("SELECT * FROM tasting WHERE id=:tastingId")
     suspend fun getTastingByIdNotLive(tastingId: Long): Tasting
 
-    @Query("DELETE FROM tasting WHERE (SELECT COUNT(*) FROM bottle WHERE tasting_id = tasting.id) = 0")
-    suspend fun deleteEmptyTastings()
+    @Query("SELECT * FROM tasting WHERE (SELECT COUNT(*) FROM bottle WHERE tasting_id = tasting.id) = 0")
+    suspend fun getEmptyTastings(): List<Tasting>
 
     @Transaction
     @Query("SELECT * FROM tasting WHERE date >= :beyond")

@@ -26,6 +26,10 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     val tastingSaved: LiveData<Event<Tasting>>
         get() = _tastingSaved
 
+    private val _cancelTastingAlarms = MutableLiveData<Event<List<Tasting>>>()
+    val cancelTastingAlarms: LiveData<Event<List<Tasting>>>
+        get() = _cancelTastingAlarms
+
     private val _selectedBottles = MutableLiveData<MutableList<BoundedBottle>>(mutableListOf())
     val selectedBottles: LiveData<MutableList<BoundedBottle>>
         get() = _selectedBottles
@@ -143,7 +147,12 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     // We also need to remove previous tasting actions
     private suspend fun cleanTastings(tastingBottleIds: List<Long>) {
         withContext(IO) {
-            repository.deleteEmptyTastings()
+            val emptyTastings = repository.getEmptyTastings()
+
+            if (emptyTastings.isNotEmpty()) {
+                _cancelTastingAlarms.postOnce(emptyTastings)
+                repository.deleteTastings(emptyTastings)
+            }
 
             tastingBottleIds.forEach {
                 repository.deleteTastingActionsForBottle(it)
