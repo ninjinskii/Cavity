@@ -22,9 +22,9 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    private val _notificationEvent = MutableLiveData<Event<Tasting>>()
-    val notificationEvent: LiveData<Event<Tasting>>
-        get() = _notificationEvent
+    private val _tastingSaved = MutableLiveData<Event<Tasting>>()
+    val tastingSaved: LiveData<Event<Tasting>>
+        get() = _tastingSaved
 
     private val _selectedBottles = MutableLiveData<MutableList<BoundedBottle>>(mutableListOf())
     val selectedBottles: LiveData<MutableList<BoundedBottle>>
@@ -32,7 +32,6 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
 
     val tastingBottles = _selectedBottles.switchMap { updateTastingBottles(it) }
 
-    val lastTasting = repository.getLastTasting()
     val friends = repository.getAllFriends()
 
     var currentTasting: Tasting? = null
@@ -55,30 +54,19 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             val bottleIds = _selectedBottles.value?.map { it.bottle.id } ?: emptyList()
             val tastingId = repository.insertTasting(tasting)
 
+            // Updating tasting id so that we can reuse it later to schedule alarms
+            currentTasting = currentTasting!!.copy(id = tastingId)
+
             repository.boundBottlesToTasting(tastingId, bottleIds)
             repository.insertTastingFriendXRef(tastingId, selectedFriends)
 
-            generateTastingActions(tasting, tastingBottles.value)
+            generateTastingActions(currentTasting!!, tastingBottles.value)
         }
     }
 
     fun onBottleStateChanged(bottle: BoundedBottle, isSelected: Boolean) {
         _selectedBottles.let {
             if (isSelected) it += bottle else it -= bottle
-        }
-    }
-
-    fun onBottleShouldJugChanged(bottleId: Long, shouldJug: Boolean) {
-        tastingBottles.value?.let { bottles ->
-            val tastingBottle = bottles.find { it.bottleId == bottleId }
-            tastingBottle?.shouldJug = shouldJug.toInt()
-        }
-    }
-
-    fun onBottleShouldFridgeChanged(bottleId: Long, shouldFridge: Boolean) {
-        tastingBottles.value?.let { bottles ->
-            val tastingBottle = bottles.find { it.bottleId == bottleId }
-            tastingBottle?.shouldJug = shouldFridge.toInt()
         }
     }
 
@@ -113,7 +101,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             .map { it.bottleId }
 
         if (occupiedBottles.isNotEmpty()) {
-            cleanObsoleteTastingActions(occupiedBottles)
+            cleanTastings(occupiedBottles)
         }
 
         withContext(Default) {
@@ -145,13 +133,18 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
 
             withContext(IO) {
                 repository.insertTastingActions(actions)
-                _notificationEvent.postOnce(tasting)
+                _tastingSaved.postOnce(tasting)
             }
         }
     }
 
-    private suspend fun cleanObsoleteTastingActions(tastingBottleIds: List<Long>) {
+    // Migrating bottles from one tasting to another one might create empty tasting.
+    // We need to get rid of those to avoid useless system alarm
+    // We also need to remove previous tasting actions
+    private suspend fun cleanTastings(tastingBottleIds: List<Long>) {
         withContext(IO) {
+            repository.deleteEmptyTastings()
+
             tastingBottleIds.forEach {
                 repository.deleteTastingActionsForBottle(it)
             }

@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -16,20 +17,25 @@ class TastingReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        val repository = WineRepository.getInstance(context as Application)
+        val repository = WineRepository.getInstance(context.applicationContext as Application)
+        val tastingId = intent.getLongExtra(EXTRA_TASTING_ID, -1)
+
+        if (tastingId == -1L) {
+            return
+        }
 
         GlobalScope.launch(IO) {
-            val tasting = repository.getTastingById(intent.getLongExtra(EXTRA_TASTING_ID, -1))
-            val bottlesWithActions = repository.getBottlesWithTastingActionsForTasting(tasting.id)
+            val tasting = repository.getTastingById(tastingId)
+            val bottlesWithActions =
+                repository.getBottlesWithTastingActionsForTastingNotLive(tastingId)
 
-            bottlesWithActions.value?.forEach { bottles ->
+            L.v("${bottlesWithActions.map { it.bottle.vintage }}")
+
+            L.v("${bottlesWithActions.size} bottles in this tasting")
+
+            bottlesWithActions.forEach { bottles ->
                 bottles.tastingActions.forEach {
-                    val notification = TastingNotifier.buildNotification(
-                        context,
-                        tasting,
-                        it
-                    )
-
+                    val notification = TastingNotifier.buildNotification(context, tasting, it)
                     TastingNotifier.notify(context, notification)
                 }
             }

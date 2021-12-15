@@ -4,7 +4,10 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -46,15 +49,7 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     }
 
     private fun initRecylerView() {
-        val tastingBottleAdapter = TastingBottleAdapter(
-            onFridgeChecked = { bottleId, shouldFridge ->
-                addTastingViewModel.onBottleShouldFridgeChanged(bottleId, shouldFridge)
-            },
-            onJugChecked = { bottleId, shouldJug ->
-                addTastingViewModel.onBottleShouldJugChanged(bottleId, shouldJug)
-            }
-        )
-
+        val tastingBottleAdapter = TastingBottleAdapter()
         val space = requireContext().resources.getDimension(R.dimen.small_margin)
 
         binding.tastingBottleList.apply {
@@ -76,9 +71,10 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
             }
         }
 
-        addTastingViewModel.notificationEvent.observe(viewLifecycleOwner) {
+        addTastingViewModel.tastingSaved.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { tasting ->
                 scheduleTastingAlarm(tasting)
+                findNavController().popBackStack()
             }
         }
     }
@@ -90,12 +86,10 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
                     .setMessage(R.string.confirm_switch_tasting)
                     .setPositiveButton(R.string.ok) { _, _ ->
                         addTastingViewModel.saveTasting()
-                        findNavController().popBackStack()
                     }
                     .show()
             } else {
                 addTastingViewModel.saveTasting()
-                findNavController().popBackStack()
             }
 
         }
@@ -105,26 +99,37 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
         return addTastingViewModel.tastingBottles.value?.any { it.showOccupiedWarning } == true
     }
 
-    private fun scheduleTastingAlarm(tasting: Tasting) {
-        val alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-        val alarmIntent = Intent(context, TastingReceiver::class.java).let { intent ->
+    private fun getTastingAlarmIntent(tasting: Tasting): PendingIntent {
+        val flags =
+            if (SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+
+        return Intent(context, TastingReceiver::class.java).let { intent ->
             intent.putExtra(EXTRA_TASTING_ID, tasting.id)
             PendingIntent.getBroadcast(
                 context,
                 tasting.id.hashCode(),
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                flags
             )
         }
+    }
 
-        val calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
+    private fun scheduleTastingAlarm(tasting: Tasting) {
+        val alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+        val alarmIntent = getTastingAlarmIntent(tasting)
+
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis() + 1000 * 5
             set(Calendar.HOUR_OF_DAY, if (tasting.isMidday) 9 else 16)
         }
 
         alarmMgr?.set(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + 20 * 1000,
             alarmIntent
         )
     }
@@ -132,16 +137,7 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     // TODO: check if it works, not sure rn
     private fun cancelTastingAlarm(tasting: Tasting) {
         val alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-        val alarmIntent = Intent(context, TastingReceiver::class.java).let { intent ->
-            intent.putExtra(EXTRA_TASTING_ID, tasting.id)
-            PendingIntent.getBroadcast(
-                context,
-                tasting.id.hashCode(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
-
+        val alarmIntent = getTastingAlarmIntent(tasting)
         alarmMgr?.cancel(alarmIntent)
     }
 
