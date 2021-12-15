@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -29,13 +28,10 @@ class TastingReceiver : BroadcastReceiver() {
             val bottlesWithActions =
                 repository.getBottlesWithTastingActionsForTastingNotLive(tastingId)
 
-            L.v("${bottlesWithActions.map { it.bottle.vintage }}")
-
-            L.v("${bottlesWithActions.size} bottles in this tasting")
-
-            bottlesWithActions.forEach { bottles ->
-                bottles.tastingActions.forEach {
-                    val notification = TastingNotifier.buildNotification(context, tasting, it)
+            bottlesWithActions.forEach { bottle ->
+                bottle.tastingActions.forEach {
+                    val notification =
+                        TastingNotifier.buildNotification(context, tasting, bottle.wine, it)
                     TastingNotifier.notify(context, notification)
                 }
             }

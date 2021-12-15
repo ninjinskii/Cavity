@@ -8,7 +8,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
-import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
@@ -25,7 +24,6 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         tastingOverviewViewModel.start(args.tastingId)
 
         initRecyclerView()
-        observe()
     }
 
     private fun initRecyclerView() {
@@ -42,22 +40,6 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
 
         tastingOverviewViewModel.bottles.observe(viewLifecycleOwner) {
             tastingOverviewAdapter.submitList(it)
-        }
-    }
-
-    private fun observe() {
-        tastingOverviewViewModel.notificationEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { pair ->
-                pair.second.forEach { action ->
-                    val notification = TastingNotifier.buildNotification(
-                        requireContext(),
-                        tasting = pair.first,
-                        action
-                    )
-
-                    TastingNotifier.notify(requireContext(), notification)
-                }
-            }
         }
     }
 
