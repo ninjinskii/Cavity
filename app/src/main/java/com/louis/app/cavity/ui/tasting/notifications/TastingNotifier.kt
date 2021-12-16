@@ -83,8 +83,8 @@ object TastingNotifier {
 
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Mon channel"
-            val descriptionText = "Channele des dégustations de Cavity"
+            val name = context.getString(R.string.tasting)
+            val descriptionText = context.getString(R.string.notification_channel)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
