@@ -249,15 +249,10 @@
     <string name="participants">Participants</string>
     <string name="temperatures">Températures</string>
     <string name="temperature">Température de dégustation</string>
-    <string name="jug_time">Carafage</string>
+    <string name="jug_time">Passage en carafe</string>
     <string name="hour">h</string>
     <string name="cellar">Cave</string>
-    <string name="fridge">Frigo</string>
-    <string name="freezer">Congèlateur</string>
-    <string name="celsius">\u2103</string>
-    <string name="fahrenheit">\u2109</string>
-    <string name="temp_celsius">%1$d \u2103</string>
-    <string name="temp_fahrenheit">%1$d \u2109</string>
+    <string name="fridge">Mettre au réfrégirateur</string>
     <string name="tasting_bottle_already_in_use">La bouteille est déjà utilisée dans une autre dégustation.</string>
     <string name="midday_meal">Midi</string>
     <string name="evening_meal">Soir</string>
