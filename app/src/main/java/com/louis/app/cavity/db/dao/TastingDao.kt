@@ -21,9 +21,6 @@ interface TastingDao {
     @Delete
     suspend fun deleteTastings(tastings: List<Tasting>)
 
-    @Query("SELECT * FROM tasting WHERE id=:tastingId")
-    fun getTastingById(tastingId: Long): Tasting
-
     @Query("SELECT * FROM tasting WHERE date < julianday(\"now\") ORDER BY date DESC LIMIT 1")
     fun getLastTasting(): LiveData<Tasting>
 
@@ -31,7 +28,10 @@ interface TastingDao {
     suspend fun getAllTastingsNotLive(): List<Tasting>
 
     @Query("SELECT * FROM tasting WHERE id=:tastingId")
-    suspend fun getTastingByIdNotLive(tastingId: Long): Tasting
+    suspend fun getTastingById(tastingId: Long): Tasting?
+
+    @Query("SELECT * FROM tasting WHERE id=:tastingId")
+    suspend fun getTastingWithFriendsById(tastingId: Long): BoundedTasting?
 
     @Query("SELECT * FROM tasting WHERE (SELECT COUNT(*) FROM bottle WHERE tasting_id = tasting.id) = 0")
     suspend fun getEmptyTastings(): List<Tasting>

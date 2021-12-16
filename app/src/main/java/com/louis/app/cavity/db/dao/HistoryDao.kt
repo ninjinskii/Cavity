@@ -94,7 +94,7 @@ data class BoundedHistoryEntry(
         parentColumn = "tasting_id",
         entityColumn = "id"
     )
-    var tasting: TastingWithBottles?,
+    var tastingWithBottles: TastingWithBottles?,
     @Relation(
         parentColumn = "id",
         entityColumn = "id",

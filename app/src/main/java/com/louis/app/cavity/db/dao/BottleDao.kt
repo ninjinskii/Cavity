@@ -15,6 +15,9 @@ interface BottleDao {
     @Update
     suspend fun updateBottle(bottle: Bottle)
 
+    @Update
+    suspend fun updateBottles(bottles: List<Bottle>)
+
     @Delete
     suspend fun deleteBottle(bottle: Bottle)
 

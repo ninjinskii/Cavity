@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
 import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
@@ -26,6 +27,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         tastingOverviewViewModel.start(args.tastingId)
 
         initRecyclerView()
+        setListeners()
     }
 
     private fun initRecyclerView() {
@@ -59,6 +61,18 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
 
         tastingOverviewViewModel.bottles.observe(viewLifecycleOwner) {
             tastingOverviewAdapter.submitList(it)
+        }
+    }
+
+    private fun setListeners() {
+        binding.buttonSubmit.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.confirm_tasting)
+                .setMessage(R.string.confirm_tasting_explanation)
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    tastingOverviewViewModel.confirmTasting()
+                }
+                .show()
         }
     }
 

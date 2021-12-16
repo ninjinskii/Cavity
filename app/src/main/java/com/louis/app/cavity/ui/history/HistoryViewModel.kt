@@ -132,7 +132,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun getDataSource(filter: HistoryFilter):
-            PagingSource<Int, BoundedHistoryEntry> {
+        PagingSource<Int, BoundedHistoryEntry> {
         return when (filter) {
             is HistoryFilter.TypeFilter -> when (filter.chipId) {
                 R.id.chipReplenishments -> repository.getEntriesByType(1, 3)
@@ -151,7 +151,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 }
 
 sealed class HistoryFilter {
-    class DateFilter(val date: Long): HistoryFilter() /* Workaround for paging fast scroll */
+    class DateFilter(val date: Long) : HistoryFilter() /* Workaround for paging fast scroll */
     class TypeFilter(@IdRes val chipId: Int) : HistoryFilter()
     class BottleFilter(val bottleId: Long) : HistoryFilter()
     object NoFilter : HistoryFilter()

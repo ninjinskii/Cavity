@@ -261,6 +261,8 @@
     <string name="set_to_fridge">Mettez la bouteille au frigo</string>
     <string name="set_to_jug">Carafez la bouteille</string>
     <string name="bottle_removed_from_tasting">Bouteille retirée de la dégustation.</string>
+    <string name="confirm_tasting">Terminer la dégustation</string>
+    <string name="confirm_tasting_explanation">Les bouteilles présentes dans la liste vont être retirées du stock.</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

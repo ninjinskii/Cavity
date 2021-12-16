@@ -24,7 +24,7 @@ class TastingReceiver : BroadcastReceiver() {
         }
 
         GlobalScope.launch(IO) {
-            val tasting = repository.getTastingById(tastingId)
+            val tasting = repository.getTastingById(tastingId) ?: return@launch
             val bottlesWithActions =
                 repository.getBottlesWithTastingActionsForTastingNotLive(tastingId)
 

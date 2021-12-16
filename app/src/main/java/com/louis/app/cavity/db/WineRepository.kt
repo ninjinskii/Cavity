@@ -91,6 +91,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
     suspend fun insertBottles(bottles: List<Bottle>) = bottleDao.insertBottles(bottles)
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
+    suspend fun updateBottles(bottles: List<Bottle>) = bottleDao.updateBottles(bottles)
     suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
     fun getBottleById(bottleId: Long) = bottleDao.getBottleById(bottleId)
     suspend fun getBottleByIdNotLive(bottleId: Long) = bottleDao.getBottleByIdNotLive(bottleId)
@@ -276,17 +277,11 @@ class WineRepository private constructor(app: Application) {
         // TODO: handle tasting here
         return database.withTransaction {
             when (entry.type) {
-                0 -> consumeBottle(entry.bottleId)
-                1 -> {
+                0, 2, 4 -> consumeBottle(entry.bottleId)
+                1, 3 -> {
                     revertBottleConsumption(entry.bottleId)
                     historyDao.clearExistingReplenishments(entry.bottleId)
                 }
-                2 -> consumeBottle(entry.bottleId)
-                3 -> {
-                    revertBottleConsumption(entry.bottleId)
-                    historyDao.clearExistingReplenishments(entry.bottleId)
-                }
-                4 -> TODO("Waiting for tasting feature")
             }
 
             historyDao.insertEntry(entry)
@@ -336,6 +331,7 @@ class WineRepository private constructor(app: Application) {
 
     // Tastings
     suspend fun insertTasting(tasting: Tasting) = tastingDao.insertTasting(tasting)
+    suspend fun updateTasting(tasting: Tasting) = tastingDao.updateTasting(tasting)
     suspend fun deleteTasting(tasting: Tasting) = tastingDao.deleteTasting(tasting)
     suspend fun deleteTastings(tastings: List<Tasting>) = tastingDao.deleteTastings(tastings)
     suspend fun getAllTastingsNotLive() = tastingDao.getAllTastingsNotLive()
@@ -343,8 +339,8 @@ class WineRepository private constructor(app: Application) {
     fun getUndoneTastings() = tastingDao.getUndoneTastings()
     fun getLastTasting() = tastingDao.getLastTasting()
     suspend fun getTastingById(tastingId: Long) = tastingDao.getTastingById(tastingId)
-    suspend fun getLastTastingByIdNotLive(tastingId: Long) =
-        tastingDao.getTastingByIdNotLive(tastingId)
+    suspend fun getBoundedTastingById(tastingId: Long) =
+        tastingDao.getTastingWithFriendsById(tastingId)
 
     suspend fun insertTastingFriendXRef(tastingId: Long, friends: List<Long>) {
         database.withTransaction {

@@ -10,5 +10,5 @@ data class Tasting(
     val date: Long,
     val isMidday: Boolean,
     val opportunity: String,
-    val done: Boolean = false
+    var done: Boolean = false
 )
