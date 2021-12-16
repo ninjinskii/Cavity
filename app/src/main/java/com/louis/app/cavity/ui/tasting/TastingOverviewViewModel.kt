@@ -1,16 +1,15 @@
 package com.louis.app.cavity.ui.tasting
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedTasting
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.TastingAction
+import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -18,6 +17,10 @@ import kotlinx.coroutines.launch
 class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
     private val tastingId = MutableLiveData<Long>(0)
+
+    private val _tastingConfirmed = MutableLiveData<Event<Unit>>()
+    val tastingConfirmed: LiveData<Event<Unit>>
+        get() = _tastingConfirmed
 
     val bottles =
         tastingId.switchMap { repository.getBottlesWithTastingActionsForTasting(it) }
@@ -51,6 +54,8 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
             repository.updateTasting(boundedTasting.tasting)
 
             updateStocks(boundedTasting)
+
+            _tastingConfirmed.postOnce(Unit)
         }
     }
 

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -27,6 +28,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         tastingOverviewViewModel.start(args.tastingId)
 
         initRecyclerView()
+        observe()
         setListeners()
     }
 
@@ -61,6 +63,12 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
 
         tastingOverviewViewModel.bottles.observe(viewLifecycleOwner) {
             tastingOverviewAdapter.submitList(it)
+        }
+    }
+
+    private fun observe() {
+        tastingOverviewViewModel.tastingConfirmed.observe(viewLifecycleOwner) {
+            findNavController().popBackStack()
         }
     }
 
