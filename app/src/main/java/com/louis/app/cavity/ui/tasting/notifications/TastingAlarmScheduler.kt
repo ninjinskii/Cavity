@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import com.louis.app.cavity.model.Tasting
+import com.louis.app.cavity.util.DateFormatter
 import java.util.*
 
 object TastingAlarmScheduler {
@@ -19,7 +20,7 @@ object TastingAlarmScheduler {
         val alarmIntent = getTastingAlarmIntent(context, tasting)
 
         val calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
+            timeInMillis = DateFormatter.roundToDay(tasting.date)
             set(
                 Calendar.HOUR_OF_DAY,
                 if (tasting.isMidday) NOTIFICATION_HOUR_MORNING else NOTIFICATION_HOUR_AFTERNOON

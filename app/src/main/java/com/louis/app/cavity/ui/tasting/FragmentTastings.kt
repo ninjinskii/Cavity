@@ -41,7 +41,10 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
 
         tastingViewModel.futureTastings.observe(viewLifecycleOwner) {
             tastingAdapter.submitList(it)
-            TastingAlarmScheduler.setIsBootCompletedReceiverEnabled(requireContext(), it.isEmpty())
+            TastingAlarmScheduler.setIsBootCompletedReceiverEnabled(
+                requireContext(),
+                it.isNotEmpty()
+            )
         }
     }
 
