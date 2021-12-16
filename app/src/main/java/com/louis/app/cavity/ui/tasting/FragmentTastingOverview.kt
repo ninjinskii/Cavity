@@ -10,6 +10,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
 import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
 import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
     private var _binding: FragmentTastingOverviewBinding? = null
@@ -35,6 +36,19 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
                 }
 
                 tastingOverviewViewModel.setActionIsChecked(tastingAction, isChecked)
+            },
+            onCloseIconClicked = { bottle ->
+                tastingOverviewViewModel.updateBottleTasting(bottle, tastingId = null)
+                binding.coordinator.showSnackbar(
+                    stringRes = R.string.bottle_removed_from_tasting,
+                    actionStringRes = R.string.cancel,
+                    action = {
+                        tastingOverviewViewModel.updateBottleTasting(
+                            bottle,
+                            tastingId = args.tastingId
+                        )
+                    }
+                )
             }
         )
 

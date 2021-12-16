@@ -258,8 +258,9 @@
     <string name="midday_meal">Midi</string>
     <string name="evening_meal">Soir</string>
     <string name="confirm_switch_tasting">Les bouteilles signalées seront déplacées de leurs dégustations respectives à cette dégustation. Continuer ?</string>
-    <string name="set_to_fridge">Mettez la bouteille au frigo</string><!-- 16h -->
-    <string name="set_to_jug">Carafez la bouteille</string><!-- 17h -->
+    <string name="set_to_fridge">Mettez la bouteille au frigo</string>
+    <string name="set_to_jug">Carafez la bouteille</string>
+    <string name="bottle_removed_from_tasting">Bouteille retirée de la dégustation.</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

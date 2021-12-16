@@ -14,11 +14,15 @@ import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemTastingBottleActionsBinding
 import com.louis.app.cavity.db.dao.BottleWithTastingActions
+import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
-class BottleActionAdapter(private val onActionCheckedChange: (TastingAction, Boolean) -> Unit) :
+class BottleActionAdapter(
+    private val onActionCheckedChange: (TastingAction, Boolean) -> Unit,
+    private val onCloseIconClicked: (Bottle) -> Unit
+) :
     ListAdapter<BottleWithTastingActions, BottleActionAdapter.BottleActionViewHolder>
         (BottleWithTastingActionsItemDiffCallback()) {
 
@@ -59,6 +63,9 @@ class BottleActionAdapter(private val onActionCheckedChange: (TastingAction, Boo
             val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
             binding.vintage.text = bottle.vintage.toString()
+            binding.buttonClose.setOnClickListener {
+                onCloseIconClicked(bottle)
+            }
 
             Glide
                 .with(itemView.context)

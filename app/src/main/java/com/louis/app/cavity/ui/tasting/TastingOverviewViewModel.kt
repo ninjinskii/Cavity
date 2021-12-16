@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
@@ -27,6 +28,14 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             repository.updateTastingAction(tastingAction)
+        }
+    }
+
+    fun updateBottleTasting(bottle: Bottle, tastingId: Long?) {
+        bottle.tastingId = tastingId
+
+        viewModelScope.launch(IO) {
+            repository.updateBottle(bottle)
         }
     }
 }

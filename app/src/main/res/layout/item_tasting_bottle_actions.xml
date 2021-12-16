@@ -6,65 +6,78 @@
     android:layout_height="wrap_content"
     android:checkable="true">
 
-  <androidx.constraintlayout.widget.ConstraintLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/wineImage"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/wineImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <View-->
-<!--        android:id="@+id/scrim"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:background="@color/scrim"-->
-<!--        android:rotation="20"-->
-<!--        android:scaleY="10"-->
-<!--        android:translationX="-40dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintWidth_percent="0.65" />-->
+        <View
+            android:id="@+id/scrim"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/scrim"
+            android:rotation="20"
+            android:scaleY="10"
+            android:translationX="-40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.70" />
 
-    <include
-        android:id="@+id/wineColorNameNaming"
-        layout="@layout/wine_color_name_naming"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/medium_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35" />
+        <include
+            android:id="@+id/wineColorNameNaming"
+            layout="@layout/wine_color_name_naming"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/medium_margin"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/large_margin"
+            app:layout_constraintEnd_toEndOf="@id/scrim"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/vintage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="@dimen/xsmall_margin"
-        android:layout_marginBottom="@dimen/medium_margin"
-        app:layout_constraintBottom_toTopOf="@id/actions"
-        app:layout_constraintStart_toStartOf="@id/wineColorNameNaming"
-        app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming"
-        tools:text="2016" />
+        <ImageButton
+            android:id="@+id/buttonClose"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close"
+            app:layout_constraintBottom_toBottomOf="@id/wineColorNameNaming"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/wineColorNameNaming"
+            app:tint="?attr/colorError" />
 
-    <LinearLayout
-        android:id="@+id/actions"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/medium_margin"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vintage" />
+        <TextView
+            android:id="@+id/vintage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="@dimen/xsmall_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
+            app:layout_constraintBottom_toTopOf="@id/actions"
+            app:layout_constraintStart_toStartOf="@id/wineColorNameNaming"
+            app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming"
+            tools:text="2016" />
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/actions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vintage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
