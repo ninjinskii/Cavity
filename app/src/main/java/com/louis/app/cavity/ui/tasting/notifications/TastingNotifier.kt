@@ -50,10 +50,15 @@ object TastingNotifier {
             bitmap = futureBitmap.get()
         }
 
+        val content = when (tastingAction.type) {
+            TastingAction.Action.SET_TO_FRIDGE -> R.string.set_to_fridge
+            TastingAction.Action.SET_TO_JUG -> R.string.set_to_jug
+        }
+
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_glass)
             .setContentTitle(wine.naming)
-            .setContentText(tastingAction.type.toString())
+            .setContentText(context.getString(content))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
             .setSubText(tasting.opportunity)
