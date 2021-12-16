@@ -342,7 +342,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun getEmptyTastings() = tastingDao.getEmptyTastings()
     fun getFutureTastings() = tastingDao.getFutureTastings()
     fun getLastTasting() = tastingDao.getLastTasting()
-    fun getTastingById(tastingId: Long) = tastingDao.getTastingById(tastingId)
+    suspend fun getTastingById(tastingId: Long) = tastingDao.getTastingById(tastingId)
     suspend fun getLastTastingByIdNotLive(tastingId: Long) =
         tastingDao.getTastingByIdNotLive(tastingId)
 

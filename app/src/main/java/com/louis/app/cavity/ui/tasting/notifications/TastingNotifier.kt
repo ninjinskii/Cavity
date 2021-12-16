@@ -19,7 +19,6 @@ import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.ActivityMain
-import com.louis.app.cavity.util.L
 
 object TastingNotifier {
     private const val CHANNEL_ID = "com.louis.app.cavity.TASTING_CHANNEL"
@@ -72,13 +71,12 @@ object TastingNotifier {
     }
 
     fun notify(context: Context, notification: TastingActionNotification) {
-        NotificationManagerCompat.from(context).run {
-            if (notification.tastingActionId <= Int.MAX_VALUE) {
-                notify(notification.tastingActionId.toInt(), notification.notification)
-            } else {
-                L.v("Too much actions in database, cannot perform notify")
-            }
-        }
+        NotificationManagerCompat.from(context)
+            .notify(notification.tastingActionId.toInt(), notification.notification)
+    }
+
+    fun cancelNotification(context: Context, tastingActionId: Int) {
+        NotificationManagerCompat.from(context).cancel(tastingActionId)
     }
 
     fun createNotificationChannel(context: Context) {
@@ -95,7 +93,6 @@ object TastingNotifier {
             notificationManager.createNotificationChannel(channel)
         }
     }
-
 }
 
 data class TastingActionNotification(val tastingActionId: Long, val notification: Notification)

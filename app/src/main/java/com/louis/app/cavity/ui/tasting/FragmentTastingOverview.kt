@@ -8,6 +8,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
+import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
@@ -29,6 +30,10 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
     private fun initRecyclerView() {
         val tastingOverviewAdapter = BottleActionAdapter(
             onActionCheckedChange = { tastingAction, isChecked ->
+                if (isChecked) {
+                    TastingNotifier.cancelNotification(requireContext(), tastingAction.id.toInt())
+                }
+
                 tastingOverviewViewModel.setActionIsChecked(tastingAction, isChecked)
             }
         )
