@@ -8,7 +8,6 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
@@ -61,7 +60,7 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
 
     private suspend fun updateStocks(boundedTasting: BoundedTasting) {
         val (tasting, _, friends) = boundedTasting
-        val updatedBottles = bottles.value?.forEach { bottleWithTastingAction ->
+        bottles.value?.forEach { bottleWithTastingAction ->
             val entry = HistoryEntry(
                 id = 0,
                 tasting.date,
@@ -74,23 +73,5 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
 
             repository.insertHistoryEntryAndFriends(entry, friends.map { it.id })
         }
-
-        L.v("$updatedBottles")
-
-        //repository.updateBottles(updatedBottles)
-    }
-
-    private suspend fun createHistoryEntry() {
-        val entry = HistoryEntry(
-            id = 0,
-            date = System.currentTimeMillis(),
-            bottleId = 0,
-            tastingId.value,
-            comment = "",
-            type = 4,
-            favorite = 0
-        )
-
-        repository.insertHistoryEntry(entry)
     }
 }
