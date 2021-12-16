@@ -81,4 +81,14 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
             repository.revertBottleConsumption(bottleId)
         }
     }
+
+    fun removeBottleFromTasting() {
+        val bottleId = bottleId.value ?: return
+
+        viewModelScope.launch(IO) {
+            val bottle = repository.getBottleByIdNotLive(bottleId)
+            bottle.tastingId = null
+            repository.updateBottle(bottle)
+        }
+    }
 }

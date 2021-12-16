@@ -44,7 +44,7 @@
     <!-- App -->
     <string name="app_name">Cavity</string>
     <string name="switch_view">Changer de vue</string>
-    <string name="consumed">Vidée</string>
+    <string name="consumed">Cette bouteille à été consommée.</string>
     <string name="drink_date">Bue le: %1$s</string>
     <string name="home">Acceuil</string>
     <string name="add_wine">Ajouter une bouteille</string>
@@ -181,6 +181,8 @@
     <string name="delete_bottle">Érradiquer la bouteille</string>
     <string name="delete_bottle_warning">Supprime totalement cette bouteille et ses entrées dans l\'historique.</string>
     <string name="confirm_bottle_delete">Voulez-vous vraiment supprimer cette bouteille ?</string>
+    <string name="bottle_used_in_tasting">Cette bouteille est utilisée dans une dégustation.</string>
+    <string name="retire">Retirer</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>
