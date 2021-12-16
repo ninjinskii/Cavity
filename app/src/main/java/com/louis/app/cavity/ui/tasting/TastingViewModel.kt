@@ -14,6 +14,6 @@ class TastingViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    val futureTastings = repository.getFutureTastings()
+    val undoneTastings = repository.getUndoneTastings()
     val friends = repository.getAllFriends()
 }

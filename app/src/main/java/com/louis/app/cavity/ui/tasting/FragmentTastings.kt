@@ -39,7 +39,7 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
             setHasFixedSize(true)
         }
 
-        tastingViewModel.futureTastings.observe(viewLifecycleOwner) {
+        tastingViewModel.undoneTastings.observe(viewLifecycleOwner) {
             tastingAdapter.submitList(it)
             TastingAlarmScheduler.setIsBootCompletedReceiverEnabled(
                 requireContext(),

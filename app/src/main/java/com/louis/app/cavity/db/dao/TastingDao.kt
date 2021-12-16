@@ -37,8 +37,8 @@ interface TastingDao {
     suspend fun getEmptyTastings(): List<Tasting>
 
     @Transaction
-    @Query("SELECT * FROM tasting WHERE date >= :beyond")
-    fun getFutureTastings(beyond: Long = 0L): LiveData<List<BoundedTasting>>
+    @Query("SELECT * FROM tasting WHERE done = 0")
+    fun getUndoneTastings(): LiveData<List<BoundedTasting>>
 
     @Transaction
     @Query("SELECT * FROM bottle WHERE bottle.tasting_id=:tastingId")

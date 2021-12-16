@@ -9,5 +9,6 @@ data class Tasting(
     val id: Long = 0,
     val date: Long,
     val isMidday: Boolean,
-    val opportunity: String
+    val opportunity: String,
+    val done: Boolean = false
 )
