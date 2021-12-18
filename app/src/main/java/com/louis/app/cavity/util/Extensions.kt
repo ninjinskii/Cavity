@@ -80,7 +80,7 @@ fun <T> ChipGroup.collectAs() = checkedChipIds.map {
 }
 
 fun <T> ChipGroup.collectAsSingle() =
-    findViewById<Chip>(checkedChipId).getTag(R.string.tag_chip_id) as T
+    findViewById<Chip>(checkedChipId)?.getTag(R.string.tag_chip_id) as T?
 
 // LiveData
 fun <T> MutableLiveData<Event<T>>.postOnce(value: T) {

@@ -74,7 +74,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         with(binding) {
             submitAddBottle.setOnClickListener {
                 friendChipGroup.apply {
-                    val friend = if (giftedBy.isChecked) collectAsSingle<Friend>().id else null
+                    val friend = if (giftedBy.isChecked) collectAsSingle<Friend>()?.id else null
 
                     otherInfoManager.submitOtherInfo(
                         otherInfo.text.toString(),

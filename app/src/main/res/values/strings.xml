@@ -17,6 +17,7 @@
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
     <string name="no_county">Aucune région sélectionnée.</string>
+    <string name="no_friend">Aucun ami sélectionné.</string>
     <string name="empty_naming">Sélectionnez une appellation.</string>
     <string name="county_already_exists">Cette région existe déjà.</string>
     <string name="naming_already_exists">Cette appellation existe déjà.</string>
