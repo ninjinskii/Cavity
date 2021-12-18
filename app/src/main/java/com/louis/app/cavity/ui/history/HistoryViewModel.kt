@@ -146,7 +146,8 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                 else -> repository.getAllEntries()
             }
             is HistoryFilter.BottleFilter -> repository.getEntriesForBottle(filter.bottleId)
-            /* is NoFilter */ else -> repository.getAllEntries()
+            is HistoryFilter.DateFilter -> repository.getEntriesForDate(filter.date)
+            is HistoryFilter.NoFilter -> repository.getAllEntries()
         }
     }
 
