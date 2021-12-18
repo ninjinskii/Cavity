@@ -274,7 +274,6 @@ class WineRepository private constructor(app: Application) {
         historyDao.getBoundedEntriesBetween(start, end)
 
     suspend fun insertHistoryEntry(entry: HistoryEntry): Long {
-        // TODO: handle tasting here
         return database.withTransaction {
             when (entry.type) {
                 0, 2, 4 -> consumeBottle(entry.bottleId)

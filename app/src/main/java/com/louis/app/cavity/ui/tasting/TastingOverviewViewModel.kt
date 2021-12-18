@@ -59,12 +59,13 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private suspend fun updateStocks(boundedTasting: BoundedTasting) {
-        val (tasting, _, friends) = boundedTasting
-        bottles.value?.forEach { bottleWithTastingAction ->
+        val (tasting, bottles, friends) = boundedTasting
+
+        bottles.forEach { bottle ->
             val entry = HistoryEntry(
                 id = 0,
                 tasting.date,
-                bottleId = bottleWithTastingAction.bottle.id,
+                bottle.id,
                 tasting.id,
                 comment = "",
                 type = 4,
