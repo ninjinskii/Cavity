@@ -1,10 +1,7 @@
 package com.louis.app.cavity.ui.home
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.util.Event
 import kotlinx.coroutines.Dispatchers.IO
@@ -22,5 +19,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     fun getAllCounties() = repository.getAllCounties()
 
     fun getWinesWithBottlesByCounty(countyId: Long) =
-        repository.getWineWithBottlesByCounty(countyId)
+        repository.getWineWithBottlesByCounty(countyId).map {
+            it.sortedBy { wineWithBottles -> wineWithBottles.wine.color.order }
+        }
 }
