@@ -82,16 +82,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
 
             binding.friendsChipGroup.apply {
                 val friend =
-                    (findViewById<Chip>(checkedChipId)?.getTag(R.string.tag_chip_id) as? Friend)?.id
-
-                if (friend == null) {
-                    snackbarProvider.onShowSnackbarRequested(
-                        R.string.no_friend,
-                        useAnchorView = false
-                    )
-
-                    return@setOnClickListener
-                }
+                    (findViewById<Chip>(checkedChipId).getTag(R.string.tag_chip_id) as Friend).id
 
                 consumeGiftBottleViewModel.giftBottle(args.bottleId, "", friend)
             }
