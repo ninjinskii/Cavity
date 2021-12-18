@@ -36,6 +36,9 @@ interface FilledReviewDao {
 
     @Query("DELETE FROM f_review WHERE bottle_id=:bottleId")
     suspend fun clearAllFReviewsForBottle(bottleId: Long)
+
+    @Query("DELETE FROM f_review")
+    suspend fun deleteAll()
 }
 
 data class FReviewAndReview(

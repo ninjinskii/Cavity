@@ -31,6 +31,9 @@ interface CountyDao {
     @Transaction
     @Query("SELECT * FROM county ORDER BY pref_order")
     fun getCountiesWithWines(): LiveData<List<CountyWithWines>>
+
+    @Query("DELETE FROM county")
+    suspend fun deleteAll()
 }
 
 data class CountyWithWines(

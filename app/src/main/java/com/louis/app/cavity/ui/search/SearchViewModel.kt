@@ -11,6 +11,7 @@ import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.util.combineAsync
 import kotlinx.coroutines.Dispatchers.Default
@@ -18,7 +19,6 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
-
     private val globalFilter = MutableLiveData<WineFilter>(NoFilter)
 
     val results: LiveData<List<BoundedBottle>> = repository
@@ -26,6 +26,11 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         .combineAsync(globalFilter) { receiver, bottles, filter ->
             filter(receiver, bottles, filter)
         }
+
+    // Pick mode only
+//    private val _selectedBottles = MutableLiveData<MutableList<Bottle>>(mutableListOf())
+//    val selectedBottles: LiveData<MutableList<Bottle>>
+//        get() = _selectedBottles
 
     private var currentBeyondDate: Long? = null
     private var currentUntilDate: Long? = null
@@ -39,6 +44,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private var dateFilter: WineFilter = NoFilter
     private var grapeFilter: WineFilter = NoFilter
     private var reviewFilter: WineFilter = NoFilter
+    private var selectedFilter: WineFilter = NoFilter
 
     var selectedCounties = emptyList<County>()
         private set
@@ -72,13 +78,13 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         val colorFilters = mutableListOf<WineFilter>()
 
         if (R.id.chipRed in colorCheckedChipIds)
-            colorFilters.add(FilterColor(0))
+            colorFilters.add(FilterColor(WineColor.RED))
         if (R.id.chipWhite in colorCheckedChipIds)
-            colorFilters.add(FilterColor(1))
+            colorFilters.add(FilterColor(WineColor.WHITE))
         if (R.id.chipSweet in colorCheckedChipIds)
-            colorFilters.add(FilterColor(2))
+            colorFilters.add(FilterColor(WineColor.SWEET))
         if (R.id.chipRose in colorCheckedChipIds)
-            colorFilters.add(FilterColor(3))
+            colorFilters.add(FilterColor(WineColor.ROSE))
 
         colorFilter =
             if (colorFilters.isNotEmpty())
@@ -169,17 +175,26 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         updateFilters()
     }
 
+    fun setSelectedFilter(filter: Boolean) {
+        reviewFilter = if (filter) FilterSelected() else NoFilter
+        updateFilters()
+    }
+
     private fun updateFilters() {
         val filters = listOf(
-            countyFilter, colorFilter, otherFilter, vintageFilter,
-            textFilter, priceFilter, dateFilter, grapeFilter, reviewFilter
+            countyFilter, colorFilter, otherFilter, vintageFilter, textFilter,
+            priceFilter, dateFilter, grapeFilter, reviewFilter, selectedFilter
         )
 
         val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
         globalFilter.value = combinedFilters
     }
 
-    private fun filter(receiver: MutableLiveData<List<BoundedBottle>>, bottles: List<BoundedBottle>, filter: WineFilter) {
+    private fun filter(
+        receiver: MutableLiveData<List<BoundedBottle>>,
+        bottles: List<BoundedBottle>,
+        filter: WineFilter
+    ) {
         viewModelScope.launch(Default) {
             val filtered = filter.meetFilters(bottles)
             receiver.postValue(filtered)

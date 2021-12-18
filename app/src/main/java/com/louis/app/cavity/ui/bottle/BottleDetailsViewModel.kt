@@ -16,7 +16,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     private var wineId = 0L
 
-    // Might be useful if used to switch dynamivcally bottles
+    // Might be useful if used to switch dynamically bottles
     private val bottleId = MutableLiveData<Long>()
 
     private val _pdfEvent = MutableLiveData<Event<Uri>>()
@@ -79,6 +79,16 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             repository.revertBottleConsumption(bottleId)
+        }
+    }
+
+    fun removeBottleFromTasting() {
+        val bottleId = bottleId.value ?: return
+
+        viewModelScope.launch(IO) {
+            val bottle = repository.getBottleByIdNotLive(bottleId)
+            bottle.tastingId = null
+            repository.updateBottle(bottle)
         }
     }
 }

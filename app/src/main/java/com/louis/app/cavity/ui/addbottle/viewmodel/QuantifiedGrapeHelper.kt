@@ -39,6 +39,6 @@ class QuantifiedGrapeHelper {
     }
 
     fun submitQGrapes(qGrapes: List<QGrapeAndGrape>) {
-        total = qGrapes.sumBy { it.qGrape.percentage }
+        total = qGrapes.sumOf { it.qGrape.percentage }
     }
 }

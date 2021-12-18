@@ -6,6 +6,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.withTranslation
 import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.util.doOnEachNextLayout
@@ -112,18 +113,16 @@ class StickyItemDecorator(
     }
 
     private fun drawHeader(c: Canvas, header: View, paddingTop: Int) {
-        c.save()
-        c.translate(0f, paddingTop.toFloat())
-        header.draw(c)
-        c.restore()
+        c.withTranslation(0f, paddingTop.toFloat()) {
+            header.draw(this)
+        }
     }
 
     private fun moveHeader(c: Canvas, currentHeader: View, nextHeader: View, paddingTop: Int) {
-        c.save()
         c.clipRect(0, paddingTop, c.width, paddingTop + currentHeader.height)
-        c.translate(0f, (nextHeader.top - currentHeader.height).toFloat() /*+ paddingTop*/)
-        currentHeader.draw(c)
-        c.restore()
+        c.withTranslation(0f, (nextHeader.top - currentHeader.height).toFloat()) {
+            currentHeader.draw(this)
+        }
     }
 
     private fun getChildInContact(parent: RecyclerView, contactPoint: Int): View? {

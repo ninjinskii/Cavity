@@ -1,71 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary">
+    android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progressBarStart"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/small_margin"
-        android:progress="100"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/stepNumber"
-        app:layout_constraintEnd_toStartOf="@id/stepNumber"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/stepNumber" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/stepNumber"
-        android:layout_width="@dimen/stepper_icon"
-        android:layout_height="@dimen/stepper_icon"
-        android:layout_margin="@dimen/large_margin"
-        android:layout_marginTop="@dimen/small_margin"
-        android:background="@drawable/shape_step"
-        android:gravity="center"
-        android:padding="4dp"
-        android:text="@string/step_1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/colorOnBackground" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="@string/next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextSwitcher
-        android:id="@+id/switcher"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/medium_margin"
-        app:layout_constraintBottom_toBottomOf="@+id/stepNumber"
-        app:layout_constraintStart_toEndOf="@+id/stepNumber"
-        app:layout_constraintTop_toTopOf="@id/stepNumber"/>
-
-    <ProgressBar
-        android:id="@+id/prograssBarMain"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/medium_margin"
-        android:progress="0"
-        app:layout_constraintBottom_toBottomOf="@id/stepNumber"
-        app:layout_constraintEnd_toStartOf="@id/endIcon"
-        app:layout_constraintStart_toEndOf="@+id/switcher"
-        app:layout_constraintTop_toTopOf="@id/stepNumber" />
-
-    <ImageView
-        android:id="@+id/endIcon"
-        android:layout_width="@dimen/small_icon"
-        android:layout_height="@dimen/small_icon"
-        android:layout_margin="@dimen/medium_margin"
-        android:contentDescription="@string/submit"
-        android:src="@drawable/ic_check"
-        android:visibility="gone"
-        app:tint="?attr/colorSecondary"
-        app:layout_constraintBottom_toBottomOf="@id/stepNumber"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/prograssBarMain"
-        app:layout_constraintTop_toTopOf="@id/stepNumber" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

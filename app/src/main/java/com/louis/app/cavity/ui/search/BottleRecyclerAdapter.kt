@@ -1,18 +1,20 @@
 package com.louis.app.cavity.ui.search
 
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemBottleBinding
 import com.louis.app.cavity.db.dao.BoundedBottle
-import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class BottleRecyclerAdapter(
-    private val colorUtil: ColorUtil,
+    private val pickMode: Boolean,
+    private val onPicked: (BoundedBottle, Boolean) -> Unit,
     private val onClickListener: (Long, Long) -> Unit
 ) :
     ListAdapter<BoundedBottle, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
@@ -42,20 +44,28 @@ class BottleRecyclerAdapter(
 
         fun bind(boundedBottle: BoundedBottle) {
             val (bottle, wine) = boundedBottle
+            val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
+
+            binding.checkedIcon.setVisible(bottle.isSelected)
+            binding.vintage.text = bottle.vintage.toString()
 
             with(binding.wineColorNameNaming) {
                 wineName.text = wine.name
                 wineNaming.text = wine.naming
                 organicImage.setVisible(wine.isOrganic.toBoolean())
-                wineColorIndicator.setColorFilter(colorUtil.getWineColor(wine))
-
+                wineColorIndicator.setColorFilter(wineColor)
             }
 
             binding.root.setOnClickListener {
-                onClickListener(wine.id, bottle.id)
+                if (pickMode) {
+                    bottle.isSelected = !bottle.isSelected
+                    TransitionManager.beginDelayedTransition(it as ViewGroup)
+                    binding.checkedIcon.setVisible(bottle.isSelected)
+                    onPicked(boundedBottle, bottle.isSelected)
+                } else {
+                    onClickListener(wine.id, bottle.id)
+                }
             }
-
-            binding.vintage.text = bottle.vintage.toString()
         }
     }
 }

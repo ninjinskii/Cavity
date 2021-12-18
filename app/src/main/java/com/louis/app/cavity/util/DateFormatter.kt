@@ -5,6 +5,8 @@ import java.util.*
 
 object DateFormatter {
     private const val DAY_IN_MILLIS = 1000 * 60 * 60 * 24
+    private const val HOUR_IN_MILLIS = 1000 * 60 * 60L
+    private const val MINUTE_IN_MILLIS = 1000 * 60L
 
     fun formatDate(timestamp: Long?, pattern: String = "dd MMM yyyy"): String {
         return if (timestamp != null && timestamp > 0L) {
@@ -18,6 +20,15 @@ object DateFormatter {
         } else {
             ""
         }
+    }
+
+    fun formatTime(hour: Int, minute: Int, pattern: String = "hh:mm"): String {
+        val formatter = SimpleDateFormat(pattern, Locale.FRENCH)
+        val calendar = Calendar.getInstance()
+
+        calendar.timeInMillis = hour * HOUR_IN_MILLIS + minute * MINUTE_IN_MILLIS
+
+        return formatter.format(calendar.time)
     }
 
     fun roundToDay(timestamp: Long): Long {

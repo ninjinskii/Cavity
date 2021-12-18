@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
-import com.louis.app.cavity.databinding.ItemHistoryTasteBinding
 import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.ui.history.HistoryUiModel
 import com.louis.app.cavity.util.ColorUtil
@@ -31,7 +30,6 @@ class HistoryRecyclerAdapter(
     companion object {
         const val TYPE_SEPARATOR = 0
         const val TYPE_NORMAL = 1
-        const val TYPE_TASTING = 2
     }
 
     // Only lightweight drawables here
@@ -46,7 +44,6 @@ class HistoryRecyclerAdapter(
 
         when (holder) {
             is HistoryEntryViewHolder -> holder.bind(item as HistoryUiModel.EntryModel?)
-            is HistoryEntryTasteViewHolder -> holder.bind(item as HistoryUiModel.EntryModel?)
             is HistorySeparatorViewHolder -> holder.bind(item as HistoryUiModel.HeaderModel?)
         }
     }
@@ -58,21 +55,16 @@ class HistoryRecyclerAdapter(
             TYPE_SEPARATOR -> HistorySeparatorViewHolder(
                 ItemHistorySeparatorBinding.inflate(inflater, parent, false)
             )
-            TYPE_NORMAL -> HistoryEntryViewHolder(
+            /* TYPE_NORMAL */ else -> HistoryEntryViewHolder(
                 ItemHistoryUseBinding.inflate(inflater, parent, false)
-            )
-            else -> HistoryEntryTasteViewHolder(
-                ItemHistoryTasteBinding.inflate(inflater, parent, false)
             )
         }
     }
 
-    // TODO: handle null item (might happen when navigating too far far away date on lower end devices)
     override fun getItemViewType(position: Int): Int {
-        return when (val item = getItem(position)) {
+        return when (getItem(position)) {
             is HistoryUiModel.HeaderModel -> TYPE_SEPARATOR
-            is HistoryUiModel.EntryModel ->
-                if (item.model.historyEntry.type == 4) TYPE_TASTING else TYPE_NORMAL
+            is HistoryUiModel.EntryModel -> TYPE_NORMAL
             null -> TYPE_NORMAL
         }
     }
@@ -102,11 +94,17 @@ class HistoryRecyclerAdapter(
 
             val (markerColor, icon, label, _, showFriends) = entry.model.historyEntry.getResources()
             val (bottle, wine) = entry.model.bottleAndWine
-            val resolvedWineColor = colorUtil.getWineColor(wine)
-            val resolvedMarkerColor = colorUtil.getColor(markerColor, ColorUtil.ColorCategory.OTHER)
+            val wineColor = ContextCompat.getColor(context, wine.color.colorRes)
+            val colorCategory =
+                if (entry.model.historyEntry.type == 4)
+                    ColorUtil.ColorCategory.PRIMARY
+                else
+                    ColorUtil.ColorCategory.OTHER
+
+            val resolvedMarkerColor = colorUtil.getColor(markerColor, colorCategory)
 
             with(binding) {
-                wineColorNameNaming.wineColorIndicator.setColorFilter(resolvedWineColor)
+                wineColorNameNaming.wineColorIndicator.setColorFilter(wineColor)
                 wineColorNameNaming.wineNaming.text = wine.naming
                 wineColorNameNaming.wineName.text = wine.name
                 vintage.text = bottle.vintage.toString()
@@ -117,27 +115,32 @@ class HistoryRecyclerAdapter(
                 marker.setBackgroundColor(resolvedMarkerColor)
 
                 comment.apply {
-                    // Consume
-                    if (entry.model.historyEntry.type == 0) {
-                        val comment = entry.model.historyEntry.comment
+                    when (entry.model.historyEntry.type) {
+                        0 -> {
+                            val comment = entry.model.historyEntry.comment
 
-                        if (comment.isBlank()) {
-                            setTypeface(null, Typeface.ITALIC)
-                            text = context.getString(R.string.no_description)
-                        } else {
+                            if (comment.isBlank()) {
+                                setTypeface(null, Typeface.ITALIC)
+                                text = context.getString(R.string.no_description)
+                            } else {
+                                typeface = Typeface.DEFAULT
+                                text = comment
+                            }
+                        }
+                        4 -> {
+                            text = entry.model.tastingWithBottles?.tasting?.opportunity
+                        }
+                        else -> {
                             typeface = Typeface.DEFAULT
-                            text = comment
-                        }
-                    } else {
-                        typeface = Typeface.DEFAULT
 
-                        val data = if (entry.model.historyEntry.type == 1) {
-                            entry.model.bottleAndWine.bottle.buyLocation
-                        } else {
-                            entry.model.friends.firstOrNull()?.name ?: ""
-                        }
+                            val data = if (entry.model.historyEntry.type == 1) {
+                                entry.model.bottleAndWine.bottle.buyLocation
+                            } else {
+                                entry.model.friends.firstOrNull()?.name ?: ""
+                            }
 
-                        text = context.getString(label, data)
+                            text = context.getString(label, data)
+                        }
                     }
 
                     setCompoundDrawablesWithIntrinsicBounds(getDrawable(icon), null, null, null)
@@ -151,29 +154,6 @@ class HistoryRecyclerAdapter(
 
         override fun onRebounded(position: Int) {
             onSwiped(getItem(position) as HistoryUiModel.EntryModel)
-        }
-    }
-
-    inner class HistoryEntryTasteViewHolder(private val binding: ItemHistoryTasteBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        init {
-            binding.root.setOnClickListener { }
-        }
-
-        fun bind(entry: HistoryUiModel.EntryModel?) {
-            with(binding) {
-                bottles.setVisible(true)
-                friends.setVisible(true)
-
-                title.text = entry?.model?.tasting?.tasting?.opportunity
-                bottles.text = entry?.model?.tasting?.bottles?.size?.toString()
-                comment.setCompoundDrawablesWithIntrinsicBounds(
-                    entry?.model?.historyEntry?.getResources()?.let {
-                        getDrawable(it.icon)
-                    }, null, null, null
-                )
-            }
         }
     }
 

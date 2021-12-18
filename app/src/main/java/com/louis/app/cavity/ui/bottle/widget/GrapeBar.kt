@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.withTranslation
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.QGrapeAndGrape
@@ -129,7 +130,6 @@ class GrapeBar @JvmOverloads constructor(
 
                 textPaint.textSize = if (grape.qGrape.percentage <= 5) 20f else 30f
 
-                val saveCount = save()
                 val text = TextUtils.ellipsize(
                     grape.grapeName,
                     textPaint,
@@ -137,10 +137,10 @@ class GrapeBar @JvmOverloads constructor(
                     TextUtils.TruncateAt.END
                 )
 
-                translate(currentPixel + (progress / 2f), baseline)
-                rotate(TEXT_ANGLE)
-                drawText(text.toString(), 0f, 0f, textPaint)
-                restoreToCount(saveCount)
+                canvas.withTranslation(currentPixel + (progress / 2f), baseline) {
+                    rotate(TEXT_ANGLE)
+                    drawText(text.toString(), 0f, 0f, textPaint)
+                }
 
                 currentPixel += progress
             }

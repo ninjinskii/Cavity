@@ -42,20 +42,23 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
     fun start(wineId: Long, bottleId: Long) {
         // Already started
-        if (this.wineId != 0L) return
+        if (this.wineId != 0L) {
+            return
+        }
 
         this.wineId = wineId
 
-        viewModelScope.launch(IO) {
-            val bottle: Bottle? =
-                if (bottleId > 0) repository.getBottleByIdNotLive(bottleId) else null
+        if (bottleId == 0L) {
+            viewModelScope.launch(IO) {
+                val bottle = repository.getBottleByIdNotLive(bottleId)
+                _editedBottle.postValue(bottle)
 
-            _editedBottle.postValue(bottle)
-
-            dateManager = DateManager(bottle)
-            grapeManager = GrapeManager(viewModelScope, repository, bottle, _userFeedback)
-            reviewManager = ReviewManager(viewModelScope, repository, bottle, _userFeedback)
-            otherInfoManager = OtherInfoManager(viewModelScope, repository, bottle, _userFeedback)
+                dateManager = DateManager(bottle)
+                grapeManager = GrapeManager(viewModelScope, repository, bottle, _userFeedback)
+                reviewManager = ReviewManager(viewModelScope, repository, bottle, _userFeedback)
+                otherInfoManager =
+                    OtherInfoManager(viewModelScope, repository, bottle, _userFeedback)
+            }
         }
     }
 
@@ -141,6 +144,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 step1.location,
                 step1.buyDate,
                 "",
+                step4.size,
                 step4.pdfPath,
                 consumed = editedBottle.value?.consumed ?: false.toInt()
             )

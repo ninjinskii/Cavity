@@ -31,6 +31,8 @@ import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter.Companion.
 import com.louis.app.cavity.ui.history.adapter.ReboundingSwipeActionCallback
 import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
 import com.louis.app.cavity.util.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -69,7 +71,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         val historyAdapter = HistoryRecyclerAdapter(
             requireContext(),
             colorUtil,
-            onHeaderClick = { showDatePicker() },
+            onHeaderClick = { historyViewModel.requestDatePicker() },
             onItemClick = {
                 binding.filterChipGroup.clearCheck()
                 historyViewModel.setFilter(HistoryFilter.BottleFilter(it.model.bottleAndWine.bottle.id))
@@ -90,7 +92,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
             addItemDecoration(HistoryDivider(height, color))
             addItemDecoration(StickyItemDecorator(this, isHeader) {
-                showDatePicker()
+                historyViewModel.requestDatePicker()
             })
 
             itemTouchHelper.attachToRecyclerView(this)
@@ -98,20 +100,45 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         historyViewModel.entries.observe(viewLifecycleOwner) {
             historyAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+
+            if (historyViewModel.filter.value is HistoryFilter.DateFilter) {
+                lifecycleScope.launch {
+                    delay(1000)
+                    historyViewModel.setFilter(HistoryFilter.NoFilter)
+                }
+            }
         }
     }
 
     private fun observe() {
-        historyViewModel.scrollTo.observe(viewLifecycleOwner) {
+        // Reuse when find a way to jump scroll into paged list
+        /*historyViewModel.scrollTo.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { pos ->
-                val scroller = LinearSmoothScroller(requireContext())
+                L.v("Start scrolling to position: $pos")
+                val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 5)
                 scroller.targetPosition = pos
+                val item = (binding.historyRecyclerView.adapter as HistoryRecyclerAdapter)
+
+
+                lifecycleScope.launch(Main) {
+                    repeat(20) {
+                        delay(100)
+                        item.refresh()
+                    }
+                }
+
                 binding.historyRecyclerView.layoutManager?.startSmoothScroll(scroller)
             }
-        }
+        }*/
 
         historyViewModel.selectedEntry.observe(viewLifecycleOwner) {
             bindBottomSheet(it)
+        }
+
+        historyViewModel.showDatePicker.observe(viewLifecycleOwner) {
+            it?.getContentIfNotHandled()?.let { oldestEntryDate ->
+                showDatePicker(oldestEntryDate)
+            }
         }
     }
 
@@ -157,15 +184,32 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         })
     }
 
-    private fun showDatePicker() {
+    private fun showDatePicker(startDate: Long) {
+        val today = MaterialDatePicker.todayInUtcMilliseconds()
+        val constraint = CalendarConstraints.Builder()
+            .setEnd(today)
+            .setStart(startDate)
+            .setValidator(object : CalendarConstraints.DateValidator {
+                override fun describeContents() = -1
+
+                override fun writeToParcel(p0: Parcel?, p1: Int) = Unit
+
+                override fun isValid(date: Long) = date in startDate..today
+            })
+            .build()
+
         val datePicker = MaterialDatePicker.Builder
             .datePicker()
+            .setCalendarConstraints(constraint)
             .setTitleText(R.string.go_to)
             .build()
 
         datePicker.addOnPositiveButtonClickListener {
             it?.let { timestamp ->
-                historyViewModel.requestScrollToDate(timestamp)
+                // TODO: Reuse when find a way to jump scroll into paged list
+                //historyViewModel.requestScrollToDate(timestamp)
+
+                historyViewModel.setFilter(HistoryFilter.DateFilter(timestamp))
             }
         }
 
@@ -178,6 +222,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         } else {
             val (bottle, wine) = entry.bottleAndWine
             val label = entry.historyEntry.getResources().detailsLabel
+            val wineColor = ContextCompat.getColor(requireContext(), wine.color.colorRes)
 
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
@@ -187,15 +232,17 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 ChipLoader.Builder()
                     .with(lifecycleScope)
                     .useInflater(layoutInflater)
+                    .toInflate(R.layout.chip_friend)
                     .load(entry.friends)
                     .into(friendChipGroup)
+                    .useAvatar(true)
                     .selectable(false)
                     .build()
                     .go()
 
                 vintage.text = bottle.vintage.toString()
 
-                wineDetails.wineColorIndicator.setColorFilter(colorUtil.getWineColor(wine))
+                wineDetails.wineColorIndicator.setColorFilter(wineColor)
                 wineDetails.wineName.text = wine.name
                 wineDetails.wineNaming.text = wine.naming
                 wineDetails.organicImage.setVisible(wine.isOrganic.toBoolean())

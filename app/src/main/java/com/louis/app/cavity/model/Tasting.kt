@@ -1,6 +1,5 @@
 package com.louis.app.cavity.model
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -9,9 +8,7 @@ data class Tasting(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val date: Long,
+    val isMidday: Boolean,
     val opportunity: String,
-    @ColumnInfo(name = "wine_temp") val wineTemp: Int = -1,
-    @ColumnInfo(name = "cellar_temp") val cellarTemp: Int = -1,
-    @ColumnInfo(name = "fridge_temp") val fridgeTemp: Int = -1,
-    @ColumnInfo(name = "tasting_id") val tastingId: Long? = null
+    var done: Boolean = false
 )

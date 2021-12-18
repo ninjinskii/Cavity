@@ -75,7 +75,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         val colorUtil = ColorUtil(requireContext())
         val reviewAdapter = ShowFilledReviewsRecyclerAdapter(colorUtil)
 
-        binding.reviewRecyclerView.apply {
+        binding.reviewList.apply {
             layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
             adapter = reviewAdapter
@@ -175,10 +175,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             bottleDetailsViewModel.toggleFavorite()
         }
 
-        binding.buttonRevertConsumption.setOnClickListener {
-            bottleDetailsViewModel.revertBottleConsumption()
-        }
-
         binding.buttonUltraDelete.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setMessage(resources.getString(R.string.confirm_bottle_delete))
@@ -230,7 +226,21 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             val consumed = bottle.consumed.toBoolean()
 
             buttonGroupInteract.setVisible(!consumed)
-            consumedBanner.setVisible(consumed)
+            warningBanner.setVisible(consumed || bottle.tastingId != null)
+
+            val stringRes = if (consumed) R.string.consumed else R.string.bottle_used_in_tasting
+            val buttonStringRes = if (consumed) R.string.cancel else R.string.retire
+
+            bannerText.text = getString(stringRes)
+            buttonRevertConsumption.text = getString(buttonStringRes)
+
+            buttonRevertConsumption.setOnClickListener {
+                if (consumed) {
+                    bottleDetailsViewModel.revertBottleConsumption()
+                } else {
+                    bottleDetailsViewModel.removeBottleFromTasting()
+                }
+            }
 
             apogee.setData(bottle.apogee.toString())
             buyLocation.setData(bottle.buyLocation)

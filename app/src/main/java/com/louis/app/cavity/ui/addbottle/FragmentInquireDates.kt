@@ -3,20 +3,18 @@ package com.louis.app.cavity.ui.addbottle
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.DatePicker
-import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.DateManager
+import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.DateFormatter
 import java.util.*
 
-class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
-    private lateinit var stepperx: Stepper
+class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
     private lateinit var dateManager: DateManager
     private var _binding: FragmentInquireDatesBinding? = null
     private val binding get() = _binding!!
@@ -28,7 +26,6 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireDatesBinding.bind(view)
 
-        stepperx = parentFragment as Stepper
         dateManager = addBottleViewModel.dateManager
 
         initNumberPickers()
@@ -74,7 +71,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
 
         with(binding) {
             stepper.next.setOnClickListener { goToNextPage() }
-            stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
+            stepper.previous.setOnClickListener { stepperFragment?.requestPreviousPage() }
         }
     }
 
@@ -105,7 +102,7 @@ class FragmentInquireDates : Fragment(R.layout.fragment_inquire_dates) {
 
         if (isFormValid) {
             savePartialBottle()
-            stepperx.requestNextPage()
+            stepperFragment?.requestNextPage()
         }
     }
 

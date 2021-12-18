@@ -22,7 +22,7 @@ interface HistoryDao {
     @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId")
     suspend fun deleteEntriesForBottle(bottleId: Long)
 
-    @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND type = 0 OR type = 2 OR type = 4")
+    @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND (type = 0 OR type = 2 OR type = 4)")
     suspend fun onBottleConsumptionReverted(bottleId: Long)
 
     @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND type = 1 OR type = 3")
@@ -30,6 +30,9 @@ interface HistoryDao {
 
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
     fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
+
+    @Query("SELECT date FROM history_entry ORDER BY date ASC LIMIT 1")
+    fun getOldestEntryDate(): Long
 
     // Divide by 1000 to convert Java milliseconds timestamps to unix timestamp (seconds)
     @Query(
@@ -68,6 +71,9 @@ interface HistoryDao {
     @Transaction
     @Query("SELECT * FROM history_entry WHERE date BETWEEN :start AND :end ORDER BY date DESC")
     fun getBoundedEntriesBetween(start: Long, end: Long): LiveData<List<BoundedHistoryEntry>>
+
+    @Query("DELETE FROM history_entry")
+    suspend fun deleteAll()
 }
 
 data class Year(val year: String, val yearStart: Long, val yearEnd: Long) {
@@ -88,7 +94,7 @@ data class BoundedHistoryEntry(
         parentColumn = "tasting_id",
         entityColumn = "id"
     )
-    var tasting: TastingWithBottles?,
+    var tastingWithBottles: TastingWithBottles?,
     @Relation(
         parentColumn = "id",
         entityColumn = "id",

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -11,7 +12,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetWineOptionsBinding
-import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.setVisible
 
 class WineOptionsBottomSheet : BottomSheetDialogFragment() {
@@ -32,12 +32,12 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val colorUtil = ColorUtil(requireContext())
+        val wineColor = ContextCompat.getColor(requireContext(), args.color.colorRes)
 
         with(binding) {
             currentWine.wineName.text = args.wineName
             currentWine.wineNaming.text = args.wineNaming
-            currentWine.wineColorIndicator.setColorFilter(colorUtil.getWineColor(args.color))
+            currentWine.wineColorIndicator.setColorFilter(wineColor)
             currentWine.organicImage.setVisible(args.isOrganic)
 
             addBottle.setOnClickListener {

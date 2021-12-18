@@ -10,7 +10,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -26,28 +25,45 @@ import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
+import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
+import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.*
 import java.util.*
 import kotlin.math.max
 
-class FragmentSearch : Fragment(R.layout.fragment_search) {
+/**
+ * This fragment is used as step when adding tasting
+ */
+class FragmentSearch : Step(R.layout.fragment_search) {
+    companion object {
+        const val PICK_MODE = "com.louis.app.cavity.ui.search.FragmentSearch.PICK_MODE"
+    }
+
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+
     private val searchViewModel: SearchViewModel by viewModels()
+    private val addTastingViewModel: AddTastingViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+
     private val recyclerViewDisabler = RecyclerViewDisabler { binding.toggleBackdrop.toggle() }
     private val backdropHeaderHeight by lazy { fetchBackdropHeaderHeight() }
     private val revealShadowAnim by lazy { loadRevealShadowAnim() }
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
+    private var isPickMode = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
 
         setupNavigation(binding.fakeToolbar)
+
+        isPickMode = arguments?.getBoolean(PICK_MODE) ?: false
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_EXPANDED
@@ -56,7 +72,11 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         binding.fakeToolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            if (isPickMode) {
+                stepperFragment?.requestPreviousPage()
+            } else {
+                findNavController().navigateUp()
+            }
         }
 
         binding.root.doOnLayout {
@@ -121,6 +141,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                 .build()
                 .go()
         }
+
+        if (isPickMode) {
+            addTastingViewModel.selectedBottles.observe(viewLifecycleOwner) {
+                binding.buttonSubmit.isEnabled = it.isNotEmpty()
+                binding.chipSelected.text = resources.getString(R.string.selected_bottles, it.size)
+            }
+        }
     }
 
     private fun initColorChips() {
@@ -135,6 +162,13 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initOtherChips() {
+        binding.chipSelected.apply {
+            setVisible(isPickMode)
+            setOnCheckedChangeListener { _, isChecked ->
+                searchViewModel.setSelectedFilter(isChecked)
+            }
+        }
+
         binding.otherChipGroup.apply {
             clearCheck()
             children.forEach {
@@ -146,13 +180,19 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     private fun initRecyclerView() {
-        bottlesAdapter = BottleRecyclerAdapter(ColorUtil(requireContext())) { wineId, bottleId ->
-            val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
-            binding.searchView.hideKeyboard()
-            findNavController().navigate(action)
-        }
+        bottlesAdapter = BottleRecyclerAdapter(
+            isPickMode,
+            onPicked = { bottle, isChecked ->
+                addTastingViewModel.onBottleStateChanged(bottle, isChecked)
+            },
+            onClickListener = { wineId, bottleId ->
+                val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
+                binding.searchView.hideKeyboard()
+                findNavController().navigate(action)
+            }
+        )
 
-        binding.recyclerView.apply {
+        binding.bottleList.apply {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
             adapter = bottlesAdapter
@@ -166,7 +206,6 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
         }
 
         searchViewModel.results.observe(viewLifecycleOwner) {
-            L.v("received event")
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter.submitList(it.toMutableList())
@@ -227,10 +266,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
     private fun prepareCountyFilters() {
         binding.countyChipGroup.apply {
-            val counties = checkedChipIds.map {
-                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as County
-            }
-
+            val counties = collectAs<County>()
             searchViewModel.setCountiesFilters(counties)
         }
     }
@@ -256,7 +292,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     }
 
     // Kwown issue: bottom sheet might and the toggle button might misbehave
-    // if for some reason the keyboard doesn't show up when calling showKeyboard()
+// if for some reason the keyboard doesn't show up when calling showKeyboard()
     private fun setupMenu() {
         binding.motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(motionLayout: MotionLayout?, p0: Int, p1: Int) {
@@ -305,7 +341,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     private fun setListeners() {
         binding.bottomSheet.setOnClickListener {
             if (bottomSheetBehavior.isCollapsed()) {
-                binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+                binding.bottleList.removeOnItemTouchListener(recyclerViewDisabler)
                 binding.toggleBackdrop.toggle()
             }
         }
@@ -316,12 +352,19 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
 
         binding.togglePrice.setOnCheckedChangeListener { _, isChecked ->
             binding.priceSlider.apply {
-                // Making sure the view has its chance to restore it state before grabbing values
+                // Making sure the view has its chance to restore its state before grabbing values
                 doOnLayout {
                     isEnabled = isChecked
                     val minPrice = if (isChecked) values[0].toInt() else -1
                     searchViewModel.setPriceFilter(minPrice, values[1].toInt())
                 }
+            }
+        }
+
+        binding.buttonSubmit.apply {
+            setVisible(isPickMode)
+            setOnClickListener {
+                stepperFragment?.requestNextPage()
             }
         }
     }
@@ -344,12 +387,12 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
                 isExpanded() -> {
                     toggleState()
                     binding.scrim.alpha = 0.76f
-                    binding.recyclerView.addOnItemTouchListener(recyclerViewDisabler)
+                    binding.bottleList.addOnItemTouchListener(recyclerViewDisabler)
                 }
                 isCollapsed() -> {
                     toggleState()
                     binding.scrim.alpha = 0f
-                    binding.recyclerView.removeOnItemTouchListener(recyclerViewDisabler)
+                    binding.bottleList.removeOnItemTouchListener(recyclerViewDisabler)
                 }
             }
         }
@@ -402,7 +445,7 @@ class FragmentSearch : Fragment(R.layout.fragment_search) {
     override fun onResume() {
         super.onResume()
 
-        setHeaderShadow(binding.recyclerView.canScrollVertically(-1))
+        setHeaderShadow(binding.bottleList.canScrollVertically(-1))
     }
 
     override fun onDestroyView() {

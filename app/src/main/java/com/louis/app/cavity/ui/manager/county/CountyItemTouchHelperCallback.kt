@@ -13,8 +13,8 @@ class CountyItemTouchHelperCallback(private val adapter: CountyRecyclerAdapter) 
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        val from = viewHolder.adapterPosition
-        val to = target.adapterPosition
+        val from = viewHolder.bindingAdapterPosition
+        val to = target.bindingAdapterPosition
         adapter.swapCounties(from, to)
         return true
     }

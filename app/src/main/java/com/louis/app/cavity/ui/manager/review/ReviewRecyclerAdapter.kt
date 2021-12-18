@@ -67,7 +67,7 @@ class ReviewRecyclerAdapter(
         }
 
         private fun showPopup(view: View) {
-            val grape = getItem(adapterPosition).review
+            val grape = getItem(bindingAdapterPosition).review
 
             PopupMenu(context, view).apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) setForceShowIcon(true)

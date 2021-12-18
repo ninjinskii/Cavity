@@ -25,13 +25,6 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true">
 
-                <View
-                    android:id="@+id/divider1"
-                    style="@style/Widget.Cavity.Divider.Start"
-                    android:layout_marginTop="@dimen/medium_margin"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <TextView
                     android:id="@+id/countyTitle"
                     style="@style/TextAppearance.MaterialComponents.Subtitle1"
@@ -40,20 +33,20 @@
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/county"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider1" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
                     android:id="@+id/buttonAddCounty"
                     android:layout_width="@dimen/medium_icon"
                     android:layout_height="@dimen/medium_icon"
-                    android:layout_margin="@dimen/medium_margin"
+                    android:layout_marginEnd="@dimen/medium_margin"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/add_county"
                     android:src="@drawable/ic_add"
-                    android:tint="?attr/colorOnBackground"
                     app:layout_constraintBottom_toBottomOf="@+id/countyTitle"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/countyTitle" />
+                    app:layout_constraintTop_toTopOf="@+id/countyTitle"
+                    app:tint="?attr/colorOnBackground" />
 
                 <HorizontalScrollView
                     android:id="@+id/countyScrollView"
@@ -98,7 +91,7 @@
                 </HorizontalScrollView>
 
                 <View
-                    android:id="@+id/divider2"
+                    android:id="@+id/divider1"
                     style="@style/Widget.Cavity.Divider.Start"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/countyScrollView" />
@@ -111,7 +104,7 @@
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/identification"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider2" />
+                    app:layout_constraintTop_toBottomOf="@id/divider1" />
 
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/nameLayout"
@@ -155,7 +148,7 @@
                 </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
                 <View
-                    android:id="@+id/divider3"
+                    android:id="@+id/divider2"
                     style="@style/Widget.Cavity.Divider.Start"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/namingLayout" />
@@ -168,7 +161,7 @@
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/cuvee"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider3" />
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/cuveeLayout"
@@ -189,7 +182,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <View
-                    android:id="@+id/divider4"
+                    android:id="@+id/divider3"
                     style="@style/Widget.Cavity.Divider.Start"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cuveeLayout" />
@@ -202,7 +195,7 @@
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/color"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider4" />
+                    app:layout_constraintTop_toBottomOf="@id/divider3" />
 
                 <HorizontalScrollView
                     android:id="@+id/colorScrollView"
@@ -259,7 +252,7 @@
                 </HorizontalScrollView>
 
                 <View
-                    android:id="@+id/divider5"
+                    android:id="@+id/divider4"
                     style="@style/Widget.Cavity.Divider.Start"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/colorScrollView" />
@@ -272,7 +265,7 @@
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/organic"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider5" />
+                    app:layout_constraintTop_toBottomOf="@id/divider4" />
 
                 <CheckBox
                     android:id="@+id/organicWine"
@@ -285,7 +278,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/organicTitle" />
 
                 <View
-                    android:id="@+id/divider6"
+                    android:id="@+id/divider5"
                     style="@style/Widget.Cavity.Divider.Start"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/organicWine" />
@@ -298,7 +291,7 @@
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/wine_photo"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider6" />
+                    app:layout_constraintTop_toBottomOf="@id/divider5" />
 
                 <ImageButton
                     android:id="@+id/buttonTakePhoto"
@@ -310,10 +303,10 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/take_photo"
                     android:src="@drawable/ic_camera"
-                    android:tint="?attr/colorPrimary"
                     app:layout_constraintEnd_toStartOf="@+id/buttonBrowsePhoto"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageTitle" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageTitle"
+                    app:tint="?attr/colorPrimary" />
 
                 <TextView
                     android:id="@+id/textButtonTakePhoto"
@@ -337,10 +330,10 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/take_photo"
                     android:src="@drawable/ic_image_search"
-                    android:tint="?attr/colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/buttonTakePhoto"
-                    app:layout_constraintTop_toBottomOf="@+id/imageTitle" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageTitle"
+                    app:tint="?attr/colorPrimary" />
 
                 <TextView
                     android:id="@+id/textButtonBrowsePhoto"
@@ -377,11 +370,11 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/add_county"
                     android:src="@drawable/ic_close"
-                    android:tint="?attr/colorError"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/wineMiniImage"
                     app:layout_constraintStart_toEndOf="@id/wineMiniImage"
-                    app:layout_constraintTop_toTopOf="@id/wineMiniImage" />
+                    app:layout_constraintTop_toTopOf="@id/wineMiniImage"
+                    app:tint="?attr/colorError" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/submitAddWine"

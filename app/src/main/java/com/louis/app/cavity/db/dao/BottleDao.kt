@@ -10,10 +10,13 @@ interface BottleDao {
     suspend fun insertBottle(bottle: Bottle): Long
 
     @Insert
-    suspend fun insertBottle(bottle: List<Bottle>)
+    suspend fun insertBottles(bottle: List<Bottle>)
 
     @Update
     suspend fun updateBottle(bottle: Bottle)
+
+    @Update
+    suspend fun updateBottles(bottles: List<Bottle>)
 
     @Delete
     suspend fun deleteBottle(bottle: Bottle)
@@ -33,14 +36,23 @@ interface BottleDao {
     @Query("UPDATE bottle SET is_favorite = 0 WHERE id=:bottleId")
     suspend fun unfav(bottleId: Long)
 
+    @Query("UPDATE bottle SET tasting_id = NULL WHERE id=:bottleId")
+    suspend fun removeTastingForBottle(bottleId: Long)
+
     @Query("DELETE FROM bottle WHERE id=:bottleId")
     suspend fun deleteBottleById(bottleId: Long)
 
     @Query("UPDATE bottle SET consumed = 1 WHERE id=:bottleId")
     suspend fun consumeBottle(bottleId: Long)
 
-    @Query("UPDATE bottle SET consumed = 0 WHERE id=:bottleId")
+    @Query("UPDATE bottle SET consumed = 0, tasting_id = NULL WHERE id=:bottleId")
     suspend fun revertBottleConsumption(bottleId: Long)
+
+    @Query("SELECT id FROM bottle WHERE id IN (:bottles) AND tasting_id IS NOT NULL")
+    suspend fun getTastingBottleIdsIn(bottles: List<Long>): List<Long>
+
+    @Query("UPDATE bottle SET tasting_id=:tastingId WHERE bottle.id IN (:bottles)")
+    suspend fun boundBottlesToTasting(tastingId: Long, bottles: List<Long>)
 
     @Transaction
     @Query("SELECT * FROM bottle WHERE consumed = 0")
@@ -49,6 +61,9 @@ interface BottleDao {
     @Transaction
     @Query("SELECT bottle.* FROM wine, bottle WHERE wine.id = bottle.wine_id AND bottle.consumed = 0")
     suspend fun getBoundedBottlesNotLive(): List<BoundedBottle>
+
+    @Query("DELETE FROM bottle")
+    suspend fun deleteAll()
 }
 
 data class BottleAndWine(
@@ -61,8 +76,30 @@ data class BottleAndWine(
     val wine: Wine,
 )
 
+data class BottleWithTastingActions(
+    @Embedded val bottle: Bottle,
+    @Relation(
+        entity = Wine::class,
+        parentColumn = "wine_id",
+        entityColumn = "id"
+    )
+    val wine: Wine,
+    @Relation(
+        entity = TastingAction::class,
+        parentColumn = "id",
+        entityColumn = "bottle_id"
+    )
+    val tastingActions: List<TastingAction>,
+)
+
 data class BottleWithHistoryEntries(
     @Embedded val bottle: Bottle,
+    @Relation(
+        entity = Wine::class,
+        parentColumn = "wine_id",
+        entityColumn = "id"
+    )
+    val wine: Wine,
     @Relation(
         parentColumn = "id",
         entityColumn = "bottle_id"

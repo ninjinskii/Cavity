@@ -10,6 +10,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/autoAnimate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="true">
@@ -57,6 +58,41 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/rbGroupSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/otherInfoLayout"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/rbSlim"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/size_slim" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/rbNormal"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/size_normal" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/rbMagnum"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/size_magnum" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
             <CheckBox
                 android:id="@+id/addToFavorite"
                 android:layout_width="0dp"
@@ -65,7 +101,7 @@
                 android:text="@string/inquire_add_to_favorites"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/otherInfoLayout" />
+                app:layout_constraintTop_toBottomOf="@id/rbGroupSize" />
 
             <CheckBox
                 android:id="@+id/giftedBy"

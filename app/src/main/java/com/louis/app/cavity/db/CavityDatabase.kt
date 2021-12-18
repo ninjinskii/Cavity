@@ -25,8 +25,9 @@ import kotlinx.coroutines.launch
         Tasting::class,
         TastingXFriend::class,
         HistoryXFriend::class,
+        TastingAction::class,
     ],
-    version = 51,
+    version = 58,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -38,11 +39,12 @@ abstract class CavityDatabase : RoomDatabase() {
     abstract fun reviewDao(): ReviewDao
     abstract fun fReviewDao(): FilledReviewDao
     abstract fun historyDao(): HistoryDao
+    abstract fun historyXFriendDao(): HistoryXFriendDao
     abstract fun friendDao(): FriendDao
+    abstract fun statsDao(): StatsDao
     abstract fun tastingDao(): TastingDao
     abstract fun tastingXFriendDao(): TastingXFriendDao
-    abstract fun historyXFriendDao(): HistoryXFriendDao
-    abstract fun statsDao(): StatsDao
+    abstract fun tastingActionDao(): TastingActionDao
 
     companion object {
         @Volatile
@@ -61,7 +63,7 @@ abstract class CavityDatabase : RoomDatabase() {
                 "cavity.db"
             )
                 .fallbackToDestructiveMigration()
-                .addCallback(callback)
+                //.addCallback(callback)
                 .build()
         }
 
@@ -134,7 +136,8 @@ abstract class CavityDatabase : RoomDatabase() {
                         "Cavavin"
                     )
 
-                    val wineColors = 0..3
+                    val wineColors =
+                        listOf(WineColor.RED, WineColor.WHITE, WineColor.ROSE, WineColor.SWEET)
 
                     val friends = arrayOf(
                         "Jean",
@@ -157,7 +160,7 @@ abstract class CavityDatabase : RoomDatabase() {
                         )
                     }
 
-                    wineDao!!.insertWine(wines)
+                    wineDao!!.insertWines(wines)
 
                     val bottlesList = List(30000) {
                         Bottle(
@@ -173,12 +176,13 @@ abstract class CavityDatabase : RoomDatabase() {
                             buyLocations.random(),
                             (1486149968..System.currentTimeMillis()).random(),
                             "",
+                            BottleSize.NORMAL,
                             "",
                             0
                         )
                     }
 
-                    bottleDao!!.insertBottle(bottlesList)
+                    bottleDao!!.insertBottles(bottlesList)
 
                     with(grapeDao!!) {
                         insertGrape(Grape(0, "Syrah"))
@@ -269,6 +273,37 @@ abstract class CavityDatabase : RoomDatabase() {
                         }
 
                         insertEntry(otherEntries)
+                    }
+
+                    with(tastingDao!!) {
+                        val opportunities =
+                            listOf(
+                                "Anniversaire Jean",
+                                "Pot de départ Guy",
+                                "Fête",
+                                "Fête des voisins"
+                            )
+                        val time = System.currentTimeMillis()
+                        val tastings = List(10) {
+                            Tasting(0, time + 100000, false, opportunities.random())
+                        }
+
+                        val tastingsXFriends = listOf(
+                            TastingXFriend(1, 1),
+                            TastingXFriend(1, 2),
+                            TastingXFriend(1, 3),
+                            TastingXFriend(1, 4),
+                            TastingXFriend(1, 5),
+                            TastingXFriend(2, 2)
+                        )
+
+                        tastings.forEach {
+                            insertTasting(it)
+                        }
+
+                        tastingsXFriends.forEach {
+                            tastingFriendXRefDao?.insertTastingXFriend(it)
+                        }
                     }
                 }
             }

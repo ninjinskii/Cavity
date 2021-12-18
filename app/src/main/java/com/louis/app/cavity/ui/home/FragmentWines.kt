@@ -31,7 +31,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         val wineAdapter = WineRecyclerAdapter(colorUtil, icons)
 
-        binding.recyclerView.apply {
+        binding.wineList.apply {
             layoutManager = HoneycombLayoutManager(
                 colCount = 2,
                 HoneycombLayoutManager.Orientation.VERTICAL
@@ -51,7 +51,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.recyclerView.adapter = null
+        binding.wineList.adapter = null
         _binding = null
     }
 

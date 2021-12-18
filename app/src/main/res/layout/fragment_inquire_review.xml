@@ -43,10 +43,10 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/add_county"
             android:src="@drawable/ic_contest"
-            android:tint="?attr/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="@id/reviewTitle"
             app:layout_constraintEnd_toStartOf="@+id/buttonAddReview"
-            app:layout_constraintTop_toTopOf="@id/reviewTitle" />
+            app:layout_constraintTop_toTopOf="@id/reviewTitle"
+            app:tint="?attr/colorOnBackground" />
 
         <ImageButton
             android:id="@+id/buttonAddReview"
@@ -56,20 +56,18 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/add_county"
             android:src="@drawable/ic_add"
-            android:tint="?attr/colorOnBackground"
             app:layout_constraintBottom_toBottomOf="@id/reviewTitle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/reviewTitle" />
+            app:layout_constraintTop_toTopOf="@id/reviewTitle"
+            app:tint="?attr/colorOnBackground" />
 
         <!-- Match parent width required to get correct behavior when changing sliders value /!\ -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/reviewList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reviewTitle"
             tools:listitem="@layout/item_review_medal" />
 
@@ -82,12 +80,12 @@
             android:src="@drawable/ic_grade"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/explanation"
-            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            app:layout_constraintEnd_toEndOf="@id/reviewList"
             app:layout_constraintHeight_percent="0.3"
-            app:layout_constraintStart_toStartOf="@id/recyclerView"
-            app:layout_constraintTop_toTopOf="@id/recyclerView"
-            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@id/reviewList"
+            app:layout_constraintTop_toTopOf="@id/reviewList"
             app:layout_constraintVertical_bias="0.35"
+            app:layout_constraintVertical_chainStyle="packed"
             app:tint="?attr/colorOnSurface" />
 
         <TextView
@@ -113,8 +111,8 @@
             android:text="@string/select_reviews"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/buttonSkip"
-            app:layout_constraintEnd_toEndOf="@id/recyclerView"
-            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintEnd_toEndOf="@id/reviewList"
+            app:layout_constraintStart_toStartOf="@id/reviewList"
             app:layout_constraintTop_toBottomOf="@id/explanation"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintWidth_percent="0.75" />
@@ -126,9 +124,9 @@
             android:layout_height="wrap_content"
             android:text="@string/skip"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/recyclerView"
-            app:layout_constraintEnd_toEndOf="@id/recyclerView"
-            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintBottom_toBottomOf="@id/reviewList"
+            app:layout_constraintEnd_toEndOf="@id/reviewList"
+            app:layout_constraintStart_toStartOf="@id/reviewList"
             app:layout_constraintTop_toBottomOf="@id/buttonSelectReviewSecondary"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintWidth_percent="0.75" />

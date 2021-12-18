@@ -3,11 +3,11 @@ package com.louis.app.cavity.ui.bottle
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentGiftBottleBinding
 import com.louis.app.cavity.model.Friend
@@ -15,11 +15,14 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
+import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.util.collectAsSingle
 
 class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentGiftBottleBinding? = null
     private val binding get() = _binding!!
+    private val addItemViewModel: AddItemViewModel by activityViewModels()
     private val consumeGiftBottleViewModel: ConsumeGiftBottleViewModel by viewModels()
     private val args: FragmentGiftBottleArgs by navArgs()
 
@@ -41,6 +44,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
             childFragmentManager,
             binding.giftDateLayout,
             title,
+            clearable = true,
             System.currentTimeMillis()
         ).apply {
             onEndIconClickListener =
@@ -54,22 +58,24 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
         val alreadyInflated = mutableSetOf<Friend>()
 
         consumeGiftBottleViewModel.getAllFriends().observe(viewLifecycleOwner) {
-            allFriends.addAll(it)
-            val toInflate = allFriends - alreadyInflated
-            alreadyInflated.addAll(toInflate)
+//            allFriends.addAll(it)
+//            val toInflate = allFriends - alreadyInflated
+//            alreadyInflated.addAll(toInflate)
 
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
-                .load(toInflate.toList())
+                .toInflate(R.layout.chip_friend_entry)
+                .load(it)
                 .into(binding.friendsChipGroup)
+                .useAvatar(true)
                 .build()
                 .go()
         }
 
         consumeGiftBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes, useAnchorView = false)
+                snackbarProvider.onShowSnackbarRequested(stringRes)
             }
         }
     }
@@ -81,17 +87,13 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
             }
 
             binding.friendsChipGroup.apply {
-                val friend =
-                    (findViewById<Chip>(checkedChipId).getTag(R.string.tag_chip_id) as Friend).id
+                val friend = collectAsSingle<Friend>()
 
-                consumeGiftBottleViewModel.giftBottle(args.bottleId, "", friend)
+                consumeGiftBottleViewModel.giftBottle(args.bottleId, "", friend.id)
             }
 
-            snackbarProvider.onShowSnackbarRequested(
-                R.string.bottle_gifted,
-                useAnchorView = false
-            )
             findNavController().navigateUp()
+            snackbarProvider.onShowSnackbarRequested(R.string.bottle_gifted)
         }
 
         binding.buttonClose.setOnClickListener {
@@ -109,7 +111,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
             hint = R.string.add_friend_label,
             icon = R.drawable.ic_person,
         ) {
-            consumeGiftBottleViewModel.insertFriend(it)
+            addItemViewModel.insertFriend(it)
         }
 
         SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)

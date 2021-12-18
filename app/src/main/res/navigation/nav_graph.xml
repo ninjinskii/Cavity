@@ -41,6 +41,9 @@
         <action
             android:id="@+id/homeToStats"
             app:destination="@id/stats_dest" />
+        <action
+            android:id="@+id/homeToTasting"
+            app:destination="@id/tasting_dest" />
     </fragment>
 
     <dialog
@@ -64,7 +67,8 @@
             app:argType="boolean" />
         <argument
             android:name="color"
-            app:argType="integer" />
+            android:defaultValue="WHITE"
+            app:argType="com.louis.app.cavity.model.WineColor" />
         <action
             android:id="@+id/wineOptionsToEditWine"
             app:destination="@+id/add_wine_dest" />
@@ -135,6 +139,23 @@
     </fragment>
 
     <fragment
+        android:id="@+id/tasting_dest"
+        android:name="com.louis.app.cavity.ui.tasting.FragmentTastings"
+        android:label="FragmentTasting"
+        tools:layout="@layout/fragment_tastings">
+        <action
+            android:id="@+id/tastingToAddTasting"
+            app:destination="@id/fragmentAddTasting" />
+        <action
+            android:id="@+id/tastingToTastingOverview"
+            app:destination="@id/fragmentTastingOverview">
+            <argument
+                android:name="tastingId"
+                app:argType="long" />
+        </action>
+    </fragment>
+
+    <fragment
         android:id="@+id/fragmentBottleDetails"
         android:name="com.louis.app.cavity.ui.bottle.FragmentBottleDetails"
         android:label="FragmentBottleDetails"
@@ -197,9 +218,9 @@
             app:argType="long" />
         <action
             android:id="@+id/historyToBottle"
+            app:destination="@id/fragmentBottleDetails"
             app:popUpTo="@id/fragmentBottleDetails"
-            app:popUpToInclusive="true"
-            app:destination="@id/fragmentBottleDetails" />
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -227,4 +248,20 @@
         android:name="com.louis.app.cavity.ui.stats.FragmentStats"
         android:label="FragmentStats"
         tools:layout="@layout/fragment_stats" />
+
+    <fragment
+        android:id="@+id/fragmentAddTasting"
+        android:name="com.louis.app.cavity.ui.addtasting.FragmentAddTasting"
+        android:label="FragmentAddTasting"
+        tools:layout="@layout/fragment_inquire_tasting_info" />
+
+    <fragment
+        android:id="@+id/fragmentTastingOverview"
+        android:name="com.louis.app.cavity.ui.tasting.FragmentTastingOverview"
+        android:label="FragmentTastingOverview"
+        tools:layout="@layout/fragment_tasting_overview" >
+        <argument
+            android:name="tastingId"
+            app:argType="long" />
+    </fragment>
 </navigation>

@@ -22,9 +22,10 @@ abstract class ReboundableViewHolder(private val binding: ViewBinding) :
     }
 
     init {
-        binding.root.background = HistorySwipeActionDrawable().apply {
-            initResources(itemView.resources, itemView.context.theme)
-        }
+        val resources = itemView.resources
+        val theme = itemView.context.theme
+
+        binding.root.background = HistorySwipeActionDrawable(resources, theme)
     }
 
     @CallSuper

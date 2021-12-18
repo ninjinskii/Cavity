@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.addbottle
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -11,16 +10,15 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddReviewBinding
 import com.louis.app.cavity.databinding.FragmentInquireReviewBinding
 import com.louis.app.cavity.ui.addbottle.adapter.FilledReviewRecyclerAdapter
-import com.louis.app.cavity.ui.addbottle.stepper.Stepper
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.ReviewManager
+import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard
 
-class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
-    private lateinit var stepperx: Stepper
+class FragmentInquireReviews : Step(R.layout.fragment_inquire_review) {
     private lateinit var reviewManager: ReviewManager
     private var _binding: FragmentInquireReviewBinding? = null
     private val binding get() = _binding!!
@@ -32,7 +30,6 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireReviewBinding.bind(view)
 
-        stepperx = parentFragment as Stepper
         reviewManager = addBottleViewModel.reviewManager
 
         initRecyclerView()
@@ -51,7 +48,7 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
             }
         )
 
-        binding.recyclerView.apply {
+        binding.reviewList.apply {
             layoutManager = LinearLayoutManager(activity)
             setHasFixedSize(true)
             adapter = reviewAdapter
@@ -90,9 +87,9 @@ class FragmentInquireReviews : Fragment(R.layout.fragment_inquire_review) {
             buttonAddReview.setOnClickListener { showAddReviewDialog() }
             buttonSelectReview.setOnClickListener { reviewManager.requestReviewDialog() }
             buttonSelectReviewSecondary.setOnClickListener { reviewManager.requestReviewDialog() }
-            buttonSkip.setOnClickListener { stepperx.requestNextPage() }
-            stepper.next.setOnClickListener { stepperx.requestNextPage() }
-            stepper.previous.setOnClickListener { stepperx.requestPreviousPage() }
+            buttonSkip.setOnClickListener { stepperFragment?.requestNextPage() }
+            stepper.next.setOnClickListener { stepperFragment?.requestNextPage() }
+            stepper.previous.setOnClickListener { stepperFragment?.requestPreviousPage() }
         }
     }
 
