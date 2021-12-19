@@ -62,9 +62,9 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
         binding.fab.setOnClickListener {
             when (binding.viewPager.currentItem) {
                 0 -> showAddCountyDialog()
-                2 -> showAddGrapeDialog()
-                3 -> showAddReviewDialog()
-                4 -> showAddFriendDialog()
+                1 -> showAddGrapeDialog()
+                2 -> showAddReviewDialog()
+                3 -> showAddFriendDialog()
             }
         }
     }
