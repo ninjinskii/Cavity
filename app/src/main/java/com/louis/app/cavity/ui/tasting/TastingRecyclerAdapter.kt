@@ -70,7 +70,11 @@ class TastingRecyclerAdapter(private val childViewPool: RecyclerView.RecycledVie
             friendAdapter.submitList(friends)
 
             binding.root.setOnClickListener {
-                val action = FragmentTastingsDirections.tastingToTastingOverview(tasting.id)
+                val action = FragmentTastingsDirections.tastingToTastingOverview(
+                    tasting.id,
+                    tasting.opportunity
+                )
+
                 itemView.findNavController().navigate(action)
             }
         }

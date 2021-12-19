@@ -48,7 +48,8 @@
     <string name="consumed">Cette bouteille à été consommée.</string>
     <string name="drink_date">Bue le: %1$s</string>
     <string name="home">Acceuil</string>
-    <string name="add_wine">Ajouter une bouteille</string>
+    <string name="add_wine">Ajouter un vin</string>
+    <string name="add_bottle">Ajouter une bouteille</string>
     <string name="delete_wine">Supprimer le vin et ses bouteilles</string>
     <string name="edit_wine">Modifier le vin</string>
     <string name="tasting">Dégustation</string>
@@ -248,6 +249,7 @@
     <string name="stock">Stock</string>
 
     <!-- Tasting -->
+    <string name="add_tasting">Créer une dégustation</string>
     <string name="opportunity">Occasion</string>
     <string name="tasting_date">Date</string>
     <string name="participants">Participants</string>

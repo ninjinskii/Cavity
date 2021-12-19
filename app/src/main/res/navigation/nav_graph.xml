@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/home_dest"
         android:name="com.louis.app.cavity.ui.home.FragmentHome"
-        android:label="FragmentHome"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_wines">
         <action
             android:id="@+id/homeToSettings"
@@ -80,13 +80,13 @@
     <fragment
         android:id="@+id/settings_dest"
         android:name="com.louis.app.cavity.ui.settings.FragmentSettings"
-        android:label="FragmentSettings"
+        android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
 
     <fragment
         android:id="@+id/add_wine_dest"
         android:name="com.louis.app.cavity.ui.addwine.FragmentAddWine"
-        android:label="FragmentAddWine"
+        android:label="@string/add_wine"
         tools:layout="@layout/fragment_add_wine">
         <argument
             android:name="editedWineId"
@@ -104,13 +104,13 @@
     <fragment
         android:id="@+id/camera_dest"
         android:name="com.louis.app.cavity.ui.addwine.FragmentCamera"
-        android:label="FragmentCamera"
+        android:label="@string/take_photo"
         tools:layout="@layout/fragment_camera" />
 
     <fragment
         android:id="@+id/add_bottle_dest"
         android:name="com.louis.app.cavity.ui.addbottle.FragmentAddBottle"
-        android:label="FragmentAddBottle"
+        android:label="@string/add_bottle"
         tools:layout="@layout/fragment_inquire_dates">
         <argument
             android:name="wineId"
@@ -124,7 +124,7 @@
     <fragment
         android:id="@+id/search_dest"
         android:name="com.louis.app.cavity.ui.search.FragmentSearch"
-        android:label="FragmentSearch"
+        android:label="@string/search"
         tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/searchToBottleDetails"
@@ -141,7 +141,7 @@
     <fragment
         android:id="@+id/tasting_dest"
         android:name="com.louis.app.cavity.ui.tasting.FragmentTastings"
-        android:label="FragmentTasting"
+        android:label="@string/tastings"
         tools:layout="@layout/fragment_tastings">
         <action
             android:id="@+id/tastingToAddTasting"
@@ -158,7 +158,6 @@
     <fragment
         android:id="@+id/fragmentBottleDetails"
         android:name="com.louis.app.cavity.ui.bottle.FragmentBottleDetails"
-        android:label="FragmentBottleDetails"
         tools:layout="@layout/fragment_bottle_details">
         <argument
             android:name="wineId"
@@ -204,13 +203,13 @@
     <fragment
         android:id="@+id/manager_dest"
         android:name="com.louis.app.cavity.ui.manager.FragmentManager"
-        android:label="FragmentManager"
+        android:label="@string/manager"
         tools:layout="@layout/fragment_manager" />
 
     <fragment
         android:id="@+id/history_dest"
         android:name="com.louis.app.cavity.ui.history.FragmentHistory"
-        android:label="FragmentHistory"
+        android:label="@string/history"
         tools:layout="@layout/fragment_history">
         <argument
             android:name="bottleId"
@@ -226,7 +225,7 @@
     <fragment
         android:id="@+id/fragmentConsumeBottle"
         android:name="com.louis.app.cavity.ui.bottle.FragmentConsumeBottle"
-        android:label="FragmentConsumeBottle"
+        android:label="@string/consume_bottle"
         tools:layout="@layout/fragment_consume_bottle">
         <argument
             android:name="bottleId"
@@ -236,7 +235,7 @@
     <fragment
         android:id="@+id/fragmentGiftBottle"
         android:name="com.louis.app.cavity.ui.bottle.FragmentGiftBottle"
-        android:label="FragmentGiftBottle"
+        android:label="@string/gift_bottle"
         tools:layout="@layout/fragment_gift_bottle">
         <argument
             android:name="bottleId"
@@ -246,22 +245,25 @@
     <fragment
         android:id="@+id/stats_dest"
         android:name="com.louis.app.cavity.ui.stats.FragmentStats"
-        android:label="FragmentStats"
+        android:label="@string/stats"
         tools:layout="@layout/fragment_stats" />
 
     <fragment
         android:id="@+id/fragmentAddTasting"
         android:name="com.louis.app.cavity.ui.addtasting.FragmentAddTasting"
-        android:label="FragmentAddTasting"
+        android:label="@string/add_tasting"
         tools:layout="@layout/fragment_inquire_tasting_info" />
 
     <fragment
         android:id="@+id/fragmentTastingOverview"
         android:name="com.louis.app.cavity.ui.tasting.FragmentTastingOverview"
-        android:label="FragmentTastingOverview"
+        android:label="{opportunity}"
         tools:layout="@layout/fragment_tasting_overview" >
         <argument
             android:name="tastingId"
             app:argType="long" />
+        <argument
+            android:name="opportunity"
+            app:argType="string" />
     </fragment>
 </navigation>
