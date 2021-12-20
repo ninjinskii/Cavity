@@ -10,7 +10,6 @@ import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.TastingBottle
 import com.louis.app.cavity.util.*
-import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -108,37 +107,35 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             cleanTastings(occupiedBottles)
         }
 
-        withContext(Default) {
-            val actions = mutableListOf<TastingAction>()
+        val actions = mutableListOf<TastingAction>()
 
-            for (tastingBottle in tastingBottles) {
-                if (tastingBottle.shouldFridge.toBoolean()) {
-                    val action = TastingAction(
-                        0,
-                        TastingAction.Action.SET_TO_FRIDGE,
-                        tastingBottle.bottleId,
-                        false.toInt()
-                    )
+        for (tastingBottle in tastingBottles) {
+            repository.deleteTastingActionsForBottle(tastingBottle.bottleId)
 
-                    actions += action
-                }
+            if (tastingBottle.shouldFridge.toBoolean()) {
+                val action = TastingAction(
+                    0,
+                    TastingAction.Action.SET_TO_FRIDGE,
+                    tastingBottle.bottleId,
+                    false.toInt()
+                )
 
-                if (tastingBottle.shouldJug.toBoolean()) {
-                    val action = TastingAction(
-                        0,
-                        TastingAction.Action.SET_TO_JUG,
-                        tastingBottle.bottleId,
-                        false.toInt()
-                    )
-
-                    actions += action
-                }
+                actions += action
             }
 
-            withContext(IO) {
-                repository.insertTastingActions(actions)
-                _tastingSaved.postOnce(tasting)
+            if (tastingBottle.shouldJug.toBoolean()) {
+                val action = TastingAction(
+                    0,
+                    TastingAction.Action.SET_TO_JUG,
+                    tastingBottle.bottleId,
+                    false.toInt()
+                )
+
+                actions += action
             }
+
+            repository.insertTastingActions(actions)
+            _tastingSaved.postOnce(tasting)
         }
     }
 
