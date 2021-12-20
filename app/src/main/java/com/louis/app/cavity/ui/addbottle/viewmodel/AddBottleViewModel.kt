@@ -48,7 +48,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
         this.wineId = wineId
 
-        if (bottleId == 0L) {
+        if (bottleId != 0L) {
             viewModelScope.launch(IO) {
                 val bottle = repository.getBottleByIdNotLive(bottleId)
                 _editedBottle.postValue(bottle)
@@ -59,6 +59,12 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 otherInfoManager =
                     OtherInfoManager(viewModelScope, repository, bottle, _userFeedback)
             }
+        } else {
+            dateManager = DateManager(null)
+            grapeManager = GrapeManager(viewModelScope, repository, null, _userFeedback)
+            reviewManager = ReviewManager(viewModelScope, repository, null, _userFeedback)
+            otherInfoManager =
+                OtherInfoManager(viewModelScope, repository, null, _userFeedback)
         }
     }
 
