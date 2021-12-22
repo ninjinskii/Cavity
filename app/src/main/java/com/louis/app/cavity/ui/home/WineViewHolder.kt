@@ -2,8 +2,11 @@ package com.louis.app.cavity.ui.home
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
@@ -31,6 +34,8 @@ class WineViewHolder(
             .toSet()
             .filter { !it.consumed.toBoolean() }
             .sortedBy { it.vintage }
+
+        ViewCompat.setTransitionName(hexagone, wine.id.toString())
 
         with(binding) {
             hexagone.isChecked = false
@@ -67,7 +72,7 @@ class WineViewHolder(
             }
 
             if (isChecked) {
-                loadBottles(wine, bottles)
+                loadBottles(hexagone, wine, bottles)
             }
         }
 
@@ -86,10 +91,11 @@ class WineViewHolder(
         }
     }
 
-    private fun loadBottles(wine: Wine, bottles: List<Bottle>) {
+    private fun loadBottles(hexagone: View, wine: Wine, bottles: List<Bottle>) {
+        val extra = FragmentNavigatorExtras(hexagone to wine.id.toString())
         val onClick = { bottleId: Long ->
             val action = FragmentHomeDirections.homeToBottleDetails(wine.id, bottleId)
-            itemView.findNavController().navigate(action)
+            itemView.findNavController().navigate(action, extra)
         }
 
         val bottleAdapter = BottleChipRecyclerAdapter(itemView.context, onClick)

@@ -1,14 +1,19 @@
 package com.louis.app.cavity.util
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.res.use
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -73,6 +78,18 @@ fun Context.dpToPx(dp: Float): Float {
 
 fun Context.pxToDp(px: Int): Float {
     return px / (resources.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)
+}
+
+@ColorInt
+@SuppressLint("Recycle")
+fun Context.themeColor(
+    @AttrRes themeAttrId: Int
+): Int {
+    return obtainStyledAttributes(
+        intArrayOf(themeAttrId)
+    ).use {
+        it.getColor(0, Color.MAGENTA)
+    }
 }
 
 fun <T> ChipGroup.collectAs() = checkedChipIds.map {
