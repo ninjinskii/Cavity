@@ -16,6 +16,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.transition.MaterialFade
+import com.google.android.material.transition.MaterialFadeThrough
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentCameraBinding
 import com.louis.app.cavity.ui.Cavity
@@ -45,6 +47,9 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        enterTransition = MaterialFadeThrough()
+        returnTransition = MaterialFadeThrough()
 
         askPermissions =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {

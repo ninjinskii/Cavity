@@ -18,6 +18,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
@@ -52,6 +53,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
             excludeTarget(R.id.appBar, true)
         }
+
+        exitTransition = MaterialFadeThrough()
+        reenterTransition = MaterialFadeThrough()
 
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             duration = 500L
