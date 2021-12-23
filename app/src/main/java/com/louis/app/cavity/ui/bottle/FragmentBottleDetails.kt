@@ -26,6 +26,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
@@ -47,6 +48,16 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
         }
+
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+        }
+
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+        }
+        //enterTransition
+        //returnTransition
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

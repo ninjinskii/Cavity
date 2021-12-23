@@ -2,12 +2,14 @@ package com.louis.app.cavity.ui.bottle
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentGiftBottleBinding
 import com.louis.app.cavity.model.Friend
@@ -25,6 +27,18 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     private val addItemViewModel: AddItemViewModel by activityViewModels()
     private val consumeGiftBottleViewModel: ConsumeGiftBottleViewModel by viewModels()
     private val args: FragmentGiftBottleArgs by navArgs()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+        }
+
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,14 +68,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     }
 
     private fun observe() {
-        val allFriends = mutableSetOf<Friend>()
-        val alreadyInflated = mutableSetOf<Friend>()
-
         consumeGiftBottleViewModel.getAllFriends().observe(viewLifecycleOwner) {
-//            allFriends.addAll(it)
-//            val toInflate = allFriends - alreadyInflated
-//            alreadyInflated.addAll(toInflate)
-
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
