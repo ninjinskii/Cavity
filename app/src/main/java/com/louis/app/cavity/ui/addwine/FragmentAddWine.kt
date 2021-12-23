@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.content.ActivityNotFoundException
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -11,10 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
@@ -40,6 +44,18 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
+            excludeTarget(R.id.appBar, true)
+        }
+
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
+            excludeTarget(R.id.appBar, true)
+        }
+
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            duration = 500L
+        }
 
         pickImage = registerForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri ->
             onImageSelected(imageUri)

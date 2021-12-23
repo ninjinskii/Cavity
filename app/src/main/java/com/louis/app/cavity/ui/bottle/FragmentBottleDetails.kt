@@ -43,7 +43,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         postponeEnterTransition()
 
         sharedElementEnterTransition = MaterialContainerTransform().apply {
-            duration = resources.getInteger(R.integer.cavity_motion_duration_long).toLong()
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
         }

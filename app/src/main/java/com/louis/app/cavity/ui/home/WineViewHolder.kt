@@ -5,11 +5,15 @@ import android.net.Uri
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.findFragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.transition.MaterialFadeThrough
+import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.model.Bottle
@@ -95,7 +99,16 @@ class WineViewHolder(
         val extra = FragmentNavigatorExtras(hexagone to wine.id.toString())
         val onClick = { bottleId: Long ->
             val action = FragmentHomeDirections.homeToBottleDetails(wine.id, bottleId)
-            itemView.findNavController().navigate(action, extra)
+
+            itemView.run {
+                findFragment<Fragment>().parentFragment?.exitTransition =
+                    MaterialFadeThrough().apply {
+                        duration =
+                            itemView.resources.getInteger(R.integer.cavity_motion_long).toLong()
+                    }
+
+                findNavController().navigate(action, extra)
+            }
         }
 
         val bottleAdapter = BottleChipRecyclerAdapter(itemView.context, onClick)
