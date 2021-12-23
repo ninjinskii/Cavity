@@ -41,16 +41,11 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
             currentWine.organicImage.setVisible(args.isOrganic)
 
             addBottle.setOnClickListener {
-                dismiss()
-
                 val action = WineOptionsBottomSheetDirections.wineOptionsToAddBottle(args.wineId)
-
                 findNavController().navigate(action)
             }
 
             editWine.setOnClickListener {
-                dismiss()
-
                 val action = WineOptionsBottomSheetDirections.wineOptionsToEditWine(
                     args.wineId,
                     args.countyId
