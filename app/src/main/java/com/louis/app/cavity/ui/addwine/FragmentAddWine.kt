@@ -47,10 +47,12 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         super.onCreate(savedInstanceState)
 
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
             excludeTarget(R.id.appBar, true)
         }
 
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
             excludeTarget(R.id.appBar, true)
         }
 

@@ -93,10 +93,12 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
         binding.fab.setOnClickListener {
             exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
+                duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
                 excludeTarget(R.id.appBar, true)
             }
 
             reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
+                duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
                 excludeTarget(R.id.appBar, true)
             }
 

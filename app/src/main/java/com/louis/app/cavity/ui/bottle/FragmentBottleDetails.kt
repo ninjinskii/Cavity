@@ -48,16 +48,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
         }
-
-        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-        }
-
-        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-        }
-        //enterTransition
-        //returnTransition
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -161,6 +151,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private fun setListeners() {
         binding.fabEditBottle.setOnClickListener {
+            updateTransition(MaterialSharedAxis.Z)
+
             val action = FragmentBottleDetailsDirections.bottleDetailsToEditBottle(
                 args.wineId,
                 args.bottleId
@@ -174,6 +166,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonConsume.setOnClickListener {
+            updateTransition(MaterialSharedAxis.Y)
+
             (it as Checkable).isChecked = false
 
             val action = FragmentBottleDetailsDirections.bottleDetailsToConsumeBottle(args.bottleId)
@@ -181,6 +175,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonGiftTo.setOnClickListener {
+            updateTransition(MaterialSharedAxis.Y)
+
             (it as Checkable).isChecked = false
 
             val action =
@@ -309,6 +305,16 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             }
 
             if (firstRun) favorite.jumpDrawablesToCurrentState()
+        }
+    }
+
+    private fun updateTransition(axis: Int) {
+        exitTransition = MaterialSharedAxis(axis, true).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+        }
+
+        reenterTransition = MaterialSharedAxis(axis, false).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
         }
     }
 

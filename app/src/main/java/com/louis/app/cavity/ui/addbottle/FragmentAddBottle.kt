@@ -2,9 +2,12 @@ package com.louis.app.cavity.ui.addbottle
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.transition.MaterialSharedAxis
+import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.stepper.Stepper
@@ -22,6 +25,19 @@ class FragmentAddBottle : Stepper() {
         FragmentInquireOtherInfo()
     )
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        postponeEnterTransition()
+
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+        }
+
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -30,6 +46,7 @@ class FragmentAddBottle : Stepper() {
         // editedBottleId is equal to 0 if user is not editing a bottle, but adding a new one
         addBottleViewModel.start(args.wineId, args.editedBottleId)
 
+        view.doOnPreDraw { startPostponedEnterTransition() }
         observe()
     }
 
