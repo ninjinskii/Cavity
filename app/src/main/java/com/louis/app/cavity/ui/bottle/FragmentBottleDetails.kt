@@ -43,11 +43,14 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onCreate(savedInstanceState)
         postponeEnterTransition()
 
+        setTransition(MaterialSharedAxis.Z)
+
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
         }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -151,7 +154,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private fun setListeners() {
         binding.fabEditBottle.setOnClickListener {
-            updateTransition(MaterialSharedAxis.Z)
+            setTransition(MaterialSharedAxis.Z)
 
             val action = FragmentBottleDetailsDirections.bottleDetailsToEditBottle(
                 args.wineId,
@@ -166,7 +169,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonConsume.setOnClickListener {
-            updateTransition(MaterialSharedAxis.Y)
+            setTransition(MaterialSharedAxis.Y)
 
             (it as Checkable).isChecked = false
 
@@ -175,7 +178,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonGiftTo.setOnClickListener {
-            updateTransition(MaterialSharedAxis.Y)
+            setTransition(MaterialSharedAxis.Y)
 
             (it as Checkable).isChecked = false
 
@@ -308,7 +311,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
     }
 
-    private fun updateTransition(axis: Int) {
+    private fun setTransition(axis: Int) {
         exitTransition = MaterialSharedAxis(axis, true).apply {
             duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
         }
