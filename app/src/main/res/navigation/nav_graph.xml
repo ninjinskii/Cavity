@@ -184,9 +184,7 @@
         </action>
         <action
             android:id="@+id/bottleDetailsToGiftBottle"
-            app:destination="@id/fragmentGiftBottle"
-            app:enterAnim="@anim/slide_in_bottom"
-            app:popExitAnim="@anim/slide_out_bottom">
+            app:destination="@id/fragmentGiftBottle">
             <argument
                 android:name="bottleId"
                 app:argType="long" />
