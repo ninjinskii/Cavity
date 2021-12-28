@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.content.ActivityNotFoundException
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -12,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -88,16 +86,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     }
 
     private fun inflateChips() {
-        val allCounties = mutableSetOf<County>()
-        val alreadyInflated = mutableSetOf<County>()
-
         addWineViewModel.getAllCounties().observe(viewLifecycleOwner) {
             binding.buttonAddCountyIfEmpty.setVisible(it.isEmpty())
-
-//            allCounties.addAll(it)
-//            val toInflate = allCounties - alreadyInflated
-//            alreadyInflated.addAll(toInflate)
-
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
@@ -245,12 +235,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     private fun toggleImageViews(hasImage: Boolean) {
         with(binding) {
-            buttonRemoveWineImage.setVisible(hasImage)
-            wineMiniImage.setVisible(hasImage)
-            buttonBrowsePhoto.setVisible(!hasImage)
-            buttonTakePhoto.setVisible(!hasImage)
-            textButtonTakePhoto.setVisible(!hasImage)
-            textButtonBrowsePhoto.setVisible(!hasImage)
+            listOf(
+                buttonRemoveWineImage, wineMiniImage, buttonBrowsePhoto,
+                buttonTakePhoto, textButtonTakePhoto, textButtonBrowsePhoto
+            ).setVisible(hasImage)
         }
     }
 
