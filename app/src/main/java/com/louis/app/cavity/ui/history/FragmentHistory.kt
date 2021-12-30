@@ -7,6 +7,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.marginStart
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSmoothScroller
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.ChipGroup
@@ -23,6 +23,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
+import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
@@ -39,13 +40,25 @@ import kotlinx.coroutines.launch
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var colorUtil: ColorUtil
+    private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private val historyViewModel: HistoryViewModel by viewModels()
     private val args: FragmentHistoryArgs by navArgs()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        transitionHelper = TransitionHelper(this).apply {
+            setFadeThrough(navigatingForward = false)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
         _binding = FragmentHistoryBinding.bind(view)
 
         setupNavigation(binding.toolbar)
@@ -158,6 +171,8 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         }
 
         binding.bottleDetails.buttonShowBottle.setOnClickListener {
+            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
+
             historyViewModel.selectedEntry.value?.let {
                 val (bottle, wine) = it.bottleAndWine
                 val action = FragmentHistoryDirections.historyToBottle(wine.id, bottle.id)

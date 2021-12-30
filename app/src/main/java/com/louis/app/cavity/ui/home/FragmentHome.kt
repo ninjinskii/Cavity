@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.home
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -11,19 +10,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setupNavigation
-import com.louis.app.cavity.util.themeColor
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
     private lateinit var tabAdapter: ScrollableTabAdapter<County>
+    private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -34,18 +33,13 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        sharedElementEnterTransition = MaterialContainerTransform().apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-            scrimColor = Color.TRANSPARENT
-            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // We need to do this in onViewCreated to ensure the right transition is selected when returning to this fragment
+        transitionHelper = TransitionHelper(this).apply {
+            setFadeThroughOnEnterAndExit()
+        }
         postponeEnterTransition()
 
         _binding = FragmentHomeBinding.bind(view)
@@ -96,15 +90,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
 
         binding.fab.setOnClickListener {
-            exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
-                duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-                excludeTarget(R.id.appBar, true)
-            }
-
-            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
-                duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-                excludeTarget(R.id.appBar, true)
-            }
+            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
 
             val extra = FragmentNavigatorExtras(binding.appBar.root to "appbar")
             val action = FragmentHomeDirections.homeToAddWine(countyId = currentCounty)

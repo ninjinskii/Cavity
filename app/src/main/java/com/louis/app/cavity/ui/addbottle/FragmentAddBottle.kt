@@ -27,7 +27,6 @@ class FragmentAddBottle : Stepper() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        postponeEnterTransition()
 
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
             duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
@@ -40,13 +39,14 @@ class FragmentAddBottle : Stepper() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         snackbarProvider = activity as SnackbarProvider
 
         // editedBottleId is equal to 0 if user is not editing a bottle, but adding a new one
         addBottleViewModel.start(args.wineId, args.editedBottleId)
 
-        view.doOnPreDraw { startPostponedEnterTransition() }
         observe()
     }
 

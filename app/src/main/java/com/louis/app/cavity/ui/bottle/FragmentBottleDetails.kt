@@ -41,7 +41,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        postponeEnterTransition()
 
         setTransition(MaterialSharedAxis.Z)
 
@@ -55,7 +54,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+
         _binding = FragmentBottleDetailsBinding.bind(view)
+
         ViewCompat.setTransitionName(binding.root, args.wineId.toString())
 
         bottleDetailsViewModel.start(args.wineId, args.bottleId)

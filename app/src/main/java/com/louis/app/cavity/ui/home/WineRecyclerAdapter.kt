@@ -8,17 +8,17 @@ import androidx.recyclerview.widget.ListAdapter
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
-import com.louis.app.cavity.util.ColorUtil
+import com.louis.app.cavity.util.TransitionHelper
 
 class WineRecyclerAdapter(
-    private val colorUtil: ColorUtil,
+    private val transitionHelper: TransitionHelper,
     private val drawables: Pair<Drawable, Drawable>
 ) :
     ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return WineViewHolder(binding, colorUtil, drawables)
+        return WineViewHolder(binding, transitionHelper, drawables)
     }
 
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) {

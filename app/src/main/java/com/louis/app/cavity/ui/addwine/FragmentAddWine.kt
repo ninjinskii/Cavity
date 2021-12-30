@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -15,8 +16,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
-import com.google.android.material.transition.MaterialContainerTransform
-import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
@@ -31,6 +30,7 @@ import com.louis.app.cavity.util.*
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
     private lateinit var pickImage: ActivityResultLauncher<Array<String>>
+    private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
@@ -44,21 +44,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-            excludeTarget(R.id.appBar, true)
-        }
-
-        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-            excludeTarget(R.id.appBar, true)
-        }
-
-        exitTransition = MaterialFadeThrough()
-        reenterTransition = MaterialFadeThrough()
-
-        sharedElementEnterTransition = MaterialContainerTransform().apply {
-            duration = 500L
+        transitionHelper = TransitionHelper(this).apply {
+            setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = false)
+            setFadeThrough(navigatingForward = true)
+            setContainerTransformTransition()
         }
 
         pickImage = registerForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri ->
@@ -72,6 +61,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
         _binding = FragmentAddWineBinding.bind(view)
 
         setupNavigation(binding.appBar.toolbar)
