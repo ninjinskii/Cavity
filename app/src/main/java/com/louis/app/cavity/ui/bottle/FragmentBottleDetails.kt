@@ -53,7 +53,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         _binding = FragmentBottleDetailsBinding.bind(view)
 
-        ViewCompat.setTransitionName(binding.root, args.wineId.toString())
+        ViewCompat.setTransitionName(binding.root, args.bottleId.toString())
 
         bottleDetailsViewModel.start(args.wineId, args.bottleId)
 

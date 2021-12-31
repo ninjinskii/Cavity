@@ -4,18 +4,21 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemBottleBinding
 import com.louis.app.cavity.db.dao.BoundedBottle
+import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class BottleRecyclerAdapter(
     private val pickMode: Boolean,
-    private val onPicked: (BoundedBottle, Boolean) -> Unit,
-    private val onClickListener: (Long, Long) -> Unit
+    private val onPicked: (BoundedBottle, Boolean) -> Unit
 ) :
     ListAdapter<BoundedBottle, BottleRecyclerAdapter.BottleViewHolder>(BottleItemDiffCallback()) {
 
@@ -46,6 +49,8 @@ class BottleRecyclerAdapter(
             val (bottle, wine) = boundedBottle
             val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
+            ViewCompat.setTransitionName(binding.root, bottle.id.toString())
+
             binding.checkedIcon.setVisible(bottle.isSelected)
             binding.vintage.text = bottle.vintage.toString()
 
@@ -63,7 +68,13 @@ class BottleRecyclerAdapter(
                     binding.checkedIcon.setVisible(bottle.isSelected)
                     onPicked(boundedBottle, bottle.isSelected)
                 } else {
-                    onClickListener(wine.id, bottle.id)
+                    val extra = FragmentNavigatorExtras(binding.root to bottle.id.toString())
+                    val action = FragmentSearchDirections.searchToBottleDetails(wine.id, bottle.id)
+
+                    itemView.apply {
+                        hideKeyboard()
+                        findNavController().navigate(action, extra)
+                    }
                 }
             }
         }

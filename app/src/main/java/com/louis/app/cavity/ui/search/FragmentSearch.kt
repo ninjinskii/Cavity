@@ -197,11 +197,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             isPickMode,
             onPicked = { bottle, isChecked ->
                 addTastingViewModel.onBottleStateChanged(bottle, isChecked)
-            },
-            onClickListener = { wineId, bottleId ->
-                val action = FragmentSearchDirections.searchToBottleDetails(wineId, bottleId)
-                binding.searchView.hideKeyboard()
-                findNavController().navigate(action)
             }
         )
 
