@@ -41,13 +41,6 @@ fun View.setVisible(isVisible: Boolean, invisible: Boolean = false) {
     visibility = if (isVisible) View.VISIBLE else if (invisible) View.INVISIBLE else View.GONE
 }
 
-fun List<View>.setVisible(isVisible: Boolean, invisible: Boolean = false) {
-    forEach {
-        it.visibility =
-            if (isVisible) View.VISIBLE else if (invisible) View.INVISIBLE else View.GONE
-    }
-}
-
 fun View.hideKeyboard() {
     (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
         ?.hideSoftInputFromWindow(windowToken, 0)

@@ -227,10 +227,12 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     private fun toggleImageViews(hasImage: Boolean) {
         with(binding) {
-            listOf(
-                buttonRemoveWineImage, wineMiniImage, buttonBrowsePhoto,
-                buttonTakePhoto, textButtonTakePhoto, textButtonBrowsePhoto
-            ).setVisible(hasImage)
+            buttonRemoveWineImage.setVisible(hasImage)
+            wineMiniImage.setVisible(hasImage)
+            buttonBrowsePhoto.setVisible(!hasImage)
+            buttonTakePhoto.setVisible(!hasImage)
+            textButtonTakePhoto.setVisible(!hasImage)
+            textButtonBrowsePhoto.setVisible(!hasImage)
         }
     }
 
