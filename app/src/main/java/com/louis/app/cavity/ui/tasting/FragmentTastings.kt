@@ -8,13 +8,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.transition.MaterialFadeThrough
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
 import com.louis.app.cavity.ui.tasting.notifications.TastingAlarmScheduler
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentTastings : Fragment(R.layout.fragment_tastings) {
+    private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentTastingsBinding? = null
     private val binding get() = _binding!!
     private val tastingViewModel: TastingViewModel by viewModels()
@@ -25,8 +26,9 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enterTransition = MaterialFadeThrough()
-        exitTransition = MaterialFadeThrough()
+        transitionHelper = TransitionHelper(this).apply {
+            setFadeThrough(navigatingForward = false)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

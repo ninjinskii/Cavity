@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.manager
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -12,10 +13,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddReviewBinding
 import com.louis.app.cavity.databinding.FragmentManagerBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
-import com.louis.app.cavity.util.hideKeyboard
-import com.louis.app.cavity.util.setupNavigation
-import com.louis.app.cavity.util.showKeyboard
-import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.*
 
 class FragmentManager : Fragment(R.layout.fragment_manager) {
     private lateinit var simpleInputDialog: SimpleInputDialog
@@ -24,8 +22,19 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
     private val managerViewModel: ManagerViewModel by viewModels()
     private val addItemViewModel: AddItemViewModel by activityViewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        TransitionHelper(this).apply {
+            setFadeThrough(navigatingForward = false)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
         _binding = FragmentManagerBinding.bind(view)
 
         simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater)

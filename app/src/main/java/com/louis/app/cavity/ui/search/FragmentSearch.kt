@@ -9,6 +9,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
+import androidx.core.view.doOnPreDraw
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -42,6 +43,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
@@ -57,8 +59,19 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private var isHeaderShadowDisplayed = false
     private var isPickMode = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        transitionHelper = TransitionHelper(this).apply {
+            setFadeThrough(navigatingForward = false)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
         _binding = FragmentSearchBinding.bind(view)
 
         setupNavigation(binding.fakeToolbar)
