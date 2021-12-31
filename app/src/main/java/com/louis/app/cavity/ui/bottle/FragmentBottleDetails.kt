@@ -43,6 +43,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         transitionHelper = TransitionHelper(this).apply {
             setContainerTransformTransition()
+            setFadeThrough(navigatingForward = false)
         }
     }
 
@@ -188,11 +189,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonShowHistory.setOnClickListener {
-            val action = FragmentBottleDetailsDirections.bottleDetailsToHistory(args.bottleId)
-            findNavController().navigate(action)
-        }
+            transitionHelper.setFadeThrough(navigatingForward = true)
 
-        binding.buttonShowHistory.setOnClickListener {
             val action = FragmentBottleDetailsDirections.bottleDetailsToHistory(args.bottleId)
             findNavController().navigate(action)
         }

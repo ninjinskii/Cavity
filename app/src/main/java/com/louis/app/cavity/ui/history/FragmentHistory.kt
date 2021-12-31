@@ -23,7 +23,6 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
@@ -171,7 +170,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         }
 
         binding.bottleDetails.buttonShowBottle.setOnClickListener {
-            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
+            transitionHelper.setFadeThrough(navigatingForward = true)
 
             historyViewModel.selectedEntry.value?.let {
                 val (bottle, wine) = it.bottleAndWine
