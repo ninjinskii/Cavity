@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.bottle
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -25,7 +24,6 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
-import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
@@ -34,6 +32,7 @@ import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.util.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
+    private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentBottleDetailsBinding? = null
     private val binding get() = _binding!!
     private val bottleDetailsViewModel: BottleDetailsViewModel by viewModels()
@@ -42,14 +41,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setTransition(MaterialSharedAxis.Z)
-
-        sharedElementEnterTransition = MaterialContainerTransform().apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-            scrimColor = Color.TRANSPARENT
-            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
+        transitionHelper = TransitionHelper(this).apply {
+            setContainerTransformTransition()
         }
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -156,7 +150,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private fun setListeners() {
         binding.fabEditBottle.setOnClickListener {
-            setTransition(MaterialSharedAxis.Z)
+            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
 
             val action = FragmentBottleDetailsDirections.bottleDetailsToEditBottle(
                 args.wineId,
@@ -171,7 +165,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonConsume.setOnClickListener {
-            setTransition(MaterialSharedAxis.Y)
+            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = true)
 
             (it as Checkable).isChecked = false
 
@@ -180,7 +174,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonGiftTo.setOnClickListener {
-            setTransition(MaterialSharedAxis.Y)
+            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = true)
 
             (it as Checkable).isChecked = false
 
@@ -310,16 +304,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             }
 
             if (firstRun) favorite.jumpDrawablesToCurrentState()
-        }
-    }
-
-    private fun setTransition(axis: Int) {
-        exitTransition = MaterialSharedAxis(axis, true).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-        }
-
-        reenterTransition = MaterialSharedAxis(axis, false).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
         }
     }
 
