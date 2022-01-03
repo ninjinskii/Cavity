@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemBottleBinding
 import com.louis.app.cavity.db.dao.BoundedBottle
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class BottleRecyclerAdapter(
+    private val transitionHelper: TransitionHelper,
     private val pickMode: Boolean,
     private val onPicked: (BoundedBottle, Boolean) -> Unit
 ) :
@@ -73,6 +75,7 @@ class BottleRecyclerAdapter(
 
                     itemView.apply {
                         hideKeyboard()
+                        transitionHelper.setElevationScale()
                         findNavController().navigate(action, extra)
                     }
                 }

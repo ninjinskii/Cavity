@@ -59,19 +59,16 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private var isHeaderShadowDisplayed = false
     private var isPickMode = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        transitionHelper = TransitionHelper(this).apply {
-            setFadeThrough(navigatingForward = false)
-            setElevationScale()
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        transitionHelper = TransitionHelper(this).apply {
+            setFadeThrough(navigatingForward = false)
+            setFadeThrough(navigatingForward = true)
+        }
+
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
+
 
         _binding = FragmentSearchBinding.bind(view)
 
@@ -195,6 +192,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun initRecyclerView() {
         bottlesAdapter = BottleRecyclerAdapter(
+            transitionHelper,
             isPickMode,
             onPicked = { bottle, isChecked ->
                 addTastingViewModel.onBottleStateChanged(bottle, isChecked)
