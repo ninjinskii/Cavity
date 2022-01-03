@@ -92,9 +92,10 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
             giftedBy.setOnCheckedChangeListener { _, isChecked ->
                 friendScrollView.setVisible(isChecked)
+                buttonAddFriend.setVisible(isChecked)
             }
 
-            buttonAddFriendIfEmpty.setOnClickListener { showAddFriendDialog() }
+            buttonAddFriend.setOnClickListener { showAddFriendDialog() }
         }
 
     }
@@ -106,16 +107,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     }
 
     private fun initFriendsChips() {
-        val allFriends = mutableSetOf<Friend>()
-        val alreadyInflated = mutableSetOf<Friend>()
-
         otherInfoManager.getAllFriends().observe(viewLifecycleOwner) {
-            binding.buttonAddFriendIfEmpty.setVisible(it.isEmpty())
-
-//            allFriends.addAll(it)
-//            val toInflate = allFriends - alreadyInflated
-//            alreadyInflated.addAll(toInflate)
-
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)

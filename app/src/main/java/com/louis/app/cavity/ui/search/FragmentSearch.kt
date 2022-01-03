@@ -69,7 +69,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-
         _binding = FragmentSearchBinding.bind(view)
 
         setupNavigation(binding.fakeToolbar)

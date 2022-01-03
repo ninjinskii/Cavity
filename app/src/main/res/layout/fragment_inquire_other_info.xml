@@ -117,10 +117,10 @@
                 android:id="@+id/friendScrollView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:visibility="gone"
                 android:clipToPadding="false"
                 android:paddingHorizontal="@dimen/medium_margin"
+                android:scrollbars="none"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/giftedBy">
@@ -130,15 +130,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/large_margin"
                     android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonAddFriendIfEmpty"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/chip_group_default_height"
-                        android:layout_marginHorizontal="@dimen/medium_margin"
-                        android:text="@string/add_friend"
-                        android:visibility="gone" />
 
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/friendChipGroup"
@@ -156,6 +147,18 @@
             </HorizontalScrollView>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonAddFriend"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/xsmall_margin"
+                android:text="@string/add_friend"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/friendScrollView" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonAddPdf"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
@@ -167,7 +170,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/friendScrollView"
+                app:layout_constraintTop_toBottomOf="@id/buttonAddFriend"
                 app:layout_constraintVertical_bias="0.0" />
 
             <com.google.android.material.button.MaterialButton
