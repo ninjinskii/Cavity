@@ -64,6 +64,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         transitionHelper = TransitionHelper(this).apply {
             setFadeThrough(navigatingForward = false)
+            setElevationScale()
         }
     }
 

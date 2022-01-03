@@ -47,7 +47,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         transitionHelper = TransitionHelper(this).apply {
             setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = false)
             setFadeThrough(navigatingForward = true)
-            setContainerTransformTransition(unifyColor = false)
+            setContainerTransformTransition()
         }
 
         pickImage = registerForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri ->

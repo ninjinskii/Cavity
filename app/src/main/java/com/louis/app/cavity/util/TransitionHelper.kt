@@ -3,6 +3,7 @@ package com.louis.app.cavity.util
 import android.graphics.Color
 import androidx.fragment.app.Fragment
 import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
@@ -49,6 +50,13 @@ class TransitionHelper(private val fragment: Fragment) {
         }
     }
 
+    fun setElevationScale() {
+        fragment.apply {
+            exitTransition = MaterialElevationScale(true)
+            reenterTransition = MaterialElevationScale(false)
+        }
+    }
+
     private fun getFadeThrough() = MaterialFadeThrough().apply {
         duration = period
         excludeTarget(R.id.appBar, true)
@@ -63,6 +71,8 @@ class TransitionHelper(private val fragment: Fragment) {
     private fun getContainerTransform() = MaterialContainerTransform().apply {
         duration = period //500
         scrimColor = Color.TRANSPARENT
+        drawingViewId = R.id.navHostFragment
+        endContainerColor = fragment.requireContext().themeColor(R.attr.colorSurface)
         setAllContainerColors(fragment.requireContext().themeColor(R.attr.colorSurface))
     }
 }

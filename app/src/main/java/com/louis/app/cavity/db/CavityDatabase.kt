@@ -63,7 +63,7 @@ abstract class CavityDatabase : RoomDatabase() {
                 "cavity.db"
             )
                 .fallbackToDestructiveMigration()
-                //.addCallback(callback)
+                .addCallback(callback)
                 .build()
         }
 
