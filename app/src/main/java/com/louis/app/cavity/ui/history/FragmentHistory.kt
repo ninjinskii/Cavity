@@ -50,6 +50,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         transitionHelper = TransitionHelper(this).apply {
             setFadeThrough(navigatingForward = false)
+            setFadeThrough(navigatingForward = true)
         }
     }
 
@@ -170,8 +171,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         }
 
         binding.bottleDetails.buttonShowBottle.setOnClickListener {
-            transitionHelper.setFadeThrough(navigatingForward = true)
-
             historyViewModel.selectedEntry.value?.let {
                 val (bottle, wine) = it.bottleAndWine
                 val action = FragmentHistoryDirections.historyToBottle(wine.id, bottle.id)

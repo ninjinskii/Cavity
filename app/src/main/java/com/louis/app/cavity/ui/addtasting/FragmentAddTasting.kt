@@ -1,25 +1,26 @@
 package com.louis.app.cavity.ui.addtasting
 
 import android.os.Bundle
-import android.view.View
 import androidx.core.os.bundleOf
-import com.louis.app.cavity.ui.SnackbarProvider
+import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.ui.search.FragmentSearch
 import com.louis.app.cavity.ui.search.FragmentSearch.Companion.PICK_MODE
 import com.louis.app.cavity.ui.stepper.Stepper
+import com.louis.app.cavity.util.TransitionHelper
 
 class FragmentAddTasting : Stepper() {
-    lateinit var snackbarProvider: SnackbarProvider
-
     override val steps = setOf(
         FragmentInquireTastingInfo(),
         FragmentSearch().apply { arguments = bundleOf(PICK_MODE to true) },
         FragmentInquireSchedule()
     )
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        snackbarProvider = activity as SnackbarProvider
+        TransitionHelper(this).apply {
+            setFadeThrough(navigatingForward = true)
+            setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = false)
+        }
     }
 }

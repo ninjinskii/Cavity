@@ -7,10 +7,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialSharedAxis
-import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.stepper.Stepper
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAddBottle : Stepper() {
@@ -28,12 +28,9 @@ class FragmentAddBottle : Stepper() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-        }
-
-        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+        TransitionHelper(this).apply {
+            setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = false)
+            setFadeThrough(navigatingForward = true)
         }
     }
 

@@ -2,15 +2,19 @@ package com.louis.app.cavity.ui.tasting
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.transition.MaterialFadeThrough
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
 import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
@@ -20,8 +24,22 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
     private val tastingOverviewViewModel: TastingOverviewViewModel by viewModels()
     private val args: FragmentTastingOverviewArgs by navArgs()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        TransitionHelper(this).apply {
+            setContainerTransformTransition()
+            setFadeThrough(navigatingForward = true)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setTransitionName(view, args.tastingId.toString())
+
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
         _binding = FragmentTastingOverviewBinding.bind(view)
 
         setupNavigation(binding.appBar.toolbar)
@@ -68,6 +86,11 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
 
     private fun observe() {
         tastingOverviewViewModel.tastingConfirmed.observe(viewLifecycleOwner) {
+            returnTransition = MaterialFadeThrough()
+            sharedElementReturnTransition = null
+
+            binding.coordinator.showSnackbar(R.string.tasting_confirmed)
+
             findNavController().popBackStack()
         }
     }

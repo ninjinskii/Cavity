@@ -96,7 +96,7 @@ class WineViewHolder(
 
     private fun loadBottles(hexagone: View, wine: Wine, bottles: List<Bottle>) {
         val onClick = { bottleId: Long ->
-            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
+            transitionHelper.setElevationScale() // Or Z shared axis
 
             val extra = FragmentNavigatorExtras(hexagone to bottleId.toString())
             val action = FragmentHomeDirections.homeToBottleDetails(wine.id, bottleId)

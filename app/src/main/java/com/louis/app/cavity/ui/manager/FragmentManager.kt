@@ -27,6 +27,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
 
         TransitionHelper(this).apply {
             setFadeThrough(navigatingForward = false)
+            setFadeThrough(navigatingForward = true)
         }
     }
 

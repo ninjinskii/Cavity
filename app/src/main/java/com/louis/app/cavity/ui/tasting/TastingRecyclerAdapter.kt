@@ -2,7 +2,9 @@ package com.louis.app.cavity.ui.tasting
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -11,8 +13,12 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemTastingBinding
 import com.louis.app.cavity.db.dao.BoundedTasting
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.TransitionHelper
 
-class TastingRecyclerAdapter(private val childViewPool: RecyclerView.RecycledViewPool) :
+class TastingRecyclerAdapter(
+    private val childViewPool: RecyclerView.RecycledViewPool,
+    private val transitionHelper: TransitionHelper
+) :
     ListAdapter<BoundedTasting, TastingRecyclerAdapter.TastingViewHolder>
         (TastingItemDiffCallback()) {
 
@@ -47,6 +53,8 @@ class TastingRecyclerAdapter(private val childViewPool: RecyclerView.RecycledVie
                 initialPrefetchItemCount = 4
             }
 
+            ViewCompat.setTransitionName(binding.root, tasting.id.toString())
+
             with(binding) {
                 opportunity.text = tasting.opportunity
                 date.text = DateFormatter.formatDate(tasting.date)
@@ -70,12 +78,15 @@ class TastingRecyclerAdapter(private val childViewPool: RecyclerView.RecycledVie
             friendAdapter.submitList(friends)
 
             binding.root.setOnClickListener {
+                transitionHelper.setElevationScale() // Or Z shared axis
+
+                val extra = FragmentNavigatorExtras(binding.root to "${tasting.id}")
                 val action = FragmentTastingsDirections.tastingToTastingOverview(
                     tasting.id,
                     tasting.opportunity
                 )
 
-                itemView.findNavController().navigate(action)
+                itemView.findNavController().navigate(action, extra)
             }
         }
     }

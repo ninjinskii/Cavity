@@ -49,11 +49,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setTransitionName(view, args.bottleId.toString())
+
+        transitionHelper.setFadeThrough(navigatingForward = true)
         postponeEnterTransition()
 
         _binding = FragmentBottleDetailsBinding.bind(view)
-
-        ViewCompat.setTransitionName(binding.root, args.bottleId.toString())
 
         bottleDetailsViewModel.start(args.wineId, args.bottleId)
 

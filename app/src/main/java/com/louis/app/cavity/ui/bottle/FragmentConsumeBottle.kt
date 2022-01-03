@@ -17,6 +17,7 @@ import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.collectAs
 
 class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
@@ -30,12 +31,9 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-        }
-
-        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+        TransitionHelper(this).apply {
+            setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = false)
+            setFadeThrough(navigatingForward = true)
         }
     }
 

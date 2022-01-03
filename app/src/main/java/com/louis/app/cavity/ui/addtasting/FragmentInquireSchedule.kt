@@ -64,6 +64,7 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
         addTastingViewModel.tastingSaved.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { tasting ->
                 TastingAlarmScheduler.scheduleTastingAlarm(requireContext(), tasting)
+                snackbarProvider.onShowSnackbarRequested(R.string.tasting_created)
                 findNavController().popBackStack()
             }
         }

@@ -16,13 +16,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.transition.MaterialFade
-import com.google.android.material.transition.MaterialFadeThrough
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentCameraBinding
 import com.louis.app.cavity.ui.Cavity
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.TAKEN_PHOTO_URI
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.showSnackbar
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -48,8 +47,10 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enterTransition = MaterialFadeThrough()
-        returnTransition = MaterialFadeThrough()
+        TransitionHelper(this).apply {
+            setFadeThrough(navigatingForward = true)
+            setFadeThrough(navigatingForward = false)
+        }
 
         askPermissions =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {

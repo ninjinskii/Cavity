@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.bottle
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -18,6 +17,7 @@ import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.collectAsSingle
 
 class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
@@ -31,12 +31,9 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
-        }
-
-        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+        TransitionHelper(this).apply {
+            setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = false)
+            setFadeThrough(navigatingForward = true)
         }
     }
 
