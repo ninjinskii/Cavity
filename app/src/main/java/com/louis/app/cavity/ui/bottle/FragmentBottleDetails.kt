@@ -51,7 +51,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onViewCreated(view, savedInstanceState)
         ViewCompat.setTransitionName(view, args.bottleId.toString())
 
-        transitionHelper.setFadeThrough(navigatingForward = true)
+        transitionHelper.setFadeThroughOnEnterAndExit()
         postponeEnterTransition()
 
         _binding = FragmentBottleDetailsBinding.bind(view)
