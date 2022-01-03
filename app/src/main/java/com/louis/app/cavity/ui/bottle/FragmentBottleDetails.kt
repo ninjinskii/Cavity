@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.bottle
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -42,7 +43,23 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         super.onCreate(savedInstanceState)
 
         transitionHelper = TransitionHelper(this).apply {
-            setContainerTransformTransition()
+            val previousDestination = findNavController().previousBackStackEntry?.destination?.id
+            val enterOptions = if (previousDestination == R.id.search_dest) {
+                TransitionHelper.ContainerTransformOptions(
+                    Color.TRANSPARENT,
+                    requireContext().themeColor(R.attr.colorSurface)
+                ).also {
+                    val returnOptions = TransitionHelper.ContainerTransformOptions(
+                        Color.TRANSPARENT,
+                        requireContext().getColor(R.color.surface_elevation_4dp)
+                    )
+                    setContainerTransformTransition(returnOptions, enter = false)
+                }
+            } else {
+                null
+            }
+
+            setContainerTransformTransition(enterOptions, enter = true)
             setFadeThrough(navigatingForward = false)
         }
     }

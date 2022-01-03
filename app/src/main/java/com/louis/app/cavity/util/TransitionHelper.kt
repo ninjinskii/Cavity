@@ -1,6 +1,8 @@
 package com.louis.app.cavity.util
 
 import android.graphics.Color
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialElevationScale
@@ -25,8 +27,22 @@ class TransitionHelper(private val fragment: Fragment) {
         }
     }
 
-    fun setContainerTransformTransition() {
-        fragment.sharedElementEnterTransition = getContainerTransform()
+    fun setContainerTransformTransition(options: ContainerTransformOptions?, enter: Boolean) {
+        val transition = getContainerTransform().apply {
+            duration = period
+            drawingViewId = R.id.navHostFragment
+
+            options?.let {
+                startContainerColor = it.startContainerColor
+                endContainerColor = it.endContainerColor
+            } ?: setAllContainerColors(resolveColor(R.attr.colorSurface))
+        }
+
+        if (enter) {
+            fragment.sharedElementEnterTransition = transition
+        } else {
+            fragment.sharedElementReturnTransition = transition
+        }
     }
 
     fun setFadeThrough(navigatingForward: Boolean) {
@@ -72,7 +88,12 @@ class TransitionHelper(private val fragment: Fragment) {
         duration = period //500
         scrimColor = Color.TRANSPARENT
         drawingViewId = R.id.navHostFragment
-        endContainerColor = fragment.requireContext().themeColor(R.attr.colorSurface)
-        setAllContainerColors(fragment.requireContext().themeColor(R.attr.colorSurface))
     }
+
+    private fun resolveColor(@AttrRes color: Int) = fragment.requireContext().themeColor(color)
+
+    data class ContainerTransformOptions(
+        @ColorInt val startContainerColor: Int,
+        @ColorInt val endContainerColor: Int
+    )
 }

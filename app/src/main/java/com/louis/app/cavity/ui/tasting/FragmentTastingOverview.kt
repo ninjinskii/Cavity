@@ -28,7 +28,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         super.onCreate(savedInstanceState)
 
         TransitionHelper(this).apply {
-            setContainerTransformTransition()
+            setContainerTransformTransition(options = null, enter = true)
             setFadeThrough(navigatingForward = true)
         }
     }
