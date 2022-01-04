@@ -80,12 +80,15 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private fun inflateChips() {
         addWineViewModel.getAllCounties().observe(viewLifecycleOwner) {
             binding.buttonAddCountyIfEmpty.setVisible(it.isEmpty())
+
+            val newCountyAdded = binding.countyChipGroup.childCount == it.size - 1
+
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
                 .load(it)
                 .into(binding.countyChipGroup)
-                .preselect(args.countyId)
+                .preselect(if (newCountyAdded) it.last().id else args.countyId)
                 .doOnClick { v -> setCounty(v) }
                 .build()
                 .go()
