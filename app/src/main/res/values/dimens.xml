@@ -28,6 +28,8 @@
     <dimen name="history_wine_image_size">145dp</dimen>
 
     <dimen name="app_bar_elevation">4dp</dimen>
+    <dimen name="container_drop_elevation">2dp</dimen>
+    <dimen name="no_elevation">0dp</dimen>
 
     <dimen name="chip_group_default_height">48dp</dimen>
 

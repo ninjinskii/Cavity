@@ -47,11 +47,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             val enterOptions = if (previousDestination == R.id.search_dest) {
                 TransitionHelper.ContainerTransformOptions(
                     Color.TRANSPARENT,
-                    requireContext().themeColor(R.attr.colorSurface)
+                    requireContext().themeColor(R.attr.colorSurface),
+                    startElevation = resources.getDimension(R.dimen.container_drop_elevation),
+                    endElevation = resources.getDimension(R.dimen.app_bar_elevation)
                 ).also {
                     val returnOptions = TransitionHelper.ContainerTransformOptions(
                         Color.TRANSPARENT,
-                        requireContext().getColor(R.color.surface_elevation_4dp)
+                        requireContext().getColor(R.color.surface_elevation_4dp),
+                        startElevation = resources.getDimension(R.dimen.app_bar_elevation),
+                        endElevation = resources.getDimension(R.dimen.container_drop_elevation)
                     )
                     setContainerTransformTransition(returnOptions, enter = false)
                 }

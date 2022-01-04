@@ -3,6 +3,7 @@ package com.louis.app.cavity.util
 import android.graphics.Color
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.annotation.Dimension
 import androidx.fragment.app.Fragment
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialElevationScale
@@ -35,6 +36,8 @@ class TransitionHelper(private val fragment: Fragment) {
             options?.let {
                 startContainerColor = it.startContainerColor
                 endContainerColor = it.endContainerColor
+                startElevation = it.startElevation
+                endElevation = it.endElevation
             } ?: setAllContainerColors(resolveColor(R.attr.colorSurface))
         }
 
@@ -94,6 +97,8 @@ class TransitionHelper(private val fragment: Fragment) {
 
     data class ContainerTransformOptions(
         @ColorInt val startContainerColor: Int,
-        @ColorInt val endContainerColor: Int
+        @ColorInt val endContainerColor: Int,
+        @Dimension val startElevation: Float = 0F,
+        @Dimension val endElevation: Float = 0F
     )
 }
