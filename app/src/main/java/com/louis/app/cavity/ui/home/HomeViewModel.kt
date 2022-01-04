@@ -1,7 +1,10 @@
 package com.louis.app.cavity.ui.home
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.util.Event
 import kotlinx.coroutines.Dispatchers.IO
@@ -18,8 +21,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllCounties() = repository.getAllCounties()
 
+    // TODO: optimize by filtering and ordering here in liveData coroutine OR by using Room's multimap
     fun getWinesWithBottlesByCounty(countyId: Long) =
-        repository.getWineWithBottlesByCounty(countyId).map {
-            it.sortedBy { wineWithBottles -> wineWithBottles.wine.color.order }
-        }
+        repository.getWineWithBottlesByCounty(countyId)
 }
