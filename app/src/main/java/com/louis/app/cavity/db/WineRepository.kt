@@ -56,8 +56,7 @@ class WineRepository private constructor(app: Application) {
         wineDao.getWineFullNamingByIdNotLive(wineId)
 
     fun getNamingsForCounty(countyId: Long) = wineDao.getNamingsForCounty(countyId)
-    suspend fun getWineWithBottlesByCounty(countyId: Long) =
-        wineDao.getWineWithBottlesByCounty(countyId)
+    fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
 
     fun getCountiesWithWines() = countyDao.getCountiesWithWines()
 

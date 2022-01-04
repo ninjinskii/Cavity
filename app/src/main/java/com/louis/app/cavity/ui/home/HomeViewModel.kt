@@ -10,7 +10,6 @@ import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
@@ -27,22 +26,20 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     fun getAllCounties() = repository.getAllCounties()
 
     // This become unecessary if we figure out how to implement Room's multimaps with standard SQL Join request
-    fun getWinesWithBottlesByCounty(countyId: Long) = liveData(IO) {
-        val winesWithBottles = repository.getWineWithBottlesByCounty(countyId)
-
-        withContext(Default) {
-            val result = winesWithBottles
-                //.filter { !it.hidden.toBoolean() }
-                .sortedBy { it.wine.color.order }
-                .map { wineWithBottles ->
-                    wineWithBottles.copy(
-                        bottles = wineWithBottles.bottles
-                            .filter { !it.consumed.toBoolean() }
-                            .sortedBy { it.vintage }
-                    )
-                }
-
-            emit(result)
-        }
+    fun getWinesWithBottlesByCounty(countyId: Long) = liveData(Default) {
+        emitSource(
+            repository.getWineWithBottlesByCounty(countyId).map { winesWithBottles ->
+                winesWithBottles
+                    //.filter { !it.hidden.toBoolean() }
+                    .sortedBy { it.wine.color.order }
+                    .map { wineWithBottles ->
+                        wineWithBottles.copy(
+                            bottles = wineWithBottles.bottles
+                                .filter { !it.consumed.toBoolean() }
+                                .sortedBy { it.vintage }
+                        )
+                    }
+            }
+        )
     }
 }
