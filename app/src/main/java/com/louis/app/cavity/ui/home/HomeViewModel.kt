@@ -33,7 +33,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
                     wineWithBottles.copy(
                         bottles = wineWithBottles.bottles
                             .filter { !it.consumed.toBoolean() }
-                            .sortedBy { it.vintage })
+                            .sortedBy { it.vintage }
+                    )
                 }
 
             emit(result)
