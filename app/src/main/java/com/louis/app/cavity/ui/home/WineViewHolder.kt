@@ -29,12 +29,8 @@ class WineViewHolder(
     // TODO: Add raw sql query to WineDao to filter consumed bottles
     fun bind(wineWithBottles: WineWithBottles) {
         val hexagone = binding.root
-        val (wine) = wineWithBottles
+        val (wine, bottles) = wineWithBottles
         val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
-        val bottles = wineWithBottles.bottles
-            .toSet()
-            .filter { !it.consumed.toBoolean() }
-            .sortedBy { it.vintage }
 
         ViewCompat.setTransitionName(hexagone, wine.id.toString())
 
