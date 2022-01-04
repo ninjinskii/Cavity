@@ -26,7 +26,6 @@ class WineViewHolder(
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
-    // TODO: Add raw sql query to WineDao to filter consumed bottles
     fun bind(wineWithBottles: WineWithBottles) {
         val hexagone = binding.root
         val (wine, bottles) = wineWithBottles

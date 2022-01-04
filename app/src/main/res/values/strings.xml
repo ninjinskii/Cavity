@@ -73,6 +73,7 @@
     <string name="add_naming">Ajouter une appellation</string>
     <string name="wine_added">Le vin a été ajouté.</string>
     <string name="wine_updated">Le vin a été modifié.</string>
+    <string name="wine_deleted">Le vin a été supprimé.</string>
     <string name="wine_color_white">Blanc</string>
     <string name="wine_color_red">Rouge</string>
     <string name="wine_color_sweet">Liquoreux</string>
