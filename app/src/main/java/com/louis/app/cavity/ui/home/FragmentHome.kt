@@ -1,22 +1,29 @@
 package com.louis.app.cavity.ui.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
+import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.themeColor
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
@@ -31,6 +38,23 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             // TODO: Adjust this number based on screen size
             setMaxRecycledViews(R.layout.item_wine, 15)
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (binding.countyDetailsScrim.isVisible) {
+                        hideCountyDetails()
+                    } else {
+                        remove()
+                        requireActivity().onBackPressed()
+                    }
+                }
+            })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,8 +82,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             onTabClick = { _, position ->
                 binding.viewPager.currentItem = position
             },
-            onLongTabClick = {
-                // TODO: show dialog info for county
+            onLongTabClick = { _, position ->
+                showCountyDetails(position)
             }
         )
 
@@ -95,6 +119,53 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             val extra = FragmentNavigatorExtras(binding.appBar.root to "appbar")
             val action = FragmentHomeDirections.homeToAddWine(countyId = currentCounty)
             findNavController().navigate(action, extra)
+        }
+
+        binding.countyDetailsScrim.setOnClickListener {
+            hideCountyDetails()
+        }
+    }
+
+    private fun showCountyDetails(itemPosition: Int) {
+        binding.viewPager.currentItem = itemPosition
+
+        val transform = MaterialContainerTransform().apply {
+            startView = binding.tab
+            endView = binding.countyDetails.root
+            startElevation = resources.getDimension(R.dimen.app_bar_elevation)
+            endElevation = resources.getDimension(R.dimen.app_bar_elevation)
+            scrimColor = Color.TRANSPARENT
+            addTarget(binding.countyDetails.root)
+        }
+
+        TransitionManager.beginDelayedTransition(binding.constraint, transform)
+
+        with(binding) {
+            tab.setVisible(false, invisible = true)
+            fab.hide()
+            countyDetails.root.setVisible(true)
+            countyDetailsScrim.setVisible(true)
+        }
+    }
+
+    private fun hideCountyDetails() {
+        val transform = MaterialContainerTransform().apply {
+            startView = binding.countyDetails.root
+            endView = binding.tab
+            startElevation = resources.getDimension(R.dimen.app_bar_elevation)
+            endElevation = resources.getDimension(R.dimen.app_bar_elevation)
+            endContainerColor = requireContext().themeColor(R.attr.colorSurface)
+            scrimColor = Color.TRANSPARENT
+            addTarget(binding.tab)
+        }
+
+        TransitionManager.beginDelayedTransition(binding.constraint, transform)
+
+        with(binding) {
+            tab.setVisible(true)
+            fab.show()
+            countyDetails.root.setVisible(false, invisible = true)
+            countyDetailsScrim.setVisible(false)
         }
     }
 

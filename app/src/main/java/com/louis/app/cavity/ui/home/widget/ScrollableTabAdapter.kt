@@ -12,7 +12,7 @@ import com.louis.app.cavity.model.Chipable
 
 class ScrollableTabAdapter<T>(
     private val onTabClick: (View, Int) -> Unit,
-    private val onLongTabClick: (T) -> Unit
+    private val onLongTabClick: (T, Int) -> Unit
 ) :
     RecyclerView.Adapter<ScrollableTabAdapter<T>.TabViewHolder>() {
 
@@ -54,7 +54,7 @@ class ScrollableTabAdapter<T>(
             textView.text = item.toString()
 
             view.setOnLongClickListener {
-                onLongTabClick(item)
+                onLongTabClick(item, bindingAdapterPosition)
                 true
             }
         }

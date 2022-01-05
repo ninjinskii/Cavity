@@ -46,8 +46,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             onTabClick = { view, _ ->
                 binding.years.moveToView(view)
             },
-            onLongTabClick = {
-                statsViewModel.setComparisonYear(it)
+            onLongTabClick = { year, _ ->
+                statsViewModel.setComparisonYear(year)
             }
         )
 
