@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.ui.widget.SliceBar
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
@@ -30,14 +29,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     val bottle = bottleId.switchMap { repository.getBottleById(it) }
 
-    val grapes = bottleId.switchMap { repository.getQGrapesAndGrapeForBottle(it) }.map {
-        it.map { qGrapeAndGrape ->
-            SliceBar.BarSlice(
-                qGrapeAndGrape.qGrape.percentage.toFloat(),
-                qGrapeAndGrape.grapeName
-            )
-        }
-    }
+    val grapes = bottleId.switchMap { repository.getQGrapesAndGrapeForBottle(it) }
 
     val reviews = bottleId.switchMap { repository.getFReviewAndReviewForBottle(it) }
 

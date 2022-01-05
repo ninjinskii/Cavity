@@ -146,5 +146,8 @@ class SliceBar @JvmOverloads constructor(
         }
     }
 
-    data class BarSlice(val percentage: Float, val name: String)
+    interface BarSlice {
+        val percentage: Float
+        val name: String
+    }
 }
