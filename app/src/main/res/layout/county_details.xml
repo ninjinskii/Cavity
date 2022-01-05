@@ -39,7 +39,7 @@
             app:layout_constraintTop_toBottomOf="@id/county"
             tools:text="85 bouteilles" />
 
-        <com.louis.app.cavity.ui.bottle.widget.GrapeBar
+        <com.louis.app.cavity.ui.widget.SliceBar
             android:id="@+id/namings"
             android:layout_width="match_parent"
             android:layout_height="120dp"
@@ -48,7 +48,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottles" />
 
-        <com.louis.app.cavity.ui.bottle.widget.GrapeBar
+        <com.louis.app.cavity.ui.widget.SliceBar
             android:id="@+id/vintages"
             android:layout_width="match_parent"
             android:layout_height="120dp"

@@ -149,7 +149,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             if (it.isEmpty()) {
                 binding.grapesCardView.setVisible(false)
             } else {
-                binding.grapeBar.setGrapes(it, anim = true)
+                binding.grapeBar.setSlices(it, anim = true)
             }
         }
 

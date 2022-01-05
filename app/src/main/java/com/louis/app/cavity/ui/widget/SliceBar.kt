@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.bottle.widget
+package com.louis.app.cavity.ui.widget
 
 import android.animation.ObjectAnimator
 import android.content.Context
@@ -12,12 +12,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.withTranslation
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.dao.QGrapeAndGrape
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.cos
 
-class GrapeBar @JvmOverloads constructor(
+class SliceBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -30,7 +29,7 @@ class GrapeBar @JvmOverloads constructor(
         private const val TEXT_ANGLE = 50f
     }
 
-    private val grapes = mutableListOf<QGrapeAndGrape>()
+    private val slices = mutableListOf<BarSlice>()
     private val backgroundColor = context.getColor(R.color.cavity_grey)
     private val colors = ColorUtil(context).randomSet()
 
@@ -63,14 +62,14 @@ class GrapeBar @JvmOverloads constructor(
     private var endX = 0f
     private var barY = 0f
 
-    fun setGrapes(grapes: List<QGrapeAndGrape>, anim: Boolean) {
+    fun setSlices(slices: List<BarSlice>, anim: Boolean) {
         val empty: Boolean
 
-        this.grapes.apply {
+        this.slices.apply {
             empty = isEmpty()
             clear()
-            addAll(grapes)
-            sortBy { it.qGrape.percentage }
+            addAll(slices)
+            sortBy { it.percentage }
         }
 
         if (empty && anim) {
@@ -122,16 +121,16 @@ class GrapeBar @JvmOverloads constructor(
 
             var currentPixel = startX
 
-            grapes.forEachIndexed { i, grape ->
+            slices.forEachIndexed { i, slice ->
                 strokePaint.color = colors[i % colors.size]
 
-                val progress = grape.qGrape.percentage * progressUnitPixelSize * interpolation
+                val progress = slice.percentage * progressUnitPixelSize * interpolation
                 drawLine(currentPixel, barY, currentPixel + progress, barY, strokePaint)
 
-                textPaint.textSize = if (grape.qGrape.percentage <= 5) 20f else 30f
+                textPaint.textSize = if (slice.percentage <= 5) 20f else 30f
 
                 val text = TextUtils.ellipsize(
-                    grape.grapeName,
+                    slice.name,
                     textPaint,
                     textMaxLength,
                     TextUtils.TruncateAt.END
@@ -146,4 +145,6 @@ class GrapeBar @JvmOverloads constructor(
             }
         }
     }
+
+    data class BarSlice(val percentage: Float, val name: String)
 }
