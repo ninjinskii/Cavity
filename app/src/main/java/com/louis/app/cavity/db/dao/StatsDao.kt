@@ -9,6 +9,20 @@ import com.louis.app.cavity.util.ColorUtil
 
 @Dao
 interface StatsDao {
+    @Query("SELECT COUNT(*) FROM bottle INNER JOIN wine ON wine_id = wine.id WHERE county_id=:countyId")
+    fun getBottleCountForCounty(countyId: Long): LiveData<Int>
+
+    @Query(
+        """SELECT wine.naming AS label, (cast( COUNT (*) AS REAL)) / 
+                    (SELECT COUNT(*) 
+                        FROM bottle INNER JOIN wine ON wine_id = wine.id 
+                        WHERE wine.county_id=:countyId) * 100 AS percentage FROM bottle
+                INNER JOIN wine ON wine_id = wine.id
+                WHERE bottle.consumed = 0 AND wine.county_id=:countyId
+                GROUP BY naming"""
+    )
+    fun getNamingsForCounty(countyId: Long): LiveData<List<BaseStat>>
+
     @Query(
         """SELECT COUNT (*) as count, county.name as label
                 FROM bottle
@@ -118,6 +132,13 @@ interface StatsDao {
     fun getConsumptionsByNaming(start: Long, end: Long): LiveData<List<NamingStat>>
 
 }
+
+interface NewStat {
+    val label: String
+    val percentage: Float
+}
+
+data class BaseStat(override val label: String, override val percentage: Float) : NewStat
 
 interface Stat {
     val count: Int

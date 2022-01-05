@@ -18,6 +18,20 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
+    private val observedCounty = MutableLiveData<Long>()
+
+    val bottleCount = observedCounty.switchMap {
+        repository.getBottleCountForCounty(it)
+    }
+
+    val namingCount = observedCounty.switchMap {
+        repository.getNamingsStatsForCounty(it)
+    }
+
+    fun setObservedCounty(countyId: Long) {
+        observedCounty.value = countyId
+    }
+
     fun deleteWine(wineId: Long) = viewModelScope.launch(IO) {
         repository.deleteWineById(wineId)
         _userFeedback.postOnce(R.string.wine_deleted)

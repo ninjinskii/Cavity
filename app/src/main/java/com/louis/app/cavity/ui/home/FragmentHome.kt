@@ -74,6 +74,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
 
         setupScrollableTab()
+        observe()
         setListeners()
     }
 
@@ -82,8 +83,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             onTabClick = { _, position ->
                 binding.viewPager.currentItem = position
             },
-            onLongTabClick = { _, position ->
-                showCountyDetails(position)
+            onLongTabClick = { county, position ->
+                showCountyDetails(position, county)
             }
         )
 
@@ -103,6 +104,17 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             // Potential delayed coroutine and offscreen limit upgrade
             /*viewPager.offscreenPageLimit = 5
             tab.setUpWithViewPager(viewPager)*/
+        }
+    }
+
+    private fun observe() {
+        homeViewModel.namingCount.observe(viewLifecycleOwner) {
+            binding.countyDetails.namings.setSlices(it, anim = true)
+        }
+
+        homeViewModel.bottleCount.observe(viewLifecycleOwner) {
+            binding.countyDetails.bottles.text =
+                resources.getQuantityString(R.plurals.bottles, it, it)
         }
     }
 
@@ -126,8 +138,14 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun showCountyDetails(itemPosition: Int) {
-        binding.viewPager.currentItem = itemPosition
+    private fun showCountyDetails(itemPosition: Int, county: County) {
+        with(binding) {
+            viewPager.currentItem = itemPosition
+            countyDetails.county.text = county.name
+            countyDetails.namings.triggerAnimation()
+        }
+
+        homeViewModel.setObservedCounty(county.id)
 
         val transform = MaterialContainerTransform().apply {
             startView = binding.tab

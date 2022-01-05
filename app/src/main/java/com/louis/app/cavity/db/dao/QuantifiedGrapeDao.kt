@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.QGrape
-import com.louis.app.cavity.ui.widget.SliceBar
 
 @Dao
 interface QuantifiedGrapeDao {
@@ -50,9 +49,11 @@ data class QGrapeAndGrape(
     )
     val grapeName: String
 ) :
-    SliceBar.BarSlice {
+    NewStat {
+    @Ignore
     override val percentage = qGrape.percentage.toFloat()
-    override val name = grapeName
+    @Ignore
+    override val label = grapeName
 }
 
 

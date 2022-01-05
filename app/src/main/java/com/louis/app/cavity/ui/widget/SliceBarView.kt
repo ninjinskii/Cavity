@@ -12,11 +12,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.withTranslation
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
+import com.louis.app.cavity.db.dao.NewStat
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.cos
 
-class SliceBar @JvmOverloads constructor(
+class SliceBarView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -29,7 +30,7 @@ class SliceBar @JvmOverloads constructor(
         private const val TEXT_ANGLE = 50f
     }
 
-    private val slices = mutableListOf<BarSlice>()
+    private val slices = mutableListOf<NewStat>()
     private val backgroundColor = context.getColor(R.color.cavity_grey)
     private val colors = ColorUtil(context).randomSet()
 
@@ -46,7 +47,7 @@ class SliceBar @JvmOverloads constructor(
         }
     }
 
-    var interpolation = 1f
+    private var interpolation = 1f
         set(value) {
             val constrained = value.coerceIn(0F, 1F)
             if (constrained != field) {
@@ -62,14 +63,14 @@ class SliceBar @JvmOverloads constructor(
     private var endX = 0f
     private var barY = 0f
 
-    fun setSlices(slices: List<BarSlice>, anim: Boolean) {
+    fun setSlices(slices: List<NewStat>, anim: Boolean) {
         val empty: Boolean
 
         this.slices.apply {
             empty = isEmpty()
             clear()
             addAll(slices)
-            sortBy { it.percentage }
+            sortByDescending { it.percentage }
         }
 
         if (empty && anim) {
@@ -79,7 +80,7 @@ class SliceBar @JvmOverloads constructor(
         }
     }
 
-    private fun triggerAnimation() {
+    fun triggerAnimation() {
         ObjectAnimator.ofFloat(this, "interpolation", 0f, 1f).apply {
             duration = 800
             interpolator = FastOutSlowInInterpolator()
@@ -121,16 +122,16 @@ class SliceBar @JvmOverloads constructor(
 
             var currentPixel = startX
 
-            slices.forEachIndexed { i, slice ->
+            slices.forEachIndexed { i, stat ->
                 strokePaint.color = colors[i % colors.size]
 
-                val progress = slice.percentage * progressUnitPixelSize * interpolation
+                val progress = stat.percentage * progressUnitPixelSize * interpolation
                 drawLine(currentPixel, barY, currentPixel + progress, barY, strokePaint)
 
-                textPaint.textSize = if (slice.percentage <= 5) 20f else 30f
+                textPaint.textSize = if (stat.percentage <= 5) 20f else 30f
 
                 val text = TextUtils.ellipsize(
-                    slice.name,
+                    stat.label,
                     textPaint,
                     textMaxLength,
                     TextUtils.TruncateAt.END
@@ -144,10 +145,5 @@ class SliceBar @JvmOverloads constructor(
                 currentPixel += progress
             }
         }
-    }
-
-    interface BarSlice {
-        val percentage: Float
-        val name: String
     }
 }
