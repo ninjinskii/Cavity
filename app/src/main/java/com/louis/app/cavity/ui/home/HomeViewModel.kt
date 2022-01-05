@@ -28,6 +28,10 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         repository.getNamingsStatsForCounty(it)
     }
 
+    val vintagesCount = observedCounty.switchMap {
+        repository.getVintagesStatsForCounty(it)
+    }
+
     fun setObservedCounty(countyId: Long) {
         observedCounty.value = countyId
     }

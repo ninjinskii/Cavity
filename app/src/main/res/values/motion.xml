@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="cavity_motion_xlong">500</integer>
     <integer name="cavity_motion_long">300</integer>
     <integer name="cavity_motion_medium">225</integer>
     <integer name="cavity_motion_short">175</integer>

@@ -108,13 +108,17 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     private fun observe() {
+        homeViewModel.bottleCount.observe(viewLifecycleOwner) {
+            binding.countyDetails.bottles.text =
+                resources.getQuantityString(R.plurals.bottles, it, it)
+        }
+
         homeViewModel.namingCount.observe(viewLifecycleOwner) {
             binding.countyDetails.namings.setSlices(it, anim = true)
         }
 
-        homeViewModel.bottleCount.observe(viewLifecycleOwner) {
-            binding.countyDetails.bottles.text =
-                resources.getQuantityString(R.plurals.bottles, it, it)
+        homeViewModel.vintagesCount.observe(viewLifecycleOwner) {
+            binding.countyDetails.vintages.setSlices(it, anim = true)
         }
     }
 
@@ -143,11 +147,13 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             viewPager.currentItem = itemPosition
             countyDetails.county.text = county.name
             countyDetails.namings.triggerAnimation()
+            countyDetails.vintages.triggerAnimation()
         }
 
         homeViewModel.setObservedCounty(county.id)
 
         val transform = MaterialContainerTransform().apply {
+            duration = resources.getInteger(R.integer.cavity_motion_xlong).toLong()
             startView = binding.tab
             endView = binding.countyDetails.root
             startElevation = resources.getDimension(R.dimen.app_bar_elevation)

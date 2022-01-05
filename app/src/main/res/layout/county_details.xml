@@ -50,7 +50,7 @@
         <com.louis.app.cavity.ui.widget.SliceBarView
             android:id="@+id/namings"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="96dp"
             android:layout_marginHorizontal="@dimen/medium_margin"
             android:layout_marginTop="@dimen/large_margin"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +60,7 @@
         <com.louis.app.cavity.ui.widget.SliceBarView
             android:id="@+id/vintages"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="96dp"
             android:layout_margin="@dimen/medium_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
