@@ -15,8 +15,8 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         android:text="@string/gift_bottle"
-        app:layout_constraintEnd_toStartOf="@id/buttonClose"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/buttonClose"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
@@ -25,8 +25,9 @@
         android:layout_height="@dimen/medium_icon"
         android:background="?attr/actionBarItemBackground"
         android:src="@drawable/ic_close"
+        android:layout_marginStart="@dimen/small_margin"
         app:layout_constraintBottom_toBottomOf="@id/title"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/title"
         app:tint="?attr/colorOnBackground" />
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:transitionGroup="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:transitionGroup="true">
 
     <TextView
         android:id="@+id/title"
@@ -15,18 +15,19 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         android:text="@string/consume_bottle"
-        app:layout_constraintEnd_toStartOf="@id/buttonClose"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/buttonClose"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/buttonClose"
         android:layout_width="@dimen/medium_icon"
         android:layout_height="@dimen/medium_icon"
+        android:layout_marginStart="@dimen/small_margin"
         android:background="?attr/actionBarItemBackground"
         android:src="@drawable/ic_close"
         app:layout_constraintBottom_toBottomOf="@id/title"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/title"
         app:tint="?attr/colorOnBackground" />
 
