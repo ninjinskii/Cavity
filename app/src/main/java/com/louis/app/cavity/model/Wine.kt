@@ -23,6 +23,7 @@ data class Wine(
     val cuvee: String,
     @ColumnInfo(name = "is_organic") val isOrganic: Int,
     @ColumnInfo(name = "img_path") val imgPath: String,
+    val hidden: Int = 0,
     @ColumnInfo(name = "county_id", index = true) val countyId: Long
 ) {
 }

@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
         HistoryXFriend::class,
         TastingAction::class,
     ],
-    version = 58,
+    version = 59,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -156,6 +156,7 @@ abstract class CavityDatabase : RoomDatabase() {
                             "",
                             (0..1).random(),
                             "",
+                            0,
                             counties.random().toLong(),
                         )
                     }

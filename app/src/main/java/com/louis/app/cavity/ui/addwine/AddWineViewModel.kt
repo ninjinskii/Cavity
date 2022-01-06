@@ -9,6 +9,7 @@ import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -84,6 +85,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
             cuvee,
             isOrganic,
             _image.value ?: "",
+            hidden = false.toInt(),
             county.id
         )
 
