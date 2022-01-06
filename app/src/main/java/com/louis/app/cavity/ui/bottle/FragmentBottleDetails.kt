@@ -103,6 +103,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {
                 shaper.interpolation = 1 - progress
+                //binding.grapeBar.hideTooltip()
             }
 
             override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {

@@ -13,10 +13,10 @@ interface StatsDao {
     fun getBottleCountForCounty(countyId: Long): LiveData<Int>
 
     @Query(
-        """SELECT wine.naming AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT wine.naming AS label, round((cast( COUNT (*) AS REAL)) / 
                     (SELECT COUNT(*) 
                         FROM bottle INNER JOIN wine ON wine_id = wine.id 
-                        WHERE wine.county_id=:countyId) * 100 AS percentage FROM bottle
+                        WHERE wine.county_id=:countyId) * 100, 0) AS percentage FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE bottle.consumed = 0 AND wine.county_id=:countyId
                 GROUP BY naming"""
@@ -24,13 +24,13 @@ interface StatsDao {
     fun getNamingsForCounty(countyId: Long): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT bottle.vintage AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT bottle.vintage AS label, round((cast( COUNT (*) AS REAL)) / 
                     (SELECT COUNT(*) 
                         FROM bottle INNER JOIN wine ON wine_id = wine.id 
-                        WHERE wine.county_id=:countyId) * 100 AS percentage FROM bottle
+                        WHERE wine.county_id=:countyId) * 100, 0) AS percentage FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE bottle.consumed = 0 AND wine.county_id=:countyId
-                GROUP BY vintage"""
+                GROUP BY vintage ORDER BY percentage, label"""
     )
     fun getVintagesForCounty(countyId: Long): LiveData<List<BaseStat>>
 

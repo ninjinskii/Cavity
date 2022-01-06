@@ -8,7 +8,6 @@ import android.graphics.Paint
 import android.text.TextPaint
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.TooltipCompat
@@ -35,20 +34,7 @@ class SliceBarView @JvmOverloads constructor(
         private const val TEXT_ANGLE = 50f
     }
 
-    private val touchListener = object : GestureDetector.SimpleOnGestureListener() {
-        override fun onDown(e: MotionEvent): Boolean {
-            return true
-        }
-
-        override fun onSingleTapUp(e: MotionEvent): Boolean {
-            showTooltipOnClick(e.x)
-            return super.onSingleTapUp(e)
-        }
-    }
-
-    private val detector: GestureDetector = GestureDetector(context, touchListener)
-
-    private val slices = mutableListOf<NewStat>()
+    private var slices = emptyList<NewStat>()
     private val backgroundColor = context.getColor(R.color.cavity_grey)
     private val colors = ColorUtil(context).randomSet()
 
@@ -74,6 +60,7 @@ class SliceBarView @JvmOverloads constructor(
             }
         }
 
+    private var previousTouchedSlice: NewStat? = null
     private var progressUnitPixelSize = 1f
     private var baseline = 0f
     private var textMaxLength = 0f
@@ -82,14 +69,8 @@ class SliceBarView @JvmOverloads constructor(
     private var barY = 0f
 
     fun setSlices(slices: List<NewStat>, anim: Boolean) {
-        val empty: Boolean
-
-        this.slices.apply {
-            empty = isEmpty()
-            clear()
-            addAll(slices)
-            sortByDescending { it.percentage }
-        }
+        val empty = this.slices.isEmpty()
+        this.slices = slices
 
         if (empty && anim) {
             triggerAnimation()
@@ -106,27 +87,38 @@ class SliceBarView @JvmOverloads constructor(
         }
     }
 
-    private fun showTooltipOnClick(touchX: Float) {
+    private fun showTooltipOnClick(touchX: Float, move: Boolean) {
         var x = 0f
         val touchPercentage = (touchX / measuredWidth) * 100
         val touchedSlice = slices.find { stat ->
             touchPercentage in x..x + stat.percentage.also { x += it }
         }
 
-        touchedSlice?.let {
+        touchedSlice?.apply {
+            if (move && touchedSlice == previousTouchedSlice) {
+                return
+            }
+
             TooltipCompat.setTooltipText(
                 this@SliceBarView,
-                "${it.label}: ${it.percentage.roundToInt()}%"
+                "${label}: ${percentage.roundToInt()}%"
             )
 
-            this@SliceBarView.performLongClick(touchX, barY)
-        }
+            if (move) {
+                this@SliceBarView.performLongClick(touchX, barY)
+            }
+        }?.also { previousTouchedSlice = it }
     }
 
     // Dont know what to do. We need coordinates, but performClick() does not take any args
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return detector.onTouchEvent(event)
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> showTooltipOnClick(event.x, move = false)
+            MotionEvent.ACTION_MOVE -> showTooltipOnClick(event.x, move = true)
+        }
+
+        return super.onTouchEvent(event)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
