@@ -9,10 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialFadeThrough
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setupNavigation
@@ -97,7 +97,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
 
     private fun setListeners() {
         binding.buttonSubmit.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
+            LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
                 .setTitle(R.string.confirm_tasting)
                 .setMessage(R.string.confirm_tasting_explanation)
                 .setPositiveButton(R.string.ok) { _, _ ->

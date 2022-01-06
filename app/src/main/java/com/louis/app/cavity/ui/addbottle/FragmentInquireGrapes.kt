@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireGrapesBinding
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.adapter.QuantifiedGrapeRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
@@ -60,7 +60,7 @@ class FragmentInquireGrapes : Step(R.layout.fragment_inquire_grapes) {
                 val names = checkableGrapes.map { it.name }.toTypedArray()
                 val bool = checkableGrapes.map { it.isChecked }.toBooleanArray()
 
-                MaterialAlertDialogBuilder(requireContext())
+                LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
                     .setTitle(R.string.select_grapes)
                     .setMultiChoiceItems(names, bool) { _, pos, checked ->
                         copy[pos].isChecked = checked
@@ -96,7 +96,8 @@ class FragmentInquireGrapes : Step(R.layout.fragment_inquire_grapes) {
             grapeManager.addGrapeAndQGrape(it)
         }
 
-        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .show(dialogResources)
     }
 
     private fun toggleRvPlaceholder(toggle: Boolean) {

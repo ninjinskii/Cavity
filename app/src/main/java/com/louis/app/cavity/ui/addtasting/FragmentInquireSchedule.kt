@@ -5,9 +5,9 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireScheduleBinding
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.tasting.notifications.TastingAlarmScheduler
@@ -81,7 +81,7 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     private fun setListener() {
         binding.buttonSubmit.setOnClickListener {
             if (needConfirmDialog()) {
-                MaterialAlertDialogBuilder(requireContext())
+                LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
                     .setMessage(R.string.confirm_switch_tasting)
                     .setPositiveButton(R.string.ok) { _, _ ->
                         addTastingViewModel.saveTasting()

@@ -10,11 +10,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.ManagerViewModel
 import com.louis.app.cavity.util.showSnackbar
@@ -40,7 +40,7 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentManageBaseBinding.bind(view)
 
-        simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater)
+        simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
 
         initRecyclerView()
     }
@@ -85,7 +85,7 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
     }
 
     private fun showConfirmDeleteDialog(friend: Friend) {
-        MaterialAlertDialogBuilder(requireContext())
+        LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
             .setMessage(R.string.confirm_grape_delete)
             .setNegativeButton(R.string.cancel) { _, _ ->
             }

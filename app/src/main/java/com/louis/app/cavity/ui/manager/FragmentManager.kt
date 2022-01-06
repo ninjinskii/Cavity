@@ -7,11 +7,11 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddReviewBinding
 import com.louis.app.cavity.databinding.FragmentManagerBinding
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.util.*
 
@@ -38,7 +38,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
 
         _binding = FragmentManagerBinding.bind(view)
 
-        simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater)
+        simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
 
         setupNavigation(binding.toolbar)
 
@@ -105,7 +105,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
     private fun showAddReviewDialog() {
         val dialogBinding = DialogAddReviewBinding.inflate(layoutInflater)
 
-        MaterialAlertDialogBuilder(requireContext())
+        LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
             .setTitle(R.string.add_review)
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
@@ -132,7 +132,8 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
             addItemViewModel.insertFriend(it)
         }
 
-        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .show(dialogResources)
     }
 
     private fun getReviewType(@IdRes button: Int) = when (button) {

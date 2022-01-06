@@ -165,7 +165,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             addItemViewModel.insertCounty(it.trim())
         }
 
-        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .show(dialogResources)
     }
 
     private fun observe() {
@@ -243,6 +244,15 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         val county = view.getTag(R.string.tag_chip_id) as County?
         addWineViewModel.setCountyId(county?.id)
     }
+
+//    override fun closeMaybeOpenedDialog() {
+//        dialog?.dismiss()
+//    }
+
+//    override fun onDetach() {
+//        super.onDetach()
+//        dialog?.dismiss()
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

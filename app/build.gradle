@@ -44,6 +44,7 @@ dependencies {
     def room_version = "2.3.0"
     def camerax_version = "1.0.0"
     def paging_version = "3.0.0"
+    def lifecycle_version = "2.4.0"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -98,5 +99,9 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:2.6"
 
     // Moshi
-    implementation"com.squareup.moshi:moshi-kotlin:1.11.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
+
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
 }

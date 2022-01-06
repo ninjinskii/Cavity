@@ -5,13 +5,20 @@ import android.view.LayoutInflater
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogSimpleInputBinding
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showKeyboard
 
-class SimpleInputDialog(private val context: Context, private val layoutInflater: LayoutInflater) {
+class SimpleInputDialog(
+    private val context: Context,
+    private val layoutInflater: LayoutInflater,
+    private val lifecycleOwner: LifecycleOwner
+) :
+    DefaultLifecycleObserver {
+
     private lateinit var dialogBinding: DialogSimpleInputBinding
 
     fun show(resources: DialogContent) {
@@ -39,7 +46,7 @@ class SimpleInputDialog(private val context: Context, private val layoutInflater
     private fun buildAndShow(resources: DialogContent) {
         customizeEditText(resources.hint, resources.icon)
 
-        val dialog = MaterialAlertDialogBuilder(context)
+        val dialog = LifecycleMaterialDialogBuilder(context, lifecycleOwner)
             .setTitle(resources.title)
             .setNegativeButton(R.string.cancel) { _, _ ->
             }

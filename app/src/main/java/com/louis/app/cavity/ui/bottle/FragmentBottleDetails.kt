@@ -22,13 +22,13 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.util.*
 
@@ -223,7 +223,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonUltraDelete.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
+            LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
                 .setMessage(resources.getString(R.string.confirm_bottle_delete))
                 .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                 }

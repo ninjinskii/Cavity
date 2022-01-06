@@ -123,7 +123,8 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
             addItemViewModel.insertFriend(it)
         }
 
-        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .show(dialogResources)
     }
 
     override fun onDestroy() {

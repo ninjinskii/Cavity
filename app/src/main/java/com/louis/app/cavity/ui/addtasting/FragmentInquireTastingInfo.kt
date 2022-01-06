@@ -88,7 +88,8 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
             addItemViewModel.insertFriend(it)
         }
 
-        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .show(dialogResources)
     }
 
     private fun submit() {

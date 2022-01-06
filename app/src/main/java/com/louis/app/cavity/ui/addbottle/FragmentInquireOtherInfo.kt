@@ -161,7 +161,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             addItemViewModel.insertFriend(it)
         }
 
-        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .show(dialogResources)
     }
 
     override fun onDestroyView() {

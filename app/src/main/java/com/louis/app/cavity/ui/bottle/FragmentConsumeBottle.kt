@@ -126,7 +126,8 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
             addItemViewModel.insertFriend(it)
         }
 
-        SimpleInputDialog(requireContext(), layoutInflater).show(dialogResources)
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .show(dialogResources)
     }
 
     override fun onDestroy() {

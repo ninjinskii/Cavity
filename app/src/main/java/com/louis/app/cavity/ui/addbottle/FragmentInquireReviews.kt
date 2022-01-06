@@ -5,10 +5,10 @@ import android.view.View
 import androidx.annotation.IdRes
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogAddReviewBinding
 import com.louis.app.cavity.databinding.FragmentInquireReviewBinding
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.addbottle.adapter.FilledReviewRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.ReviewManager
@@ -67,7 +67,7 @@ class FragmentInquireReviews : Step(R.layout.fragment_inquire_review) {
                 val names = checkableReviews.map { it.name }.toTypedArray()
                 val bool = checkableReviews.map { it.isChecked }.toBooleanArray()
 
-                MaterialAlertDialogBuilder(requireContext())
+                LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
                     .setTitle(R.string.select_reviews)
                     .setMultiChoiceItems(names, bool) { _, pos, checked ->
                         copy[pos].isChecked = checked
@@ -96,7 +96,7 @@ class FragmentInquireReviews : Step(R.layout.fragment_inquire_review) {
     private fun showAddReviewDialog() {
         val dialogBinding = DialogAddReviewBinding.inflate(layoutInflater)
 
-        MaterialAlertDialogBuilder(requireContext())
+        LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
             .setTitle(R.string.add_review)
             .setNegativeButton(R.string.cancel) { _, _ ->
             }

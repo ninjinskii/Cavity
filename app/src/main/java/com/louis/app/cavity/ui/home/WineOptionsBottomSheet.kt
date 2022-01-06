@@ -9,9 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetWineOptionsBinding
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.util.setVisible
 
 class WineOptionsBottomSheet : BottomSheetDialogFragment() {
@@ -56,7 +56,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
 
             deleteWine.setOnClickListener {
                 context?.let { context ->
-                    MaterialAlertDialogBuilder(context)
+                    LifecycleMaterialDialogBuilder(context, viewLifecycleOwner)
                         .setMessage(resources.getString(R.string.confirm_wine_delete))
                         .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                         }

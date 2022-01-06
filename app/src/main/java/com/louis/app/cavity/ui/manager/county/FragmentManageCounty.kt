@@ -7,17 +7,18 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogConfirmDeleteBinding
 import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.ManagerViewModel
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.showKeyboard
 
 class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
+    private lateinit var itemTouchHelper: ItemTouchHelper
     private lateinit var simpleInputDialog: SimpleInputDialog
     private var _binding: FragmentManageBaseBinding? = null
     private val binding get() = _binding!!
@@ -29,13 +30,12 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
         onRename = { county: County -> showEditCountyDialog(county) },
         onDelete = { county: County -> showConfirmDeleteDialog(county) }
     )
-    private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentManageBaseBinding.bind(view)
 
-        simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater)
+        simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
 
         initRecyclerView()
     }
@@ -76,7 +76,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
     private fun showConfirmDeleteDialog(county: County) {
         val dialogBinding = DialogConfirmDeleteBinding.inflate(layoutInflater)
 
-        MaterialAlertDialogBuilder(requireContext())
+        LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
             .setTitle(R.string.delete)
             .setMessage(R.string.delete_county_warn)
             .setNegativeButton(R.string.cancel) { _, _ ->
