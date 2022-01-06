@@ -37,7 +37,7 @@ interface WineDao {
     suspend fun getWineFullNamingByIdNotLive(wineId: Long): Wine
 
     @Transaction
-    @Query("SELECT * FROM wine WHERE county_id =:countyId AND hidden = 0 ORDER BY color, naming")
+    @Query("SELECT * FROM wine WHERE county_id =:countyId ORDER BY color, naming")
     fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
 
 //    @Transaction
