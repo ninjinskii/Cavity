@@ -1,13 +1,17 @@
 package com.louis.app.cavity.ui.widget
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.text.TextPaint
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.withTranslation
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -16,6 +20,7 @@ import com.louis.app.cavity.db.dao.NewStat
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
 import kotlin.math.cos
+import kotlin.math.roundToInt
 
 class SliceBarView @JvmOverloads constructor(
     context: Context,
@@ -29,6 +34,19 @@ class SliceBarView @JvmOverloads constructor(
         private const val BAR_WIDTH = 4f
         private const val TEXT_ANGLE = 50f
     }
+
+    private val touchListener = object : GestureDetector.SimpleOnGestureListener() {
+        override fun onDown(e: MotionEvent): Boolean {
+            return true
+        }
+
+        override fun onSingleTapUp(e: MotionEvent): Boolean {
+            showTooltipOnClick(e.x)
+            return super.onSingleTapUp(e)
+        }
+    }
+
+    private val detector: GestureDetector = GestureDetector(context, touchListener)
 
     private val slices = mutableListOf<NewStat>()
     private val backgroundColor = context.getColor(R.color.cavity_grey)
@@ -86,6 +104,29 @@ class SliceBarView @JvmOverloads constructor(
             interpolator = FastOutSlowInInterpolator()
             start()
         }
+    }
+
+    private fun showTooltipOnClick(touchX: Float) {
+        var x = 0f
+        val touchPercentage = (touchX / measuredWidth) * 100
+        val touchedSlice = slices.find { stat ->
+            touchPercentage in x..x + stat.percentage.also { x += it }
+        }
+
+        touchedSlice?.let {
+            TooltipCompat.setTooltipText(
+                this@SliceBarView,
+                "${it.label}: ${it.percentage.roundToInt()}%"
+            )
+
+            this@SliceBarView.performLongClick(touchX, barY)
+        }
+    }
+
+    // Dont know what to do. We need coordinates, but performClick() does not take any args
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        return detector.onTouchEvent(event)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
