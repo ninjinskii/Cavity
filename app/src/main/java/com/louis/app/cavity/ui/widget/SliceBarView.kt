@@ -32,6 +32,7 @@ class SliceBarView @JvmOverloads constructor(
         private const val BAR_BOTTOM_SPACING = 16f
         private const val BAR_WIDTH = 4f
         private const val TEXT_ANGLE = 50f
+        private const val TEXT_SIZE = 12f
     }
 
     private var slices = emptyList<NewStat>()
@@ -48,6 +49,7 @@ class SliceBarView @JvmOverloads constructor(
     private val textPaint by lazy {
         TextPaint(TextPaint.ANTI_ALIAS_FLAG).apply {
             color = ContextCompat.getColor(context, R.color.material_on_surface_emphasis_medium)
+            textSize = context.dpToPx(TEXT_SIZE)
         }
     }
 

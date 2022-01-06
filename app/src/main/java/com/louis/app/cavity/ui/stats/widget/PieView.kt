@@ -26,6 +26,10 @@ class PieView @JvmOverloads constructor(
 ) :
     View(context, attrs, defStyleAttr) {
 
+    companion object {
+        private const val TEXT_SIZE = 12f
+    }
+
     private var colors = emptyList<@ColorInt Int>()
 
     private val sliceSpace = resources.getDimension(R.dimen.divider_height) / 2
@@ -51,7 +55,7 @@ class PieView @JvmOverloads constructor(
 
     private val textPaint by lazy {
         TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-            textSize = context.dpToPx(12f)
+            textSize = context.dpToPx(TEXT_SIZE)
         }
     }
 
