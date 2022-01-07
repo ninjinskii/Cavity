@@ -16,7 +16,7 @@ interface StatsDao {
         """SELECT wine.naming AS label, round((cast( COUNT (*) AS REAL)) / 
                     (SELECT COUNT(*) 
                         FROM bottle INNER JOIN wine ON wine_id = wine.id 
-                        WHERE wine.county_id=:countyId) * 100, 0) AS percentage FROM bottle
+                        WHERE wine.county_id=:countyId AND bottle.consumed = 0) * 100, 0) AS percentage FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE bottle.consumed = 0 AND wine.county_id=:countyId
                 GROUP BY naming"""
@@ -27,7 +27,7 @@ interface StatsDao {
         """SELECT bottle.vintage AS label, round((cast( COUNT (*) AS REAL)) / 
                     (SELECT COUNT(*) 
                         FROM bottle INNER JOIN wine ON wine_id = wine.id 
-                        WHERE wine.county_id=:countyId) * 100, 0) AS percentage FROM bottle
+                        WHERE wine.county_id=:countyId AND bottle.consumed = 0) * 100, 0) AS percentage FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE bottle.consumed = 0 AND wine.county_id=:countyId
                 GROUP BY vintage ORDER BY percentage, label"""
