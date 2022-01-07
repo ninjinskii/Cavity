@@ -134,9 +134,10 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
                 actions += action
             }
 
-            repository.insertTastingActions(actions)
-            _tastingSaved.postOnce(tasting)
         }
+
+        repository.insertTastingActions(actions)
+        _tastingSaved.postOnce(tasting)
     }
 
     // Migrating bottles from one tasting to another one might create empty tasting.
