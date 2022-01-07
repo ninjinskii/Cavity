@@ -13,12 +13,14 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.collectAs
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) {
+    private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentInquireTastingInfoBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
@@ -34,8 +36,11 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
 
         setupNavigation(binding.appBar.toolbar)
 
+        snackbarProvider = activity as SnackbarProvider
+
         initFriendChips()
         initDatePicker()
+        observe()
         setListeners()
     }
 
@@ -67,6 +72,14 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
             defaultDate = System.currentTimeMillis(),
             constraint
         )
+    }
+
+    private fun observe() {
+        addTastingViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                snackbarProvider.onShowSnackbarRequested(stringRes)
+            }
+        }
     }
 
     private fun setListeners() {
@@ -102,8 +115,8 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
                 val isMidday = rbMidday.isChecked
                 val friends = friendsChipGroup.collectAs<Friend>()
 
-                addTastingViewModel.submitTasting(opportunity, isMidday, date, friends)
-                stepperFragment?.requestNextPage()
+                val ok = addTastingViewModel.submitTasting(opportunity, isMidday, date, friends)
+                if (ok) stepperFragment?.requestNextPage()
             }
         }
     }

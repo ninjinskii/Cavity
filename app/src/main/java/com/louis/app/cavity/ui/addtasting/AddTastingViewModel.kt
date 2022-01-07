@@ -40,9 +40,21 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     var currentTasting: Tasting? = null
     var selectedFriends: List<Long> = emptyList()
 
-    fun submitTasting(opportunity: String, isMidday: Boolean, date: Long, friends: List<Friend>) {
+    fun submitTasting(
+        opportunity: String,
+        isMidday: Boolean,
+        date: Long,
+        friends: List<Friend>
+    ): Boolean {
+        if (friends.isEmpty()) {
+            _userFeedback.postOnce(R.string.no_friend)
+            return false
+        }
+
         currentTasting = Tasting(0, date, isMidday, opportunity)
         selectedFriends = friends.map { it.id }
+
+        return true
     }
 
     fun saveTasting() {
