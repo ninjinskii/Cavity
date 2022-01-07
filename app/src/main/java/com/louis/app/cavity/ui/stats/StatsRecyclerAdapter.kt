@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.stats
+package com.louis.app.cavity.ui.NewStats
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -23,21 +23,25 @@ class StatsRecyclerAdapter :
     override fun getItemCount() = currentList.size
 
     class StatItemDiffCallback : DiffUtil.ItemCallback<Stat>() {
-        override fun areItemsTheSame(oldItem: Stat, newItem: Stat) = oldItem.label == newItem.label
+        override fun areItemsTheSame(oldItem: Stat, newItem: Stat) =
+            oldItem.label == newItem.label
 
         override fun areContentsTheSame(oldItem: Stat, newItem: Stat) =
-            oldItem.count == newItem.count
+            oldItem.label == newItem.label &&
+                oldItem.percentage == newItem.percentage &&
+                oldItem.color == newItem.color
     }
 
     inner class StatViewHolder(private val binding: ItemStatBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(stat: Stat) {
-            val resolvedColor = itemView.context.getColor(stat.safeColor)
 
             with(binding) {
                 label.text = stat.label
-                count.text = stat.count.toString()
+                count.text = stat.percentage.toString()
+
+                val resolvedColor = itemView.context.getColor(stat.color)
                 color.setBackgroundColor(resolvedColor)
             }
         }

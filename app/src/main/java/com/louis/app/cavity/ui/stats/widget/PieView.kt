@@ -8,13 +8,12 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
+import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.util.spToPx
 import kotlin.math.PI
 import kotlin.math.min
@@ -29,8 +28,6 @@ class PieView @JvmOverloads constructor(
     companion object {
         private const val TEXT_SIZE = 12f
     }
-
-    private var colors = emptyList<@ColorInt Int>()
 
     private val sliceSpace = resources.getDimension(R.dimen.divider_height) / 2
     private val strokeWidth = resources.getDimension(R.dimen.pie_stroke_width)
@@ -59,8 +56,7 @@ class PieView @JvmOverloads constructor(
         }
     }
 
-    private var pieData: List<PieSlice> = mutableListOf()
-
+    private var pieSlices = emptyList<Stat>()
     private var rect = RectF()
     private var pieRadius = 0f
     private var centerX = 0.0f
@@ -75,18 +71,16 @@ class PieView @JvmOverloads constructor(
             }
         }
 
-    fun setPieData(slices: List<PieSlice>, anim: Boolean) {
-        colors = slices.map { context.getColor(it.color) }
-
+    fun setPieSlices(slices: List<Stat>, anim: Boolean) {
         if (anim) {
-            if (pieData.isNotEmpty()) {
+            if (pieSlices.isNotEmpty()) {
                 replaceData(slices) // Will take care of updating pieData
             } else {
-                pieData = slices
+                pieSlices = slices
                 triggerAnimation()
             }
         } else {
-            pieData = slices
+            pieSlices = slices
             invalidate()
         }
     }
@@ -101,11 +95,11 @@ class PieView @JvmOverloads constructor(
         }
     }
 
-    private fun replaceData(slices: List<PieSlice>) {
+    private fun replaceData(slices: List<Stat>) {
         ObjectAnimator.ofFloat(this, "alpha", 1f, 0f).apply {
             duration = 300
             interpolator = DecelerateInterpolator()
-            addListener(onEnd = { pieData = slices; triggerAnimation() })
+            addListener(onEnd = { pieSlices = slices; triggerAnimation() })
             start()
         }
     }
@@ -147,19 +141,19 @@ class PieView @JvmOverloads constructor(
 
         var previousAngle = -90f
 
-        pieData.forEach {
+        pieSlices.forEach {
             piePaint.color = context.getColor(it.color)
             textPaint.color = ColorUtils.blendARGB(transparent, textColor, interpolation)
 
-            val label = it.name
             val startAngle = (previousAngle + sliceSpace) * interpolation
-            val sweepAngle = (it.angle - sliceSpace) * interpolation
+            val pureAngle = (it.percentage / 100) * 360
+            val sweepAngle = (pureAngle - sliceSpace) * interpolation
 
             textPath.reset()
 
             // Might reverse arc to avoid drawing upside-down text
             val verticalOffset = if (startAngle in 0f..180f) {
-                val sweepSpaceForText = min(sweepAngle, getAngle(textPaint.measureText(label)))
+                val sweepSpaceForText = min(sweepAngle, getAngle(textPaint.measureText(it.label)))
                 textPath.addArc(rect, startAngle + sweepSpaceForText, -sweepSpaceForText)
                 textSpace
             } else {
@@ -168,7 +162,7 @@ class PieView @JvmOverloads constructor(
             }
 
             val text = TextUtils.ellipsize(
-                label,
+                it.label,
                 textPaint,
                 getArcLength(sweepAngle),
                 TextUtils.TruncateAt.END
@@ -177,9 +171,7 @@ class PieView @JvmOverloads constructor(
             canvas.drawTextOnPath(text.toString(), textPath, 0f, verticalOffset, textPaint)
             canvas.drawArc(rect, startAngle, sweepAngle, false, piePaint)
 
-            previousAngle += it.angle
+            previousAngle += pureAngle
         }
     }
-
-    data class PieSlice(val name: String, val angle: Float, @ColorRes val color: Int)
 }

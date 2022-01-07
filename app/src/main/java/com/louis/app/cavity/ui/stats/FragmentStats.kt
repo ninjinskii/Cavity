@@ -9,6 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
 import com.louis.app.cavity.db.dao.Year
+import com.louis.app.cavity.ui.NewStats.StatsRecyclerAdapter
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible

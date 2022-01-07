@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.QGrape
+import com.louis.app.cavity.util.ColorUtil
 
 @Dao
 interface QuantifiedGrapeDao {
@@ -49,11 +50,13 @@ data class QGrapeAndGrape(
     )
     val grapeName: String
 ) :
-    NewStat {
+    Stat {
     @Ignore
     override val percentage = qGrape.percentage.toFloat()
     @Ignore
     override val label = grapeName
+    @Ignore
+    override val color = ColorUtil.next()
 }
 
 

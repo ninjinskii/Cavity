@@ -15,8 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.withTranslation
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.dao.NewStat
-import com.louis.app.cavity.util.ColorUtil
+import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.util.dpToPx
 import com.louis.app.cavity.util.spToPx
 import kotlin.math.cos
@@ -37,9 +36,7 @@ class SliceBarView @JvmOverloads constructor(
         private const val TEXT_SIZE_SMALL = 10f
     }
 
-    private var slices = emptyList<NewStat>()
     private val backgroundColor = context.getColor(R.color.cavity_grey)
-    private val colors = ColorUtil(context).randomSet()
     private val normalText = context.spToPx(TEXT_SIZE_NORMAL)
     private val smallText = context.spToPx(TEXT_SIZE_SMALL)
 
@@ -65,7 +62,8 @@ class SliceBarView @JvmOverloads constructor(
             }
         }
 
-    private var previousTouchedSlice: NewStat? = null
+    private var slices = emptyList<Stat>()
+    private var previousTouchedSlice: Stat? = null
     private var progressUnitPixelSize = 1f
     private var baseline = 0f
     private var textMaxLength = 0f
@@ -73,7 +71,7 @@ class SliceBarView @JvmOverloads constructor(
     private var endX = 0f
     private var barY = 0f
 
-    fun setSlices(slices: List<NewStat>, anim: Boolean) {
+    fun setSlices(slices: List<Stat>, anim: Boolean) {
         val empty = this.slices.isEmpty()
         this.slices = slices
 
@@ -160,8 +158,8 @@ class SliceBarView @JvmOverloads constructor(
 
             var currentPixel = startX
 
-            slices.forEachIndexed { i, stat ->
-                strokePaint.color = colors[i % colors.size]
+            slices.forEach { stat ->
+                strokePaint.color = context.getColor(stat.color)
 
                 val progress = stat.percentage * progressUnitPixelSize * interpolation
                 drawLine(currentPixel, barY, currentPixel + progress, barY, strokePaint)
