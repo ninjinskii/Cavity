@@ -370,6 +370,9 @@ class WineRepository private constructor(app: Application) {
     suspend fun deleteTastingAction(tastingAction: TastingAction) =
         tastingActionDao.deleteTastingAction(tastingAction)
 
+    suspend fun getTastingActionById(tastingActionId: Long) =
+        tastingActionDao.getTastingActionById(tastingActionId)
+
     suspend fun deleteTastingActionsForBottle(bottleId: Long) =
         tastingActionDao.deleteTastingActionsForBottle(bottleId)
 

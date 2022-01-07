@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemTastingBottleBinding
 import com.louis.app.cavity.model.TastingBottle
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 import com.louis.app.cavity.util.toInt
@@ -49,7 +48,6 @@ class TastingBottleAdapter :
         }
 
         fun bind(bottle: TastingBottle) {
-            L.v("bind bottle $position, jug: ${bottle.shouldJug}, fridge: ${bottle.shouldFridge}")
             val wine = bottle.wine
             val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
