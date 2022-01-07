@@ -3,22 +3,20 @@ package com.louis.app.cavity.ui.tasting.notifications
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.bundleOf
+import androidx.navigation.NavDeepLinkBuilder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.FutureTarget
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.ui.ActivityMain
 
 object TastingNotifier {
     private const val CHANNEL_ID = "com.louis.app.cavity.TASTING_CHANNEL"
@@ -30,11 +28,15 @@ object TastingNotifier {
         wine: Wine,
         tastingAction: TastingAction
     ): TastingActionNotification {
-        val intent = Intent(context, ActivityMain::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        val pendingIntent = NavDeepLinkBuilder(context).run {
+            setGraph(R.navigation.nav_graph)
+            setDestination(R.id.fragmentTastingOverview)
+            setArguments(
+                bundleOf("tastingId" to tasting.id, "opportunity" to tasting.opportunity)
+            )
+            createPendingIntent()
         }
-        val pendingIntent: PendingIntent =
-            PendingIntent.getActivity(context, 0, intent, FLAG_IMMUTABLE)
 
         var futureBitmap: FutureTarget<Bitmap>? = null
         var bitmap: Bitmap? = null
