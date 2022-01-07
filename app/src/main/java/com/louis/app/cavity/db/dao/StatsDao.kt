@@ -13,7 +13,7 @@ interface StatsDao {
     fun getBottleCountForCounty(countyId: Long): LiveData<Int>
 
     @Query(
-        """SELECT wine.naming AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                     (SELECT COUNT(*) 
                     FROM bottle INNER JOIN wine ON wine_id = wine.id 
                     WHERE wine.county_id=:countyId AND bottle.consumed = 0) * 100
@@ -26,7 +26,7 @@ interface StatsDao {
     fun getNamingsForCounty(countyId: Long): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT bottle.vintage AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                     (SELECT COUNT(*) 
                     FROM bottle INNER JOIN wine ON wine_id = wine.id 
                     WHERE wine.county_id=:countyId AND bottle.consumed = 0) * 100
@@ -39,7 +39,7 @@ interface StatsDao {
     fun getVintagesForCounty(countyId: Long): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT county.name AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT county.name AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM bottle WHERE bottle.consumed = 0) * 100
                         AS percentage 
                 FROM bottle
@@ -51,7 +51,7 @@ interface StatsDao {
     fun getStockByCounty(): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT county.name AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT county.name AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
                         AS percentage 
@@ -65,7 +65,7 @@ interface StatsDao {
     fun getReplenishmentsByCounty(start: Long, end: Long): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT county.name AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT county.name AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
                         AS percentage 
@@ -79,7 +79,7 @@ interface StatsDao {
     fun getConsumptionsByCounty(start: Long, end: Long): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT wine.color AS wcolor, (cast( COUNT (*) AS REAL)) / 
+        """SELECT wine.color AS wcolor, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM bottle WHERE bottle.consumed = 0) * 100
                         AS percentage 
                 FROM bottle
@@ -90,7 +90,7 @@ interface StatsDao {
     fun getStockByColor(): LiveData<List<WineColorStat>>
 
     @Query(
-        """SELECT wine.color AS wcolor, (cast( COUNT (*) AS REAL)) / 
+        """SELECT wine.color AS wcolor, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
                         AS percentage 
@@ -103,7 +103,7 @@ interface StatsDao {
     fun getReplenishmentsByColor(start: Long, end: Long): LiveData<List<WineColorStat>>
 
     @Query(
-        """SELECT wine.color AS wcolor, (cast( COUNT (*) AS REAL)) / 
+        """SELECT wine.color AS wcolor, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
                         AS percentage 
@@ -116,7 +116,7 @@ interface StatsDao {
     fun getConsumptionsByColor(start: Long, end: Long): LiveData<List<WineColorStat>>
 
     @Query(
-        """SELECT bottle.vintage AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM bottle WHERE bottle.consumed = 0) * 100
                         AS percentage 
                 FROM bottle
@@ -126,7 +126,7 @@ interface StatsDao {
     fun getStockByVintage(): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT bottle.vintage AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
                         AS percentage 
@@ -138,7 +138,7 @@ interface StatsDao {
     fun getReplenishmentsByVintage(start: Long, end: Long): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT bottle.vintage AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
                         AS percentage 
@@ -150,7 +150,7 @@ interface StatsDao {
     fun getConsumptionsByVintage(start: Long, end: Long): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT wine.naming AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM bottle WHERE bottle.consumed = 0) * 100
                         AS percentage 
                 FROM bottle
@@ -161,7 +161,7 @@ interface StatsDao {
     fun getStockByNaming(): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT wine.naming AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
                         AS percentage 
@@ -174,7 +174,7 @@ interface StatsDao {
     fun getReplenishmentsByNaming(start: Long, end: Long): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT wine.naming AS label, (cast( COUNT (*) AS REAL)) / 
+        """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
                         AS percentage 
@@ -190,12 +190,14 @@ interface StatsDao {
 
 interface Stat {
     val label: String
+    val count: Int
     val percentage: Float
     val color: Int
 }
 
 data class BaseStat(
     override val label: String,
+    override val count: Int,
     override val percentage: Float,
 ) : Stat {
     @Ignore
@@ -204,6 +206,7 @@ data class BaseStat(
 
 data class WineColorStat(
     val wcolor: WineColor,
+    override val count: Int,
     override val percentage: Float,
 ) : Stat {
     @Ignore

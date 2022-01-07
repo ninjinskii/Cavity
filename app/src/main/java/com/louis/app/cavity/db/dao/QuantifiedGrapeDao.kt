@@ -53,8 +53,13 @@ data class QGrapeAndGrape(
     Stat {
     @Ignore
     override val percentage = qGrape.percentage.toFloat()
+
+    @Ignore
+    override val count = -1
+
     @Ignore
     override val label = grapeName
+
     @Ignore
     override val color = ColorUtil.next()
 }

@@ -39,7 +39,7 @@ class StatsRecyclerAdapter :
 
             with(binding) {
                 label.text = stat.label
-                count.text = stat.percentage.toString()
+                count.text = stat.count.toString()
 
                 val resolvedColor = itemView.context.getColor(stat.color)
                 color.setBackgroundColor(resolvedColor)
