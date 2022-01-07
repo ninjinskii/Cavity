@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
-import com.louis.app.cavity.util.dpToPx
+import com.louis.app.cavity.util.spToPx
 import kotlin.math.PI
 import kotlin.math.min
 
@@ -55,7 +55,7 @@ class PieView @JvmOverloads constructor(
 
     private val textPaint by lazy {
         TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-            textSize = context.dpToPx(TEXT_SIZE)
+            textSize = context.spToPx(TEXT_SIZE)
         }
     }
 

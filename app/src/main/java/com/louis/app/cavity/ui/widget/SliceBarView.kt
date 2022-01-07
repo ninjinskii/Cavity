@@ -18,6 +18,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.NewStat
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.dpToPx
+import com.louis.app.cavity.util.spToPx
 import kotlin.math.cos
 import kotlin.math.roundToInt
 
@@ -32,12 +33,15 @@ class SliceBarView @JvmOverloads constructor(
         private const val BAR_BOTTOM_SPACING = 16f
         private const val BAR_WIDTH = 4f
         private const val TEXT_ANGLE = 50f
-        private const val TEXT_SIZE = 12f
+        private const val TEXT_SIZE_NORMAL = 14f
+        private const val TEXT_SIZE_SMALL = 10f
     }
 
     private var slices = emptyList<NewStat>()
     private val backgroundColor = context.getColor(R.color.cavity_grey)
     private val colors = ColorUtil(context).randomSet()
+    private val normalText = context.spToPx(TEXT_SIZE_NORMAL)
+    private val smallText = context.spToPx(TEXT_SIZE_SMALL)
 
     private val strokePaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -49,7 +53,6 @@ class SliceBarView @JvmOverloads constructor(
     private val textPaint by lazy {
         TextPaint(TextPaint.ANTI_ALIAS_FLAG).apply {
             color = ContextCompat.getColor(context, R.color.material_on_surface_emphasis_medium)
-            textSize = context.dpToPx(TEXT_SIZE)
         }
     }
 
@@ -163,7 +166,7 @@ class SliceBarView @JvmOverloads constructor(
                 val progress = stat.percentage * progressUnitPixelSize * interpolation
                 drawLine(currentPixel, barY, currentPixel + progress, barY, strokePaint)
 
-                textPaint.textSize = if (stat.percentage <= 5) 20f else 30f
+                textPaint.textSize = if (stat.percentage <= 5) smallText else normalText
 
                 val text = TextUtils.ellipsize(
                     stat.label,

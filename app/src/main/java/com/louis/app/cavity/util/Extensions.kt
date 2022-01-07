@@ -80,6 +80,14 @@ fun Context.pxToDp(px: Int): Float {
     return px / (resources.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)
 }
 
+fun Context.pxToSp(px: Int): Float {
+    return px / resources.displayMetrics.scaledDensity
+}
+
+fun Context.spToPx(sp: Float): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics)
+}
+
 @ColorInt
 @SuppressLint("Recycle")
 fun Context.themeColor(
