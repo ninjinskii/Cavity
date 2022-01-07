@@ -1,12 +1,14 @@
 package com.louis.app.cavity.ui.tasting
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.*
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedTasting
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.TastingAction
+import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
@@ -45,6 +47,23 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
 //            }
 
             repository.updateBottle(bottle)
+        }
+    }
+
+    fun requestNotificationsForTastingAction(context: Context, tastingAction: TastingAction) {
+        viewModelScope.launch(IO) {
+            val bottle = repository.getBottleByIdNotLive(tastingAction.bottleId)
+            val wine = repository.getWineByIdNotLive(bottle.wineId)
+            val tasting = repository.getTastingById(bottle.tastingId ?: return@launch)
+
+            val notification = TastingNotifier.buildNotification(
+                context,
+                tasting ?: return@launch,
+                wine,
+                tastingAction
+            )
+
+            TastingNotifier.notify(context, notification)
         }
     }
 

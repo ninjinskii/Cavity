@@ -55,6 +55,11 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
             onActionCheckedChange = { tastingAction, isChecked ->
                 if (isChecked) {
                     TastingNotifier.cancelNotification(requireContext(), tastingAction.id.toInt())
+                } else {
+                    tastingOverviewViewModel.requestNotificationsForTastingAction(
+                        requireContext(),
+                        tastingAction
+                    )
                 }
 
                 tastingOverviewViewModel.setActionIsChecked(tastingAction, isChecked)
