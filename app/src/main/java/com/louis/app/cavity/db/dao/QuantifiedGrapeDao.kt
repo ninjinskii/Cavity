@@ -28,7 +28,7 @@ interface QuantifiedGrapeDao {
     suspend fun getQGrape(bottleId: Long, grapeId: Long): QGrape
 
     @Transaction
-    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")
+    @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId ORDER BY percentage DESC")
     fun getQGrapesAndGrapeForBottle(bottleId: Long): LiveData<List<QGrapeAndGrape>>
 
     @Transaction
