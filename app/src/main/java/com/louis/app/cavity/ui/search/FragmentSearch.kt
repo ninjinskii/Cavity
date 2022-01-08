@@ -71,6 +71,11 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         _binding = FragmentSearchBinding.bind(view)
 
+        binding.bottleList.doOnPreDraw {
+            isHeaderShadowDisplayed = false
+            setHeaderShadow(binding.bottleList.canScrollVertically(-1))
+        }
+
         setupNavigation(binding.fakeToolbar)
 
         isPickMode = arguments?.getBoolean(PICK_MODE) ?: false
@@ -447,12 +452,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun loadHideShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.hide_elevation)
-
-    override fun onResume() {
-        super.onResume()
-
-        setHeaderShadow(binding.bottleList.canScrollVertically(-1))
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
