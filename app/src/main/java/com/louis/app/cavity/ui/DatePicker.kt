@@ -68,6 +68,7 @@ class DatePicker(
         picker.addOnDismissListener {
             associatedTextLayout.editText?.clearFocus()
             isDatePickerDisplayed = false
+            this.picker = null
         }
 
         picker.addOnPositiveButtonClickListener {
