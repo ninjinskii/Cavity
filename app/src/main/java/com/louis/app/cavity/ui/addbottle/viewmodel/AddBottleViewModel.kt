@@ -37,6 +37,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     val completedEvent: LiveData<Event<Int>>
         get() = _completedEvent
 
+    val buyLocations = repository.getAllBuyLocations()
+
     private var wineId = 0L
 
     fun start(wineId: Long, bottleId: Long) {

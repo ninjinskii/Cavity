@@ -31,6 +31,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
         initNumberPickers()
         initCurrencyDropdown()
+        initBuyLocationDropdown()
         setListeners()
         observe()
     }
@@ -56,6 +57,17 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
         val adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
         binding.currency.setAdapter(adapter)
+    }
+
+    private fun initBuyLocationDropdown() {
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_naming)
+
+        binding.buyLocation.setAdapter(adapter)
+
+        addBottleViewModel.buyLocations.observe(viewLifecycleOwner) {
+            adapter.clear()
+            adapter.addAll(it)
+        }
     }
 
     private fun setListeners() {

@@ -54,6 +54,9 @@ interface BottleDao {
     @Query("UPDATE bottle SET tasting_id=:tastingId WHERE bottle.id IN (:bottles)")
     suspend fun boundBottlesToTasting(tastingId: Long, bottles: List<Long>)
 
+    @Query("SELECT DISTINCT buy_location FROM bottle WHERE length(buy_location) > 0")
+    fun getAllBuyLocations(): LiveData<List<String>>
+
     @Transaction
     @Query("SELECT * FROM bottle WHERE consumed = 0")
     fun getBoundedBottles(): LiveData<List<BoundedBottle>>

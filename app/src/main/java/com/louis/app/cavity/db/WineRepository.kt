@@ -136,6 +136,8 @@ class WineRepository private constructor(app: Application) {
     suspend fun boundBottlesToTasting(tastingId: Long, bottles: List<Long>) =
         bottleDao.boundBottlesToTasting(tastingId, bottles)
 
+    fun getAllBuyLocations() = bottleDao.getAllBuyLocations()
+
     suspend fun deleteAllBottles() = bottleDao.deleteAll()
 
     // Grape
