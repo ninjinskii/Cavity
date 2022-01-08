@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import android.app.Application
-import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -73,31 +72,39 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         val step4Bottle = otherInfoManager.partialBottle
         val bottle = mergeStep1And4Bottles(step1Bottle, step4Bottle)
 
-        if (bottle == null) {
+        if (bottle == null || step1Bottle == null) {
             _userFeedback.postOnce(R.string.base_error)
             return
         }
 
         viewModelScope.launch(IO) {
-            val bottleId: Long
-            @StringRes val message: Int
+            val isEdit = _editedBottle.value != null
 
-            if (_editedBottle.value == null) {
-                bottleId = repository.insertBottle(bottle)
-                message = R.string.bottle_added
+            if (!isEdit) {
+                val count = step1Bottle.count.coerceAtLeast(1)
+                val message = if (count > 1) R.string.bottles_added else R.string.bottle_added
+
+                for (i in 1..count) {
+                    val bottleId = repository.insertBottle(bottle)
+
+                    insertQGrapes(bottleId)
+                    insertFReviews(bottleId)
+                    insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
+                }
+
+                _completedEvent.postOnce(message)
             } else {
-                bottleId = _editedBottle.value!!.id
+                val message = R.string.bottle_updated
+                val bottleId = _editedBottle.value!!.id
                 repository.updateBottle(bottle)
-                message = R.string.bottle_updated
+
+                insertQGrapes(bottleId)
+                insertFReviews(bottleId)
+                insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
+
+                _completedEvent.postOnce(message)
             }
-
-            insertQGrapes(bottleId)
-            insertFReviews(bottleId)
-            insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
-
-            _completedEvent.postOnce(message)
         }
-
     }
 
     private suspend fun insertQGrapes(bottleId: Long) {

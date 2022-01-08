@@ -139,6 +139,7 @@
     <string name="add_friend_label">Nom prénom</string>
     <string name="remove_pdf">Retirer le PDF</string>
     <string name="bottle_added">La bouteille a été ajoutée.</string>
+    <string name="bottles_added">Les bouteilles ont été ajoutées.</string>
     <string name="bottle_updated">La bouteille a été modifiée.</string>
 
     <!-- Search -->

@@ -12,6 +12,7 @@ import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.DateManager
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.setVisible
 import java.util.*
 
 class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
@@ -87,11 +88,12 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
         with(binding) {
             vintage.value = editedBottle.vintage
             apogee.value = editedBottle.apogee
-            count.setText(editedBottle.count.toString())
+            //count.setText(editedBottle.count.toString())
             price.setText(formattedPrice)
             currency.setText(editedBottle.currency, false)
             buyLocation.setText(editedBottle.buyLocation)
             buyDate.setText(DateFormatter.formatDate(editedBottle.buyDate))
+            count.setVisible(false)
         }
     }
 
