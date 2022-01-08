@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="5" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.louis.app.cavity.ui.tasting.ForwardTouchRecyclerView
         android:id="@+id/friendList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
