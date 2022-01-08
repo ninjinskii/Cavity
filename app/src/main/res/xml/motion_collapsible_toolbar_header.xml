@@ -17,6 +17,14 @@
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
         <Constraint
+            android:id="@id/gradient"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:alpha="1.0"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
             android:id="@id/bottleName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,6 +47,14 @@
             android:alpha="0.2"
             android:translationY="-100dp"
             motion:layout_constraintDimensionRatio="1:1"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@id/gradient"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:alpha="0.0"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />

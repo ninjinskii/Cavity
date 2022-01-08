@@ -25,6 +25,12 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp" />
 
+            <View
+                android:id="@+id/gradient"
+                android:layout_width="0dp"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/gradient_app_bar" />
+
             <ImageButton
                 android:id="@+id/backButton"
                 android:layout_width="?attr/actionBarSize"
