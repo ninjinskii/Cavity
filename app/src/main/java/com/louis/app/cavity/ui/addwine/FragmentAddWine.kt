@@ -82,16 +82,21 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             binding.buttonAddCountyIfEmpty.setVisible(it.isEmpty())
 
             val newCountyAdded = binding.countyChipGroup.childCount == it.size - 1
+            val newCountyId = if (newCountyAdded) it.last().id else 0
 
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
                 .load(it)
                 .into(binding.countyChipGroup)
-                .preselect(if (newCountyAdded) it.last().id else args.countyId)
+                .preselect(if (newCountyAdded) newCountyId else args.countyId)
                 .doOnClick { v -> setCounty(v) }
                 .build()
                 .go()
+
+            if (newCountyAdded) {
+                addWineViewModel.setCountyId(newCountyId)
+            }
         }
     }
 
@@ -244,15 +249,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         val county = view.getTag(R.string.tag_chip_id) as County?
         addWineViewModel.setCountyId(county?.id)
     }
-
-//    override fun closeMaybeOpenedDialog() {
-//        dialog?.dismiss()
-//    }
-
-//    override fun onDetach() {
-//        super.onDetach()
-//        dialog?.dismiss()
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
