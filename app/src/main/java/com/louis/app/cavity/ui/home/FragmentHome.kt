@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.home
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
@@ -13,17 +14,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Slide
 import androidx.transition.TransitionManager
+import com.google.android.material.shape.CutCornerTreatment
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
-import com.louis.app.cavity.util.TransitionHelper
-import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupNavigation
-import com.louis.app.cavity.util.themeColor
+import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
@@ -74,6 +75,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
 
         setupScrollableTab()
+        //setCountyDetailsShape()
         observe()
         setListeners()
     }
@@ -89,6 +91,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         )
 
         homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
+            binding.emptyState.setVisible(it.isEmpty())
+
             with(binding) {
                 tab.adapter = tabAdapter
                 viewPager.adapter =
@@ -105,6 +109,16 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             /*viewPager.offscreenPageLimit = 5
             tab.setUpWithViewPager(viewPager)*/
         }
+    }
+
+    private fun setCountyDetailsShape() {
+        binding.countyDetails.root.shapeAppearanceModel = ShapeAppearanceModel.Builder()
+            .setAllCornerSizes { requireContext().dpToPx(16f) }
+            .setTopLeftCorner(CutCornerTreatment())
+            .setTopRightCorner(CutCornerTreatment())
+            .setBottomLeftCornerSize(0f)
+            .setBottomRightCornerSize(0f)
+            .build()
     }
 
     private fun observe() {
@@ -129,12 +143,12 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             currentCounty = tabAdapter.getItemId(it)
         }
 
-        binding.fab.setOnClickListener {
-            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
+        binding.emptyState.setOnActionClickListener {
+            navigateToAddWine(currentCounty)
+        }
 
-            val extra = FragmentNavigatorExtras(binding.appBar.root to "appbar")
-            val action = FragmentHomeDirections.homeToAddWine(countyId = currentCounty)
-            findNavController().navigate(action, extra)
+        binding.fab.setOnClickListener {
+            navigateToAddWine(currentCounty)
         }
 
         binding.countyDetailsScrim.setOnClickListener {
@@ -162,11 +176,17 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             addTarget(binding.countyDetails.root)
         }
 
+        val transformFab = Slide(Gravity.BOTTOM).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_medium).toLong()
+            addTarget(binding.fab)
+        }
+
         TransitionManager.beginDelayedTransition(binding.constraint, transform)
+        TransitionManager.beginDelayedTransition(binding.fab, transformFab)
 
         with(binding) {
             tab.setVisible(false, invisible = true)
-            fab.hide()
+            fab.setVisible(false)
             countyDetails.root.setVisible(true)
             countyDetailsScrim.setVisible(true)
         }
@@ -183,14 +203,28 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             addTarget(binding.tab)
         }
 
+        val transformFab = Slide(Gravity.BOTTOM).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_long).toLong()
+            addTarget(binding.fab)
+        }
+
         TransitionManager.beginDelayedTransition(binding.constraint, transform)
+        TransitionManager.beginDelayedTransition(binding.fab, transformFab)
 
         with(binding) {
             tab.setVisible(true)
-            fab.show()
+            fab.setVisible(true)
             countyDetails.root.setVisible(false, invisible = true)
             countyDetailsScrim.setVisible(false)
         }
+    }
+
+    fun navigateToAddWine(countyId: Long) {
+        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
+
+        val extra = FragmentNavigatorExtras(binding.appBar.root to "appbar")
+        val action = FragmentHomeDirections.homeToAddWine(countyId = countyId)
+        findNavController().navigate(action, extra)
     }
 
     fun getRecycledViewPool() = recyclePool

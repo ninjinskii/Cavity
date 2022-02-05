@@ -19,4 +19,6 @@ abstract class Step(@LayoutRes layout: Int) : Fragment(layout) {
             }
         }
     }
+
+    open fun requestNextPage() = true
 }

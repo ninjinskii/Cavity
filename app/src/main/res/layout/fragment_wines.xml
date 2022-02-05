@@ -15,4 +15,17 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_wine" />
 
+    <com.louis.app.cavity.ui.widget.EmptyStateView
+        android:id="@+id/emptyState"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:actionText="@string/add_wine"
+        app:bigIcon="@drawable/ic_glass"
+        app:layout_constraintBottom_toBottomOf="@id/wineList"
+        app:layout_constraintEnd_toEndOf="@id/wineList"
+        app:layout_constraintStart_toStartOf="@id/wineList"
+        app:layout_constraintTop_toTopOf="@id/wineList"
+        app:text="@string/empty_wine" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

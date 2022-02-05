@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.38"
+        app:layout_constraintBottom_toTopOf="@id/text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="?attr/colorOnSurface"
+        tools:src="@drawable/ic_grape" />
+
+    <TextView
+        android:id="@+id/text"
+        style="?attr/textAppearanceBody1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_margin"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/action"
+        app:layout_constraintEnd_toEndOf="@id/action"
+        app:layout_constraintStart_toStartOf="@id/action"
+        app:layout_constraintTop_toBottomOf="@id/icon"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@string/empty_grape" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/action"
+        style="@style/Widget.Cavity.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/medium_margin"
+        app:layout_constraintBottom_toTopOf="@id/secondaryAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_percent="0.75"
+        tools:text="@string/select_grapes" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/secondaryAction"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/action"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_percent="0.75"
+        tools:text="@string/skip"
+        tools:visibility="visible" />
+
+</merge>

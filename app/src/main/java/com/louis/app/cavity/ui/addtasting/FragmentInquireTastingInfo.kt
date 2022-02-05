@@ -54,6 +54,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
                 .into(binding.friendsChipGroup)
                 .useAvatar(true)
                 .selectable(true)
+                .emptyText(getString(R.string.empty_friend))
                 .build()
                 .go()
         }
@@ -116,7 +117,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
                 val friends = friendsChipGroup.collectAs<Friend>()
 
                 val ok = addTastingViewModel.submitTasting(opportunity, isMidday, date, friends)
-                if (ok) stepperFragment?.requestNextPage()
+                if (ok) stepperFragment?.goToNextPage()
             }
         }
     }

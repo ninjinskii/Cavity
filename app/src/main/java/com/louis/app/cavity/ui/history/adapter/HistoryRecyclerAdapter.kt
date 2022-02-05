@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.history.adapter
 
 import android.content.Context
-import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -119,19 +118,20 @@ class HistoryRecyclerAdapter(
                         0 -> {
                             val comment = entry.model.historyEntry.comment
 
-                            if (comment.isBlank()) {
-                                setTypeface(null, Typeface.ITALIC)
-                                text = context.getString(R.string.no_description)
+                            text = if (comment.isBlank()) {
+                                setTextAppearance(R.style.TextAppearance_Cavity_Body2_Italic)
+                                context.getString(R.string.no_description)
                             } else {
-                                typeface = Typeface.DEFAULT
-                                text = comment
+                                setTextAppearance(R.style.TextAppearance_Cavity_Body2)
+                                comment
                             }
                         }
                         4 -> {
+                            setTextAppearance(R.style.TextAppearance_Cavity_Body2)
                             text = entry.model.tastingWithBottles?.tasting?.opportunity
                         }
                         else -> {
-                            typeface = Typeface.DEFAULT
+                            setTextAppearance(R.style.TextAppearance_Cavity_Body2)
 
                             val data = if (entry.model.historyEntry.type == 1) {
                                 entry.model.bottleAndWine.bottle.buyLocation

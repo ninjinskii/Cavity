@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
 import com.louis.app.cavity.R
@@ -20,7 +19,7 @@ class ScrollableTabAdapter<T>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_county, parent, false)
-        TextViewCompat.setTextAppearance(view.findViewById(R.id.county), R.style.TabTextAppearance)
+        //TextViewCompat.setTextAppearance(view.findViewById(R.id.county), R.style.TabTextAppearance)
 
         return TabViewHolder(view)
     }

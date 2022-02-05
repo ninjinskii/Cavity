@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.setVisible
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
@@ -19,7 +20,9 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWinesBinding.bind(view)
+
         initRecyclerView()
+        setListeners()
     }
 
     private fun initRecyclerView() {
@@ -45,7 +48,16 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         val countyId = arguments?.getLong(COUNTY_ID)
 
         homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
+            binding.emptyState.setVisible(it.isEmpty())
             wineAdapter.submitList(it)
+        }
+    }
+
+    private fun setListeners() {
+        binding.emptyState.setOnActionClickListener {
+            (parentFragment as? FragmentHome)?.navigateToAddWine(
+                arguments?.getLong(COUNTY_ID) ?: return@setOnActionClickListener
+            )
         }
     }
 

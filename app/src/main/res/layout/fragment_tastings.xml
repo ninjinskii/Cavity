@@ -20,13 +20,35 @@
         app:layout_constraintTop_toBottomOf="@id/appBar"
         tools:listitem="@layout/item_tasting" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.louis.app.cavity.ui.widget.EmptyStateView
+        android:id="@+id/emptyState"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:actionText="@string/add_tasting"
+        app:bigIcon="@drawable/ic_toast_wine"
+        app:layout_constraintBottom_toBottomOf="@id/tastingList"
+        app:layout_constraintEnd_toEndOf="@id/tastingList"
+        app:layout_constraintStart_toStartOf="@id/tastingList"
+        app:layout_constraintTop_toTopOf="@id/tastingList"
+        app:text="@string/empty_tasting" />
+
+    <com.louis.app.cavity.ui.home.widget.HexagonalView
         android:id="@+id/buttonAddTasting"
-        android:layout_width="wrap_content"
+        style="@style/Widget.Cavity.FloatingActionButton"
+        android:layout_width="@dimen/hexagonal_fab_width"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/medium_margin"
         android:src="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_margin="@dimen/medium_margin"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <ImageView
+            android:layout_width="@dimen/xsmall_icon"
+            android:layout_height="@dimen/xsmall_icon"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_add"
+            app:tint="?attr/colorPrimary" />
+
+    </com.louis.app.cavity.ui.home.widget.HexagonalView>
 </androidx.constraintlayout.widget.ConstraintLayout>

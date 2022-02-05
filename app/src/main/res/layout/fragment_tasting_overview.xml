@@ -23,8 +23,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appBar" />
 
+        <com.louis.app.cavity.ui.widget.EmptyStateView
+            android:id="@+id/emptyState"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:actionText="@string/confirm_tasting"
+            app:bigIcon="@drawable/ic_bottle"
+            app:layout_constraintBottom_toBottomOf="@id/bottleTastingActionsList"
+            app:layout_constraintEnd_toEndOf="@id/bottleTastingActionsList"
+            app:layout_constraintStart_toStartOf="@id/bottleTastingActionsList"
+            app:layout_constraintTop_toTopOf="@id/bottleTastingActionsList"
+            app:text="@string/empty_tasting_bottle" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSubmit"
+            style="@style/Widget.Cavity.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"

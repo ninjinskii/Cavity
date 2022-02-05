@@ -72,17 +72,5 @@
             android:layout_width="match_parent"
             android:layout_height="-70dp"
             motion:layout_constraintBottom_toBottomOf="parent" />
-        <Constraint
-            android:id="@id/bottleVintage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0"
-            android:translationY="20dp" />
-        <Constraint
-            android:id="@id/fabEditBottle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:translationX="400dp"
-            android:translationY="-100dp" />
     </ConstraintSet>
 </MotionScene>

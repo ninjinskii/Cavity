@@ -13,8 +13,10 @@ import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.manager.FragmentManager
 import com.louis.app.cavity.ui.manager.ManagerViewModel
 import com.louis.app.cavity.util.hideKeyboard
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard
 
 class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
@@ -38,6 +40,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
         simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
 
         initRecyclerView()
+        initEmptyState()
     }
 
     private fun initRecyclerView() {
@@ -48,6 +51,7 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
         }
 
         managerViewModel.getCountiesWithWines().observe(viewLifecycleOwner) {
+            binding.emptyState.setVisible(it.isEmpty())
             countyAdapter.setCounties(it)
         }
 
@@ -55,6 +59,17 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
 
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+    }
+
+    private fun initEmptyState() {
+        binding.emptyState.apply {
+            setIcon(R.drawable.ic_bottle)
+            setText(getString(R.string.empty_county))
+            setActionText(getString(R.string.add_county))
+            setOnActionClickListener {
+                (parentFragment as? FragmentManager)?.showAddCountyDialog()
+            }
+        }
     }
 
     private fun requestDrag(viewHolder: RecyclerView.ViewHolder) {

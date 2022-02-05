@@ -67,7 +67,7 @@ object TastingNotifier {
             .setGroup(GROUP_ID)
             .setAutoCancel(false)
 
-        Glide.with(context).clear(futureBitmap)
+        //Glide.with(context).clear(futureBitmap)
 
         return TastingActionNotification(tastingAction.id, notification.build())
     }

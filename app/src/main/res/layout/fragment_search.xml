@@ -27,9 +27,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="?attr/colorOnPrimarySurface"
-            app:title="SearchFragment"
-            app:titleTextColor="?attr/colorOnPrimarySurface"
+            app:titleCentered="true"
+            app:titleTextColor="?attr/colorOnSurface"
             tools:layout_editor_absoluteX="29dp" />
 
         <com.louis.app.cavity.ui.search.widget.AnimatedCheckBox
@@ -43,7 +42,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorOnPrimarySurface" />
+            app:tint="?attr/colorOnSurface" />
 
         <com.louis.app.cavity.ui.search.widget.AnimatedCheckBox
             android:id="@+id/searchButton"
@@ -56,7 +55,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorOnPrimarySurface" />
+            app:tint="?attr/colorOnSurface" />
 
         <EditText
             android:id="@+id/searchView"
@@ -68,6 +67,7 @@
             android:hint="@string/search_wine_hint"
             android:imeOptions="actionDone"
             android:inputType="textCapSentences"
+            android:textAppearance="?attr/textAppearanceBody1"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -90,11 +90,11 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipSelected"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/medium_margin"
                     android:checkable="true"
+                    android:textAppearance="?attr/textAppearanceOverline"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -143,43 +143,43 @@
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipRed"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
                             android:clickable="true"
                             android:focusable="true"
-                            android:text="@string/wine_color_red" />
+                            android:text="@string/wine_color_red"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipWhite"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
                             android:clickable="true"
                             android:focusable="true"
-                            android:text="@string/wine_color_white" />
+                            android:text="@string/wine_color_white"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipSweet"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
                             android:clickable="true"
                             android:focusable="true"
-                            android:text="@string/wine_color_sweet" />
+                            android:text="@string/wine_color_sweet"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipRose"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
                             android:clickable="true"
                             android:focusable="true"
-                            android:text="@string/wine_color_rose" />
+                            android:text="@string/wine_color_rose"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                     </com.google.android.material.chip.ChipGroup>
                 </HorizontalScrollView>
@@ -206,60 +206,60 @@
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipReadyToDrink"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
                             android:clickable="true"
                             android:focusable="true"
-                            android:text="@string/ready_to_drink" />
+                            android:text="@string/ready_to_drink"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipOrganic"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
                             android:clickable="true"
                             android:focusable="true"
-                            android:text="@string/organic" />
+                            android:text="@string/organic"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipFavorite"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
                             android:clickable="true"
                             android:focusable="true"
-                            android:text="@string/favorite" />
+                            android:text="@string/favorite"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipPdf"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
                             android:clickable="true"
                             android:focusable="true"
-                            android:text="@string/pdf" />
+                            android:text="@string/pdf"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                     </com.google.android.material.chip.ChipGroup>
                 </HorizontalScrollView>
 
                 <View
                     android:id="@+id/divider1"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/otherScrollView" />
 
                 <TextView
                     android:id="@+id/vintageTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/vintage"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider1" />
@@ -277,23 +277,23 @@
 
                 <View
                     android:id="@+id/divider2"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/vintageSlider" />
 
                 <TextView
                     android:id="@+id/dateTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/date"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider2" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/beyondLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    style="@style/Widget.Cavity.TextInputLayout.FilledBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/medium_margin"
@@ -306,7 +306,6 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/beyond"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:focusableInTouchMode="false"
@@ -317,7 +316,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/untilLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    style="@style/Widget.Cavity.TextInputLayout.FilledBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/medium_margin"
@@ -330,7 +329,6 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/until"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:focusableInTouchMode="false"
@@ -341,17 +339,17 @@
 
                 <View
                     android:id="@+id/divider3"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/untilLayout" />
 
                 <TextView
                     android:id="@+id/priceTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/price"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider3" />
 
@@ -385,23 +383,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/medium_margin"
                     android:text="@string/no_price_no_results"
+                    android:textAppearance="?attr/textAppearanceCaption"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/priceSlider" />
 
                 <View
                     android:id="@+id/divider4"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/warning" />
 
                 <TextView
                     android:id="@+id/grapeTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/grapes"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider4" />
 
@@ -430,17 +429,17 @@
 
                 <View
                     android:id="@+id/divider5"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/grapeScrollView" />
 
                 <TextView
                     android:id="@+id/reviewTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/reviews"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider5" />
 
@@ -486,55 +485,65 @@
             app:layout_insetEdge="bottom">
 
             <!-- Nested layout for bottom sheet header -->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/backdropHeader"
                 android:layout_width="0dp"
                 android:layout_height="?attr/actionBarSize"
                 android:animateLayoutChanges="true"
-                android:background="@drawable/shape_backdrop"
+                android:backgroundTint="@color/surface_elevation_4dp"
+                app:cardElevation="@dimen/no_elevation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearance="@style/ShapeAppearanceOverlay.Cavity.Backdrop">
 
-                <TextView
-                    android:id="@+id/matchingWines"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/currentQuery"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="12 résultats" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/surface_elevation_4dp">
 
-                <TextView
-                    android:id="@+id/currentQuery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:ellipsize="end"
-                    android:maxWidth="100dp"
-                    android:maxLines="1"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/buttonSubmit"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="'Barolo'" />
+                    <TextView
+                        android:id="@+id/matchingWines"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/medium_margin"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/currentQuery"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="12 résultats" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonSubmit"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/submit"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:id="@+id/currentQuery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/medium_margin"
+                        android:ellipsize="end"
+                        android:maxWidth="100dp"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/buttonSubmit"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="'Barolo'" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonSubmit"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/medium_margin"
+                        android:text="@string/submit"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/bottleList"
@@ -549,6 +558,18 @@
                 app:layout_constraintVertical_bias="0.0"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_bottle" />
+
+            <com.louis.app.cavity.ui.widget.EmptyStateView
+                android:id="@+id/emptyState"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                app:bigIcon="@drawable/ic_search"
+                app:layout_constraintBottom_toBottomOf="@id/bottleList"
+                app:layout_constraintEnd_toEndOf="@id/bottleList"
+                app:layout_constraintStart_toStartOf="@id/bottleList"
+                app:layout_constraintTop_toTopOf="@id/bottleList"
+                app:text="@string/empty_search" />
 
             <View
                 android:id="@+id/scrim"

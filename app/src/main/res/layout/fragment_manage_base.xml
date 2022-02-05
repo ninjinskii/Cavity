@@ -11,4 +11,10 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/item_county_manager" />
 
+    <com.louis.app.cavity.ui.widget.EmptyStateView
+        android:id="@+id/emptyState"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

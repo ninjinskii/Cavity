@@ -55,7 +55,7 @@ class FragmentInquireReviews : Step(R.layout.fragment_inquire_review) {
         }
 
         reviewManager.fReviews.observe(viewLifecycleOwner) {
-            toggleRvPlaceholder(it.isEmpty())
+            binding.emptyState.setVisible((it.isEmpty()))
             reviewAdapter.submitList(it.toMutableList())
         }
     }
@@ -86,10 +86,8 @@ class FragmentInquireReviews : Step(R.layout.fragment_inquire_review) {
         with(binding) {
             buttonAddReview.setOnClickListener { showAddReviewDialog() }
             buttonSelectReview.setOnClickListener { reviewManager.requestReviewDialog() }
-            buttonSelectReviewSecondary.setOnClickListener { reviewManager.requestReviewDialog() }
-            buttonSkip.setOnClickListener { stepperFragment?.requestNextPage() }
-            stepper.next.setOnClickListener { stepperFragment?.requestNextPage() }
-            stepper.previous.setOnClickListener { stepperFragment?.requestPreviousPage() }
+            emptyState.setOnActionClickListener { reviewManager.requestReviewDialog() }
+            emptyState.setOnSecondaryActionClickListener { stepperFragment?.goToNextPage() }
         }
     }
 
@@ -119,15 +117,6 @@ class FragmentInquireReviews : Step(R.layout.fragment_inquire_review) {
         R.id.rbRate20 -> 1
         R.id.rbRate100 -> 2
         else -> 3
-    }
-
-    private fun toggleRvPlaceholder(toggle: Boolean) {
-        with(binding) {
-            reviewIconEmpty.setVisible(toggle)
-            explanation.setVisible(toggle)
-            buttonSelectReviewSecondary.setVisible(toggle)
-            buttonSkip.setVisible(toggle)
-        }
     }
 
     override fun onDestroyView() {

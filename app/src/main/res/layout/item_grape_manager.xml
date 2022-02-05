@@ -18,10 +18,10 @@
 
     <TextView
         android:id="@+id/grapeName"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/medium_margin"
+        android:layout_marginHorizontal="@dimen/small_margin"
         android:layout_marginTop="@dimen/small_margin"
         android:drawablePadding="4dp"
         android:ellipsize="end"
@@ -35,10 +35,10 @@
 
     <TextView
         android:id="@+id/bottleCount"
-        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:textAppearance="?attr/textAppearanceCaption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/medium_margin"
+        android:layout_marginHorizontal="@dimen/small_margin"
         android:layout_marginBottom="@dimen/small_margin"
         android:ellipsize="end"
         android:maxLines="1"

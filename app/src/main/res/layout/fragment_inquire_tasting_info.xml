@@ -26,17 +26,16 @@
 
                 <TextView
                     android:id="@+id/tastingTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/tasting"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/opportunityLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
@@ -52,14 +51,12 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/opportunity"
                         android:inputType="textCapSentences"
-                        android:nextFocusDown="@id/date"
-                        android:text="Anniversaire Jean" />
+                        android:nextFocusDown="@id/date" />
 
                 </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/dateLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
@@ -93,7 +90,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/medium_margin"
-                        android:text="@string/midday_meal" />
+                        android:text="@string/midday_meal"
+                        android:textAppearance="?attr/textAppearanceBody1" />
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/rbEvening"
@@ -101,23 +99,24 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/medium_margin"
                         android:checked="true"
-                        android:text="@string/evening_meal" />
+                        android:text="@string/evening_meal"
+                        android:textAppearance="?attr/textAppearanceBody1" />
                 </RadioGroup>
 
                 <View
                     android:id="@+id/divider1"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     android:layout_marginTop="@dimen/medium_margin"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rbGroupMeal" />
 
                 <TextView
                     android:id="@+id/friendTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/participants"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider1" />
 
@@ -160,11 +159,14 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonSubmit"
+                    style="@style/Widget.Cavity.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/next"
                     app:icon="@drawable/ic_check"
+                    app:layout_constraintTop_toBottomOf="@id/friendScrollView"
+                    app:layout_constraintVertical_bias="1"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

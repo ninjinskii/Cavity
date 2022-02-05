@@ -16,7 +16,9 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.manager.FragmentManager
 import com.louis.app.cavity.ui.manager.ManagerViewModel
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
@@ -43,6 +45,7 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
         simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
 
         initRecyclerView()
+        initEmptyState()
     }
 
     private fun initRecyclerView() {
@@ -68,7 +71,19 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
         }
 
         managerViewModel.getAllFriends().observe(viewLifecycleOwner) {
+            binding.emptyState.setVisible(it.isEmpty())
             friendAdapter.submitList(it)
+        }
+    }
+
+    private fun initEmptyState() {
+        binding.emptyState.apply {
+            setIcon(R.drawable.ic_person)
+            setText(getString(R.string.empty_friend))
+            setActionText(getString(R.string.add_friend))
+            setOnActionClickListener {
+                (parentFragment as? FragmentManager)?.showAddFriendDialog()
+            }
         }
     }
 

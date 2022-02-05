@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="app_bar_elevation">0dp</dimen>
+    <dimen name="container_drop_elevation">2dp</dimen>
+    <dimen name="no_elevation">0dp</dimen>
+</resources>

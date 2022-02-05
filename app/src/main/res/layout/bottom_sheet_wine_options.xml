@@ -9,8 +9,8 @@
         layout="@layout/wine_color_name_naming"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/medium_margin"
         android:layout_marginHorizontal="@dimen/large_margin"
+        android:layout_marginTop="@dimen/medium_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -45,11 +45,11 @@
             app:tint="?attr/colorOnBackground" />
 
         <TextView
-            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
             android:text="@string/add_bottle"
+            android:textAppearance="?attr/textAppearanceBody1"
             app:layout_constraintBottom_toBottomOf="@+id/icAdd"
             app:layout_constraintStart_toEndOf="@+id/icAdd"
             app:layout_constraintTop_toTopOf="@+id/icAdd" />
@@ -80,11 +80,11 @@
             app:tint="?attr/colorOnBackground" />
 
         <TextView
-            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
             android:text="@string/edit_wine"
+            android:textAppearance="?attr/textAppearanceBody1"
             app:layout_constraintBottom_toBottomOf="@+id/icEdit"
             app:layout_constraintStart_toEndOf="@+id/icEdit"
             app:layout_constraintTop_toTopOf="@+id/icEdit" />
@@ -115,13 +115,13 @@
             app:tint="?attr/colorOnBackground" />
 
         <TextView
-            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/delete_wine"
+            android:textAppearance="?attr/textAppearanceBody1"
             app:layout_constraintBottom_toBottomOf="@+id/icDelete"
             app:layout_constraintStart_toEndOf="@+id/icDelete"
             app:layout_constraintTop_toTopOf="@+id/icDelete" />

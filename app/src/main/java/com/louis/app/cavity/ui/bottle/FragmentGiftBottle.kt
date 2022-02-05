@@ -73,6 +73,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
                 .load(it)
                 .into(binding.friendsChipGroup)
                 .useAvatar(true)
+                .emptyText(getString(R.string.no_friend))
                 .build()
                 .go()
         }

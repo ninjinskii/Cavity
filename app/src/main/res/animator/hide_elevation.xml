@@ -3,7 +3,7 @@
     <item>
         <objectAnimator
             android:propertyName="elevation"
-            android:valueTo="0dp"
+            android:valueTo="@dimen/no_elevation"
             android:valueType="floatType" />
     </item>
 </selector>

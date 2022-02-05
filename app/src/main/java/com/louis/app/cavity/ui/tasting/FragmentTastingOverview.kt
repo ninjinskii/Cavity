@@ -13,8 +13,10 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
+import com.louis.app.cavity.ui.addtasting.SpaceGridItemDecoration
 import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
@@ -51,6 +53,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
     }
 
     private fun initRecyclerView() {
+        val space = requireContext().resources.getDimension(R.dimen.small_margin)
         val tastingOverviewAdapter = BottleActionAdapter(
             onActionCheckedChange = { tastingAction, isChecked ->
                 if (isChecked) {
@@ -82,9 +85,11 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         binding.bottleTastingActionsList.apply {
             adapter = tastingOverviewAdapter
             layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(SpaceGridItemDecoration(space.toInt()))
         }
 
         tastingOverviewViewModel.bottles.observe(viewLifecycleOwner) {
+            binding.emptyState.setVisible(it.isEmpty())
             tastingOverviewAdapter.submitList(it)
         }
     }
@@ -109,6 +114,10 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
                     tastingOverviewViewModel.confirmTasting()
                 }
                 .show()
+        }
+
+        binding.emptyState.setOnActionClickListener {
+            tastingOverviewViewModel.confirmTasting()
         }
     }
 

@@ -15,6 +15,16 @@ class LifecycleMaterialDialogBuilder(
 ) :
     MaterialAlertDialogBuilder(context) {
 
+    override fun setTitle(titleId: Int): MaterialAlertDialogBuilder {
+        context.getString(titleId).uppercase().let {
+            return super.setTitle(it)
+        }
+    }
+
+    override fun setTitle(title: CharSequence?): MaterialAlertDialogBuilder {
+        return super.setTitle(title.toString().uppercase())
+    }
+
     override fun show(): AlertDialog {
         return super.show().also {
             lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {

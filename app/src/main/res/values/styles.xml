@@ -1,14 +1,262 @@
 <resources>
     <!-- Base application theme. -->
     <style name="CavityTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Color -->
         <item name="colorPrimary">@color/cavity_gold</item>
         <item name="colorAccent">@color/cavity_gold</item>
         <item name="colorSecondary">@color/cavity_gold</item>
         <item name="colorOnError">#ffffff</item>
 
+        <!-- Typography -->
+        <item name="textAppearanceHeadline3">@style/TextAppearance.Cavity.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.Cavity.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.Cavity.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.Cavity.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Cavity.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.Cavity.Subtitle2</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.Cavity.Overline</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.Cavity.Caption</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.Cavity.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Cavity.Body2</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Cavity.Button</item>
+
+        <!-- Sets all fonts to forum, also into popup menus & tooltips -->
+        <!--                <item name="fontFamily">@font/forum</item>-->
+
+        <!-- Shape -->
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Cavtiy.LargeComponent
+        </item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Cavity.SmallComponent
+        </item>
+
+        <item name="appBarLayoutStyle">@style/Widget.Cavity.AppBarLayout</item>
+        <item name="toolbarStyle">@style/Widget.Cavity.Toolbar</item>
+        <!--        <item name="tooltipStyle">@style/Widget.Cavity.Tooltip</item>-->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Cavity.MaterialAlertDialog</item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.Cavity.DatePicker</item>
+        <item name="textInputStyle">@style/Widget.Cavity.TextInputLayout.FilledBox</item>
+        <item name="tabStyle">@style/Widget.Cavity.TabLayout</item>
+        <item name="chipStyle">@style/Widget.Cavity.Chip.Choice</item>
+        <item name="sliderStyle">@style/Widget.Cavity.Slider</item>
+        <item name="switchStyle">@style/Widget.Cavity.Switch</item>
+        <item name="navigationViewStyle">@style/Widget.Cavity.NavigationView</item>
+
         <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
-        <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
+        <item name="android:popupMenuStyle">@style/Widget.Cavity.PopupMenu</item>
         <item name="android:windowSharedElementsUseOverlay">false</item>
+        <item name="android:itemTextAppearance">@style/TextAppearance.Cavity.Body1</item>
+        <item name="android:dropDownItemStyle">@style/ThemeOverlay.Cavity.DropdownItem</item>
+        <item name="android:spinnerDropDownItemStyle">@style/ThemeOverlay.Cavity.DropdownItem</item>
+        <item name="android:dropDownListViewStyle">@style/ThemeOverlay.Cavity.DropdownItem</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="Widget.Cavity.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
+        <item name="android:elevation">0dp</item>
+        <item name="elevation">0dp</item>
+        <item name="elevationOverlayEnabled">false</item>
+    </style>
+
+    <style name="Widget.Cavity.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Cavity.Toolbar</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Cavity.Headline5</item>
+    </style>
+
+    <style name="ThemeOverlay.Cavity.Toolbar" parent="">
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="android:elevation">0dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <!-- Date Picker -->
+    <style name="ThemeOverlay.Cavity.DatePicker" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarHeaderLayout">
+            @style/Widget.Cavity.MaterialCalendar.HeaderLayout
+        </item>
+        <item name="materialCalendarHeaderSelection">
+            @style/Widget.Cavity.MaterialCalendar.HeaderSelection
+        </item>
+        <item name="materialCalendarStyle">@style/Widget.Cavity.DatePicker</item>
+        <item name="colorOnPrimary">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Widget.Cavity.DatePicker" parent="Widget.MaterialComponents.MaterialCalendar">
+        <item name="daySelectedStyle">@style/Widget.Cavity.MaterialCalendar.Day.Selected</item>
+        <item name="yearSelectedStyle">@style/Widget.Cavity.MaterialCalendar.Year.Selected</item>
+        <item name="shapeAppearance">@style/ShapeAppearanceOverlay.Cavity.Dialog</item>
+    </style>
+
+    <style name="Widget.Cavity.MaterialCalendar.HeaderLayout" parent="Widget.MaterialComponents.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.Cavity.MaterialCalendar.HeaderSelection" parent="Widget.MaterialComponents.MaterialCalendar.HeaderSelection">
+        <item name="android:textAppearance">@style/TextAppearance.Cavity.Button</item>
+    </style>
+
+    <style name="Widget.Cavity.MaterialCalendar.Day.Selected" parent="Widget.MaterialComponents.MaterialCalendar.Day.Selected">
+        <item name="itemFillColor">@android:color/transparent</item>
+        <item name="itemStrokeColor">@color/cavity_gold</item>
+        <item name="itemStrokeWidth">1dp</item>
+        <item name="itemTextColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Widget.Cavity.MaterialCalendar.Year.Selected" parent="Widget.MaterialComponents.MaterialCalendar.Year.Selected">
+        <item name="itemFillColor">@android:color/transparent</item>
+        <item name="itemStrokeColor">@color/cavity_gold</item>
+        <item name="itemStrokeWidth">1dp</item>
+        <item name="itemTextColor">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Text inputs -->
+    <style name="Widget.Cavity.TextInputLayout.FilledBox" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Cavity.TextInputLayout.FilledBox
+        </item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+    </style>
+
+    <style name="Widget.Cavity.TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Cavity.TextInputLayout.OutlinedBox
+        </item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+    </style>
+
+    <style name="Widget.Cavity.TextInputLayout.OutlinedBox.Dense" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="materialThemeOverlay">
+            @style/ThemeOverlay.Cavity.TextInputLayout.OutlinedBox.Dense
+        </item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+    </style>
+
+    <style name="Widget.Cavity.TextInputLayout.FilledBox.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="materialThemeOverlay">
+            @style/ThemeOverlay.Cavity.TextInputLayout.AutoCompleteTextView.FilledBox
+        </item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+    </style>
+
+    <style name="ThemeOverlay.Cavity.TextInputLayout.FilledBox" parent="">
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Cavity.Body1</item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.FilledBox
+        </item>
+    </style>
+
+    <style name="ThemeOverlay.Cavity.TextInputLayout.OutlinedBox" parent="">
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Cavity.Body1</item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox
+        </item>
+    </style>
+
+    <style name="ThemeOverlay.Cavity.TextInputLayout.OutlinedBox.Dense" parent="">
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Cavity.Body1</item>
+        <item name="editTextStyle">
+            @style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense
+        </item>
+    </style>
+
+    <style name="ThemeOverlay.Cavity.TextInputLayout.AutoCompleteTextView.FilledBox" parent="">
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Cavity.Body1</item>
+        <item name="autoCompleteTextViewStyle">
+            @style/Widget.MaterialComponents.AutoCompleteTextView.FilledBox
+        </item>
+    </style>
+
+    <!--    <style name="Widget.Cavity.Tooltip" parent="Widget.MaterialComponents.Tooltip">-->
+    <!--        <item name="android:textAppearance">@style/TextAppearance.Cavity.Body2</item>-->
+    <!--    </style>-->
+
+    <!-- Dialog -->
+    <style name="ThemeOverlay.Cavity.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="materialAlertDialogTitleTextStyle">
+            @style/MaterialAlertDialog.Cavity.Title.Text
+        </item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.Cavity.Body.Text
+        </item>
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.Cavity</item>
+        <!--        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearanceOverlay.Cavity.Dialog</item>-->
+    </style>
+
+    <style name="MaterialAlertDialog.Cavity" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="shapeAppearance">@style/ShapeAppearanceOverlay.Cavity.Dialog</item>
+    </style>
+
+    <style name="MaterialAlertDialog.Cavity.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textAppearance">@style/TextAppearance.Cavity.SubtitleDialog</item>
+        <item name="android:lineSpacingExtra">8dp</item>
+        <!--        <item name="android:letterSpacing">0.2</item> This is causing textAllCaps to malfunction-->
+    </style>
+
+    <style name="MaterialAlertDialog.Cavity.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textAppearance">@style/TextAppearance.Cavity.Body1</item>
+        <item name="android:textSize">@dimen/body1TextSize</item>
+    </style>
+
+    <!-- TabLayout -->
+    <style name="Widget.Cavity.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabTextAppearance">?attr/textAppearanceHeadline5</item>
+    </style>
+
+    <!-- Chip -->
+    <style name="Widget.Cavity.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="shapeAppearanceOverlay">@null</item>
+        <item name="chipBackgroundColor">@android:color/transparent</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/chip_stroke</item>
+    </style>
+
+    <style name="Widget.Cavity.Chip.Entry" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Cavity.ChipIcon</item>
+        <item name="chipBackgroundColor">@android:color/transparent</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/chip_stroke</item>
+    </style>
+
+    <!-- Slider -->
+    <style name="Widget.Cavity.Slider" parent="Widget.MaterialComponents.Slider">
+        <item name="labelStyle">@style/Widget.Cavity.Tooltip</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Cavity.Slider</item>
+        <item name="thumbColor">@color/surface_elevation_4dp</item>
+        <item name="trackHeight">1dp</item>
+        <item name="tickColorActive">?attr/colorOnSurface</item>
+        <item name="tickColorInactive">@android:color/transparent</item>
+    </style>
+
+    <style name="ThemeOverlay.Cavity.Slider" parent="">
+        <item name="thumbStrokeWidth">1dp</item>
+        <item name="thumbStrokeColor">@color/slider_thumb_stroke</item>
+    </style>
+
+    <!-- Tooltip (Slider's tooltip only) -->
+    <style name="Widget.Cavity.Tooltip" parent="Widget.MaterialComponents.Tooltip">
+        <item name="android:textAppearance">@style/TextAppearance.Cavity.Body1</item>
+    </style>
+
+    <!-- Switch -->
+    <style name="Widget.Cavity.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Cavity.Switch</item>
+    </style>
+
+    <style name="ThemeOverlay.Cavity.Switch" parent="">
+        <item name="thumbTint">@color/switch_thumb</item>
+    </style>
+
+    <!-- Navigation View -->
+    <style name="Widget.Cavity.NavigationView" parent="Widget.MaterialComponents.NavigationView">
+        <item name="itemTextAppearance">?attr/textAppearanceBody1</item>
+        <item name="itemShapeFillColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Button -->
+    <style name="Widget.Cavity.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/button_stroke</item>
+        <item name="strokeWidth">0.5dp</item>
+    </style>
+
+    <!-- FAB -->
+    <style name="Widget.Cavity.FloatingActionButton" parent="">
+        <item name="cardElevation">8dp</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+        <item name="strokeWidth">0.5dp</item>
     </style>
 
     <!-- Scrollable tab -->
@@ -36,39 +284,29 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
+    <!-- Divider -->
     <style name="Widget.Cavity.Divider" parent="">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/divider_height</item>
-        <item name="android:layout_marginTop">@dimen/medium_margin</item>
-        <item name="android:layout_marginBottom">@dimen/medium_margin</item>
-        <item name="android:background">?attr/colorOnBackground</item>
+        <item name="android:layout_marginTop">@dimen/large_margin</item>
+        <item name="android:layout_marginBottom">@dimen/large_margin</item>
+        <item name="android:layout_marginStart">@dimen/small_margin</item>
+        <item name="android:layout_marginEnd">@dimen/small_margin</item>
+        <item name="android:background">@drawable/divider</item>
         <item name="android:alpha">0.12</item>
     </style>
 
-    <style name="Widget.Cavity.Divider.Start">
-        <item name="android:layout_marginStart">@dimen/medium_margin</item>
+    <!-- Popup menus -->
+    <style name="Widget.Cavity.PopupMenu" parent="Widget.MaterialComponents.PopupMenu">
+        <item name="android:textAppearance">@style/TextAppearance.Cavity.Body1</item>
+    </style>
+
+    <!-- Dropdown -->
+    <style name="ThemeOverlay.Cavity.DropdownItem" parent="">
+        <item name="android:textAppearance">@style/TextAppearance.Cavity.Body1</item>
     </style>
 
     <style name="RoundedImage">
         <item name="cornerSize">50%</item>
-    </style>
-
-    <!-- Chips -->
-    <style name="Widget.Cavity.Chip.Friend" parent="">
-        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Action</item>
-        <item name="chipIconSize">@dimen/small_icon</item>
-        <item name="chipIcon">@drawable/ic_person</item>
-        <item name="closeIconEnabled">false</item>
-        <item name="closeIconSize">0dp</item>
-        <item name="chipStartPadding">0dp</item>
-        <item name="android:clickable">false</item>
-        <item name="android:checkable">false</item>
-        <item name="android:focusable">true</item>
-    </style>
-
-    <style name="Widget.Cavity.Chip.Friend.Entry">
-        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Entry</item>
-        <item name="android:clickable">true</item>
-        <item name="android:checkable">true</item>
     </style>
 </resources>

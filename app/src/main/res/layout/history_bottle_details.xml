@@ -34,9 +34,9 @@
         android:layout_margin="@dimen/medium_margin"
         android:background="?attr/actionBarItemBackground"
         android:src="@drawable/ic_close"
-        android:tint="?attr/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorOnSurface" />
 
     <TextView
         android:id="@+id/vintage"
@@ -51,6 +51,7 @@
 
     <TextView
         android:id="@+id/participants"
+        android:textAppearance="?attr/textAppearanceCaption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/medium_margin"
@@ -77,7 +78,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonShowBottle"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        style="@style/Widget.Cavity.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/medium_margin"

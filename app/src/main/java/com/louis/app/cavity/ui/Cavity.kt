@@ -15,7 +15,7 @@ class Cavity : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val isOreoOrHigher = Build.VERSION.SDK_INT < Build.VERSION_CODES.O
+        val isOreoOrHigher = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         val mode = if (isOreoOrHigher) MODE_NIGHT_FOLLOW_SYSTEM else MODE_NIGHT_YES
 
         setDefaultNightMode(mode)

@@ -5,19 +5,25 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.text.TextPaint
+import android.graphics.Typeface
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
+import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.withTranslation
+import androidx.core.text.inSpans
+import androidx.core.widget.TextViewCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.util.dpToPx
 import com.louis.app.cavity.util.spToPx
+import kotlinx.android.synthetic.main.empty_state.view.*
 import kotlin.math.cos
 import kotlin.math.roundToInt
 
@@ -32,13 +38,14 @@ class SliceBarView @JvmOverloads constructor(
         private const val BAR_BOTTOM_SPACING = 16f
         private const val BAR_WIDTH = 4f
         private const val TEXT_ANGLE = 50f
-        private const val TEXT_SIZE_NORMAL = 14f
-        private const val TEXT_SIZE_SMALL = 10f
+        private const val TEXT_SIZE_NORMAL = 16f
+        private const val TEXT_SIZE_SMALL = 12f
     }
 
     private val backgroundColor = context.getColor(R.color.cavity_grey)
     private val normalText = context.spToPx(TEXT_SIZE_NORMAL)
     private val smallText = context.spToPx(TEXT_SIZE_SMALL)
+
 
     private val strokePaint by lazy {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -47,8 +54,12 @@ class SliceBarView @JvmOverloads constructor(
         }
     }
 
+    private val textAppearanceApplier = AppCompatTextView(context).apply {
+        TextViewCompat.setTextAppearance(this, R.style.TextAppearance_Cavity_Body1)
+    }
+
     private val textPaint by lazy {
-        TextPaint(TextPaint.ANTI_ALIAS_FLAG).apply {
+        textAppearanceApplier.paint.apply {
             color = ContextCompat.getColor(context, R.color.material_on_surface_emphasis_medium)
         }
     }
@@ -90,6 +101,12 @@ class SliceBarView @JvmOverloads constructor(
         }
     }
 
+    inline fun SpannableStringBuilder.font(
+        typeface: Typeface? = null,
+        builderAction: SpannableStringBuilder.() -> Unit
+    ) =
+        inSpans(StyleSpan(typeface?.style ?: Typeface.DEFAULT.style), builderAction = builderAction)
+
     private fun showTooltipOnClick(touchX: Float, move: Boolean) {
         var x = 0f
         val touchPercentage = (touchX / measuredWidth) * 100
@@ -101,6 +118,13 @@ class SliceBarView @JvmOverloads constructor(
             if (move && touchedSlice == previousTouchedSlice) {
                 return
             }
+
+
+//            val text = buildSpannedString {
+//                font(ResourcesCompat.getFont(context, R.font.forum)) {
+//                    append("${label}: ${percentage.roundToInt()}%")
+//                }
+//            }
 
             TooltipCompat.setTooltipText(
                 this@SliceBarView,

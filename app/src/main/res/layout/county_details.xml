@@ -6,8 +6,10 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    app:cardElevation="@dimen/app_bar_elevation"
-    app:rippleColor="@android:color/transparent">
+    app:cardElevation="4dp"
+    app:cardPreventCornerOverlap="false"
+    app:rippleColor="@android:color/transparent"
+    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Cavity.Backdrop">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,13 +17,14 @@
 
         <TextView
             android:id="@+id/county"
-            style="@style/TabTextAppearance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
             android:ellipsize="end"
+            android:textAppearance="?attr/textAppearanceOverline"
             android:textColor="?attr/colorPrimary"
             android:textSize="17sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -29,11 +32,11 @@
 
         <TextView
             android:id="@+id/bottles"
-            style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/medium_margin"
             android:layout_marginTop="@dimen/small_margin"
+            android:textAppearance="?attr/textAppearanceCaption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/county"

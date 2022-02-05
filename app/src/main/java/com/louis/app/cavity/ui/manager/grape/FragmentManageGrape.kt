@@ -10,7 +10,9 @@ import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.manager.FragmentManager
 import com.louis.app.cavity.ui.manager.ManagerViewModel
+import com.louis.app.cavity.util.setVisible
 
 class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
     private lateinit var simpleInputDialog: SimpleInputDialog
@@ -27,6 +29,7 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
         simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
 
         initRecyclerView()
+        initEmptyState()
     }
 
     private fun initRecyclerView() {
@@ -42,7 +45,19 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
         }
 
         managerViewModel.getGrapeWithQuantifiedGrapes().observe(viewLifecycleOwner) {
+            binding.emptyState.setVisible(it.isEmpty())
             grapeAdapter.submitList(it)
+        }
+    }
+
+    private fun initEmptyState() {
+        binding.emptyState.apply {
+            setIcon(R.drawable.ic_grape)
+            setText(getString(R.string.empty_grape_manager))
+            setActionText(getString(R.string.add_grape))
+            setOnActionClickListener {
+                (parentFragment as? FragmentManager)?.showAddGrapeDialog()
+            }
         }
     }
 

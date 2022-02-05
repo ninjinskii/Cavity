@@ -1,9 +1,12 @@
 package com.louis.app.cavity.ui
 
+import android.content.Context
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.HorizontalScrollView
 import androidx.annotation.LayoutRes
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.forEach
@@ -14,6 +17,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Chipable
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.util.AvatarLoader
+import com.louis.app.cavity.util.L
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
@@ -29,9 +33,11 @@ class ChipLoader private constructor(
     private val chipGroup: ChipGroup,
     private val preselectedItems: List<Long>,
     private val selectable: Boolean,
+    private val onEmpty: String?,
     private val showIconIf: (Chipable) -> Boolean,
     private val onClickListener: ((View) -> Unit)?
 ) {
+
     fun go() {
         scope.launch(Default) {
             val itemsToInflate = clearChipGroup()
@@ -69,18 +75,25 @@ class ChipLoader private constructor(
                 }
             }
 
+            maybeShowEmptyState()
             scrollToCheckedChip()
         }
     }
 
     private suspend fun clearChipGroup(): List<Chipable> {
+        chipGroup.children.firstOrNull { it is ChipableTextView }?.let {
+            withContext(Main) {
+                chipGroup.removeView(it)
+            }
+        }
+
         val currentList = chipGroup.children.map { it.getTag(R.string.tag_chip_id) as Chipable }
         val toInflate = items.filter { it !in currentList }
         val toRemove = mutableSetOf<View>()
 
         chipGroup.forEach {
-            val item = it.getTag(R.string.tag_chip_id) as Chipable
-            if (item !in items) toRemove.add(it)
+            val item = it.getTag(R.string.tag_chip_id) as Chipable?
+            if (item !in items && item != null) toRemove.add(it)
         }
 
         withContext(Main) {
@@ -109,6 +122,20 @@ class ChipLoader private constructor(
         }
     }
 
+    private suspend fun maybeShowEmptyState() {
+        withContext(Main) {
+            val emptyTextView = ChipableTextView(chipGroup.context).apply {
+                text = onEmpty
+                setTypeface(null, Typeface.ITALIC)
+            }
+
+            if (items.isEmpty() && onEmpty != null) {
+                chipGroup.removeAllViews()
+                chipGroup.addView(emptyTextView)
+            }
+        }
+    }
+
     data class Builder(
         private var scope: CoroutineScope? = null,
         private var layoutInflater: LayoutInflater? = null,
@@ -119,6 +146,7 @@ class ChipLoader private constructor(
         private var preselectedItems: List<Long> = emptyList(),
         private var selectable: Boolean = true,
         private var minified: Boolean = false,
+        private var onEmpty: String? = null,
         private var showIconIf: (Chipable) -> Boolean = { false },
         private var onClickListener: ((View) -> Unit)? = null
     ) {
@@ -131,6 +159,7 @@ class ChipLoader private constructor(
         fun preselect(preselect: List<Long>) = apply { this.preselectedItems = preselect }
         fun preselect(preselect: Long) = apply { this.preselectedItems = listOf(preselect) }
         fun selectable(selectable: Boolean) = apply { this.selectable = selectable }
+        fun emptyText(text: String?) = apply { this.onEmpty = text }
         fun showIconIf(block: (Chipable) -> Boolean) = apply { this.showIconIf = block }
         fun doOnClick(block: (View) -> Unit) = apply {
             this.onClickListener = block
@@ -163,9 +192,16 @@ class ChipLoader private constructor(
                 chipGroup!!,
                 preselectedItems,
                 selectable,
+                onEmpty,
                 showIconIf,
                 onClickListener
             )
         }
+    }
+
+    class ChipableTextView(context: Context) : AppCompatTextView(context),
+        Chipable {
+        override fun getItemId() = -1L
+        override fun getChipText() = ""
     }
 }

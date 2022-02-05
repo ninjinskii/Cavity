@@ -9,6 +9,7 @@ import com.louis.app.cavity.ui.stepper.Stepper
 import com.louis.app.cavity.util.TransitionHelper
 
 class FragmentAddTasting : Stepper() {
+    override val showStepperProgress = false
     override val steps = setOf(
         FragmentInquireTastingInfo(),
         FragmentSearch().apply { arguments = bundleOf(PICK_MODE to true) },

@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/contestName"
-            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textAppearance="?attr/textAppearanceBody1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
@@ -45,9 +45,9 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/delete"
             android:src="@drawable/ic_close"
-            android:tint="?attr/colorError"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorError" />
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/rbGroupMedal"
@@ -66,6 +66,7 @@
             <Button
                 android:id="@+id/rbBronze"
                 style="?attr/materialButtonOutlinedStyle"
+                android:textSize="@dimen/smallerButtonsSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bronze" />
@@ -73,6 +74,7 @@
             <Button
                 android:id="@+id/rbSilver"
                 style="?attr/materialButtonOutlinedStyle"
+                android:textSize="@dimen/smallerButtonsSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/silver" />
@@ -80,6 +82,7 @@
             <Button
                 android:id="@+id/rbGold"
                 style="?attr/materialButtonOutlinedStyle"
+                android:textSize="@dimen/smallerButtonsSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/gold" />

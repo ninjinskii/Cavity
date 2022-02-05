@@ -4,21 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/stepper"
-        layout="@layout/stepper"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stepper">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,18 +18,18 @@
 
             <View
                 android:id="@+id/divider1"
-                style="@style/Widget.Cavity.Divider.Start"
+                style="@style/Widget.Cavity.Divider"
                 android:layout_marginTop="@dimen/medium_margin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/dateTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/date"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider1" />
 
@@ -47,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/vintage"
+                android:textAppearance="?attr/textAppearanceCaption"
                 app:layout_constraintEnd_toEndOf="@id/vintage"
                 app:layout_constraintStart_toStartOf="@id/vintage"
                 app:layout_constraintTop_toBottomOf="@id/dateTitle" />
@@ -56,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
+                android:textAppearance="?attr/textAppearanceCaption"
                 app:layout_constraintEnd_toStartOf="@id/apogee"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/vintageText" />
@@ -66,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/apogee"
+                android:textAppearance="?attr/textAppearanceCaption"
                 app:layout_constraintEnd_toEndOf="@id/apogee"
                 app:layout_constraintStart_toStartOf="@id/apogee"
                 app:layout_constraintTop_toBottomOf="@id/dateTitle" />
@@ -81,7 +76,6 @@
 
             <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/countLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -106,23 +100,22 @@
 
             <View
                 android:id="@+id/divider2"
-                style="@style/Widget.Cavity.Divider.Start"
+                style="@style/Widget.Cavity.Divider"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/vintage" />
 
             <TextView
                 android:id="@+id/priceTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/buying"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider2" />
 
             <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/priceLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -146,7 +139,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/currencyLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                style="@style/Widget.Cavity.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -167,7 +160,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/buyLocationLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                style="@style/Widget.Cavity.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -189,7 +182,6 @@
 
             <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/buyDateLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"

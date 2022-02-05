@@ -10,7 +10,9 @@ import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.manager.FragmentManager
 import com.louis.app.cavity.ui.manager.ManagerViewModel
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManageReview: Fragment(R.layout.fragment_manage_base) {
@@ -28,6 +30,7 @@ class FragmentManageReview: Fragment(R.layout.fragment_manage_base) {
         simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
 
         initRecyclerView()
+        initEmptyState()
     }
 
     private fun initRecyclerView() {
@@ -42,7 +45,19 @@ class FragmentManageReview: Fragment(R.layout.fragment_manage_base) {
         }
 
         managerViewModel.getReviewWithFilledReviews().observe(viewLifecycleOwner) {
+            binding.emptyState.setVisible(it.isEmpty())
             reviewAdapter.submitList(it)
+        }
+    }
+
+    private fun initEmptyState() {
+        binding.emptyState.apply {
+            setIcon(R.drawable.ic_grade)
+            setText(getString(R.string.empty_review_manager))
+            setActionText(getString(R.string.add_review))
+            setOnActionClickListener {
+                (parentFragment as? FragmentManager)?.showAddReviewDialog()
+            }
         }
     }
 

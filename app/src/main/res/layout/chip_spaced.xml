@@ -6,4 +6,5 @@
     android:layout_marginHorizontal="@dimen/small_margin"
     android:focusable="true"
     android:gravity="center"
+    android:textAppearance="?attr/textAppearanceOverline"
     app:chipEndPadding="@dimen/xsmall_margin" />

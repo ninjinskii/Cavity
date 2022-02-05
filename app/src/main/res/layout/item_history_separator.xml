@@ -17,6 +17,7 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody1"
             android:layout_marginHorizontal="@dimen/small_margin"
             android:background="@drawable/shape_step"
             android:paddingHorizontal="@dimen/medium_margin"

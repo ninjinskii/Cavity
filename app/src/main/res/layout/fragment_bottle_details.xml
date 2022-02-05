@@ -64,7 +64,7 @@
                 android:id="@+id/bottleName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
                 android:textColor="?attr/colorOnSurface"
                 android:transformPivotX="0dp"
                 android:transformPivotY="0dp"
@@ -73,33 +73,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Domaine F. Engel" />
 
-            <TextView
-                android:id="@+id/bottleVintage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBody1"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="2016" />
-
             <View
                 android:id="@+id/shaper"
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabEditBottle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/small_margin"
-                android:contentDescription="@string/edit_bottle"
-                android:src="@drawable/ic_edit"
-                app:layout_constraintBottom_toBottomOf="@id/bottleVintage"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:layout_height="30dp"
+                android:paddingBottom="-1dp" />
 
         </androidx.constraintlayout.motion.widget.MotionLayout>
 
@@ -107,7 +85,8 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:layout_editor_absoluteY="411dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -129,6 +108,7 @@
                         android:layout_width="146dp"
                         android:layout_height="wrap_content"
                         android:text="@string/taste"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
                         app:icon="@drawable/ic_glass" />
 
                     <com.google.android.material.button.MaterialButton
@@ -137,6 +117,7 @@
                         android:layout_width="146dp"
                         android:layout_height="wrap_content"
                         android:text="@string/gift_to"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
                         app:icon="@drawable/ic_gift" />
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -188,266 +169,266 @@
                     app:barrierDirection="bottom"
                     app:constraint_referenced_ids="warningBanner,buttonGroupInteract" />
 
-                <!-- Step 1 info, grapes -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/grapesCardView"
+                <!-- TODO: Add vintage chip group here -->
+
+                <com.louis.app.cavity.ui.widget.SliceBarView
+                    android:id="@+id/grapeBar"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="80dp"
                     android:layout_marginHorizontal="@dimen/small_margin"
-                    android:layout_marginVertical="@dimen/medium_margin"
-                    app:cardElevation="2dp"
+                    android:layout_marginTop="@dimen/xlarge_margin"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:paddingStart="@dimen/medium_margin"
+                    android:paddingEnd="@dimen/medium_margin"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/barrier">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/grapeTitleIcon"
-                            android:layout_width="@dimen/small_icon"
-                            android:layout_height="@dimen/small_icon"
-                            android:layout_margin="@dimen/small_margin"
-                            android:src="@drawable/ic_grape"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="?attr/colorPrimary" />
-
-                        <TextView
-                            android:id="@+id/grapeTitle"
-                            style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/small_margin"
-                            android:text="@string/grapes"
-                            app:layout_constraintBottom_toBottomOf="@id/grapeTitleIcon"
-                            app:layout_constraintStart_toEndOf="@id/grapeTitleIcon"
-                            app:layout_constraintTop_toTopOf="@id/grapeTitleIcon" />
-
-                        <com.louis.app.cavity.ui.widget.SliceBarView
-                            android:id="@+id/grapeBar"
-                            android:layout_width="0dp"
-                            android:layout_height="80dp"
-                            android:layout_marginHorizontal="@dimen/small_margin"
-                            android:layout_marginTop="@dimen/large_margin"
-                            android:layout_marginBottom="@dimen/small_margin"
-                            android:paddingStart="@dimen/medium_margin"
-                            android:paddingEnd="@dimen/medium_margin"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/grapeTitleIcon" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/miscCardView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/small_margin"
-                    android:layout_marginVertical="@dimen/medium_margin"
-                    app:cardElevation="2dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/grapesCardView">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/miscTitleIcon"
-                            android:layout_width="@dimen/small_icon"
-                            android:layout_height="@dimen/small_icon"
-                            android:layout_margin="@dimen/small_margin"
-                            android:src="@drawable/ic_info"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="?attr/colorPrimary" />
-
-                        <TextView
-                            android:id="@+id/miscTitle"
-                            style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/small_margin"
-                            android:text="@string/misc"
-                            app:layout_constraintBottom_toBottomOf="@id/miscTitleIcon"
-                            app:layout_constraintStart_toEndOf="@id/miscTitleIcon"
-                            app:layout_constraintTop_toTopOf="@id/miscTitleIcon" />
-
-                        <com.louis.app.cavity.ui.bottle.widget.LabeledData
-                            android:id="@+id/apogee"
-                            android:layout_width="146dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/small_margin"
-                            android:layout_marginVertical="@dimen/medium_margin"
-                            app:icon="@drawable/ic_glass"
-                            app:label="@string/apogee"
-                            app:layout_constraintEnd_toStartOf="@id/price"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/miscTitleIcon" />
-
-                        <com.louis.app.cavity.ui.bottle.widget.LabeledData
-                            android:id="@+id/price"
-                            android:layout_width="146dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/small_margin"
-                            android:layout_marginVertical="@dimen/medium_margin"
-                            app:icon="@drawable/ic_coin_stack"
-                            app:label="@string/price"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/apogee"
-                            app:layout_constraintTop_toBottomOf="@id/miscTitleIcon" />
-
-                        <com.louis.app.cavity.ui.bottle.widget.LabeledData
-                            android:id="@+id/buyLocation"
-                            android:layout_width="146dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/small_margin"
-                            android:layout_marginVertical="@dimen/medium_margin"
-                            app:icon="@drawable/ic_location"
-                            app:label="@string/buying_location"
-                            app:layout_constraintEnd_toStartOf="@id/buyDate"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/apogee" />
-
-                        <com.louis.app.cavity.ui.bottle.widget.LabeledData
-                            android:id="@+id/buyDate"
-                            android:layout_width="146dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/small_margin"
-                            android:layout_marginVertical="@dimen/medium_margin"
-                            app:icon="@drawable/ic_calendar"
-                            app:label="@string/buying_date"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/buyLocation"
-                            app:layout_constraintTop_toBottomOf="@id/price" />
-
-                        <com.louis.app.cavity.ui.bottle.widget.LabeledData
-                            android:id="@+id/otherInfo"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="@dimen/medium_margin"
-                            app:icon="@drawable/ic_comment"
-                            app:label="@string/other_info"
-                            app:layout_constraintEnd_toEndOf="@id/buyDate"
-                            app:layout_constraintStart_toStartOf="@id/buyLocation"
-                            app:layout_constraintTop_toBottomOf="@id/buyLocation" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/buttonShowPdf"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/medium_margin"
-                            android:text="@string/show_pdf"
-                            app:icon="@drawable/ic_pdf"
-                            app:layout_constraintEnd_toEndOf="@id/price"
-                            app:layout_constraintStart_toStartOf="@id/apogee"
-                            app:layout_constraintTop_toBottomOf="@id/otherInfo" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/buttonShowHistory"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/xsmall_margin"
-                            android:layout_marginBottom="@dimen/medium_margin"
-                            android:text="@string/show_history"
-                            app:icon="@drawable/ic_history"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="@id/price"
-                            app:layout_constraintStart_toStartOf="@id/apogee"
-                            app:layout_constraintTop_toBottomOf="@id/buttonShowPdf" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/reviewCardView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/small_margin"
-                    android:layout_marginVertical="@dimen/medium_margin"
-                    app:cardElevation="2dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/miscCardView">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <ImageView
-                            android:id="@+id/reviewTitleIcon"
-                            android:layout_width="@dimen/small_icon"
-                            android:layout_height="@dimen/small_icon"
-                            android:layout_margin="@dimen/small_margin"
-                            android:src="@drawable/ic_contest"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="?attr/colorPrimary" />
-
-                        <TextView
-                            android:id="@+id/reviewTitle"
-                            style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/small_margin"
-                            android:text="@string/expert_advice"
-                            app:layout_constraintBottom_toBottomOf="@id/reviewTitleIcon"
-                            app:layout_constraintStart_toEndOf="@id/reviewTitleIcon"
-                            app:layout_constraintTop_toTopOf="@id/reviewTitleIcon" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/reviewList"
-                            android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            android:layout_margin="@dimen/small_margin"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/reviewTitleIcon"
-                            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            tools:listitem="@layout/item_show_review_medal"
-                            tools:orientation="horizontal" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    app:layout_constraintTop_toBottomOf="@id/barrier" />
 
                 <View
-                    android:id="@+id/divider"
+                    android:id="@+id/divider1"
                     style="@style/Widget.Cavity.Divider"
-                    android:layout_marginTop="@dimen/large_margin"
-                    app:layout_constraintTop_toBottomOf="@id/reviewCardView" />
+                    app:layout_constraintTop_toBottomOf="@id/grapeBar" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonUltraDelete"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
+                <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                    android:id="@+id/apogee"
+                    android:layout_width="146dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/small_margin"
-                    android:layout_marginTop="@dimen/large_margin"
-                    android:text="@string/delete_bottle"
-                    app:icon="@drawable/ic_delete_all"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginVertical="@dimen/large_margin"
+                    app:icon="@drawable/ic_glass"
+                    app:label="@string/apogee"
+                    app:layout_constraintEnd_toStartOf="@id/price"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider" />
+                    app:layout_constraintTop_toBottomOf="@id/divider1"
+                    app:tint="?attr/colorOnPrimary" />
 
-                <TextView
+                <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                    android:id="@+id/price"
+                    android:layout_width="146dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginVertical="@dimen/large_margin"
+                    app:icon="@drawable/ic_coin_stack"
+                    app:label="@string/price"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/apogee"
+                    app:layout_constraintTop_toBottomOf="@id/divider1"
+                    app:tint="?attr/colorOnPrimary" />
+
+                <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                    android:id="@+id/capacity"
+                    android:layout_width="146dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    app:icon="@drawable/ic_bottle"
+                    app:label="@string/capacity"
+                    app:layout_constraintEnd_toStartOf="@id/buyDate"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/apogee"
+                    app:tint="?attr/colorOnPrimary" />
+
+                <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                    android:id="@+id/buyDate"
+                    android:layout_width="146dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    app:icon="@drawable/ic_calendar"
+                    app:label="@string/buying_date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/capacity"
+                    app:layout_constraintTop_toBottomOf="@id/price"
+                    app:tint="?attr/colorOnPrimary" />
+
+                <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                    android:id="@+id/buyLocation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    app:icon="@drawable/ic_location"
+                    app:label="@string/buying_location"
+                    app:layout_constraintEnd_toEndOf="@id/buyDate"
+                    app:layout_constraintStart_toStartOf="@id/capacity"
+                    app:layout_constraintTop_toBottomOf="@id/capacity"
+                    app:tint="?attr/colorOnPrimary" />
+
+                <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                    android:id="@+id/otherInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    app:icon="@drawable/ic_comment"
+                    app:label="@string/other_info"
+                    app:layout_constraintEnd_toEndOf="@id/buyDate"
+                    app:layout_constraintStart_toStartOf="@id/buyLocation"
+                    app:layout_constraintTop_toBottomOf="@id/buyLocation"
+                    app:tint="?attr/colorOnPrimary" />
+
+                <View
+                    android:id="@+id/divider2"
+                    style="@style/Widget.Cavity.Divider"
+                    app:layout_constraintTop_toBottomOf="@id/otherInfo" />
+
+                <ImageView
+                    android:id="@+id/buttonEdit"
+                    android:layout_width="@dimen/medium_icon"
+                    android:layout_height="@dimen/medium_icon"
+                    android:layout_margin="@dimen/large_margin"
+                    android:background="@drawable/shape_icon_button"
+                    android:foreground="?attr/actionBarItemBackground"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_edit"
+                    app:layout_constraintEnd_toStartOf="@id/buttonHistory"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/buttonEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/small_margin"
-                    android:gravity="center"
-                    android:text="@string/delete_bottle_warning"
+                    android:text="@string/edit_bottle"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintEnd_toEndOf="@id/buttonEdit"
+                    app:layout_constraintStart_toStartOf="@id/buttonEdit"
+                    app:layout_constraintTop_toBottomOf="@id/buttonEdit" />
+
+                <ImageView
+                    android:id="@+id/buttonHistory"
+                    android:layout_width="@dimen/medium_icon"
+                    android:layout_height="@dimen/medium_icon"
+                    android:layout_margin="@dimen/large_margin"
+                    android:background="@drawable/shape_icon_button"
+                    android:foreground="?attr/actionBarItemBackground"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_history"
+                    app:layout_constraintEnd_toStartOf="@id/buttonPdf"
+                    app:layout_constraintStart_toEndOf="@id/buttonEdit"
+                    app:layout_constraintTop_toBottomOf="@id/divider2"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin"
+                    android:text="@string/show_history"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintEnd_toEndOf="@id/buttonHistory"
+                    app:layout_constraintStart_toStartOf="@id/buttonHistory"
+                    app:layout_constraintTop_toBottomOf="@id/buttonHistory" />
+
+                <ImageView
+                    android:id="@+id/buttonPdf"
+                    android:layout_width="@dimen/medium_icon"
+                    android:layout_height="@dimen/medium_icon"
+                    android:layout_margin="@dimen/large_margin"
+                    android:background="@drawable/shape_icon_button"
+                    android:foreground="?attr/actionBarItemBackground"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_pdf"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/buttonHistory"
+                    app:layout_constraintTop_toBottomOf="@id/divider2"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin"
+                    android:text="@string/show_pdf"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintEnd_toEndOf="@id/buttonPdf"
+                    app:layout_constraintStart_toStartOf="@id/buttonPdf"
+                    app:layout_constraintTop_toBottomOf="@id/buttonPdf" />
+
+                <View
+                    android:id="@+id/divider3"
+                    style="@style/Widget.Cavity.Divider"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/buttonEditText" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/reviewList"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider3"
+                    tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_show_review_medal"
+                    tools:orientation="horizontal" />
+
+                <View
+                    android:id="@+id/divider4"
+                    style="@style/Widget.Cavity.Divider"
+                    app:layout_constraintTop_toBottomOf="@id/reviewList" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardPreventCornerOverlap="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/buttonUltraDelete" />
+                    app:layout_constraintTop_toBottomOf="@id/divider4"
+                    app:layout_constraintWidth_max="400dp"
+                    app:shapeAppearance="?attr/shapeAppearanceLargeComponent"
+                    app:strokeColor="@color/cardview_stroke"
+                    app:strokeWidth="1dp">
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/bottle"
+                            android:layout_width="300dp"
+                            android:layout_height="0dp"
+                            android:rotation="40"
+                            android:src="@drawable/ic_bottle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/cardview_stroke" />
+
+                        <TextView
+                            android:id="@+id/deleteText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/medium_margin"
+                            android:text="@string/delete_bottle_warning"
+                            android:textAppearance="?attr/textAppearanceBody1"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonUltraDelete"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|right"
+                            android:layout_marginVertical="@dimen/small_margin"
+                            android:layout_marginEnd="@dimen/medium_margin"
+                            android:text="@string/delete_bottle"
+                            app:icon="@drawable/ic_delete_all"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/deleteText" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.motion.widget.MotionLayout>

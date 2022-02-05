@@ -16,10 +16,10 @@ interface GrapeDao {
     @Delete
     suspend fun deleteGrape(grape: Grape)
 
-    @Query("SELECT * FROM grape")
+    @Query("SELECT * FROM grape ORDER BY name")
     fun getAllGrapes(): LiveData<List<Grape>>
 
-    @Query("SELECT * FROM grape")
+    @Query("SELECT * FROM grape ORDER BY name")
     suspend fun getAllGrapesNotLive(): List<Grape>
 
     @Transaction

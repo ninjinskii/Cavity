@@ -7,34 +7,39 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/opportunity"
-        style="@style/TextAppearance.MaterialComponents.Headline6"
-        android:layout_width="wrap_content"
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:ellipsize="end"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toStartOf="@id/bottleCount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        tools:text="13 janv. 2022" />
+
+    <TextView
+        android:id="@+id/opportunity"
+        android:layout_width="0dp"
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/xsmall_margin"
+        android:ellipsize="end"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/bottleCount"
+        app:layout_constraintTop_toBottomOf="@id/date"
         tools:text="Anniversaire Jean-Paul" />
 
     <TextView
-        android:id="@+id/date"
-        style="@style/TextAppearance.MaterialComponents.Body2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/opportunity"
-        tools:text="05/12/20" />
-
-    <TextView
         android:id="@+id/bottleCount"
-        style="@style/TextAppearance.MaterialComponents.Body2"
+        android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
         app:drawableEndCompat="@drawable/ic_bottle"
         app:drawableTint="?attr/colorOnBackground"
-        app:layout_constraintBottom_toBottomOf="@id/date"
+        app:layout_constraintBottom_toBottomOf="@id/opportunity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="5" />
@@ -48,7 +53,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/date"
+        app:layout_constraintTop_toBottomOf="@id/opportunity"
         android:orientation="horizontal"
         tools:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/chip_friend" />

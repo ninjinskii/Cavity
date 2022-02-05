@@ -13,6 +13,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
 import com.louis.app.cavity.ui.tasting.notifications.TastingAlarmScheduler
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentTastings : Fragment(R.layout.fragment_tastings) {
@@ -52,6 +53,7 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
         }
 
         tastingViewModel.undoneTastings.observe(viewLifecycleOwner) {
+            binding.emptyState.setVisible(it.isEmpty())
             tastingAdapter.submitList(it)
             TastingAlarmScheduler.setIsBootCompletedReceiverEnabled(
                 requireContext(),
@@ -62,11 +64,19 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
 
     private fun setListener() {
         binding.buttonAddTasting.setOnClickListener {
-            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
-
-            val action = FragmentTastingsDirections.tastingToAddTasting()
-            findNavController().navigate(action)
+            navigateToAddTasting()
         }
+
+        binding.emptyState.setOnActionClickListener {
+            navigateToAddTasting()
+        }
+    }
+
+    private fun navigateToAddTasting() {
+        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
+
+        val action = FragmentTastingsDirections.tastingToAddTasting()
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

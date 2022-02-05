@@ -4,6 +4,8 @@
 
     <!-- #d6aa50 -->
     <color name="cavity_gold">#a37e2c</color>
+    <color name="cavity_gold_gradient_1">#f3c258</color>
+    <color name="cavity_gold_gradient_2">#ecda9c</color>
     <color name="cavity_green">#81c784</color>
     <color name="cavity_light_green">#aed581</color>
     <color name="cavity_red">#e57373</color>
@@ -14,6 +16,7 @@
     <color name="cavity_grey">#9e9e9e</color>
 
     <color name="surface_elevation_4dp">#ffffff</color>
+    <color name="under_surface">#cecece</color>
 
     <color name="wine_white">#fff176</color>
     <color name="wine_red">#a60000</color>

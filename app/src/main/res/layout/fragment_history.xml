@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorSurface"
-        android:elevation="@dimen/app_bar_elevation"
+        android:translationZ="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
-            app:layout_scrollFlags="scroll|enterAlways|snap" />
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:titleCentered="true" />
 
         <HorizontalScrollView
             android:id="@+id/filterScrollView"
@@ -45,60 +46,68 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipReplenishments"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/replenishments" />
+                    android:text="@string/replenishments"
+                    android:textAppearance="?attr/textAppearanceOverline" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipComsumptions"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/consumptions" />
+                    android:text="@string/consumptions"
+                    android:textAppearance="?attr/textAppearanceOverline" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipTastings"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tastings" />
+                    android:text="@string/tastings"
+                    android:textAppearance="?attr/textAppearanceOverline" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipGiftedTo"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/gifted_to" />
+                    android:text="@string/gifted_to"
+                    android:textAppearance="?attr/textAppearanceOverline" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipGiftedBy"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/gifted_by" />
+                    android:text="@string/gifted_by"
+                    android:textAppearance="?attr/textAppearanceOverline" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipFavorites"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/favorites" />
+                    android:text="@string/favorites"
+                    android:textAppearance="?attr/textAppearanceOverline" />
 
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/historyRecyclerView"
+        android:id="@+id/historyEntryList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filterScrollView"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_history_use" />
+
+    <com.louis.app.cavity.ui.widget.EmptyStateView
+        android:id="@+id/emptyState"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:bigIcon="@drawable/ic_history"
+        app:text="@string/empty_history" />
 
     <!-- Bottom sheet -->
     <androidx.constraintlayout.widget.ConstraintLayout

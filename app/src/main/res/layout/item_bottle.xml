@@ -21,6 +21,7 @@
         android:id="@+id/vintage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceOverline"
         android:layout_marginVertical="@dimen/small_margin"
         android:layout_marginEnd="@dimen/medium_margin"
         app:layout_constraintBottom_toBottomOf="parent"

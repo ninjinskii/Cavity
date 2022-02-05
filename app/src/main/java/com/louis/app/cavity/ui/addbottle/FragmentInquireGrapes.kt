@@ -48,7 +48,7 @@ class FragmentInquireGrapes : Step(R.layout.fragment_inquire_grapes) {
         }
 
         grapeManager.qGrapes.observe(viewLifecycleOwner) {
-            toggleRvPlaceholder(it.isEmpty())
+            binding.emptyState.setVisible(it.isEmpty())
             quantifiedGrapeAdapter.submitList(it.toMutableList())
         }
     }
@@ -79,11 +79,9 @@ class FragmentInquireGrapes : Step(R.layout.fragment_inquire_grapes) {
     private fun setListeners() {
         with(binding) {
             buttonSelectGrape.setOnClickListener { grapeManager.requestGrapeDialog() }
-            buttonSelectGrapeSecondary.setOnClickListener { grapeManager.requestGrapeDialog() }
+            emptyState.setOnActionClickListener { grapeManager.requestGrapeDialog() }
+            emptyState.setOnSecondaryActionClickListener { stepperFragment?.goToNextPage() }
             buttonAddGrape.setOnClickListener { showAddGrapeDialog() }
-            buttonSkip.setOnClickListener { stepperFragment?.requestNextPage() }
-            stepper.next.setOnClickListener { stepperFragment?.requestNextPage() }
-            stepper.previous.setOnClickListener { stepperFragment?.requestPreviousPage() }
         }
     }
 
@@ -98,15 +96,6 @@ class FragmentInquireGrapes : Step(R.layout.fragment_inquire_grapes) {
 
         SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
             .show(dialogResources)
-    }
-
-    private fun toggleRvPlaceholder(toggle: Boolean) {
-        with(binding) {
-            grapeIconEmpty.setVisible(toggle)
-            explanation.setVisible(toggle)
-            buttonSelectGrapeSecondary.setVisible(toggle)
-            buttonSkip.setVisible(toggle)
-        }
     }
 
     override fun onDestroyView() {

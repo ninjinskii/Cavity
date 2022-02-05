@@ -58,6 +58,7 @@
 
         <TextView
             android:id="@+id/vintage"
+            android:textAppearance="?attr/textAppearanceOverline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"

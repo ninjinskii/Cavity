@@ -126,11 +126,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         bottleDetailsViewModel.reviews.observe(viewLifecycleOwner) {
-            if (it.isEmpty()) {
-                binding.reviewCardView.setVisible(false)
-            } else {
-                reviewAdapter.submitList(it)
-            }
+            binding.divider3.setVisible(it.isNotEmpty())
+            binding.reviewList.setVisible(it.isNotEmpty())
+            reviewAdapter.submitList(it)
         }
     }
 
@@ -147,10 +145,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         bottleDetailsViewModel.grapes.observe(viewLifecycleOwner) {
-            if (it.isEmpty()) {
-                binding.grapesCardView.setVisible(false)
-            } else {
-                binding.grapeBar.setSlices(it, anim = true)
+            binding.grapeBar.apply {
+                setVisible(it.isNotEmpty())
+                setSlices(it, anim = true)
             }
         }
 
@@ -173,7 +170,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun setListeners() {
-        binding.fabEditBottle.setOnClickListener {
+        binding.buttonEdit.setOnClickListener {
             transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
 
             val action = FragmentBottleDetailsDirections.bottleDetailsToEditBottle(
@@ -207,11 +204,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             findNavController().navigate(action)
         }
 
-        binding.buttonShowPdf.setOnClickListener {
+        binding.buttonPdf.setOnClickListener {
             bottleDetailsViewModel.preparePdf()
         }
 
-        binding.buttonShowHistory.setOnClickListener {
+        binding.buttonHistory.setOnClickListener {
             transitionHelper.setFadeThrough(navigatingForward = true)
 
             val action = FragmentBottleDetailsDirections.bottleDetailsToHistory(args.bottleId)
@@ -224,7 +221,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         binding.buttonUltraDelete.setOnClickListener {
             LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
-                .setMessage(resources.getString(R.string.confirm_bottle_delete))
+                .setMessage(R.string.confirm_bottle_delete)
                 .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                 }
                 .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
@@ -309,9 +306,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             apogee.setData(bottle.apogee.toString())
             buyLocation.setData(bottle.buyLocation)
             buyDate.setData(DateFormatter.formatDate(bottle.buyDate))
+            capacity.setData(getString(bottle.bottleSize.stringRes))
             otherInfo.setData(bottle.otherInfo)
-            bottleVintage.text = bottle.vintage.toString()
-            buttonShowPdf.isEnabled = bottle.hasPdf()
+            buttonPdf.isEnabled = bottle.hasPdf()
             favorite.isChecked = bottle.isFavorite.toBoolean()
 
             if (formattedPrice.isNotEmpty()) {

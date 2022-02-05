@@ -12,6 +12,7 @@ import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.DateManager
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import java.util.*
 
@@ -81,11 +82,6 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
             onEndIconClickListener = { dateManager.setBuyDate(System.currentTimeMillis()) }
             onDateChangedListener = { dateManager.setBuyDate(it) }
         }
-
-        with(binding) {
-            stepper.next.setOnClickListener { goToNextPage() }
-            stepper.previous.setOnClickListener { stepperFragment?.requestPreviousPage() }
-        }
     }
 
     private fun observe() {
@@ -109,17 +105,6 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
         }
     }
 
-    private fun goToNextPage() {
-        val isFormValid = binding.countLayout.validate() &&
-            binding.priceLayout.validate() &&
-            binding.buyDateLayout.validate()
-
-        if (isFormValid) {
-            savePartialBottle()
-            stepperFragment?.requestNextPage()
-        }
-    }
-
     private fun savePartialBottle() {
         with(binding) {
             val count = count.text.toString().trim().toInt()
@@ -137,6 +122,20 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
                 location,
             )
         }
+    }
+
+    override fun requestNextPage(): Boolean {
+        L.v("requestNextPage inquire dates")
+        val isFormValid = binding.countLayout.validate() &&
+            binding.priceLayout.validate() &&
+            binding.buyDateLayout.validate()
+
+        if (isFormValid) {
+            savePartialBottle()
+            return true
+        }
+
+        return false
     }
 
     override fun onDestroyView() {

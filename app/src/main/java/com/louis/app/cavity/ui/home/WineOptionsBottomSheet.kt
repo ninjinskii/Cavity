@@ -57,7 +57,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
             deleteWine.setOnClickListener {
                 context?.let { context ->
                     LifecycleMaterialDialogBuilder(context, viewLifecycleOwner)
-                        .setMessage(resources.getString(R.string.confirm_wine_delete))
+                        .setMessage(R.string.confirm_wine_delete)
                         .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                         }
                         .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->

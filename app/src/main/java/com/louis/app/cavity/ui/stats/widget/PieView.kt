@@ -3,14 +3,15 @@ package com.louis.app.cavity.ui.stats.widget
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.*
-import android.text.TextPaint
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.widget.TextViewCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.Stat
@@ -26,7 +27,7 @@ class PieView @JvmOverloads constructor(
     View(context, attrs, defStyleAttr) {
 
     companion object {
-        private const val TEXT_SIZE = 12f
+        private const val TEXT_SIZE = 14f
     }
 
     private val sliceSpace = resources.getDimension(R.dimen.divider_height) / 2
@@ -34,7 +35,7 @@ class PieView @JvmOverloads constructor(
     private val textSpace = resources.getDimension(R.dimen.pie_text_space)
     private val upsideDownTextSpace = resources.getDimension(R.dimen.pie_upside_down_text_space)
 
-    private val backgroundColor = Color.BLACK
+    private val backgroundColor = ContextCompat.getColor(context, R.color.under_surface)
     private val transparent = Color.TRANSPARENT
     private val textColor = ContextCompat.getColor(
         context,
@@ -50,8 +51,12 @@ class PieView @JvmOverloads constructor(
         }
     }
 
+    private val textAppearanceApplier = AppCompatTextView(context).apply {
+        TextViewCompat.setTextAppearance(this, R.style.TextAppearance_Cavity_Body1)
+    }
+
     private val textPaint by lazy {
-        TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAppearanceApplier.paint.apply {
             textSize = context.spToPx(TEXT_SIZE)
         }
     }

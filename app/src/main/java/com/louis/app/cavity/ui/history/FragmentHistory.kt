@@ -100,7 +100,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         )
 
         val isHeader = { itemPos: Int -> historyAdapter.getItemViewType(itemPos) == TYPE_SEPARATOR }
-        binding.historyRecyclerView.apply {
+        binding.historyEntryList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = historyAdapter
             setHasFixedSize(false)
@@ -115,6 +115,11 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         historyViewModel.entries.observe(viewLifecycleOwner) {
             historyAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+
+            lifecycleScope.launch {
+                delay(100)
+                binding.emptyState.setVisible(historyAdapter.itemCount == 0)
+            }
 
             if (historyViewModel.filter.value is HistoryFilter.DateFilter) {
                 lifecycleScope.launch {
@@ -132,7 +137,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 L.v("Start scrolling to position: $pos")
                 val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 5)
                 scroller.targetPosition = pos
-                val item = (binding.historyRecyclerView.adapter as HistoryRecyclerAdapter)
+                val item = (binding.historyEntryList.adapter as HistoryRecyclerAdapter)
 
 
                 lifecycleScope.launch(Main) {
@@ -142,7 +147,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                     }
                 }
 
-                binding.historyRecyclerView.layoutManager?.startSmoothScroll(scroller)
+                binding.historyEntryList.layoutManager?.startSmoothScroll(scroller)
             }
         }*/
 
@@ -160,6 +165,20 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     private fun setListeners() {
         binding.filterChipGroup.setOnCheckedChangeListener { _, checkedId ->
             historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
+
+            lifecycleScope.launch {
+                delay(100)
+
+                binding.emptyState.apply {
+                    if (checkedId == R.id.chipFavorites) {
+                        setIcon(R.drawable.ic_star)
+                        setText(getString(R.string.empty_history_favorite))
+                    } else {
+                        setIcon(R.drawable.ic_history)
+                        setText(getString(R.string.empty_history))
+                    }
+                }
+            }
         }
 
         binding.bottleDetails.buttonCloseBottomSheet.setOnClickListener {
@@ -241,9 +260,10 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-            with(binding.bottleDetails) {
-                friendChipGroup.removeAllViews()
+            // Ensure friends are in the correct order by forcing all chips to be inflated again
+            binding.bottleDetails.friendChipGroup.removeAllViews()
 
+            with(binding.bottleDetails) {
                 ChipLoader.Builder()
                     .with(lifecycleScope)
                     .useInflater(layoutInflater)

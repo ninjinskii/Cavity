@@ -6,11 +6,6 @@
         <attr name="tabTextAppearance" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="AnimatedImageButton">
-        <attr name="initialAvd" format="reference" />
-        <attr name="otherAvd" format="reference" />
-    </declare-styleable>
-
     <declare-styleable name="AnimatedCheckBox">
         <attr name="delayBeforeRepeat" format="integer" />
     </declare-styleable>
@@ -33,5 +28,12 @@
     <declare-styleable name="HexagonalView">
         <attr name="flat" format="boolean" />
         <attr name="markerColor" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="EmptyStateView">
+        <attr name="bigIcon" format="reference" />
+        <attr name="text" format="string" />
+        <attr name="actionText" format="string" />
+        <attr name="secondaryActionText" format="string" />
     </declare-styleable>
 </resources>

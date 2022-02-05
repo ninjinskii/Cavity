@@ -88,7 +88,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         binding.fakeToolbar.setNavigationOnClickListener {
             if (isPickMode) {
-                stepperFragment?.requestPreviousPage()
+                stepperFragment?.goToPreviousPage()
             } else {
                 findNavController().navigateUp()
             }
@@ -126,6 +126,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .into(binding.countyChipGroup)
                 .preselect(preselectedCounties)
                 .doOnClick { prepareCountyFilters() }
+                .emptyText(getString(R.string.empty_county))
                 .build()
                 .go()
         }
@@ -139,6 +140,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .into(binding.grapeChipGroup)
                 .preselect(preselectedGrapes)
                 .doOnClick { prepareGrapeFilters() }
+                .emptyText(getString(R.string.empty_grape_manager))
                 .build()
                 .go()
 
@@ -153,6 +155,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .into(binding.reviewChipGroup)
                 .preselect(preselectedReviews)
                 .doOnClick { prepareReviewFilters() }
+                .emptyText(getString(R.string.empty_review_manager))
                 .build()
                 .go()
         }
@@ -217,6 +220,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
 
         searchViewModel.results.observe(viewLifecycleOwner) {
+            binding.emptyState.setVisible(it.isEmpty())
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter.submitList(it.toMutableList())
@@ -375,7 +379,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         binding.buttonSubmit.apply {
             setVisible(isPickMode)
             setOnClickListener {
-                stepperFragment?.requestNextPage()
+                stepperFragment?.goToNextPage()
             }
         }
     }

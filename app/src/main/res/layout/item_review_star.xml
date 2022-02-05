@@ -16,12 +16,12 @@
 
         <TextView
             android:id="@+id/contestName"
-            style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
             android:ellipsize="end"
             android:maxLines="2"
+            android:textAppearance="?attr/textAppearanceBody1"
             app:layout_constraintEnd_toStartOf="@id/deleteReview"
             app:layout_constraintStart_toEndOf="@id/star"
             app:layout_constraintTop_toTopOf="parent"
@@ -42,6 +42,7 @@
             android:id="@+id/starCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorOnPrimary"
             app:layout_constraintBottom_toBottomOf="@id/star"
             app:layout_constraintEnd_toEndOf="@id/star"
@@ -56,9 +57,9 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/delete"
             android:src="@drawable/ic_close"
-            android:tint="?attr/colorError"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorError" />
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/rbGroupStars"
@@ -78,21 +79,24 @@
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/star1" />
+                android:text="@string/star1"
+                android:textSize="@dimen/smallerButtonsSize" />
 
             <Button
                 android:id="@+id/rbStar2"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/star2" />
+                android:text="@string/star2"
+                android:textSize="@dimen/smallerButtonsSize" />
 
             <Button
                 android:id="@+id/rbStar3"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/star3" />
+                android:text="@string/star3"
+                android:textSize="@dimen/smallerButtonsSize" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>

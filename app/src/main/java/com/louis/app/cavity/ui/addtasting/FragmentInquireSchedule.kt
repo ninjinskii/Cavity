@@ -28,7 +28,7 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
         setupNavigation(binding.appBar.toolbar)
 
         binding.appBar.toolbar.setNavigationOnClickListener {
-            stepperFragment?.requestPreviousPage()
+            stepperFragment?.goToPreviousPage()
         }
 
         snackbarProvider = activity as SnackbarProvider

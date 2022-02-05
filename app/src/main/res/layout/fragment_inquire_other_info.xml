@@ -15,20 +15,12 @@
             android:layout_height="match_parent"
             android:animateLayoutChanges="true">
 
-            <include
-                android:id="@+id/stepper"
-                layout="@layout/stepper"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
             <View
                 android:id="@+id/divider"
-                style="@style/Widget.Cavity.Divider.Start"
+                style="@style/Widget.Cavity.Divider"
                 android:layout_marginTop="@dimen/medium_margin"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stepper" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/otherInfoTitle"
@@ -75,21 +67,24 @@
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/size_slim" />
+                    android:text="@string/size_slim"
+                    android:textAppearance="?attr/textAppearanceSubtitle1" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/rbNormal"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/size_normal" />
+                    android:text="@string/size_normal"
+                    android:textAppearance="?attr/textAppearanceSubtitle1" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/rbMagnum"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/size_magnum" />
+                    android:text="@string/size_magnum"
+                    android:textAppearance="?attr/textAppearanceSubtitle1" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -99,6 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/inquire_add_to_favorites"
+                android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rbGroupSize" />
@@ -109,6 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/gifted_by_friend"
+                android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/addToFavorite" />
@@ -160,7 +157,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonAddPdf"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Cavity.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -172,17 +169,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/buttonAddFriend"
                 app:layout_constraintVertical_bias="0.0" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/submitAddBottle"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/submit"
-                app:icon="@drawable/ic_check"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonAddPdf" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

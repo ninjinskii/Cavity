@@ -18,6 +18,7 @@ class FragmentAddBottle : Stepper() {
     private val addBottleViewModel: AddBottleViewModel by viewModels()
     private val args: FragmentAddBottleArgs by navArgs()
 
+    override val showStepperProgress = true
     override val steps = setOf(
         FragmentInquireDates(),
         FragmentInquireGrapes(),

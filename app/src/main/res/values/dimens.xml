@@ -22,20 +22,24 @@
     <dimen name="stepper_icon_background">42dp</dimen>
     <dimen name="labeled_data_icon">36dp</dimen>
 
+    <dimen name="hexagonal_fab_width">56dp</dimen>
+
     <dimen name="review_height">96dp</dimen>
 
     <dimen name="history_marker_width">4dp</dimen>
     <dimen name="history_wine_image_size">145dp</dimen>
-
-    <dimen name="app_bar_elevation">4dp</dimen>
-    <dimen name="container_drop_elevation">2dp</dimen>
-    <dimen name="no_elevation">0dp</dimen>
 
     <dimen name="chip_group_default_height">48dp</dimen>
 
     <dimen name="small_item">48dp</dimen>
 
     <dimen name="starred_corner_size">24dp</dimen>
+    <dimen name="starred_line_small_start">16dp</dimen>
+    <dimen name="starred_line_small_end">20dp</dimen>
+    <dimen name="starred_line_medium_start">18dp</dimen>
+    <dimen name="starred_line_medium_end">22dp</dimen>
+    <dimen name="starred_line_large_start">24dp</dimen>
+    <dimen name="starred_line_large_end">30dp</dimen>
 
     <dimen name="pie_text_space">-6dp</dimen>
     <dimen name="pie_upside_down_text_space">14dp</dimen>

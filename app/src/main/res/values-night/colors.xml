@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="surface_elevation_4dp">#282828</color>
+    <color name="under_surface">#000000</color>
+
     <color name="flat_card_background">#12ffffff</color>
 
     <color name="unselected_icon">#86ffffff</color>
 
     <color name="divider_color">#12ffffff</color>
+
 </resources>

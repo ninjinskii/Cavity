@@ -79,7 +79,14 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
         }
     }
 
-    private fun showAddCountyDialog() {
+    private fun getReviewType(@IdRes button: Int) = when (button) {
+        R.id.rbMedal -> 0
+        R.id.rbRate20 -> 1
+        R.id.rbRate100 -> 2
+        else -> 3
+    }
+
+    fun showAddCountyDialog() {
         val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.add_county,
             hint = R.string.county
@@ -90,7 +97,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
         simpleInputDialog.show(dialogResources)
     }
 
-    private fun showAddGrapeDialog() {
+    fun showAddGrapeDialog() {
         val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.add_grape,
             hint = R.string.grape_name,
@@ -102,7 +109,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
         simpleInputDialog.show(dialogResources)
     }
 
-    private fun showAddReviewDialog() {
+    fun showAddReviewDialog() {
         val dialogBinding = DialogAddReviewBinding.inflate(layoutInflater)
 
         LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
@@ -123,7 +130,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
         dialogBinding.rbMedal.performClick()
     }
 
-    private fun showAddFriendDialog() {
+    fun showAddFriendDialog() {
         val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.add_friend,
             hint = R.string.add_friend_label,
@@ -134,13 +141,6 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
 
         SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
             .show(dialogResources)
-    }
-
-    private fun getReviewType(@IdRes button: Int) = when (button) {
-        R.id.rbMedal -> 0
-        R.id.rbRate20 -> 1
-        R.id.rbRate100 -> 2
-        else -> 3
     }
 
     override fun onDestroyView() {

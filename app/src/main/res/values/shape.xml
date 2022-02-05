@@ -2,7 +2,7 @@
 <resources>
 
     <style name="ShapeAppearance.Cavtiy.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
-        <item name="cornerFamily">rounded</item>
+        <item name="cornerFamily">cut</item>
         <item name="cornerSize">16dp</item>
     </style>
 
@@ -11,19 +11,46 @@
         <item name="cornerSize">70dp</item>
     </style>
 
+    <style name="ShapeAppearance.Cavity.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">6dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.Cavity.Dialog" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">14dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.Cavity.ChipIcon" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">6dp</item>
+        <item name="cornerFamilyBottomLeft">rounded</item>
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerSizeBottomLeft">50%</item>
+        <item name="cornerSizeTopLeft">50%</item>
+    </style>
+
     <!-- Backdrop front layer shape -->
-    <style name="ShapeAppearenceOverlay.Cavity.Backdrop" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerRadius">16dp</item>
+    <style name="ShapeAppearanceOverlay.Cavity.Backdrop" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">16dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
     <!-- Favorite history items -->
-    <style name="ShapeAppearenceOverlay.Cavity.HistoryItems" parent="">
+    <style name="ShapeAppearanceOverlay.Cavity.HistoryItems" parent="">
         <item name="cornerFamily">cut</item>
         <item name="cornerSizeTopRight">@dimen/starred_corner_size</item>
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeTopLeft">0dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.Cavity.Drawer" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeBottomRight">16dp</item>
     </style>
 </resources>
 

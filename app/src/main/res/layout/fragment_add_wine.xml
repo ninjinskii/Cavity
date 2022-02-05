@@ -2,9 +2,9 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinator"
-    android:transitionGroup="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:transitionGroup="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,11 +28,11 @@
 
                 <TextView
                     android:id="@+id/countyTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/county"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -93,23 +93,22 @@
 
                 <View
                     android:id="@+id/divider1"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/countyScrollView" />
 
                 <TextView
                     android:id="@+id/identificationTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/identification"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider1" />
 
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/nameLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
@@ -128,7 +127,7 @@
 
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/namingLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    style="@style/Widget.Cavity.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
@@ -150,17 +149,17 @@
 
                 <View
                     android:id="@+id/divider2"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/namingLayout" />
 
                 <TextView
                     android:id="@+id/cuveeTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/cuvee"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider2" />
 
@@ -184,17 +183,17 @@
 
                 <View
                     android:id="@+id/divider3"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cuveeLayout" />
 
                 <TextView
                     android:id="@+id/colorTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/color"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider3" />
 
@@ -222,49 +221,49 @@
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/colorRed"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:checked="true"
-                            android:text="@string/wine_color_red" />
+                            android:text="@string/wine_color_red"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/colorWhite"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/wine_color_white" />
+                            android:text="@string/wine_color_white"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/colorSweet"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:text="@string/wine_color_sweet" />
+                            android:text="@string/wine_color_sweet"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/colorRose"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:text="@string/wine_color_rose" />
+                            android:text="@string/wine_color_rose"
+                            android:textAppearance="?attr/textAppearanceOverline" />
 
                     </com.google.android.material.chip.ChipGroup>
                 </HorizontalScrollView>
 
                 <View
                     android:id="@+id/divider4"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/colorScrollView" />
 
                 <TextView
                     android:id="@+id/organicTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/organic"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider4" />
 
@@ -275,22 +274,23 @@
                     android:layout_marginStart="@dimen/medium_margin"
                     android:layout_marginTop="@dimen/medium_margin"
                     android:text="@string/organic_wine"
+                    android:textAppearance="?attr/textAppearanceBody2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/organicTitle" />
 
                 <View
                     android:id="@+id/divider5"
-                    style="@style/Widget.Cavity.Divider.Start"
+                    style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/organicWine" />
 
                 <TextView
                     android:id="@+id/imageTitle"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/wine_photo"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider5" />
 
@@ -315,6 +315,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="100dp"
                     android:text="@string/take_photo"
+                    android:textAppearance="?attr/textAppearanceCaption"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/buttonTakePhoto"
                     app:layout_constraintStart_toStartOf="@id/buttonTakePhoto"
@@ -342,6 +343,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="100dp"
                     android:text="@string/add_photo"
+                    android:textAppearance="?attr/textAppearanceCaption"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/buttonBrowsePhoto"
                     app:layout_constraintStart_toStartOf="@id/buttonBrowsePhoto"
@@ -379,6 +381,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/submitAddWine"
+                    style="@style/Widget.Cavity.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"

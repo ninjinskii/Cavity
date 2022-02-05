@@ -17,7 +17,7 @@
 
     <TextView
         android:id="@+id/label"
-        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:textAppearance="?attr/textAppearanceCaption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/xsmall_margin"
@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/data"
-        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/xsmall_margin"

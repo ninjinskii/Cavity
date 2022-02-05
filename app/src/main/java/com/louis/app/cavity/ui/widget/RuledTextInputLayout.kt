@@ -1,25 +1,17 @@
 package com.louis.app.cavity.ui.widget
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Paint.ANTI_ALIAS_FLAG
-import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View.OnFocusChangeListener
 import androidx.annotation.StringRes
 import androidx.core.content.res.use
-import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.textfield.TextInputLayout
 import com.louis.app.cavity.R
-import com.louis.app.cavity.util.L
 
 class RuledTextInputLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = R.attr.textInputStyle
 ) :
     TextInputLayout(context, attrs, defStyleAttr), TextInputLayout.OnEditTextAttachedListener {
 
@@ -39,7 +31,7 @@ class RuledTextInputLayout @JvmOverloads constructor(
             attrs,
             R.styleable.RuledTextInputLayout,
             defStyleAttr,
-            0
+            R.style.Widget_MaterialComponents_TextInputLayout_FilledBox //com.google.android.material.R.style.Widget_Design_TextInputLayout,
         ).use {
             flags = it.getInteger(R.styleable.RuledTextInputLayout_rule, RULE_ABSENT)
             setDefaultRules()

@@ -72,24 +72,6 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         }
 
         with(binding) {
-            submitAddBottle.setOnClickListener {
-                friendChipGroup.apply {
-                    val friend = if (giftedBy.isChecked) collectAsSingle<Friend>()?.id else null
-
-                    otherInfoManager.submitOtherInfo(
-                        otherInfo.text.toString(),
-                        rbGroupSize.checkedButtonId,
-                        addToFavorite.isChecked,
-                        friend
-                    )
-
-                    addBottleViewModel.insertBottle()
-                }
-            }
-
-            stepper.next.setOnClickListener { stepperFragment?.requestNextPage() }
-            stepper.previous.setOnClickListener { stepperFragment?.requestPreviousPage() }
-
             giftedBy.setOnCheckedChangeListener { _, isChecked ->
                 friendScrollView.setVisible(isChecked)
                 buttonAddFriend.setVisible(isChecked)
@@ -115,6 +97,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 .load(it)
                 .into(binding.friendChipGroup)
                 .useAvatar(true)
+                .emptyText(getString(R.string.empty_friend))
                 .build()
                 .go()
         }
@@ -163,6 +146,25 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
             .show(dialogResources)
+    }
+
+    override fun requestNextPage(): Boolean {
+        with(binding) {
+            friendChipGroup.apply {
+                val friend = if (giftedBy.isChecked) collectAsSingle<Friend>()?.id else null
+
+                otherInfoManager.submitOtherInfo(
+                    otherInfo.text.toString(),
+                    rbGroupSize.checkedButtonId,
+                    addToFavorite.isChecked,
+                    friend
+                )
+
+                addBottleViewModel.insertBottle()
+            }
+        }
+
+        return true
     }
 
     override fun onDestroyView() {

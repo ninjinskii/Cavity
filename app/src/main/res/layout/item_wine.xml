@@ -36,7 +36,7 @@
 
         <TextView
             android:id="@+id/wineNaming"
-            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:textAppearance="?attr/textAppearanceCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/small_margin"
@@ -47,7 +47,7 @@
 
         <TextView
             android:id="@+id/wineName"
-            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:textAppearance="?attr/textAppearanceBody1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/small_margin"
@@ -75,6 +75,7 @@
 
     <TextView
         android:id="@+id/bottlesCount"
+        android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"

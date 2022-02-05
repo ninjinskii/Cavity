@@ -80,6 +80,7 @@
     <string name="wine_color_rose">Rosé</string>
     <string name="vintage_and_count">%1$d (%2$d)</string>
     <string name="confirm_wine_delete">Supprimer le vin et ses bouteilles ?</string>
+    <string name="empty_wine">Ajoutez un vin pour commencer à gérer votre stock</string>
 
     <string name="step_1">1</string>
     <string name="step_2">2</string>
@@ -100,17 +101,19 @@
     <string name="select_grapes">Sélectionner les cépages</string>
     <string name="skip">Passer à la suite</string>
     <string name="add_grape">Créer un nouveau cépage</string>
-    <string name="grape_explanation">Choisissez les cépages contenus dans cette bouteille, ou créez en des nouveaux s\'ils sont manquants</string>
+    <string name="empty_grape">Choisissez les cépages contenus dans cette bouteille, ou créez en des nouveaux s\'ils sont manquants</string>
     <string name="grape_other">Autre</string>
     <string name="percentage">%1$d %%</string>
     <string name="buying">Achat</string>
     <string name="price">Prix</string>
     <string name="currency">Monnaie</string>
     <string name="buying_location">Lieu d\'achat</string>
+    <string name="capacity">Contenance</string>
     <string name="buying_date">Date d\'achat</string>
     <string name="review">Avis d\'expert</string>
     <string name="contest_name">Nom du concours</string>
     <string name="add_review">Ajouter un avis</string>
+    <string name="empty_review">Saisissez les notes et concours de cette bouteille, ou créez en des nouveaux s\'ils sont manquants</string>
     <string name="reviews">Avis d\'experts</string>
     <string name="select_reviews">Choisissez un concours</string>
     <string name="medal">Médaille</string>
@@ -155,6 +158,7 @@
     <string name="no_price_no_results">Les bouteilles n\'ayant pas de prix renseigné ne seront pas affichées.</string>
     <string name="query_feedback">\'%1$s\'</string>
     <string name="selected_bottles">Bouteilles sélectionnées (%1$d)</string>
+    <string name="empty_search">Aucun résultat</string>
     <!--    <string name="search_wine">Recherche</string>-->
 
     <!-- Bottle details -->
@@ -182,9 +186,9 @@
     <string name="bottle_consumed">La bouteille a été dégustée.</string>
     <string name="bottle_gifted">La bouteille a été offerte.</string>
     <string name="gift_date">Offerte le</string>
-    <string name="delete_bottle">Érradiquer la bouteille</string>
-    <string name="delete_bottle_warning">Supprime totalement cette bouteille et ses entrées dans l\'historique.</string>
-    <string name="confirm_bottle_delete">Voulez-vous vraiment supprimer cette bouteille ?</string>
+    <string name="delete_bottle">Jeter la bouteille</string>
+    <string name="delete_bottle_warning">En cas de perte ou d\'erreur de saisie, vous pouvez jeter la bouteille. Elle n\'apparaîtra plus dans le stock ni dans l\'historique.</string>
+    <string name="confirm_bottle_delete">Voulez-vous vraiment jeter cette bouteille ?</string>
     <string name="bottle_used_in_tasting">Cette bouteille est utilisée dans une dégustation.</string>
     <string name="retire">Retirer</string>
 
@@ -221,6 +225,10 @@
     <string name="contests">Concours</string>
     <string name="friends">Amis</string>
     <string name="cannot_delete">Les noms ne correspondent pas.</string>
+    <string name="empty_county">Aucune région</string>
+    <string name="empty_grape_manager">Aucun cépage</string>
+    <string name="empty_review_manager">Aucune note ou concours</string>
+    <string name="empty_friend">Aucun ami</string>
 
     <!-- History -->
     <string name="name_and_vintage">%1$s (%2$d)</string>
@@ -240,6 +248,8 @@
     <string name="consume_label">Bue avec: </string>
     <string name="go_to">Aller à</string>
     <string name="nothing"> </string>
+    <string name="empty_history">La liste des bouteilles ajoutées ou consommées sera affichée ici</string>
+    <string name="empty_history_favorite">Pour mettre un favori, glissez une entrée de l\'historique vers la gauche</string>
 
     <!-- Stats -->
     <string name="stats">Statistiques</string>
@@ -269,6 +279,8 @@
     <string name="tasting_confirmed">Dégustation terminée.</string>
     <string name="tasting_created">La dégustation a été ajoutée.</string>
     <string name="confirm_tasting_explanation">Les bouteilles présentes dans la liste vont être retirées du stock.</string>
+    <string name="empty_tasting">Vous comptez boire plusieurs bouteilles ce soir ? Préparez tout à l\'avance !</string>
+    <string name="empty_tasting_bottle">Aucune bouteille associée à cette dégustation</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

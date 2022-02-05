@@ -15,9 +15,10 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
+        android:textAppearance="?attr/textAppearanceOverline"
         android:paddingHorizontal="@dimen/small_margin"
         android:paddingVertical="@dimen/county_tab_height"
-        android:textColor="#fff"
+        android:textColor="?attr/colorOnSurface"
         android:textStyle="bold"
         tools:text="Alsace" />
 

@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.button.MaterialButton
+    <ImageButton
         android:id="@+id/previous"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Précédent"
+        android:layout_width="@dimen/large_icon"
+        android:layout_height="@dimen/small_icon"
+        android:layout_margin="@dimen/medium_margin"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="@dimen/small_margin" />
+        app:tint="@color/image_button" />
 
-    <com.google.android.material.button.MaterialButton
+    <ImageButton
         android:id="@+id/next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Suivant"
+        android:layout_width="@dimen/large_icon"
+        android:layout_height="@dimen/small_icon"
+        android:layout_margin="@dimen/medium_margin"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/asl_check"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="@dimen/small_margin" />
+        app:tint="@color/stepper_next_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

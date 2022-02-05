@@ -7,7 +7,6 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginHorizontal="@dimen/medium_margin"
@@ -15,6 +14,7 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         android:text="@string/consume_bottle"
+        android:textAppearance="?attr/textAppearanceHeadline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/buttonClose"
         app:layout_constraintTop_toTopOf="parent" />
@@ -50,26 +50,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <View
-                android:id="@+id/divider1"
-                style="@style/Widget.Cavity.Divider.Start"
-                android:layout_marginTop="@dimen/medium_margin"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <TextView
                 android:id="@+id/generalTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/miscellaneous"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider1" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/consumeDateLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -114,18 +106,18 @@
 
             <View
                 android:id="@+id/divider2"
-                style="@style/Widget.Cavity.Divider.Start"
+                style="@style/Widget.Cavity.Divider"
                 android:layout_marginTop="@dimen/medium_margin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tasteCommentLayout" />
 
             <TextView
                 android:id="@+id/friendTitle"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/friends"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider2" />
 
@@ -148,6 +140,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 android:text="@string/consumed_with"
+                android:textAppearance="?attr/textAppearanceCaption"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/friendTitle" />
 
@@ -175,13 +168,14 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonSubmit"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Cavity.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/large_margin"
                 android:layout_marginBottom="@dimen/medium_margin"
                 android:text="@string/submit"
+                app:icon="@drawable/ic_check"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/friendsScrollView" />
