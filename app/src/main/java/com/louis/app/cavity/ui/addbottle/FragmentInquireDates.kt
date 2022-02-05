@@ -11,8 +11,8 @@ import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.DateManager
 import com.louis.app.cavity.ui.stepper.Step
+import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import java.util.*
 
@@ -31,6 +31,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
         dateManager = addBottleViewModel.dateManager
 
         initNumberPickers()
+        initQuantityRule()
         initCurrencyDropdown()
         initBuyLocationDropdown()
         setListeners()
@@ -51,6 +52,10 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
             maxValue = year + 30
             value = year + 5
         }
+    }
+
+    private fun initQuantityRule() {
+        binding.countLayout.addRules(Rule(R.string.count_limit) { it.toInt() <= MAX_BOTTLE_COUNT })
     }
 
     private fun initCurrencyDropdown() {
@@ -125,7 +130,6 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
     }
 
     override fun requestNextPage(): Boolean {
-        L.v("requestNextPage inquire dates")
         val isFormValid = binding.countLayout.validate() &&
             binding.priceLayout.validate() &&
             binding.buyDateLayout.validate()
@@ -141,5 +145,9 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val MAX_BOTTLE_COUNT = 20
     }
 }

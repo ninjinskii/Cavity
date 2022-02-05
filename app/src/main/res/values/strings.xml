@@ -96,6 +96,7 @@
     <string name="date">Dates</string>
     <string name="apogee">Apogée</string>
     <string name="count">Quantité</string>
+    <string name="count_limit">Maximum: 20</string>
     <string name="grapes">Cépages</string>
     <string name="grape_name">Nom du cépage</string>
     <string name="select_grapes">Sélectionner les cépages</string>
