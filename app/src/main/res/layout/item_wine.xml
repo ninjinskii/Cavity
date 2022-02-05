@@ -10,7 +10,7 @@
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardElevation="4dp"
-    app:checkedIcon="@null"
+    app:checkedIcon="@android:color/transparent"
     app:flat="false"
     app:strokeColor="@color/cavity_gold"
     app:strokeWidth="1dp">
