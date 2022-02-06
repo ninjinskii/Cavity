@@ -15,8 +15,10 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     @Suppress("PropertyName")
     protected var _binding: FragmentStepperBinding? = null
     val binding get() = _binding!!
+
+    @Suppress("PropertyName")
     protected var _topBinding: StepperBinding? = null
-    val topBinding get() = _topBinding!!
+    private val topBinding get() = _topBinding!!
 
     abstract val showStepperProgress: Boolean
     abstract val steps: Set<Step>
@@ -58,7 +60,8 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
                 next.setOnClickListener { goToNextPage() }
             }
         } else {
-            topBinding.root.setVisible(false)
+            topBinding.next.setVisible(false)
+            topBinding.previous.setVisible(false)
         }
     }
 
