@@ -6,6 +6,7 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
+import com.louis.app.cavity.databinding.StepperBinding
 import com.louis.app.cavity.util.setVisible
 
 abstract class Stepper : Fragment(R.layout.fragment_stepper) {
@@ -14,6 +15,8 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     @Suppress("PropertyName")
     protected var _binding: FragmentStepperBinding? = null
     val binding get() = _binding!!
+    protected var _topBinding: StepperBinding? = null
+    val topBinding get() = _topBinding!!
 
     abstract val showStepperProgress: Boolean
     abstract val steps: Set<Step>
@@ -21,6 +24,7 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentStepperBinding.bind(view)
+        _topBinding = StepperBinding.bind(binding.root)
 
         init()
         setupCustomBackNav()
@@ -49,21 +53,21 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
 
     private fun setupStepper() {
         if (showStepperProgress) {
-            with(binding.stepper) {
+            with(topBinding) {
                 previous.setOnClickListener { goToPreviousPage() }
                 next.setOnClickListener { goToNextPage() }
             }
         } else {
-            binding.stepper.root.setVisible(false)
+            topBinding.root.setVisible(false)
         }
     }
 
     private fun updateIcons(pagerPosition: Int) {
         val isLastPage = pagerPosition == steps.size - 1
-        binding.stepper.next.isActivated = isLastPage
+        topBinding.next.isActivated = isLastPage
 
         val isFirstPage = pagerPosition == 0
-        binding.stepper.previous.isEnabled = !isFirstPage
+        topBinding.previous.isEnabled = !isFirstPage
     }
 
     override fun onResume() {

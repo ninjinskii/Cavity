@@ -25,9 +25,9 @@
 
     </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
-    <include
+    <View
+        android:id="@+id/divider"
         style="@style/Widget.Cavity.Divider"
-        layout="@layout/divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginStart="@dimen/xlarge_margin"
