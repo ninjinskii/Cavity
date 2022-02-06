@@ -1,15 +1,18 @@
 package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
+import androidx.core.widget.TextViewCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +33,8 @@ import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.*
+import com.robinhood.ticker.TickerUtils
+import com.robinhood.ticker.TickerView
 import java.util.*
 import kotlin.math.max
 
@@ -102,6 +107,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         initColorChips()
         initOtherChips()
         initRecyclerView()
+        initTickerView()
         initDatePickers()
         initSliders()
         setupMenu()
@@ -224,6 +230,17 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter.submitList(it.toMutableList())
+        }
+    }
+
+    private fun initTickerView() {
+        val textAppearanceApplier = AppCompatTextView(requireContext()).apply {
+            TextViewCompat.setTextAppearance(this, R.style.TextAppearance_Cavity_Body1)
+        }
+
+        binding.matchingWines.apply {
+            textPaint.typeface = textAppearanceApplier.paint.typeface
+            setCharacterLists(TickerUtils.provideNumberList())
         }
     }
 
@@ -460,5 +477,11 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+}
+
+class M(context: Context) : TickerView(context) {
+    override fun setPaintFlags(flags: Int) {
+        super.setPaintFlags(flags)
     }
 }

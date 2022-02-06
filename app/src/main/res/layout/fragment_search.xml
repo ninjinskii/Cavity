@@ -502,13 +502,14 @@
                     android:layout_height="match_parent"
                     android:background="@color/surface_elevation_4dp">
 
-                    <TextView
+                    <com.robinhood.ticker.TickerView
                         android:id="@+id/matchingWines"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/medium_margin"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        app:ticker_defaultPreferredScrollingDirection="any"
                         android:textAppearance="?attr/textAppearanceBody2"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/currentQuery"

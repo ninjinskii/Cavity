@@ -104,4 +104,7 @@ dependencies {
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
+    // Animated TextView
+    implementation "com.robinhood.ticker:ticker:2.0.4"
+
 }
