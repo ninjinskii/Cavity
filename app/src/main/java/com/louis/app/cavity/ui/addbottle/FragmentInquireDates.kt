@@ -62,7 +62,12 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
         val items = resources.getStringArray(R.array.currencies)
         val adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
-        binding.currency.setAdapter(adapter)
+
+        binding.currency.apply {
+            setAdapter(adapter)
+            val default = resources.getStringArray(R.array.currencies).first()
+            setText(default, false)
+        }
     }
 
     private fun initBuyLocationDropdown() {
