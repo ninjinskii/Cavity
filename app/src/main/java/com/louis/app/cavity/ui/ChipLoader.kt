@@ -1,7 +1,5 @@
 package com.louis.app.cavity.ui
 
-import android.content.Context
-import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.HorizontalScrollView
@@ -11,13 +9,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.forEach
 import androidx.core.view.postDelayed
+import androidx.core.widget.TextViewCompat
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Chipable
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.util.AvatarLoader
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
@@ -81,7 +79,7 @@ class ChipLoader private constructor(
     }
 
     private suspend fun clearChipGroup(): List<Chipable> {
-        chipGroup.children.firstOrNull { it is ChipableTextView }?.let {
+        chipGroup.children.firstOrNull { it is AppCompatTextView }?.let {
             withContext(Main) {
                 chipGroup.removeView(it)
             }
@@ -124,9 +122,9 @@ class ChipLoader private constructor(
 
     private suspend fun maybeShowEmptyState() {
         withContext(Main) {
-            val emptyTextView = ChipableTextView(chipGroup.context).apply {
+            val emptyTextView = AppCompatTextView(chipGroup.context).apply {
                 text = onEmpty
-                setTypeface(null, Typeface.ITALIC)
+                TextViewCompat.setTextAppearance(this, R.style.TextAppearance_Cavity_Body2_Italic)
             }
 
             if (items.isEmpty() && onEmpty != null) {
@@ -197,11 +195,5 @@ class ChipLoader private constructor(
                 onClickListener
             )
         }
-    }
-
-    class ChipableTextView(context: Context) : AppCompatTextView(context),
-        Chipable {
-        override fun getItemId() = -1L
-        override fun getChipText() = ""
     }
 }
