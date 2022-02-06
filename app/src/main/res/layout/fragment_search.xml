@@ -81,8 +81,8 @@
 
         <ViewStub
             android:id="@+id/filtersStub"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout="@layout/search_filters" />
 
         <!-- Using BottomSheet as Backdrop here. Since the 'opiniated' bs in Material,
@@ -123,12 +123,12 @@
                         android:layout_margin="@dimen/medium_margin"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        app:ticker_defaultPreferredScrollingDirection="any"
                         android:textAppearance="?attr/textAppearanceBody2"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/currentQuery"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:ticker_defaultPreferredScrollingDirection="any"
                         tools:text="12 résultats" />
 
                     <TextView
@@ -151,6 +151,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/medium_margin"
+                        android:enabled="false"
                         android:text="@string/submit"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
