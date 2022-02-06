@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <rotate android:fromDegrees="45" android:toDegrees="45">
+            <shape android:shape="oval">
+                <size android:width="20dp" android:height="20dp" />
+                <stroke android:width="1dp" android:color="@color/switch_thumb_stroke" />
+                <solid android:color="@color/surface_elevation_4dp" />
+            </shape>
+        </rotate>
+    </item>
+</selector>

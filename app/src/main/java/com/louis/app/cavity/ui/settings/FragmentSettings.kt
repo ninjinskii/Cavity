@@ -42,10 +42,10 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
     }
 
     private fun setListeners() {
-        binding.buttonImportDb.setOnClickListener {
-            val externalDir = requireContext().getExternalFilesDir(null)!!.path
-            settingsViewModel.importDbFromExternalDir(externalDir)
-        }
+//        binding.buttonImportDb.setOnClickListener {
+//            val externalDir = requireContext().getExternalFilesDir(null)!!.path
+//            settingsViewModel.importDbFromExternalDir(externalDir)
+//        }
     }
 
     override fun onDestroy() {

@@ -8,6 +8,7 @@ import androidx.activity.addCallback
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
@@ -301,13 +302,21 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             })
         }
 
-        filtersBinding.togglePrice.setOnCheckedChangeListener { _, isChecked ->
-            filtersBinding.priceSlider.apply {
-                // Making sure the view has its chance to restore its state before grabbing values
-                doOnLayout {
-                    isEnabled = isChecked
-                    val minPrice = if (isChecked) values[0].toInt() else -1
-                    searchViewModel.setPriceFilter(minPrice, values[1].toInt())
+        filtersBinding.togglePrice.apply {
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
+
+            setOnCheckedChangeListener { _, isChecked ->
+                filtersBinding.priceSlider.apply {
+                    // Making sure the view has its chance to restore its state before grabbing values
+                    doOnLayout {
+                        isEnabled = isChecked
+                        val minPrice = if (isChecked) values[0].toInt() else -1
+                        searchViewModel.setPriceFilter(minPrice, values[1].toInt())
+                    }
                 }
             }
         }

@@ -278,7 +278,7 @@
             android:id="@+id/togglePrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/medium_margin"
+            android:paddingHorizontal="@dimen/medium_margin"
             android:checked="false"
             app:layout_constraintBottom_toBottomOf="@id/priceTitle"
             app:layout_constraintEnd_toEndOf="parent"

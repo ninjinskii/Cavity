@@ -401,6 +401,7 @@
                     android:layout_marginTop="@dimen/large_margin"
                     android:layout_marginBottom="@dimen/medium_margin"
                     app:cardBackgroundColor="@android:color/transparent"
+                    app:cardElevation="@dimen/no_elevation"
                     app:cardPreventCornerOverlap="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
