@@ -26,9 +26,10 @@
     </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
     <include
+        style="@style/Widget.Cavity.Divider"
         layout="@layout/divider"
         android:layout_width="0dp"
-        android:layout_height="@dimen/divider_height"
+        android:layout_height="1dp"
         android:layout_marginStart="@dimen/xlarge_margin"
         android:layout_marginTop="@dimen/large_margin"
         android:layout_marginEnd="@dimen/xlarge_margin"
@@ -40,11 +41,11 @@
         android:id="@+id/rbGroupType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/medium_margin"
+        android:layout_margin="@dimen/large_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:selectionRequired="true"
         app:singleSelection="true">
 

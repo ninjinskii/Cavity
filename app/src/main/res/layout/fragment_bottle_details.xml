@@ -332,7 +332,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/buttonHistory"
                     app:layout_constraintTop_toBottomOf="@id/divider2"
-                    app:tint="?attr/colorPrimary" />
+                    app:tint="@color/button_stroke" />
 
                 <TextView
                     android:layout_width="wrap_content"
