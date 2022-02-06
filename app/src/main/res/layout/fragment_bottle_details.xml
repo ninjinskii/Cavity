@@ -271,84 +271,109 @@
                     style="@style/Widget.Cavity.Divider"
                     app:layout_constraintTop_toBottomOf="@id/otherInfo" />
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/buttonEdit"
-                    android:layout_width="@dimen/medium_icon"
-                    android:layout_height="@dimen/medium_icon"
-                    android:layout_margin="@dimen/large_margin"
-                    android:background="@drawable/shape_icon_button"
-                    android:foreground="?attr/actionBarItemBackground"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:orientation="vertical"
                     app:layout_constraintEnd_toStartOf="@id/buttonHistory"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider2"
-                    app:tint="?attr/colorPrimary" />
+                    app:layout_constraintWidth_max="100dp">
 
-                <TextView
-                    android:id="@+id/buttonEditText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/small_margin"
-                    android:text="@string/edit_bottle"
-                    android:textAppearance="?attr/textAppearanceCaption"
-                    app:layout_constraintEnd_toEndOf="@id/buttonEdit"
-                    app:layout_constraintStart_toStartOf="@id/buttonEdit"
-                    app:layout_constraintTop_toBottomOf="@id/buttonEdit" />
+                    <ImageView
+                        android:layout_width="@dimen/medium_icon"
+                        android:layout_height="@dimen/medium_icon"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/shape_icon_button"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_edit"
+                        app:tint="?attr/colorPrimary" />
 
-                <ImageView
+                    <TextView
+                        android:id="@+id/buttonEditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/xsmall_margin"
+                        android:gravity="center_horizontal"
+                        android:text="@string/edit_bottle"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/buttonHistory"
-                    android:layout_width="@dimen/medium_icon"
-                    android:layout_height="@dimen/medium_icon"
-                    android:layout_margin="@dimen/large_margin"
-                    android:background="@drawable/shape_icon_button"
-                    android:foreground="?attr/actionBarItemBackground"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_history"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:orientation="vertical"
                     app:layout_constraintEnd_toStartOf="@id/buttonPdf"
                     app:layout_constraintStart_toEndOf="@id/buttonEdit"
                     app:layout_constraintTop_toBottomOf="@id/divider2"
-                    app:tint="?attr/colorPrimary" />
+                    app:layout_constraintWidth_max="100dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/small_margin"
-                    android:text="@string/show_history"
-                    android:textAppearance="?attr/textAppearanceCaption"
-                    app:layout_constraintEnd_toEndOf="@id/buttonHistory"
-                    app:layout_constraintStart_toStartOf="@id/buttonHistory"
-                    app:layout_constraintTop_toBottomOf="@id/buttonHistory" />
+                    <ImageView
+                        android:layout_width="@dimen/medium_icon"
+                        android:layout_height="@dimen/medium_icon"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/shape_icon_button"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_history"
+                        app:tint="?attr/colorPrimary" />
 
-                <ImageView
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/xsmall_margin"
+                        android:gravity="center_horizontal"
+                        android:text="@string/show_history"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/buttonPdf"
-                    android:layout_width="@dimen/medium_icon"
-                    android:layout_height="@dimen/medium_icon"
-                    android:layout_margin="@dimen/large_margin"
-                    android:background="@drawable/shape_icon_button"
-                    android:foreground="?attr/actionBarItemBackground"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_pdf"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/buttonHistory"
                     app:layout_constraintTop_toBottomOf="@id/divider2"
-                    app:tint="@color/button_stroke" />
+                    app:layout_constraintWidth_max="100dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/small_margin"
-                    android:text="@string/show_pdf"
-                    android:textAppearance="?attr/textAppearanceCaption"
-                    app:layout_constraintEnd_toEndOf="@id/buttonPdf"
-                    app:layout_constraintStart_toStartOf="@id/buttonPdf"
-                    app:layout_constraintTop_toBottomOf="@id/buttonPdf" />
+                    <ImageView
+                        android:id="@+id/buttonPdfIcon"
+                        android:layout_width="@dimen/medium_icon"
+                        android:layout_height="@dimen/medium_icon"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/shape_icon_button"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_pdf"
+                        app:tint="@color/button_stroke" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/xsmall_margin"
+                        android:gravity="center_horizontal"
+                        android:text="@string/show_pdf"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                </LinearLayout>
 
                 <View
                     android:id="@+id/divider3"
                     style="@style/Widget.Cavity.Divider"
                     android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/buttonEditText" />
+                    app:layout_constraintTop_toBottomOf="@id/buttonPdf" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/reviewList"

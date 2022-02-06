@@ -308,7 +308,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             buyDate.setData(DateFormatter.formatDate(bottle.buyDate))
             capacity.setData(getString(bottle.bottleSize.stringRes))
             otherInfo.setData(bottle.otherInfo)
-            buttonPdf.isEnabled = bottle.hasPdf()
+            buttonPdfIcon.isEnabled = bottle.hasPdf()
             favorite.isChecked = bottle.isFavorite.toBoolean()
 
             if (formattedPrice.isNotEmpty()) {
