@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -24,6 +23,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
+import com.louis.app.cavity.databinding.SearchFiltersBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
@@ -34,7 +34,8 @@ import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.*
 import com.robinhood.ticker.TickerUtils
-import com.robinhood.ticker.TickerView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.max
 
@@ -51,6 +52,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+    private var _filtersBinding: SearchFiltersBinding? = null
+    private val filtersBinding get() = _filtersBinding!!
 
     private val searchViewModel: SearchViewModel by viewModels()
     private val addTastingViewModel: AddTastingViewModel by viewModels(
@@ -99,25 +102,43 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
         }
 
-        binding.root.doOnLayout {
+        initRecyclerView()
+        initTickerView()
+        setupMenu()
+        setListeners()
+        initSearchView()
+        setupCustomBackNav()
+
+        lifecycleScope.launch {
+            delay(500)
+            inflateFiltersStub()
+        }
+    }
+
+    private fun inflateFiltersStub() {
+        val view = binding.filtersStub.inflate()
+        _filtersBinding = SearchFiltersBinding.bind(view)
+
+        filtersBinding.root.doOnLayout {
             setBottomSheetPeekHeight()
         }
 
         observe()
         initColorChips()
         initOtherChips()
-        initRecyclerView()
-        initTickerView()
         initDatePickers()
         initSliders()
-        setupMenu()
-        setListeners()
-        initSearchView()
-        setupCustomBackNav()
     }
 
     private fun setBottomSheetPeekHeight() {
-        val fill = binding.root.height - binding.reviewScrollView.bottom - backdropHeaderHeight
+        if (_filtersBinding == null) {
+            return
+        }
+
+        val height = binding.root.height
+        val filtersBottom = filtersBinding.reviewScrollView.bottom
+        val fill = height - filtersBottom - backdropHeaderHeight
+
         val peekHeight = max(backdropHeaderHeight, fill)
         bottomSheetBehavior.setPeekHeight(peekHeight, true)
     }
@@ -129,7 +150,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
                 .load(counties)
-                .into(binding.countyChipGroup)
+                .into(filtersBinding.countyChipGroup)
                 .preselect(preselectedCounties)
                 .doOnClick { prepareCountyFilters() }
                 .emptyText(getString(R.string.empty_county))
@@ -143,7 +164,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
                 .load(grapes)
-                .into(binding.grapeChipGroup)
+                .into(filtersBinding.grapeChipGroup)
                 .preselect(preselectedGrapes)
                 .doOnClick { prepareGrapeFilters() }
                 .emptyText(getString(R.string.empty_grape_manager))
@@ -158,7 +179,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
                 .load(reviews)
-                .into(binding.reviewChipGroup)
+                .into(filtersBinding.reviewChipGroup)
                 .preselect(preselectedReviews)
                 .doOnClick { prepareReviewFilters() }
                 .emptyText(getString(R.string.empty_review_manager))
@@ -168,14 +189,15 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         if (isPickMode) {
             addTastingViewModel.selectedBottles.observe(viewLifecycleOwner) {
-                binding.buttonSubmit.isEnabled = it.isNotEmpty()
-                binding.chipSelected.text = resources.getString(R.string.selected_bottles, it.size)
+                this@FragmentSearch.binding.buttonSubmit.isEnabled = it.isNotEmpty()
+                filtersBinding.chipSelected.text =
+                    resources.getString(R.string.selected_bottles, it.size)
             }
         }
     }
 
     private fun initColorChips() {
-        binding.colorChipGroup.apply {
+        filtersBinding.colorChipGroup.apply {
             clearCheck()
             children.forEach {
                 (it as Chip).setOnCheckedChangeListener { _, _ ->
@@ -186,14 +208,14 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun initOtherChips() {
-        binding.chipSelected.apply {
+        filtersBinding.chipSelected.apply {
             setVisible(isPickMode)
             setOnCheckedChangeListener { _, isChecked ->
                 searchViewModel.setSelectedFilter(isChecked)
             }
         }
 
-        binding.otherChipGroup.apply {
+        filtersBinding.otherChipGroup.apply {
             clearCheck()
             children.forEach {
                 (it as Chip).setOnCheckedChangeListener { _, _ ->
@@ -248,19 +270,19 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         val beyondTitle = getString(R.string.buying_date_beyond)
         val untilTitle = getString(R.string.buying_date_until)
 
-        DatePicker(parentFragmentManager, binding.beyondLayout, beyondTitle).apply {
+        DatePicker(parentFragmentManager, filtersBinding.beyondLayout, beyondTitle).apply {
             onEndIconClickListener = { searchViewModel.setBeyondFilter(null) }
             onDateChangedListener = { searchViewModel.setBeyondFilter(it) }
         }
 
-        DatePicker(parentFragmentManager, binding.untilLayout, untilTitle).apply {
+        DatePicker(parentFragmentManager, filtersBinding.untilLayout, untilTitle).apply {
             onEndIconClickListener = { searchViewModel.setUntilFilter(null) }
             onDateChangedListener = { searchViewModel.setUntilFilter(it) }
         }
     }
 
     private fun initSliders() {
-        binding.vintageSlider.apply {
+        filtersBinding.vintageSlider.apply {
             val year = Calendar.getInstance().get(Calendar.YEAR).toFloat()
             valueFrom = year - 20F
             valueTo = year
@@ -279,7 +301,18 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             })
         }
 
-        binding.priceSlider.apply {
+        filtersBinding.togglePrice.setOnCheckedChangeListener { _, isChecked ->
+            filtersBinding.priceSlider.apply {
+                // Making sure the view has its chance to restore its state before grabbing values
+                doOnLayout {
+                    isEnabled = isChecked
+                    val minPrice = if (isChecked) values[0].toInt() else -1
+                    searchViewModel.setPriceFilter(minPrice, values[1].toInt())
+                }
+            }
+        }
+
+        filtersBinding.priceSlider.apply {
             isEnabled = false
 
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
@@ -297,14 +330,14 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun prepareCountyFilters() {
-        binding.countyChipGroup.apply {
+        filtersBinding.countyChipGroup.apply {
             val counties = collectAs<County>()
             searchViewModel.setCountiesFilters(counties)
         }
     }
 
     private fun prepareGrapeFilters() {
-        binding.grapeChipGroup.apply {
+        filtersBinding.grapeChipGroup.apply {
             val grapes = checkedChipIds.map {
                 findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Grape
             }
@@ -314,7 +347,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun prepareReviewFilters() {
-        binding.reviewChipGroup.apply {
+        filtersBinding.reviewChipGroup.apply {
             val reviews = checkedChipIds.map {
                 findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Review
             }
@@ -380,17 +413,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         binding.currentQuery.setOnClickListener {
             binding.searchButton.performClick()
-        }
-
-        binding.togglePrice.setOnCheckedChangeListener { _, isChecked ->
-            binding.priceSlider.apply {
-                // Making sure the view has its chance to restore its state before grabbing values
-                doOnLayout {
-                    isEnabled = isChecked
-                    val minPrice = if (isChecked) values[0].toInt() else -1
-                    searchViewModel.setPriceFilter(minPrice, values[1].toInt())
-                }
-            }
         }
 
         binding.buttonSubmit.apply {
@@ -477,11 +499,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-}
-
-class M(context: Context) : TickerView(context) {
-    override fun setPaintFlags(flags: Int) {
-        super.setPaintFlags(flags)
+        _filtersBinding = null
     }
 }
