@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.addbottle
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
@@ -10,6 +11,7 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.DateManager
+import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.DateFormatter
@@ -20,9 +22,11 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
     private lateinit var dateManager: DateManager
     private var _binding: FragmentInquireDatesBinding? = null
     private val binding get() = _binding!!
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,7 +69,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
         binding.currency.apply {
             setAdapter(adapter)
-            val default = resources.getStringArray(R.array.currencies).first()
+            val default = settingsViewModel.getDefaultCurrency()
             setText(default, false)
         }
     }

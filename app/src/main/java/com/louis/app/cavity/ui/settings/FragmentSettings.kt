@@ -2,10 +2,11 @@ package com.louis.app.cavity.ui.settings
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.button.MaterialButton
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSettingsBinding
@@ -16,7 +17,7 @@ import com.louis.app.cavity.util.showSnackbar
 class FragmentSettings : Fragment(R.layout.fragment_settings) {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
-    private val settingsViewModel: SettingsViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
     private var clickCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +55,10 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
                 requireContext().theme
             )
 
+            isChecked = settingsViewModel.getSkewBottle()
+
             setOnCheckedChangeListener { _, isChecked ->
+                settingsViewModel.setSkewBottle(isChecked)
                 clickCount++
             }
 
@@ -81,20 +85,32 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
 
                 true
             }
-
-//        binding.buttonImportDb.setOnClickListener {
-//            val externalDir = requireContext().getExternalFilesDir(null)!!.path
-//            settingsViewModel.importDbFromExternalDir(externalDir)
-//        }
         }
     }
 
     private fun setupCurrencyButtons() {
         val currencies = resources.getStringArray(R.array.currencies)
+        val defaultCurrency = settingsViewModel.getDefaultCurrency()
+        val defaultIndex = currencies.indexOf(defaultCurrency)
 
         binding.rbGroupCurrency.children.forEachIndexed { index, view ->
-            (view as MaterialButton).text = currencies[index]
+            val button = view as MaterialButton
+
+            if (index == defaultIndex) {
+                button.isChecked = true
+            }
+
+            button.text = currencies[index]
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val checkedButtonId = binding.rbGroupCurrency.checkedButtonId
+        val checkedButton = binding.rbGroupCurrency.findViewById<Button>(checkedButtonId)
+
+        settingsViewModel.setDefaultCurrency(checkedButton.text.toString())
     }
 
     override fun onDestroy() {

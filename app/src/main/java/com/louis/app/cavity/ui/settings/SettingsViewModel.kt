@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
+import com.louis.app.cavity.db.PrefsRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
+    private val prefsRepository = PrefsRepository.getInstance(app)
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
@@ -22,6 +24,18 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
         get() = _isLoading
+
+    fun setSkewBottle(skew: Boolean) {
+        prefsRepository.setSkewBottle(skew)
+    }
+
+    fun setDefaultCurrency(currency: String) {
+        prefsRepository.setDefaultCurrency(currency)
+    }
+
+    fun getSkewBottle() = prefsRepository.getSkewBottle()
+
+    fun getDefaultCurrency() = prefsRepository.getDefaultCurrency()
 
     fun importDbFromExternalDir(externalDir: String) {
         viewModelScope.launch(IO) {
