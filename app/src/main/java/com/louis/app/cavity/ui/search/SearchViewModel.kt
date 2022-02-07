@@ -27,14 +27,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             filter(receiver, bottles, filter)
         }
 
-    // Pick mode only
-//    private val _selectedBottles = MutableLiveData<MutableList<Bottle>>(mutableListOf())
-//    val selectedBottles: LiveData<MutableList<Bottle>>
-//        get() = _selectedBottles
-
-    private var currentBeyondDate: Long? = null
-    private var currentUntilDate: Long? = null
-
     private var countyFilter: WineFilter = NoFilter
     private var colorFilter: WineFilter = NoFilter
     private var otherFilter: WineFilter = NoFilter
@@ -53,6 +45,12 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         private set
 
     var selectedReviews = emptyList<Review>()
+        private set
+
+    var currentBeyondDate: Long? = null
+        private set
+
+    var currentUntilDate: Long? = null
         private set
 
     fun getAllCounties() = repository.getAllCounties()

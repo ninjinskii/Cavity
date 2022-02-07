@@ -45,6 +45,18 @@ import kotlin.math.max
  */
 class FragmentSearch : Step(R.layout.fragment_search) {
     companion object {
+        /* Saved state */
+        private const val SLIDER_VINTAGE_START = "com.louis.app.cavity.SLIDER_VINTAGE_START"
+        private const val SLIDER_VINTAGE_END = "com.louis.app.cavity.SLIDER_VINTAGE_END"
+        private const val SWITCH_PRICE_ENABLED = "com.louis.app.cavity.SWITCH_PRICE_ENABLED"
+        private const val SLIDER_PRICE_START = "com.louis.app.cavity.SLIDER_PRICE_START"
+        private const val SLIDER_PRICE_END = "com.louis.app.cavity.SLIDER_PRICE_END"
+        private const val DATE_BEYOND = "com.louis.app.cavity.DATE_BEYOND"
+        private const val DATE_UNTIL = "com.louis.app.cavity.DATE_UNTIL"
+        private const val CHIP_COLOR = "com.louis.app.cavity.CHIP_COLOR"
+        private const val CHIP_MISC = "com.louis.app.cavity.CHIP_MISC"
+        private const val SWITCH_SELECTED_ENABLED = "com.louis.app.cavity.SWITCH_SELECTED_ENABLED"
+
         const val PICK_MODE = "com.louis.app.cavity.ui.search.FragmentSearch.PICK_MODE"
     }
 
@@ -111,12 +123,12 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         setupCustomBackNav()
 
         lifecycleScope.launch {
-            delay(500)
-            inflateFiltersStub()
+            delay(800)
+            inflateFiltersStub(savedInstanceState)
         }
     }
 
-    private fun inflateFiltersStub() {
+    private fun inflateFiltersStub(savedInstanceState: Bundle?) {
         val view = binding.filtersStub.inflate()
         _filtersBinding = SearchFiltersBinding.bind(view)
 
@@ -125,10 +137,10 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
 
         observe()
-        initColorChips()
-        initOtherChips()
-        initDatePickers()
-        initSliders()
+        initColorChips(savedInstanceState)
+        initOtherChips(savedInstanceState)
+        initDatePickers(savedInstanceState)
+        initSliders(savedInstanceState)
     }
 
     private fun setBottomSheetPeekHeight() {
@@ -197,32 +209,129 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
     }
 
-    private fun initColorChips() {
+    private fun initColorChips(savedInstanceState: Bundle?) {
+        val savedState = savedInstanceState?.getIntArray(CHIP_COLOR)
+
         filtersBinding.colorChipGroup.apply {
-            clearCheck()
             children.forEach {
                 (it as Chip).setOnCheckedChangeListener { _, _ ->
                     searchViewModel.setColorFilters(checkedChipIds)
+                }
+
+                savedState?.let { checkedIds ->
+                    it.isChecked = it.id in checkedIds
                 }
             }
         }
     }
 
-    private fun initOtherChips() {
+    private fun initOtherChips(savedInstanceState: Bundle?) {
+        val savedStateSelected = savedInstanceState?.getBoolean(SWITCH_SELECTED_ENABLED)
+        val savedStateMisc = savedInstanceState?.getIntArray(CHIP_MISC)
+
         filtersBinding.chipSelected.apply {
             setVisible(isPickMode)
+            isChecked = savedStateSelected ?: false
             setOnCheckedChangeListener { _, isChecked ->
                 searchViewModel.setSelectedFilter(isChecked)
             }
         }
 
         filtersBinding.otherChipGroup.apply {
-            clearCheck()
             children.forEach {
                 (it as Chip).setOnCheckedChangeListener { _, _ ->
                     searchViewModel.setOtherFilters(checkedChipIds)
                 }
+
+                savedStateMisc?.let { checkedIds ->
+                    it.isChecked = it.id in checkedIds
+                }
             }
+        }
+    }
+
+    private fun initDatePickers(savedInstanceState: Bundle?) {
+        val beyondTitle = getString(R.string.buying_date_beyond)
+        val untilTitle = getString(R.string.buying_date_until)
+
+        DatePicker(parentFragmentManager, filtersBinding.beyondLayout, beyondTitle).apply {
+            onEndIconClickListener = { searchViewModel.setBeyondFilter(null) }
+            onDateChangedListener = { searchViewModel.setBeyondFilter(it) }
+        }
+
+
+        DatePicker(parentFragmentManager, filtersBinding.untilLayout, untilTitle).apply {
+            onEndIconClickListener = { searchViewModel.setUntilFilter(null) }
+            onDateChangedListener = { searchViewModel.setUntilFilter(it) }
+        }
+
+        // In case a date were set and restored, the view model will keep the Long value,
+        // but we need to restore the text
+        filtersBinding.beyond.setText(savedInstanceState?.getString(DATE_BEYOND))
+        filtersBinding.until.setText(savedInstanceState?.getString(DATE_UNTIL))
+    }
+
+    private fun initSliders(savedInstanceState: Bundle?) {
+        filtersBinding.vintageSlider.apply {
+            val year = Calendar.getInstance().get(Calendar.YEAR).toFloat()
+            val start = savedInstanceState?.getFloat(SLIDER_VINTAGE_START)
+            val end = savedInstanceState?.getFloat(SLIDER_VINTAGE_END)
+
+            valueFrom = year - 20F
+            valueTo = year
+            values = listOf(start ?: valueFrom, end ?: valueTo)
+
+            addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+                override fun onStopTrackingTouch(slider: RangeSlider) {
+                    searchViewModel.setVintageFilter(
+                        slider.values[0].toInt(),
+                        slider.values[1].toInt()
+                    )
+                }
+
+                override fun onStartTrackingTouch(slider: RangeSlider) = Unit
+            })
+        }
+
+        filtersBinding.togglePrice.apply {
+            val savedState = savedInstanceState?.getBoolean(SWITCH_PRICE_ENABLED)
+
+            isChecked = savedState ?: false
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
+
+            setOnCheckedChangeListener { _, isChecked ->
+                filtersBinding.priceSlider.apply {
+                    // Making sure the view has its chance to restore its state before grabbing values
+                    doOnLayout {
+                        isEnabled = isChecked
+                        val minPrice = if (isChecked) values[0].toInt() else -1
+                        searchViewModel.setPriceFilter(minPrice, values[1].toInt())
+                    }
+                }
+            }
+        }
+
+        filtersBinding.priceSlider.apply {
+            val start = savedInstanceState?.getFloat(SLIDER_PRICE_START)
+            val end = savedInstanceState?.getFloat(SLIDER_PRICE_END)
+
+            values = listOf(start ?: valueFrom, end ?: valueTo)
+            isEnabled = filtersBinding.togglePrice.isChecked
+
+            addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+                override fun onStopTrackingTouch(slider: RangeSlider) {
+                    searchViewModel.setPriceFilter(
+                        slider.values[0].toInt(),
+                        slider.values[1].toInt()
+                    )
+                }
+
+                override fun onStartTrackingTouch(slider: RangeSlider) = Unit
+            })
         }
     }
 
@@ -264,77 +373,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         binding.matchingWines.apply {
             textPaint.typeface = textAppearanceApplier.paint.typeface
             setCharacterLists(TickerUtils.provideNumberList())
-        }
-    }
-
-    private fun initDatePickers() {
-        val beyondTitle = getString(R.string.buying_date_beyond)
-        val untilTitle = getString(R.string.buying_date_until)
-
-        DatePicker(parentFragmentManager, filtersBinding.beyondLayout, beyondTitle).apply {
-            onEndIconClickListener = { searchViewModel.setBeyondFilter(null) }
-            onDateChangedListener = { searchViewModel.setBeyondFilter(it) }
-        }
-
-        DatePicker(parentFragmentManager, filtersBinding.untilLayout, untilTitle).apply {
-            onEndIconClickListener = { searchViewModel.setUntilFilter(null) }
-            onDateChangedListener = { searchViewModel.setUntilFilter(it) }
-        }
-    }
-
-    private fun initSliders() {
-        filtersBinding.vintageSlider.apply {
-            val year = Calendar.getInstance().get(Calendar.YEAR).toFloat()
-            valueFrom = year - 20F
-            valueTo = year
-            values = listOf(valueFrom, valueTo)
-
-            addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
-                override fun onStopTrackingTouch(slider: RangeSlider) {
-                    searchViewModel.setVintageFilter(
-                        slider.values[0].toInt(),
-                        slider.values[1].toInt()
-                    )
-                }
-
-                override fun onStartTrackingTouch(slider: RangeSlider) {
-                }
-            })
-        }
-
-        filtersBinding.togglePrice.apply {
-            thumbDrawable = ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.switch_thumb,
-                requireContext().theme
-            )
-
-            setOnCheckedChangeListener { _, isChecked ->
-                filtersBinding.priceSlider.apply {
-                    // Making sure the view has its chance to restore its state before grabbing values
-                    doOnLayout {
-                        isEnabled = isChecked
-                        val minPrice = if (isChecked) values[0].toInt() else -1
-                        searchViewModel.setPriceFilter(minPrice, values[1].toInt())
-                    }
-                }
-            }
-        }
-
-        filtersBinding.priceSlider.apply {
-            isEnabled = false
-
-            addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
-                override fun onStopTrackingTouch(slider: RangeSlider) {
-                    searchViewModel.setPriceFilter(
-                        slider.values[0].toInt(),
-                        slider.values[1].toInt()
-                    )
-                }
-
-                override fun onStartTrackingTouch(slider: RangeSlider) {
-                }
-            })
         }
     }
 
@@ -504,6 +542,23 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun loadHideShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.hide_elevation)
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        with(outState) {
+            putFloat(SLIDER_VINTAGE_START, filtersBinding.vintageSlider.values[0])
+            putFloat(SLIDER_VINTAGE_END, filtersBinding.vintageSlider.values[1])
+            putBoolean(SWITCH_PRICE_ENABLED, filtersBinding.togglePrice.isChecked)
+            putFloat(SLIDER_PRICE_START, filtersBinding.priceSlider.values[0])
+            putFloat(SLIDER_PRICE_END, filtersBinding.priceSlider.values[1])
+            putString(DATE_BEYOND, filtersBinding.beyond.text.toString())
+            putString(DATE_UNTIL, filtersBinding.until.text.toString())
+            putIntArray(CHIP_COLOR, filtersBinding.colorChipGroup.checkedChipIds.toIntArray())
+            putIntArray(CHIP_MISC, filtersBinding.otherChipGroup.checkedChipIds.toIntArray())
+            putBoolean(SWITCH_SELECTED_ENABLED, filtersBinding.chipSelected.isChecked)
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
