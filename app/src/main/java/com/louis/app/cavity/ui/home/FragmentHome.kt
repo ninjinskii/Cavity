@@ -16,15 +16,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
-import com.google.android.material.shape.CutCornerTreatment
-import com.google.android.material.shape.ShapeAppearanceModel
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
-import com.louis.app.cavity.util.*
+import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.themeColor
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
@@ -36,7 +38,6 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val recyclePool by lazy {
         RecyclerView.RecycledViewPool().apply {
-            // TODO: Adjust this number based on screen size
             setMaxRecycledViews(R.layout.item_wine, 15)
         }
     }
@@ -75,6 +76,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
 
         setupScrollableTab()
+        setViewPagerOrientation()
         //setCountyDetailsShape()
         observe()
         setListeners()
@@ -111,14 +113,12 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun setCountyDetailsShape() {
-        binding.countyDetails.root.shapeAppearanceModel = ShapeAppearanceModel.Builder()
-            .setAllCornerSizes { requireContext().dpToPx(16f) }
-            .setTopLeftCorner(CutCornerTreatment())
-            .setTopRightCorner(CutCornerTreatment())
-            .setBottomLeftCornerSize(0f)
-            .setBottomRightCornerSize(0f)
-            .build()
+    private fun setViewPagerOrientation() {
+        val flat = resources.getBoolean(R.bool.flat_hexagones)
+        val orientation =
+            if (flat) ViewPager2.ORIENTATION_VERTICAL else ViewPager2.ORIENTATION_HORIZONTAL
+
+        binding.viewPager.orientation = orientation
     }
 
     private fun observe() {

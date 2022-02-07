@@ -33,13 +33,17 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             }
 
         val wineAdapter = WineRecyclerAdapter(transitionHelper, icons)
+        val colCount = resources.getInteger(R.integer.honeycomb_cols)
+        val flat = resources.getBoolean(R.bool.flat_hexagones)
+        val orientation =
+            if (flat) {
+                HoneycombLayoutManager.Orientation.HORIZONTAL
+            } else {
+                HoneycombLayoutManager.Orientation.VERTICAL
+            }
 
         binding.wineList.apply {
-            layoutManager = HoneycombLayoutManager(
-                colCount = 2,
-                HoneycombLayoutManager.Orientation.VERTICAL
-            )
-
+            layoutManager = HoneycombLayoutManager(colCount, orientation)
             setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
             setHasFixedSize(true)
             adapter = wineAdapter

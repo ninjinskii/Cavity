@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/small_margin"
+    android:layout_margin="@dimen/hexagones_margin"
     android:checkable="true"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardElevation="4dp"
     app:checkedIcon="@android:color/transparent"
-    app:flat="false"
+    app:flat="@bool/flat_hexagones"
     app:strokeColor="@color/cavity_gold"
     app:strokeWidth="1dp">
 

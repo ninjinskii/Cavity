@@ -98,8 +98,8 @@ class ScrollableTab @JvmOverloads constructor(
 
     private fun createPagerStyle() {
         clipToPadding = false
-        val halfSWidth = context.resources.displayMetrics.widthPixels / 2
-        val padding = halfSWidth / 2
+        val halfWidth = context.resources.displayMetrics.widthPixels / 2
+        val padding = halfWidth / 2
         setPadding(padding, 0, padding, 0)
     }
 
