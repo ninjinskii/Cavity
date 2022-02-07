@@ -19,6 +19,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/bottleTemplate"
             android:layout_width="400dp"
             android:layout_height="600dp"
             android:alpha="0.40"

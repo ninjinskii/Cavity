@@ -15,12 +15,14 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentCameraBinding
 import com.louis.app.cavity.ui.Cavity
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.TAKEN_PHOTO_URI
+import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.showSnackbar
 import java.io.File
@@ -36,10 +38,12 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     private lateinit var askPermissions: ActivityResultLauncher<Array<String>>
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
 
     companion object {
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
+        private const val TEMPLATE_ROTATION = -45f
         private val REQUIRED_PERMISSIONS =
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
@@ -72,6 +76,8 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
+
+        maybeApplyRotation()
     }
 
     private fun startCamera() {
@@ -194,6 +200,18 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         } else {
             findNavController().navigateUp()
             snackbarProvider.onShowSnackbarRequested(R.string.permissions_denied)
+        }
+    }
+
+    private fun maybeApplyRotation() {
+        val shouldRotate = settingsViewModel.getSkewBottle()
+
+        if (shouldRotate) {
+            binding.bottleTemplate.apply {
+                rotationX = width / 2f
+                rotationY = height / 2f
+                rotation = TEMPLATE_ROTATION
+            }
         }
     }
 
