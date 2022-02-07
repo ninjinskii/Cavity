@@ -9,4 +9,5 @@
 
     <color name="divider_color">#12ffffff</color>
 
+    <color name="thumb_plain">@color/surface_elevation_4dp</color>
 </resources>

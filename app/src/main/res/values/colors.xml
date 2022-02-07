@@ -35,4 +35,6 @@
     <color name="divider_color">#12000000</color>
 
     <color name="scrim">#50000000</color>
+
+    <color name="thumb_plain">@color/under_surface</color>
 </resources>

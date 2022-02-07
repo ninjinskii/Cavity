@@ -38,7 +38,6 @@
         <item name="tabStyle">@style/Widget.Cavity.TabLayout</item>
         <item name="chipStyle">@style/Widget.Cavity.Chip.Choice</item>
         <item name="sliderStyle">@style/Widget.Cavity.Slider</item>
-        <item name="switchStyle">@style/Widget.Cavity.Switch</item>
         <item name="navigationViewStyle">@style/Widget.Cavity.NavigationView</item>
 
         <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
@@ -229,15 +228,6 @@
     <!-- Tooltip (Slider's tooltip only) -->
     <style name="Widget.Cavity.Tooltip" parent="Widget.MaterialComponents.Tooltip">
         <item name="android:textAppearance">@style/TextAppearance.Cavity.Body1</item>
-    </style>
-
-    <!-- Switch -->
-    <style name="Widget.Cavity.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Cavity.Switch</item>
-    </style>
-
-    <style name="ThemeOverlay.Cavity.Switch" parent="">
-        <item name="thumbTint">@color/switch_thumb</item>
     </style>
 
     <!-- Navigation View -->
