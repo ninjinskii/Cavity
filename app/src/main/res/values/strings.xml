@@ -283,15 +283,14 @@
     <string name="empty_tasting">Vous comptez boire plusieurs bouteilles ce soir ? Préparez tout à l\'avance !</string>
     <string name="empty_tasting_bottle">Aucune bouteille associée à cette dégustation</string>
 
+    <!-- Settings -->
+    <string name="skew_bottle_title">Incliner le gabarit</string>
+    <string name="skew_bottle">Incline le gabarit de la bouteille lors de la prise d\'une photo.</string>
+    <string name="default_currency_title">Monnaie par défaut</string>
+    <string name="default_currency">Choisissez la monnaie par défaut à utiliser lors de l\'ajout d\'une bouteille.</string>
+
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>
     <string name="tag_modal_sheet_id" translatable="false">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
     <string name="tag_date_picker" translatable="false">com.louis.app.cavity.TAG_DATE_PICKER</string>
-
-    <string-array name="currencies">
-        <item>€</item>
-        <item>£</item>
-        <item>.-</item>
-        <item>$</item>
-    </string-array>
 </resources>

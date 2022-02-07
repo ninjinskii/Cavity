@@ -9,4 +9,11 @@
         <item>0.0</item>
         <item>30.0</item>
     </array>
+
+    <string-array name="currencies">
+        <item>€</item>
+        <item>£</item>
+        <item>.-</item>
+        <item>$</item>
+    </string-array>
 </resources>
