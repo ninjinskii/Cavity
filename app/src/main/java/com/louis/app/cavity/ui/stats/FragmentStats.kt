@@ -2,6 +2,9 @@ package com.louis.app.cavity.ui.stats
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.BounceInterpolator
+import android.view.animation.Interpolator
+import android.view.animation.PathInterpolator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,7 +42,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         setupViewPager()
         initRecyclerViews()
         observe()
-        maybeAnimateViewPager()
+        hintViewPagerSlide()
     }
 
     private fun setupScrollableTab() {
@@ -115,19 +118,27 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 
     }
 
-    private fun maybeAnimateViewPager() {
-        // This cause a memory leak
-//        binding.viewPager.doOnLayout {
-//            it as ViewPager2
-//            it.setCurrentItem(statsPagerAdapter.itemCount - 1, false)
-//            it.postDelayed(200L) {
-//                it.setCurrentItem(0, true)
-//            }
-//        }
+    private fun hintViewPagerSlide() {
+        binding.viewPager.animate()
+            .setDuration(2000)
+            .setInterpolator(SoftenBounceInterpolator())
+            .translationX(0f)
+            .translationY(0f)
+            .start()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    class SoftenBounceInterpolator : Interpolator {
+        private val slowOut = PathInterpolator(0.46f, 0.49f, 0.45f, 1.01f)
+        private val bounceInterpolator = BounceInterpolator()
+
+        override fun getInterpolation(input: Float): Float {
+            val bounce = bounceInterpolator.getInterpolation(input)
+            return slowOut.getInterpolation(bounce)
+        }
     }
 }
