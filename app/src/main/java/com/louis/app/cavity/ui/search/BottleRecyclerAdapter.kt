@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.search
 
+import android.net.Uri
 import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,8 +11,12 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemBottleBinding
 import com.louis.app.cavity.db.dao.BoundedBottle
+import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
@@ -79,6 +84,43 @@ class BottleRecyclerAdapter(
                         findNavController().navigate(action, extra)
                     }
                 }
+            }
+
+            // If this view is available, we're on large screen
+            if (binding.capacity != null) {
+                bindLargeScreenVariant(wine, bottle)
+            }
+        }
+
+        private fun bindLargeScreenVariant(wine: Wine, bottle: Bottle) {
+            val context = itemView.context
+            val formattedPrice = bottle.price.let { if (it != -1F) it.toString() else "" }
+
+            with(binding) {
+                wineImage?.let {
+                    Glide.with(context)
+                        .load(Uri.parse(wine.imgPath))
+                        .centerCrop()
+                        .into(it)
+                }
+
+                capacity?.text = context.getString(bottle.bottleSize.stringRes)
+
+                if (formattedPrice.isNotEmpty()) {
+                    separatorPrice?.setVisible(true)
+                    price?.setVisible(true)
+                    price?.text = context.getString(
+                        R.string.price_and_currency,
+                        formattedPrice,
+                        bottle.currency
+                    )
+                }
+
+                separatorApogee?.setVisible(bottle.isReadyToDrink())
+                apogeeIcon?.setVisible(bottle.isReadyToDrink())
+
+                separatorFavorite?.setVisible(bottle.isFavorite.toBoolean())
+                favoriteIcon?.setVisible(bottle.isFavorite.toBoolean())
             }
         }
     }

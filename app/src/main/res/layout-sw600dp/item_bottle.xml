@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/wineImage"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_margin="@dimen/small_margin"
+        android:contentDescription="@string/wine_photo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/RoundedImage" />
+
+    <include
+        android:id="@+id/wineColorNameNaming"
+        layout="@layout/wine_color_name_naming"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/wineImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/vintage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/small_margin"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:textAppearance="?attr/textAppearanceOverline"
+        app:layout_constraintBottom_toBottomOf="@id/wineColorNameNaming"
+        app:layout_constraintEnd_toStartOf="@id/checkedIcon"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/favoriteIcon"
+        app:layout_constraintTop_toTopOf="@id/wineColorNameNaming"
+        tools:text="2015" />
+
+    <ImageView
+        android:id="@+id/checkedIcon"
+        android:layout_width="@dimen/medium_icon"
+        android:layout_height="@dimen/medium_icon"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_check"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/vintage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/vintage"
+        app:tint="?attr/colorPrimary"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/capacity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintBottom_toBottomOf="@id/wineColorNameNaming"
+        app:layout_constraintStart_toEndOf="@id/wineColorNameNaming"
+        app:layout_constraintTop_toTopOf="@id/wineColorNameNaming"
+        tools:text="75 cL" />
+
+    <ImageView
+        android:id="@+id/separatorPrice"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:alpha="0.38"
+        android:src="@drawable/switch_thumb"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/capacity"
+        app:layout_constraintStart_toEndOf="@id/capacity"
+        app:layout_constraintTop_toTopOf="@id/capacity"
+        app:tint="?attr/colorOnSurface"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:textAppearance="?attr/textAppearanceCaption"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/wineColorNameNaming"
+        app:layout_constraintStart_toEndOf="@id/separatorPrice"
+        app:layout_constraintTop_toTopOf="@id/wineColorNameNaming"
+        tools:text="14 €"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/separatorApogee"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:alpha="0.38"
+        android:src="@drawable/switch_thumb"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/price"
+        app:layout_constraintStart_toEndOf="@id/price"
+        app:layout_constraintTop_toTopOf="@id/price"
+        app:tint="?attr/colorOnSurface"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/apogeeIcon"
+        android:layout_width="@dimen/xsmall_icon"
+        android:layout_height="@dimen/xsmall_icon"
+        android:src="@drawable/ic_glass"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/separatorApogee"
+        app:layout_constraintStart_toEndOf="@id/separatorApogee"
+        app:layout_constraintTop_toTopOf="@id/separatorApogee"
+        app:tint="?attr/colorOnSurface"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/separatorFavorite"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        android:alpha="0.38"
+        android:src="@drawable/switch_thumb"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/apogeeIcon"
+        app:layout_constraintStart_toEndOf="@id/apogeeIcon"
+        app:layout_constraintTop_toTopOf="@id/apogeeIcon"
+        app:tint="?attr/colorOnSurface"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/favoriteIcon"
+        android:layout_width="@dimen/xsmall_icon"
+        android:layout_height="@dimen/xsmall_icon"
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:src="@drawable/ic_heart"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/separatorFavorite"
+        app:layout_constraintStart_toEndOf="@+id/separatorFavorite"
+        app:layout_constraintTop_toTopOf="@+id/separatorFavorite"
+        tools:visibility="visible" />
+
+    <View
+        style="@style/Widget.Cavity.Divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:layout_marginVertical="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/wineColorNameNaming" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
