@@ -394,7 +394,8 @@
                     app:icon="@drawable/ic_check"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

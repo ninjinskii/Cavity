@@ -171,7 +171,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             startView = binding.tab
             endView = binding.countyDetails.root
             startElevation = resources.getDimension(R.dimen.app_bar_elevation)
-            endElevation = resources.getDimension(R.dimen.app_bar_elevation)
+            endElevation = binding.countyDetails.root.cardElevation
             scrimColor = Color.TRANSPARENT
             addTarget(binding.countyDetails.root)
         }
@@ -196,7 +196,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         val transform = MaterialContainerTransform().apply {
             startView = binding.countyDetails.root
             endView = binding.tab
-            startElevation = resources.getDimension(R.dimen.app_bar_elevation)
+            startElevation = binding.countyDetails.root.cardElevation
             endElevation = resources.getDimension(R.dimen.app_bar_elevation)
             endContainerColor = requireContext().themeColor(R.attr.colorSurface)
             scrimColor = Color.TRANSPARENT

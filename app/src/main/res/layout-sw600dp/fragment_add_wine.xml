@@ -317,14 +317,11 @@
                     android:id="@+id/textButtonTakePhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="100dp"
                     android:text="@string/take_photo"
                     android:textAppearance="?attr/textAppearanceCaption"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/buttonTakePhoto"
                     app:layout_constraintStart_toStartOf="@id/buttonTakePhoto"
-                    app:layout_constraintTop_toBottomOf="@id/buttonTakePhoto"
-                    app:layout_constraintVertical_bias="0" />
+                    app:layout_constraintTop_toBottomOf="@id/buttonTakePhoto" />
 
                 <ImageButton
                     android:id="@+id/buttonBrowsePhoto"
@@ -345,14 +342,11 @@
                     android:id="@+id/textButtonBrowsePhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="100dp"
                     android:text="@string/add_photo"
                     android:textAppearance="?attr/textAppearanceCaption"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/buttonBrowsePhoto"
                     app:layout_constraintStart_toStartOf="@id/buttonBrowsePhoto"
-                    app:layout_constraintTop_toBottomOf="@id/buttonBrowsePhoto"
-                    app:layout_constraintVertical_bias="0" />
+                    app:layout_constraintTop_toBottomOf="@id/buttonBrowsePhoto" />
 
                 <ImageView
                     android:id="@+id/wineMiniImage"
@@ -384,17 +378,30 @@
                     app:layout_constraintTop_toTopOf="@id/wineMiniImage"
                     app:tint="?attr/colorError" />
 
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierAllowsGoneWidgets="false"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="textButtonBrowsePhoto,wineMiniImage" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/submitAddWine"
                     style="@style/Widget.Cavity.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginTop="@dimen/xlarge_margin"
+                    android:layout_marginBottom="@dimen/medium_margin"
                     android:text="@string/submit"
                     app:icon="@drawable/ic_check"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/barrier"
+                    app:layout_constraintVertical_bias="0"
+                    app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

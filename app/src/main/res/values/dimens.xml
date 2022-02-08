@@ -45,4 +45,6 @@
     <dimen name="pie_upside_down_text_space">14dp</dimen>
     <dimen name="pie_text_size">12dp</dimen>
     <dimen name="pie_stroke_width">6dp</dimen>
+
+    <dimen name="large_screen_preffered_width">500dp</dimen>
 </resources>
