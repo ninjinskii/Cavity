@@ -116,10 +116,7 @@ class BottleRecyclerAdapter(
                     )
                 }
 
-                separatorApogee?.setVisible(bottle.isReadyToDrink())
                 apogeeIcon?.setVisible(bottle.isReadyToDrink())
-
-                separatorFavorite?.setVisible(bottle.isFavorite.toBoolean())
                 favoriteIcon?.setVisible(bottle.isFavorite.toBoolean())
             }
         }

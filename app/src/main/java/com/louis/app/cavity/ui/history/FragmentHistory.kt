@@ -258,7 +258,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             val label = entry.historyEntry.getResources().detailsLabel
             val wineColor = ContextCompat.getColor(requireContext(), wine.color.colorRes)
 
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
             // Ensure friends are in the correct order by forcing all chips to be inflated again
             binding.bottleDetails.friendChipGroup.removeAllViews()
@@ -282,7 +282,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 wineDetails.wineNaming.text = wine.naming
                 wineDetails.organicImage.setVisible(wine.isOrganic.toBoolean())
 
-                participants.setVisible(entry.friends.isNotEmpty())
+                participants.setVisible(entry.friends.isNotEmpty(), invisible = true)
                 participants.text = getString(label)
 
                 Glide.with(requireContext())

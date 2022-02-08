@@ -45,7 +45,7 @@ class PrefsRepository(app: Application) {
         editor.commit()
     }
 
-    private fun String.getString() = pref.getString(this, "")!!
+    private fun String.getString() = pref.getString(this, "€")!!
 
     private fun String.getBoolean() = pref.getBoolean(this, true)
 }

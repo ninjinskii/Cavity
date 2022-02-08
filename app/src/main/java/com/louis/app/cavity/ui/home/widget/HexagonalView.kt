@@ -36,6 +36,7 @@ class HexagonalView @JvmOverloads constructor(
         private const val HEXAGONAL_SQUARE_RATIO = 0.866
     }
 
+    private val clickableArea = Region()
     private val clipPath = Path()
     private val markerPath = Path()
     private val clipPaint by lazy {
@@ -55,7 +56,6 @@ class HexagonalView @JvmOverloads constructor(
 
     private var isFlat = false
     private var markerColor: ColorStateList = ColorStateList.valueOf(Color.TRANSPARENT)
-    private var clickableArea = Region()
 
     init {
         context.theme.obtainStyledAttributes(
