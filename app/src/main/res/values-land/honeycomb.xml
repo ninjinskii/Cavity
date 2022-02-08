@@ -2,5 +2,5 @@
 <resources>
     <integer name="honeycomb_cols">4</integer>
     <bool name="flat_hexagones">false</bool>
-    <dimen name="hexagones_margin">@dimen/medium_margin</dimen>
+    <dimen name="hexagones_margin">@dimen/small_margin</dimen>
 </resources>
