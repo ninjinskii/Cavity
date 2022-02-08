@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:clipChildren="false"
+    android:transitionGroup="true">
+
+    <include
+        android:id="@+id/appBar"
+        layout="@layout/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@id/statDetailsList"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/statDetailsList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:translationZ="-1dp"
+        app:layout_constraintBottom_toTopOf="@id/years"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/viewPager"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        app:layout_constraintWidth_percent="0.35" />
+
+    <!-- An ungly "patch" to hide scrolling down RecyclerView items without hiding ScrollableTab -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?attr/colorSurface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/statDetailsList"
+        app:layout_constraintStart_toStartOf="@id/statDetailsList"
+        app:layout_constraintTop_toBottomOf="@id/statDetailsList" />
+
+    <com.louis.app.cavity.ui.home.widget.ScrollableTab
+        android:id="@+id/years"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
