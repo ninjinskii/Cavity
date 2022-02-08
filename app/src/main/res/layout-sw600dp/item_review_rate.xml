@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:layout_margin="@dimen/small_margin"
+    app:cardBackgroundColor="@color/flat_card_background"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/cardview_stroke"
+    app:strokeWidth="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/contestName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceBody1"
+            app:layout_constraintEnd_toStartOf="@id/deleteReview"
+            app:layout_constraintStart_toEndOf="@id/rateIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Concours Parker" />
+
+        <ImageView
+            android:id="@+id/rateIcon"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:layout_margin="@dimen/small_margin"
+            android:contentDescription="@string/rate"
+            android:src="@drawable/ic_rate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:tint="@color/medal_gold" />
+
+        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+            android:id="@+id/rateLayout"
+            style="@style/Widget.Cavity.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="224dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/rateIcon"
+            app:layout_constraintTop_toBottomOf="@id/contestName"
+            app:rule="required|positive|integer"
+            app:startIconDrawable="@drawable/ic_rate">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/rate"
+                android:imeOptions="actionDone"
+                android:inputType="number" />
+
+        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+        <ImageButton
+            android:id="@+id/deleteReview"
+            android:layout_width="@dimen/medium_icon"
+            android:layout_height="@dimen/medium_icon"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorError" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
