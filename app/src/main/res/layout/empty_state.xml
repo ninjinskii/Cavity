@@ -33,6 +33,7 @@
         app:layout_constraintStart_toStartOf="@id/action"
         app:layout_constraintTop_toBottomOf="@id/icon"
         app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
         tools:text="@string/empty_grape" />
 
     <com.google.android.material.button.MaterialButton
@@ -46,6 +47,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text"
         app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
         app:layout_constraintWidth_percent="0.75"
         tools:text="@string/select_grapes" />
 
@@ -60,6 +62,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/action"
         app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
         app:layout_constraintWidth_percent="0.75"
         tools:text="@string/skip"
         tools:visibility="visible" />
