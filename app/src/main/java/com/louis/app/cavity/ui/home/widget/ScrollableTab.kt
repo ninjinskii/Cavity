@@ -28,6 +28,7 @@ class ScrollableTab @JvmOverloads constructor(
     private val layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
     private var viewPager: ViewPager2? = null
     private var isRVScrolling = true
+    private var pagerInitiatedScroll = false
     private var pageChangeListener: ((position: Int) -> Unit)? = null
     private var tabChangeListener: ((position: Int) -> Unit)? = null
     private var selectedColor = Color.WHITE
@@ -137,8 +138,10 @@ class ScrollableTab @JvmOverloads constructor(
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
-                if (state == ViewPager2.SCROLL_STATE_DRAGGING)
+                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
                     isRVScrolling = false
+                    pagerInitiatedScroll = true
+                }
             }
 
             override fun onPageScrolled(
@@ -146,15 +149,17 @@ class ScrollableTab @JvmOverloads constructor(
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
-                if (!isRVScrolling)
+                if (!isRVScrolling) {
                     layoutManager.scrollToPositionWithOffset(
                         position,
                         ((-positionOffsetPixels * lengthRatio) / 2).toInt()
                     )
+                }
             }
 
             override fun onPageSelected(position: Int) {
-                isRVScrolling = true
+                isRVScrolling = !pagerInitiatedScroll
+                pagerInitiatedScroll = false
                 smoothScrollToPosition(position)
                 pageChangeListener?.invoke(position)
             }
