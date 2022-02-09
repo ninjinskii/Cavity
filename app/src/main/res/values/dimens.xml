@@ -29,6 +29,7 @@
 
     <dimen name="history_marker_width">4dp</dimen>
     <dimen name="history_wine_image_size">145dp</dimen>
+    <dimen name="history_swipe_threshold">160dp</dimen>
 
     <dimen name="chip_group_default_height">48dp</dimen>
 

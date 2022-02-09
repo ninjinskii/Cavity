@@ -2,10 +2,13 @@ package com.louis.app.cavity.ui.history.adapter
 
 import android.graphics.Canvas
 import android.view.View
+import androidx.annotation.Px
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.louis.app.cavity.R
 import kotlin.math.abs
 import kotlin.math.ln
+import kotlin.math.roundToInt
 
 class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
     0,
@@ -14,7 +17,6 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
 
     companion object {
         private const val SWIPE_REBOUNDING_ELASTICITY = 0.8f
-        private const val TRUE_SWIPE_THRESHOLD = 0.4f
     }
 
     interface ReboundableViewHolder {
@@ -23,12 +25,14 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
         fun onRebounded(position: Int)
 
         fun onReboundOffsetChanged(
-            currentSwipePercentage: Float,
-            swipeThreshold: Float,
+            currentSwipeDistance: Int,
+            swipeThreshold: Int,
             currentTargetHasMetThresholdOnce: Boolean
         )
     }
 
+    @Px
+    private var trueSwipeThreshold: Int = -1
     private var currentTargetPosition: Int = -1
     private var currentTargetHasMetThresholdOnce: Boolean = false
 
@@ -68,37 +72,38 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
     ) {
         if (viewHolder !is ReboundableViewHolder) return
 
+
         if (currentTargetPosition != viewHolder.bindingAdapterPosition) {
             currentTargetPosition = viewHolder.bindingAdapterPosition
             currentTargetHasMetThresholdOnce = false
         }
 
+        val currentSwipeDistance = abs(dX).roundToInt()
         val itemView = viewHolder.itemView
-        val currentSwipePercentage = abs(dX) / itemView.width
+        trueSwipeThreshold =
+            itemView.resources.getDimensionPixelSize(R.dimen.history_swipe_threshold)
 
         viewHolder.onReboundOffsetChanged(
-            currentSwipePercentage,
-            TRUE_SWIPE_THRESHOLD,
+            currentSwipeDistance,
+            trueSwipeThreshold,
             currentTargetHasMetThresholdOnce
         )
 
-        translateReboundingView(itemView, viewHolder, dX)
+        translateReboundingView(viewHolder, dX)
 
-        if (currentSwipePercentage >= TRUE_SWIPE_THRESHOLD && !currentTargetHasMetThresholdOnce) {
+        if (currentSwipeDistance >= trueSwipeThreshold && !currentTargetHasMetThresholdOnce) {
             currentTargetHasMetThresholdOnce = true
         }
     }
 
     private fun translateReboundingView(
-        itemView: View,
         viewHolder: ReboundableViewHolder,
         dX: Float
     ) {
-        val swipeDismissDistanceHorizontal = itemView.width * TRUE_SWIPE_THRESHOLD
         val dragFraction =
-            ln((1 - (dX / swipeDismissDistanceHorizontal)).toDouble()) / ln(3.toDouble())
+            ln((1 - (dX / trueSwipeThreshold)).toDouble()) / ln(3.toDouble())
 
-        val dragTo = dragFraction * swipeDismissDistanceHorizontal * SWIPE_REBOUNDING_ELASTICITY
+        val dragTo = dragFraction * trueSwipeThreshold * SWIPE_REBOUNDING_ELASTICITY
 
         viewHolder.reboundableView.translationX = -dragTo.toFloat()
     }

@@ -49,18 +49,18 @@ abstract class ReboundableViewHolder(private val binding: ViewBinding) :
     }
 
     override fun onReboundOffsetChanged(
-        currentSwipePercentage: Float,
-        swipeThreshold: Float,
+        currentSwipeDistance: Int,
+        swipeThreshold: Int,
         currentTargetHasMetThresholdOnce: Boolean
     ) {
         if (currentTargetHasMetThresholdOnce) return
 
         val isStarred = binding.root.isActivated
-        val interpolation = (currentSwipePercentage / swipeThreshold).coerceIn(0F, 1F)
+        val interpolation = (currentSwipeDistance / swipeThreshold.toFloat()).coerceIn(0F, 1F)
         val adjustedInterpolation = abs((if (isStarred) 1F else 0F) - interpolation)
         updateCorner(adjustedInterpolation)
 
-        val thresholdMet = currentSwipePercentage >= swipeThreshold
+        val thresholdMet = currentSwipeDistance >= swipeThreshold
         val shouldStar = when {
             thresholdMet && isStarred -> false
             thresholdMet && !isStarred -> true
