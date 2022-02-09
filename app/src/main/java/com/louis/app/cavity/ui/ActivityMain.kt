@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -47,13 +48,8 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
             true
         }
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            binding.navigationRail?.menu?.forEach { item ->
-                val destinations = generateSequence(destination) { it.parent }
-                if (destinations.any { it.id == item.itemId }) {
-                    item.isChecked = true
-                }
-            }
+        navController.addOnDestinationChangedListener { controller, _, _ ->
+            updateNavigationRailState(controller)
         }
     }
 
@@ -66,12 +62,23 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     }
 
     private fun maybeLockDrawer() {
-        val hasNavigationRail = binding.navigationRail != null
-
-        if (hasNavigationRail) {
+        if (hasNavigationRail()) {
             binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
     }
+
+    private fun updateNavigationRailState(navController: NavController) {
+        val destination = navController.currentDestination ?: return
+
+        binding.navigationRail?.menu?.forEach { item ->
+            val destinations = generateSequence(destination) { it.parent }
+            if (destinations.any { it.id == item.itemId }) {
+                item.isChecked = true
+            }
+        }
+    }
+
+    private fun hasNavigationRail() = binding.navigationRail != null
 
     fun requestMediaPersistentPermission(mediaUri: Uri) {
         val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
@@ -87,6 +94,11 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     }
 
     override fun onBackPressed() {
+        if (hasNavigationRail()) {
+            val navController = navHostFragment.findNavController()
+            updateNavigationRailState(navController)
+        }
+
         if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
             binding.drawer.closeDrawer(GravityCompat.START)
         } else {
