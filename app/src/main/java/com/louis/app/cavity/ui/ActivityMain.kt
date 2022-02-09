@@ -6,8 +6,10 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
@@ -24,14 +26,35 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
+
+        setupNavigation()
+        observe()
+        maybeLockDrawer()
+    }
+
+    private fun setupNavigation() {
         navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment)!!
         val navController = navHostFragment.findNavController()
 
         binding.navView.setupWithNavController(navController)
-        binding.navigationRail?.setupWithNavController(navController)
 
-        observe()
-        maybeLockDrawer()
+        binding.navigationRail?.setOnItemSelectedListener {
+            val options = NavOptions.Builder()
+                .setPopUpTo(R.id.home_dest, false)
+                .build()
+
+            navController.navigate(it.itemId, null, options)
+            true
+        }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.navigationRail?.menu?.forEach { item ->
+                val destinations = generateSequence(destination) { it.parent }
+                if (destinations.any { it.id == item.itemId }) {
+                    item.isChecked = true
+                }
+            }
+        }
     }
 
     private fun observe() {
