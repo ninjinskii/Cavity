@@ -60,11 +60,11 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         const val PICK_MODE = "com.louis.app.cavity.ui.search.FragmentSearch.PICK_MODE"
     }
 
-    private lateinit var bottlesAdapter: BottleRecyclerAdapter
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+    private var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>? = null
+    private var bottlesAdapter: BottleRecyclerAdapter? = null
     private var _filtersBinding: SearchFiltersBinding? = null
     private val filtersBinding get() = _filtersBinding!!
 
@@ -153,7 +153,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         val fill = height - filtersBottom - backdropHeaderHeight
 
         val peekHeight = max(backdropHeaderHeight, fill)
-        bottomSheetBehavior.setPeekHeight(peekHeight, true)
+        bottomSheetBehavior?.setPeekHeight(peekHeight, true)
     }
 
     private fun observe() {
@@ -361,7 +361,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             binding.emptyState.setVisible(it.isEmpty())
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
-            bottlesAdapter.submitList(it.toMutableList())
+            bottlesAdapter?.submitList(it.toMutableList())
         }
     }
 
@@ -429,7 +429,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 if (id == R.id.end) {
                     binding.searchView.showKeyboard()
                     if (binding.toggleBackdrop.isChecked) {
-                        bottomSheetBehavior.peekHeight = backdropHeaderHeight
+                        bottomSheetBehavior?.peekHeight = backdropHeaderHeight
                     }
                 } else {
                     setBottomSheetPeekHeight()
@@ -452,7 +452,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun setListeners() {
         binding.bottomSheet.setOnClickListener {
-            if (bottomSheetBehavior.isCollapsed()) {
+            if (bottomSheetBehavior?.isCollapsed() == true) {
                 binding.bottleList.removeOnItemTouchListener(recyclerViewDisabler)
                 binding.toggleBackdrop.toggle()
             }
@@ -483,7 +483,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun toggleBackdrop() {
-        bottomSheetBehavior.run {
+        bottomSheetBehavior?.run {
             when {
                 isExpanded() -> {
                     toggleState()
@@ -564,6 +564,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bottlesAdapter = null
+        bottomSheetBehavior = null
         _binding = null
         _filtersBinding = null
     }

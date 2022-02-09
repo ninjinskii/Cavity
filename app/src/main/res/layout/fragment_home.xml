@@ -56,6 +56,7 @@
             android:id="@+id/countyDetailsScrim"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,10 +69,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:visibility="invisible"
-            app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
 
         <com.louis.app.cavity.ui.home.widget.HexagonalView
             android:id="@+id/fab"

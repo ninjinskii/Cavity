@@ -37,9 +37,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var colorUtil: ColorUtil
     private lateinit var transitionHelper: TransitionHelper
+    private var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>? = null
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private val historyViewModel: HistoryViewModel by viewModels()
@@ -182,11 +182,11 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         }
 
         binding.bottleDetails.buttonCloseBottomSheet.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         binding.bottleDetails.root.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
         binding.bottleDetails.buttonShowBottle.setOnClickListener {
@@ -198,7 +198,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             }
         }
 
-        bottomSheetBehavior.addBottomSheetCallback(object :
+        bottomSheetBehavior?.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -252,13 +252,13 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
     private fun bindBottomSheet(entry: BoundedHistoryEntry?) {
         if (entry == null) {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             val (bottle, wine) = entry.bottleAndWine
             val label = entry.historyEntry.getResources().detailsLabel
             val wineColor = ContextCompat.getColor(requireContext(), wine.color.colorRes)
 
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
 
             // Ensure friends are in the correct order by forcing all chips to be inflated again
             binding.bottleDetails.friendChipGroup.removeAllViews()
@@ -319,6 +319,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bottomSheetBehavior = null
         _binding = null
     }
 }
