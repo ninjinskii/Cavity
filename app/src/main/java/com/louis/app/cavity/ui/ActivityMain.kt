@@ -4,10 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
@@ -30,8 +32,40 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         binding.navView.setupWithNavController(navController)
         binding.navigationRail?.setupWithNavController(navController)
 
+        fixShitty2_4_0NavigationComponentBehavior()
         observe()
         maybeLockDrawer()
+    }
+
+    private fun fixShitty2_4_0NavigationComponentBehavior() {
+        val navController = navHostFragment.findNavController()
+
+        fun doNavigate(@IdRes id: Int): Boolean {
+            val options = NavOptions.Builder()
+                .setRestoreState(false) // f*ck off
+                .build()
+
+            navController.navigate(id, null, options)
+
+            return true
+        }
+
+        // When navigating from the drawer to a saved (automatically saved from 2.4.0),
+        // non top destination, drawer does not close
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            binding.drawer.closeDrawer(GravityCompat.START)
+        }
+
+        // Override default NavigationUI component to disable restore state
+        binding.navView.setNavigationItemSelectedListener {
+            doNavigate(it.itemId)
+        }
+
+        // Override default NavigationUI component to disable restore state
+        binding.navigationRail?.setOnItemSelectedListener {
+            doNavigate(it.itemId)
+        }
+
     }
 
     private fun observe() {

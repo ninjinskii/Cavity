@@ -12,16 +12,20 @@
         tools:layout="@layout/fragment_wines">
         <action
             android:id="@+id/homeToSettings"
-            app:destination="@id/settings_dest" />
+            app:destination="@id/settings_dest"
+            app:restoreState="false" />
         <action
             android:id="@+id/homeToAddWine"
-            app:destination="@id/add_wine_dest" />
+            app:destination="@id/add_wine_dest"
+            app:restoreState="false" />
         <action
             android:id="@+id/homeToSearch"
-            app:destination="@id/search_dest" />
+            app:destination="@id/search_dest"
+            app:restoreState="false" />
         <action
             android:id="@+id/homeToBottleDetails"
-            app:destination="@id/fragmentBottleDetails">
+            app:destination="@id/fragmentBottleDetails"
+            app:restoreState="false">
             <argument
                 android:name="wineId"
                 app:argType="long" />
@@ -31,19 +35,24 @@
         </action>
         <action
             android:id="@+id/homeToWineOptions"
-            app:destination="@id/wine_options_dialog" />
+            app:destination="@id/wine_options_dialog"
+            app:restoreState="false" />
         <action
             android:id="@+id/homeToManager"
-            app:destination="@id/manager_dest" />
+            app:destination="@id/manager_dest"
+            app:restoreState="false" />
         <action
             android:id="@+id/homeToHistory"
-            app:destination="@id/history_dest" />
+            app:destination="@id/history_dest"
+            app:restoreState="false" />
         <action
             android:id="@+id/homeToStats"
-            app:destination="@id/stats_dest" />
+            app:destination="@id/stats_dest"
+            app:restoreState="false" />
         <action
             android:id="@+id/homeToTasting"
-            app:destination="@id/tasting_dest" />
+            app:destination="@id/tasting_dest"
+            app:restoreState="false" />
     </fragment>
 
     <dialog
@@ -71,10 +80,12 @@
             app:argType="com.louis.app.cavity.model.WineColor" />
         <action
             android:id="@+id/wineOptionsToEditWine"
-            app:destination="@+id/add_wine_dest" />
+            app:destination="@+id/add_wine_dest"
+            app:restoreState="false" />
         <action
             android:id="@+id/wineOptionsToAddBottle"
-            app:destination="@id/add_bottle_dest" />
+            app:destination="@id/add_bottle_dest"
+            app:restoreState="false" />
     </dialog>
 
     <fragment
@@ -98,7 +109,8 @@
             app:argType="long" />
         <action
             android:id="@+id/addWineToCamera"
-            app:destination="@id/camera_dest" />
+            app:destination="@id/camera_dest"
+            app:restoreState="false" />
     </fragment>
 
     <fragment
@@ -128,7 +140,8 @@
         tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/searchToBottleDetails"
-            app:destination="@id/fragmentBottleDetails">
+            app:destination="@id/fragmentBottleDetails"
+            app:restoreState="false">
             <argument
                 android:name="wineId"
                 app:argType="long" />
@@ -145,10 +158,12 @@
         tools:layout="@layout/fragment_tastings">
         <action
             android:id="@+id/tastingToAddTasting"
-            app:destination="@id/fragmentAddTasting" />
+            app:destination="@id/fragmentAddTasting"
+            app:restoreState="false" />
         <action
             android:id="@+id/tastingToTastingOverview"
-            app:destination="@id/fragmentTastingOverview">
+            app:destination="@id/fragmentTastingOverview"
+            app:restoreState="false">
             <argument
                 android:name="tastingId"
                 app:argType="long" />
@@ -167,7 +182,8 @@
             app:argType="long" />
         <action
             android:id="@+id/bottleDetailsToEditBottle"
-            app:destination="@id/add_bottle_dest">
+            app:destination="@id/add_bottle_dest"
+            app:restoreState="false">
             <argument
                 android:name="wineId"
                 app:argType="long" />
@@ -177,14 +193,16 @@
         </action>
         <action
             android:id="@+id/bottleDetailsToConsumeBottle"
-            app:destination="@id/fragmentConsumeBottle">
+            app:destination="@id/fragmentConsumeBottle"
+            app:restoreState="false">
             <argument
                 android:name="bottleId"
                 app:argType="long" />
         </action>
         <action
             android:id="@+id/bottleDetailsToGiftBottle"
-            app:destination="@id/fragmentGiftBottle">
+            app:destination="@id/fragmentGiftBottle"
+            app:restoreState="false">
             <argument
                 android:name="bottleId"
                 app:argType="long" />
@@ -193,7 +211,8 @@
             android:id="@+id/bottleDetailsToHistory"
             app:destination="@id/history_dest"
             app:popUpTo="@id/history_dest"
-            app:popUpToInclusive="true">
+            app:popUpToInclusive="true"
+            app:restoreState="false">
             <argument
                 android:name="bottleId"
                 app:argType="long" />
@@ -219,7 +238,8 @@
             android:id="@+id/historyToBottle"
             app:destination="@id/fragmentBottleDetails"
             app:popUpTo="@id/fragmentBottleDetails"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:restoreState="false" />
     </fragment>
 
     <fragment
@@ -258,7 +278,7 @@
         android:id="@+id/fragmentTastingOverview"
         android:name="com.louis.app.cavity.ui.tasting.FragmentTastingOverview"
         android:label="{opportunity}"
-        tools:layout="@layout/fragment_tasting_overview" >
+        tools:layout="@layout/fragment_tasting_overview">
         <argument
             android:name="tastingId"
             app:argType="long" />
