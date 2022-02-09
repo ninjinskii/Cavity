@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="xsmall_margin">4dp</dimen>
+    <dimen name="small_margin">12dp</dimen>
+    <dimen name="medium_margin">20dp</dimen>
+    <dimen name="large_margin">28dp</dimen>
+    <dimen name="xlarge_margin">56dp</dimen>
 
+    <dimen name="margin_hexagone_text">@dimen/large_margin</dimen>
 </resources>

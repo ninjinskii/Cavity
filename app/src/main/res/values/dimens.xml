@@ -23,6 +23,7 @@
     <dimen name="labeled_data_icon">36dp</dimen>
 
     <dimen name="hexagonal_fab_width">56dp</dimen>
+    <dimen name="margin_hexagone_text">0dp</dimen>
 
     <dimen name="review_height">96dp</dimen>
 
