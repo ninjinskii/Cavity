@@ -126,6 +126,15 @@ class ScrollableTab @JvmOverloads constructor(
         )
         this.viewPager = viewPager
 
+        var lengthRatio = 1f
+
+        // Some adjustments need to be done if ViewPage scrolling distance is not the same as ScrollableTab width
+        if (viewPager.orientation == ViewPager2.ORIENTATION_VERTICAL) {
+            val viewPagerHeight = viewPager.measuredHeight.toFloat()
+            val tabWidth = measuredWidth
+            lengthRatio = tabWidth / viewPagerHeight
+        }
+
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
                 if (state == ViewPager2.SCROLL_STATE_DRAGGING)
@@ -138,10 +147,14 @@ class ScrollableTab @JvmOverloads constructor(
                 positionOffsetPixels: Int
             ) {
                 if (!isRVScrolling)
-                    layoutManager.scrollToPositionWithOffset(position, -positionOffsetPixels / 2)
+                    layoutManager.scrollToPositionWithOffset(
+                        position,
+                        ((-positionOffsetPixels * lengthRatio) / 2).toInt()
+                    )
             }
 
             override fun onPageSelected(position: Int) {
+                isRVScrolling = true
                 smoothScrollToPosition(position)
                 pageChangeListener?.invoke(position)
             }
