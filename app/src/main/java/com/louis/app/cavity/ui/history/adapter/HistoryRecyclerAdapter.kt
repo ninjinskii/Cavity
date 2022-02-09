@@ -32,7 +32,7 @@ class HistoryRecyclerAdapter(
     }
 
     // Only lightweight drawables here
-    private val drawables = mutableMapOf<@DrawableRes Int, Drawable>()
+    private val drawables = mutableMapOf<Int, Drawable>()
 
     private fun getDrawable(@DrawableRes id: Int): Drawable? {
         return drawables[id] ?: ContextCompat.getDrawable(context, id)?.also { drawables[id] = it }

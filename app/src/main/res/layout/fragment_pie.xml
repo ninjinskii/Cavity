@@ -14,7 +14,8 @@
         android:layout_marginVertical="@dimen/small_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
 
     <com.louis.app.cavity.ui.stats.widget.PieView
         android:id="@+id/comparisonPieView"
@@ -43,12 +44,12 @@
 
     <TextView
         android:id="@+id/title"
-        android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/small_margin"
         android:layout_marginVertical="@dimen/medium_margin"
         android:gravity="center_horizontal"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintBottom_toTopOf="@id/buttonGroupSwitchStat"
         app:layout_constraintEnd_toEndOf="@id/textEnd"
         app:layout_constraintStart_toStartOf="@id/textStart"

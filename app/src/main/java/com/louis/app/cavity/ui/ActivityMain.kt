@@ -6,8 +6,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
@@ -27,10 +27,11 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment)!!
         val navController = navHostFragment.findNavController()
 
-        initDialogWatcher(navController)
         binding.navView.setupWithNavController(navController)
+        binding.navigationRail?.setupWithNavController(navController)
 
         observe()
+        maybeLockDrawer()
     }
 
     private fun observe() {
@@ -41,16 +42,11 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         }
     }
 
-    private fun initDialogWatcher(navController: NavController) {
-        navController.addOnDestinationChangedListener { controller, _, _ ->
-//            controller.currentDestination?.id?.let {
-//                val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment)
-//                val fragment = navHostFragment?.childFragmentManager!!.fragments[0]
-//
-//                if (fragment is DialogWatcher) {
-//                    fragment.closeMaybeOpenedDialog()
-//                }
-//            }
+    private fun maybeLockDrawer() {
+        val hasNavigationRail = binding.navigationRail != null
+
+        if (hasNavigationRail) {
+            binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
     }
 

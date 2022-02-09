@@ -12,7 +12,6 @@
         android:id="@+id/main"
         layout="@layout/content_main" />
 
-    <!-- NavHost fragment -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"
         android:layout_width="wrap_content"

@@ -6,17 +6,18 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
@@ -27,8 +28,6 @@ import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.themeColor
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
     private lateinit var tabAdapter: ScrollableTabAdapter<County>
@@ -70,9 +69,11 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
         _binding = FragmentHomeBinding.bind(view)
 
-        // Hack. On app launch, top bar is not bounded if not doing this
-        lifecycleScope.launch(Main) {
-            setupNavigation(binding.appBar.toolbar)
+        binding.appBar.toolbar.doOnLayout {
+            val hasNavigationRail =
+                activity?.findViewById<NavigationRailView>(R.id.navigationRail) != null
+
+            setupNavigation(binding.appBar.toolbar, hasNavigationRail)
         }
 
         setupScrollableTab()

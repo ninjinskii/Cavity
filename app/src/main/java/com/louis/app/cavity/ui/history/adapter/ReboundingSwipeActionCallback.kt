@@ -12,10 +12,9 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
     ItemTouchHelper.LEFT
 ) {
 
-    // TODO: update values for larger screens
     companion object {
-        private const val swipeReboundingElasticity = 0.8f
-        private const val trueSwipeThreshold = 0.4f
+        private const val SWIPE_REBOUNDING_ELASTICITY = 0.8f
+        private const val TRUE_SWIPE_THRESHOLD = 0.4f
     }
 
     interface ReboundableViewHolder {
@@ -79,13 +78,13 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
 
         viewHolder.onReboundOffsetChanged(
             currentSwipePercentage,
-            trueSwipeThreshold,
+            TRUE_SWIPE_THRESHOLD,
             currentTargetHasMetThresholdOnce
         )
 
         translateReboundingView(itemView, viewHolder, dX)
 
-        if (currentSwipePercentage >= trueSwipeThreshold && !currentTargetHasMetThresholdOnce) {
+        if (currentSwipePercentage >= TRUE_SWIPE_THRESHOLD && !currentTargetHasMetThresholdOnce) {
             currentTargetHasMetThresholdOnce = true
         }
     }
@@ -95,11 +94,11 @@ class ReboundingSwipeActionCallback : ItemTouchHelper.SimpleCallback(
         viewHolder: ReboundableViewHolder,
         dX: Float
     ) {
-        val swipeDismissDistanceHorizontal = itemView.width * trueSwipeThreshold
+        val swipeDismissDistanceHorizontal = itemView.width * TRUE_SWIPE_THRESHOLD
         val dragFraction =
             ln((1 - (dX / swipeDismissDistanceHorizontal)).toDouble()) / ln(3.toDouble())
 
-        val dragTo = dragFraction * swipeDismissDistanceHorizontal * swipeReboundingElasticity
+        val dragTo = dragFraction * swipeDismissDistanceHorizontal * SWIPE_REBOUNDING_ELASTICITY
 
         viewHolder.reboundableView.translationX = -dragTo.toFloat()
     }

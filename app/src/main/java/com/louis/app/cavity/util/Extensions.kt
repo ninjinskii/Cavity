@@ -195,10 +195,15 @@ fun BottomSheetBehavior<ConstraintLayout>.toggleState() {
 }
 
 // Navigation
-fun Fragment.setupNavigation(toolbar: Toolbar) {
-    val drawer = (activity as ActivityMain).findViewById<DrawerLayout>(R.id.drawer)
-    val navController = findNavController()
-    toolbar.setupWithNavController(navController, drawer)
+fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false) {
+    if (!hideDrawerToggle) {
+        val drawer = (activity as ActivityMain).findViewById<DrawerLayout>(R.id.drawer)
+        val navController = findNavController()
+        toolbar.setupWithNavController(navController, drawer)
+    } else {
+        toolbar.title = getString(R.string.app_name)
+        toolbar.setNavigationOnClickListener(null)
+    }
 }
 
 // String

@@ -279,7 +279,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
             valueFrom = year - 20F
             valueTo = year
-            values = listOf(start ?: valueFrom, end ?: valueTo)
+            values = listOf(max(valueFrom, start ?: valueFrom), max(valueTo, end ?: valueTo))
 
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
                 override fun onStopTrackingTouch(slider: RangeSlider) {
@@ -319,7 +319,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             val start = savedInstanceState?.getFloat(SLIDER_PRICE_START)
             val end = savedInstanceState?.getFloat(SLIDER_PRICE_END)
 
-            values = listOf(start ?: valueFrom, end ?: valueTo)
+            values = listOf(max(valueFrom, start ?: valueFrom), max(valueTo, end ?: valueTo))
             isEnabled = filtersBinding.togglePrice.isChecked
 
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
@@ -545,6 +545,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+
+        if (_filtersBinding == null) return
 
         with(outState) {
             putFloat(SLIDER_VINTAGE_START, filtersBinding.vintageSlider.values[0])
