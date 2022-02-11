@@ -145,6 +145,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         bottleDetailsViewModel.grapes.observe(viewLifecycleOwner) {
+            binding.divider2.setVisible(it.isNotEmpty())
             binding.grapeBar.apply {
                 setVisible(it.isNotEmpty())
                 setSlices(it, anim = true)

@@ -173,25 +173,6 @@
 
                 <!-- TODO: Add vintage chip group here -->
 
-                <com.louis.app.cavity.ui.widget.SliceBarView
-                    android:id="@+id/grapeBar"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_marginHorizontal="@dimen/small_margin"
-                    android:layout_marginTop="@dimen/xlarge_margin"
-                    android:layout_marginBottom="@dimen/small_margin"
-                    android:paddingStart="@dimen/medium_margin"
-                    android:paddingEnd="@dimen/medium_margin"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/barrier" />
-
-                <View
-                    android:id="@+id/divider1"
-                    style="@style/Widget.Cavity.Divider"
-                    app:layout_constraintTop_toBottomOf="@id/grapeBar" />
-
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/apogee"
                     android:layout_width="146dp"
@@ -202,7 +183,7 @@
                     app:label="@string/apogee"
                     app:layout_constraintEnd_toStartOf="@id/price"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider1"
+                    app:layout_constraintTop_toBottomOf="@id/barrier"
                     app:tint="?attr/colorOnPrimary" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
@@ -215,7 +196,7 @@
                     app:label="@string/price"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/apogee"
-                    app:layout_constraintTop_toBottomOf="@id/divider1"
+                    app:layout_constraintTop_toBottomOf="@id/barrier"
                     app:tint="?attr/colorOnPrimary" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
@@ -269,7 +250,7 @@
                     app:tint="?attr/colorOnPrimary" />
 
                 <View
-                    android:id="@+id/divider2"
+                    android:id="@+id/divider1"
                     style="@style/Widget.Cavity.Divider"
                     app:layout_constraintTop_toBottomOf="@id/otherInfo" />
 
@@ -282,7 +263,7 @@
                     android:orientation="vertical"
                     app:layout_constraintEnd_toStartOf="@id/buttonHistory"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider2"
+                    app:layout_constraintTop_toBottomOf="@id/divider1"
                     app:layout_constraintWidth_max="100dp">
 
                     <ImageView
@@ -315,7 +296,7 @@
                     android:orientation="vertical"
                     app:layout_constraintEnd_toStartOf="@id/buttonPdf"
                     app:layout_constraintStart_toEndOf="@id/buttonEdit"
-                    app:layout_constraintTop_toBottomOf="@id/divider2"
+                    app:layout_constraintTop_toBottomOf="@id/divider1"
                     app:layout_constraintWidth_max="100dp">
 
                     <ImageView
@@ -347,7 +328,7 @@
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/buttonHistory"
-                    app:layout_constraintTop_toBottomOf="@id/divider2"
+                    app:layout_constraintTop_toBottomOf="@id/divider1"
                     app:layout_constraintWidth_max="100dp">
 
                     <ImageView
@@ -372,10 +353,30 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/divider3"
+                    android:id="@+id/divider2"
                     style="@style/Widget.Cavity.Divider"
                     android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/buttonPdf" />
+
+                <com.louis.app.cavity.ui.widget.SliceBarView
+                    android:id="@+id/grapeBar"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:paddingStart="@dimen/medium_margin"
+                    android:paddingEnd="@dimen/medium_margin"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                <View
+                    android:id="@+id/divider3"
+                    style="@style/Widget.Cavity.Divider"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/grapeBar" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/reviewList"
@@ -391,11 +392,6 @@
                     tools:listitem="@layout/item_show_review_medal"
                     tools:orientation="horizontal" />
 
-                <View
-                    android:id="@+id/divider4"
-                    style="@style/Widget.Cavity.Divider"
-                    app:layout_constraintTop_toBottomOf="@id/reviewList" />
-
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -408,7 +404,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider4"
+                    app:layout_constraintTop_toBottomOf="@id/reviewList"
                     app:layout_constraintWidth_max="400dp"
                     app:shapeAppearance="?attr/shapeAppearanceLargeComponent"
                     app:strokeColor="@color/cardview_stroke"

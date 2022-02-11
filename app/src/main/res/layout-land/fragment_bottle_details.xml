@@ -65,7 +65,7 @@
             app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/backButton"
-            app:shapeAppearance="@style/RoundedImage" />
+            app:shapeAppearanceOverlay="@style/RoundedImage" />
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/buttonGroupInteract"
@@ -395,13 +395,6 @@
                     tools:listitem="@layout/item_show_review_medal"
                     tools:orientation="horizontal" />
 
-                <View
-                    android:id="@+id/divider4"
-                    style="@style/Widget.Cavity.Divider"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/reviewList" />
-
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -414,7 +407,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider4"
+                    app:layout_constraintTop_toBottomOf="@id/reviewList"
                     app:layout_constraintWidth_max="400dp"
                     app:shapeAppearance="?attr/shapeAppearanceLargeComponent"
                     app:strokeColor="@color/cardview_stroke"
