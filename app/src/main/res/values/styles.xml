@@ -37,10 +37,11 @@
         <item name="textInputStyle">@style/Widget.Cavity.TextInputLayout.FilledBox</item>
         <item name="tabStyle">@style/Widget.Cavity.TabLayout</item>
         <item name="chipStyle">@style/Widget.Cavity.Chip.Choice</item>
+        <item name="switchStyle">@style/Widget.Cavity.Switch</item>
         <item name="sliderStyle">@style/Widget.Cavity.Slider</item>
         <item name="navigationViewStyle">@style/Widget.Cavity.NavigationView</item>
 
-        <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
         <item name="android:popupMenuStyle">@style/Widget.Cavity.PopupMenu</item>
         <item name="android:windowSharedElementsUseOverlay">false</item>
         <item name="android:itemTextAppearance">@style/TextAppearance.Cavity.Body1</item>
@@ -208,6 +209,11 @@
         <item name="chipBackgroundColor">@android:color/transparent</item>
         <item name="chipStrokeWidth">1dp</item>
         <item name="chipStrokeColor">@color/chip_stroke</item>
+    </style>
+
+    <!-- Switch -->
+    <style name="Widget.Cavity.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="useMaterialThemeColors">false</item>
     </style>
 
     <!-- Slider -->
