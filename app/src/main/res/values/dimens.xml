@@ -22,6 +22,8 @@
     <dimen name="stepper_icon_background">42dp</dimen>
     <dimen name="labeled_data_icon">36dp</dimen>
 
+    <dimen name="bottle_land_image_height">148dp</dimen>
+
     <dimen name="hexagonal_fab_width">56dp</dimen>
     <dimen name="margin_hexagone_text">0dp</dimen>
 

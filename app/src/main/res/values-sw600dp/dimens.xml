@@ -7,4 +7,6 @@
     <dimen name="xlarge_margin">56dp</dimen>
 
     <dimen name="margin_hexagone_text">@dimen/large_margin</dimen>
+
+    <dimen name="bottle_land_image_height">350dp</dimen>
 </resources>

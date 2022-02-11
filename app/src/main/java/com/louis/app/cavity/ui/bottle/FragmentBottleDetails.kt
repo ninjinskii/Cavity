@@ -88,7 +88,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private fun setupToolbarShape() {
         val shaper = MaterialShapeDrawable.createWithElevationOverlay(context)
 
-        binding.shaper.apply {
+        binding.shaper?.apply {
             background = shaper
 
             doOnLayout {
@@ -97,7 +97,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             }
         }
 
-        binding.motionLayout.addTransitionListener(object : MotionLayout.TransitionListener {
+        binding.motionLayout?.addTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
             }
 
