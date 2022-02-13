@@ -3,10 +3,12 @@ package com.louis.app.cavity.util
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ScrollView
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
@@ -14,6 +16,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.use
+import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -70,6 +73,13 @@ inline fun View.doOnEachNextLayout(crossinline action: (view: View) -> Unit) {
     addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
         action(view)
     }
+}
+
+fun NestedScrollView.isViewVisible(view: View) : Boolean {
+    val scrollBounds = Rect()
+    getHitRect(scrollBounds)
+
+    return view.getLocalVisibleRect(scrollBounds)
 }
 
 fun Context.dpToPx(dp: Float): Float {

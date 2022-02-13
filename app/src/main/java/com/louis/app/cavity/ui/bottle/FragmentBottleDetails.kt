@@ -11,6 +11,7 @@ import android.widget.Checkable
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -38,6 +39,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private val binding get() = _binding!!
     private val bottleDetailsViewModel: BottleDetailsViewModel by viewModels()
     private val args: FragmentBottleDetailsArgs by navArgs()
+
+    private var hasRevealGrapeBar = false
+    private var hasRevealReviewsList = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +87,39 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         initRecyclerView()
         observe()
         setListeners()
+
+        binding.root.doOnLayout {
+            setupScrollViewWatcher()
+        }
+    }
+
+    private fun setupScrollViewWatcher() {
+        hasRevealGrapeBar = checkViewIsOnScreen(binding.grapeBar)
+        hasRevealReviewsList = checkViewIsOnScreen(binding.reviewList)
+
+        if (hasRevealGrapeBar) {
+            binding.grapeBar.triggerAnimation()
+        }
+
+        binding.scrollView.setOnScrollChangeListener { v, _, _, _, _ ->
+            v as NestedScrollView
+
+            if (v.isViewVisible(binding.grapeBar) && !hasRevealGrapeBar) {
+                binding.grapeBar.triggerAnimation()
+                hasRevealGrapeBar = true
+            }
+
+            if (v.isViewVisible(binding.reviewList) && !hasRevealReviewsList) {
+                //binding.reviewList.
+                hasRevealReviewsList = true
+            }
+
+            if (hasRevealGrapeBar && hasRevealReviewsList) {
+                binding.scrollView.setOnScrollChangeListener(
+                    null as NestedScrollView.OnScrollChangeListener?
+                )
+            }
+        }
     }
 
     private fun setupToolbarShape() {
@@ -103,7 +140,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {
                 shaper.interpolation = 1 - progress
-                //binding.grapeBar.hideTooltip()
+
+                if (!hasRevealGrapeBar && checkViewIsOnScreen(binding.grapeBar)) {
+                    hasRevealGrapeBar = true
+                    binding.grapeBar.triggerAnimation()
+                }
             }
 
             override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {
@@ -148,7 +189,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             binding.divider2.setVisible(it.isNotEmpty())
             binding.grapeBar.apply {
                 setVisible(it.isNotEmpty())
-                setSlices(it, anim = true)
+                setSlices(it, anim = false)
             }
         }
 
@@ -231,6 +272,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 }
                 .show()
         }
+    }
+
+    private fun checkViewIsOnScreen(view: View): Boolean {
+        val scrollViewStart = binding.scrollView.top
+        val availableHeight = binding.root.height
+
+        if (scrollViewStart > availableHeight) return false
+
+        return scrollViewStart + view.top < availableHeight
     }
 
     private fun showImage(image: Uri) {
