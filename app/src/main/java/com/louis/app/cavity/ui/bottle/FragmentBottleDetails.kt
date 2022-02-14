@@ -88,6 +88,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         setListeners()
 
         binding.root.doOnLayout {
+            binding.scrollView.scrollY = 0
             setupScrollViewWatcher()
         }
     }
