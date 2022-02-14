@@ -5,10 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Typeface
-import android.text.SpannableStringBuilder
 import android.text.TextUtils
-import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -17,7 +14,6 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import androidx.core.graphics.withTranslation
-import androidx.core.text.inSpans
 import androidx.core.widget.TextViewCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
@@ -121,12 +117,6 @@ class SliceBarView @JvmOverloads constructor(
         }
     }
 
-    inline fun SpannableStringBuilder.font(
-        typeface: Typeface? = null,
-        builderAction: SpannableStringBuilder.() -> Unit
-    ) =
-        inSpans(StyleSpan(typeface?.style ?: Typeface.DEFAULT.style), builderAction = builderAction)
-
     private fun showTooltipOnClick(touchX: Float, move: Boolean) {
         var x = 0f
         val touchPercentage = (touchX / measuredWidth) * 100
@@ -138,13 +128,6 @@ class SliceBarView @JvmOverloads constructor(
             if (move && touchedSlice == previousTouchedSlice) {
                 return
             }
-
-
-//            val text = buildSpannedString {
-//                font(ResourcesCompat.getFont(context, R.font.forum)) {
-//                    append("${label}: ${percentage.roundToInt()}%")
-//                }
-//            }
 
             TooltipCompat.setTooltipText(
                 this@SliceBarView,
