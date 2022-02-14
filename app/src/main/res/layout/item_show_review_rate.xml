@@ -7,6 +7,7 @@
     android:layout_marginHorizontal="@dimen/small_margin"
     app:cardBackgroundColor="@color/flat_card_background"
     app:cardElevation="0dp"
+    app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
     app:strokeColor="@color/cardview_stroke"
     app:strokeWidth="1dp">
 
