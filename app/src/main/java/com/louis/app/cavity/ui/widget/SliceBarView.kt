@@ -15,6 +15,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.use
 import androidx.core.graphics.withTranslation
 import androidx.core.text.inSpans
 import androidx.core.widget.TextViewCompat
@@ -73,6 +74,7 @@ class SliceBarView @JvmOverloads constructor(
             }
         }
 
+    private var waitAnimationTriggerBeforeDraw = false
     private var slices = emptyList<Stat>()
     private var previousTouchedSlice: Stat? = null
     private var progressUnitPixelSize = 1f
@@ -82,13 +84,31 @@ class SliceBarView @JvmOverloads constructor(
     private var endX = 0f
     private var barY = 0f
 
+    init {
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.SliceBarView,
+            defStyleAttr,
+            0
+        ).use {
+            waitAnimationTriggerBeforeDraw = it.getBoolean(
+                R.styleable.SliceBarView_waitAnimationTriggerBeforeDraw,
+                false
+            )
+        }
+    }
+
+    fun setWaitAnimationTriggerBeforeDraw(wait: Boolean) {
+        this.waitAnimationTriggerBeforeDraw = wait
+    }
+
     fun setSlices(slices: List<Stat>, anim: Boolean) {
         val empty = this.slices.isEmpty()
         this.slices = slices
 
         if (empty && anim) {
             triggerAnimation()
-        } else {
+        } else if (!waitAnimationTriggerBeforeDraw) {
             invalidate()
         }
     }

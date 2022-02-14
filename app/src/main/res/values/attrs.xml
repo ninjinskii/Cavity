@@ -20,6 +20,10 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="SliceBarView">
+        <attr name="waitAnimationTriggerBeforeDraw" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="LabeledData">
         <attr name="label" format="string" />
         <attr name="icon" format="reference" />
