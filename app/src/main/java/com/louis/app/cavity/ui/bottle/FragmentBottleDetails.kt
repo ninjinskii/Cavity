@@ -41,7 +41,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private val args: FragmentBottleDetailsArgs by navArgs()
 
     private var hasRevealGrapeBar = false
-    private var hasRevealReviewsList = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,10 +94,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private fun setupScrollViewWatcher() {
         hasRevealGrapeBar = checkViewIsOnScreen(binding.grapeBar)
-        hasRevealReviewsList = checkViewIsOnScreen(binding.reviewList)
 
         if (hasRevealGrapeBar) {
             binding.grapeBar.triggerAnimation()
+            return
         }
 
         binding.scrollView.setOnScrollChangeListener { v, _, _, _, _ ->
@@ -107,17 +106,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             if (v.isViewVisible(binding.grapeBar) && !hasRevealGrapeBar) {
                 binding.grapeBar.triggerAnimation()
                 hasRevealGrapeBar = true
-            }
 
-            if (v.isViewVisible(binding.reviewList) && !hasRevealReviewsList) {
-                //binding.reviewList.
-                hasRevealReviewsList = true
-            }
-
-            if (hasRevealGrapeBar && hasRevealReviewsList) {
-                binding.scrollView.setOnScrollChangeListener(
-                    null as NestedScrollView.OnScrollChangeListener?
-                )
+                binding.scrollView.setOnScrollChangeListener(null as View.OnScrollChangeListener?)
             }
         }
     }
@@ -144,6 +134,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 if (!hasRevealGrapeBar && checkViewIsOnScreen(binding.grapeBar)) {
                     hasRevealGrapeBar = true
                     binding.grapeBar.triggerAnimation()
+
+                    binding.scrollView.setOnScrollChangeListener(
+                        null as View.OnScrollChangeListener?
+                    )
                 }
             }
 
