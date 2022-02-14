@@ -35,6 +35,8 @@ import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var colorUtil: ColorUtil
@@ -220,15 +222,18 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
     private fun showDatePicker(startDate: Long) {
         val today = MaterialDatePicker.todayInUtcMilliseconds()
+        val min = min(startDate, today)
+        val max = max(startDate, today)
+
         val constraint = CalendarConstraints.Builder()
-            .setEnd(today)
-            .setStart(startDate)
+            .setEnd(max)
+            .setStart(min)
             .setValidator(object : CalendarConstraints.DateValidator {
                 override fun describeContents() = -1
 
                 override fun writeToParcel(p0: Parcel?, p1: Int) = Unit
 
-                override fun isValid(date: Long) = date in startDate..today
+                override fun isValid(date: Long) = date in min..max
             })
             .build()
 
