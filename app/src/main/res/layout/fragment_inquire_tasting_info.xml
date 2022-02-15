@@ -112,11 +112,14 @@
 
                 <TextView
                     android:id="@+id/friendTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="@string/participants"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:layout_constraintEnd_toStartOf="@id/buttonAddFriend"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider1" />
 
@@ -165,11 +168,11 @@
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/next"
                     app:icon="@drawable/ic_check"
-                    app:layout_constraintTop_toBottomOf="@id/friendScrollView"
-                    app:layout_constraintVertical_bias="1"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/friendScrollView"
+                    app:layout_constraintVertical_bias="1" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
