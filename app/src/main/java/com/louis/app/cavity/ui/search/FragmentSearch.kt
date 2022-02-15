@@ -129,7 +129,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun inflateFiltersStub(savedInstanceState: Bundle?) {
-        val view = binding.filtersStub.inflate()
+        // binding might be null if someone (or the monkey) is spamming destinations
+        val view = _binding?.filtersStub?.inflate() ?: return
         _filtersBinding = SearchFiltersBinding.bind(view)
 
         filtersBinding.root.doOnLayout {
