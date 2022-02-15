@@ -13,6 +13,7 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
+import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addtasting.SpaceGridItemDecoration
 import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
 import com.louis.app.cavity.util.TransitionHelper
@@ -21,6 +22,7 @@ import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
+    private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentTastingOverviewBinding? = null
     private val binding get() = _binding!!
     private val tastingOverviewViewModel: TastingOverviewViewModel by viewModels()
@@ -43,6 +45,8 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         view.doOnPreDraw { startPostponedEnterTransition() }
 
         _binding = FragmentTastingOverviewBinding.bind(view)
+
+        snackbarProvider = activity as SnackbarProvider
 
         setupNavigation(binding.appBar.toolbar)
         tastingOverviewViewModel.start(args.tastingId)
@@ -102,7 +106,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
             returnTransition = MaterialFadeThrough()
             sharedElementReturnTransition = null
 
-            binding.coordinator.showSnackbar(R.string.tasting_confirmed)
+            snackbarProvider.onShowSnackbarRequested(R.string.tasting_confirmed)
 
             findNavController().popBackStack()
         }

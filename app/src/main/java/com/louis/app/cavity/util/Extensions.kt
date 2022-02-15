@@ -8,7 +8,6 @@ import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ScrollView
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
@@ -62,8 +61,8 @@ fun CoordinatorLayout.showSnackbar(
     anchorView: View? = null,
     action: (View) -> Unit = { }
 ) {
-    Snackbar.make(this, stringRes, Snackbar.LENGTH_LONG).apply {
-        actionStringRes?.let { setAction(it, action).duration = 8000 }
+    Snackbar.make(this, stringRes, 3000).apply {
+        actionStringRes?.let { setAction(it, action).duration = 9000 }
         anchorView?.let { this.anchorView = anchorView }
         show()
     }
