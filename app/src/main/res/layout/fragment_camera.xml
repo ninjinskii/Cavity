@@ -18,6 +18,39 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            app:cardBackgroundColor="@color/scrim"
+            app:cardElevation="@dimen/no_elevation"
+            app:cardPreventCornerOverlap="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
+            app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+            app:strokeColor="@color/cardview_stroke"
+            app:strokeWidth="1dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/small_margin"
+                android:text="@string/skew_bottle_title"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="?attr/colorOnSurface" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/toggleSkewBottle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="@dimen/small_margin" />
+
+        </com.google.android.material.card.MaterialCardView>
+
         <ImageView
             android:id="@+id/bottleTemplate"
             android:layout_width="400dp"

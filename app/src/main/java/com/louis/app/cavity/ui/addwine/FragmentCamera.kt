@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.Manifest
+import android.animation.ObjectAnimator
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -13,9 +14,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.doOnLayout
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentCameraBinding
@@ -77,7 +81,8 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        maybeApplyRotation()
+        setListener()
+        rotateTemplate(settingsViewModel.getSkewBottle())
     }
 
     private fun startCamera() {
@@ -203,14 +208,30 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         }
     }
 
-    private fun maybeApplyRotation() {
-        val shouldRotate = settingsViewModel.getSkewBottle()
+    private fun setListener() {
+        binding.toggleSkewBottle.apply {
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
 
-        if (shouldRotate) {
-            binding.bottleTemplate.apply {
-                rotationX = width / 2f
-                rotationY = height / 2f
-                rotation = TEMPLATE_ROTATION
+            isChecked = settingsViewModel.getSkewBottle()
+            jumpDrawablesToCurrentState()
+
+            setOnCheckedChangeListener { _, isChecked ->
+                settingsViewModel.setSkewBottle(isChecked)
+                rotateTemplate(shouldRotate = isChecked)
+            }
+        }
+    }
+
+    private fun rotateTemplate(shouldRotate: Boolean) {
+        binding.bottleTemplate.doOnLayout {
+            ObjectAnimator.ofFloat(it, "rotation", 0f, TEMPLATE_ROTATION).apply {
+                duration = resources.getInteger(R.integer.cavity_motion_short).toLong()
+                interpolator = FastOutSlowInInterpolator()
+                if (shouldRotate) start() else reverse()
             }
         }
     }
