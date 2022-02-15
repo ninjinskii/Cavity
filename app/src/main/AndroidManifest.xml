@@ -29,6 +29,11 @@
             android:exported="true" />
 
         <receiver
+            android:name=".ui.tasting.notifications.TastingActionDoneReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
             android:name=".ui.tasting.notifications.BootCompletedReceiver"
             android:enabled="false"
             android:exported="true">

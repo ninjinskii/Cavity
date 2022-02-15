@@ -3,7 +3,9 @@ package com.louis.app.cavity.ui.tasting.notifications
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
@@ -32,13 +34,27 @@ object TastingNotifier {
         val pendingIntent = NavDeepLinkBuilder(context).run {
             setGraph(R.navigation.nav_graph)
             setDestination(R.id.fragmentTastingOverview)
+            createTaskStackBuilder()
             setArguments(
                 bundleOf("tastingId" to tasting.id, "opportunity" to tasting.opportunity)
             )
             createPendingIntent()
         }
 
-        var futureBitmap: FutureTarget<Bitmap>? = null
+        val flags =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+
+        val actionPendingIntent = Intent(context, TastingActionDoneReceiver::class.java).let {
+            it.putExtra(TastingActionDoneReceiver.EXTRA_TASTING_ACTION_ID, tastingAction.id)
+            PendingIntent.getBroadcast(context, tastingAction.id.hashCode(), it, flags)
+        }
+
+        val futureBitmap: FutureTarget<Bitmap>?
+        val action = context.getString(R.string.done)
         var bitmap: Bitmap? = null
 
         if (wine.imgPath.isNotEmpty()) {
@@ -66,6 +82,7 @@ object TastingNotifier {
             .setSubText(tasting.opportunity)
             .setLargeIcon(bitmap)
             .setGroup(GROUP_ID)
+            .addAction(R.drawable.ic_check, action, actionPendingIntent)
             .setAutoCancel(false)
 
         //Glide.with(context).clear(futureBitmap)

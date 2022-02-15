@@ -284,6 +284,7 @@
     <string name="empty_tasting">Vous comptez boire plusieurs bouteilles ce soir ? Préparez tout à l\'avance !</string>
     <string name="empty_tasting_bottle">Aucune bouteille associée à cette dégustation</string>
     <string name="todo">À faire:</string>
+    <string name="done">C\'est fait !</string>
 
     <!-- Settings -->
     <string name="skew_bottle_title">Incliner le gabarit</string>
