@@ -7,6 +7,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,7 @@ import com.louis.app.cavity.util.toBoolean
 
 class BottleActionAdapter(
     private val onActionCheckedChange: (TastingAction, Boolean) -> Unit,
+    private val onCommentChanged: (Bottle, String) -> Unit,
     private val onCloseIconClicked: (Bottle) -> Unit
 ) :
     ListAdapter<BottleWithTastingActions, BottleActionAdapter.BottleActionViewHolder>
@@ -60,6 +62,13 @@ class BottleActionAdapter(
     inner class BottleActionViewHolder(private val binding: ItemTastingBottleActionsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        private val watcher = binding.comment.doAfterTextChanged {
+            if (binding.commentLayout.validate()) {
+                val bottle = currentList[bindingAdapterPosition].bottle
+                onCommentChanged(bottle, it.toString())
+            }
+        }
+
         private val textSize = itemView.context.run {
             pxToSp(resources.getDimension(R.dimen.body2TextSize).toInt())
         }
@@ -68,9 +77,14 @@ class BottleActionAdapter(
             val (bottle, wine, actions) = bottleWithTastingActions
             val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
-            binding.vintage.text = bottle.vintage.toString()
-            binding.buttonClose.setOnClickListener {
-                onCloseIconClicked(bottle)
+            with(binding) {
+                comment.removeTextChangedListener(watcher)
+                comment.setText(bottle.tastingTasteComment)
+                comment.addTextChangedListener(watcher)
+                vintage.text = bottle.vintage.toString()
+                buttonClose.setOnClickListener {
+                    onCloseIconClicked(bottle)
+                }
             }
 
             Glide
@@ -86,6 +100,7 @@ class BottleActionAdapter(
                 wineNaming.text = wine.naming
             }
 
+            binding.todo.setVisible(actions.isNotEmpty())
             addActionViews(actions)
         }
 

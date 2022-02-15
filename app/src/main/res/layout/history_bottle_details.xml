@@ -40,7 +40,6 @@
 
     <TextView
         android:id="@+id/vintage"
-        style="@style/TextAppearance.MaterialComponents.Body1"
         android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

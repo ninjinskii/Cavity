@@ -67,6 +67,9 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
 
                 tastingOverviewViewModel.setActionIsChecked(tastingAction, isChecked)
             },
+            onCommentChanged = { bottle, comment ->
+                tastingOverviewViewModel.updateBottleComment(bottle, comment)
+            },
             onCloseIconClicked = { bottle ->
                 tastingOverviewViewModel.updateBottleTasting(bottle, tastingId = null)
                 binding.coordinator.showSnackbar(

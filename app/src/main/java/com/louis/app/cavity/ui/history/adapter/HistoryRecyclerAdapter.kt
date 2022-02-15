@@ -115,7 +115,7 @@ class HistoryRecyclerAdapter(
 
                 comment.apply {
                     when (entry.model.historyEntry.type) {
-                        0 -> {
+                        0, 4 -> {
                             val comment = entry.model.historyEntry.comment
 
                             text = if (comment.isBlank()) {
@@ -125,10 +125,6 @@ class HistoryRecyclerAdapter(
                                 setTextAppearance(R.style.TextAppearance_Cavity_Body2)
                                 comment
                             }
-                        }
-                        4 -> {
-                            setTextAppearance(R.style.TextAppearance_Cavity_Body2)
-                            text = entry.model.tastingWithBottles?.tasting?.opportunity
                         }
                         else -> {
                             setTextAppearance(R.style.TextAppearance_Cavity_Body2)

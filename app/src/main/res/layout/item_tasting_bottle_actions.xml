@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:checkable="true">
+    app:cardPreventCornerOverlap="false"
+    app:shapeAppearance="?attr/shapeAppearanceSmallComponent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -58,16 +59,25 @@
 
         <TextView
             android:id="@+id/vintage"
-            android:textAppearance="?attr/textAppearanceOverline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="@dimen/xsmall_margin"
             android:layout_marginBottom="@dimen/medium_margin"
-            app:layout_constraintBottom_toTopOf="@id/actions"
+            android:textAppearance="?attr/textAppearanceOverline"
             app:layout_constraintStart_toStartOf="@id/wineColorNameNaming"
             app:layout_constraintTop_toBottomOf="@id/wineColorNameNaming"
             tools:text="2016" />
+
+        <TextView
+            android:id="@+id/todo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/todo"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vintage" />
 
         <LinearLayout
             android:id="@+id/actions"
@@ -75,10 +85,30 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
             android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/todo" />
+
+        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+            android:id="@+id/commentLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vintage" />
+            app:layout_constraintTop_toBottomOf="@id/actions"
+            app:startIconDrawable="@drawable/ic_glass">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tasting_comment"
+                android:inputType="textCapSentences"
+                android:nextFocusDown="@id/date" />
+
+        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

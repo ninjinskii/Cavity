@@ -50,6 +50,12 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun updateBottleComment(bottle: Bottle, comment: String) {
+        viewModelScope.launch(IO) {
+            repository.updateBottle(bottle.copy(tastingTasteComment = comment))
+        }
+    }
+
     fun requestNotificationsForTastingAction(context: Context, tastingAction: TastingAction) {
         viewModelScope.launch(IO) {
             val bottle = repository.getBottleByIdNotLive(tastingAction.bottleId)
@@ -90,7 +96,7 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
                 tasting.date,
                 bottle.id,
                 tasting.id,
-                comment = "",
+                comment = bottle.tastingTasteComment,
                 type = 4,
                 favorite = 0
             )

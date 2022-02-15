@@ -260,8 +260,12 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             val (bottle, wine) = entry.bottleAndWine
-            val label = entry.historyEntry.getResources().detailsLabel
             val wineColor = ContextCompat.getColor(requireContext(), wine.color.colorRes)
+            val label = if (entry.tastingWithBottles != null) {
+                entry.tastingWithBottles?.tasting?.opportunity ?: ""
+            } else {
+                getString(entry.historyEntry.getResources().detailsLabel)
+            }
 
             bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
 
@@ -288,7 +292,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 wineDetails.organicImage.setVisible(wine.isOrganic.toBoolean())
 
                 participants.setVisible(entry.friends.isNotEmpty(), invisible = true)
-                participants.text = getString(label)
+                participants.text = label
 
                 Glide.with(requireContext())
                     .load(Uri.parse(wine.imgPath))

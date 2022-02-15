@@ -177,7 +177,7 @@ function makeBottles() {
       currency: "€",
       buyLocation: bottle.lieuxAchat.trim(),
       buyDate: getBottleBuyDate(bottle),
-      tasteComment: bottle.commentaire.trim(),
+      tastingTasteComment: "",
       pdfPath: bottle.pdf_path || "",
       consumed: bottle.consumed,
       otherInfo: "",
@@ -293,6 +293,7 @@ function getGenericHistoryEntries(bottle, date) {
       id: lastHistoryEntryId++,
       date: date + 1,
       type: 0, // consumption
+      comment: bottle.commentaire.trim(),
     });
   }
 

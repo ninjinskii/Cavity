@@ -26,7 +26,7 @@ data class Bottle(
     @ColumnInfo(name = "other_info") var otherInfo: String,
     @ColumnInfo(name = "buy_location") val buyLocation: String,
     @ColumnInfo(name = "buy_date") val buyDate: Long,
-    @ColumnInfo(name = "taste_comment") val tasteComment: String, // might disappear
+    @ColumnInfo(name = "tasting_taste_comment") val tastingTasteComment: String,
     @ColumnInfo(name = "bottle_size") val bottleSize: BottleSize,
     @ColumnInfo(name = "pdf_path") var pdfPath: String,
     var consumed: Int,

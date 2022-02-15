@@ -282,6 +282,7 @@
     <string name="confirm_tasting_explanation">Les bouteilles présentes dans la liste vont être retirées du stock.</string>
     <string name="empty_tasting">Vous comptez boire plusieurs bouteilles ce soir ? Préparez tout à l\'avance !</string>
     <string name="empty_tasting_bottle">Aucune bouteille associée à cette dégustation</string>
+    <string name="todo">À faire:</string>
 
     <!-- Settings -->
     <string name="skew_bottle_title">Incliner le gabarit</string>

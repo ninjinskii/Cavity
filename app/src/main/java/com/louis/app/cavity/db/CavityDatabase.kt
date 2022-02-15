@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
         HistoryXFriend::class,
         TastingAction::class,
     ],
-    version = 58,
+    version = 59,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -63,7 +63,7 @@ abstract class CavityDatabase : RoomDatabase() {
                 "cavity.db"
             )
                 .fallbackToDestructiveMigration()
-                //.addCallback(callback)
+                .addCallback(callback)
                 .build()
         }
 
