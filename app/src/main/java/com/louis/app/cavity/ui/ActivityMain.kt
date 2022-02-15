@@ -16,21 +16,27 @@ import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.tasting.TastingViewModel
+import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.themeColor
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navHostFragment: Fragment
     private val addItemViewModel: AddItemViewModel by viewModels()
+    private val tastingViewModel: TastingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
-
         setupNavigation()
         observe()
-        maybeLockDrawer()
+
+        if (hasNavigationRail()) {
+            lockDrawer()
+        }
     }
 
     private fun setupNavigation() {
@@ -40,6 +46,13 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         binding.navView.setupWithNavController(navController)
 
         binding.navigationRail?.setOnItemSelectedListener {
+            val fromHomeToHome = navController.currentDestination?.id ?: 0 == R.id.home_dest &&
+                it.itemId == R.id.home_dest
+
+            if (fromHomeToHome) {
+                return@setOnItemSelectedListener false
+            }
+
             val options = NavOptions.Builder()
                 .setPopUpTo(R.id.home_dest, false)
                 .build()
@@ -59,12 +72,32 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
                 onShowSnackbarRequested(stringRes)
             }
         }
+
+        tastingViewModel.undoneTastings.observe(this) { tastings ->
+            val hasTastingToday = tastings.any { DateFormatter.isToday(it.tasting.date) }
+            showTastingIndicator(hasTastingToday)
+        }
     }
 
-    private fun maybeLockDrawer() {
+    private fun showTastingIndicator(show: Boolean) {
         if (hasNavigationRail()) {
-            binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            binding.navigationRail!!.getOrCreateBadge(R.id.tasting_dest).apply {
+                backgroundColor = binding.navigationRail!!.context.themeColor(R.attr.colorPrimary)
+                isVisible = show
+            }
+        } else {
+            val tastingItem = binding.navView.menu.getItem(1)
+
+            if (show) {
+                tastingItem.setActionView(R.layout.dot)
+            } else {
+                tastingItem.actionView = null
+            }
         }
+    }
+
+    private fun lockDrawer() {
+        binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 
     private fun updateNavigationRailState(navController: NavController) {
@@ -94,15 +127,15 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     }
 
     override fun onBackPressed() {
-        if (hasNavigationRail()) {
-            val navController = navHostFragment.findNavController()
-            updateNavigationRailState(navController)
-        }
-
         if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
             binding.drawer.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
+
+            if (hasNavigationRail()) {
+                val navController = navHostFragment.findNavController()
+                updateNavigationRailState(navController)
+            }
         }
     }
 

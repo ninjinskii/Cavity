@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +20,7 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
     private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentTastingsBinding? = null
     private val binding get() = _binding!!
-    private val tastingViewModel: TastingViewModel by viewModels()
+    private val tastingViewModel: TastingViewModel by activityViewModels()
     private val friendViewPool = RecyclerView.RecycledViewPool().apply {
         setMaxRecycledViews(R.layout.chip_friend, 8)
     }
