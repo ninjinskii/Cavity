@@ -37,13 +37,13 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
 
     val friends = repository.getAllFriends()
 
-    var currentTasting: Tasting? = null
+    private var currentTasting: Tasting? = null
+    var tastingDate: Long = System.currentTimeMillis()
     var selectedFriends: List<Long> = emptyList()
 
     fun submitTasting(
         opportunity: String,
         isMidday: Boolean,
-        date: Long,
         friends: List<Friend>
     ): Boolean {
         if (friends.isEmpty()) {
@@ -51,7 +51,7 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             return false
         }
 
-        currentTasting = Tasting(0, date, isMidday, opportunity)
+        currentTasting = Tasting(0, tastingDate, isMidday, opportunity)
         selectedFriends = friends.map { it.id }
 
         return true
@@ -146,6 +146,16 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
                 actions += action
             }
 
+            if (tastingBottle.shouldUncork.toBoolean()) {
+                val action = TastingAction(
+                    0,
+                    TastingAction.Action.UNCORK,
+                    tastingBottle.bottleId,
+                    false.toInt()
+                )
+
+                actions += action
+            }
         }
 
         repository.insertTastingActions(actions)

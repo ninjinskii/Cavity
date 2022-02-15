@@ -72,7 +72,9 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
             clearable = false,
             defaultDate = System.currentTimeMillis(),
             constraint
-        )
+        ).apply {
+            onDateChangedListener = { addTastingViewModel.tastingDate = it }
+        }
     }
 
     private fun observe() {
@@ -112,11 +114,10 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         if (valid) {
             with(binding) {
                 val opportunity = opportunity.text.toString().trim()
-                val date = datePicker.getDate() ?: System.currentTimeMillis()
                 val isMidday = rbMidday.isChecked
                 val friends = friendsChipGroup.collectAs<Friend>()
 
-                val ok = addTastingViewModel.submitTasting(opportunity, isMidday, date, friends)
+                val ok = addTastingViewModel.submitTasting(opportunity, isMidday, friends)
                 if (ok) stepperFragment?.goToNextPage()
             }
         }

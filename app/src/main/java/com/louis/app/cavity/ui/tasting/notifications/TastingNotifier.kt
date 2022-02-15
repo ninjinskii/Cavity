@@ -54,6 +54,7 @@ object TastingNotifier {
         val content = when (tastingAction.type) {
             TastingAction.Action.SET_TO_FRIDGE -> R.string.set_to_fridge
             TastingAction.Action.SET_TO_JUG -> R.string.set_to_jug
+            TastingAction.Action.UNCORK -> R.string.uncork
         }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)

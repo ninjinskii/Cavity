@@ -7,6 +7,7 @@ data class TastingBottle(
     val size: BottleSize,
     var shouldFridge: Int = 0,
     var shouldJug: Int = 0,
+    var shouldUncork: Int = 0,
     var isSelected: Boolean = false,
     var showOccupiedWarning: Boolean = false
 )

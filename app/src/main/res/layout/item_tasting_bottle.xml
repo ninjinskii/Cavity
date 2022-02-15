@@ -48,12 +48,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/medium_margin"
-            android:layout_marginBottom="@dimen/medium_margin"
             android:text="@string/fridge"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:layout_constraintBottom_toTopOf="@id/uncork"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/jug" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/uncork"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/medium_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:text="@string/uncork"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/jug" />
+            app:layout_constraintTop_toBottomOf="@id/fridge" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/wineImage"

@@ -73,9 +73,12 @@ class TastingBottleAdapter :
 
                 jug.setOnCheckedChangeListener(null)
                 fridge.setOnCheckedChangeListener(null)
+                uncork.setOnCheckedChangeListener(null)
 
                 jug.isChecked = bottle.shouldJug.toBoolean()
                 fridge.isChecked = bottle.shouldFridge.toBoolean()
+                uncork.isChecked = bottle.shouldUncork.toBoolean()
+
 
                 jug.setOnCheckedChangeListener { _, isChecked ->
                     bottle.shouldJug = isChecked.toInt()
@@ -83,6 +86,10 @@ class TastingBottleAdapter :
 
                 fridge.setOnCheckedChangeListener { _, isChecked ->
                     bottle.shouldFridge = isChecked.toInt()
+                }
+
+                uncork.setOnCheckedChangeListener { _, isChecked ->
+                    bottle.shouldUncork = isChecked.toInt()
                 }
             }
         }

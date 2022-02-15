@@ -56,7 +56,7 @@ class DatePicker(
         }
     }
 
-    fun getDate() = picker?.selection
+    //fun getDate() = picker?.selection
 
     private fun createDatePicker(): MaterialDatePicker<Long> {
         val picker = MaterialDatePicker.Builder

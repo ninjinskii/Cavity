@@ -275,6 +275,7 @@
     <string name="confirm_switch_tasting">Les bouteilles signalées seront déplacées de leurs dégustations respectives à cette dégustation. Continuer ?</string>
     <string name="set_to_fridge">Mettez la bouteille au frigo</string>
     <string name="set_to_jug">Carafez la bouteille</string>
+    <string name="uncork">Débouchonner la bouteille</string>
     <string name="bottle_removed_from_tasting">Bouteille retirée de la dégustation.</string>
     <string name="confirm_tasting">Terminer la dégustation</string>
     <string name="tasting_confirmed">Dégustation terminée.</string>

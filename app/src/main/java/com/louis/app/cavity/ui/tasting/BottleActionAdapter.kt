@@ -111,6 +111,7 @@ class BottleActionAdapter(
                 val actionText = when (it.type) {
                     TastingAction.Action.SET_TO_FRIDGE -> R.string.set_to_fridge
                     TastingAction.Action.SET_TO_JUG -> R.string.set_to_jug
+                    TastingAction.Action.UNCORK -> R.string.uncork
                 }
 
                 val checkbox = MaterialCheckBox(itemView.context).apply {

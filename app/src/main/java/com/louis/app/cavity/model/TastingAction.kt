@@ -23,6 +23,7 @@ data class TastingAction(
 ) {
     enum class Action {
         SET_TO_FRIDGE,
-        SET_TO_JUG
+        SET_TO_JUG,
+        UNCORK
     }
 }
