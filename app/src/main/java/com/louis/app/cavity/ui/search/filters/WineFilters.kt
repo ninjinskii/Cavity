@@ -102,6 +102,12 @@ class FilterConsumed(private val consumed: Boolean) : WineFilter {
     }
 }
 
+class FilterCapacity(private val bottleSize: BottleSize) : WineFilter {
+    override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
+        return boundedBottle.filter { it.bottle.bottleSize == bottleSize }
+    }
+}
+
 object NoFilter : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
         return boundedBottle

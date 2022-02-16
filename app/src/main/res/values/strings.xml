@@ -160,6 +160,7 @@
     <string name="query_feedback">\'%1$s\'</string>
     <string name="selected_bottles">Bouteilles sélectionnées (%1$d)</string>
     <string name="empty_search">Aucun résultat</string>
+    <string name="filter_consumed">Consommées</string>
     <!--    <string name="search_wine">Recherche</string>-->
 
     <!-- Bottle details -->

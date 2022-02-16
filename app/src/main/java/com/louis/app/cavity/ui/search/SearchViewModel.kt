@@ -8,10 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
-import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.model.WineColor
+import com.louis.app.cavity.model.*
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.util.combineAsync
 import kotlinx.coroutines.Dispatchers.Default
@@ -19,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
-    private val globalFilter = MutableLiveData<WineFilter>(NoFilter)
+    private val globalFilter = MutableLiveData<WineFilter>(FilterConsumed(false))
 
     val results: LiveData<List<BoundedBottle>> = repository
         .getBoundedBottles()
@@ -37,7 +34,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private var grapeFilter: WineFilter = NoFilter
     private var reviewFilter: WineFilter = NoFilter
     private var selectedFilter: WineFilter = NoFilter
-    private var consumedFilter: WineFilter = FilterConsumed(false)
+    private var capacityFilter: WineFilter = NoFilter
 
     var selectedCounties = emptyList<County>()
         private set
@@ -100,6 +97,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         if (R.id.chipOrganic in otherCheckedChipIds) otherFilters.add(FilterOrganic())
         if (R.id.chipFavorite in otherCheckedChipIds) otherFilters.add(FilterFavorite())
         if (R.id.chipPdf in otherCheckedChipIds) otherFilters.add(FilterPdf())
+        otherFilters.add(FilterConsumed(R.id.chipConsume in otherCheckedChipIds))
 
         otherFilter =
             if (otherFilters.isNotEmpty())
@@ -179,15 +177,21 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         updateFilters()
     }
 
-    fun setConsumedFilter(filter: Boolean) {
-        consumedFilter = FilterConsumed(filter)
+    fun setCapacityFilter(checkedButtonId: Int) {
+        capacityFilter = when (checkedButtonId) {
+            R.id.rbSlim -> FilterCapacity(BottleSize.SLIM)
+            R.id.rbNormal -> FilterCapacity(BottleSize.NORMAL)
+            R.id.rbMagnum -> FilterCapacity(BottleSize.MAGNUM)
+            else /* View.NO_ID */ -> NoFilter
+        }
+
         updateFilters()
     }
 
     private fun updateFilters() {
         val filters = listOf(
-            countyFilter, colorFilter, otherFilter, vintageFilter, textFilter,
-            priceFilter, dateFilter, grapeFilter, reviewFilter, selectedFilter, consumedFilter
+            countyFilter, colorFilter, otherFilter, vintageFilter, textFilter, priceFilter,
+            dateFilter, grapeFilter, reviewFilter, selectedFilter, capacityFilter
         )
 
         val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }

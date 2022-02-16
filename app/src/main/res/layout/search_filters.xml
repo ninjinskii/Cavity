@@ -165,6 +165,16 @@
                     android:text="@string/pdf"
                     android:textAppearance="?attr/textAppearanceOverline" />
 
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipConsume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="@string/filter_consumed"
+                    android:textAppearance="?attr/textAppearanceOverline" />
+
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
 
@@ -368,12 +378,9 @@
             android:id="@+id/reviewScrollView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="?attr/actionBarSize"
             android:clipToPadding="false"
             android:paddingHorizontal="@dimen/medium_margin"
-            android:paddingBottom="@dimen/small_margin"
             android:scrollbars="none"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reviewTitle">
@@ -390,27 +397,62 @@
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
 
-        <!--        <com.google.android.material.switchmaterial.SwitchMaterial-->
-        <!--            android:id="@+id/toggleConsumedOnly"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:paddingStart="@dimen/medium_margin"-->
-        <!--            android:layout_marginTop="@dimen/medium_margin"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+        <View
+            android:id="@+id/divider6"
+            style="@style/Widget.Cavity.Divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reviewScrollView" />
 
-        <!--        <TextView-->
-        <!--            android:id="@+id/toggleConsumedOnlyText"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_margin="@dimen/small_margin"-->
-        <!--            android:ellipsize="end"-->
-        <!--            android:maxLines="1"-->
-        <!--            android:text="Chercher dans les bouteilles consommées"-->
-        <!--            android:textAppearance="?attr/textAppearanceBody2"-->
-        <!--            app:layout_constraintBottom_toBottomOf="@id/toggleConsumedOnly"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toEndOf="@id/toggleConsumedOnly"-->
-        <!--            app:layout_constraintTop_toTopOf="@id/toggleConsumedOnly" />-->
+        <TextView
+            android:id="@+id/bottleSizeTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/capacity"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider6" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/rbGroupSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginBottom="?attr/actionBarSize"
+            android:paddingBottom="@dimen/small_margin"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bottleSizeTitle"
+            app:selectionRequired="false"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/rbSlim"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/size_slim"
+                android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/rbNormal"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/size_normal"
+                android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/rbMagnum"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/size_magnum"
+                android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
