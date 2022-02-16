@@ -202,6 +202,7 @@
         <item name="chipBackgroundColor">@android:color/transparent</item>
         <item name="chipStrokeWidth">1dp</item>
         <item name="chipStrokeColor">@color/chip_stroke</item>
+        <item name="chipIconVisible">true</item>
     </style>
 
     <style name="Widget.Cavity.Chip.Entry" parent="Widget.MaterialComponents.Chip.Entry">
@@ -209,6 +210,7 @@
         <item name="chipBackgroundColor">@android:color/transparent</item>
         <item name="chipStrokeWidth">1dp</item>
         <item name="chipStrokeColor">@color/chip_stroke</item>
+        <item name="chipIconVisible">true</item>
     </style>
 
     <!-- Switch -->

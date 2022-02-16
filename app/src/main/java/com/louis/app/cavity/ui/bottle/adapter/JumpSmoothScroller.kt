@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.history.adapter
+package com.louis.app.cavity.ui.bottle.adapter
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager

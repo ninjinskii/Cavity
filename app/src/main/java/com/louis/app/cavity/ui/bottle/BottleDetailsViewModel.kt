@@ -14,9 +14,6 @@ import kotlinx.coroutines.launch
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
 
-    private var wineId = 0L
-
-    // Might be useful if used to switch dynamically bottles
     private val bottleId = MutableLiveData<Long>()
 
     private val _pdfEvent = MutableLiveData<Event<Uri>>()
@@ -33,12 +30,15 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     val reviews = bottleId.switchMap { repository.getFReviewAndReviewForBottle(it) }
 
-    fun start(wineId: Long, bottleId: Long) {
-        this.wineId = wineId
-        this.bottleId.postValue(bottleId)
+    fun getWineById(wineId: Long) = repository.getWineById(wineId)
+
+    fun getBottlesForWine(wineId: Long) = repository.getBottlesForWine(wineId)
+
+    fun setBottleId(bottleId: Long) {
+        this.bottleId.value = bottleId
     }
 
-    fun getWineById(wineId: Long) = repository.getWineById(wineId)
+    fun getBottleId() = this.bottleId.value
 
     fun deleteBottle() {
         val bottleId = bottleId.value ?: return

@@ -30,7 +30,10 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
+import com.louis.app.cavity.ui.bottle.adapter.BottleChipRecyclerAdapter
+import com.louis.app.cavity.ui.bottle.adapter.JumpSmoothScroller
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
+import com.louis.app.cavity.ui.tasting.SpaceItemDecoration
 import com.louis.app.cavity.util.*
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
@@ -73,19 +76,21 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewCompat.setTransitionName(view, args.bottleId.toString())
+        ViewCompat.setTransitionName(view, args.wineId.toString())
 
         transitionHelper.setFadeThroughOnEnterAndExit()
         postponeEnterTransition()
 
         _binding = FragmentBottleDetailsBinding.bind(view)
 
-        bottleDetailsViewModel.start(args.wineId, args.bottleId)
-
         setupToolbarShape()
-        initRecyclerView()
+        initRecyclerViews()
         observe()
         setListeners()
+
+        if (bottleDetailsViewModel.getBottleId() == -1L || args.bottleId != -1L) {
+            bottleDetailsViewModel.setBottleId(args.bottleId)
+        }
 
         binding.root.doOnLayout {
             binding.scrollView.scrollY = 0
@@ -151,7 +156,28 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         })
     }
 
-    private fun initRecyclerView() {
+    private fun initRecyclerViews() {
+        val bottleAdapter = BottleChipRecyclerAdapter(
+            requireContext(),
+            onBottleClick = { bottleDetailsViewModel.setBottleId(it) }
+        )
+
+        binding.bottlesList.apply {
+            adapter = bottleAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+
+            val space = resources.getDimensionPixelSize(R.dimen.small_margin)
+            addItemDecoration(SpaceItemDecoration(space))
+        }
+
+        bottleDetailsViewModel.getBottlesForWine(args.wineId).observe(viewLifecycleOwner) {
+            val checkedBottleId = bottleDetailsViewModel.getBottleId()
+            val id = bottleAdapter.submitListWithPreselection(it, checkedBottleId ?: -1L)
+            smoothScrollToCheckedChip(id, it)
+            bottleDetailsViewModel.setBottleId(id)
+        }
+
         val colorUtil = ColorUtil(requireContext())
         val reviewAdapter = ShowFilledReviewsRecyclerAdapter(colorUtil)
 
@@ -172,11 +198,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         var firstRun = true
 
         bottleDetailsViewModel.bottle.observe(viewLifecycleOwner) {
-            if (it == null) {
-                findNavController().popBackStack()
-            } else {
-                updateUI(it, firstRun)
-                firstRun = false
+            if (it != null) {
+                updateUI(it)
             }
         }
 
@@ -185,6 +208,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             binding.grapeBar.apply {
                 setVisible(it.isNotEmpty())
                 setSlices(it, anim = false)
+
+                if (!firstRun) {
+                    triggerAnimation()
+                }
+
+                firstRun = false
             }
         }
 
@@ -210,12 +239,16 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         binding.buttonEdit.setOnClickListener {
             transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
 
-            val action = FragmentBottleDetailsDirections.bottleDetailsToEditBottle(
-                args.wineId,
-                args.bottleId
-            )
+            val id = bottleDetailsViewModel.getBottleId()
 
-            findNavController().navigate(action)
+            id?.let { bottleId ->
+                val action = FragmentBottleDetailsDirections.bottleDetailsToEditBottle(
+                    args.wineId,
+                    bottleId
+                )
+
+                findNavController().navigate(action)
+            }
         }
 
         binding.backButton.setOnClickListener {
@@ -226,19 +259,24 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = true)
 
             (it as Checkable).isChecked = false
+            val id = bottleDetailsViewModel.getBottleId()
 
-            val action = FragmentBottleDetailsDirections.bottleDetailsToConsumeBottle(args.bottleId)
-            findNavController().navigate(action)
+            id?.let { bottleId ->
+                val action = FragmentBottleDetailsDirections.bottleDetailsToConsumeBottle(bottleId)
+                findNavController().navigate(action)
+            }
         }
 
         binding.buttonGiftTo.setOnClickListener {
             transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = true)
 
             (it as Checkable).isChecked = false
+            val id = bottleDetailsViewModel.getBottleId()
 
-            val action =
-                FragmentBottleDetailsDirections.bottleDetailsToGiftBottle(args.bottleId)
-            findNavController().navigate(action)
+            id?.let { bottleId ->
+                val action = FragmentBottleDetailsDirections.bottleDetailsToGiftBottle(bottleId)
+                findNavController().navigate(action)
+            }
         }
 
         binding.buttonPdf.setOnClickListener {
@@ -248,8 +286,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         binding.buttonHistory.setOnClickListener {
             transitionHelper.setFadeThrough(navigatingForward = true)
 
-            val action = FragmentBottleDetailsDirections.bottleDetailsToHistory(args.bottleId)
-            findNavController().navigate(action)
+            val id = bottleDetailsViewModel.getBottleId()
+
+            id?.let { bottleId ->
+                val action = FragmentBottleDetailsDirections.bottleDetailsToHistory(bottleId)
+                findNavController().navigate(action)
+            }
         }
 
         binding.favorite.setOnClickListener {
@@ -267,6 +309,24 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 }
                 .show()
         }
+    }
+
+    private fun smoothScrollToCheckedChip(checkedChipBottleId: Long, bottles: List<Bottle>?) {
+        if (bottles == null || checkedChipBottleId == -1L) {
+            return
+        }
+
+        val postion = bottles.indexOfFirst { it.id == checkedChipBottleId }
+
+        if (postion == -1) {
+            return
+        }
+
+        val scroller = JumpSmoothScroller(requireContext(), 10).apply {
+            targetPosition = postion
+        }
+
+        binding.bottlesList.layoutManager?.startSmoothScroll(scroller)
     }
 
     private fun checkViewIsOnScreen(view: View): Boolean {
@@ -327,19 +387,22 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
     }
 
-    private fun updateUI(bottle: Bottle, firstRun: Boolean) {
+    private fun updateUI(bottle: Bottle) {
         with(binding) {
             val formattedPrice = bottle.price.let { if (it != -1F) it.toString() else "" }
             val consumed = bottle.consumed.toBoolean()
 
             buttonGroupInteract.setVisible(!consumed)
             warningBanner.setVisible(consumed || bottle.tastingId != null)
+            bottlesList.setVisible(!consumed)
+            vintageIfConsumed.setVisible(consumed)
 
             val stringRes = if (consumed) R.string.consumed else R.string.bottle_used_in_tasting
             val buttonStringRes = if (consumed) R.string.cancel else R.string.retire
 
             bannerText.text = getString(stringRes)
             buttonRevertConsumption.text = getString(buttonStringRes)
+            vintageIfConsumed.text = bottle.vintage.toString()
 
             buttonRevertConsumption.setOnClickListener {
                 if (consumed) {
@@ -367,7 +430,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 )
             }
 
-            if (firstRun) favorite.jumpDrawablesToCurrentState()
+            favorite.jumpDrawablesToCurrentState()
         }
     }
 
