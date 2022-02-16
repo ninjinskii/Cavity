@@ -298,4 +298,7 @@
     <string name="tag_modal_sheet_id" translatable="false">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
     <string name="tag_date_picker" translatable="false">com.louis.app.cavity.TAG_DATE_PICKER</string>
     <string name="tag_shared_prefs" translatable="false">com.louis.app.cavity.SHARED_PREFS</string>
+
+    <!-- Transition -->
+    <string name="transition_bottle_details" translatable="false">transition-bottle-details-%1$d</string>
 </resources>

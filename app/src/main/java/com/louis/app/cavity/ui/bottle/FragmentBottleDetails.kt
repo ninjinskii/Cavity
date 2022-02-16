@@ -76,7 +76,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewCompat.setTransitionName(view, args.wineId.toString())
+
+        val transition = getString(R.string.transition_bottle_details, args.wineId)
+        ViewCompat.setTransitionName(view, transition)
 
         transitionHelper.setFadeThroughOnEnterAndExit()
         postponeEnterTransition()

@@ -9,6 +9,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.transition.MaterialSharedAxis
+import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.util.TransitionHelper
@@ -52,7 +53,8 @@ class WineViewHolder(
         itemView.setOnClickListener {
             transitionHelper.setElevationScale() // Or Z shared axis
 
-            val extra = FragmentNavigatorExtras(hexagone to wine.id.toString())
+            val transition = itemView.context.getString(R.string.transition_bottle_details, wine.id)
+            val extra = FragmentNavigatorExtras(hexagone to transition)
             val action = FragmentHomeDirections.homeToBottleDetails(wine.id, -1)
             itemView.findNavController().navigate(action, extra)
         }

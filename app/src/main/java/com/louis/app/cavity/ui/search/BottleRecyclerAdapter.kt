@@ -75,7 +75,9 @@ class BottleRecyclerAdapter(
                     binding.checkedIcon.setVisible(bottle.isSelected)
                     onPicked(boundedBottle, bottle.isSelected)
                 } else {
-                    val extra = FragmentNavigatorExtras(binding.root to bottle.id.toString())
+                    val transition =
+                        itemView.context.getString(R.string.transition_bottle_details, wine.id)
+                    val extra = FragmentNavigatorExtras(binding.root to transition)
                     val action = FragmentSearchDirections.searchToBottleDetails(wine.id, bottle.id)
 
                     itemView.apply {
