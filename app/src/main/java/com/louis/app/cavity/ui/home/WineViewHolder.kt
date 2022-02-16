@@ -1,11 +1,13 @@
 package com.louis.app.cavity.ui.home
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles

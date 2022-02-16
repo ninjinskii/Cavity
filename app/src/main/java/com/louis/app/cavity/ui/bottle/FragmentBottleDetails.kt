@@ -88,7 +88,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         observe()
         setListeners()
 
-        if (bottleDetailsViewModel.getBottleId() == -1L || args.bottleId != -1L) {
+        val currentId = bottleDetailsViewModel.getBottleId()
+
+        if ((currentId == -1L && args.bottleId != -1L) || currentId == null) {
             bottleDetailsViewModel.setBottleId(args.bottleId)
         }
 
@@ -196,10 +198,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private fun observe() {
         var firstRun = true
+        var lastBottleId = -1L
 
         bottleDetailsViewModel.bottle.observe(viewLifecycleOwner) {
             if (it != null) {
-                updateUI(it)
+                updateUI(it, lastBottleId)
+                lastBottleId = it.id
             }
         }
 
@@ -387,10 +391,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
     }
 
-    private fun updateUI(bottle: Bottle) {
+    private fun updateUI(bottle: Bottle, lastBottleId: Long) {
         with(binding) {
             val formattedPrice = bottle.price.let { if (it != -1F) it.toString() else "" }
             val consumed = bottle.consumed.toBoolean()
+            val shouldJumpDrawableState = bottle.id != lastBottleId
 
             buttonGroupInteract.setVisible(!consumed)
             warningBanner.setVisible(consumed || bottle.tastingId != null)
@@ -430,7 +435,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 )
             }
 
-            favorite.jumpDrawablesToCurrentState()
+            if (shouldJumpDrawableState) {
+                favorite.jumpDrawablesToCurrentState()
+            }
         }
     }
 
