@@ -37,7 +37,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         observedCounty.value = countyId
     }
 
-    fun deleteWine(wineId: Long) = viewModelScope.launch(IO) {
+    fun deleteOrHideWine(wineId: Long) = viewModelScope.launch(IO) {
         val wineBottles = repository.getBottlesForWineNotLive(wineId)
         val folder = mutableListOf<Bottle>() to mutableListOf<Bottle>()
         val (consumed, stock) = wineBottles.fold(folder) { pair, bottle ->

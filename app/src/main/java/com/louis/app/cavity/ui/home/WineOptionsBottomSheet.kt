@@ -61,7 +61,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
                         .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                         }
                         .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
-                            homeViewModel.deleteWine(args.wineId)
+                            homeViewModel.deleteOrHideWine(args.wineId)
                             dismiss()
                         }
                         .show()

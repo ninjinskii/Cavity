@@ -5,9 +5,11 @@ import android.net.Uri
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
+import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -42,8 +44,10 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun deleteBottle() {
         val bottleId = bottleId.value ?: return
+        val wineId = bottle.value?.wineId ?: return
 
         viewModelScope.launch(IO) {
+            maybeDeleteWine(bottleId, wineId)
             repository.deleteBottleById(bottleId)
         }
     }
@@ -76,8 +80,12 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun revertBottleConsumption() {
         val bottleId = bottleId.value ?: return
+        val wineId = bottle.value?.wineId ?: return
 
         viewModelScope.launch(IO) {
+            val wine = repository.getWineByIdNotLive(wineId)
+            repository.updateWine(wine.copy(hidden = false.toInt()))
+
             repository.revertBottleConsumption(bottleId)
         }
     }
@@ -89,6 +97,28 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
             val bottle = repository.getBottleByIdNotLive(bottleId)
             bottle.tastingId = null
             repository.updateBottle(bottle)
+        }
+    }
+
+    private suspend fun maybeDeleteWine(deletedBottleId: Long, wineId: Long) {
+        val wine = repository.getWineByIdNotLive(wineId)
+        val wineBottles = repository.getBottlesForWineNotLive(wineId)
+        val folder = mutableListOf<Bottle>() to mutableListOf<Bottle>()
+        val (consumed, stock) = wineBottles.fold(folder) { pair, bottle ->
+            pair.apply {
+                when (bottle.consumed.toBoolean()) {
+                    true -> first += bottle
+                    else -> second += bottle
+                }
+            }
+        }
+
+        val hasOtherConsumedBottle = consumed.size > 1
+        val hasStock = stock.size > 0
+        val isSameBottle = consumed.firstOrNull()?.id == deletedBottleId
+
+        if (wine.hidden.toBoolean() && !hasOtherConsumedBottle && !hasStock && isSameBottle) {
+            repository.deleteWineById(wineId)
         }
     }
 }
