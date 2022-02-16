@@ -278,8 +278,8 @@
             android:id="@+id/togglePrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/medium_margin"
             android:checked="false"
+            android:paddingHorizontal="@dimen/medium_margin"
             app:layout_constraintBottom_toBottomOf="@id/priceTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/priceTitle" />
@@ -389,5 +389,28 @@
 
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
+
+        <!--        <com.google.android.material.switchmaterial.SwitchMaterial-->
+        <!--            android:id="@+id/toggleConsumedOnly"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:paddingStart="@dimen/medium_margin"-->
+        <!--            android:layout_marginTop="@dimen/medium_margin"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/toggleConsumedOnlyText"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_margin="@dimen/small_margin"-->
+        <!--            android:ellipsize="end"-->
+        <!--            android:maxLines="1"-->
+        <!--            android:text="Chercher dans les bouteilles consommées"-->
+        <!--            android:textAppearance="?attr/textAppearanceBody2"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@id/toggleConsumedOnly"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/toggleConsumedOnly"-->
+        <!--            app:layout_constraintTop_toTopOf="@id/toggleConsumedOnly" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -37,6 +37,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private var grapeFilter: WineFilter = NoFilter
     private var reviewFilter: WineFilter = NoFilter
     private var selectedFilter: WineFilter = NoFilter
+    private var consumedFilter: WineFilter = FilterConsumed(false)
 
     var selectedCounties = emptyList<County>()
         private set
@@ -178,10 +179,15 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         updateFilters()
     }
 
+    fun setConsumedFilter(filter: Boolean) {
+        consumedFilter = FilterConsumed(filter)
+        updateFilters()
+    }
+
     private fun updateFilters() {
         val filters = listOf(
             countyFilter, colorFilter, otherFilter, vintageFilter, textFilter,
-            priceFilter, dateFilter, grapeFilter, reviewFilter, selectedFilter
+            priceFilter, dateFilter, grapeFilter, reviewFilter, selectedFilter, consumedFilter
         )
 
         val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }

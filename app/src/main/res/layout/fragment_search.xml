@@ -21,7 +21,6 @@
         <!-- TODO: replace all android:white with colorOnPrimary -->
         <!-- Using a toolbar here to get correct title and nav icon positioning -->
 
-        <!-- TODO: check if padding is correct on tablet. -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/fakeToolbar"
             android:layout_width="0dp"

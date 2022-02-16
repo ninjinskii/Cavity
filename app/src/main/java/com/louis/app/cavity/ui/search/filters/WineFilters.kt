@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.search.filters
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.util.toBoolean
+import com.louis.app.cavity.util.toInt
 
 class FilterReadyToDrink : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
@@ -92,6 +93,12 @@ class FilterReview(private val review: Review) : WineFilter {
 class FilterSelected : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
         return boundedBottle.filter { it.bottle.isSelected }
+    }
+}
+
+class FilterConsumed(private val consumed: Boolean) : WineFilter {
+    override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
+        return boundedBottle.filter { it.bottle.consumed == consumed.toInt() }
     }
 }
 

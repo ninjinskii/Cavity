@@ -58,7 +58,7 @@ interface BottleDao {
     fun getAllBuyLocations(): LiveData<List<String>>
 
     @Transaction
-    @Query("SELECT * FROM bottle WHERE consumed = 0")
+    @Query("SELECT * FROM bottle")
     fun getBoundedBottles(): LiveData<List<BoundedBottle>>
 
     @Transaction

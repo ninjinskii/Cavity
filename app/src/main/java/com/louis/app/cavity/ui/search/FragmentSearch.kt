@@ -56,6 +56,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         private const val CHIP_COLOR = "com.louis.app.cavity.CHIP_COLOR"
         private const val CHIP_MISC = "com.louis.app.cavity.CHIP_MISC"
         private const val SWITCH_SELECTED_ENABLED = "com.louis.app.cavity.SWITCH_SELECTED_ENABLED"
+        private const val SWITCH_CONSUMED_ENABLED = "com.louis.app.cavity.SWITCH_CONSUMED_ENABLED"
 
         const val PICK_MODE = "com.louis.app.cavity.ui.search.FragmentSearch.PICK_MODE"
     }
@@ -138,6 +139,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
 
         observe()
+        initToggleFilterConsumed(savedInstanceState)
         initColorChips(savedInstanceState)
         initOtherChips(savedInstanceState)
         initDatePickers(savedInstanceState)
@@ -206,6 +208,26 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 this@FragmentSearch.binding.buttonSubmit.isEnabled = it.isNotEmpty()
                 filtersBinding.chipSelected.text =
                     resources.getString(R.string.selected_bottles, it.size)
+            }
+        }
+    }
+
+    private fun initToggleFilterConsumed(savedInstanceState: Bundle?) {
+        filtersBinding.toggleConsumedOnly.apply {
+            setVisible(!isPickMode)
+            filtersBinding.toggleConsumedOnlyText.setVisible(!isPickMode)
+
+            val savedState = savedInstanceState?.getBoolean(SWITCH_CONSUMED_ENABLED)
+
+            isChecked = savedState ?: false
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
+
+            setOnCheckedChangeListener { _, isChecked ->
+                searchViewModel.setConsumedFilter(isChecked)
             }
         }
     }
@@ -560,6 +582,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             putIntArray(CHIP_COLOR, filtersBinding.colorChipGroup.checkedChipIds.toIntArray())
             putIntArray(CHIP_MISC, filtersBinding.otherChipGroup.checkedChipIds.toIntArray())
             putBoolean(SWITCH_SELECTED_ENABLED, filtersBinding.chipSelected.isChecked)
+            putBoolean(SWITCH_CONSUMED_ENABLED, filtersBinding.toggleConsumedOnly.isChecked)
         }
     }
 
