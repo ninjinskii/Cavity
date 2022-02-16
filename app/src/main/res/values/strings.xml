@@ -79,7 +79,7 @@
     <string name="wine_color_sweet">Liquoreux</string>
     <string name="wine_color_rose">Rosé</string>
     <string name="vintage_and_count">%1$d (%2$d)</string>
-    <string name="confirm_wine_delete">Supprimer le vin et ses bouteilles ?</string>
+    <string name="confirm_wine_delete">Supprimer le vin et jeter ses bouteilles ?</string>
     <string name="empty_wine">Ajoutez un vin pour commencer à gérer votre stock</string>
 
     <string name="step_1">1</string>

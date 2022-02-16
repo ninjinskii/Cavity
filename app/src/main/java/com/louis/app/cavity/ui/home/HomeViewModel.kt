@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
@@ -37,7 +38,25 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun deleteWine(wineId: Long) = viewModelScope.launch(IO) {
-        repository.deleteWineById(wineId)
+        val wineBottles = repository.getBottlesForWineNotLive(wineId)
+        val folder = mutableListOf<Bottle>() to mutableListOf<Bottle>()
+        val (consumed, stock) = wineBottles.fold(folder) { pair, bottle ->
+            pair.apply {
+                when (bottle.consumed.toBoolean()) {
+                    true -> first += bottle
+                    else -> second += bottle
+                }
+            }
+        }
+
+        repository.deleteBottles(stock)
+
+        when {
+            consumed.size > 0 -> repository.hideWineById(wineId)
+            else -> repository.deleteWineById(wineId)
+        }
+
+        // We dirty liers
         _userFeedback.postOnce(R.string.wine_deleted)
     }
 

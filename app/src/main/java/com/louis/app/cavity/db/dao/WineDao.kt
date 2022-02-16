@@ -19,6 +19,9 @@ interface WineDao {
     @Delete
     suspend fun deleteWine(wine: Wine)
 
+    @Query("UPDATE wine SET hidden = 1 WHERE id =:wineId")
+    suspend fun hideWineById(wineId: Long)
+
     @Query("DELETE FROM wine WHERE id =:wineId")
     suspend fun deleteWineById(wineId: Long)
 
@@ -37,7 +40,7 @@ interface WineDao {
     suspend fun getWineFullNamingByIdNotLive(wineId: Long): Wine
 
     @Transaction
-    @Query("SELECT * FROM wine WHERE county_id =:countyId ORDER BY color, naming")
+    @Query("SELECT * FROM wine WHERE county_id =:countyId AND hidden != 1 ORDER BY color, naming")
     fun getWineWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
 
 //    @Transaction
