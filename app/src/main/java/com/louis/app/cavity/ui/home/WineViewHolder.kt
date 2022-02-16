@@ -51,12 +51,20 @@ class WineViewHolder(
         }
 
         itemView.setOnClickListener {
-            transitionHelper.setElevationScale() // Or Z shared axis
+            if (bottles.isNotEmpty()) {
+                transitionHelper.setElevationScale()
 
-            val transition = itemView.context.getString(R.string.transition_bottle_details, wine.id)
-            val extra = FragmentNavigatorExtras(hexagone to transition)
-            val action = FragmentHomeDirections.homeToBottleDetails(wine.id, -1)
-            itemView.findNavController().navigate(action, extra)
+                val transition =
+                    itemView.context.getString(R.string.transition_bottle_details, wine.id)
+                val extra = FragmentNavigatorExtras(hexagone to transition)
+                val action = FragmentHomeDirections.homeToBottleDetails(wine.id, -1)
+                itemView.findNavController().navigate(action, extra)
+            } else {
+                transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
+
+                val action = FragmentHomeDirections.homeToAddBottle(wine.id, -1L)
+                itemView.findNavController().navigate(action)
+            }
         }
 
         itemView.setOnLongClickListener {

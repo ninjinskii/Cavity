@@ -30,6 +30,13 @@
                 app:argType="long" />
         </action>
         <action
+            android:id="@+id/homeToAddBottle"
+            app:destination="@id/add_bottle_dest">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+        </action>
+        <action
             android:id="@+id/homeToWineOptions"
             app:destination="@id/wine_options_dialog" />
         <action
