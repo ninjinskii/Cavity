@@ -34,6 +34,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private var grapeFilter: WineFilter = NoFilter
     private var reviewFilter: WineFilter = NoFilter
     private var selectedFilter: WineFilter = NoFilter
+    private var consumedFilter: WineFilter = NoFilter
     private var capacityFilter: WineFilter = NoFilter
 
     var selectedCounties = emptyList<County>()
@@ -97,7 +98,9 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         if (R.id.chipOrganic in otherCheckedChipIds) otherFilters.add(FilterOrganic())
         if (R.id.chipFavorite in otherCheckedChipIds) otherFilters.add(FilterFavorite())
         if (R.id.chipPdf in otherCheckedChipIds) otherFilters.add(FilterPdf())
-        otherFilters.add(FilterConsumed(R.id.chipConsume in otherCheckedChipIds))
+
+        // Consumed filter nneds a special treatment
+        consumedFilter = FilterConsumed(R.id.chipConsume in otherCheckedChipIds)
 
         otherFilter =
             if (otherFilters.isNotEmpty())
@@ -189,9 +192,13 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun updateFilters() {
+        if (consumedFilter is NoFilter) {
+            consumedFilter = FilterConsumed(false)
+        }
+
         val filters = listOf(
             countyFilter, colorFilter, otherFilter, vintageFilter, textFilter, priceFilter,
-            dateFilter, grapeFilter, reviewFilter, selectedFilter, capacityFilter
+            dateFilter, grapeFilter, reviewFilter, selectedFilter, capacityFilter, consumedFilter
         )
 
         val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
