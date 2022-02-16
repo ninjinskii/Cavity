@@ -36,10 +36,11 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentStatsBinding.bind(view)
 
-        setupNavigation(binding.appBar.toolbar)
+        setupNavigation(binding.toolbar)
 
         setupScrollableTab()
         setupViewPager()
+        setupToolbar()
         initRecyclerViews()
         observe()
         hintViewPagerSlide()
@@ -77,6 +78,20 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
                 statsViewModel.notifyPageChanged(position)
             }
         })
+    }
+
+    private fun setupToolbar() {
+        binding.toolbar.setOnMenuItemClickListener {
+            if (it.itemId == R.id.misc) {
+                StatsBottomSheet().show(
+                    childFragmentManager,
+                    getString(R.string.tag_modal_sheet_id)
+                )
+                return@setOnMenuItemClickListener true
+            }
+
+            false
+        }
     }
 
     private fun initRecyclerViews() {

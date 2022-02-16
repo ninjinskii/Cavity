@@ -336,6 +336,10 @@ class WineRepository private constructor(app: Application) {
     fun getConsumptionsByNaming(start: Long, end: Long) =
         statsDao.getConsumptionsByNaming(start, end)
 
+    fun getTotalPriceByCurrency() = statsDao.getTotalPriceByCurrency()
+    fun getTotalConsumedBottles() = statsDao.getTotalConsumedBottles()
+    fun getTotalStockBottles() = statsDao.getTotalStockBottles()
+
 
     // Tastings
     suspend fun insertTasting(tasting: Tasting) = tastingDao.insertTasting(tasting)

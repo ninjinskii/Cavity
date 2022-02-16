@@ -186,6 +186,14 @@ interface StatsDao {
     )
     fun getConsumptionsByNaming(start: Long, end: Long): LiveData<List<BaseStat>>
 
+    @Query("""SELECT SUM(price) as sum, currency FROM bottle WHERE price != -1  GROUP BY currency""")
+    fun getTotalPriceByCurrency(): LiveData<List<PriceByCurrency>>
+
+    @Query("""SELECT COUNT(*) FROM bottle WHERE consumed = 1""")
+    fun getTotalConsumedBottles(): LiveData<Int>
+
+    @Query("""SELECT COUNT(*) FROM bottle WHERE consumed = 0""")
+    fun getTotalStockBottles(): LiveData<Int>
 }
 
 interface Stat {
@@ -215,3 +223,13 @@ data class WineColorStat(
     @Ignore
     override val color = ColorUtil.getColorResForWineColor(wcolor.ordinal)
 }
+
+data class PriceByCurrency(
+    val sum: Long,
+    val currency: String
+) {
+    override fun toString(): String {
+        return "$sum $currency"
+    }
+}
+

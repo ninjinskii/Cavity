@@ -260,6 +260,9 @@
     <string name="pie_title_color">Bouteilles par couleurs</string>
     <string name="pie_title_vintage">Bouteilles par millésimes</string>
     <string name="pie_title_naming">Bouteilles par appellations</string>
+    <string name="misc_total_price">Prix total de la cave</string>
+    <string name="misc_total_consumed">Bouteilles bues</string>
+    <string name="misc_total_stock">Bouteilles en stock</string>
     <string name="stock">Stock</string>
 
     <!-- Tasting -->

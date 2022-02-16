@@ -46,6 +46,12 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     val comparison: LiveData<Boolean>
         get() = _comparison
 
+    fun getTotalPriceByCurrency() = repository.getTotalPriceByCurrency()
+
+    fun getTotalConsumed() = repository.getTotalConsumedBottles()
+
+    fun getTotalStock() = repository.getTotalStockBottles()
+
     fun setStatType(viewPagerPos: Int, statType: StatType) {
         statFactory.applyStatType(viewPagerPos, statType)
     }

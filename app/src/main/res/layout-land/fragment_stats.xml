@@ -7,11 +7,22 @@
     android:clipChildren="false"
     android:transitionGroup="true">
 
-    <include
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
-        layout="@layout/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:transitionName="appbar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/stats_menu"
+            app:titleCentered="true"
+            app:titleTextColor="?attr/colorOnSurface" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
