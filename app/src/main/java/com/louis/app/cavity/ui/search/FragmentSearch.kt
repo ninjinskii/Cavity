@@ -342,7 +342,9 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private fun initRadioButtons(savedInstanceState: Bundle?) {
         filtersBinding.rbGroupSize.apply {
             savedInstanceState?.getInt(RADIO_CAPACITY)?.let {
-                (getChildAt(it) as Checkable).isChecked = true
+                if (it != View.NO_ID) {
+                    (getChildAt(it) as Checkable).isChecked = true
+                }
             }
 
             addOnButtonCheckedListener { _, checkedId, isChecked ->
@@ -568,7 +570,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         val pos = when (filtersBinding.rbGroupSize.checkedButtonId) {
             R.id.rbSlim -> 0
             R.id.rbNormal -> 1
-            else /* R.id.rbMagnum */ -> 2
+            R.id.rbMagnum -> 2
+            else /* R.id.rbMagnum */ -> View.NO_ID
         }
 
         with(outState) {
