@@ -52,7 +52,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
         }
 
         binding.apogee.apply {
-            minValue = year
+            minValue = year - 20
             maxValue = year + 30
             value = year + 5
         }
