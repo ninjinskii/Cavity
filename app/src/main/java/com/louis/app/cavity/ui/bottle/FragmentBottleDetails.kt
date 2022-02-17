@@ -395,9 +395,11 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private fun updateUI(bottle: Bottle, lastBottleId: Long) {
         with(binding) {
-            val formattedPrice = bottle.price.let { if (it != -1F) it.toString() else "" }
             val consumed = bottle.consumed.toBoolean()
             val shouldJumpDrawableState = bottle.id != lastBottleId
+            val formattedPrice = bottle.price.let { if (it != -1F) it.toString() else "" }
+            val priceAndCurrency =
+                if (formattedPrice.isEmpty()) "" else "$formattedPrice $bottle.currency"
 
             buttonGroupInteract.setVisible(!consumed)
             warningBanner.setVisible(consumed || bottle.tastingId != null)
@@ -426,16 +428,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             otherInfo.setData(bottle.otherInfo)
             buttonPdfIcon.isEnabled = bottle.hasPdf()
             favorite.isChecked = bottle.isFavorite.toBoolean()
-
-            if (formattedPrice.isNotEmpty()) {
-                price.setData(
-                    getString(
-                        R.string.price_and_currency,
-                        formattedPrice,
-                        bottle.currency
-                    )
-                )
-            }
+            price.setData(priceAndCurrency)
 
             if (shouldJumpDrawableState) {
                 favorite.jumpDrawablesToCurrentState()
