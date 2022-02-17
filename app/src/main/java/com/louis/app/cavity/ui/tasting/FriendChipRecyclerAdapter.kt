@@ -33,6 +33,12 @@ class FriendChipRecyclerAdapter : ListAdapter<Friend, FriendChipRecyclerAdapter.
 
     inner class FriendViewHolder(private val binding: ChipFriendBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        // Lazy approximative solution (ripple only affect chip instead of whole item)
+//        init {
+//            binding.root.setOnClickListener {
+//                (it.parent as View).performClick()
+//            }
+//        }
 
         fun bind(friend: Friend) {
             binding.root.text = friend.name

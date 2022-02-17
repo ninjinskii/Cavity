@@ -25,6 +25,8 @@
                 android:id="@+id/skewBottle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
                 android:background="?attr/selectableItemBackground"
                 android:paddingBottom="@dimen/small_margin">
 

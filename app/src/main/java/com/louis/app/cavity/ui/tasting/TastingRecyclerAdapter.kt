@@ -22,7 +22,10 @@ class TastingRecyclerAdapter(
     ListAdapter<BoundedTasting, TastingRecyclerAdapter.TastingViewHolder>
         (TastingItemDiffCallback()) {
 
+    var recycler: RecyclerView? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TastingViewHolder {
+        recycler = parent as RecyclerView
         val binding = ItemTastingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TastingViewHolder(binding)
     }
@@ -65,6 +68,8 @@ class TastingRecyclerAdapter(
                 adapter = friendAdapter
                 layoutManager = childLayoutManager
                 setRecycledViewPool(childViewPool)
+                setHasFixedSize(true)
+                setTargetView(binding.root)
 
                 if (itemDecorationCount == 0) {
                     addItemDecoration(
