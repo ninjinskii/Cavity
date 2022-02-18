@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import androidx.annotation.WorkerThread
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
@@ -24,6 +25,7 @@ object TastingNotifier {
     private const val CHANNEL_ID = "com.louis.app.cavity.TASTING_CHANNEL"
     private const val GROUP_ID = "com.louis.app.cavity.TASTING_GROUP"
 
+    @WorkerThread
     fun buildNotification(
         context: Context,
         tasting: Tasting,
