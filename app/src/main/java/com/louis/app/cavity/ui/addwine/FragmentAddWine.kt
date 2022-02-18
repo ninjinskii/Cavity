@@ -71,6 +71,10 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
         addWineViewModel.setCountyId(args.countyId)
 
+        if (args.editedWineId != 0L) {
+            binding.appBar.toolbar.title = getString(R.string.edit_wine_title)
+        }
+
         inflateChips()
         initDropdown()
         setListeners()

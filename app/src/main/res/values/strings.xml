@@ -52,6 +52,7 @@
     <string name="add_bottle">Ajouter une bouteille</string>
     <string name="delete_wine">Supprimer le vin et ses bouteilles</string>
     <string name="edit_wine">Modifier le vin</string>
+    <string name="edit_wine_title">Modifier un vin</string>
     <string name="tasting">Dégustation</string>
     <string name="search">Rechercher</string>
     <string name="history">Historique</string>
