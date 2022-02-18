@@ -60,12 +60,12 @@
             motion:layout_constraintTop_toTopOf="parent" />
         <Constraint
             android:id="@id/bottleName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
             android:rotation="0.0"
             motion:layout_constraintBottom_toBottomOf="@id/centerHelper"
-            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toStartOf="@id/favorite"
+            motion:layout_constraintStart_toEndOf="@id/backButton"
             motion:layout_constraintTop_toTopOf="@id/centerHelper" />
         <Constraint
             android:id="@id/shaper"

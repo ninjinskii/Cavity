@@ -11,6 +11,8 @@ import android.widget.Checkable
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
+import androidx.core.view.marginEnd
+import androidx.core.view.marginStart
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -99,6 +101,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         binding.root.doOnLayout {
             binding.scrollView.scrollY = 0
             setupScrollViewWatcher()
+            measureTitle()
         }
     }
 
@@ -120,6 +123,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 binding.scrollView.setOnScrollChangeListener(null as View.OnScrollChangeListener?)
             }
         }
+    }
+
+    private fun measureTitle() {
+        val titleStart = binding.backButton.run { right + marginEnd }
+        val titleEnd = binding.favorite.run { left + marginStart }
+        binding.bottleName.maxWidth = titleEnd - titleStart
     }
 
     private fun setupToolbarShape() {

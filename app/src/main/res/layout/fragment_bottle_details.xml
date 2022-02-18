@@ -70,6 +70,8 @@
                 android:textColor="?attr/colorOnSurface"
                 android:transformPivotX="0dp"
                 android:transformPivotY="0dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
