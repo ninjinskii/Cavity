@@ -247,7 +247,7 @@
     <!-- Button -->
     <style name="Widget.Cavity.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="strokeColor">@color/button_stroke</item>
-        <item name="strokeWidth">0.5dp</item>
+        <item name="strokeWidth">1dp</item>
     </style>
 
     <!-- FAB -->
