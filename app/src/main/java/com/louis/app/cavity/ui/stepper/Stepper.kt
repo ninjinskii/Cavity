@@ -8,6 +8,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
 import com.louis.app.cavity.databinding.StepperBinding
 import com.louis.app.cavity.util.setVisible
+import kotlin.reflect.KClass
 
 abstract class Stepper : Fragment(R.layout.fragment_stepper) {
 
@@ -21,7 +22,7 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     private val topBinding get() = _topBinding!!
 
     abstract val showStepperProgress: Boolean
-    abstract val steps: Set<Step>
+    abstract val steps: Set<KClass<out Step>>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,18 +85,18 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     }
 
     fun goToNextPage(): Int {
-        val currentPage = binding.viewPager.currentItem
-        val ok = steps.elementAt(currentPage).requestNextPage()
-
-        return if (ok) {
-            val nextPage = ++binding.viewPager.currentItem
-            updateIcons(nextPage)
-
-            nextPage
-        } else {
-            currentPage
-        }
-
+        return 0
+//        val currentPage = binding.viewPager.currentItem
+//        val ok = steps.elementAt(currentPage).requestNextPage()
+//
+//        return if (ok) {
+//            val nextPage = ++binding.viewPager.currentItem
+//            updateIcons(nextPage)
+//
+//            nextPage
+//        } else {
+//            currentPage
+//        }
     }
 
     fun goToPreviousPage(): Int {

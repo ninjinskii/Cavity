@@ -20,10 +20,10 @@ class FragmentAddBottle : Stepper() {
 
     override val showStepperProgress = true
     override val steps = setOf(
-        FragmentInquireDates(),
-        FragmentInquireGrapes(),
-        FragmentInquireReviews(),
-        FragmentInquireOtherInfo()
+        FragmentInquireDates::class,
+        FragmentInquireGrapes::class,
+        FragmentInquireReviews::class,
+        FragmentInquireOtherInfo::class
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
