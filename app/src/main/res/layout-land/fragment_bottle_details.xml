@@ -401,6 +401,7 @@
                     android:layout_marginBottom="@dimen/small_margin"
                     android:paddingStart="@dimen/medium_margin"
                     android:paddingEnd="@dimen/medium_margin"
+                    android:theme="@style/ApplyMyFontOnTooltipsPlz"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider2"

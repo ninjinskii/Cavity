@@ -31,7 +31,7 @@
 
         <item name="appBarLayoutStyle">@style/Widget.Cavity.AppBarLayout</item>
         <item name="toolbarStyle">@style/Widget.Cavity.Toolbar</item>
-        <!--        <item name="tooltipStyle">@style/Widget.Cavity.Tooltip</item>-->
+<!--        <item name="tooltipStyle">@style/Widget.Cavity.Tooltip</item>-->
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Cavity.MaterialAlertDialog</item>
         <item name="materialCalendarTheme">@style/ThemeOverlay.Cavity.DatePicker</item>
         <item name="textInputStyle">@style/Widget.Cavity.TextInputLayout.FilledBox</item>
@@ -306,5 +306,9 @@
 
     <style name="RoundedImage">
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ApplyMyFontOnTooltipsPlz">
+        <item name="fontFamily">@font/forum</item>
     </style>
 </resources>
