@@ -19,11 +19,11 @@ class FragmentAddBottle : Stepper() {
     private val args: FragmentAddBottleArgs by navArgs()
 
     override val showStepperProgress = true
-    override val steps = setOf(
-        FragmentInquireDates(),
-        FragmentInquireGrapes(),
-        FragmentInquireReviews(),
-        FragmentInquireOtherInfo()
+    override val steps = listOf(
+        { FragmentInquireDates() },
+        { FragmentInquireGrapes() },
+        { FragmentInquireReviews() },
+        { FragmentInquireOtherInfo() }
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

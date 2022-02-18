@@ -10,10 +10,10 @@ import com.louis.app.cavity.util.TransitionHelper
 
 class FragmentAddTasting : Stepper() {
     override val showStepperProgress = false
-    override val steps = setOf(
-        FragmentInquireTastingInfo(),
-        FragmentSearch().apply { arguments = bundleOf(PICK_MODE to true) },
-        FragmentInquireSchedule()
+    override val steps = listOf(
+        { FragmentInquireTastingInfo() },
+        { FragmentSearch().apply { arguments = bundleOf(PICK_MODE to true) } },
+        { FragmentInquireSchedule() }
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

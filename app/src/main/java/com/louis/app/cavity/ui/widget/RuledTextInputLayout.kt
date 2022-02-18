@@ -110,13 +110,6 @@ class RuledTextInputLayout @JvmOverloads constructor(
         }
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-
-        // TODO: This can cause a memory leak if not run, does it ? (if dev add custom rule with capturing lambda)
-        rules.clear()
-    }
-
 //    @RequiresApi(Build.VERSION_CODES.O)
 //    override fun onDraw(canvas: Canvas?) {
 //        super.onDraw(canvas)

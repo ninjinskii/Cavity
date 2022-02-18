@@ -11,6 +11,8 @@ import com.louis.app.cavity.util.setVisible
 
 abstract class Stepper : Fragment(R.layout.fragment_stepper) {
 
+    private lateinit var pagerAdapter: StepperPagerAdapter
+
     // Sublcasses would be confusing to read
     @Suppress("PropertyName")
     protected var _binding: FragmentStepperBinding? = null
@@ -21,7 +23,7 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     private val topBinding get() = _topBinding!!
 
     abstract val showStepperProgress: Boolean
-    abstract val steps: Set<Step>
+    abstract val steps: List<() -> Step>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,7 +36,7 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     }
 
     private fun init() {
-        val pagerAdapter = StepperPagerAdapter(this, steps)
+        pagerAdapter = StepperPagerAdapter(this, steps)
 
         binding.viewPager.apply {
             adapter = pagerAdapter
@@ -85,9 +87,9 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
 
     fun goToNextPage(): Int {
         val currentPage = binding.viewPager.currentItem
-        val ok = steps.elementAt(currentPage).requestNextPage()
+        val ok = pagerAdapter.getFragmentAtPosition(currentPage)?.requestNextPage()
 
-        return if (ok) {
+        return if (ok == true) {
             val nextPage = ++binding.viewPager.currentItem
             updateIcons(nextPage)
 
@@ -95,7 +97,6 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
         } else {
             currentPage
         }
-
     }
 
     fun goToPreviousPage(): Int {
