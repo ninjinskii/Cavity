@@ -408,7 +408,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             val shouldJumpDrawableState = bottle.id != lastBottleId
             val formattedPrice = bottle.price.let { if (it != -1F) it.toString() else "" }
             val priceAndCurrency =
-                if (formattedPrice.isEmpty()) "" else "$formattedPrice $bottle.currency"
+                if (formattedPrice.isEmpty()) "" else "$formattedPrice ${bottle.currency}"
 
             buttonGroupInteract.setVisible(!consumed)
             warningBanner.setVisible(consumed || bottle.tastingId != null)
