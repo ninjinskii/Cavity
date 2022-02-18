@@ -20,8 +20,8 @@
         <item name="textAppearanceBody2">@style/TextAppearance.Cavity.Body2</item>
         <item name="textAppearanceButton">@style/TextAppearance.Cavity.Button</item>
 
-        <!-- Sets all fonts to forum, also into popup menus & tooltips -->
-        <!--                <item name="fontFamily">@font/forum</item>-->
+        <item name="textAppearanceLargePopupMenu">@style/TextAppearance.Cavity.Body1</item>
+        <item name="textAppearanceSmallPopupMenu">@style/TextAppearance.Cavity.Body1</item>
 
         <!-- Shape -->
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Cavtiy.LargeComponent
@@ -31,7 +31,6 @@
 
         <item name="appBarLayoutStyle">@style/Widget.Cavity.AppBarLayout</item>
         <item name="toolbarStyle">@style/Widget.Cavity.Toolbar</item>
-<!--        <item name="tooltipStyle">@style/Widget.Cavity.Tooltip</item>-->
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Cavity.MaterialAlertDialog</item>
         <item name="materialCalendarTheme">@style/ThemeOverlay.Cavity.DatePicker</item>
         <item name="textInputStyle">@style/Widget.Cavity.TextInputLayout.FilledBox</item>
@@ -45,9 +44,6 @@
         <item name="android:popupMenuStyle">@style/Widget.Cavity.PopupMenu</item>
         <item name="android:windowSharedElementsUseOverlay">false</item>
         <item name="android:itemTextAppearance">@style/TextAppearance.Cavity.Body1</item>
-        <item name="android:dropDownItemStyle">@style/ThemeOverlay.Cavity.DropdownItem</item>
-        <item name="android:spinnerDropDownItemStyle">@style/ThemeOverlay.Cavity.DropdownItem</item>
-        <item name="android:dropDownListViewStyle">@style/ThemeOverlay.Cavity.DropdownItem</item>
     </style>
 
     <!-- Toolbar -->
