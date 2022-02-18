@@ -82,4 +82,3 @@ class ForwardTouchRecyclerView @JvmOverloads constructor(
         }
     }
 }
-
