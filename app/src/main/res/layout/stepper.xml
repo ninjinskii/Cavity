@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <ImageButton
         android:id="@+id/previous"
         android:layout_width="@dimen/large_icon"
-        android:layout_height="@dimen/small_icon"
-        android:layout_margin="@dimen/medium_margin"
+        android:layout_height="@dimen/large_icon"
+        android:layout_marginHorizontal="@dimen/medium_margin"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,8 +20,8 @@
     <ImageButton
         android:id="@+id/next"
         android:layout_width="@dimen/large_icon"
-        android:layout_height="@dimen/small_icon"
-        android:layout_margin="@dimen/medium_margin"
+        android:layout_height="@dimen/large_icon"
+        android:layout_marginHorizontal="@dimen/medium_margin"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/asl_check"
         app:layout_constraintEnd_toEndOf="parent"
