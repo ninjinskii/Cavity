@@ -269,6 +269,7 @@
     <!-- Tasting -->
     <string name="add_tasting">Créer une dégustation</string>
     <string name="opportunity">Occasion</string>
+    <string name="opportunity_hint">Anniversaire Guy, Repas de Noël…</string>
     <string name="tasting_date">Date</string>
     <string name="participants">Participants</string>
     <string name="jug_time">Passage en carafe</string>

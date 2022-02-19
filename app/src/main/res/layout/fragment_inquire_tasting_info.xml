@@ -42,6 +42,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tastingTitle"
+                    app:helperText="@string/opportunity_hint"
                     app:rule="required"
                     app:startIconDrawable="@drawable/ic_cake">
 
