@@ -405,13 +405,14 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private fun updateUI(bottle: Bottle, lastBottleId: Long) {
         with(binding) {
             val consumed = bottle.consumed.toBoolean()
+            val hasTasting = bottle.tastingId != null
             val shouldJumpDrawableState = bottle.id != lastBottleId
             val formattedPrice = bottle.price.let { if (it != -1F) it.toString() else "" }
             val priceAndCurrency =
                 if (formattedPrice.isEmpty()) "" else "$formattedPrice ${bottle.currency}"
 
-            buttonGroupInteract.setVisible(!consumed)
-            warningBanner.setVisible(consumed || bottle.tastingId != null)
+            buttonGroupInteract.setVisible(!consumed && !hasTasting)
+            warningBanner.setVisible(consumed || hasTasting)
             bottlesList.setVisible(!consumed)
             vintageIfConsumed.setVisible(consumed)
 
