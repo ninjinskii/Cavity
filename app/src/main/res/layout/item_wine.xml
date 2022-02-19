@@ -20,10 +20,10 @@
         android:contentDescription="@string/wine_photo"
         tools:src="@drawable/ic_list_check" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/gradient_wines" />
+    <!--    <View-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:background="@drawable/gradient_wines" />-->
 
     <LinearLayout
         android:id="@+id/infoLayout"
@@ -35,24 +35,32 @@
 
         <TextView
             android:id="@+id/wineNaming"
-            android:textAppearance="?attr/textAppearanceCaption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/small_margin"
             android:layout_marginBottom="@dimen/xsmall_margin"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingHorizontal="@dimen/small_margin"
+            android:shadowColor="?attr/colorSurface"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="4"
+            android:textAppearance="?attr/textAppearanceCaption"
             tools:text="Saint-Émilion" />
 
         <TextView
             android:id="@+id/wineName"
-            android:textAppearance="?attr/textAppearanceBody1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/small_margin"
             android:layout_marginTop="@dimen/xsmall_margin"
             android:ellipsize="end"
             android:maxLines="2"
+            android:paddingHorizontal="@dimen/small_margin"
+            android:shadowColor="?attr/colorSurface"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="4"
+            android:textAppearance="?attr/textAppearanceBody1"
             tools:text="Château la Cour" />
 
     </LinearLayout>
@@ -74,10 +82,14 @@
 
     <TextView
         android:id="@+id/bottlesCount"
-        android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="@dimen/medium_margin" />
+        android:layout_marginBottom="@dimen/medium_margin"
+        android:shadowColor="?attr/colorSurface"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="2"
+        android:textAppearance="?attr/textAppearanceBody1" />
 
 </com.louis.app.cavity.ui.home.widget.HexagonalView>
