@@ -40,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="@id/contestName"
             app:layout_constraintStart_toStartOf="@id/contestName"
             app:layout_constraintTop_toBottomOf="@id/contestName"
-            tools:tint="@color/medal_gold" />
+            app:tint="@color/medal_gold" />
 
         <TextView
             android:id="@+id/starCount"

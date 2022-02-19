@@ -36,7 +36,7 @@
             android:src="@drawable/ic_rate"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:tint="@color/medal_gold" />
+            app:tint="?attr/colorOnSurface" />
 
         <com.louis.app.cavity.ui.widget.RuledTextInputLayout
             android:id="@+id/rateLayout"
