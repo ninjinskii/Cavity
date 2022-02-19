@@ -42,6 +42,7 @@
 
     <ImageView
         android:id="@+id/icon"
+        style="@style/Cavity.Widget.Icon"
         android:layout_width="@dimen/xsmall_icon"
         android:layout_height="@dimen/xsmall_icon"
         android:layout_margin="@dimen/medium_margin"

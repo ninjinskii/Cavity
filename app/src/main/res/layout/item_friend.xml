@@ -14,16 +14,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearance="@style/RoundedImage" />
+        app:shapeAppearance="@style/RoundedImage"
+        app:tint="@color/chip_stroke" />
 
     <TextView
         android:id="@+id/friendName"
-        android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/buttonOptions"
         app:layout_constraintStart_toEndOf="@id/avatar"

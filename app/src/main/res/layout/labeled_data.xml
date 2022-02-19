@@ -7,6 +7,7 @@
 
     <ImageView
         android:id="@+id/icon"
+        style="@style/Cavity.Widget.Icon"
         android:layout_width="@dimen/labeled_data_icon"
         android:layout_height="@dimen/labeled_data_icon"
         android:contentDescription="@string/labeled_data"

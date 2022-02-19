@@ -42,7 +42,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorOnSurface" />
+            app:tint="?attr/colorControlNormal" />
 
         <com.louis.app.cavity.ui.search.widget.AnimatedCheckBox
             android:id="@+id/searchButton"
@@ -55,7 +55,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toggleBackdrop"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorOnSurface" />
+            app:tint="?attr/colorControlNormal" />
 
         <EditText
             android:id="@+id/searchView"
