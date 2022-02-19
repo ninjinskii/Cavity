@@ -11,6 +11,7 @@
     android:textAppearance="?attr/textAppearanceOverline"
     app:chipIcon="@drawable/ic_person"
     app:chipIconSize="@dimen/small_icon"
+    app:chipIconTint="?attr/colorOnSurface"
     app:chipStartPadding="0dp"
     app:closeIconEnabled="false"
     app:closeIconSize="0dp" />
