@@ -10,4 +10,6 @@
     <color name="divider_color">#12ffffff</color>
 
     <color name="thumb_plain">@color/surface_elevation_4dp</color>
+
+    <color name="under_backdrop">#121212</color>
 </resources>

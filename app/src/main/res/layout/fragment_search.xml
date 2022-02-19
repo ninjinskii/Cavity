@@ -7,7 +7,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/under_backdrop"
     android:orientation="vertical"
     android:transitionGroup="true">
 
@@ -25,6 +25,7 @@
             android:id="@+id/fakeToolbar"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@color/under_backdrop"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:titleCentered="true"
             app:titleTextColor="?attr/colorOnSurface"
