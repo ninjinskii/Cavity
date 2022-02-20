@@ -163,7 +163,7 @@
     <string name="rename">Rename</string>
     <string name="rename_county">Rename the region</string>
     <string name="rename_grape">Rename the variety of wine</string>
-    <string name="rename_review">Rename the rating/contest</string>
+    <string name="rename_review">Rename the review</string>
     <string name="rename_friend">Rename a friend</string>
     <string name="delete_county_warn">Deleting this region will delete all bottles and history entries related to this region. To confirm, enter the name of the region to be deleted.</string>
     <string name="confirm_grape_delete">Delete the variety of wine ?</string>
@@ -175,9 +175,9 @@
     <string name="grape_deleted">Grape variety deleted.</string>
     <string name="grape_renamed">Grape variety renamed.</string>
     <string name="grape_added">Grape variety added.</string>
-    <string name="review_deleted">Rating/contest deleted.</string>
-    <string name="review_renamed">Rating/contest renamed.</string>
-    <string name="review_added">Rating/contest added.</string>
+    <string name="review_deleted">Review deleted.</string>
+    <string name="review_renamed">Review renamed.</string>
+    <string name="review_added">Review added.</string>
     <string name="friend_added">Friend added.</string>
     <string name="friend_renamed">Friend edited.</string>
     <string name="friend_deleted">Friend deleted.</string>
