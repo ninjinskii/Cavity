@@ -55,6 +55,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tint="?attr/colorControlNormal" />
 
+        <!-- No autofill for a wine search query -->
         <EditText
             android:id="@+id/searchView"
             style="@style/Widget.Cavity.SearchView"
@@ -69,7 +70,8 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="Autofill" />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 

@@ -10,6 +10,7 @@
         android:layout_width="@dimen/large_icon"
         android:layout_height="@dimen/large_icon"
         android:layout_margin="@dimen/medium_margin"
+        android:contentDescription="@string/app_name"
         android:src="@drawable/ic_glass"
         app:tint="?attr/colorPrimary" />
 

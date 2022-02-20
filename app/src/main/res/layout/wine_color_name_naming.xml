@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/wineColorIndicator"
         android:layout_width="@dimen/wine_color_indicator_width"
         android:layout_height="@dimen/wine_color_indicator_height"
-        android:contentDescription=""
-        tools:tint="@color/wine_red"
+        android:contentDescription="@string/a11y_wine_color"
         android:src="@drawable/shape_color_wine"
         app:layout_constraintBottom_toBottomOf="@id/wineNaming"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/wineName" />
+        app:layout_constraintTop_toTopOf="@id/wineName"
+        tools:tint="@color/wine_red" />
 
     <TextView
         android:id="@+id/wineName"
-        android:textAppearance="?attr/textAppearanceBody1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/small_margin"
         android:layout_marginBottom="@dimen/xsmall_margin"
         android:ellipsize="end"
         android:maxLines="2"
-        tools:text="Château la Cour"
-        app:layout_constraintStart_toEndOf="@id/wineColorIndicator"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintEnd_toStartOf="@id/organic_image"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/wineColorIndicator"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Château la Cour" />
 
     <TextView
         android:id="@+id/wineNaming"
-        android:textAppearance="?attr/textAppearanceCaption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/small_margin"
         android:layout_marginTop="@dimen/xsmall_margin"
         android:ellipsize="end"
         android:maxLines="1"
-        tools:text="Saint-Émilion"
+        android:textAppearance="?attr/textAppearanceCaption"
         app:layout_constraintEnd_toStartOf="@id/organic_image"
         app:layout_constraintStart_toEndOf="@id/wineColorIndicator"
-        app:layout_constraintTop_toBottomOf="@id/wineName" />
+        app:layout_constraintTop_toBottomOf="@id/wineName"
+        tools:text="Saint-Émilion" />
 
     <ImageView
         android:id="@+id/organic_image"
@@ -51,9 +51,9 @@
         android:contentDescription="@string/bio_wine"
         android:src="@drawable/ic_bio"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/wineNaming"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/wineName" />
+        app:layout_constraintTop_toTopOf="@id/wineName"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

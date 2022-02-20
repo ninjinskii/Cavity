@@ -11,6 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:alpha="0.38"
+        android:contentDescription="@string/a11y_empty_state_icon"
         app:layout_constraintBottom_toTopOf="@id/text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.3"

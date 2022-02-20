@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="matching_wines">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
+
+    <plurals name="wines">
+        <item quantity="one">%d wine</item>
+        <item quantity="other">%d wines</item>
+    </plurals>
+
+    <plurals name="bottles">
+        <item quantity="one">%d bottle</item>
+        <item quantity="other">%d bottles</item>
+    </plurals>
+</resources>

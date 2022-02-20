@@ -21,9 +21,9 @@
         android:id="@+id/vintage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceOverline"
         android:layout_marginVertical="@dimen/small_margin"
         android:layout_marginEnd="@dimen/medium_margin"
+        android:textAppearance="?attr/textAppearanceOverline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/checkedIcon"
         app:layout_constraintStart_toEndOf="@id/wineColorNameNaming"
@@ -34,6 +34,7 @@
         android:id="@+id/checkedIcon"
         android:layout_width="@dimen/medium_icon"
         android:layout_height="@dimen/medium_icon"
+        android:contentDescription="@string/a11y_check_icon"
         android:scaleType="centerInside"
         android:src="@drawable/ic_check"
         android:visibility="gone"
@@ -42,14 +43,5 @@
         app:layout_constraintStart_toEndOf="@id/vintage"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorPrimary" />
-
-    <!--    <View-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:background="@color/cavity_gold"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

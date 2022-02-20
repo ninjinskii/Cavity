@@ -25,6 +25,7 @@
         android:layout_height="@dimen/medium_icon"
         android:layout_marginStart="@dimen/small_margin"
         android:background="?attr/actionBarItemBackground"
+        android:contentDescription="@string/a11y_back"
         android:src="@drawable/ic_close"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="parent"

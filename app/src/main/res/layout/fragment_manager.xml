@@ -66,6 +66,7 @@
             android:layout_width="@dimen/xsmall_icon"
             android:layout_height="@dimen/xsmall_icon"
             android:layout_gravity="center"
+            android:contentDescription="@string/a11y_add"
             android:src="@drawable/ic_add"
             app:tint="?attr/colorPrimary" />
 

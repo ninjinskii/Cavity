@@ -187,6 +187,7 @@
     <string name="empty_grape_manager">No grape variety</string>
     <string name="empty_review_manager">No rating or contest</string>
     <string name="empty_friend">No friend</string>
+    <string name="add_image_to_friend">Add image</string>
 
     <!-- History -->
     <string name="buyed_at">Purchase from : %1$s</string>
@@ -249,12 +250,18 @@
     <string name="default_currency_title">Default currency</string>
     <string name="default_currency">Select the default currency used when adding a bottle.</string>
 
-    <!-- Tags -->
-    <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>
-    <string name="tag_modal_sheet_id" translatable="false">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
-    <string name="tag_date_picker" translatable="false">com.louis.app.cavity.TAG_DATE_PICKER</string>
-    <string name="tag_shared_prefs" translatable="false">com.louis.app.cavity.SHARED_PREFS</string>
-
-    <!-- Transition -->
-    <string name="transition_bottle_details" translatable="false">transition-bottle-details-%1$d</string>
+    <!-- a11y -->
+    <string name="a11y_empty_state_icon">Illustration for empty list</string>
+    <string name="a11y_bottle">Bottle illustration</string>
+    <string name="a11y_bottle_template">Photo template</string>
+    <string name="a11y_camera">Snap</string>
+    <string name="a11y_back">Previous</string>
+    <string name="a11y_add">Add item</string>
+    <string name="a11y_check_icon">Selection icon</string>
+    <string name="a11y_more_options">More options</string>
+    <string name="a11y_drag">Drag</string>
+    <string name="a11y_choose_date">Pick a date</string>
+    <string name="a11y_wine_image">Wine image</string>
+    <string name="a11y_wine_color">Wine color indicator</string>
+    <string name="a11y_separator">Separator</string>
 </resources>

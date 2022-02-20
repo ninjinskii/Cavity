@@ -83,6 +83,7 @@
             android:id="@+id/warn"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
+            android:contentDescription="@string/warning"
             android:src="@drawable/ic_warning"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/wineImage"

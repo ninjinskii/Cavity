@@ -185,6 +185,7 @@
     <string name="empty_grape_manager">Ajoutez des cépages pour ensuite les associer à vos bouteilles</string>
     <string name="empty_review_manager">Ajoutez des notes et concours pour les renseigner sur vos bouteilles</string>
     <string name="empty_friend">Ajoutez des amis pour vous souvenir avec qui vous partagez vos bouteilles</string>
+    <string name="add_image_to_friend">Associer une image</string>
 
     <!-- History -->
     <string name="buyed_at">Achetée à : %1$s</string>
@@ -255,4 +256,19 @@
 
     <!-- Transition -->
     <string name="transition_bottle_details" translatable="false">transition-bottle-details-%1$d</string>
+
+    <!-- a11y -->
+    <string name="a11y_empty_state_icon">Illustration pour liste vide</string>
+    <string name="a11y_bottle">Illustration de bouteille</string>
+    <string name="a11y_bottle_template">Gabarit de prise de photo</string>
+    <string name="a11y_camera">Prendre la photo</string>
+    <string name="a11y_back">Précédent</string>
+    <string name="a11y_add">Ajouter un item</string>
+    <string name="a11y_check_icon">Icone de sélection</string>
+    <string name="a11y_more_options">Plus d\'options</string>
+    <string name="a11y_drag">Prendre et déplacer</string>
+    <string name="a11y_choose_date">Sélectionner une date</string>
+    <string name="a11y_wine_image">Image du vin</string>
+    <string name="a11y_wine_color">Indicateur de couleur du vin</string>
+    <string name="a11y_separator">Séparateur</string>
 </resources>

@@ -20,11 +20,6 @@
         android:contentDescription="@string/wine_photo"
         tools:src="@drawable/ic_list_check" />
 
-    <!--    <View-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:background="@drawable/gradient_wines" />-->
-
     <LinearLayout
         android:id="@+id/infoLayout"
         android:layout_width="match_parent"

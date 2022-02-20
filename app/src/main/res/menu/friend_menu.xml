@@ -14,7 +14,7 @@
         android:id="@+id/edit_image"
         android:icon="@drawable/ic_image_search"
         android:iconTint="?attr/colorOnSurface"
-        android:title="Associer une image"
+        android:title="@string/add_image_to_friend"
         app:iconTint="?attr/colorOnSurface"
         tools:targetApi="o" />
 

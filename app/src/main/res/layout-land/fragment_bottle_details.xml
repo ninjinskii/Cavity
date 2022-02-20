@@ -26,6 +26,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/actionBarItemBackground"
             android:clickable="true"
+            android:contentDescription="@string/a11y_back"
             android:focusable="true"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintStart_toStartOf="parent"
@@ -298,6 +299,7 @@
                         android:layout_height="@dimen/medium_icon"
                         android:layout_gravity="center_horizontal"
                         android:background="@drawable/shape_icon_button"
+                        android:contentDescription="@string/edit_bottle"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_edit"
                         app:tint="?attr/colorPrimary" />
@@ -331,6 +333,7 @@
                         android:layout_height="@dimen/medium_icon"
                         android:layout_gravity="center_horizontal"
                         android:background="@drawable/shape_icon_button"
+                        android:contentDescription="@string/show_history"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_history"
                         app:tint="?attr/colorPrimary" />
@@ -364,6 +367,7 @@
                         android:layout_height="@dimen/medium_icon"
                         android:layout_gravity="center_horizontal"
                         android:background="@drawable/shape_icon_button"
+                        android:contentDescription="@string/show_pdf"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_pdf"
                         app:tint="@color/button_stroke" />
@@ -450,6 +454,7 @@
                             android:id="@+id/bottle"
                             android:layout_width="300dp"
                             android:layout_height="0dp"
+                            android:contentDescription="@string/a11y_bottle"
                             android:rotation="40"
                             android:src="@drawable/ic_bottle"
                             app:layout_constraintBottom_toBottomOf="parent"
