@@ -102,7 +102,7 @@
     <string name="grape_name">Nom du cépage</string>
     <string name="select_grapes">Sélectionner les cépages</string>
     <string name="skip">Passer à la suite</string>
-    <string name="add_grape">Créer un nouveau cépage</string>
+    <string name="add_grape">Créer un cépage</string>
     <string name="empty_grape">Choisissez les cépages contenus dans cette bouteille, ou créez en des nouveaux s\'ils sont manquants</string>
     <string name="grape_other">Autre</string>
     <string name="percentage">%1$d %%</string>
