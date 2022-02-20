@@ -44,7 +44,6 @@
 
     <!-- App -->
     <string name="app_name">Cavity</string>
-    <string name="switch_view">Changer de vue</string>
     <string name="consumed">Cette bouteille à été consommée.</string>
     <string name="drink_date">Bue le: %1$s</string>
     <string name="home">Acceuil</string>
