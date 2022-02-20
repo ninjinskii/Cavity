@@ -408,7 +408,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/reviewList"
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="@dimen/review_height"
                     android:layout_marginHorizontal="@dimen/small_margin"
                     android:layout_marginTop="@dimen/large_margin"
                     android:visibility="gone"

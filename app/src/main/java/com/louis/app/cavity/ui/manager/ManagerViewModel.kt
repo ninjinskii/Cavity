@@ -90,7 +90,7 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             try {
                 repository.updateReview(review)
-                _userFeedback.postOnce(R.string.review_added)
+                _userFeedback.postOnce(R.string.review_renamed)
             } catch (e: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.empty_contest_name)
             } catch (e: SQLiteConstraintException) {
@@ -111,7 +111,7 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 val newFriend = friend.copy(name = newName)
                 repository.updateFriend(newFriend)
-                _userFeedback.postOnce(R.string.friend_added)
+                _userFeedback.postOnce(R.string.friend_renamed)
             } catch (e: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.input_error)
             } catch (e: SQLiteConstraintException) {

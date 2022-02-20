@@ -18,6 +18,7 @@ import com.louis.app.cavity.ui.manager.ManagerViewModel
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
     private lateinit var itemTouchHelper: ItemTouchHelper
@@ -92,13 +93,15 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
         val dialogBinding = DialogConfirmDeleteBinding.inflate(layoutInflater)
 
         LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
-            .setTitle(R.string.delete)
+            .setTitle(R.string.warning)
             .setMessage(R.string.delete_county_warn)
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.delete) { _, _ ->
                 if (dialogBinding.countyName.text.toString() == county.name) {
                     managerViewModel.deleteCounty(county.id)
+                } else {
+                    binding.coordinator.showSnackbar(R.string.cannot_delete)
                 }
             }
             .setView(dialogBinding.root)

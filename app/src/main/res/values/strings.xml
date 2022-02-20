@@ -2,50 +2,37 @@
     <!-- User related -->
     <string name="submit">Valider</string>
     <string name="cancel">Annuler</string>
-    <string name="save">Save</string>
     <string name="delete">Supprimer</string>
     <string name="next">Suivant</string>
-    <string name="previous">Précédent</string>
     <string name="ok">OK</string>
-    <string name="unknown">Non renseigné</string>
     <string name="input_error">Saisie non valide.</string>
     <string name="permissions_denied">Cavity a besoin de ces autorisations pour prendre des photos.</string>
     <string name="persistent_permission_error">Impossible d\'ouvrir le fichier correctement.</string>
     <string name="db_import_success">La base de données a été importée correctement.</string>
     <string name="notification_channel">Rappels dégustations</string>
+    <string name="warning">Attention !</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
     <string name="no_county">Aucune région sélectionnée.</string>
     <string name="no_friend">Aucun ami sélectionné.</string>
-    <string name="empty_naming">Sélectionnez une appellation.</string>
     <string name="county_already_exists">Cette région existe déjà.</string>
-    <string name="naming_already_exists">Cette appellation existe déjà.</string>
     <string name="no_file_explorer">Aucune application d\'exploration de fichier trouvée.</string>
     <string name="base_error">Une erreur est survenue.</string>
     <string name="required_field">Champ requis.</string>
     <string name="require_integer">Nombre entier uniquement.</string>
     <string name="require_float">Valeurs numériques uniquement.</string>
-    <string name="empty_required_field">Certains champs n\'ont pas étés remplis.</string>
-    <string name="zero_bottle">Indiquez un nombre de bouteille.</string>
     <string name="empty_contest_name">Indiquez un nom de concours.</string>
     <string name="empty_grape_name">Indiquez un nom de cépage.</string>
-    <string name="empty_grape_percent">Un cépage vaut 0%.</string>
     <string name="grape_already_exists">Ce cépage existe déjà.</string>
     <string name="contest_name_already_exists">Ce concours est existe déjà.</string>
     <string name="friend_already_exists">Cet ami existe déjà.</string>
-    <string name="falsy_price">Le prix ne peut pas contenir de caractères.</string>
-    <string name="rate_out_of_bounds">La note n\'est pas correcte.</string>
-    <string name="reserved_name">Nom réservé.</string>
-    <string name="falsy_number">Chiffres uniquement.</string>
     <string name="no_negative">Entrez un nombre supérieur à 0.</string>
-    <string name="too_much">Ça fait vraiment beaucoup là.</string>
     <string name="camera_error">Échec de l\'initialisation de la caméra.</string>
 
     <!-- App -->
     <string name="app_name">Cavity</string>
     <string name="consumed">Cette bouteille à été consommée.</string>
-    <string name="drink_date">Bue le: %1$s</string>
     <string name="home">Acceuil</string>
     <string name="add_wine">Ajouter un vin</string>
     <string name="add_bottle">Ajouter une bouteille</string>
@@ -57,7 +44,6 @@
     <string name="history">Historique</string>
     <string name="settings">Paramètres</string>
     <string name="bio_wine">Le vin est bio</string>
-    <string name="wine_color">Couleur du vin</string>
     <string name="wine_photo">Photo du vin</string>
     <string name="add_photo">Ajouter une photo</string>
     <string name="take_photo">Photographier</string>
@@ -70,7 +56,6 @@
     <string name="organic">Bio</string>
     <string name="organic_wine">Vin issu de l\'agriculture biologique</string>
     <string name="add_county">Ajouter une région</string>
-    <string name="add_naming">Ajouter une appellation</string>
     <string name="wine_added">Le vin a été ajouté.</string>
     <string name="wine_updated">Le vin a été modifié.</string>
     <string name="wine_deleted">Le vin a été supprimé.</string>
@@ -78,19 +63,9 @@
     <string name="wine_color_red">Rouge</string>
     <string name="wine_color_sweet">Liquoreux</string>
     <string name="wine_color_rose">Rosé</string>
-    <string name="vintage_and_count">%1$d (%2$d)</string>
     <string name="confirm_wine_delete">Supprimer le vin et jeter ses bouteilles ?</string>
     <string name="empty_wine">Ajoutez un vin pour commencer à gérer votre stock</string>
 
-    <string name="step_1">1</string>
-    <string name="step_2">2</string>
-    <string name="step_3">3</string>
-    <string name="step_4">4</string>
-    <string name="step_1_text">Dates</string>
-    <string name="step_2_text">Cépages</string>
-    <string name="step_3_text">Concours</string>
-    <string name="step_4_text">Divers</string>
-    <string name="viewed_step">Étape actuelle</string>
     <string name="default_bottle_quantity">1</string>
     <string name="vintage">Millésime</string>
     <string name="date">Dates</string>
@@ -103,7 +78,6 @@
     <string name="skip">Passer à la suite</string>
     <string name="add_grape">Créer un cépage</string>
     <string name="empty_grape">Choisissez les cépages contenus dans cette bouteille, ou créez en des nouveaux s\'ils sont manquants</string>
-    <string name="grape_other">Autre</string>
     <string name="percentage">%1$d %%</string>
     <string name="buying">Achat</string>
     <string name="price">Prix</string>
@@ -111,16 +85,13 @@
     <string name="buying_location">Lieu d\'achat</string>
     <string name="capacity">Contenance</string>
     <string name="buying_date">Date d\'achat</string>
-    <string name="review">Avis d\'expert</string>
     <string name="contest_name">Nom du concours</string>
     <string name="add_review">Ajouter un avis</string>
     <string name="empty_review">Saisissez les notes et concours de cette bouteille, ou créez en des nouveaux s\'ils sont manquants</string>
     <string name="reviews">Avis d\'experts</string>
     <string name="select_reviews">Choisissez un concours</string>
-    <string name="medal">Médaille</string>
     <string name="rate100">100</string>
     <string name="rate20">20</string>
-    <string name="star">Étoiles</string>
     <string name="star1">1 étoile</string>
     <string name="star2">2 étoiles</string>
     <string name="star3">3 étoiles</string>
@@ -147,39 +118,29 @@
     <string name="bottle_updated">La bouteille a été modifiée.</string>
 
     <!-- Search -->
-    <string name="show_filters">Voir les filtres</string>
     <string name="search_wine_hint">Nom du vin, appellation…</string>
     <string name="miscellaneous">Divers</string>
     <string name="ready_to_drink">Prêt à boire</string>
-    <string name="show_bottom_sheet">Dérouler le panneau</string>
-    <string name="more_filters">Plus de filtres</string>
     <string name="buying_date_beyond">Achetée après le</string>
     <string name="buying_date_until">Achetée avant le</string>
-    <string name="results">Résultat(s)</string>
     <string name="no_price_no_results">Les bouteilles n\'ayant pas de prix renseigné ne seront pas affichées.</string>
     <string name="query_feedback">\'%1$s\'</string>
     <string name="selected_bottles">Bouteilles sélectionnées (%1$d)</string>
     <string name="empty_search">Aucun résultat</string>
     <string name="filter_consumed">Consommées</string>
-    <!--    <string name="search_wine">Recherche</string>-->
 
     <!-- Bottle details -->
     <string name="edit_bottle">Éditer</string>
     <string name="taste">Déguster</string>
-    <string name="provide">Ajouter</string>
-    <string name="stock_number">En stock: %1$d</string>
     <string name="price_and_currency">%1$s %2$s</string>
     <string name="show_pdf">Consulter le PDF</string>
     <string name="show_history">Voir l\'historique</string>
     <string name="no_pdf">Pas de pdf associé à cette bouteille.</string>
     <string name="no_pdf_app">Aucun lecteur de pdf trouvé sur le téléphone.</string>
     <string name="labeled_data">Icon</string>
-    <string name="misc">Général</string>
     <string name="expert_advice">Notes et concours</string>
-    <string name="bottle_count">Nombre de bouteilles</string>
     <string name="gift_to">Offrir</string>
     <string name="gift_to_who">A qui offrir cette bouteille ?</string>
-    <string name="how_many_to_add">Combien de bouteilles à ajouter ?</string>
     <string name="consume_bottle">Déguster une bouteille</string>
     <string name="gift_bottle">Offrir une bouteille</string>
     <string name="tasting_comment">Commentaire de dégustation</string>
@@ -197,14 +158,11 @@
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>
     <string name="counties">Régions</string>
-    <string name="namings">Appellations</string>
     <string name="rename">Renommer</string>
     <string name="rename_county">Renommer la région</string>
-    <string name="rename_naming">Renommer l\'appellation</string>
     <string name="rename_grape">Renommer le cépage</string>
     <string name="rename_review">Renommer l\'avis d\'expert</string>
     <string name="rename_friend">Renommer un ami</string>
-    <string name="delete_county">Supprimer la région et son contenu</string>
     <string name="delete_county_warn">Supprimer cette région entraînera la supression de toutes les bouteilles et entrées dans l\'historique liées à cette région. Pour confirmer, entrez le nom de la région à supprimer.</string>
     <string name="confirm_grape_delete">Supprimer le cépage ?</string>
     <string name="confirm_review_delete">Supprimer l\'avis d\'expert ?</string>
@@ -215,17 +173,12 @@
     <string name="grape_deleted">Cépage supprimé.</string>
     <string name="grape_renamed">Cépage renommé.</string>
     <string name="grape_added">Cépage ajouté.</string>
-    <string name="naming_added">Appellation ajoutée.</string>
-    <string name="naming_updated">Appellation modifiée.</string>
-    <string name="naming_deleted">Appellation supprimée.</string>
-    <string name="cannot_delete_naming">Des vins sont rattachés à cette appellation.</string>
     <string name="review_deleted">Avis d\'expert supprimé.</string>
     <string name="review_renamed">Avis d\'expert renommé.</string>
     <string name="review_added">Avis d\'expert créé.</string>
     <string name="friend_added">Ami ajouté.</string>
-    <string name="friend_renamed">Ami modifié.</string>
+    <string name="friend_renamed">Ami renommé.</string>
     <string name="friend_deleted">Ami supprimé.</string>
-    <string name="contests">Concours</string>
     <string name="friends">Amis</string>
     <string name="cannot_delete">Les noms ne correspondent pas.</string>
     <string name="empty_county">Aucune région</string>
@@ -234,7 +187,6 @@
     <string name="empty_friend">Ajoutez des amis pour vous souvenir avec qui vous partagez vos bouteilles</string>
 
     <!-- History -->
-    <string name="name_and_vintage">%1$s (%2$d)</string>
     <string name="buyed_at">Achetée à : %1$s</string>
     <string name="gifted_to_someone">Offerte à : %1$s</string>
     <string name="gifted_by_someone">Offerte par : %1$s</string>
@@ -244,7 +196,6 @@
     <string name="consumptions">Sorties</string>
     <string name="gifted_to">Offerte à</string>
     <string name="gifted_by">Offerte par</string>
-    <string name="drinked">Consommation unique</string>
     <string name="favorites">Favoris</string>
     <string name="show_bottle">Voir la bouteille</string>
     <string name="tasting_label">Participants: </string>
@@ -256,7 +207,6 @@
 
     <!-- Stats -->
     <string name="stats">Statistiques</string>
-    <string name="show_more">En savoir plus</string>
     <string name="pie_title_county">Bouteilles par régions</string>
     <string name="pie_title_color">Bouteilles par couleurs</string>
     <string name="pie_title_vintage">Bouteilles par millésimes</string>
@@ -273,7 +223,6 @@
     <string name="tasting_date">Date</string>
     <string name="participants">Participants</string>
     <string name="jug_time">Passage en carafe</string>
-    <string name="cellar">Cave</string>
     <string name="fridge">Mettre au réfrégirateur</string>
     <string name="tasting_bottle_already_in_use">La bouteille est déjà utilisée dans une autre dégustation.</string>
     <string name="midday_meal">Midi</string>

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="TextAppearance.Cavity.Headline1" parent="TextAppearance.MaterialComponents.Headline1" />
-
-    <style name="TextAppearance.Cavity.Headline2" parent="TextAppearance.MaterialComponents.Headline2" />
-
     <!-- Used only in drawer -->
     <style name="TextAppearance.Cavity.Headline3" parent="TextAppearance.AppCompat.Body2">
         <item name="android:fontFamily">@font/josefin_sans</item>
@@ -13,12 +9,6 @@
         <item name="android:letterSpacing">0.4</item>
     </style>
 
-    <!-- Bottle name, Date picker title-->
-    <!--    <style name="TextAppearance.Cavity.Headline4" parent="TextAppearance.AppCompat.Body2">-->
-    <!--        <item name="android:fontFamily">@font/forum</item>-->
-    <!--        <item name="android:textSize">22sp</item>-->
-    <!--        <item name="android:letterSpacing">0.12</item>-->
-    <!--    </style>-->
     <style name="TextAppearance.Cavity.Headline4" parent="TextAppearance.AppCompat.Body2">
         <item name="android:fontFamily">@font/josefin_sans_semibold</item>
         <item name="android:textAllCaps">true</item>
@@ -26,27 +16,12 @@
         <item name="android:letterSpacing">0.3</item>
     </style>
 
-    <!-- Consume / gift bottle title, maybe toolbar title when not home -->
-    <!--    <style name="TextAppearance.Cavity.Headline5" parent="TextAppearance.AppCompat.Body2">-->
-    <!--        <item name="android:fontFamily">@font/josefin_sans_semibold</item>-->
-    <!--        <item name="android:textAllCaps">true</item>-->
-    <!--        <item name="android:textSize">16sp</item>-->
-    <!--        <item name="android:letterSpacing">0.2</item>-->
-    <!--    </style>-->
     <style name="TextAppearance.Cavity.Headline5" parent="TextAppearance.AppCompat.Body2">
         <item name="android:fontFamily">@font/josefin_sans</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">17sp</item>
         <item name="android:letterSpacing">0.2</item>
     </style>
-
-    <!--    Tootlbar title / splash screen -->
-    <!--    <style name="TextAppearance.Cavity.Headline6" parent="TextAppearance.AppCompat.Body2">-->
-    <!--        <item name="android:fontFamily">@font/josefin_sans_semibold</item>-->
-    <!--        <item name="android:textAllCaps">true</item>-->
-    <!--        <item name="android:textSize">20sp</item>-->
-    <!--        <item name="android:letterSpacing">0.3</item>-->
-    <!--    </style>-->
 
     <style name="TextAppearance.Cavity.Headline6" parent="TextAppearance.AppCompat.Body2">
         <item name="android:fontFamily">@font/josefin_sans_thin</item>
@@ -76,12 +51,6 @@
         <item name="android:textSize">@dimen/subtitle1TextSize</item>
     </style>
 
-
-    <!--    <style name="TextAppearance.Cavity.Body1" parent="TextAppearance.AppCompat.Body1">-->
-    <!--        <item name="android:fontFamily">@font/forum</item>-->
-    <!--        <item name="android:textSize">16.5sp</item>-->
-    <!--        &lt;!&ndash; 14sp &ndash;&gt;-->
-    <!--    </style>-->
     <style name="TextAppearance.Cavity.Body1" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">@font/forum</item>
         <item name="android:textSize">@dimen/body1TextSize</item>
@@ -123,5 +92,4 @@
     <dimen name="body2TextSize">16.5sp</dimen>
     <dimen name="subtitle1TextSize">15sp</dimen>
     <dimen name="smallerButtonsSize">17sp</dimen>
-
 </resources>

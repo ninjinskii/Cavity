@@ -254,7 +254,6 @@
     </style>
 
     <!-- Scrollable tab -->
-    <style name="TabTextAppearance" parent="TextAppearance.MaterialComponents.Button" />
 
     <!-- Grouped button -->
     <style name="Widget.Cavity.Button.OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -292,11 +291,6 @@
 
     <!-- Popup menus -->
     <style name="Widget.Cavity.PopupMenu" parent="Widget.MaterialComponents.PopupMenu">
-        <item name="android:textAppearance">@style/TextAppearance.Cavity.Body1</item>
-    </style>
-
-    <!-- Dropdown -->
-    <style name="ThemeOverlay.Cavity.DropdownItem" parent="">
         <item name="android:textAppearance">@style/TextAppearance.Cavity.Body1</item>
     </style>
 

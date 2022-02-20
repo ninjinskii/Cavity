@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorTest">#972940</color>
 
     <!-- #d6aa50 -->
     <color name="cavity_gold">#a37e2c</color>
     <color name="cavity_gold_gradient_1">#f3c258</color>
     <color name="cavity_gold_gradient_2">#ecda9c</color>
     <color name="cavity_green">#81c784</color>
-    <color name="cavity_light_green">#aed581</color>
     <color name="cavity_red">#e57373</color>
     <color name="cavity_purple">#ba68c8</color>
     <color name="cavity_indigo">#64b5f6</color>

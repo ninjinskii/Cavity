@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="wine_card_image_height">140dp</dimen>
     <dimen name="wine_color_indicator_width">10dp</dimen>
     <dimen name="wine_color_indicator_height">25dp</dimen>
 
@@ -18,8 +17,6 @@
     <dimen name="small_icon">32dp</dimen>
     <dimen name="medium_icon">48dp</dimen>
     <dimen name="large_icon">64dp</dimen>
-    <dimen name="stepper_icon">36dp</dimen>
-    <dimen name="stepper_icon_background">42dp</dimen>
     <dimen name="labeled_data_icon">36dp</dimen>
 
     <dimen name="bottle_land_image_height">148dp</dimen>
@@ -27,7 +24,7 @@
     <dimen name="hexagonal_fab_width">56dp</dimen>
     <dimen name="margin_hexagone_text">0dp</dimen>
 
-    <dimen name="review_height">96dp</dimen>
+    <dimen name="review_height">120dp</dimen>
 
     <dimen name="history_marker_width">4dp</dimen>
     <dimen name="history_wine_image_size">145dp</dimen>
@@ -35,19 +32,11 @@
 
     <dimen name="chip_group_default_height">48dp</dimen>
 
-    <dimen name="small_item">48dp</dimen>
-
     <dimen name="starred_corner_size">24dp</dimen>
-    <dimen name="starred_line_small_start">16dp</dimen>
-    <dimen name="starred_line_small_end">20dp</dimen>
-    <dimen name="starred_line_medium_start">18dp</dimen>
-    <dimen name="starred_line_medium_end">22dp</dimen>
-    <dimen name="starred_line_large_start">24dp</dimen>
-    <dimen name="starred_line_large_end">30dp</dimen>
 
     <dimen name="pie_text_space">-6dp</dimen>
     <dimen name="pie_upside_down_text_space">14dp</dimen>
-    <dimen name="pie_text_size">12dp</dimen>
+    <dimen name="pie_text_size">14dp</dimen>
     <dimen name="pie_stroke_width">6dp</dimen>
 
     <dimen name="large_screen_preffered_width">500dp</dimen>

@@ -5,11 +5,6 @@
         <item>200.0</item>
     </array>
 
-    <array name="initial_slider_values_stock">
-        <item>0.0</item>
-        <item>30.0</item>
-    </array>
-
     <string-array name="currencies">
         <item>€</item>
         <item>£</item>

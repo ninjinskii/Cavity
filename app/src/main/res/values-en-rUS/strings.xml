@@ -3,50 +3,37 @@
     <!-- User related -->
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="next">Next</string>
-    <string name="previous">Preview</string>
     <string name="ok">OK</string>
-    <string name="unknown">Unknown</string>
     <string name="input_error">Invalid input.</string>
     <string name="permissions_denied">Cavity needs these authorizations to take pictures.</string>
     <string name="persistent_permission_error">Unable to open the file correctly.</string>
     <string name="db_import_success">The database has been imported correctly.</string>
     <string name="notification_channel">Tasting reminders</string>
+    <string name="warning">Warning !</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Please enter a region name.</string>
     <string name="no_county">No region selected.</string>
     <string name="no_friend">No friend selected.</string>
-    <string name="empty_naming">Select an appellation.</string>
     <string name="county_already_exists">This region already exists.</string>
-    <string name="naming_already_exists">This appellation already exists.</string>
     <string name="no_file_explorer">No file explorer application found.</string>
     <string name="base_error">An error has occurred.</string>
     <string name="required_field">Required field.</string>
     <string name="require_integer">Integer only.</string>
     <string name="require_float">Numerical value only.</string>
-    <string name="empty_required_field">Some fields should not be left blank.</string>
-    <string name="zero_bottle">Please enter a number of bottles.</string>
     <string name="empty_contest_name">Please enter a contest name.</string>
     <string name="empty_grape_name">Please enter a grape variety.</string>
-    <string name="empty_grape_percent">A grape variety is set to 0%.</string>
     <string name="grape_already_exists">This grape variety already exists.</string>
     <string name="contest_name_already_exists">This contest already exist.</string>
     <string name="friend_already_exists">This friend already exist.</string>
-    <string name="falsy_price">The price may not contain any character.</string>
-    <string name="rate_out_of_bounds">Rate is out of bounds.</string>
-    <string name="reserved_name">Reserved name.</string>
-    <string name="falsy_number">Numbers only.</string>
     <string name="no_negative">Enter a positive number.</string>
-    <string name="too_much">That\'s a lot there !</string>
     <string name="camera_error">Camera initialization failed.</string>
 
     <!-- App -->
     <string name="app_name">Cavity</string>
     <string name="consumed">this bottle has been drunk.</string>
-    <string name="drink_date">Drunk on: %1$s</string>
     <string name="home">Home</string>
     <string name="add_wine">Add a wine</string>
     <string name="add_bottle">Add a bottle</string>
@@ -58,7 +45,6 @@
     <string name="history">History</string>
     <string name="settings">Settings</string>
     <string name="bio_wine">Organic wine</string>
-    <string name="wine_color">Wine color</string>
     <string name="wine_photo">Wine photo</string>
     <string name="add_photo">Add photo</string>
     <string name="take_photo">Photographr</string>
@@ -71,7 +57,6 @@
     <string name="organic">Organic</string>
     <string name="organic_wine">Organic wine</string>
     <string name="add_county">Add region</string>
-    <string name="add_naming">Add appellation</string>
     <string name="wine_added">The wine has been added.</string>
     <string name="wine_updated">The wine has been edited.</string>
     <string name="wine_deleted">The wine has been deleted.</string>
@@ -79,19 +64,9 @@
     <string name="wine_color_red">Red</string>
     <string name="wine_color_sweet">Sweet</string>
     <string name="wine_color_rose">Rosé</string>
-    <string name="vintage_and_count">%1$d (%2$d)</string>
     <string name="confirm_wine_delete">Delete the wine and discard its bottles ?</string>
     <string name="empty_wine">Add a wine to start managing your stock</string>
 
-    <string name="step_1">1</string>
-    <string name="step_2">2</string>
-    <string name="step_3">3</string>
-    <string name="step_4">4</string>
-    <string name="step_1_text">Dates</string>
-    <string name="step_2_text">Grape variety</string>
-    <string name="step_3_text">Contests</string>
-    <string name="step_4_text">Divers ##</string>
-    <string name="viewed_step">Current step</string>
     <string name="default_bottle_quantity">1</string>
     <string name="vintage">Vintage</string>
     <string name="date">Dates</string>
@@ -104,7 +79,6 @@
     <string name="skip">Skip</string>
     <string name="add_grape">Add grape variety</string>
     <string name="empty_grape">Choose the grape varieties contained in this bottle, or create new ones if they are missing</string>
-    <string name="grape_other">Other</string>
     <string name="percentage">%1$d %%</string>
     <string name="buying">Purchase</string>
     <string name="price">Price</string>
@@ -112,16 +86,13 @@
     <string name="buying_location">Purchase location</string>
     <string name="capacity">Capacity</string>
     <string name="buying_date">Purchase date</string>
-    <string name="review">Contest</string>
     <string name="contest_name">Contest name</string>
     <string name="add_review">Add contest</string>
     <string name="empty_review">Enter the ratings and contests for this bottle, or create new ones if they are missing</string>
     <string name="reviews">Contests</string>
     <string name="select_reviews">Choose ratings/contests</string>
-    <string name="medal">Medal</string>
     <string name="rate100">100</string>
     <string name="rate20">20</string>
-    <string name="star">Star</string>
     <string name="star1">1 star</string>
     <string name="star2">2 star</string>
     <string name="star3">3 star</string>
@@ -148,15 +119,11 @@
     <string name="bottle_updated">The bottle has been edited.</string>
 
     <!-- Search -->
-    <string name="show_filters">Show filters</string>
     <string name="search_wine_hint">Wine name, appellation…</string>
     <string name="miscellaneous">Miscellaneous</string>
     <string name="ready_to_drink">Ready to drink</string>
-    <string name="show_bottom_sheet">Show bottom sheet</string>
-    <string name="more_filters">More filtres</string>
     <string name="buying_date_beyond">Purchased after</string>
     <string name="buying_date_until">Purchased before</string>
-    <string name="results">Résult(s)</string>
     <string name="no_price_no_results">Bottles without a price tag will not be displayed.</string>
     <string name="query_feedback">\'%1$s\'</string>
     <string name="selected_bottles">Selected botttles (%1$d)</string>
@@ -167,20 +134,15 @@
     <!-- Bottle details -->
     <string name="edit_bottle">Edit</string>
     <string name="taste">Taste</string>
-    <string name="provide">Add</string>
-    <string name="stock_number">In stock: %1$d</string>
     <string name="price_and_currency">%1$s %2$s</string>
     <string name="show_pdf">Open PDF</string>
     <string name="show_history">Show history</string>
     <string name="no_pdf">No PDF for this bottle.</string>
     <string name="no_pdf_app">No pdf reader found on the phone.</string>
     <string name="labeled_data">Icon</string>
-    <string name="misc">Général</string>
     <string name="expert_advice">Ratings and contests</string>
-    <string name="bottle_count">Number of bottle</string>
     <string name="gift_to">Give</string>
     <string name="gift_to_who">Choose somene to give the bottle to.</string>
-    <string name="how_many_to_add">How manny bottles to add ?</string>
     <string name="consume_bottle">Taste a bottle</string>
     <string name="gift_bottle">Give a bottle</string>
     <string name="tasting_comment">tasting comment</string>
@@ -198,14 +160,11 @@
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>
     <string name="counties">Regions</string>
-    <string name="namings">Appellations</string>
     <string name="rename">Rename</string>
     <string name="rename_county">Rename the region</string>
-    <string name="rename_naming">Rename the appellation</string>
     <string name="rename_grape">Rename the variety of wine</string>
     <string name="rename_review">Rename the rating/contest</string>
     <string name="rename_friend">Rename a friend</string>
-    <string name="delete_county">Delete the region and its contents</string>
     <string name="delete_county_warn">Deleting this region will delete all bottles and history entries related to this region. To confirm, enter the name of the region to be deleted.</string>
     <string name="confirm_grape_delete">Delete the variety of wine ?</string>
     <string name="confirm_review_delete">Delete rating/contest ?</string>
@@ -216,17 +175,12 @@
     <string name="grape_deleted">Grape variety deleted.</string>
     <string name="grape_renamed">Grape variety renamed.</string>
     <string name="grape_added">Grape variety added.</string>
-    <string name="naming_added">Appellation added.</string>
-    <string name="naming_updated">Appellation edited.</string>
-    <string name="naming_deleted">Appellation deleted.</string>
-    <string name="cannot_delete_naming">Des vins sont rattachés à cette appellation##.</string>
     <string name="review_deleted">Rating/contest deleted.</string>
     <string name="review_renamed">Rating/contest renamed.</string>
     <string name="review_added">Rating/contest added.</string>
     <string name="friend_added">Friend added.</string>
     <string name="friend_renamed">Friend edited.</string>
     <string name="friend_deleted">Friend deleted.</string>
-    <string name="contests">Contests</string>
     <string name="friends">Friends</string>
     <string name="cannot_delete">Names don\'t match.</string>
     <string name="empty_county">No region</string>
@@ -235,7 +189,6 @@
     <string name="empty_friend">No friend</string>
 
     <!-- History -->
-    <string name="name_and_vintage">%1$s (%2$d)</string>
     <string name="buyed_at">Purchase from : %1$s</string>
     <string name="gifted_to_someone">Given to : %1$s</string>
     <string name="gifted_by_someone">Given by : %1$s</string>
@@ -245,7 +198,6 @@
     <string name="consumptions">Consumptions</string>
     <string name="gifted_to">Given to</string>
     <string name="gifted_by">Given by</string>
-    <string name="drinked">Consommation unique##</string>
     <string name="favorites">Favorites</string>
     <string name="show_bottle">Show the bottle</string>
     <string name="tasting_label">Participants: </string>
@@ -257,7 +209,6 @@
 
     <!-- Stats -->
     <string name="stats">Statistics</string>
-    <string name="show_more">See more</string>
     <string name="pie_title_county">Bottles per regions</string>
     <string name="pie_title_color">Bottles per wine colors</string>
     <string name="pie_title_vintage">Bottles per vintages</string>
@@ -274,7 +225,6 @@
     <string name="tasting_date">Date</string>
     <string name="participants">Participants</string>
     <string name="jug_time">Decanting</string>
-    <string name="cellar">Wine cellar</string>
     <string name="fridge">Refrigerator</string>
     <string name="tasting_bottle_already_in_use">The bottle is already used in another tasting.</string>
     <string name="midday_meal">Lunch</string>

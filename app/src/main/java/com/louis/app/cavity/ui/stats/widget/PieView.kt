@@ -15,7 +15,6 @@ import androidx.core.widget.TextViewCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.Stat
-import com.louis.app.cavity.util.spToPx
 import kotlin.math.PI
 import kotlin.math.min
 
@@ -26,14 +25,11 @@ class PieView @JvmOverloads constructor(
 ) :
     View(context, attrs, defStyleAttr) {
 
-    companion object {
-        private const val TEXT_SIZE = 14f
-    }
-
     private val sliceSpace = resources.getDimension(R.dimen.divider_height) / 2
     private val strokeWidth = resources.getDimension(R.dimen.pie_stroke_width)
     private val textSpace = resources.getDimension(R.dimen.pie_text_space)
     private val upsideDownTextSpace = resources.getDimension(R.dimen.pie_upside_down_text_space)
+    private val textSize = resources.getDimension(R.dimen.pie_text_size)
 
     private val backgroundColor = ContextCompat.getColor(context, R.color.under_surface)
     private val transparent = Color.TRANSPARENT
@@ -57,7 +53,7 @@ class PieView @JvmOverloads constructor(
 
     private val textPaint by lazy {
         textAppearanceApplier.paint.apply {
-            textSize = context.spToPx(TEXT_SIZE)
+            textSize = this@PieView.textSize
         }
     }
 
