@@ -101,7 +101,7 @@ class FragmentManageFriend : Fragment(R.layout.fragment_manage_base) {
 
     private fun showConfirmDeleteDialog(friend: Friend) {
         LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
-            .setMessage(R.string.confirm_grape_delete)
+            .setMessage(R.string.confirm_friend_delete)
             .setNegativeButton(R.string.cancel) { _, _ ->
             }
             .setPositiveButton(R.string.submit) { _, _ ->

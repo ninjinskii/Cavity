@@ -209,6 +209,7 @@
     <string name="delete_county_warn">Supprimer cette région entraînera la supression de toutes les bouteilles et entrées dans l\'historique liées à cette région. Pour confirmer, entrez le nom de la région à supprimer.</string>
     <string name="confirm_grape_delete">Supprimer le cépage ?</string>
     <string name="confirm_review_delete">Supprimer l\'avis d\'expert ?</string>
+    <string name="confirm_friend_delete">Supprimer cet ami ?</string>
     <string name="county_deleted">Région supprimée.</string>
     <string name="county_renamed">Région renomée.</string>
     <string name="county_added">Région ajoutée.</string>
@@ -229,9 +230,9 @@
     <string name="friends">Amis</string>
     <string name="cannot_delete">Les noms ne correspondent pas.</string>
     <string name="empty_county">Aucune région</string>
-    <string name="empty_grape_manager">Aucun cépage</string>
-    <string name="empty_review_manager">Aucune note ou concours</string>
-    <string name="empty_friend">Aucun ami</string>
+    <string name="empty_grape_manager">Ajoutez des cépages pour ensuite les associer à vos bouteilles</string>
+    <string name="empty_review_manager">Ajoutez des notes et concours pour les renseigner sur vos bouteilles</string>
+    <string name="empty_friend">Ajoutez des amis pour vous souvenir avec qui vous partagez vos bouteilles</string>
 
     <!-- History -->
     <string name="name_and_vintage">%1$s (%2$d)</string>

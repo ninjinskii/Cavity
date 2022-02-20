@@ -18,9 +18,7 @@
         app:layoutDescription="@xml/motion_search_toolbar"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- TODO: replace all android:white with colorOnPrimary -->
         <!-- Using a toolbar here to get correct title and nav icon positioning -->
-
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/fakeToolbar"
             android:layout_width="0dp"
