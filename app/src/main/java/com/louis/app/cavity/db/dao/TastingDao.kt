@@ -41,7 +41,7 @@ interface TastingDao {
     fun getUndoneTastings(): LiveData<List<BoundedTasting>>
 
     @Transaction
-    @Query("SELECT * FROM bottle WHERE bottle.tasting_id=:tastingId")
+    @Query("SELECT * FROM bottle WHERE bottle.tasting_id=:tastingId AND consumed = 0")
     fun getBottlesWithTastingActionsForTasting(tastingId: Long): LiveData<List<BottleWithTastingActions>>
 
     @Transaction

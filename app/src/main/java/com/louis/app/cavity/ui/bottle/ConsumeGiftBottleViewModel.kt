@@ -24,23 +24,31 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
     fun consumeBottle(bottleId: Long, comment: String, friends: List<Friend>) {
         val typeConsume = 0
         val friendIds = friends.map { it.id }
-        val historyEntry =
-            HistoryEntry(0, date, bottleId, null, comment, typeConsume, 0)
+        val historyEntry = HistoryEntry(0, date, bottleId, null, comment, typeConsume, 0)
 
         viewModelScope.launch(IO) {
-            repository.removeTastingForBottle(bottleId)
-            repository.insertHistoryEntryAndFriends(historyEntry, friendIds)
+            repository.run {
+                transaction {
+                    consumeBottle(bottleId)
+                    removeTastingForBottle(bottleId)
+                    insertHistoryEntryAndFriends(historyEntry, friendIds)
+                }
+            }
         }
     }
 
     fun giftBottle(bottleId: Long, comment: String, friendId: Long) {
         val typeGiftTo = 2
-        val historyEntry =
-                HistoryEntry(0, date, bottleId, null, comment, typeGiftTo, 0)
+        val historyEntry = HistoryEntry(0, date, bottleId, null, comment, typeGiftTo, 0)
 
         viewModelScope.launch(IO) {
-            repository.removeTastingForBottle(bottleId)
-            repository.insertHistoryEntryAndFriends(historyEntry, listOf(friendId))
+            repository.run {
+                transaction {
+                    consumeBottle(bottleId)
+                    removeTastingForBottle(bottleId)
+                    insertHistoryEntryAndFriends(historyEntry, listOf(friendId))
+                }
+            }
         }
     }
 

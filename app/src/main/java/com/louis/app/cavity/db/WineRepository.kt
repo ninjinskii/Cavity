@@ -43,6 +43,9 @@ class WineRepository private constructor(app: Application) {
         Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
     }
 
+    suspend fun <T> transaction(databaseQueries: suspend () -> T) = database.withTransaction {
+        databaseQueries()
+    }
 
     // Wine
     suspend fun insertWine(wine: Wine) = wineDao.insertWine(wine)
@@ -122,15 +125,17 @@ class WineRepository private constructor(app: Application) {
     }
 
     suspend fun declareGiftedBottle(entry: HistoryEntry, friendId: Long) {
-        database.withTransaction {
-            val entryId = historyDao.insertEntry(entry)
-            historyXFriendDao.insertHistoryXFriend(
-                HistoryXFriend(
-                    entryId,
-                    friendId
-                )
-            )
+        if (!database.inTransaction()) {
+            throw IllegalStateException("This method should be called inside a transaction")
         }
+
+        val entryId = historyDao.insertEntry(entry)
+        historyXFriendDao.insertHistoryXFriend(
+            HistoryXFriend(
+                entryId,
+                friendId
+            )
+        )
     }
 
     suspend fun getTastingBottleIdsIn(bottles: List<Long>) =
@@ -175,17 +180,21 @@ class WineRepository private constructor(app: Application) {
         qGrapeDao.getQGrapesAndGrapeForBottleNotLive(bottleId)
 
     suspend fun insertGrapeAndQGrape(bottleId: Long, grape: Grape, qGrapeValue: Int) {
-        database.withTransaction {
-            val grapeId = insertGrape(grape)
-            insertQGrape(QGrape(bottleId, grapeId, qGrapeValue))
+        if (!database.inTransaction()) {
+            throw IllegalStateException("This method should be called inside a transaction")
         }
+
+        val grapeId = insertGrape(grape)
+        insertQGrape(QGrape(bottleId, grapeId, qGrapeValue))
     }
 
     suspend fun replaceQGrapesForBottle(bottleId: Long, qGrapes: List<QGrape>) {
-        database.withTransaction {
-            qGrapeDao.clearAllQGrapesForBottle(bottleId)
-            qGrapeDao.insertQGrape(qGrapes)
+        if (!database.inTransaction()) {
+            throw IllegalStateException("This method should be called inside a transaction")
         }
+
+        qGrapeDao.clearAllQGrapesForBottle(bottleId)
+        qGrapeDao.insertQGrape(qGrapes)
     }
 
     suspend fun deleteAllGrapes() = grapeDao.deleteAll()
@@ -220,17 +229,21 @@ class WineRepository private constructor(app: Application) {
         fReviewDao.deleteFReviewByPk(bottleId, reviewId)
 
     suspend fun insertReviewAndFReview(bottleId: Long, review: Review, fReviewValue: Int) {
-        database.withTransaction {
-            val reviewId = insertReview(review)
-            insertFilledReview(FReview(bottleId, reviewId, fReviewValue))
+        if (!database.inTransaction()) {
+            throw IllegalStateException("This method should be called inside a transaction")
         }
+
+        val reviewId = insertReview(review)
+        insertFilledReview(FReview(bottleId, reviewId, fReviewValue))
     }
 
     suspend fun replaceFReviewsForBottle(bottleId: Long, fReviews: List<FReview>) {
-        database.withTransaction {
-            fReviewDao.clearAllFReviewsForBottle(bottleId)
-            fReviewDao.insertFReviews(fReviews)
+        if (!database.inTransaction()) {
+            throw IllegalStateException("This method should be called inside a transaction")
         }
+
+        fReviewDao.clearAllFReviewsForBottle(bottleId)
+        fReviewDao.insertFReviews(fReviews)
     }
 
     suspend fun deleteAllReviews() = reviewDao.deleteAll()
@@ -279,26 +292,19 @@ class WineRepository private constructor(app: Application) {
     fun getBoundedEntriesBetween(start: Long, end: Long) =
         historyDao.getBoundedEntriesBetween(start, end)
 
-    suspend fun insertHistoryEntry(entry: HistoryEntry): Long {
-        return database.withTransaction {
-            when (entry.type) {
-                0, 2, 4 -> consumeBottle(entry.bottleId)
-                1, 3 -> {
-                    revertBottleConsumption(entry.bottleId)
-                    historyDao.clearExistingReplenishments(entry.bottleId)
-                }
-            }
+    suspend fun clearExistingReplenishments(bottleId: Long) =
+        historyDao.clearExistingReplenishments(bottleId)
 
-            historyDao.insertEntry(entry)
-        }
-    }
+    suspend fun insertHistoryEntry(entry: HistoryEntry) = historyDao.insertEntry(entry)
 
     suspend fun insertHistoryEntryAndFriends(entry: HistoryEntry, friends: List<Long>) {
-        database.withTransaction {
-            val historyId = insertHistoryEntry(entry)
-            val historyXFriends = friends.map { HistoryXFriend(historyId, it) }
-            insertFriendHistoryXRef(historyXFriends)
+        if (!database.inTransaction()) {
+            throw IllegalStateException("This method should be called inside a transaction")
         }
+
+        val historyId = insertHistoryEntry(entry)
+        val historyXFriends = friends.map { HistoryXFriend(historyId, it) }
+        insertFriendHistoryXRef(historyXFriends)
     }
 
     suspend fun deleteAllHistoryEntries() = historyDao.deleteAll()
@@ -355,10 +361,12 @@ class WineRepository private constructor(app: Application) {
         tastingDao.getTastingWithFriendsById(tastingId)
 
     suspend fun insertTastingFriendXRef(tastingId: Long, friends: List<Long>) {
-        database.withTransaction {
-            friends.forEach {
-                tastingXFriendDao.insertTastingXFriend(TastingXFriend(tastingId, it))
-            }
+        if (!database.inTransaction()) {
+            throw IllegalStateException("This method should be called inside a transaction")
+        }
+
+        friends.forEach {
+            tastingXFriendDao.insertTastingXFriend(TastingXFriend(tastingId, it))
         }
     }
 

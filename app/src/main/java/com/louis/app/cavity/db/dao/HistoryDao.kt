@@ -8,7 +8,7 @@ import com.louis.app.cavity.model.*
 @Dao
 interface HistoryDao {
     @Insert
-    fun insertEntry(entry: HistoryEntry): Long
+    suspend fun insertEntry(entry: HistoryEntry): Long
 
     @Insert
     fun insertEntry(entry: List<HistoryEntry>)

@@ -72,10 +72,13 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
             // Updating tasting id so that we can reuse it later to schedule alarms
             currentTasting = currentTasting!!.copy(id = tastingId)
 
-            repository.boundBottlesToTasting(tastingId, bottleIds)
-            repository.insertTastingFriendXRef(tastingId, selectedFriends)
-
-            generateTastingActions(currentTasting!!, tastingBottles.value)
+            repository.run {
+                transaction {
+                    boundBottlesToTasting(tastingId, bottleIds)
+                    insertTastingFriendXRef(tastingId, selectedFriends)
+                    generateTastingActions(currentTasting!!, tastingBottles.value)
+                }
+            }
         }
     }
 

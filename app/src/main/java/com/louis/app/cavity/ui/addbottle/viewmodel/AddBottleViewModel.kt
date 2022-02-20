@@ -12,6 +12,7 @@ import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
@@ -87,22 +88,30 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 val message = if (count > 1) R.string.bottles_added else R.string.bottle_added
 
                 for (i in 1..count) {
-                    val bottleId = repository.insertBottle(bottle)
+                    repository.run {
+                        transaction {
+                            val bottleId = repository.insertBottle(bottle)
 
-                    insertQGrapes(bottleId)
-                    insertFReviews(bottleId)
-                    insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
+                            insertQGrapes(bottleId)
+                            insertFReviews(bottleId)
+                            insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
+                        }
+                    }
                 }
 
                 _completedEvent.postOnce(message)
             } else {
                 val message = R.string.bottle_updated
                 val bottleId = _editedBottle.value!!.id
-                repository.updateBottle(bottle)
 
-                insertQGrapes(bottleId)
-                insertFReviews(bottleId)
-                insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
+                repository.run {
+                    transaction {
+                        updateBottle(bottle)
+                        insertQGrapes(bottleId)
+                        insertFReviews(bottleId)
+                        insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
+                    }
+                }
 
                 _completedEvent.postOnce(message)
             }
@@ -128,16 +137,23 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private suspend fun insertHistoryEntry(bottleId: Long, buyDate: Long, friendId: Long?) {
-        if (friendId == null) {
-            val typeReplenishment = 1
-            val historyEntry =
-                HistoryEntry(0, buyDate, bottleId, null, "", typeReplenishment, 0)
-            repository.insertHistoryEntry(historyEntry)
-        } else {
-            val typeGiftedBy = 3
-            val historyEntry =
-                HistoryEntry(0, buyDate, bottleId, null, "", typeGiftedBy, 0)
-            repository.declareGiftedBottle(historyEntry, friendId)
+        val isAGift = friendId != null
+        val typeReplenishment = 1
+        val typeGiftedBy = 3
+        val type = if (isAGift) typeGiftedBy else typeReplenishment
+        val historyEntry = HistoryEntry(0, buyDate, bottleId, null, "", type, 0)
+
+        repository.run {
+            transaction {
+                revertBottleConsumption(bottleId)
+                clearExistingReplenishments(bottleId)
+
+                if (isAGift) {
+                    declareGiftedBottle(historyEntry, friendId!!)
+                } else {
+                    insertHistoryEntry(historyEntry)
+                }
+            }
         }
     }
 
@@ -146,6 +162,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         step4: OtherInfoManager.Step4Bottle?
     ): Bottle? {
         return if (step1 != null && step4 != null) {
+            L.v("${_editedBottle.value}")
             Bottle(
                 id = _editedBottle.value?.id ?: 0,
                 wineId,

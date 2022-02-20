@@ -90,18 +90,26 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
     private suspend fun updateStocks(boundedTasting: BoundedTasting) {
         val (tasting, bottles, friends) = boundedTasting
 
-        bottles.forEach { bottle ->
-            val entry = HistoryEntry(
-                id = 0,
-                tasting.date,
-                bottle.id,
-                tasting.id,
-                comment = bottle.tastingTasteComment,
-                type = 4,
-                favorite = 0
-            )
+        bottles
+            .filter { it.consumed == false.toInt() }
+            .forEach { bottle ->
+                val entry = HistoryEntry(
+                    id = 0,
+                    tasting.date,
+                    bottle.id,
+                    tasting.id,
+                    comment = bottle.tastingTasteComment,
+                    type = 4,
+                    favorite = 0
+                )
 
-            repository.insertHistoryEntryAndFriends(entry, friends.map { it.id })
-        }
+                repository.run {
+                    transaction {
+                        consumeBottle(bottle.id)
+                        insertHistoryEntryAndFriends(entry, friends.map { it.id })
+                        deleteTastingActionsForBottle(bottle.id)
+                    }
+                }
+            }
     }
 }
