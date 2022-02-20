@@ -1,10 +1,7 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
@@ -37,6 +34,10 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val _completedEvent = MutableLiveData<Event<Int>>()
     val completedEvent: LiveData<Event<Int>>
         get() = _completedEvent
+
+    val editedBottleHistoryEntry = _editedBottle.switchMap {
+        repository.getEntriesForBottleNotPaged(it?.id ?: 0)
+    }
 
     val buyLocations = repository.getAllBuyLocations()
 

@@ -4,17 +4,21 @@ import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Checkable
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
+import com.louis.app.cavity.model.Chipable
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.ChipLoader
@@ -23,10 +27,7 @@ import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
-import com.louis.app.cavity.util.collectAsSingle
-import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.showSnackbar
-import com.louis.app.cavity.util.toBoolean
+import com.louis.app.cavity.util.*
 
 class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     private lateinit var otherInfoManager: OtherInfoManager
@@ -87,6 +88,26 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     private fun observe() {
         addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
             if (it != null) updateFields(it)
+        }
+
+        addBottleViewModel.editedBottleHistoryEntry.observe(viewLifecycleOwner) { entry ->
+            entry?.let {
+                val isAGift = entry.friends.isNotEmpty()
+
+                binding.giftedBy.isChecked = isAGift
+
+                if (isAGift) {
+                    val friendId = entry.friends.first().id
+
+                    binding.friendChipGroup.doOnEachNextLayout {
+                        it as ViewGroup
+                        it.forEach { chip ->
+                            val id = (chip.getTag(R.string.tag_chip_id) as Chipable).getItemId()
+                            (chip as Chip).isChecked = friendId == id
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -61,6 +61,10 @@ interface HistoryDao {
     fun getEntriesForBottle(bottleId: Long): PagingSource<Int, BoundedHistoryEntry>
 
     @Transaction
+    @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId AND type = 1 OR type = 3 LIMIT 1")
+    fun getEntriesForBottleNotPaged(bottleId: Long): LiveData<HistoryEntryWithFriends>
+
+    @Transaction
     @Query("SELECT * FROM history_entry WHERE date < :date ORDER BY date DESC")
     fun getEntriesForDate(date: Long): PagingSource<Int, BoundedHistoryEntry>
 
