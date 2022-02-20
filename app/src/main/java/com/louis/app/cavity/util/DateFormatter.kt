@@ -1,5 +1,7 @@
 package com.louis.app.cavity.util
 
+import android.content.res.Resources
+import androidx.core.os.ConfigurationCompat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -10,8 +12,8 @@ object DateFormatter {
 
     fun formatDate(timestamp: Long?, pattern: String = "dd MMM yyyy"): String {
         return if (timestamp != null && timestamp > 0L) {
-            // TODO: i18n
-            val formatter = SimpleDateFormat(pattern, Locale.FRENCH)
+            val locale = ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0]
+            val formatter = SimpleDateFormat(pattern, locale)
             val calendar = Calendar.getInstance()
 
             calendar.timeInMillis = timestamp

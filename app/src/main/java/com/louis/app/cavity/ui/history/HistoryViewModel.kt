@@ -13,8 +13,6 @@ import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -30,7 +28,6 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val selectedEntry: LiveData<BoundedHistoryEntry?>
         get() = _selectedEntry
 
-    // TODO: consider removing public part if not needed
     private val _filter = MutableLiveData<HistoryFilter>(HistoryFilter.NoFilter)
     val filter: LiveData<HistoryFilter>
         get() = _filter

@@ -38,8 +38,6 @@ abstract class ReboundableViewHolder(private val binding: ViewBinding) :
 
             updateCorner(if (isFavorite) 1f else 0f)
         }
-
-        // TODO: Tasting
     }
 
     private fun updateCorner(interpolation: Float) {

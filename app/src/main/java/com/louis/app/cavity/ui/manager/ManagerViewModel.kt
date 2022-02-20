@@ -42,7 +42,6 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
             } catch (e: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.empty_county_name)
             } catch (e: SQLiteConstraintException) {
-                // TODO: Log all SQLITEConstraint exception, to ensure that it is a Unique constraint fail and not something else
                 _userFeedback.postOnce(R.string.county_already_exists)
             }
         }

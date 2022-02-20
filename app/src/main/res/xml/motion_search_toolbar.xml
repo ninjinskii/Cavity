@@ -14,7 +14,6 @@
         </KeyFrameSet>
     </Transition>
 
-    <!-- TODO: check icon size with higher toolbars (tablet) -->
     <ConstraintSet android:id="@+id/start">
         <Constraint
             android:id="@id/fakeToolbar"
