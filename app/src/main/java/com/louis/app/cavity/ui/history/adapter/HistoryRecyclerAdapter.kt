@@ -10,8 +10,8 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.ItemHistoryBinding
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
-import com.louis.app.cavity.databinding.ItemHistoryUseBinding
 import com.louis.app.cavity.ui.history.HistoryUiModel
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.DateFormatter
@@ -55,7 +55,7 @@ class HistoryRecyclerAdapter(
                 ItemHistorySeparatorBinding.inflate(inflater, parent, false)
             )
             /* TYPE_NORMAL */ else -> HistoryEntryViewHolder(
-                ItemHistoryUseBinding.inflate(inflater, parent, false)
+                ItemHistoryBinding.inflate(inflater, parent, false)
             )
         }
     }
@@ -85,7 +85,7 @@ class HistoryRecyclerAdapter(
             oldItem == newItem
     }
 
-    inner class HistoryEntryViewHolder(private val binding: ItemHistoryUseBinding) :
+    inner class HistoryEntryViewHolder(private val binding: ItemHistoryBinding) :
         ReboundableViewHolder(binding) {
 
         fun bind(entry: HistoryUiModel.EntryModel?) {

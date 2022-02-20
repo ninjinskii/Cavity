@@ -63,7 +63,7 @@
                 android:minHeight="@dimen/small_icon"
                 android:textAppearance="?attr/textAppearanceBody1"
                 app:drawableLeftCompat="@drawable/ic_glass"
-                app:drawableTint="?attr/colorOnBackground"
+                app:drawableTint="@color/high_emphasis"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/friends"
                 app:layout_constraintStart_toEndOf="@id/marker"

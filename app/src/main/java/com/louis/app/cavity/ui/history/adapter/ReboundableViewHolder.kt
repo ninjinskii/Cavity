@@ -3,7 +3,7 @@ package com.louis.app.cavity.ui.history.adapter
 import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.louis.app.cavity.databinding.ItemHistoryUseBinding
+import com.louis.app.cavity.databinding.ItemHistoryBinding
 import com.louis.app.cavity.ui.history.HistoryUiModel
 import com.louis.app.cavity.util.toBoolean
 import kotlin.math.abs
@@ -13,7 +13,7 @@ abstract class ReboundableViewHolder(private val binding: ViewBinding) :
     ReboundingSwipeActionCallback.ReboundableViewHolder {
 
     override val reboundableView = when (binding) {
-        is ItemHistoryUseBinding -> binding.cardView
+        is ItemHistoryBinding -> binding.cardView
         else -> throw IllegalArgumentException(
             "Cannot use this binding instance to make it reboundable."
         )
