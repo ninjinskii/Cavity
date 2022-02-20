@@ -111,9 +111,9 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
     private suspend fun insertQGrapes(bottleId: Long) {
         val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
-        val qGrapes = uiQGrapes.map {
-            QGrape(bottleId, it.grapeId, it.percentage)
-        }
+        val qGrapes = uiQGrapes
+            .filter { it.percentage > 0 }
+            .map { QGrape(bottleId, it.grapeId, it.percentage) }
 
         repository.replaceQGrapesForBottle(bottleId, qGrapes)
     }
