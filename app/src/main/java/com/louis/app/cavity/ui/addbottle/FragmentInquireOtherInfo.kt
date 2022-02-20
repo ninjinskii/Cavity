@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Checkable
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -13,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.BottleSize
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.ChipLoader
@@ -108,6 +110,14 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             otherInfo.setText(editedBottle.otherInfo)
             addToFavorite.isChecked = editedBottle.isFavorite.toBoolean()
             otherInfoManager.setPdfPath(editedBottle.pdfPath)
+
+            val checkedButtonPos = when (editedBottle.bottleSize) {
+                BottleSize.SLIM -> 0
+                BottleSize.NORMAL -> 1
+                BottleSize.MAGNUM -> 2
+            }
+
+            (binding.rbGroupSize.getChildAt(checkedButtonPos) as Checkable).isChecked = true
 
             if (otherInfoManager.hasPdf) {
                 buttonAddPdf.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
