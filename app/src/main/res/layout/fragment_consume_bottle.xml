@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/title"
-        app:tint="?attr/colorOnBackground" />
+        app:tint="?attr/colorControlNormal" />
 
     <View
         android:id="@+id/divider"

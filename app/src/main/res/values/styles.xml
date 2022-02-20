@@ -296,6 +296,7 @@
 
     <style name="Cavity.Widget.Icon" parent="">
         <item name="android:alpha">0.87</item>
+        <item name="tint">?attr/colorOnSurface</item>
     </style>
 
     <style name="RoundedImage">

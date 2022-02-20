@@ -214,8 +214,7 @@
                     app:label="@string/apogee"
                     app:layout_constraintEnd_toStartOf="@id/price"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/colorOnPrimary" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/price"
@@ -227,8 +226,7 @@
                     app:label="@string/price"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/apogee"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="?attr/colorOnPrimary" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/capacity"
@@ -240,8 +238,7 @@
                     app:label="@string/capacity"
                     app:layout_constraintEnd_toStartOf="@id/buyDate"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/apogee"
-                    app:tint="?attr/colorOnPrimary" />
+                    app:layout_constraintTop_toBottomOf="@id/apogee" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/buyDate"
@@ -253,8 +250,7 @@
                     app:label="@string/buying_date"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/capacity"
-                    app:layout_constraintTop_toBottomOf="@id/price"
-                    app:tint="?attr/colorOnPrimary" />
+                    app:layout_constraintTop_toBottomOf="@id/price" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/buyLocation"
@@ -265,8 +261,7 @@
                     app:label="@string/buying_location"
                     app:layout_constraintEnd_toEndOf="@id/buyDate"
                     app:layout_constraintStart_toStartOf="@id/capacity"
-                    app:layout_constraintTop_toBottomOf="@id/capacity"
-                    app:tint="?attr/colorOnPrimary" />
+                    app:layout_constraintTop_toBottomOf="@id/capacity" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/otherInfo"
@@ -277,8 +272,7 @@
                     app:label="@string/other_info"
                     app:layout_constraintEnd_toEndOf="@id/buyDate"
                     app:layout_constraintStart_toStartOf="@id/buyLocation"
-                    app:layout_constraintTop_toBottomOf="@id/buyLocation"
-                    app:tint="?attr/colorOnPrimary" />
+                    app:layout_constraintTop_toBottomOf="@id/buyLocation" />
 
                 <View
                     android:id="@+id/divider1"

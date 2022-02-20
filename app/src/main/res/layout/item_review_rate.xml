@@ -29,14 +29,14 @@
 
         <ImageView
             android:id="@+id/rateIcon"
+            style="@style/Cavity.Widget.Icon"
             android:layout_width="@dimen/medium_icon"
             android:layout_height="@dimen/medium_icon"
             android:layout_margin="@dimen/small_margin"
             android:contentDescription="@string/rate"
             android:src="@drawable/ic_rate"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorOnSurface" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.louis.app.cavity.ui.widget.RuledTextInputLayout
             android:id="@+id/rateLayout"
