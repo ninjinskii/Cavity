@@ -89,7 +89,7 @@
     <string name="add_review">Ajouter un avis</string>
     <string name="empty_review">Saisissez les notes et concours de cette bouteille, ou créez en des nouveaux s\'ils sont manquants</string>
     <string name="reviews">Avis d\'experts</string>
-    <string name="select_reviews">Choisissez un concours</string>
+    <string name="select_reviews">Choisissez un avis</string>
     <string name="rate100">100</string>
     <string name="rate20">20</string>
     <string name="star1">1 étoile</string>
@@ -138,7 +138,7 @@
     <string name="no_pdf">Pas de pdf associé à cette bouteille.</string>
     <string name="no_pdf_app">Aucun lecteur de pdf trouvé sur le téléphone.</string>
     <string name="labeled_data">Icon</string>
-    <string name="expert_advice">Notes et concours</string>
+    <string name="expert_advice">Notes &amp; concours</string>
     <string name="gift_to">Offrir</string>
     <string name="gift_to_who">A qui offrir cette bouteille ?</string>
     <string name="consume_bottle">Déguster une bouteille</string>

@@ -54,7 +54,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
             when (position) {
                 0 -> tab.text = getString(R.string.counties)
                 1 -> tab.text = getString(R.string.grapes)
-                2 -> tab.text = getString(R.string.reviews)
+                2 -> tab.text = getString(R.string.expert_advice)
                 3 -> tab.text = getString(R.string.friends)
             }
         }.attach()
