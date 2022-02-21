@@ -41,14 +41,11 @@ android {
 dependencies {
     def nav_version = "2.3.5"
     def room_version = "2.4.1"
-    def camerax_version = "1.0.2"
+    def camerax_version = "1.1.0-beta01"
     def paging_version = "3.1.0"
     def lifecycle_version = "2.4.1"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-
-    // Kotlin
-    //implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // Ktx core
     implementation "androidx.core:core-ktx:1.7.0"
@@ -90,7 +87,7 @@ dependencies {
     // CameraX
     implementation "androidx.camera:camera-camera2:$camerax_version"
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
-    implementation "androidx.camera:camera-view:1.1.0-beta01"
+    implementation "androidx.camera:camera-view:$camerax_version"
 
     // Paging
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
