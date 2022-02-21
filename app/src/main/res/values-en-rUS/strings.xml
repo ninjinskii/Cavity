@@ -117,6 +117,7 @@
     <string name="bottle_added">The bottle has been added.</string>
     <string name="bottles_added">The bottles have been added.</string>
     <string name="bottle_updated">The bottle has been edited.</string>
+    <string name="placeholder_friend">No friend.</string>
 
     <!-- Search -->
     <string name="search_wine_hint">Wine name, appellation…</string>
@@ -145,7 +146,7 @@
     <string name="gift_to_who">Choose someone to give the bottle to.</string>
     <string name="consume_bottle">Taste a bottle</string>
     <string name="gift_bottle">Give a bottle</string>
-    <string name="tasting_comment">tasting comment</string>
+    <string name="tasting_comment">Tasting comment</string>
     <string name="consume_date">Drink date</string>
     <string name="consumed_with">Who do you drink this bottle with ?</string>
     <string name="bottle_consumed">The bottle has been drunk.</string>
@@ -186,7 +187,7 @@
     <string name="empty_county">No region</string>
     <string name="empty_grape_manager">No grape variety</string>
     <string name="empty_review_manager">No rating or contest</string>
-    <string name="empty_friend">No friend</string>
+    <string name="empty_friend">Add friends to remember who you share your bottles with</string>
     <string name="add_image_to_friend">Add image</string>
 
     <!-- History -->

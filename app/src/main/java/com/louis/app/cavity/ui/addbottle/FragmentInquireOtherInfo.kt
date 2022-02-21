@@ -120,7 +120,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 .load(it)
                 .into(binding.friendChipGroup)
                 .useAvatar(true)
-                .emptyText(getString(R.string.empty_friend))
+                .emptyText(getString(R.string.placeholder_friend))
                 .build()
                 .go()
         }

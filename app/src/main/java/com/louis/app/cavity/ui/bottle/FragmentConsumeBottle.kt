@@ -73,7 +73,7 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
                 .load(it)
                 .into(binding.friendsChipGroup)
                 .useAvatar(true)
-                .emptyText(getString(R.string.no_friend))
+                .emptyText(getString(R.string.placeholder_friend))
                 .build()
                 .go()
         }

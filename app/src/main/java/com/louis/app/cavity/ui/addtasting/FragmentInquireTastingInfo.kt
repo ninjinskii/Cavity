@@ -54,7 +54,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
                 .into(binding.friendsChipGroup)
                 .useAvatar(true)
                 .selectable(true)
-                .emptyText(getString(R.string.empty_friend))
+                .emptyText(getString(R.string.placeholder_friend))
                 .build()
                 .go()
         }
