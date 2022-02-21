@@ -62,7 +62,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllCounties() = repository.getAllCounties()
 
-    // This become unecessary if we figure out how to implement Room's multimaps with standard SQL Join request
+    // This become unnecessary if we figure out how to implement Room's multimaps with standard SQL Join request
     fun getWinesWithBottlesByCounty(countyId: Long) = liveData(Default) {
         emitSource(
             repository.getWineWithBottlesByCounty(countyId).map { winesWithBottles ->

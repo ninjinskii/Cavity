@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.NewStats
+package com.louis.app.cavity.ui.stats
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

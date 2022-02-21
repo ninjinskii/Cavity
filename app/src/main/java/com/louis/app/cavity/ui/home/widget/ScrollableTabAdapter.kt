@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.home.widget
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +20,6 @@ class ScrollableTabAdapter<T>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_county, parent, false)
-        //TextViewCompat.setTextAppearance(view.findViewById(R.id.county), R.style.TabTextAppearance)
-
         return TabViewHolder(view)
     }
 
@@ -34,6 +33,8 @@ class ScrollableTabAdapter<T>(
 
     fun getItem(position: Int) = tabs[position]
 
+    // We don't want any fancy animations and this list is very small
+    @SuppressLint("NotifyDataSetChanged")
     fun addAll(list: List<T>) {
         tabs.clear()
         tabs.addAll(list)

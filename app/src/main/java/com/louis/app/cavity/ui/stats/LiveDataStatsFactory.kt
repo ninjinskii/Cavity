@@ -29,21 +29,9 @@ class LiveDataStatsFactory(
     val results: List<LiveData<List<BaseStat>>>
         get() = _results
 
-    fun addStat(): LiveData<List<BaseStat>> {
-        statTypes.add(MutableLiveData(StatType.STOCK))
-
-        return createLiveStat(_results.size).also {
-            _results.add(it)
-        }
-    }
-
     fun applyStatType(position: Int, statType: StatType) {
         statTypes[position].value = statType
     }
-
-    fun getLiveStatType(position: Int): LiveData<StatType> = statTypes[position]
-
-    fun getStatType(position: Int): StatType = statTypes[position].value ?: StatType.STOCK
 
     private fun createLiveStat(position: Int) = year.switchMap { year ->
         statTypes[position].switchMap { statType ->

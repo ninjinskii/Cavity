@@ -38,6 +38,8 @@ class CountyRecyclerAdapter(
 
     override fun getItemCount() = counties.size
 
+    // Small list
+    @SuppressLint("NotifyDataSetChanged")
     fun setCounties(list: List<CountyWithWines>) {
         counties.clear()
         counties.addAll(list)

@@ -18,7 +18,7 @@ data class TastingAction(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val type: Action,
-    @ColumnInfo(name = "bottle_id") val bottleId: Long,
+    @ColumnInfo(name = "bottle_id", index = true) val bottleId: Long,
     var done: Int
 ) {
     enum class Action {

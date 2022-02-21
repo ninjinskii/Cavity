@@ -9,7 +9,6 @@ import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
@@ -59,15 +58,13 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 dateManager = DateManager(bottle)
                 grapeManager = GrapeManager(viewModelScope, repository, bottle, _userFeedback)
                 reviewManager = ReviewManager(viewModelScope, repository, bottle, _userFeedback)
-                otherInfoManager =
-                    OtherInfoManager(viewModelScope, repository, bottle, _userFeedback)
+                otherInfoManager = OtherInfoManager(repository, bottle)
             }
         } else {
             dateManager = DateManager(null)
             grapeManager = GrapeManager(viewModelScope, repository, null, _userFeedback)
             reviewManager = ReviewManager(viewModelScope, repository, null, _userFeedback)
-            otherInfoManager =
-                OtherInfoManager(viewModelScope, repository, null, _userFeedback)
+            otherInfoManager = OtherInfoManager(repository, null)
         }
     }
 
@@ -163,14 +160,12 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         step4: OtherInfoManager.Step4Bottle?
     ): Bottle? {
         return if (step1 != null && step4 != null) {
-            L.v("${_editedBottle.value}")
             Bottle(
                 id = _editedBottle.value?.id ?: 0,
                 wineId,
                 step1.vintage,
                 step1.apogee,
                 step4.isFavorite,
-                1,
                 step1.price,
                 step1.currency,
                 step4.otherInfo,

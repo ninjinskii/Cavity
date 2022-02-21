@@ -45,7 +45,6 @@ class ScrollableTab @JvmOverloads constructor(
 
         setLayoutManager(layoutManager)
         setHasFixedSize(true)
-        //adapter = tabAdapter
 
         snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(this)
@@ -183,7 +182,7 @@ class ScrollableTab @JvmOverloads constructor(
 
     fun getGaussianScale(
         childCenterX: Int,
-        minScaleOffest: Float,
+        minScaleOffset: Float,
         scaleFactor: Float,
         spreadFactor: Double,
         left: Int,
@@ -194,7 +193,7 @@ class ScrollableTab @JvmOverloads constructor(
             -(childCenterX - recyclerCenterX.toDouble()).pow(2.toDouble()) / (2 * spreadFactor.pow(
                 2.toDouble()
             ))
-        ) * scaleFactor + minScaleOffest).toFloat()
+        ) * scaleFactor + minScaleOffset).toFloat()
     }
 
     override fun onDetachedFromWindow() {

@@ -9,8 +9,8 @@ class Cavity : Application() {
 
     companion object {
         const val PHOTOS_DIRECTORY = "/wines/"
-        const val FRIENDS_DIRECTORY = "/friends/"
-        const val DOCUMENTS_DIRECTORY = "/pdfs/" // Used when retrieving a DB from back end
+//        const val FRIENDS_DIRECTORY = "/friends/"
+//        const val DOCUMENTS_DIRECTORY = "/pdfs/" // Used when retrieving a DB from back end
     }
 
     override fun onCreate() {

@@ -21,13 +21,21 @@
                 android:id="@+id/appBar"
                 layout="@layout/app_bar" />
 
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:trackThickness="1dp" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/skewBottle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackground"
                 android:paddingBottom="@dimen/small_margin">
 
                 <TextView

@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.home.widget
 
 import com.google.android.material.shape.CornerTreatment
 import com.google.android.material.shape.ShapePath
-import com.louis.app.cavity.util.L
 
 class HexagonalCornerTreatment(private val toFlatCorner: Boolean) : CornerTreatment(), Cloneable {
 

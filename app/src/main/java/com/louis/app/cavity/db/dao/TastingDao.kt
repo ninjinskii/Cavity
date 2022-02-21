@@ -30,11 +30,12 @@ interface TastingDao {
     @Query("SELECT * FROM tasting WHERE id=:tastingId")
     suspend fun getTastingById(tastingId: Long): Tasting?
 
-    @Query("SELECT * FROM tasting WHERE id=:tastingId")
-    suspend fun getTastingWithFriendsById(tastingId: Long): BoundedTasting?
-
     @Query("SELECT * FROM tasting WHERE (SELECT COUNT(*) FROM bottle WHERE tasting_id = tasting.id) = 0")
     suspend fun getEmptyTastings(): List<Tasting>
+
+    @Transaction
+    @Query("SELECT * FROM tasting WHERE id=:tastingId")
+    suspend fun getTastingWithFriendsById(tastingId: Long): BoundedTasting?
 
     @Transaction
     @Query("SELECT * FROM tasting WHERE done = 0")
@@ -56,25 +57,6 @@ data class TastingWithBottles(
         entityColumn = "tasting_id"
     )
     var bottles: List<Bottle>
-)
-
-data class TastingWithBottlesAndTastingActions(
-    @Embedded var tasting: Tasting,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "tasting_id"
-    )
-    var bottles: List<BottleWithTastingActions>,
-)
-
-data class TastingWithFriends(
-    @Embedded val tasting: Tasting,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "tasting_id",
-        associateBy = Junction(TastingXFriend::class)
-    )
-    val friends: List<Friend>
 )
 
 data class BoundedTasting(

@@ -85,24 +85,6 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
 
     private fun updatePieData(pieView: PieView, stats: List<Stat>) {
         pieView.setPieSlices(stats, anim = true)
-//        lifecycleScope.launch(Default) {
-//            val total = stats.sumOf { stat -> stat.count }
-//            val slices = stats.map { stat ->
-//                val angle = (stat.count.toFloat() / total.toFloat()) * 360f
-//
-//                if (stat is ColorStat) {
-//                    stat.label =
-//                        context?.getString(ColorUtil.getStringResForWineColor(stat.color ?: 0))
-//                            ?: ""
-//                }
-//
-//                PieView.PieSlice(stat.label, angle, stat.safeColor)
-//            }
-//
-//            withContext(Main) {
-//                pieView.setPieSlices(slices, anim = true)
-//            }
-//        }
     }
 
     override fun onDestroyView() {

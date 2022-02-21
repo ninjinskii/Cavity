@@ -23,6 +23,6 @@ import androidx.room.ForeignKey
     ]
 )
 data class TastingXFriend(
-    @ColumnInfo(name = "tasting_id") val tastingId: Long,
-    @ColumnInfo(name = "friend_id") val friendId: Long
+    @ColumnInfo(name = "tasting_id", index = true) val tastingId: Long,
+    @ColumnInfo(name = "friend_id", index = true) val friendId: Long
 )

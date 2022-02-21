@@ -158,6 +158,8 @@ class ChipLoader private constructor(
         fun preselect(preselect: Long) = apply { this.preselectedItems = listOf(preselect) }
         fun selectable(selectable: Boolean) = apply { this.selectable = selectable }
         fun emptyText(text: String?) = apply { this.onEmpty = text }
+
+        @Suppress("unused")
         fun showIconIf(block: (Chipable) -> Boolean) = apply { this.showIconIf = block }
         fun doOnClick(block: (View) -> Unit) = apply {
             this.onClickListener = block

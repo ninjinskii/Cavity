@@ -39,14 +39,6 @@ class ColorUtil(context: Context) {
             3 -> R.color.wine_rose
             else -> throw IllegalArgumentException("Wine color $wineColor does not exists")
         }
-
-        fun getStringResForWineColor(wineColor: Int) = when (wineColor) {
-            0 -> R.string.wine_color_red
-            1 -> R.string.wine_color_white
-            2 -> R.string.wine_color_sweet
-            3 -> R.string.wine_color_rose
-            else -> throw IllegalArgumentException("Wine color $wineColor does not exists")
-        }
     }
 
     private val wineColors by lazy {
@@ -82,13 +74,6 @@ class ColorUtil(context: Context) {
     }
 
     @ColorInt
-    fun getWineColor(colorInt: Int) = try {
-        wineColors.map { it.second }[colorInt]
-    } catch (e: IndexOutOfBoundsException) {
-        colorPrimary
-    }
-
-    @ColorInt
     fun getMedalColor(fReview: FReviewUiModel) = try {
         medalColors.map { it.second }[fReview.value]
     } catch (e: IndexOutOfBoundsException) {
@@ -113,6 +98,4 @@ class ColorUtil(context: Context) {
 
         return color ?: throw IllegalArgumentException("Color $colorRes absent of $cat category")
     }
-
-    fun randomSet() = colors.map { it.second }.shuffled()
 }

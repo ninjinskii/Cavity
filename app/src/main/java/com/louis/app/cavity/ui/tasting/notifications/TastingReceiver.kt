@@ -5,13 +5,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.louis.app.cavity.db.WineRepository
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-// Can't find any other way than GlobalScope to have suspending feature inside BroadcastReceiver
-@DelicateCoroutinesApi
 class TastingReceiver : BroadcastReceiver() {
 
     companion object {

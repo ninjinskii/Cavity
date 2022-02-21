@@ -13,7 +13,7 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
 
     private lateinit var pagerAdapter: StepperPagerAdapter
 
-    // Sublcasses would be confusing to read
+    // Subclasses would be confusing to read
     @Suppress("PropertyName")
     protected var _binding: FragmentStepperBinding? = null
     val binding get() = _binding!!

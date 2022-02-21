@@ -68,6 +68,8 @@ class EmptyStateView @JvmOverloads constructor(
         binding.action.text = text
     }
 
+    // Android view attributes convention
+    @Suppress("unused")
     fun setSecondaryActionText(text: String?) {
         binding.secondaryAction.setVisible(!text.isNullOrEmpty(), invisible = true)
         binding.secondaryAction.text = text

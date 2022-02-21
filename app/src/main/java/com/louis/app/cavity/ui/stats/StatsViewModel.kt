@@ -85,12 +85,8 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun stopComparison() {
+    private fun stopComparison() {
         _comparison.value = false
-    }
-
-    fun getComparisonString(): String {
-        return "${year.value} - ${comparisonYear.value}"
     }
 }
 

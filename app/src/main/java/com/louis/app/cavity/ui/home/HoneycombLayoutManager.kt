@@ -21,7 +21,7 @@ import kotlin.math.roundToInt
  * Even rows will contain rowCount items, odd rows will contain rowCount - 1 items
  * Thus rowCount must be at least 2
  *
- * Thinked to be used with HexagonalView
+ * Thought to be used with HexagonalView
  *
  * To get nice patterns, set the HexagonalView's flat attribute to true when using HORIZONTAL
  * orientation otherwise false

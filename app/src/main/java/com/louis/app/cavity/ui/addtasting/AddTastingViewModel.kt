@@ -38,8 +38,8 @@ class AddTastingViewModel(app: Application) : AndroidViewModel(app) {
     val friends = repository.getAllFriends()
 
     private var currentTasting: Tasting? = null
+    private var selectedFriends: List<Long> = emptyList()
     var tastingDate: Long = System.currentTimeMillis()
-    var selectedFriends: List<Long> = emptyList()
 
     fun submitTasting(
         opportunity: String,

@@ -8,7 +8,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.BuildConfig
 import com.louis.app.cavity.db.dao.*
 import com.louis.app.cavity.model.*
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -29,7 +28,7 @@ import kotlinx.coroutines.launch
         HistoryXFriend::class,
         TastingAction::class,
     ],
-    version = 60,
+    version = 1,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -52,16 +51,12 @@ abstract class CavityDatabase : RoomDatabase() {
         @Volatile
         private var instance: CavityDatabase? = null
 
-        // Coroutine only used in debug mode, for data prepopulation purposes
-        @DelicateCoroutinesApi
         fun getInstance(context: Context): CavityDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(context).also { instance = it }
             }
         }
 
-        // Coroutine only used in debug mode, for data prepopulation purposes
-        @DelicateCoroutinesApi
         private fun buildDatabase(context: Context): CavityDatabase {
             val isDebug = BuildConfig.DEBUG
 
@@ -79,8 +74,6 @@ abstract class CavityDatabase : RoomDatabase() {
                 .build()
         }
 
-        // We don't really care, this is for database prepopulation purposes
-        @DelicateCoroutinesApi
         private val callback = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
@@ -182,7 +175,6 @@ abstract class CavityDatabase : RoomDatabase() {
                             "20${(10..21).random()}".toInt(),
                             "20${(21..35).random()}".toInt(),
                             (0..1).random(),
-                            1,
                             price = bottles.random().toFloat(),
                             "€",
                             "",

@@ -331,14 +331,14 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             return
         }
 
-        val postion = bottles.indexOfFirst { it.id == checkedChipBottleId }
+        val position = bottles.indexOfFirst { it.id == checkedChipBottleId }
 
-        if (postion == -1) {
+        if (position == -1) {
             return
         }
 
         val scroller = JumpSmoothScroller(requireContext(), 10).apply {
-            targetPosition = postion
+            targetPosition = position
         }
 
         binding.bottlesList.layoutManager?.startSmoothScroll(scroller)

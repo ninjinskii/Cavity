@@ -20,7 +20,6 @@ data class Bottle(
     val vintage: Int,
     val apogee: Int,
     @ColumnInfo(name = "is_favorite") var isFavorite: Int,
-    val count: Int, // is going to disappear
     val price: Float,
     val currency: String,
     @ColumnInfo(name = "other_info") var otherInfo: String,

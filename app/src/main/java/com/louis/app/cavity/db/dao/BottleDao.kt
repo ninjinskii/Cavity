@@ -64,10 +64,6 @@ interface BottleDao {
     @Query("SELECT * FROM bottle")
     fun getBoundedBottles(): LiveData<List<BoundedBottle>>
 
-    @Transaction
-    @Query("SELECT bottle.* FROM wine, bottle WHERE wine.id = bottle.wine_id AND bottle.consumed = 0")
-    suspend fun getBoundedBottlesNotLive(): List<BoundedBottle>
-
     @Query("DELETE FROM bottle")
     suspend fun deleteAll()
 }
@@ -96,21 +92,6 @@ data class BottleWithTastingActions(
         entityColumn = "bottle_id"
     )
     val tastingActions: List<TastingAction>,
-)
-
-data class BottleWithHistoryEntries(
-    @Embedded val bottle: Bottle,
-    @Relation(
-        entity = Wine::class,
-        parentColumn = "wine_id",
-        entityColumn = "id"
-    )
-    val wine: Wine,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "bottle_id"
-    )
-    val historyEntries: List<HistoryEntry>
 )
 
 data class BoundedBottle(

@@ -42,10 +42,6 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
         bottle.tastingId = tastingId
 
         viewModelScope.launch(IO) {
-//            if (tastingId == null) {
-//                repository.deleteTastingActionsForBottle(bottle.id)
-//            }
-
             repository.updateBottle(bottle)
         }
     }

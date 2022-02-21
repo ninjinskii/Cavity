@@ -12,7 +12,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
 import com.louis.app.cavity.db.dao.Year
-import com.louis.app.cavity.ui.NewStats.StatsRecyclerAdapter
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
@@ -61,7 +60,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         }
 
         with(binding.years) {
-            background = null // Remove background for elegant disapear animation
+            background = null // Remove background for elegant disappear animation
             adapter = tabAdapter
             addOnTabChangeListener {
                 statsViewModel.setYear(tabAdapter.getItem(it))
@@ -105,25 +104,6 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         statsViewModel.details.observe(viewLifecycleOwner) {
             statsAdapter.submitList(it)
         }
-
-//        statsViewModel.comparison.observe(viewLifecycleOwner) {
-//            if (!it) statsAdapter.comparisonDetails = emptyList()
-//
-//            lifecycleScope.launch(Main) {
-//                delay(300)
-//
-//                with(binding.recyclerView) {
-//                    val animator = itemAnimator
-//                    itemAnimator = null
-//                    statsAdapter.notifyItemRangeChanged(0, statsAdapter.itemCount - 1)
-//
-//                    lifecycleScope.launch(Main) {
-//                        delay(200)
-//                        itemAnimator = animator
-//                    }
-//                }
-//            }
-//        }
     }
 
     private fun observe() {

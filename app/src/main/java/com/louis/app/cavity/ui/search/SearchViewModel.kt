@@ -46,11 +46,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     var selectedReviews = emptyList<Review>()
         private set
 
-    var currentBeyondDate: Long? = null
-        private set
-
-    var currentUntilDate: Long? = null
-        private set
+    private var currentBeyondDate: Long? = null
+    private var currentUntilDate: Long? = null
 
     fun getAllCounties() = repository.getAllCounties()
 

@@ -20,7 +20,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.util.dpToPx
 import com.louis.app.cavity.util.spToPx
-import kotlinx.android.synthetic.main.empty_state.view.*
 import kotlin.math.cos
 import kotlin.math.roundToInt
 
@@ -94,6 +93,8 @@ class SliceBarView @JvmOverloads constructor(
         }
     }
 
+    // Android view attributes convention
+    @Suppress("unused")
     fun setWaitAnimationTriggerBeforeDraw(wait: Boolean) {
         this.waitAnimationTriggerBeforeDraw = wait
     }

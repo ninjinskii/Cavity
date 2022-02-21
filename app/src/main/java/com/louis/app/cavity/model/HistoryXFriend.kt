@@ -23,6 +23,6 @@ import androidx.room.ForeignKey
     ]
 )
 data class HistoryXFriend(
-    @ColumnInfo(name = "history_entry_id") val historyEntryId: Long,
-    @ColumnInfo(name = "friend_id") val friendId: Long
+    @ColumnInfo(name = "history_entry_id", index = true) val historyEntryId: Long,
+    @ColumnInfo(name = "friend_id", index = true) val friendId: Long
 )

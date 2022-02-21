@@ -109,34 +109,6 @@ class RuledTextInputLayout @JvmOverloads constructor(
             if (!hasFocus) validate(requestFocusIfFail = false)
         }
     }
-
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    override fun onDraw(canvas: Canvas?) {
-//        super.onDraw(canvas)
-//
-//        val paint = Paint(ANTI_ALIAS_FLAG).apply {
-//            style = Paint.Style.STROKE
-//            color = Color.RED
-//            strokeWidth = 20f
-//        }
-//
-//        val paint2 = Paint(ANTI_ALIAS_FLAG).apply {
-//            style = Paint.Style.STROKE
-//            color = Color.GREEN
-//            strokeWidth = 40f
-//        }
-//
-//        canvas?.apply {
-//            val bg = editText?.background as MaterialShapeDrawable
-//            val a = bg.transparentRegion?.boundaryPath
-//            clipOutPath(a ?: return) // if < api26: clipPath(path, Region.Op.XOR)
-//            drawLine(0f, 0f, 150f, 150f, paint)
-//            drawLine(150f, 150f, 300f, 300f, paint2)
-//            //editText?.background = ColorDrawable(Color.RED)
-//            //clipOutPath(a ?: return)
-//        }
-//    }
-
 }
 
 data class Rule(@StringRes val onTestFailed: Int, val test: (String) -> Boolean)

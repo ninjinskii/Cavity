@@ -3,7 +3,6 @@ package com.louis.app.cavity.db
 import android.app.Application
 import androidx.room.withTransaction
 import com.louis.app.cavity.model.*
-import com.louis.app.cavity.util.L
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers.IO
@@ -49,15 +48,12 @@ class WineRepository private constructor(app: Application) {
 
     // Wine
     suspend fun insertWine(wine: Wine) = wineDao.insertWine(wine)
-    suspend fun insertWines(wines: List<Wine>) = wineDao.insertWines(wines)
+    private suspend fun insertWines(wines: List<Wine>) = wineDao.insertWines(wines)
     suspend fun updateWine(wine: Wine) = wineDao.updateWine(wine)
-    suspend fun deleteWine(wine: Wine) = wineDao.deleteWine(wine)
     suspend fun hideWineById(wineId: Long) = wineDao.hideWineById(wineId)
     suspend fun deleteWineById(wineId: Long) = wineDao.deleteWineById(wineId)
     fun getWineById(wineId: Long) = wineDao.getWineById(wineId)
     suspend fun getWineByIdNotLive(wineId: Long) = wineDao.getWineByIdNotLive(wineId)
-    suspend fun getWineFullNamingByIdNotLive(wineId: Long) =
-        wineDao.getWineFullNamingByIdNotLive(wineId)
 
     fun getNamingsForCounty(countyId: Long) = wineDao.getNamingsForCounty(countyId)
     fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
@@ -65,8 +61,7 @@ class WineRepository private constructor(app: Application) {
     fun getCountiesWithWines() = countyDao.getCountiesWithWines()
 
     fun getBoundedBottles() = bottleDao.getBoundedBottles()
-    suspend fun getBoundedBottlesNotLive() = bottleDao.getBoundedBottlesNotLive()
-    suspend fun deleteAllWines() = wineDao.deleteAll()
+    private suspend fun deleteAllWines() = wineDao.deleteAll()
 
 
     // County
@@ -90,13 +85,12 @@ class WineRepository private constructor(app: Application) {
     suspend fun getAllCountiesNotLive() = countyDao.getAllCountiesNotLive()
     suspend fun updateCounties(counties: List<County>) = countyDao.updateCounties(counties)
     suspend fun deleteCounty(countyId: Long) = countyDao.deleteCounty(countyId)
-    suspend fun deleteAllCounties() = countyDao.deleteAll()
+    private suspend fun deleteAllCounties() = countyDao.deleteAll()
 
     // Bottle
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
-    suspend fun insertBottles(bottles: List<Bottle>) = bottleDao.insertBottles(bottles)
+    private suspend fun insertBottles(bottles: List<Bottle>) = bottleDao.insertBottles(bottles)
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
-    suspend fun updateBottles(bottles: List<Bottle>) = bottleDao.updateBottles(bottles)
     suspend fun deleteBottles(bottles: List<Bottle>) = bottleDao.deleteBottles(bottles)
     suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)
     fun getBottleById(bottleId: Long) = bottleDao.getBottleById(bottleId)
@@ -113,9 +107,6 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun getFReviewAndReviewForBottleNotLive(bottleId: Long) =
         fReviewDao.getFReviewAndReviewForBottleNotLive(bottleId)
-
-    suspend fun getFReviewsForBottleNotLive(bottleId: Long) =
-        fReviewDao.getFReviewsForBottleNotLive(bottleId)
 
     suspend fun revertBottleConsumption(bottleId: Long) {
         database.withTransaction {
@@ -146,7 +137,7 @@ class WineRepository private constructor(app: Application) {
 
     fun getAllBuyLocations() = bottleDao.getAllBuyLocations()
 
-    suspend fun deleteAllBottles() = bottleDao.deleteAll()
+    private suspend fun deleteAllBottles() = bottleDao.deleteAll()
 
     // Grape
     suspend fun updateGrape(grape: Grape) {
@@ -169,24 +160,12 @@ class WineRepository private constructor(app: Application) {
     fun getAllGrapes() = grapeDao.getAllGrapes()
     suspend fun getAllGrapesNotLive() = grapeDao.getAllGrapesNotLive()
     fun getGrapeWithQuantifiedGrapes() = grapeDao.getGrapeWithQuantifiedGrapes()
-    suspend fun insertQGrape(qGrape: QGrape) = qGrapeDao.insertQGrape(qGrape)
-    suspend fun updateQuantifiedGrape(qGrape: QGrape) = qGrapeDao.updateQGrape(qGrape)
-    suspend fun deleteQuantifiedGrape(qGrape: QGrape) = qGrapeDao.deleteQGrape(qGrape)
 
     fun getQGrapesAndGrapeForBottle(bottleId: Long) =
         qGrapeDao.getQGrapesAndGrapeForBottle(bottleId)
 
     suspend fun getQGrapesAndGrapeForBottleNotLive(bottleId: Long) =
         qGrapeDao.getQGrapesAndGrapeForBottleNotLive(bottleId)
-
-    suspend fun insertGrapeAndQGrape(bottleId: Long, grape: Grape, qGrapeValue: Int) {
-        if (!database.inTransaction()) {
-            throw IllegalStateException("This method should be called inside a transaction")
-        }
-
-        val grapeId = insertGrape(grape)
-        insertQGrape(QGrape(bottleId, grapeId, qGrapeValue))
-    }
 
     suspend fun replaceQGrapesForBottle(bottleId: Long, qGrapes: List<QGrape>) {
         if (!database.inTransaction()) {
@@ -197,7 +176,7 @@ class WineRepository private constructor(app: Application) {
         qGrapeDao.insertQGrape(qGrapes)
     }
 
-    suspend fun deleteAllGrapes() = grapeDao.deleteAll()
+    private suspend fun deleteAllGrapes() = grapeDao.deleteAll()
 
 
     // Review
@@ -221,21 +200,8 @@ class WineRepository private constructor(app: Application) {
     fun getAllReviews() = reviewDao.getAllReviews()
     suspend fun getAllReviewsNotLive() = reviewDao.getAllReviewsNotLive()
     fun getReviewWithFilledReviews() = reviewDao.getReviewWithFilledReviews()
-    suspend fun insertFilledReview(fReview: FReview) = fReviewDao.insertFReview(fReview)
-    suspend fun insertFilledReviews(fReviews: List<FReview>) = fReviewDao.insertFReviews(fReviews)
-    suspend fun updateFilledReview(fReview: FReview) = fReviewDao.updateFReview(fReview)
-    suspend fun deleteFilledReview(fReview: FReview) = fReviewDao.deleteFReview(fReview)
-    suspend fun deleteFReviewByPk(bottleId: Long, reviewId: Long) =
-        fReviewDao.deleteFReviewByPk(bottleId, reviewId)
-
-    suspend fun insertReviewAndFReview(bottleId: Long, review: Review, fReviewValue: Int) {
-        if (!database.inTransaction()) {
-            throw IllegalStateException("This method should be called inside a transaction")
-        }
-
-        val reviewId = insertReview(review)
-        insertFilledReview(FReview(bottleId, reviewId, fReviewValue))
-    }
+    private suspend fun insertFilledReviews(fReviews: List<FReview>) =
+        fReviewDao.insertFReviews(fReviews)
 
     suspend fun replaceFReviewsForBottle(bottleId: Long, fReviews: List<FReview>) {
         if (!database.inTransaction()) {
@@ -246,8 +212,8 @@ class WineRepository private constructor(app: Application) {
         fReviewDao.insertFReviews(fReviews)
     }
 
-    suspend fun deleteAllReviews() = reviewDao.deleteAll()
-    suspend fun deleteAllFReviews() = fReviewDao.deleteAll()
+    private suspend fun deleteAllReviews() = reviewDao.deleteAll()
+    private suspend fun deleteAllFReviews() = fReviewDao.deleteAll()
 
     // Friend
     suspend fun insertFriend(friend: Friend) {
@@ -268,12 +234,8 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun deleteFriend(friend: Friend) = friendDao.deleteFriend(friend)
     fun getAllFriends() = friendDao.getAllFriends()
-    suspend fun getAllFriendsNotLive() = friendDao.getAllFriendsNotLive()
 
-    suspend fun insertFriendHistoryXRef(fxh: List<HistoryXFriend>) =
-        historyXFriendDao.insertHistoryXFriend(fxh)
-
-    suspend fun insertFriendHistoryXRef(fxh: HistoryXFriend) =
+    private suspend fun insertFriendHistoryXRef(fxh: List<HistoryXFriend>) =
         historyXFriendDao.insertHistoryXFriend(fxh)
 
 
@@ -281,7 +243,6 @@ class WineRepository private constructor(app: Application) {
     suspend fun updateEntry(entry: HistoryEntry) = historyDao.updateEntry(entry)
     fun getAllEntries() = historyDao.getAllEntries()
     fun getYears() = historyDao.getYears()
-    fun getBoundedEntriesNotPagedNotLive() = historyDao.getBoundedEntriesNotPagedNotLive()
     fun getEntriesByType(type1: Int, type2: Int) = historyDao.getEntriesByType(type1, type2)
     fun getEntriesForBottle(bottleId: Long) = historyDao.getEntriesForBottle(bottleId)
     fun getEntriesForBottleNotPaged(bottleId: Long) =
@@ -290,10 +251,6 @@ class WineRepository private constructor(app: Application) {
     fun getEntriesForDate(date: Long) = historyDao.getEntriesForDate(date)
     fun getFavoriteEntries() = historyDao.getFavoriteEntries()
     fun getOldestEntryDate() = historyDao.getOldestEntryDate()
-    fun getAllEntriesNotPagedNotLive() = historyDao.getAllEntriesNotPagedNotLive()
-
-    fun getBoundedEntriesBetween(start: Long, end: Long) =
-        historyDao.getBoundedEntriesBetween(start, end)
 
     suspend fun clearExistingReplenishments(bottleId: Long) =
         historyDao.clearExistingReplenishments(bottleId)
@@ -310,7 +267,7 @@ class WineRepository private constructor(app: Application) {
         insertFriendHistoryXRef(historyXFriends)
     }
 
-    suspend fun deleteAllHistoryEntries() = historyDao.deleteAll()
+    private suspend fun deleteAllHistoryEntries() = historyDao.deleteAll()
 
 
     // Stats
@@ -353,12 +310,10 @@ class WineRepository private constructor(app: Application) {
     // Tastings
     suspend fun insertTasting(tasting: Tasting) = tastingDao.insertTasting(tasting)
     suspend fun updateTasting(tasting: Tasting) = tastingDao.updateTasting(tasting)
-    suspend fun deleteTasting(tasting: Tasting) = tastingDao.deleteTasting(tasting)
     suspend fun deleteTastings(tastings: List<Tasting>) = tastingDao.deleteTastings(tastings)
     suspend fun getAllTastingsNotLive() = tastingDao.getAllTastingsNotLive()
     suspend fun getEmptyTastings() = tastingDao.getEmptyTastings()
     fun getUndoneTastings() = tastingDao.getUndoneTastings()
-    fun getLastTasting() = tastingDao.getLastTasting()
     suspend fun getTastingById(tastingId: Long) = tastingDao.getTastingById(tastingId)
     suspend fun getBoundedTastingById(tastingId: Long) =
         tastingDao.getTastingWithFriendsById(tastingId)
@@ -387,15 +342,14 @@ class WineRepository private constructor(app: Application) {
     suspend fun updateTastingAction(tastingAction: TastingAction) =
         tastingActionDao.updateTastingAction(tastingAction)
 
-    suspend fun deleteTastingAction(tastingAction: TastingAction) =
-        tastingActionDao.deleteTastingAction(tastingAction)
-
     suspend fun getTastingActionById(tastingActionId: Long) =
         tastingActionDao.getTastingActionById(tastingActionId)
 
     suspend fun deleteTastingActionsForBottle(bottleId: Long) =
         tastingActionDao.deleteTastingActionsForBottle(bottleId)
 
+    // This is called from a background thread, so blocking operations are not that bad
+    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun importDbFromExternalDir(externalDirPath: String) {
         val file = File("$externalDirPath/db.json")
 
@@ -414,7 +368,6 @@ class WineRepository private constructor(app: Application) {
                 var readString: String? = buffreader.readLine()
 
                 while (readString != null) {
-                    L.v("read line")
                     data.append(readString)
                     readString = buffreader.readLine()
                 }

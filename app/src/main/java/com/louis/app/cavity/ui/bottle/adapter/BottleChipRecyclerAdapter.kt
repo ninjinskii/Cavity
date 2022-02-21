@@ -1,10 +1,10 @@
 package com.louis.app.cavity.ui.bottle.adapter
 
 import android.content.Context
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,12 +16,8 @@ class BottleChipRecyclerAdapter(context: Context, private val onBottleClick: (Lo
     ListAdapter<Bottle, BottleChipRecyclerAdapter.BottleChipViewHolder>(BottleItemDiffCallback()) {
 
     private val glassIcon by lazy {
-        // TODO: replace (careful on what context to use) with extensions.kt themeColor
-        val color = TypedValue().run {
-            context.theme.resolveAttribute(R.attr.colorOnSurface, this, true)
-            data
-        }
-
+        val resources = context.resources
+        val color = ResourcesCompat.getColor(resources, R.color.high_emphasis, context.theme)
         ContextCompat.getDrawable(context, R.drawable.ic_glass)?.also { it.setTint(color) }
     }
 

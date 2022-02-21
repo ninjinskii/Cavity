@@ -115,8 +115,7 @@ class BottleActionAdapter(
                 }
 
                 val checkbox = MaterialCheckBox(itemView.context).apply {
-                    //setTextAppearance(R.style.TextAppearance_Cavity_Body2)
-                    // We need to use typeface here, cause Checkbox textAppearance does not work programatically
+                    // We need to use typeface here, cause Checkbox textAppearance does not work programmatically
                     typeface = ResourcesCompat.getFont(context, R.font.forum)
                     textSize = this@BottleActionViewHolder.textSize
                     text = itemView.context.getString(actionText)

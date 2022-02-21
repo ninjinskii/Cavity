@@ -56,17 +56,6 @@
         app:layout_constraintEnd_toStartOf="@id/buttonOptions"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <!--    <ImageView-->
-    <!--        android:id="@+id/reviewType"-->
-    <!--        android:layout_width="@dimen/small_icon"-->
-    <!--        android:layout_height="@dimen/small_icon"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toStartOf="@id/buttonOptions"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        app:tint="?attr/colorOnBackground"-->
-    <!--        tools:src="@drawable/ic_grade" />-->
-
     <ImageButton
         android:id="@+id/buttonOptions"
         android:layout_width="@dimen/medium_icon"

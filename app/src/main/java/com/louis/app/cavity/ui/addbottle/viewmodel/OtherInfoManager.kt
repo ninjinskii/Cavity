@@ -1,20 +1,15 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import androidx.annotation.IdRes
-import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
-import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.toInt
-import kotlinx.coroutines.CoroutineScope
 
 class OtherInfoManager(
-    private val viewModelScope: CoroutineScope,
     private val repository: WineRepository,
-    editedBottle: Bottle?,
-    private val _userFeedback: MutableLiveData<Event<Int>>
+    editedBottle: Bottle?
 ) {
     private var pdfPath: String = ""
 

@@ -11,6 +11,7 @@ import com.google.android.material.button.MaterialButton
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSettingsBinding
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
@@ -44,6 +45,10 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
             it.getContentIfNotHandled()?.let { stringRes ->
                 binding.coordinator.showSnackbar(stringRes)
             }
+        }
+
+        settingsViewModel.isLoading.observe(viewLifecycleOwner) {
+            binding.progressBar.setVisible(it)
         }
     }
 

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
-import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -21,7 +20,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.switchMap
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -74,7 +72,7 @@ inline fun View.doOnEachNextLayout(crossinline action: (view: View) -> Unit) {
     }
 }
 
-fun NestedScrollView.isViewVisible(view: View) : Boolean {
+fun NestedScrollView.isViewVisible(view: View): Boolean {
     val scrollBounds = Rect()
     getHitRect(scrollBounds)
 
@@ -83,10 +81,6 @@ fun NestedScrollView.isViewVisible(view: View) : Boolean {
 
 fun Context.dpToPx(dp: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
-}
-
-fun Context.pxToDp(px: Int): Float {
-    return px / (resources.displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)
 }
 
 fun Context.pxToSp(px: Int): Float {
@@ -109,10 +103,12 @@ fun Context.themeColor(
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <T> ChipGroup.collectAs() = checkedChipIds.map {
     findViewById<Chip>(it).getTag(R.string.tag_chip_id) as T
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <T> ChipGroup.collectAsSingle() =
     findViewById<Chip>(checkedChipId)?.getTag(R.string.tag_chip_id) as T?
 
@@ -131,17 +127,6 @@ operator fun <T> MutableLiveData<MutableList<T>>.minusAssign(item: T) {
     this.value?.let {
         it.remove(item)
         this.value = value // notify observers
-    }
-}
-
-fun <A, B, Result> LiveData<A>.nestedSwitchMap(
-    innerTarget: LiveData<B>,
-    value: (A, B) -> LiveData<Result>
-): LiveData<Result> {
-    return this.switchMap { a ->
-        innerTarget.switchMap { b ->
-            value(a, b)
-        }
     }
 }
 
@@ -185,10 +170,6 @@ fun <A, B, Result> LiveData<A>.combineAsync(
     return result
 }
 
-fun <T> MutableLiveData<MutableList<T>>.clearList() {
-    this.value = mutableListOf()
-}
-
 // BottomSheet
 fun BottomSheetBehavior<ConstraintLayout>.isCollapsed() =
     state == BottomSheetBehavior.STATE_COLLAPSED
@@ -213,9 +194,4 @@ fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false
         toolbar.title = getString(R.string.app_name)
         toolbar.setNavigationOnClickListener(null)
     }
-}
-
-// String
-fun String.isNotBlankOrNull(): String? {
-    return if (this.isBlank()) null else this
 }

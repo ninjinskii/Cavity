@@ -21,10 +21,6 @@ interface FilledReviewDao {
 
     @Transaction
     @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId")
-    suspend fun getFReviewsForBottleNotLive(bottleId: Long): List<FReview>
-
-    @Transaction
-    @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId")
     fun getFReviewAndReviewForBottle(bottleId: Long): LiveData<List<FReviewAndReview>>
 
     @Transaction
