@@ -35,8 +35,8 @@
     <string name="app_name">Cavity</string>
     <string name="consumed">this bottle has been drunk.</string>
     <string name="home">Home</string>
-    <string name="add_wine">Add a wine</string>
-    <string name="add_bottle">Add a bottle</string>
+    <string name="add_wine">Add wine</string>
+    <string name="add_bottle">Add bottle</string>
     <string name="delete_wine">Delete the wine and its bottles</string>
     <string name="edit_wine">Edit wine</string>
     <string name="edit_wine_title">Modifier un vin</string>
@@ -47,7 +47,7 @@
     <string name="bio_wine">Organic wine</string>
     <string name="wine_photo">Wine photo</string>
     <string name="add_photo">Add photo</string>
-    <string name="take_photo">Photographr</string>
+    <string name="take_photo">Photograph</string>
     <string name="naming">Appellation</string>
     <string name="name">Name</string>
     <string name="county">Region</string>
