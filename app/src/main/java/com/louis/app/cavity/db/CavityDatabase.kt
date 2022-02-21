@@ -5,8 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.louis.app.cavity.BuildConfig
 import com.louis.app.cavity.db.dao.*
 import com.louis.app.cavity.model.*
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -50,23 +52,35 @@ abstract class CavityDatabase : RoomDatabase() {
         @Volatile
         private var instance: CavityDatabase? = null
 
+        // Coroutine only used in debug mode, for data prepopulation purposes
+        @DelicateCoroutinesApi
         fun getInstance(context: Context): CavityDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(context).also { instance = it }
             }
         }
 
+        // Coroutine only used in debug mode, for data prepopulation purposes
+        @DelicateCoroutinesApi
         private fun buildDatabase(context: Context): CavityDatabase {
+            val isDebug = BuildConfig.DEBUG
+
             return Room.databaseBuilder(
                 context.applicationContext,
                 CavityDatabase::class.java,
                 "cavity.db"
             )
-                .fallbackToDestructiveMigration()
-                .addCallback(callback)
+                .apply {
+                    if (isDebug) {
+                        fallbackToDestructiveMigration()
+                        addCallback(callback)
+                    }
+                }
                 .build()
         }
 
+        // We don't really care, this is for database prepopulation purposes
+        @DelicateCoroutinesApi
         private val callback = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
@@ -81,7 +95,6 @@ abstract class CavityDatabase : RoomDatabase() {
                 val friendDao = instance?.friendDao()
                 val tastingDao = instance?.tastingDao()
                 val tastingFriendXRefDao = instance?.tastingXFriendDao()
-                val friendHistoryEntryXRef = instance?.historyXFriendDao()
 
                 GlobalScope.launch(IO) {
                     with(countyDao!!) {
@@ -238,10 +251,8 @@ abstract class CavityDatabase : RoomDatabase() {
                     }
 
                     with(historyDao!!) {
-                        val historyBottles = 300L..400L
                         val twenyone = 1609459200000..System.currentTimeMillis()
                         val tweny = 1577836800000L..1609459199000L
-                        val historyBottlesLastYear = 401L..29999L
                         val types = listOf(0, 0, 0, 1, 1, 1, 2, 3)
 
                         val entries2021 = List(99) {

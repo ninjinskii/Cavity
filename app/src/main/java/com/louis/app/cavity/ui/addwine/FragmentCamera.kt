@@ -95,7 +95,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     }
 
     private fun bindPreview(cameraProvider: ProcessCameraProvider) {
-        val metrics = DisplayMetrics().also { binding.previewView.display.getRealMetrics(it) }
+        val metrics = DisplayMetrics()
         val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
         val rotation = binding.previewView.display.rotation
 

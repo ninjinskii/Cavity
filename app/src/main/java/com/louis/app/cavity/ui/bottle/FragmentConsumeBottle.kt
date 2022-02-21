@@ -65,14 +65,7 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
     }
 
     private fun observe() {
-        val allFriends = mutableSetOf<Friend>()
-        val alreadyInflated = mutableSetOf<Friend>()
-
         consumeGiftBottleViewModel.getAllFriends().observe(viewLifecycleOwner) {
-//            allFriends.addAll(it)
-//            val toInflate = allFriends - alreadyInflated
-//            alreadyInflated.addAll(toInflate)
-
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
