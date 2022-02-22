@@ -20,6 +20,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.Wine
+import java.util.concurrent.ExecutionException
 
 object TastingNotifier {
     private const val CHANNEL_ID = "com.louis.app.cavity.TASTING_CHANNEL"
@@ -66,7 +67,11 @@ object TastingNotifier {
                 .load(Uri.parse(wine.imgPath))
                 .submit()
 
-            bitmap = futureBitmap.get()
+            try {
+                bitmap = futureBitmap.get()
+            } catch (e: ExecutionException) {
+                // Do nothing
+            }
         }
 
         val content = when (tastingAction.type) {
