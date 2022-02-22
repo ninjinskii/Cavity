@@ -78,7 +78,7 @@
     <string name="select_grapes">Select the grape varieties</string>
     <string name="skip">Skip</string>
     <string name="add_grape">Add grape variety</string>
-    <string name="empty_grape">Choose the grape varieties contained in this bottle, or create new ones if they are missing</string>
+    <string name="empty_grape_explanation">Choose the grape varieties contained in this bottle, or create new ones if they are missing</string>
     <string name="percentage">%1$d %%</string>
     <string name="buying">Purchase</string>
     <string name="price">Price</string>
@@ -88,7 +88,7 @@
     <string name="buying_date">Purchase date</string>
     <string name="contest_name">Contest name</string>
     <string name="add_review">Add contest</string>
-    <string name="empty_review">Enter the ratings and contests for this bottle, or create new ones if they are missing</string>
+    <string name="empty_review_explanation">Enter the ratings and contests for this bottle, or create new ones if they are missing</string>
     <string name="reviews">Contests</string>
     <string name="select_reviews">Choose a review</string>
     <string name="rate100">100</string>
@@ -185,8 +185,10 @@
     <string name="friends">Friends</string>
     <string name="cannot_delete">Names don\'t match.</string>
     <string name="empty_county">No region</string>
-    <string name="empty_grape_manager">No grape variety</string>
-    <string name="empty_review_manager">No rating or contest</string>
+    <string name="empty_grape_manager">Add grape varieties, then use them when adding a bottle</string>
+    <string name="empty_grape">No grape variety</string>
+    <string name="empty_review_manager">Add ratings or contest, then use them when adding a bottle</string>
+    <string name="empty_review">No rating or contest</string>
     <string name="empty_friend">Add friends to remember who you share your bottles with</string>
     <string name="add_image_to_friend">Add image</string>
 

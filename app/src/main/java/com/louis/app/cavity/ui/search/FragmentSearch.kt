@@ -184,7 +184,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .into(filtersBinding.grapeChipGroup)
                 .preselect(preselectedGrapes)
                 .doOnClick { prepareGrapeFilters() }
-                .emptyText(getString(R.string.empty_grape_manager))
+                .emptyText(getString(R.string.empty_grape))
                 .build()
                 .go()
 
@@ -199,7 +199,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .into(filtersBinding.reviewChipGroup)
                 .preselect(preselectedReviews)
                 .doOnClick { prepareReviewFilters() }
-                .emptyText(getString(R.string.empty_review_manager))
+                .emptyText(getString(R.string.empty_review))
                 .build()
                 .go()
         }

@@ -78,7 +78,7 @@
             app:layout_constraintStart_toStartOf="@id/reviewList"
             app:layout_constraintTop_toTopOf="@id/reviewList"
             app:secondaryActionText="@string/skip"
-            app:text="@string/empty_review" />
+            app:text="@string/empty_review_explanation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

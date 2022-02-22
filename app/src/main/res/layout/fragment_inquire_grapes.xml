@@ -75,6 +75,6 @@
         app:layout_constraintStart_toStartOf="@id/grapeList"
         app:layout_constraintTop_toTopOf="@id/grapeList"
         app:secondaryActionText="@string/skip"
-        app:text="@string/empty_grape" />
+        app:text="@string/empty_grape_explanation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
