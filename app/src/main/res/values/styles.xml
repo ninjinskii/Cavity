@@ -306,4 +306,10 @@
     <style name="ApplyMyFontOnTooltipsPlz">
         <item name="fontFamily">@font/forum</item>
     </style>
+
+    <!-- Splash Screen Android 12+ only, see styles-v31/styles.xml -->
+    <!-- Android 12+ -->
+    <style name="Theme.Cavity.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
 </resources>

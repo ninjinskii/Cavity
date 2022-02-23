@@ -5,7 +5,7 @@ apply plugin: "org.jlleitschuh.gradle.ktlint"
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
-    compileSdkVersion 31
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.louis.app.cavity"
@@ -79,7 +79,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-paging:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    
+
     // Glide
     implementation "com.github.bumptech.glide:glide:4.11.0"
     annotationProcessor "com.github.bumptech.glide:compiler:4.11.0"
@@ -93,7 +93,7 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     // Leak Canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.6"
+    //debugImplementation "com.squareup.leakcanary:leakcanary-android:2.6"
 
     // Moshi
     implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
@@ -104,4 +104,6 @@ dependencies {
     // Animated TextView
     implementation "com.robinhood.ticker:ticker:2.0.4"
 
+    // Splash Screen
+    implementation "androidx.core:core-splashscreen:1.0.0-beta01"
 }

@@ -2,24 +2,28 @@ package com.louis.app.cavity.ui
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
-import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.tasting.TastingViewModel
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.showSnackbar
-import com.louis.app.cavity.util.themeColor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private lateinit var binding: ActivityMainBinding
@@ -28,7 +32,18 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private val tastingViewModel: TastingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val isAndroid12 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+        if (!isAndroid12) {
+            setTheme(R.style.CavityTheme)
+        }
+
         super.onCreate(savedInstanceState)
+
+        if (isAndroid12) {
+            initSplashScreen()
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
         setupNavigation()
@@ -37,6 +52,31 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         if (hasNavigationRail()) {
             lockDrawer()
         }
+    }
+
+    private fun initSplashScreen() {
+        var isSplashScreenFinished = false
+
+        installSplashScreen()
+
+        lifecycleScope.launch(Dispatchers.Default) {
+            delay(1900)
+            isSplashScreenFinished = true
+        }
+
+        val content: View = findViewById(android.R.id.content)
+        content.viewTreeObserver.addOnPreDrawListener(
+            object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    return if (isSplashScreenFinished) {
+                        content.viewTreeObserver.removeOnPreDrawListener(this)
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }
+        )
     }
 
     private fun setupNavigation() {
