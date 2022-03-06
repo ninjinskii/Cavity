@@ -1,6 +1,6 @@
 name: Buil & deploy to Play Store
 
-# TODO: check if ci is triggering when master is updated wihtout a tag
+# TODO: Remove master branches when ready
 on:
   push:
     branches: 
@@ -22,6 +22,9 @@ jobs:
 
       - name: Grant rights
         run: chmod +x build.gradle
+
+      - name: Grant rights gradlew
+        run: chmod +x ./gradlew
 
       - name: Gradle build
         run: ./gradlew build
