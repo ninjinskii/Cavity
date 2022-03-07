@@ -179,8 +179,9 @@ function makeBottles() {
       buyDate: getBottleBuyDate(bottle),
       tastingTasteComment: "",
       pdfPath: bottle.pdf_path || "",
+      bottleSize: "NORMAL",
       consumed: bottle.consumed,
-      otherInfo: "",
+      otherInfo: bottle.commentaireNote.trim(),
       tastingId: null,
     };
 
