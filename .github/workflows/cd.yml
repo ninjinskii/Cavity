@@ -20,6 +20,9 @@ jobs:
         with:
           java-version: 11
 
+      - name: Try to get tag if available
+        run: echo '${{ GITHUB_REF }}'
+
       - name: Grant rights
         run: chmod +x build.gradle
 
