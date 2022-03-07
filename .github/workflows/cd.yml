@@ -3,8 +3,6 @@ name: Build & deploy to Play Store
 # TODO: Remove master branches when ready
 on:
   push:
-    branches: 
-      - master
     tags:
       - '*'
 
@@ -19,9 +17,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-
-      - name: Try to get tag if available
-        run: echo 'RELEASE_VERSION=${GITHUB_REF}' >> $GITHUB_ENV && echo '${{ env.RELEASE_VERSION }}'
 
       - name: Grant rights gradlew
         run: chmod +x ./gradlew
@@ -50,5 +45,6 @@ jobs:
           serviceAccountJson: service_account.json
           packageName: com.louis.app.cavity
           releaseFile: app/build/outputs/bundle/release/app-release.aab
+          releaseName: ${{ GITHUB_REF_NAME }}
           track: production
           whatsNewDirectory: whatsnew/
