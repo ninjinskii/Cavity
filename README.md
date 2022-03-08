@@ -6,11 +6,7 @@
 Cavity is a wine cellar manager for Android.
 It follows Material Design 2 principles to have a clear and simple user interface.
 
-<p width="200px">
-  [![Get it on Google Play](/assets/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.louis.app.cavity)
-</p>
-
-
+[<img alt="Get it on Google Plau" width="200px" src="/assets/google-play-badge.png" />](https://play.google.com/store/apps/details?id=com.louis.app.cavity)
 
 ## Features
 - Stock management
@@ -32,7 +28,7 @@ The app is designed to be used in dark mode, but the light version is also suppo
 Clone the project, and you're ready to build and run it via Android Studio.
 
 ## Architecture
-Cavity use Kotlin, Coroutines, Room, LiveData, ViewPager2 with a standard MVVM pattern
+Cavity use Kotlin, Coroutines, Room, LiveData, ViewPager2 with a standard MVVM pattern.
 
 ## Release process
 This project uses CI/CD.
