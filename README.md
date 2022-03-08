@@ -8,7 +8,7 @@ It follows Material Design 2 principles to have a clear and simple user interfac
 
 [<img alt="Get it on Google Plau" width="200px" src="/assets/google-play-badge.png" />](https://play.google.com/store/apps/details?id=com.louis.app.cavity)
 
-## Features
+## Features
 - Stock management
 - Highlights peaking bottles
 - Stock history
@@ -17,14 +17,14 @@ It follows Material Design 2 principles to have a clear and simple user interfac
 - Search
 - Tasting sessions: decanting notification, chill a bottle
 
-## Design
+## Design
 Cavity use gold as its color primary and no secondary color to emphasize luxurious and classy wine atmosphere.
 
 Primary gold is used sparingly as it breaks the gold effect when using it in large surfaces.
 
 The app is designed to be used in dark mode, but the light version is also supported for light mode lovers.
 
-## Run the project locally
+## Run the project locally
 Clone the project, and you're ready to build and run it via Android Studio.
 
 ## Architecture
