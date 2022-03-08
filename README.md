@@ -1,16 +1,16 @@
 # Cavity
 <p align="center">
-  <img src="/assets/home.jpg" alt="Cavity screenshots">
+  <img src="/assets/readme.png" alt="Cavity screenshots">
 </p>
 
 Cavity is a wine cellar manager for Android.
 It follows Material Design 2 principles to have a clear and simple user interface.
 
-<p align="center" width="200px">
-  <a href="/assets/google-play-badge">
-    Get it on google play
-  </a>
+<p width="200px">
+  [![Get it on Google Play](/assets/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.louis.app.cavity)
 </p>
+
+
 
 ## Features
 - Stock management
@@ -58,4 +58,6 @@ Run this command from your terminal:
 
 where `-v 1000` is the number of inputs sent to the phone.
 
-<sup><sup>“Google Play and the Google Play logo are trademarks of Google LLC.”</sup></sup>
+
+
+<sup><sup>Google Play and the Google Play logo are trademarks of Google LLC.</sup></sup>
