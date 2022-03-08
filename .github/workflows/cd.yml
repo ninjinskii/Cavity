@@ -1,6 +1,5 @@
 name: Build & deploy to Play Store
 
-# TODO: Remove master branches when ready
 on:
   push:
     tags:
