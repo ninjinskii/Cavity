@@ -1,4 +1,4 @@
-name: Build & deploy to Play Store
+name: Build & deploy to Play Store (test)
 
 on:
   push:
