@@ -144,9 +144,14 @@ class SliceBarView @JvmOverloads constructor(
     // Dont know what to do. We need coordinates, but performClick() does not take any args
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> showTooltipOnClick(event.x, move = false)
-            MotionEvent.ACTION_MOVE -> showTooltipOnClick(event.x, move = true)
+        // This has caused some trouble on some phone, e.g. phone rebooting
+        try {
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> showTooltipOnClick(event.x, move = false)
+                MotionEvent.ACTION_MOVE -> showTooltipOnClick(event.x, move = true)
+            }
+        } catch (e: Exception) {
+            // Investigating the issue, the try block might not throw an exception at all
         }
 
         return super.onTouchEvent(event)
