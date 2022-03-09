@@ -47,7 +47,7 @@ jobs:
           serviceAccountJson: service_account.json
           packageName: com.louis.app.cavity
           releaseFile: app/build/outputs/bundle/release/app-release.aab
-          releaseName: ${{ github.refname }}
+          releaseName: ${{ github.ref_name }}
           track: beta
           status: completed
           whatsNewDirectory: whatsnew/
