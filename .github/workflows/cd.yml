@@ -49,4 +49,5 @@ jobs:
           releaseFile: app/build/outputs/bundle/release/app-release.aab
           releaseName: ${{ github.refname }}
           track: beta
+          status: completed
           whatsNewDirectory: whatsnew/
