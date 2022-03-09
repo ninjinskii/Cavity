@@ -2,6 +2,8 @@ name: Build & deploy to Play Store
 
 on:
   push:
+    branches:
+      - master
     tags:
       - '*'
 
