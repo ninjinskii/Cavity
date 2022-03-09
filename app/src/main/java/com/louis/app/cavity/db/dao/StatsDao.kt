@@ -21,7 +21,7 @@ interface StatsDao {
                 FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE bottle.consumed = 0 AND wine.county_id=:countyId
-                GROUP BY naming"""
+                GROUP BY naming ORDER BY percentage"""
     )
     fun getNamingsForCounty(countyId: Long): LiveData<List<BaseStat>>
 
@@ -46,7 +46,7 @@ interface StatsDao {
                 INNER JOIN wine ON wine_id = wine.id
                 INNER JOIN county ON county_id = county.id
                 WHERE bottle.consumed = 0
-                GROUP BY county.name ORDER BY percentage, county.name"""
+                GROUP BY county.name ORDER BY percentage DESC, county.name"""
     )
     fun getStockByCounty(): LiveData<List<BaseStat>>
 
@@ -60,7 +60,7 @@ interface StatsDao {
                     INNER JOIN wine ON wine_id = wine.id
                     INNER JOIN county ON county_id = county.id
                     WHERE history_entry.date BETWEEN :start AND :end AND (type = 1 OR type = 3)
-                    GROUP BY county.name ORDER BY percentage, county.name"""
+                    GROUP BY county.name ORDER BY percentage DESC, county.name"""
     )
     fun getReplenishmentsByCounty(start: Long, end: Long): LiveData<List<BaseStat>>
 
@@ -74,7 +74,7 @@ interface StatsDao {
                     INNER JOIN wine ON wine_id = wine.id
                     INNER JOIN county ON county_id = county.id
                     WHERE history_entry.date BETWEEN :start AND :end AND (type = 0 OR type = 2 OR type = 4)
-                    GROUP BY county.name ORDER BY percentage, county.name"""
+                    GROUP BY county.name ORDER BY percentage DESC, county.name"""
     )
     fun getConsumptionsByCounty(start: Long, end: Long): LiveData<List<BaseStat>>
 
@@ -85,7 +85,7 @@ interface StatsDao {
                 FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE bottle.consumed = 0
-                GROUP BY wine.color ORDER BY percentage, wine.color"""
+                GROUP BY wine.color ORDER BY percentage DESC, wine.color"""
     )
     fun getStockByColor(): LiveData<List<WineColorStat>>
 
@@ -98,7 +98,7 @@ interface StatsDao {
                     INNER JOIN bottle ON bottle_id = bottle.id
                     INNER JOIN wine ON wine_id = wine.id
                     WHERE history_entry.date BETWEEN :start AND :end AND (type = 1 OR type = 3)
-                    GROUP BY wine.color ORDER BY percentage, wine.color"""
+                    GROUP BY wine.color ORDER BY percentage DESC, wine.color"""
     )
     fun getReplenishmentsByColor(start: Long, end: Long): LiveData<List<WineColorStat>>
 
@@ -111,7 +111,7 @@ interface StatsDao {
                     INNER JOIN bottle ON bottle_id = bottle.id
                     INNER JOIN wine ON wine_id = wine.id
                     WHERE history_entry.date BETWEEN :start AND :end AND (type = 0 OR type = 2 OR type = 4)
-                    GROUP BY wine.color ORDER BY percentage, wine.color"""
+                    GROUP BY wine.color ORDER BY percentage DESC, wine.color"""
     )
     fun getConsumptionsByColor(start: Long, end: Long): LiveData<List<WineColorStat>>
 
@@ -121,7 +121,7 @@ interface StatsDao {
                         AS percentage 
                 FROM bottle
                 WHERE bottle.consumed = 0
-                GROUP BY bottle.vintage ORDER BY percentage, bottle.vintage"""
+                GROUP BY bottle.vintage ORDER BY percentage DESC, bottle.vintage"""
     )
     fun getStockByVintage(): LiveData<List<BaseStat>>
 
@@ -133,7 +133,7 @@ interface StatsDao {
                     FROM history_entry
                     INNER JOIN bottle ON bottle_id = bottle.id
                     WHERE history_entry.date BETWEEN :start AND :end AND (type = 1 OR type = 3)
-                    GROUP BY bottle.vintage ORDER BY percentage, bottle.vintage"""
+                    GROUP BY bottle.vintage ORDER BY percentage DESC, bottle.vintage"""
     )
     fun getReplenishmentsByVintage(start: Long, end: Long): LiveData<List<BaseStat>>
 
@@ -145,7 +145,7 @@ interface StatsDao {
                     FROM history_entry
                     INNER JOIN bottle ON bottle_id = bottle.id
                     WHERE history_entry.date BETWEEN :start AND :end AND (type = 0 OR type = 2 OR type = 4)
-                    GROUP BY bottle.vintage ORDER BY percentage, bottle.vintage"""
+                    GROUP BY bottle.vintage ORDER BY percentage DESC, bottle.vintage"""
     )
     fun getConsumptionsByVintage(start: Long, end: Long): LiveData<List<BaseStat>>
 
@@ -156,7 +156,7 @@ interface StatsDao {
                 FROM bottle
                 INNER JOIN wine on wine_id = wine.id
                 WHERE bottle.consumed = 0
-                GROUP BY wine.naming ORDER BY percentage, wine.naming"""
+                GROUP BY wine.naming ORDER BY percentage DESC, wine.naming"""
     )
     fun getStockByNaming(): LiveData<List<BaseStat>>
 
@@ -169,7 +169,7 @@ interface StatsDao {
                     INNER JOIN bottle ON bottle_id = bottle.id
                     INNER JOIN wine ON wine_id = wine.id
                     WHERE history_entry.date BETWEEN :start AND :end AND (type = 1 OR type = 3)
-                    GROUP BY wine.naming ORDER BY percentage, wine.naming"""
+                    GROUP BY wine.naming ORDER BY percentage DESC, wine.naming"""
     )
     fun getReplenishmentsByNaming(start: Long, end: Long): LiveData<List<BaseStat>>
 
@@ -182,7 +182,7 @@ interface StatsDao {
                     INNER JOIN bottle ON bottle_id = bottle.id
                     INNER JOIN wine ON wine_id = wine.id
                     WHERE history_entry.date BETWEEN :start AND :end AND (type = 0 OR type = 2 OR type = 4)
-                    GROUP BY wine.naming ORDER BY percentage, wine.naming"""
+                    GROUP BY wine.naming ORDER BY percentage DESC, wine.naming"""
     )
     fun getConsumptionsByNaming(start: Long, end: Long): LiveData<List<BaseStat>>
 
