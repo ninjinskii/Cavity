@@ -2,8 +2,10 @@ name: Build & deploy to Play Store (test)
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - master
+#    tags:
+#      - '*'
 
 jobs:
   build:
@@ -16,6 +18,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+
+      - name: Check ref nam
+        run: echo '${{ github.refname }}'
 
       - name: Grant rights gradlew
         run: chmod +x ./gradlew
