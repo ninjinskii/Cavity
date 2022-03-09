@@ -45,5 +45,5 @@ jobs:
           packageName: com.louis.app.cavity
           releaseFile: app/build/outputs/bundle/release/app-release.aab
           releaseName: ${{ GITHUB_REF_NAME }}
-          track: production
+          track: beta
           whatsNewDirectory: whatsnew/

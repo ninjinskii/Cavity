@@ -1,1 +1,4 @@
-Test déploiement automatisé
+- Correction d'un problème dans l'affichage des couleurs dans les statistiques
+- Changement de l'ordre des parts dans les statistiques, désormais elles sont dans un ordre décroissant
+- Tentative de résolution d'un bug lors du clique long sur une barre des statistiques de région sur certains appareils
+- Embellissement de l'icône de dégustation

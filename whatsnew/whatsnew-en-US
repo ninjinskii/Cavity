@@ -1,0 +1,4 @@
+- Fix wine color display name in stats
+- Change stats ordering: stats are now ordered descending
+- Attempt to fix a bug that cause the phone to reboot when long clicking on a stat bar in county details stats on some device
+- Improve tasting icon

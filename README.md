@@ -1,12 +1,12 @@
 # Cavity
-<p align="center">
+<p>
   <img src="/assets/readme.png" alt="Cavity screenshots">
 </p>
 
 Cavity is a wine cellar manager for Android.
 It follows Material Design 2 principles to have a clear and simple user interface.
 
-[<img alt="Get it on Google Plau" width="200px" src="/assets/google-play-badge.png" />](https://play.google.com/store/apps/details?id=com.louis.app.cavity)
+[<img alt="Get it on Google Play" width="200px" src="/assets/google-play-badge.png" />](https://play.google.com/store/apps/details?id=com.louis.app.cavity)
 
 ## Features
 - Stock management
@@ -38,6 +38,7 @@ Things to do to prepare a release:
 
 - Update `/whatsnew directory`
 - Update `/app/build.gradle`: increment version code & update __version name__
+- Update `/app/src/AndroidManifest.xml`: increment version code & update __version name__
 - Merge target code into master branch
 - Create and push a tag named __version name__
 
