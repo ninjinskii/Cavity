@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemStatBinding
 import com.louis.app.cavity.db.dao.Stat
+import com.louis.app.cavity.db.dao.WineColorStat
 
 class StatsRecyclerAdapter :
     ListAdapter<Stat, StatsRecyclerAdapter.StatViewHolder>(StatItemDiffCallback()) {
@@ -36,12 +37,14 @@ class StatsRecyclerAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(stat: Stat) {
+            val ctx = itemView.context
 
             with(binding) {
-                label.text = stat.label
+                label.text =
+                    if (stat is WineColorStat) ctx.getString(stat.wcolor.stringRes) else stat.label
                 count.text = stat.count.toString()
 
-                val resolvedColor = itemView.context.getColor(stat.color)
+                val resolvedColor = ctx.getColor(stat.color)
                 color.setBackgroundColor(resolvedColor)
             }
         }

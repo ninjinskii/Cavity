@@ -15,6 +15,7 @@ import androidx.core.widget.TextViewCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.Stat
+import com.louis.app.cavity.db.dao.WineColorStat
 import kotlin.math.PI
 import kotlin.math.min
 
@@ -152,9 +153,12 @@ class PieView @JvmOverloads constructor(
 
             textPath.reset()
 
+            val string =
+                if (it is WineColorStat) context.getString(it.wcolor.stringRes) else it.label
+
             // Might reverse arc to avoid drawing upside-down text
             val verticalOffset = if (startAngle in 0f..180f) {
-                val sweepSpaceForText = min(sweepAngle, getAngle(textPaint.measureText(it.label)))
+                val sweepSpaceForText = min(sweepAngle, getAngle(textPaint.measureText(string)))
                 textPath.addArc(rect, startAngle + sweepSpaceForText, -sweepSpaceForText)
                 textSpace
             } else {
@@ -163,7 +167,7 @@ class PieView @JvmOverloads constructor(
             }
 
             val text = TextUtils.ellipsize(
-                it.label,
+                string,
                 textPaint,
                 getArcLength(sweepAngle),
                 TextUtils.TruncateAt.END
