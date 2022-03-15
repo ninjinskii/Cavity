@@ -47,6 +47,7 @@ function makeWines(counties) {
       isOrganic: isOrganic ? 1 : 0,
       imgPath: image.trim(),
       countyId: county.id,
+      hidden: 0,
     });
   }
 
