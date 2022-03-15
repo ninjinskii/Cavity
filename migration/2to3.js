@@ -127,7 +127,7 @@ function makeFReviews(reviews) {
       const secondaryContest = comment.split("/")[1].trim().toLowerCase();
       const value = parseInt(secondaryContest.substring(0, 2));
       const contest = reviews.find((r) =>
-        secondaryContest.includes(r.contest_name.toLowerCase())
+        secondaryContest.includes(r.contestName.toLowerCase())
       );
 
       fReviews.push({ bottleId: bottle.id, reviewId: contest.id, value });
