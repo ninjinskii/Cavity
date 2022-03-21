@@ -307,9 +307,11 @@
         <item name="fontFamily">@font/forum</item>
     </style>
 
-    <!-- Splash Screen Android 12+ only, see styles-v31/styles.xml -->
-    <!-- Android 12+ -->
+    <!-- Since Cavity on Android 7 will be displyed in dark theme, set splash screen to dark values -->
+    <!-- This code is targeting Android 7 & 7.1 -->
     <style name="Theme.Cavity.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
