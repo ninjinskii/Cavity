@@ -312,7 +312,7 @@
     <!-- This code is targeting Android 7 & 7.1 -->
     <style name="Theme.Cavity.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:statusBarColor">@color/android_7_splash_background</item>
         <item name="android:windowLightStatusBar">@bool/light_statusbar</item>
     </style>
 </resources>
