@@ -100,7 +100,7 @@
     <string name="silver">Argent</string>
     <string name="gold">Or</string>
     <string name="item_rate">%1$d / %2$d</string>
-    <string name="other_info">Autre informations</string>
+    <string name="other_info">Autres informations</string>
     <string name="inquire_add_to_favorites">Ajouter aux coup de cœurs</string>
     <string name="favorite">Coup de cœurs</string>
     <string name="add_pdf">Associer un fichier PDF</string>

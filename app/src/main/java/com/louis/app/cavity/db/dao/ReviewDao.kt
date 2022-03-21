@@ -16,10 +16,10 @@ interface ReviewDao {
     @Delete
     suspend fun deleteReview(review: Review)
 
-    @Query("SELECT * FROM review")
+    @Query("SELECT * FROM review ORDER BY contest_name")
     fun getAllReviews(): LiveData<List<Review>>
 
-    @Query("SELECT * FROM review")
+    @Query("SELECT * FROM review ORDER BY contest_name")
     suspend fun getAllReviewsNotLive(): List<Review>
 
     @Transaction

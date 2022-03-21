@@ -41,6 +41,7 @@
         <item name="navigationViewStyle">@style/Widget.Cavity.NavigationView</item>
 
         <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">@bool/light_statusbar</item>
         <item name="android:popupMenuStyle">@style/Widget.Cavity.PopupMenu</item>
         <item name="android:windowSharedElementsUseOverlay">false</item>
         <item name="android:itemTextAppearance">@style/TextAppearance.Cavity.Body1</item>
@@ -312,6 +313,6 @@
     <style name="Theme.Cavity.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:statusBarColor">?attr/colorSurface</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar">@bool/light_statusbar</item>
     </style>
 </resources>

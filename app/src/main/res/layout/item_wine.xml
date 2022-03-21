@@ -22,6 +22,7 @@
 
     <LinearLayout
         android:id="@+id/infoLayout"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/margin_hexagone_text"

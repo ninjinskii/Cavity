@@ -201,28 +201,42 @@
                     app:layout_constraintTop_toBottomOf="@id/bottlesList" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                    android:id="@+id/cuvee"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/large_margin"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_flower"
+                    app:label="@string/cuvee"
+                    app:layout_constraintEnd_toEndOf="@id/otherInfo"
+                    app:layout_constraintStart_toStartOf="@id/otherInfo"
+                    app:layout_constraintTop_toBottomOf="@id/vintageIfConsumed" />
+
+                <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/apogee"
                     android:layout_width="146dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/small_margin"
-                    android:layout_marginVertical="@dimen/large_margin"
+                    android:layout_marginVertical="@dimen/medium_margin"
                     app:icon="@drawable/ic_glass"
                     app:label="@string/apogee"
                     app:layout_constraintEnd_toStartOf="@id/price"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/vintageIfConsumed" />
+                    app:layout_constraintTop_toBottomOf="@id/cuvee"
+                    app:layout_goneMarginTop="@dimen/large_margin" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/price"
                     android:layout_width="146dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/small_margin"
-                    android:layout_marginVertical="@dimen/large_margin"
+                    android:layout_marginVertical="@dimen/medium_margin"
                     app:icon="@drawable/ic_coin_stack"
                     app:label="@string/price"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/apogee"
-                    app:layout_constraintTop_toBottomOf="@id/vintageIfConsumed" />
+                    app:layout_constraintTop_toBottomOf="@id/cuvee"
+                    app:layout_goneMarginTop="@dimen/large_margin" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/capacity"
