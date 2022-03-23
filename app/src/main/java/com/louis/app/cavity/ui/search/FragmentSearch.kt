@@ -569,8 +569,9 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         val pos = when (filtersBinding.rbGroupSize.checkedButtonId) {
             R.id.rbSlim -> 0
-            R.id.rbNormal -> 1
-            R.id.rbMagnum -> 2
+            R.id.rbSmall -> 1
+            R.id.rbNormal -> 2
+            R.id.rbMagnum -> 3
             else /* R.id.rbMagnum */ -> View.NO_ID
         }
 
