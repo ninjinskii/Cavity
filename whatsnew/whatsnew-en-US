@@ -1,4 +1,7 @@
-- Fix wine color display name in stats
-- Change stats ordering: stats are now ordered descending
-- Attempt to fix a bug that cause the phone to reboot when long clicking on a stat bar in county details stats on some device
-- Improve tasting icon
+- Add a check to avoid wine duplicates
+- Add 50 cL capacity
+- Add cuvee on bottle details screen
+- Reviews are now ordered alphabetically
+- Fix typos
+- Fix splash screen colors
+- Fix status bar items color on light themes
