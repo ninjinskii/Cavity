@@ -39,6 +39,7 @@ Things to do to prepare a release:
 - Update `/whatsnew directory`
 - Update `/app/build.gradle`: increment version code & update __version name__
 - Update `/app/src/AndroidManifest.xml`: increment version code & update __version name__
+- Check for database changes & migration
 - Merge target code into master branch
 - Create and push a tag named __version name__
 
