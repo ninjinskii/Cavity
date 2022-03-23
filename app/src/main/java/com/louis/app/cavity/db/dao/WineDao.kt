@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.model.WineColor
 
 @Dao
 interface WineDao {
@@ -30,6 +31,9 @@ interface WineDao {
 
     @Query("SELECT DISTINCT naming FROM wine WHERE county_id =:countyId ORDER BY naming")
     fun getNamingsForCounty(countyId: Long): LiveData<List<String>>
+
+    @Query("SELECT * FROM wine WHERE name =:name AND naming =:naming AND color =:color")
+    suspend fun getWineByAttrs(name: String, naming: String, color: WineColor): Wine?
 
     @Transaction
     @Query("SELECT * FROM wine WHERE id =:wineId")

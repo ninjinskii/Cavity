@@ -88,17 +88,26 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         )
 
         viewModelScope.launch(IO) {
-            if (isEditMode) {
-                repository.updateWine(wine)
-                _wineUpdatedEvent.postOnce(R.string.wine_updated)
-            } else {
-                repository.insertWine(wine)
-                _wineUpdatedEvent.postOnce(R.string.wine_added)
+            val duplicate = repository.getWineByAttrs(wine.name, wine.naming, wine.color)
+
+            when {
+                duplicate != null && duplicate.id != wine.id -> {
+                    _userFeedback.postOnce(R.string.wine_already_exists)
+                }
+
+                isEditMode -> {
+                    repository.updateWine(wine)
+                    _wineUpdatedEvent.postOnce(R.string.wine_updated)
+                    reset()
+                }
+
+                else -> {
+                    repository.insertWine(wine)
+                    _wineUpdatedEvent.postOnce(R.string.wine_added)
+                    reset()
+                }
             }
-
-            reset()
         }
-
     }
 
     fun setImage(imagePath: String) {

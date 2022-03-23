@@ -60,6 +60,7 @@
     <string name="wine_added">The wine has been added.</string>
     <string name="wine_updated">The wine has been edited.</string>
     <string name="wine_deleted">The wine has been deleted.</string>
+    <string name="wine_already_exists">This wine already exists.</string>
     <string name="wine_color_white">White</string>
     <string name="wine_color_red">Red</string>
     <string name="wine_color_sweet">Sweet</string>
