@@ -108,6 +108,7 @@
     <string name="pdf">PDF</string>
     <string name="medal_color">Medal color</string>
     <string name="size_slim">37.5 cL</string>
+    <string name="size_small">50 cL</string>
     <string name="size_normal">75 cL</string>
     <string name="size_magnum">1.5 L</string>
     <string name="gifted_by_friend">Given by a friend</string>
