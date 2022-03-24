@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -286,6 +287,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             values = listOf(max(valueFrom, start ?: valueFrom), max(valueTo, end ?: valueTo))
 
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+                @SuppressLint("RestrictedApi")
                 override fun onStopTrackingTouch(slider: RangeSlider) {
                     searchViewModel.setVintageFilter(
                         slider.values[0].toInt(),
@@ -293,6 +295,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     )
                 }
 
+                @SuppressLint("RestrictedApi")
                 override fun onStartTrackingTouch(slider: RangeSlider) = Unit
             })
         }
@@ -327,6 +330,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             isEnabled = filtersBinding.togglePrice.isChecked
 
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+                @SuppressLint("RestrictedApi")
                 override fun onStopTrackingTouch(slider: RangeSlider) {
                     searchViewModel.setPriceFilter(
                         slider.values[0].toInt(),
@@ -334,6 +338,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     )
                 }
 
+                @SuppressLint("RestrictedApi")
                 override fun onStartTrackingTouch(slider: RangeSlider) = Unit
             })
         }
