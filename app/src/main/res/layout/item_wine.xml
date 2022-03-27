@@ -22,6 +22,7 @@
 
     <LinearLayout
         android:id="@+id/infoLayout"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/margin_hexagone_text"
@@ -71,11 +72,12 @@
 
     <TextView
         android:id="@+id/bottlesCount"
+        android:shadowColor="#000000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="@dimen/medium_margin"
-        android:shadowColor="?attr/colorSurface"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
         android:shadowDx="0"
         android:shadowDy="0"
         android:shadowRadius="2"

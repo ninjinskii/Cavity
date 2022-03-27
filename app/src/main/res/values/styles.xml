@@ -41,6 +41,7 @@
         <item name="navigationViewStyle">@style/Widget.Cavity.NavigationView</item>
 
         <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">@bool/light_statusbar</item>
         <item name="android:popupMenuStyle">@style/Widget.Cavity.PopupMenu</item>
         <item name="android:windowSharedElementsUseOverlay">false</item>
         <item name="android:itemTextAppearance">@style/TextAppearance.Cavity.Body1</item>
@@ -307,9 +308,11 @@
         <item name="fontFamily">@font/forum</item>
     </style>
 
-    <!-- Splash Screen Android 12+ only, see styles-v31/styles.xml -->
-    <!-- Android 12+ -->
+    <!-- Since Cavity on Android 7 will be displyed in dark theme, set splash screen to dark values -->
+    <!-- This code is targeting Android 7 & 7.1 -->
     <style name="Theme.Cavity.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">@color/android_7_splash_background</item>
+        <item name="android:windowLightStatusBar">@bool/light_statusbar</item>
     </style>
 </resources>

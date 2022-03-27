@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.addbottle.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -48,9 +49,10 @@ class QuantifiedGrapeRecyclerAdapter(
 
             slider.clearOnSliderTouchListeners()
             slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
-                override fun onStartTrackingTouch(slider: Slider) {
-                }
+                @SuppressLint("RestrictedApi")
+                override fun onStartTrackingTouch(slider: Slider) = Unit
 
+                @SuppressLint("RestrictedApi")
                 override fun onStopTrackingTouch(slider: Slider) {
                     val acceptedVal = onValueChangeListener(qGrape, slider.value.toInt())
                     slider.value = acceptedVal.toFloat()

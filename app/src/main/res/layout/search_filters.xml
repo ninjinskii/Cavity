@@ -439,6 +439,14 @@
                 android:textAppearance="?attr/textAppearanceSubtitle1" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/rbSmall"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/size_small"
+                android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/rbNormal"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"

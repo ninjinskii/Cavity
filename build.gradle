@@ -9,7 +9,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath "com.android.tools.build:gradle:7.1.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // DO NOT UPDATE, it will mess the navigation logic in Cavity
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5"

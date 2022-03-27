@@ -5,6 +5,7 @@ import com.louis.app.cavity.R
 
 enum class BottleSize(@StringRes val stringRes: Int) {
     SLIM(R.string.size_slim),
+    SMALL(R.string.size_small),
     NORMAL(R.string.size_normal),
     MAGNUM(R.string.size_magnum)
 }

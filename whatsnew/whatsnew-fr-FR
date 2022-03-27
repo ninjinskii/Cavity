@@ -1,4 +1,7 @@
-- Correction d'un problème dans l'affichage des couleurs dans les statistiques
-- Changement de l'ordre des parts dans les statistiques, désormais elles sont dans un ordre décroissant
-- Tentative de résolution d'un bug lors du clique long sur une barre des statistiques de région sur certains appareils
-- Embellissement de l'icône de dégustation
+- Ajout d'une vérification pour éviter de créer des doublons de vins
+- Ajout de la contenance 50 cL
+- Ajout de la cuvée sur l'écran de vue d'une bouteille
+- Tri des concours par ordre alphabétique
+- Corrections de fautes d'orthographe
+- Correction d'un problème de couleur pour l'écran d'introduction
+- Correction de la couleur des items de la barre de statut avec un thème clair

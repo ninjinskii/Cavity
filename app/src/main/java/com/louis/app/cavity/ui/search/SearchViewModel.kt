@@ -180,6 +180,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     fun setCapacityFilter(checkedButtonId: Int) {
         capacityFilter = when (checkedButtonId) {
             R.id.rbSlim -> FilterCapacity(BottleSize.SLIM)
+            R.id.rbSmall -> FilterCapacity(BottleSize.SMALL)
             R.id.rbNormal -> FilterCapacity(BottleSize.NORMAL)
             R.id.rbMagnum -> FilterCapacity(BottleSize.MAGNUM)
             else /* View.NO_ID */ -> NoFilter

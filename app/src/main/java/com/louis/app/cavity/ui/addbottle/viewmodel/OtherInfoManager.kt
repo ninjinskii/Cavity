@@ -36,6 +36,7 @@ class OtherInfoManager(
     ) {
         val size = when (checkedSize) {
             R.id.rbSlim -> BottleSize.SLIM
+            R.id.rbSmall -> BottleSize.SMALL
             R.id.rbNormal -> BottleSize.NORMAL
             else /* R.id.rbMagnum */ -> BottleSize.MAGNUM
         }

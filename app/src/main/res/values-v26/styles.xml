@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- This code is targeting Android 8 to Android 11 included -->
+    <style name="Theme.Cavity.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">@bool/light_statusbar</item>
+    </style>
+</resources>

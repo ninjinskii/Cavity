@@ -233,7 +233,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         bottleDetailsViewModel.getWineById(args.wineId).observe(viewLifecycleOwner) {
-            binding.bottleName.text = it.name
+            with(binding) {
+                bottleName.text = it.name
+                cuvee.setVisible(it.cuvee.isNotBlank())
+                cuvee.setData(it.cuvee)
+            }
+
             showImage(Uri.parse(it.imgPath))
         }
 

@@ -54,6 +54,8 @@ class WineRepository private constructor(app: Application) {
     suspend fun deleteWineById(wineId: Long) = wineDao.deleteWineById(wineId)
     fun getWineById(wineId: Long) = wineDao.getWineById(wineId)
     suspend fun getWineByIdNotLive(wineId: Long) = wineDao.getWineByIdNotLive(wineId)
+    suspend fun getWineByAttrs(name: String, naming: String, color: WineColor) =
+        wineDao.getWineByAttrs(name, naming, color)
 
     fun getNamingsForCounty(countyId: Long) = wineDao.getNamingsForCounty(countyId)
     fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
@@ -61,6 +63,7 @@ class WineRepository private constructor(app: Application) {
     fun getCountiesWithWines() = countyDao.getCountiesWithWines()
 
     fun getBoundedBottles() = bottleDao.getBoundedBottles()
+
     private suspend fun deleteAllWines() = wineDao.deleteAll()
 
 

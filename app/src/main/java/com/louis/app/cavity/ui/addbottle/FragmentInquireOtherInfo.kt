@@ -134,8 +134,9 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
             val checkedButtonPos = when (editedBottle.bottleSize) {
                 BottleSize.SLIM -> 0
-                BottleSize.NORMAL -> 1
-                BottleSize.MAGNUM -> 2
+                BottleSize.SMALL -> 1
+                BottleSize.NORMAL -> 2
+                BottleSize.MAGNUM -> 3
             }
 
             (binding.rbGroupSize.getChildAt(checkedButtonPos) as Checkable).isChecked = true

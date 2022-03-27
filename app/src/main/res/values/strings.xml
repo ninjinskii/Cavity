@@ -59,6 +59,7 @@
     <string name="wine_added">Le vin a été ajouté.</string>
     <string name="wine_updated">Le vin a été modifié.</string>
     <string name="wine_deleted">Le vin a été supprimé.</string>
+    <string name="wine_already_exists">Ce vin existe déjà.</string>
     <string name="wine_color_white">Blanc</string>
     <string name="wine_color_red">Rouge</string>
     <string name="wine_color_sweet">Liquoreux</string>
@@ -100,13 +101,14 @@
     <string name="silver">Argent</string>
     <string name="gold">Or</string>
     <string name="item_rate">%1$d / %2$d</string>
-    <string name="other_info">Autre informations</string>
+    <string name="other_info">Autres informations</string>
     <string name="inquire_add_to_favorites">Ajouter aux coup de cœurs</string>
     <string name="favorite">Coup de cœurs</string>
     <string name="add_pdf">Associer un fichier PDF</string>
     <string name="pdf">PDF</string>
     <string name="medal_color">Couleur de la médaille</string>
     <string name="size_slim">37.5 cL</string>
+    <string name="size_small">50 cL</string>
     <string name="size_normal">75 cL</string>
     <string name="size_magnum">1.5 L</string>
     <string name="gifted_by_friend">Offerte par un ami</string>

@@ -37,4 +37,8 @@
     <color name="thumb_plain">@color/under_surface</color>
 
     <color name="under_backdrop">@color/under_surface</color>
+
+    <color name="android_7_splash_background">#121212</color>
+
+    <bool name="light_statusbar">true</bool>
 </resources>
