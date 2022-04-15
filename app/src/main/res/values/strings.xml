@@ -257,6 +257,7 @@
     <string name="email">Email</string>
     <string name="password">Mot de passe</string>
     <string name="ip">Adresse IP + port</string>
+    <string name="confirm_mail_sent">Un mail de confirmation a été envoyé.</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

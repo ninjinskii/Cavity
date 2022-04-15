@@ -34,6 +34,14 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.login(email, password) }
     }
 
+    suspend fun register(email: String, password: String): ApiResponse<Unit> {
+        return doApiCall { cavityApi.register(email, password) }
+    }
+
+    suspend fun confirmAccount(email: String, registrationCode: String): ApiResponse<Unit> {
+        return doApiCall { cavityApi.confirmAccount(email, registrationCode) }
+    }
+
     private suspend fun <T> doApiCall(apiCall: suspend () -> T): ApiResponse<T> {
         return try {
             ApiResponse.Success(apiCall.invoke())

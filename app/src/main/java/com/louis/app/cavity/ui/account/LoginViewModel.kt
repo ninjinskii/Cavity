@@ -36,12 +36,43 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     val isLogged: LiveData<Boolean>
         get() = _isLogged
 
+    private val _confirmedEvent = MutableLiveData<Event<Unit>>()
+    val confirmedEvent: LiveData<Event<Unit>>
+        get() = _confirmedEvent
+
     fun submitIp(ip: String) {
         val token = prefsRepository.getApiToken()
         accountRepository.submitIpAndRetrieveToken(ip, token)
     }
 
     fun login(email: String, password: String) {
+        doApiCall(
+            call = { accountRepository.login(email, password) },
+            onSuccess = {
+                prefsRepository.setApiToken(it.value.token)
+                _isLogged.postValue(true)
+            }
+        )
+    }
+
+    fun register(email: String, password: String) {
+        doApiCall(
+            call = { accountRepository.register(email, password) },
+            onSuccess = { _userFeedback.postOnce(R.string.confirm_mail_sent) }
+        )
+    }
+
+    fun confirmAccount(email: String, registrationCode: String) {
+        doApiCall(
+            call = { accountRepository.confirmAccount(email, registrationCode) },
+            onSuccess = { _confirmedEvent.postOnce(Unit) }
+        )
+    }
+
+    private fun <T> doApiCall(
+        call: suspend () -> ApiResponse<T>,
+        onSuccess: (ApiResponse.Success<T>) -> Unit
+    ) {
         if (_isLoading.value == true) {
             return
         }
@@ -49,11 +80,8 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         _isLoading.postValue(true)
 
         viewModelScope.launch(IO) {
-            when (val response = accountRepository.login(email, password)) {
-                is ApiResponse.Success -> {
-                    prefsRepository.setApiToken(response.value.token)
-                    _isLogged.postValue(true)
-                }
+            when (val response = call()) {
+                is ApiResponse.Success -> onSuccess(response)
                 is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
                 is ApiResponse.UnknownError -> _userFeedback.postOnce(R.string.base_error)
             }
