@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/appBar"
+                layout="@layout/app_bar" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/appBar"
+                app:trackThickness="1dp" />
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/history_wine_image_size"
+                android:layout_height="@dimen/history_wine_image_size"
+                android:layout_marginHorizontal="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/large_margin"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_glass"
+                app:layout_constraintBottom_toTopOf="@id/digit1Layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/progressBar"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:tint="?attr/colorPrimary" />
+
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/digit1Layout"
+                style="@style/ThemeOverlay.Cavity.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="38dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/medium_margin"
+                android:layout_marginLeft="@dimen/medium_margin"
+                android:layout_marginRight="@dimen/small_margin"
+                app:layout_constraintBottom_toTopOf="@id/explanation"
+                app:layout_constraintEnd_toStartOf="@id/digit2Layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/icon">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/digit1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxEms="1" />
+
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/digit2Layout"
+                style="@style/ThemeOverlay.Cavity.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="38dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:layout_marginVertical="@dimen/medium_margin"
+                app:layout_constraintBottom_toTopOf="@id/explanation"
+                app:layout_constraintEnd_toStartOf="@id/digit3Layout"
+                app:layout_constraintStart_toEndOf="@id/digit1Layout"
+                app:layout_constraintTop_toBottomOf="@id/icon"
+                app:rule="required">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/digit2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxEms="1" />
+
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/digit3Layout"
+                style="@style/ThemeOverlay.Cavity.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="38dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:layout_marginVertical="@dimen/medium_margin"
+                app:layout_constraintBottom_toTopOf="@id/explanation"
+                app:layout_constraintEnd_toStartOf="@id/digit4Layout"
+                app:layout_constraintStart_toEndOf="@id/digit2Layout"
+                app:layout_constraintTop_toBottomOf="@id/icon"
+                app:rule="required">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/digit3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxEms="1" />
+
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/digit4Layout"
+                style="@style/ThemeOverlay.Cavity.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="38dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:layout_marginVertical="@dimen/medium_margin"
+                app:layout_constraintBottom_toTopOf="@id/explanation"
+                app:layout_constraintEnd_toStartOf="@id/digit5Layout"
+                app:layout_constraintStart_toEndOf="@id/digit3Layout"
+                app:layout_constraintTop_toBottomOf="@id/icon"
+                app:rule="required">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/digit4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxEms="1" />
+
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/digit5Layout"
+                style="@style/ThemeOverlay.Cavity.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="38dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:layout_marginVertical="@dimen/medium_margin"
+                app:layout_constraintBottom_toTopOf="@id/explanation"
+                app:layout_constraintEnd_toStartOf="@id/digit6Layout"
+                app:layout_constraintStart_toEndOf="@id/digit4Layout"
+                app:layout_constraintTop_toBottomOf="@id/icon"
+                app:rule="required">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/digit5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxEms="1" />
+
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/digit6Layout"
+                style="@style/ThemeOverlay.Cavity.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="38dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/medium_margin"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginRight="@dimen/medium_margin"
+                app:layout_constraintBottom_toTopOf="@id/explanation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/digit5Layout"
+                app:layout_constraintTop_toBottomOf="@id/icon"
+                app:rule="required">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/digit6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxEms="1" />
+
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+            <TextView
+                android:id="@+id/explanation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/confirm_account_explanation"
+                app:layout_constraintBottom_toTopOf="@id/buttonSubmit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/digit1Layout"
+                app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSubmit"
+                style="@style/Widget.Cavity.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginBottom="@dimen/medium_margin"
+                android:text="@string/submit"
+                app:icon="@drawable/ic_check"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/explanation"
+                app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,113 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <include
-            android:id="@+id/appBar"
-            layout="@layout/app_bar" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="@dimen/history_wine_image_size"
-            android:layout_height="@dimen/history_wine_image_size"
-            android:layout_marginHorizontal="@dimen/medium_margin"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:layout_marginBottom="@dimen/xlarge_margin"
-            android:src="@drawable/ic_glass"
-            app:layout_constraintBottom_toTopOf="@id/loginLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appBar"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:tint="?attr/colorPrimary" />
+            <include
+                android:id="@+id/appBar"
+                layout="@layout/app_bar" />
 
-        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
-            android:id="@+id/loginLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            app:layout_constraintBottom_toTopOf="@id/passwordLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/icon"
-            app:rule="required"
-            app:startIconDrawable="@drawable/ic_person">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/login"
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/email"
-                android:inputType="none" />
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/appBar"
+                app:trackThickness="1dp" />
 
-        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/history_wine_image_size"
+                android:layout_height="@dimen/history_wine_image_size"
+                android:layout_marginHorizontal="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/large_margin"
+                android:src="@drawable/ic_glass"
+                app:layout_constraintBottom_toTopOf="@id/loginLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/progressBar"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:tint="?attr/colorPrimary" />
 
-        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
-            android:id="@+id/passwordLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            app:endIconMode="password_toggle"
-            app:layout_constraintBottom_toTopOf="@id/ipLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginLayout"
-            app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
-            app:rule="required"
-            app:startIconDrawable="@drawable/ic_password">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/loginLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:inputType="none" />
+                android:layout_margin="@dimen/medium_margin"
+                app:layout_constraintBottom_toTopOf="@id/passwordLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/icon"
+                app:rule="required"
+                app:startIconDrawable="@drawable/ic_person">
 
-        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    android:inputType="none" />
 
-        <com.louis.app.cavity.ui.widget.RuledTextInputLayout
-            android:id="@+id/ipLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medium_margin"
-            app:layout_constraintBottom_toTopOf="@id/buttonSubmit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/passwordLayout"
-            app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
-            app:rule="required">
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ip"
-                android:layout_width="match_parent"
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/passwordLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="@string/ip"
-                android:inputType="none" />
+                android:layout_margin="@dimen/medium_margin"
+                app:endIconMode="password_toggle"
+                app:layout_constraintBottom_toTopOf="@id/ipLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/loginLayout"
+                app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
+                app:rule="required"
+                app:startIconDrawable="@drawable/ic_password">
 
-        </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    android:inputType="none" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonSubmit"
-            style="@style/Widget.Cavity.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/medium_margin"
-            android:layout_marginTop="@dimen/large_margin"
-            android:layout_marginBottom="@dimen/medium_margin"
-            android:text="@string/submit"
-            app:icon="@drawable/ic_check"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ipLayout"
-            app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+                android:id="@+id/ipLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                app:layout_constraintBottom_toTopOf="@id/newAccount"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/passwordLayout"
+                app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
+                app:rule="required">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/ip"
+                    android:inputType="none" />
+
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/newAccount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/new_account"
+                android:textAppearance="?attr/textAppearanceBody2"
+                app:layout_constraintBottom_toTopOf="@id/buttonSubmit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ipLayout"
+                app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSubmit"
+                style="@style/Widget.Cavity.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginBottom="@dimen/medium_margin"
+                android:text="@string/submit"
+                app:icon="@drawable/ic_check"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/newAccount"
+                app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
