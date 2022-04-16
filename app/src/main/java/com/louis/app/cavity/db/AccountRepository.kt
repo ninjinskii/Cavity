@@ -47,7 +47,10 @@ class AccountRepository private constructor(private val app: Application) {
             ApiResponse.Success(apiCall.invoke())
         } catch (t: Throwable) {
             when (t) {
-                is HttpException -> parseError(t.response())
+                is HttpException -> when (t.code()) {
+                    412 -> ApiResponse.UnregisteredError
+                    else -> parseError(t.response())
+                }
                 else -> ApiResponse.UnknownError
 //                is IOException -> ApiResponse.UnknownError
 //                else -> throw t
