@@ -15,7 +15,7 @@ import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class LoginViewModel(app: Application) : AndroidViewModel(app) {
+class AccountViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
     private val prefsRepository = PrefsRepository.getInstance(app)
     private val accountRepository = AccountRepository.getInstance(app)
@@ -35,6 +35,10 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     private val _isLogged = MutableLiveData(false)
     val isLogged: LiveData<Boolean>
         get() = _isLogged
+
+    private val _navigateToConfirm = MutableLiveData<Event<Unit>>()
+    val navigateToConfirm: LiveData<Event<Unit>>
+        get() = _navigateToConfirm
 
     private val _confirmedEvent = MutableLiveData<Event<Unit>>()
     val confirmedEvent: LiveData<Event<Unit>>
@@ -84,6 +88,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                 is ApiResponse.Success -> onSuccess(response)
                 is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
                 is ApiResponse.UnknownError -> _userFeedback.postOnce(R.string.base_error)
+                is ApiResponse.UnregisteredError -> _navigateToConfirm.postOnce(Unit)
             }
 
             _isLoading.postValue(false)
