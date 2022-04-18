@@ -32,9 +32,9 @@ class AccountViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedbackString: LiveData<Event<String>>
         get() = _userFeedbackString
 
-    private val _isLogged = MutableLiveData(false)
-    val isLogged: LiveData<Boolean>
-        get() = _isLogged
+    private val _user = MutableLiveData<String?>(null)
+    val user: LiveData<String?>
+        get() = _user
 
     private val _navigateToConfirm = MutableLiveData<Event<Unit>>()
     val navigateToConfirm: LiveData<Event<Unit>>
@@ -54,7 +54,7 @@ class AccountViewModel(app: Application) : AndroidViewModel(app) {
             call = { accountRepository.login(email, password) },
             onSuccess = {
                 prefsRepository.setApiToken(it.value.token)
-                _isLogged.postValue(true)
+                _user.postValue(it.value.email)
             }
         )
     }
@@ -62,7 +62,10 @@ class AccountViewModel(app: Application) : AndroidViewModel(app) {
     fun register(email: String, password: String) {
         doApiCall(
             call = { accountRepository.register(email, password) },
-            onSuccess = { _userFeedback.postOnce(R.string.confirm_mail_sent) }
+            onSuccess = {
+                _userFeedback.postOnce(R.string.confirm_mail_sent)
+                _navigateToConfirm.postOnce(Unit)
+            }
         )
     }
 

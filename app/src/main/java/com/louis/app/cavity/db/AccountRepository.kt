@@ -6,6 +6,7 @@ import com.louis.app.cavity.network.CavityApiClient
 import com.louis.app.cavity.network.CavityApiService
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.LoginResponse
+import com.louis.app.cavity.util.L
 import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -31,21 +32,25 @@ class AccountRepository private constructor(private val app: Application) {
     }
 
     suspend fun login(email: String, password: String): ApiResponse<LoginResponse> {
-        return doApiCall { cavityApi.login(email, password) }
+        val parameters = mapOf("email" to email, "password" to password)
+        return doApiCall { cavityApi.login(parameters) }
     }
 
     suspend fun register(email: String, password: String): ApiResponse<Unit> {
-        return doApiCall { cavityApi.register(email, password) }
+        val parameters = mapOf("email" to email, "password" to password)
+        return doApiCall { cavityApi.register(parameters) }
     }
 
     suspend fun confirmAccount(email: String, registrationCode: String): ApiResponse<Unit> {
-        return doApiCall { cavityApi.confirmAccount(email, registrationCode) }
+        val parameters = mapOf("email" to email, "registrationCode" to registrationCode)
+        return doApiCall { cavityApi.confirmAccount(parameters) }
     }
 
     private suspend fun <T> doApiCall(apiCall: suspend () -> T): ApiResponse<T> {
         return try {
             ApiResponse.Success(apiCall.invoke())
         } catch (t: Throwable) {
+            L.e(t)
             when (t) {
                 is HttpException -> when (t.code()) {
                     412 -> ApiResponse.UnregisteredError

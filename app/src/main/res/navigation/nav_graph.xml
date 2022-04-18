@@ -237,6 +237,9 @@
         <action
             android:id="@+id/accountToLogin"
             app:destination="@id/fragmentLogin" />
+        <action
+            android:id="@+id/accountToHome"
+            app:destination="@id/home_dest" />
     </fragment>
 
     <fragment

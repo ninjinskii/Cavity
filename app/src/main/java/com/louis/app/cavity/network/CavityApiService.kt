@@ -1,15 +1,16 @@
 package com.louis.app.cavity.network
 
 import com.louis.app.cavity.network.response.LoginResponse
+import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface CavityApiService {
     @POST("account")
-    suspend fun register(email: String, password: String)
+    suspend fun register(@Body parameters: Map<String, String>)
 
     @POST("account/confirm")
-    suspend fun confirmAccount(email: String, registrationCode: String)
+    suspend fun confirmAccount(@Body parameters: Map<String, String>)
 
     @POST("auth/login")
-    suspend fun login(email: String, password: String): LoginResponse
+    suspend fun login(@Body parameters: Map<String, String>): LoginResponse
 }

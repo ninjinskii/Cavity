@@ -261,6 +261,7 @@
     <string name="new_account">Créer un compte</string>
     <string name="cavity_account">Compte Cavity</string>
     <string name="confirm_account">Confirmation</string>
+    <string name="confirm_account_explanation">Un code de confirmation vous a été envoyé sur votre adresse mail</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>
