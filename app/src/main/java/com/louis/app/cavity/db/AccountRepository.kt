@@ -25,7 +25,8 @@ class AccountRepository private constructor(private val app: Application) {
     private lateinit var cavityApi: CavityApiService
 
     fun submitIpAndRetrieveToken(ip: String, token: String) {
-        retrofit = CavityApiClient.buildRetrofitInstance(ip, token)
+        val locale = app.getString(R.string.locale)
+        retrofit = CavityApiClient.buildRetrofitInstance(ip, token, locale)
         cavityApi = retrofit.create()
     }
 

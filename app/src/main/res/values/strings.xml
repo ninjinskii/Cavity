@@ -11,6 +11,7 @@
     <string name="db_import_success">La base de données a été importée correctement.</string>
     <string name="notification_channel">Rappels dégustations</string>
     <string name="warning">Attention !</string>
+    <string name="locale">fr-FR</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>

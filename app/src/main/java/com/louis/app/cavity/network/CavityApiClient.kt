@@ -15,11 +15,12 @@ object CavityApiClient {
         MoshiConverterFactory.create(moshi)
     }
 
-    fun buildRetrofitInstance(ip: String, token: String): Retrofit {
+    fun buildRetrofitInstance(ip: String, token: String, locale: String): Retrofit {
         val httpClient = OkHttpClient.Builder()
             .addInterceptor {
                 val request = it.request().newBuilder()
                     .addHeader("Authorization", "Bearer $token")
+                    .addHeader("Accept-Language", locale)
                     .build()
 
                 it.proceed(request)

@@ -12,6 +12,7 @@
     <string name="db_import_success">The database has been imported correctly.</string>
     <string name="notification_channel">Tasting reminders</string>
     <string name="warning">Warning !</string>
+    <string name="locale">en-US</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Please enter a region name.</string>
