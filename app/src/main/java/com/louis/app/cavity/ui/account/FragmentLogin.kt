@@ -52,12 +52,6 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
             }
         }
 
-        accountViewModel.confirmedEvent.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let {
-                // redirect to account start page
-            }
-        }
-
         accountViewModel.navigateToConfirm.observe(viewLifecycleOwner) {
             it?.getContentIfNotHandled()?.let {
                 val action = FragmentLoginDirections.loginToConfirm()

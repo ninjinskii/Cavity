@@ -248,7 +248,7 @@
         android:label="@string/confirm_account"
         tools:layout="@layout/fragment_confirm_account">
         <action
-            android:id="@+id/cofirmToAccount"
+            android:id="@+id/confirmToAccount"
             app:destination="@id/account_dest" />
     </fragment>
 

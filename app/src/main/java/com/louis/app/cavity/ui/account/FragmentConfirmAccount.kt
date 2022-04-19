@@ -27,8 +27,10 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
 
     private fun observe() {
         accountViewModel.confirmedEvent.observe(viewLifecycleOwner) {
-            val action = FragmentConfirmAccountDirections.cofirmToAccount()
-            findNavController().navigate(action)
+            it?.getContentIfNotHandled()?.let {
+                val action = FragmentConfirmAccountDirections.confirmToAccount()
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -46,7 +48,7 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
         }
 
         binding.digit6.doAfterTextChanged {
-            accountViewModel.confirmAccount("louiszimbabwe@gmail.com", loadInput())
+            accountViewModel.confirmAccount("user@cavity.fr", loadInput())
         }
     }
 

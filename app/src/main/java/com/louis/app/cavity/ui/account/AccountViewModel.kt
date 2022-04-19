@@ -72,7 +72,10 @@ class AccountViewModel(app: Application) : AndroidViewModel(app) {
     fun confirmAccount(email: String, registrationCode: String) {
         doApiCall(
             call = { accountRepository.confirmAccount(email, registrationCode) },
-            onSuccess = { _confirmedEvent.postOnce(Unit) }
+            onSuccess = {
+                _confirmedEvent.postOnce(Unit)
+                _user.postValue(email)
+            }
         )
     }
 
