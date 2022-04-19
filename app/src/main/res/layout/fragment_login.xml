@@ -60,6 +60,7 @@
                     android:id="@+id/login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="user@cavity.fr"
                     android:hint="@string/email"
                     android:inputType="none" />
 
@@ -83,6 +84,7 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="a"
                     android:hint="@string/password"
                     android:inputType="none" />
 
@@ -104,6 +106,7 @@
                     android:id="@+id/ip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="192.168.1.12:5000"
                     android:hint="@string/ip"
                     android:inputType="none" />
 

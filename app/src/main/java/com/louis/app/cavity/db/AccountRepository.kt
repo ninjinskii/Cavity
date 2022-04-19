@@ -7,10 +7,8 @@ import com.louis.app.cavity.network.CavityApiService
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.LoginResponse
 import com.louis.app.cavity.util.L
-import retrofit2.HttpException
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.create
+import okhttp3.ResponseBody
+import retrofit2.*
 
 class AccountRepository private constructor(private val app: Application) {
     companion object {
@@ -65,13 +63,14 @@ class AccountRepository private constructor(private val app: Application) {
 
     private fun parseError(response: Response<*>?): ApiResponse.Failure {
         return try {
-            val converter = retrofit.responseBodyConverter<ApiResponse.Failure>(
-                ApiResponse.Failure::class.java,
-                emptyArray()
-            )
+            val converter: Converter<ResponseBody, ApiResponse.Failure> = retrofit
+                .responseBodyConverter(
+                    ApiResponse.Failure::class.java,
+                    arrayOfNulls<Annotation>(0)
+                )
 
             val message = response?.errorBody()?.let {
-                converter.convert(it)?.message
+                converter.convert(it)!!.message
             } ?: app.getString(R.string.base_error)
 
             ApiResponse.Failure(message)
