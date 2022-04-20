@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
@@ -13,7 +14,8 @@ import com.louis.app.cavity.util.setupNavigation
 class FragmentAccount : Fragment(R.layout.fragment_account) {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
-    private val accountViewModel: AccountViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels()
+    private val accountViewModel: AccountViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +48,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     }
 
     private fun observe() {
-        accountViewModel.user.observe(viewLifecycleOwner) {
+        loginViewModel.user.observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.email.text = it
             } else {
@@ -59,7 +61,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     private fun setupToolbar() {
         binding.toolbar.setOnMenuItemClickListener {
             if (it.itemId == R.id.logout) {
-                accountViewModel.logout()
+                loginViewModel.logout()
                 return@setOnMenuItemClickListener true
             }
 

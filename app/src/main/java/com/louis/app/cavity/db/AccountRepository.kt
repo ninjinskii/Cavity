@@ -2,6 +2,7 @@ package com.louis.app.cavity.db
 
 import android.app.Application
 import com.louis.app.cavity.R
+import com.louis.app.cavity.model.County
 import com.louis.app.cavity.network.CavityApiClient
 import com.louis.app.cavity.network.CavityApiService
 import com.louis.app.cavity.network.response.ApiResponse
@@ -43,6 +44,10 @@ class AccountRepository private constructor(private val app: Application) {
     suspend fun confirmAccount(email: String, registrationCode: String): ApiResponse<Unit> {
         val parameters = mapOf("email" to email, "registrationCode" to registrationCode)
         return doApiCall { cavityApi.confirmAccount(parameters) }
+    }
+
+    suspend fun postCounties(counties: List<County>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postCounties(counties) }
     }
 
     private suspend fun <T> doApiCall(apiCall: suspend () -> T): ApiResponse<T> {

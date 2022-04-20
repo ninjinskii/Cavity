@@ -14,7 +14,7 @@ import com.louis.app.cavity.util.setupNavigation
 class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
     private var _binding: FragmentConfirmAccountBinding? = null
     private val binding get() = _binding!!
-    private val accountViewModel: AccountViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,7 +27,7 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
     }
 
     private fun observe() {
-        accountViewModel.confirmedEvent.observe(viewLifecycleOwner) {
+        loginViewModel.confirmedEvent.observe(viewLifecycleOwner) {
             it?.getContentIfNotHandled()?.let {
                 val action = FragmentConfirmAccountDirections.confirmToAccount()
                 val navOptions = NavOptions.Builder()
@@ -53,7 +53,7 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
         }
 
         binding.digit6.doAfterTextChanged {
-            accountViewModel.confirmAccount(loadConfimrationCode())
+            loginViewModel.confirmAccount(loadConfimrationCode())
         }
     }
 

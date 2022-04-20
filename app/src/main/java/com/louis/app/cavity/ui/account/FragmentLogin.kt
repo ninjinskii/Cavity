@@ -17,7 +17,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private val accountViewModel: AccountViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels()
     private lateinit var savedStateHandle: SavedStateHandle
 
 
@@ -35,18 +35,18 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
     }
 
     private fun observe() {
-        accountViewModel.isLoading.observe(viewLifecycleOwner) {
+        loginViewModel.isLoading.observe(viewLifecycleOwner) {
             // Update progress bar
         }
 
-        accountViewModel.navigateToConfirm.observe(viewLifecycleOwner) {
+        loginViewModel.navigateToConfirm.observe(viewLifecycleOwner) {
             it?.getContentIfNotHandled()?.let {
                 val action = FragmentLoginDirections.loginToConfirm()
                 findNavController().navigate(action)
             }
         }
 
-        accountViewModel.user.observe(viewLifecycleOwner) {
+        loginViewModel.user.observe(viewLifecycleOwner) {
             if (it != null) {
                 savedStateHandle.set(LOGIN_SUCCESSFUL, true)
                 findNavController().popBackStack()
@@ -61,11 +61,11 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
                 val password = password.text.toString()
                 val apiUrl = "http://${ip.text.toString()}"
 
-                accountViewModel.submitIp(apiUrl)
+                loginViewModel.submitIp(apiUrl)
 
                 when (newAccount.isChecked) {
-                    true -> accountViewModel.register(email, password)
-                    else -> accountViewModel.login(email, password)
+                    true -> loginViewModel.register(email, password)
+                    else -> loginViewModel.login(email, password)
                 }
             }
         }

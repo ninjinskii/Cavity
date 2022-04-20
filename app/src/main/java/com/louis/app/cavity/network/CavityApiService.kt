@@ -1,5 +1,6 @@
 package com.louis.app.cavity.network
 
+import com.louis.app.cavity.model.County
 import com.louis.app.cavity.network.response.LoginResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -13,4 +14,7 @@ interface CavityApiService {
 
     @POST("auth/login")
     suspend fun login(@Body parameters: Map<String, String>): LoginResponse
+
+    @POST("county")
+    suspend fun postCounties(@Body counties: List<County>)
 }
