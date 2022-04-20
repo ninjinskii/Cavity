@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentConfirmAccountBinding
@@ -29,7 +30,11 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
         accountViewModel.confirmedEvent.observe(viewLifecycleOwner) {
             it?.getContentIfNotHandled()?.let {
                 val action = FragmentConfirmAccountDirections.confirmToAccount()
-                findNavController().navigate(action)
+                val navOptions = NavOptions.Builder()
+                    .setPopUpTo(R.id.fragmentLogin, true)
+                    .build()
+
+                findNavController().navigate(action, navOptions)
             }
         }
     }

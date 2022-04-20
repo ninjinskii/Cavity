@@ -8,7 +8,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAccountBinding
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentAccount : Fragment(R.layout.fragment_account) {
@@ -47,11 +46,9 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
     private fun observe() {
         accountViewModel.user.observe(viewLifecycleOwner) {
-            L.v("observe user from fragment account")
             if (it != null) {
-                L.v("user's logged in: $it")
+                binding.email.text = it
             } else {
-                L.v("go to login")
                 val action = FragmentAccountDirections.accountToLogin()
                 findNavController().navigate(action)
             }
