@@ -39,9 +39,10 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAccountBinding.bind(view)
 
-        setupNavigation(binding.appBar.toolbar)
+        setupNavigation(binding.toolbar)
 
         observe()
+        setupToolbar()
     }
 
     private fun observe() {
@@ -52,6 +53,17 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                 val action = FragmentAccountDirections.accountToLogin()
                 findNavController().navigate(action)
             }
+        }
+    }
+
+    private fun setupToolbar() {
+        binding.toolbar.setOnMenuItemClickListener {
+            if (it.itemId == R.id.logout) {
+                accountViewModel.logout()
+                return@setOnMenuItemClickListener true
+            }
+
+            false
         }
     }
 

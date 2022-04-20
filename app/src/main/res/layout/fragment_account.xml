@@ -14,9 +14,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include
+            <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/appBar"
-                layout="@layout/app_bar" />
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:transitionName="appbar"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:menu="@menu/account_menu"
+                    app:titleCentered="true"
+                    app:titleTextColor="?attr/colorOnSurface" />
+
+            </com.google.android.material.appbar.AppBarLayout>
 
             <TextView
                 android:id="@+id/email"

@@ -263,6 +263,12 @@
     <string name="cavity_account">Compte Cavity</string>
     <string name="confirm_account">Confirmation</string>
     <string name="confirm_account_explanation">Un code de confirmation vous a été envoyé sur votre adresse mail</string>
+    <string name="logout">Se déconnecter</string>
+    <string name="account_explanation">Utiliser votre compte Cavity pour créer une sauvegarde en ligne de votre cave.</string>
+    <string name="export_explanation">Enregistre la cave de cet appareil sur un serveur distant.</string>
+    <string name="export">Exporter</string>
+    <string name="import_explanation">Récupérer votre dernière sauvegarde.</string>
+    <string name="import_">Importer</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

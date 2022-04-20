@@ -90,6 +90,10 @@ class AccountViewModel(app: Application) : AndroidViewModel(app) {
         )
     }
 
+    fun logout() {
+        _user.value = null
+    }
+
     private fun <T> doApiCall(
         call: suspend () -> ApiResponse<T>,
         onSuccess: (ApiResponse.Success<T>) -> Unit
