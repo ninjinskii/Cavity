@@ -44,6 +44,8 @@ class AccountViewModel(app: Application) : AndroidViewModel(app) {
     val confirmedEvent: LiveData<Event<Unit>>
         get() = _confirmedEvent
 
+    var inConfirmationUser: String? = null
+
     fun submitIp(ip: String) {
         val token = prefsRepository.getApiToken()
         accountRepository.submitIpAndRetrieveToken(ip, token)
@@ -64,15 +66,24 @@ class AccountViewModel(app: Application) : AndroidViewModel(app) {
             call = { accountRepository.register(email, password) },
             onSuccess = {
                 _userFeedback.postOnce(R.string.confirm_mail_sent)
+                inConfirmationUser = email
                 _navigateToConfirm.postOnce(Unit)
             }
         )
     }
 
-    fun confirmAccount(email: String, registrationCode: String) {
+    fun confirmAccount(registrationCode: String) {
+        val email = inConfirmationUser
+
+        if (email == null) {
+            _userFeedback.postOnce(R.string.base_error)
+            return
+        }
+
         doApiCall(
             call = { accountRepository.confirmAccount(email, registrationCode) },
             onSuccess = {
+                inConfirmationUser = null
                 _confirmedEvent.postOnce(Unit)
                 _user.postValue(email)
             }

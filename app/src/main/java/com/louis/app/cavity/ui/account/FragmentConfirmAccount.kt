@@ -53,11 +53,11 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
         }
 
         binding.digit6.doAfterTextChanged {
-            accountViewModel.confirmAccount("user@cavity.fr", loadInput())
+            accountViewModel.confirmAccount(loadConfimrationCode())
         }
     }
 
-    private fun loadInput(): String {
+    private fun loadConfimrationCode(): String {
         with(binding) {
             val inputs = listOf(digit1, digit2, digit3, digit4, digit5, digit6)
             var code = ""
