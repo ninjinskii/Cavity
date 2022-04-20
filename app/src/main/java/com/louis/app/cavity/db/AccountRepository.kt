@@ -2,7 +2,7 @@ package com.louis.app.cavity.db
 
 import android.app.Application
 import com.louis.app.cavity.R
-import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.*
 import com.louis.app.cavity.network.CavityApiClient
 import com.louis.app.cavity.network.CavityApiService
 import com.louis.app.cavity.network.response.ApiResponse
@@ -48,6 +48,56 @@ class AccountRepository private constructor(private val app: Application) {
 
     suspend fun postCounties(counties: List<County>): ApiResponse<Unit> {
         return doApiCall { cavityApi.postCounties(counties) }
+    }
+
+    suspend fun postWines(wines: List<Wine>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postWines(wines) }
+    }
+
+    suspend fun postBottles(bottles: List<Bottle>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postBottles(bottles) }
+    }
+
+    suspend fun postFriends(friends: List<Friend>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postFriends(friends) }
+    }
+
+    suspend fun postGrapes(grapes: List<Grape>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postGrapes(grapes) }
+    }
+
+    suspend fun postReviews(reviews: List<Review>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postReviews(reviews) }
+    }
+
+    suspend fun postHistoryEntries(entries: List<HistoryEntry>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postHistoryEntries(entries) }
+    }
+
+    suspend fun postTastings(tastings: List<Tasting>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postTastings(tastings) }
+    }
+
+    suspend fun postTastingActions(actions: List<TastingAction>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postTastingActions(actions) }
+    }
+
+    suspend fun postFReviews(fReviews: List<FReview>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postFReview(fReviews) }
+    }
+
+    suspend fun postQGrapes(qGrapes: List<QGrape>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postQGrapes(qGrapes) }
+    }
+
+    suspend fun postTastingFriendsXRefs(tastingFriendXRefs: List<TastingXFriend>):
+        ApiResponse<Unit> {
+        return doApiCall { cavityApi.postTastingFriendsXRef(tastingFriendXRefs) }
+    }
+
+    suspend fun postHistoryFriendsXRefs(historyFriendXRefs: List<HistoryXFriend>):
+        ApiResponse<Unit> {
+        return doApiCall { cavityApi.postHistoryFriendsXRef(historyFriendXRefs) }
     }
 
     private suspend fun <T> doApiCall(apiCall: suspend () -> T): ApiResponse<T> {

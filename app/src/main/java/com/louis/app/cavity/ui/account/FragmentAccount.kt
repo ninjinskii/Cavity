@@ -44,6 +44,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         setupNavigation(binding.toolbar)
 
         observe()
+        setListeners()
         setupToolbar()
     }
 
@@ -55,6 +56,12 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                 val action = FragmentAccountDirections.accountToLogin()
                 findNavController().navigate(action)
             }
+        }
+    }
+
+    private fun setListeners() {
+        binding.export.setOnClickListener {
+            accountViewModel.export()
         }
     }
 
