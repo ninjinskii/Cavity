@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
+import com.louis.app.cavity.ui.account.AccountViewModel
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.tasting.TastingViewModel
 import com.louis.app.cavity.util.DateFormatter
@@ -34,6 +35,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private lateinit var navHostFragment: Fragment
     private val addItemViewModel: AddItemViewModel by viewModels()
     private val tastingViewModel: TastingViewModel by viewModels()
+    private val accountViewModel: AccountViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val isAndroid12 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
@@ -112,6 +114,18 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         addItemViewModel.userFeedback.observe(this) {
             it.getContentIfNotHandled()?.let { stringRes ->
                 onShowSnackbarRequested(stringRes)
+            }
+        }
+
+        accountViewModel.userFeedback.observe(this) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                onShowSnackbarRequested(stringRes)
+            }
+        }
+
+        accountViewModel.userFeedbackString.observe(this) {
+            it.getContentIfNotHandled()?.let { string ->
+                binding.main.coordinator.showSnackbar(string)
             }
         }
 

@@ -9,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.util.setupNavigation
-import com.louis.app.cavity.util.showSnackbar
 
 class FragmentLogin : Fragment(R.layout.fragment_login) {
     companion object {
@@ -38,18 +37,6 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
     private fun observe() {
         accountViewModel.isLoading.observe(viewLifecycleOwner) {
             // Update progress bar
-        }
-
-        accountViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
-            }
-        }
-
-        accountViewModel.userFeedbackString.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let { string ->
-                binding.coordinator.showSnackbar(string)
-            }
         }
 
         accountViewModel.navigateToConfirm.observe(viewLifecycleOwner) {
