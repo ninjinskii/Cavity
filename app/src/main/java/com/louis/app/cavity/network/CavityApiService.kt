@@ -21,7 +21,7 @@ interface CavityApiService {
     @POST("wine")
     suspend fun postWines(@Body wines: List<Wine>)
 
-    @POST("bottles")
+    @POST("bottle")
     suspend fun postBottles(@Body bottles: List<Bottle>)
 
     @POST("friend")
@@ -48,9 +48,9 @@ interface CavityApiService {
     @POST("qgrape")
     suspend fun postQGrapes(@Body qGrapes: List<QGrape>)
 
-    @POST("tasting-x-friends")
+    @POST("tasting-x-friend")
     suspend fun postTastingFriendsXRef(@Body tastingXFriends: List<TastingXFriend>)
 
-    @POST("history-x-friends")
+    @POST("history-x-friend")
     suspend fun postHistoryFriendsXRef(@Body historyXFriends: List<HistoryXFriend>)
 }

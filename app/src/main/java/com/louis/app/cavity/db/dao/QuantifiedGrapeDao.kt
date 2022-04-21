@@ -20,6 +20,9 @@ interface QuantifiedGrapeDao {
     @Delete
     suspend fun deleteQGrape(qGrape: QGrape)
 
+    @Query("SELECT * FROM q_grape")
+    suspend fun getAllQGrapesNotLive(): List<QGrape>
+
     @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId AND grape_id=:grapeId")
     suspend fun getQGrape(bottleId: Long, grapeId: Long): QGrape

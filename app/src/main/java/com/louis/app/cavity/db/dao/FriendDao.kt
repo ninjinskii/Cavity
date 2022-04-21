@@ -17,4 +17,7 @@ interface FriendDao {
 
     @Query("SELECT * FROM friend ORDER BY name")
     fun getAllFriends(): LiveData<List<Friend>>
+
+    @Query("SELECT * FROM friend")
+    suspend fun getAllFriendsNotLive(): List<Friend>
 }

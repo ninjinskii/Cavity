@@ -104,7 +104,7 @@ abstract class CavityDatabase : RoomDatabase() {
                     }
 
                     val counties = 1..10
-                    val bottles = 1..29999
+                    val bottles = 1..499
 
                     val wineNames = arrayOf(
                         "Immelé",
@@ -168,7 +168,7 @@ abstract class CavityDatabase : RoomDatabase() {
 
                     wineDao!!.insertWines(wines)
 
-                    val bottlesList = List(30000) {
+                    val bottlesList = List(500) {
                         Bottle(
                             0,
                             (1..50).random().toLong(),
@@ -203,7 +203,7 @@ abstract class CavityDatabase : RoomDatabase() {
                         insertReview(Review(0, "Les étoiles", 3))
                     }
 
-                    repeat(500) {
+                    repeat(50) {
                         try {
                             qGrapeDao!!.insertQGrape(
                                 QGrape(
@@ -262,7 +262,7 @@ abstract class CavityDatabase : RoomDatabase() {
 
                         insertEntry(entries2021)
 
-                        val otherEntries = List(20000) {
+                        val otherEntries = List(200) {
                             val type = types.random()
                             HistoryEntry(
                                 0,
