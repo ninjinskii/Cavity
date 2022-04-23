@@ -52,6 +52,9 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun login(email: String, password: String) {
+        // In case the user create an account, quit the app, and then try to re-login
+        inConfirmationUser = email
+
         doApiCall(
             call = { accountRepository.login(email, password) },
             onSuccess = {

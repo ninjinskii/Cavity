@@ -9,6 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentConfirmAccountBinding
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
@@ -36,6 +37,10 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
 
                 findNavController().navigate(action, navOptions)
             }
+        }
+
+        loginViewModel.isLoading.observe(viewLifecycleOwner) {
+            binding.progressBar.setVisible(it, invisible = true)
         }
     }
 

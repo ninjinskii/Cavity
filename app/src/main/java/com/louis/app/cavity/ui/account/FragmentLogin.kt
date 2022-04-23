@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentLogin : Fragment(R.layout.fragment_login) {
@@ -36,7 +37,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
 
     private fun observe() {
         loginViewModel.isLoading.observe(viewLifecycleOwner) {
-            // Update progress bar
+            binding.progressBar.setVisible(it, invisible = true)
         }
 
         loginViewModel.navigateToConfirm.observe(viewLifecycleOwner) {
