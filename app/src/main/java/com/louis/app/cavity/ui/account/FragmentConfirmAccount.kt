@@ -47,17 +47,22 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
     private fun setListeners() {
         with(binding) {
             val inputs = listOf(digit1, digit2, digit3, digit4, digit5, digit6)
-            inputs.forEachIndexed { index, input ->
-                input.doAfterTextChanged {
-                    try {
-                        inputs[index + 1].requestFocus()
-                    } catch (e: IndexOutOfBoundsException) {
+            for (i in 0 until 5) {
+                inputs[i].doAfterTextChanged {
+                    if (it.toString().isNotEmpty()) {
+                        inputs[i + 1].requestFocus()
                     }
                 }
             }
         }
 
         binding.digit6.doAfterTextChanged {
+            if (it.toString().isNotEmpty()) {
+                loginViewModel.confirmAccount(loadConfimrationCode())
+            }
+        }
+
+        binding.buttonSubmit.setOnClickListener {
             loginViewModel.confirmAccount(loadConfimrationCode())
         }
     }
