@@ -6,9 +6,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.util.L
+import com.louis.app.cavity.network.response.ApiResponse
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -16,33 +15,48 @@ class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker
     private val repository = WineRepository.getInstance(context as Application)
     private val accountRepository = AccountRepository.getInstance(context as Application)
 
+    private var retryCount = 0
+
     override suspend fun doWork(): Result {
         return try {
             uploadDatabase()
             Result.success()
+        } catch (e: UncompleteExportException) {
+            if (retryCount++ < 1) {
+                Result.retry()
+            } else {
+                Result.failure()
+            }
         } catch (e: Exception) {
-            L.e(e)
             Result.failure()
         }
     }
 
     private suspend fun uploadDatabase() = withContext(IO) {
         with(accountRepository) {
-            listOf(
-                launch { postCounties(repository.getAllCountiesNotLive()) },
-                launch { postWines(repository.getAllWinesNotLive()) },
-                launch { postBottles(repository.getAllBottlesNotLive()) },
-                launch { postFriends(repository.getAllFriendsNotLive()) },
-                launch { postGrapes(repository.getAllGrapesNotLive()) },
-                launch { postReviews(repository.getAllReviewsNotLive()) },
-                launch { postHistoryEntries(repository.getAllEntriesNotPagedNotLive()) },
-                launch { postTastings(repository.getAllTastingsNotLive()) },
-                launch { postTastingActions(repository.getAllTastingActionsNotLive()) },
-                launch { postFReviews(repository.getAllFReviewsNotLive()) },
-                launch { postQGrapes(repository.getAllQGrapesNotLive()) },
-                launch { postTastingFriendsXRefs(repository.getAllTastingXFriendsNotLive()) },
-                launch { postHistoryFriendsXRefs(repository.getAllHistoryXFriendsNotLive()) }
-            ).joinAll()
+            launch {
+                listOf(
+                    postCounties(repository.getAllCountiesNotLive()),
+                    postWines(repository.getAllWinesNotLive()),
+                    postBottles(repository.getAllBottlesNotLive()),
+                    postFriends(repository.getAllFriendsNotLive()),
+                    postGrapes(repository.getAllGrapesNotLive()),
+                    postReviews(repository.getAllReviewsNotLive()),
+                    postHistoryEntries(repository.getAllEntriesNotPagedNotLive()),
+                    postTastings(repository.getAllTastingsNotLive()),
+                    postTastingActions(repository.getAllTastingActionsNotLive()),
+                    postFReviews(repository.getAllFReviewsNotLive()),
+                    postQGrapes(repository.getAllQGrapesNotLive()),
+                    postTastingFriendsXRefs(repository.getAllTastingXFriendsNotLive()),
+                    postHistoryFriendsXRefs(repository.getAllHistoryXFriendsNotLive())
+                ).forEach {
+                    if (it !is ApiResponse.Success) {
+                        throw UncompleteExportException()
+                    }
+                }
+            }
         }
     }
+
+    class UncompleteExportException : Exception()
 }

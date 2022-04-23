@@ -7,7 +7,6 @@ import com.louis.app.cavity.network.CavityApiClient
 import com.louis.app.cavity.network.CavityApiService
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.LoginResponse
-import com.louis.app.cavity.util.L
 import okhttp3.ResponseBody
 import retrofit2.*
 
@@ -104,7 +103,6 @@ class AccountRepository private constructor(private val app: Application) {
         return try {
             ApiResponse.Success(apiCall.invoke())
         } catch (t: Throwable) {
-            L.e(t)
             when (t) {
                 is HttpException -> when (t.code()) {
                     412 -> ApiResponse.UnregisteredError
