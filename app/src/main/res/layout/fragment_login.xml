@@ -50,6 +50,20 @@
                     app:layout_constraintVertical_chainStyle="packed"
                     app:tint="?attr/colorPrimary" />
 
+                <TextView
+                    android:id="@+id/explanation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:gravity="center"
+                    android:text="@string/account_explanation"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    app:layout_constraintBottom_toTopOf="@id/loginLayout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/icon"
+                    app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
+
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/loginLayout"
                     android:layout_width="0dp"
@@ -58,7 +72,7 @@
                     app:layout_constraintBottom_toTopOf="@id/passwordLayout"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/icon"
+                    app:layout_constraintTop_toBottomOf="@id/explanation"
                     app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
                     app:rule="required"
                     app:startIconDrawable="@drawable/ic_person">
