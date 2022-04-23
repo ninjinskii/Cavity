@@ -7,9 +7,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.work.WorkInfo
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAccountBinding
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAccount : Fragment(R.layout.fragment_account) {
     private var _binding: FragmentAccountBinding? = null
@@ -55,6 +58,27 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
             } else {
                 val action = FragmentAccountDirections.accountToLogin()
                 findNavController().navigate(action)
+            }
+        }
+
+        accountViewModel.workProgress.observe(viewLifecycleOwner) {
+            if (it != null) {
+                when (it.state) {
+                    WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
+                        binding.progressBar.setVisible(true)
+                    }
+                    WorkInfo.State.FAILED -> {
+                        binding.progressBar.setVisible(false)
+                        binding.coordinator.showSnackbar(R.string.base_error)
+                    }
+                    WorkInfo.State.SUCCEEDED -> {
+                        binding.progressBar.setVisible(false)
+                        binding.coordinator.showSnackbar(R.string.export_done)
+                    }
+                    else -> Unit
+                }
+            } else {
+                binding.progressBar.setVisible(false)
             }
         }
     }

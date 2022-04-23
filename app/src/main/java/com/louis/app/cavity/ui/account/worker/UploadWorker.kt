@@ -15,14 +15,12 @@ class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker
     private val repository = WineRepository.getInstance(context as Application)
     private val accountRepository = AccountRepository.getInstance(context as Application)
 
-    private var retryCount = 0
-
     override suspend fun doWork(): Result {
         return try {
             uploadDatabase()
             Result.success()
         } catch (e: UncompleteExportException) {
-            if (retryCount++ < 1) {
+            if (runAttemptCount < 1) {
                 Result.retry()
             } else {
                 Result.failure()
@@ -59,4 +57,8 @@ class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker
     }
 
     class UncompleteExportException : Exception()
+
+    companion object {
+        const val WORK_TAG = "upload-db"
+    }
 }

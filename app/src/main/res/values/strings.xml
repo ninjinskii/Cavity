@@ -269,6 +269,7 @@
     <string name="export">Exporter</string>
     <string name="import_explanation">Récupérer votre dernière sauvegarde.</string>
     <string name="import_">Importer</string>
+    <string name="export_done">Sauvegarde effectuée.</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>
