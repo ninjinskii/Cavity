@@ -2,6 +2,7 @@ package com.louis.app.cavity.model
 
 import androidx.room.*
 import com.louis.app.cavity.R
+import com.louis.app.cavity.ui.Cavity
 import java.util.*
 
 @Entity(
@@ -30,7 +31,7 @@ data class Bottle(
     @ColumnInfo(name = "pdf_path") var pdfPath: String,
     var consumed: Int,
     @ColumnInfo(name = "tasting_id", index = true) var tastingId: Long? = null
-) : Chipable {
+) : Chipable, FileAssoc {
 
     @Ignore
     var isSelected: Boolean = false
@@ -45,4 +46,7 @@ data class Bottle(
     override fun getItemId() = id
     override fun getChipText() = vintage.toString()
     override fun getIcon() = R.drawable.ic_glass
+    override fun getFilePath() = pdfPath
+    override fun getFileName() = "${this.vintage}-${this.id}"
+    override fun getDirectory() = Cavity.DOCUMENTS_DIRECTORY
 }

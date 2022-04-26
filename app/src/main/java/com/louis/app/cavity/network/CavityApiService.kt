@@ -1,9 +1,11 @@
 package com.louis.app.cavity.network
 
 import com.louis.app.cavity.model.*
+import com.louis.app.cavity.network.response.FileTransfer
 import com.louis.app.cavity.network.response.LoginResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface CavityApiService {
     @POST("account")
@@ -53,4 +55,7 @@ interface CavityApiService {
 
     @POST("history-x-friend")
     suspend fun postHistoryFriendsXRef(@Body historyXFriends: List<HistoryXFriend>)
+
+    @POST("wine/{wineId}/image")
+    suspend fun postWineImage(@Path("wineId") wineId: String, @Body file: FileTransfer)
 }

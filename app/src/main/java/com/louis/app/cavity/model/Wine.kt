@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.louis.app.cavity.ui.Cavity
 
 @Entity(
     tableName = "wine",
@@ -25,5 +26,8 @@ data class Wine(
     @ColumnInfo(name = "img_path") val imgPath: String,
     @ColumnInfo(name = "county_id", index = true) val countyId: Long,
     val hidden: Int = 0
-) {
+) : FileAssoc {
+    override fun getFilePath() = imgPath
+    override fun getFileName() = "${this.name.replace(" ", "-")}-${this.id}"
+    override fun getDirectory() = Cavity.PHOTOS_DIRECTORY
 }

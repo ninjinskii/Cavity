@@ -6,6 +6,7 @@ import com.louis.app.cavity.model.*
 import com.louis.app.cavity.network.CavityApiClient
 import com.louis.app.cavity.network.CavityApiService
 import com.louis.app.cavity.network.response.ApiResponse
+import com.louis.app.cavity.network.response.FileTransfer
 import com.louis.app.cavity.network.response.LoginResponse
 import okhttp3.ResponseBody
 import retrofit2.*
@@ -97,6 +98,10 @@ class AccountRepository private constructor(private val app: Application) {
     suspend fun postHistoryFriendsXRefs(historyFriendXRefs: List<HistoryXFriend>):
         ApiResponse<Unit> {
         return doApiCall { cavityApi.postHistoryFriendsXRef(historyFriendXRefs) }
+    }
+
+    suspend fun postWineImage(wine: Wine, file: FileTransfer): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postWineImage(wine.id.toString(), file) }
     }
 
     private suspend fun <T> doApiCall(apiCall: suspend () -> T): ApiResponse<T> {
