@@ -116,7 +116,8 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
     // We're in IO context, so we'are not worried about a blocking call
     @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun migrateFileToExternalDirectory(fileAssoc: FileAssoc) = withContext(IO) {
-        val path = fileAssoc.getFilePath()
+        val path =
+            fileAssoc.getFilePath() // path = "content://com.android.providers.downloads.documents/document/msf%3A24"
         val uri = Uri.parse(path)
         val inputFile = context.contentResolver.openInputStream(uri)
         val externalDir = context.getExternalFilesDir(null)!!.path
