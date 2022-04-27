@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Base64
+import android.webkit.MimeTypeMap
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.louis.app.cavity.db.AccountRepository
@@ -14,12 +15,11 @@ import com.louis.app.cavity.model.FileAssoc
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.FileTransfer
+import com.louis.app.cavity.ui.Cavity
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 
 
 class UploadWorker(private val context: Context, params: WorkerParameters) :
@@ -38,7 +38,6 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                 Result.failure()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
             Result.failure()
         }
     }
@@ -83,65 +82,80 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                     migrateFileToExternalDirectory(it)
                 }
 
-                val fileTransfert = convertImageToBase64(it.getFilePath().split(":")[1])
-
-                when (it) {
-                    is Wine -> accountRepository.postWineImage(it, fileTransfert)
+                val uri = Uri.parse(it.getFilePath())
+                convertImageToBase64(uri)?.let { fileT ->
+                    when (it) {
+                        is Wine -> accountRepository.postWineImage(it, fileT)
+                    }
                 }
             }
     }
 
     // We're in IO context, so we'are not worried about a blockin call
     @Suppress("BlockingMethodInNonBlockingContext")
-    private suspend fun convertImageToBase64(path: String) = withContext(IO) {
-        val bitmap = BitmapFactory.decodeFile(Uri.parse(path).toString())
-        val extension = path.substringAfterLast(".", "")
-        val compressFormat = when (extension) {
-            PNG_FORMAT -> Bitmap.CompressFormat.PNG
-            else -> Bitmap.CompressFormat.JPEG
-        }
+    private suspend fun convertImageToBase64(uri: Uri) = withContext(IO) {
+        try {
+            val fileInputStream = context.contentResolver.openInputStream(uri)
+            val bitmap = BitmapFactory.decodeStream(fileInputStream)
+            val extension =
+                MimeTypeMap.getSingleton()
+                    .getExtensionFromMimeType(context.contentResolver.getType(uri))
+                    ?: uri.path?.substringAfterLast(".", "")
+                    ?: throw FileNotFoundException()
 
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(compressFormat, 100, baos)
-
-        return@withContext baos.toByteArray().let {
-            val base64 = Base64.encodeToString(it, Base64.DEFAULT)
-            withContext(IO) {
-                baos.close()
+            val compressFormat = when (extension) {
+                PNG_FORMAT -> Bitmap.CompressFormat.PNG
+                else -> Bitmap.CompressFormat.JPEG
             }
-            FileTransfer(extension, base64)
+
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(compressFormat, 100, baos)
+
+            return@withContext baos.use {
+                val base64 = Base64.encodeToString(it.toByteArray(), Base64.DEFAULT)
+                FileTransfer(extension, base64)
+            }
+        } catch (e: FileNotFoundException) {
+            return@withContext null
         }
     }
 
     // We're in IO context, so we'are not worried about a blocking call
     @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun migrateFileToExternalDirectory(fileAssoc: FileAssoc) = withContext(IO) {
-        val path =
-            fileAssoc.getFilePath() // path = "content://com.android.providers.downloads.documents/document/msf%3A24"
-        val uri = Uri.parse(path)
-        val inputFile = context.contentResolver.openInputStream(uri)
-        val externalDir = context.getExternalFilesDir(null)!!.path
-        val filename = fileAssoc.getFileName()
-        val directory = fileAssoc.getDirectory()
-        val outputFile = File("$externalDir${directory}/${filename}.jpeg") // TODO: ext
+        try {
+            val uriString = fileAssoc.getFilePath()
+            val uri = Uri.parse(uriString)
+            val fileInputStream = context.contentResolver.openInputStream(uri)
+            val externalDir = context.getExternalFilesDir(null)!!.path
+            val filename = fileAssoc.getFileName()
+            val directory = fileAssoc.getDirectory()
+            val outputFile = File("$externalDir${directory}/${filename}.${JPEG_FORMAT}")
+            val tempDir = File("$externalDir${Cavity.PHOTOS_DIRECTORY}")
+            val compressFormat = when (uriString.substringAfterLast(".", "")) {
+                PNG_FORMAT -> Bitmap.CompressFormat.PNG
+                else -> Bitmap.CompressFormat.JPEG
+            }
 
-        if (!outputFile.exists()) {
-            outputFile.createNewFile()
-        }
+            if (!tempDir.exists()) {
+                tempDir.mkdir()
+            }
 
-        val bitmap = BitmapFactory.decodeStream(inputFile)
-//        val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//            ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri))
-//        } else {
-//            MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-//        }
+            if (!outputFile.exists()) {
+                outputFile.createNewFile()
+            }
 
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val bitmap = BitmapFactory.decodeStream(fileInputStream)
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(compressFormat, 100, baos)
 
-        val fos = FileOutputStream(outputFile, false)
-        fos.use {
-            it.write(baos.toByteArray())
+            FileOutputStream(outputFile, false).use {
+                it.write(baos.toByteArray())
+            }
+        } catch (e: IOException) {
+            // Do nothing
+        } catch (e: FileNotFoundException) {
+            // Do nothing
         }
     }
 
@@ -150,5 +164,6 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
     companion object {
         const val WORK_TAG = "upload-db"
         const val PNG_FORMAT = "png"
+        const val JPEG_FORMAT = "jpeg"
     }
 }
