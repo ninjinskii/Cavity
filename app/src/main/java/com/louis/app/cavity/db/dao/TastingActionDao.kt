@@ -17,6 +17,9 @@ interface TastingActionDao {
     @Query("SELECT * FROM tasting_action WHERE id=:tastingActionId")
     suspend fun getTastingActionById(tastingActionId: Long): TastingAction
 
+    @Query("SELECT * FROM tasting_action")
+    suspend fun getAllTastingActionsNotLive(): List<TastingAction>
+
     @Query("DELETE FROM tasting_action WHERE bottle_id=:bottleId")
     suspend fun deleteTastingActionsForBottle(bottleId: Long)
 }

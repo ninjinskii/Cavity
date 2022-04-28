@@ -1,9 +1,6 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
 import com.louis.app.cavity.model.TastingXFriend
 
 @Dao
@@ -16,4 +13,7 @@ interface TastingXFriendDao {
 
     @Delete
     suspend fun deleteTastingXFriend(tasting: TastingXFriend)
+
+    @Query("SELECT * FROM tasting_friend_xref")
+    suspend fun getAllTastingXFriendsNotLive(): List<TastingXFriend>
 }

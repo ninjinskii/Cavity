@@ -1,9 +1,6 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
 import com.louis.app.cavity.model.HistoryXFriend
 
 @Dao
@@ -19,4 +16,7 @@ interface HistoryXFriendDao {
 
     @Delete
     suspend fun deleteHistoryXFriend(fxh: HistoryXFriend)
+
+    @Query("SELECT * FROM friend_history_entry_xref")
+    suspend fun getAllHistoryXFriendsNotLive(): List<HistoryXFriend>
 }

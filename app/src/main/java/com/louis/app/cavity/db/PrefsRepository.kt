@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.louis.app.cavity.R
 
-class PrefsRepository(app: Application) {
+class PrefsRepository private constructor(app: Application) {
     companion object {
         private const val PREF_SKEW_BOTTLE = "com.louis.app.cavity.PREF_SKEW_BOTTLE"
         private const val PREF_DEFAULT_CURRENCY = "com.louis.app.cavity.PREF_DEFAULT_CURRENCY"
+        private const val PREF_API_TOKEN = "com.louis.app.cavity.PREF_API_TOKEN"
+        private const val DEFAULT_CURRENCY = "€"
 
         @Volatile
         var instance: PrefsRepository? = null
@@ -31,9 +33,15 @@ class PrefsRepository(app: Application) {
         PREF_DEFAULT_CURRENCY.put(currency)
     }
 
+    fun setApiToken(token: String) {
+        PREF_API_TOKEN.put(token)
+    }
+
     fun getSkewBottle() = PREF_SKEW_BOTTLE.getBoolean()
 
-    fun getDefaultCurrency() = PREF_DEFAULT_CURRENCY.getString()
+    fun getDefaultCurrency() = PREF_DEFAULT_CURRENCY.getString() ?: DEFAULT_CURRENCY
+
+    fun getApiToken() = PREF_API_TOKEN.getString() ?: ""
 
     private fun String.put(string: String) {
         editor.putString(this, string)
@@ -45,7 +53,7 @@ class PrefsRepository(app: Application) {
         editor.commit()
     }
 
-    private fun String.getString() = pref.getString(this, "€")!!
+    private fun String.getString(): String? = pref.getString(this, null)
 
     private fun String.getBoolean() = pref.getBoolean(this, true)
 }

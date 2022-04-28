@@ -66,6 +66,19 @@ fun CoordinatorLayout.showSnackbar(
     }
 }
 
+fun CoordinatorLayout.showSnackbar(
+    string: String,
+    @StringRes actionStringRes: Int? = null,
+    anchorView: View? = null,
+    action: (View) -> Unit = { }
+) {
+    Snackbar.make(this, string, 3000).apply {
+        actionStringRes?.let { setAction(it, action).duration = 9000 }
+        anchorView?.let { this.anchorView = anchorView }
+        show()
+    }
+}
+
 inline fun View.doOnEachNextLayout(crossinline action: (view: View) -> Unit) {
     addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
         action(view)

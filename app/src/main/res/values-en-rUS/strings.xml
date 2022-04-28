@@ -8,10 +8,12 @@
     <string name="ok">OK</string>
     <string name="input_error">Invalid input.</string>
     <string name="permissions_denied">Cavity needs these authorizations to take pictures.</string>
+    <string name="permissions_denied_external">Cavity needs these authorizations to work.</string>
     <string name="persistent_permission_error">Unable to open the file correctly.</string>
     <string name="db_import_success">The database has been imported correctly.</string>
     <string name="notification_channel">Tasting reminders</string>
     <string name="warning">Warning !</string>
+    <string name="locale">en-US</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Please enter a region name.</string>
@@ -254,6 +256,23 @@
     <string name="skew_bottle">Rotate the bottle template when taking a photo.</string>
     <string name="default_currency_title">Default currency</string>
     <string name="default_currency">Select the default currency used when adding a bottle.</string>
+
+    <!-- Account -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="ip">IP Address + port</string>
+    <string name="confirm_mail_sent">A confirmation mail has been sent.</string>
+    <string name="new_account">Create an account</string>
+    <string name="cavity_account">Cavity account</string>
+    <string name="confirm_account">Confirmation</string>
+    <string name="confirm_account_explanation">A confirmation code has been sent to you email address.</string>
+    <string name="logout">Logout</string>
+    <string name="account_explanation">Use a Cavity account to create online backups of your wine cellar and get it back wherever you need (work in progress).</string>
+    <string name="export_explanation">Save the device wine cellar on the server</string>
+    <string name="export">Export</string>
+    <string name="import_explanation">Download your last backup.</string>
+    <string name="import_">Import</string>
+    <string name="export_done">Backup done successfully.</string>
 
     <!-- a11y -->
     <string name="a11y_empty_state_icon">Illustration for empty list</string>

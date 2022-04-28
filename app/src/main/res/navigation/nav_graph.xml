@@ -230,6 +230,29 @@
     </fragment>
 
     <fragment
+        android:id="@+id/account_dest"
+        android:name="com.louis.app.cavity.ui.account.FragmentAccount"
+        android:label="@string/cavity_account"
+        tools:layout="@layout/fragment_account">
+        <action
+            android:id="@+id/accountToLogin"
+            app:destination="@id/fragmentLogin" />
+        <action
+            android:id="@+id/accountToHome"
+            app:destination="@id/home_dest" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentConfirmAccount"
+        android:name="com.louis.app.cavity.ui.account.FragmentConfirmAccount"
+        android:label="@string/confirm_account"
+        tools:layout="@layout/fragment_confirm_account">
+        <action
+            android:id="@+id/confirmToAccount"
+            app:destination="@id/account_dest" />
+    </fragment>
+
+    <fragment
         android:id="@+id/fragmentConsumeBottle"
         android:name="com.louis.app.cavity.ui.bottle.FragmentConsumeBottle"
         android:label="@string/consume_bottle"
@@ -272,5 +295,18 @@
         <argument
             android:name="opportunity"
             app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentLogin"
+        android:name="com.louis.app.cavity.ui.account.FragmentLogin"
+        android:label="@string/cavity_account"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/loginToConfirm"
+            app:destination="@id/fragmentConfirmAccount" />
+        <action
+            android:id="@+id/loginToAccount"
+            app:destination="@id/account_dest" />
     </fragment>
 </navigation>

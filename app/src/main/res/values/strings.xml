@@ -7,10 +7,12 @@
     <string name="ok">OK</string>
     <string name="input_error">Saisie non valide.</string>
     <string name="permissions_denied">Cavity a besoin de ces autorisations pour prendre des photos.</string>
+    <string name="permissions_denied_external">Cavity a besoin de ces autorisations pour fonctionner.</string>
     <string name="persistent_permission_error">Impossible d\'ouvrir le fichier correctement.</string>
     <string name="db_import_success">La base de données a été importée correctement.</string>
     <string name="notification_channel">Rappels dégustations</string>
     <string name="warning">Attention !</string>
+    <string name="locale">fr-FR</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
@@ -252,6 +254,23 @@
     <string name="skew_bottle">Incline le gabarit de la bouteille lors de la prise d\'une photo.</string>
     <string name="default_currency_title">Monnaie par défaut</string>
     <string name="default_currency">Choisissez la monnaie par défaut à utiliser lors de l\'ajout d\'une bouteille.</string>
+
+    <!-- Account -->
+    <string name="email">Email</string>
+    <string name="password">Mot de passe</string>
+    <string name="ip">Adresse IP + port</string>
+    <string name="confirm_mail_sent">Un mail de confirmation a été envoyé.</string>
+    <string name="new_account">Créer un compte</string>
+    <string name="cavity_account">Compte Cavity</string>
+    <string name="confirm_account">Confirmation</string>
+    <string name="confirm_account_explanation">Un code de confirmation vous a été envoyé sur votre adresse mail</string>
+    <string name="logout">Se déconnecter</string>
+    <string name="account_explanation">Utiliser votre compte Cavity pour créer une sauvegarde en ligne de votre cave et la récupérer où vous le souhaitez (en cours de développement).</string>
+    <string name="export_explanation">Enregistre la cave de cet appareil sur un serveur distant.</string>
+    <string name="export">Exporter</string>
+    <string name="import_explanation">Récupérer votre dernière sauvegarde.</string>
+    <string name="import_">Importer</string>
+    <string name="export_done">Sauvegarde effectuée.</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

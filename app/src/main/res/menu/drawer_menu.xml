@@ -27,6 +27,11 @@
             android:title="@string/history" />
 
         <item
+            android:id="@+id/account_dest"
+            android:icon="@drawable/ic_person"
+            android:title="@string/cavity_account" />
+
+        <item
             android:id="@+id/stats_dest"
             android:icon="@drawable/ic_chart"
             android:title="@string/stats" />
