@@ -1,7 +1,1 @@
-- Ajout d'une vérification pour éviter de créer des doublons de vins
-- Ajout de la contenance 50 cL
-- Ajout de la cuvée sur l'écran de vue d'une bouteille
-- Tri des concours par ordre alphabétique
-- Corrections de fautes d'orthographe
-- Correction d'un problème de couleur pour l'écran d'introduction
-- Correction de la couleur des items de la barre de statut avec un thème clair
+- Ajout de la création de compte (en cours de développement)

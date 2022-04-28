@@ -1,7 +1,1 @@
-- Add a check to avoid wine duplicates
-- Add 50 cL capacity
-- Add cuvee on bottle details screen
-- Reviews are now ordered alphabetically
-- Fix typos
-- Fix splash screen colors
-- Fix status bar items color on light themes
+- Add account creation (WIP)
