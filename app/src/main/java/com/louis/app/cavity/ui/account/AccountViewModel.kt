@@ -10,6 +10,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.ui.account.worker.DownloadWorker
 import com.louis.app.cavity.ui.account.worker.UploadWorker
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -36,6 +37,22 @@ class AccountViewModel(app: Application) : AndroidViewModel(app) {
             )
             .build().also {
                 workRequestId.value = it.id
+                workManager.enqueue(it)
+            }
+    }
+
+    fun import() {
+        workManager.cancelAllWorkByTag(DownloadWorker.WORK_TAG)
+
+        OneTimeWorkRequestBuilder<DownloadWorker>()
+            .addTag(DownloadWorker.WORK_TAG)
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                OneTimeWorkRequest.MIN_BACKOFF_MILLIS, // 10 sec
+                TimeUnit.MILLISECONDS
+            )
+            .build().also {
+                //workRequestId.value = it.id
                 workManager.enqueue(it)
             }
     }

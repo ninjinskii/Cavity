@@ -104,6 +104,30 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.postWineImage(wine.id.toString(), file) }
     }
 
+    suspend fun postBottlePdf(bottle: Bottle, file: FileTransfer): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postBottlePdf(bottle.id.toString(), file) }
+    }
+
+    suspend fun getCounties(): ApiResponse<List<County>> {
+        return doApiCall { cavityApi.getCounties() }
+    }
+
+    suspend fun getWines(): ApiResponse<List<Wine>> {
+        return doApiCall { cavityApi.getWines() }
+    }
+
+    suspend fun getBottles(): ApiResponse<List<Bottle>> {
+        return doApiCall { cavityApi.getBottles() }
+    }
+
+    suspend fun getWineImage(wine: Wine): ApiResponse<FileTransfer> {
+        return doApiCall { cavityApi.getWineImage(wine.id.toString()) }
+    }
+
+    suspend fun getBottlePdf(bottle: Bottle): ApiResponse<FileTransfer> {
+        return doApiCall { cavityApi.getBottlePdf(bottle.id.toString()) }
+    }
+
     private suspend fun <T> doApiCall(apiCall: suspend () -> T): ApiResponse<T> {
         return try {
             ApiResponse.Success(apiCall.invoke())

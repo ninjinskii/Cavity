@@ -48,7 +48,7 @@ class WineRepository private constructor(app: Application) {
 
     // Wine
     suspend fun insertWine(wine: Wine) = wineDao.insertWine(wine)
-    private suspend fun insertWines(wines: List<Wine>) = wineDao.insertWines(wines)
+    suspend fun insertWines(wines: List<Wine>) = wineDao.insertWines(wines)
     suspend fun updateWine(wine: Wine) = wineDao.updateWine(wine)
     suspend fun hideWineById(wineId: Long) = wineDao.hideWineById(wineId)
     suspend fun deleteWineById(wineId: Long) = wineDao.deleteWineById(wineId)
@@ -74,7 +74,15 @@ class WineRepository private constructor(app: Application) {
             throw IllegalArgumentException("County name is blank.")
         }
 
-        countyDao.insertCounty(county)
+        countyDao.insertCounties(county)
+    }
+
+    suspend fun insertCounties(counties: List<County>) {
+        if (counties.any { it.name.isBlank() }) {
+            throw IllegalArgumentException("County name is blank.")
+        }
+
+        countyDao.insertCounties(counties)
     }
 
     suspend fun updateCounty(county: County) {
@@ -93,7 +101,7 @@ class WineRepository private constructor(app: Application) {
 
     // Bottle
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
-    private suspend fun insertBottles(bottles: List<Bottle>) = bottleDao.insertBottles(bottles)
+    suspend fun insertBottles(bottles: List<Bottle>) = bottleDao.insertBottles(bottles)
     suspend fun updateBottle(bottle: Bottle) = bottleDao.updateBottle(bottle)
     suspend fun deleteBottles(bottles: List<Bottle>) = bottleDao.deleteBottles(bottles)
     suspend fun deleteBottleById(bottleId: Long) = bottleDao.deleteBottleById(bottleId)

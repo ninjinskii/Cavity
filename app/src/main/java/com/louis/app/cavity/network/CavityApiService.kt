@@ -4,6 +4,7 @@ import com.louis.app.cavity.model.*
 import com.louis.app.cavity.network.response.FileTransfer
 import com.louis.app.cavity.network.response.LoginResponse
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -58,4 +59,22 @@ interface CavityApiService {
 
     @POST("wine/{wineId}/image")
     suspend fun postWineImage(@Path("wineId") wineId: String, @Body file: FileTransfer)
+
+    @POST("bottle/{bottleId}/pdf")
+    suspend fun postBottlePdf(@Path("bottleId") bottleId: String, @Body file: FileTransfer)
+
+    @GET("county")
+    suspend fun getCounties(): List<County>
+
+    @GET("wine")
+    suspend fun getWines(): List<Wine>
+
+    @GET("bottle")
+    suspend fun getBottles(): List<Bottle>
+
+    @GET("wine/{wineId}/image")
+    suspend fun getWineImage(@Path("wineId") wineId: String): FileTransfer
+
+    @GET("bottle/{bottleId}/pdf")
+    suspend fun getBottlePdf(@Path("bottleId") bottleId: String): FileTransfer
 }

@@ -7,6 +7,7 @@
     <string name="ok">OK</string>
     <string name="input_error">Saisie non valide.</string>
     <string name="permissions_denied">Cavity a besoin de ces autorisations pour prendre des photos.</string>
+    <string name="permissions_denied_external">Cavity a besoin de ces autorisations pour fonctionner.</string>
     <string name="persistent_permission_error">Impossible d\'ouvrir le fichier correctement.</string>
     <string name="db_import_success">La base de données a été importée correctement.</string>
     <string name="notification_channel">Rappels dégustations</string>

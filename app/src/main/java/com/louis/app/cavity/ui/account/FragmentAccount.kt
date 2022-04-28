@@ -1,7 +1,12 @@
 package com.louis.app.cavity.ui.account
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -15,6 +20,7 @@ import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAccount : Fragment(R.layout.fragment_account) {
+    private lateinit var askPermission: ActivityResultLauncher<String>
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
@@ -22,6 +28,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        askPermission =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+                handlePermisionResults(it)
+            }
 
         val currentBackStackEntry = findNavController().currentBackStackEntry!!
         val savedStateHandle = currentBackStackEntry.savedStateHandle
@@ -85,7 +96,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
     private fun setListeners() {
         binding.export.setOnClickListener {
-            accountViewModel.export()
+            if (hasPermissions()) {
+                accountViewModel.export()
+            } else {
+                askPermission.launch(REQUIRED_PERMISSION)
+            }
         }
     }
 
@@ -100,8 +115,25 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         }
     }
 
+    private fun hasPermissions() = ContextCompat.checkSelfPermission(
+        requireContext(),
+        REQUIRED_PERMISSION
+    ) == PackageManager.PERMISSION_GRANTED
+
+    private fun handlePermisionResults(permission: Boolean) {
+        if (permission) {
+            accountViewModel.export()
+        } else {
+            binding.coordinator.showSnackbar(R.string.permissions_denied_external)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val REQUIRED_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE
     }
 }

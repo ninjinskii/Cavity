@@ -36,6 +36,7 @@ data class Bottle(
     @Ignore
     var isSelected: Boolean = false
 
+
     fun isReadyToDrink(): Boolean {
         val year = Calendar.getInstance().get(Calendar.YEAR)
         return year >= apogee
@@ -46,7 +47,8 @@ data class Bottle(
     override fun getItemId() = id
     override fun getChipText() = vintage.toString()
     override fun getIcon() = R.drawable.ic_glass
+
     override fun getFilePath() = pdfPath
-    override fun getFileName() = "${this.vintage}-${this.id}"
-    override fun getDirectory() = Cavity.DOCUMENTS_DIRECTORY
+    override fun getExternalFileName() = "${this.vintage}-${this.id}"
+    override fun getExternalSubDirectory() = Cavity.DOCUMENTS_DIRECTORY
 }
