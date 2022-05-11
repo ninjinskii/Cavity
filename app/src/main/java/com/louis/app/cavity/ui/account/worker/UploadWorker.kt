@@ -33,6 +33,7 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                 Result.failure()
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             Result.failure()
         }
     }
@@ -75,16 +76,20 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                 val uriString = it.getFilePath()
                 val uri = Uri.parse(uriString)
 
-                FileProcessor(context, uri).apply {
-                    extension?.let { ext ->
-                        getBase64()?.let { base64 ->
-                            val ft = FileTransfer(ext, base64)
-                            when (it) {
-                                is Wine -> accountRepository.postWineImage(it, ft)
-                                is Bottle -> accountRepository.postBottlePdf(it, ft)
+                try {
+                    FileProcessor(context, uri).apply {
+                        extension?.let { ext ->
+                            getBase64()?.let { base64 ->
+                                val ft = FileTransfer(ext, base64)
+                                when (it) {
+                                    is Wine -> accountRepository.postWineImage(it, ft)
+                                    is Bottle -> accountRepository.postBottlePdf(it, ft)
+                                }
                             }
                         }
                     }
+                } catch (e: SecurityException) {
+                    // Do nothing
                 }
             }
     }
