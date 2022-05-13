@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.search
 
 import android.animation.AnimatorInflater
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -218,13 +217,13 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         val savedState = savedInstanceState?.getIntArray(CHIP_COLOR)
 
         filtersBinding.colorChipGroup.apply {
-            children.forEach {
-                (it as Chip).setOnCheckedChangeListener { _, _ ->
-                    searchViewModel.setColorFilters(checkedChipIds)
-                }
+            setOnCheckedStateChangeListener { _, checkedIds ->
+                searchViewModel.setColorFilters(checkedIds)
+            }
 
+            children.forEach {
                 savedState?.let { checkedIds ->
-                    it.isChecked = it.id in checkedIds
+                    (it as Chip).isChecked = it.id in checkedIds
                 }
             }
         }
@@ -243,13 +242,13 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
 
         filtersBinding.otherChipGroup.apply {
-            children.forEach {
-                (it as Chip).setOnCheckedChangeListener { _, _ ->
-                    searchViewModel.setOtherFilters(checkedChipIds)
-                }
+            setOnCheckedStateChangeListener { _, checkedIds ->
+                searchViewModel.setOtherFilters(checkedIds)
+            }
 
+            children.forEach {
                 savedStateMisc?.let { checkedIds ->
-                    it.isChecked = it.id in checkedIds
+                    (it as Chip).isChecked = it.id in checkedIds
                 }
             }
         }
@@ -287,7 +286,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             values = listOf(max(valueFrom, start ?: valueFrom), max(valueTo, end ?: valueTo))
 
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
-                @SuppressLint("RestrictedApi")
                 override fun onStopTrackingTouch(slider: RangeSlider) {
                     searchViewModel.setVintageFilter(
                         slider.values[0].toInt(),
@@ -295,7 +293,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     )
                 }
 
-                @SuppressLint("RestrictedApi")
                 override fun onStartTrackingTouch(slider: RangeSlider) = Unit
             })
         }
@@ -330,7 +327,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             isEnabled = filtersBinding.togglePrice.isChecked
 
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
-                @SuppressLint("RestrictedApi")
                 override fun onStopTrackingTouch(slider: RangeSlider) {
                     searchViewModel.setPriceFilter(
                         slider.values[0].toInt(),
@@ -338,7 +334,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     )
                 }
 
-                @SuppressLint("RestrictedApi")
                 override fun onStartTrackingTouch(slider: RangeSlider) = Unit
             })
         }
@@ -409,20 +404,14 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun prepareGrapeFilters() {
         filtersBinding.grapeChipGroup.apply {
-            val grapes = checkedChipIds.map {
-                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Grape
-            }
-
+            val grapes = collectAs<Grape>()
             searchViewModel.setGrapeFilters(grapes)
         }
     }
 
     private fun prepareReviewFilters() {
         filtersBinding.reviewChipGroup.apply {
-            val reviews = checkedChipIds.map {
-                findViewById<Chip>(it).getTag(R.string.tag_chip_id) as Review
-            }
-
+            val reviews = collectAs<Review>()
             searchViewModel.setReviewFilters(reviews)
         }
     }
