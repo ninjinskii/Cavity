@@ -25,7 +25,7 @@ interface HistoryDao {
     @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND (type = 0 OR type = 2 OR type = 4)")
     suspend fun onBottleConsumptionReverted(bottleId: Long)
 
-    @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND type = 1 OR type = 3")
+    @Query("DELETE FROM history_entry WHERE bottle_id=:bottleId AND (type = 1 OR type = 3)")
     suspend fun clearExistingReplenishments(bottleId: Long)
 
     @Query("SELECT * FROM history_entry ORDER BY date DESC")

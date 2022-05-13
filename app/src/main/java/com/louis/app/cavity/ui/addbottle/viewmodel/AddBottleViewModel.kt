@@ -142,15 +142,13 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         val historyEntry = HistoryEntry(0, buyDate, bottleId, null, "", type, 0)
 
         repository.run {
-            transaction {
-                revertBottleConsumption(bottleId)
-                clearExistingReplenishments(bottleId)
+            revertBottleConsumption(bottleId)
+            clearExistingReplenishments(bottleId)
 
-                if (isAGift) {
-                    declareGiftedBottle(historyEntry, friendId!!)
-                } else {
-                    insertHistoryEntry(historyEntry)
-                }
+            if (isAGift) {
+                declareGiftedBottle(historyEntry, friendId!!)
+            } else {
+                insertHistoryEntry(historyEntry)
             }
         }
     }

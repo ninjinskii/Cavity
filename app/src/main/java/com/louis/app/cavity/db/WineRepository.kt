@@ -134,6 +134,7 @@ class WineRepository private constructor(app: Application) {
         }
 
         val entryId = historyDao.insertEntry(entry)
+
         historyXFriendDao.insertHistoryXFriend(
             HistoryXFriend(
                 entryId,
