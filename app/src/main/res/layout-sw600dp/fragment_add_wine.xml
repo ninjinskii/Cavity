@@ -349,21 +349,30 @@
                     app:layout_constraintStart_toStartOf="@id/buttonBrowsePhoto"
                     app:layout_constraintTop_toBottomOf="@id/buttonBrowsePhoto" />
 
-                <ImageView
-                    android:id="@+id/wineMiniImage"
+                <com.louis.app.cavity.ui.home.widget.HexagonalView
+                    android:id="@+id/hexagonPreview"
                     android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/medium_margin"
                     android:layout_marginTop="@dimen/medium_margin"
                     android:layout_marginEnd="@dimen/medium_margin"
                     android:layout_marginBottom="100dp"
-                    android:contentDescription="@string/wine_photo"
                     android:visibility="gone"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:strokeColor="?attr/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageTitle"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:id="@+id/wineMiniImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/wine_photo" />
+
+                </com.louis.app.cavity.ui.home.widget.HexagonalView>
 
                 <ImageButton
                     android:id="@+id/buttonRemoveWineImage"
@@ -374,9 +383,9 @@
                     android:contentDescription="@string/add_county"
                     android:src="@drawable/ic_close"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/wineMiniImage"
-                    app:layout_constraintStart_toEndOf="@id/wineMiniImage"
-                    app:layout_constraintTop_toTopOf="@id/wineMiniImage"
+                    app:layout_constraintBottom_toBottomOf="@id/hexagonPreview"
+                    app:layout_constraintStart_toEndOf="@id/hexagonPreview"
+                    app:layout_constraintTop_toTopOf="@id/hexagonPreview"
                     app:tint="?attr/colorError" />
 
                 <androidx.constraintlayout.widget.Barrier
@@ -385,7 +394,7 @@
                     android:layout_height="wrap_content"
                     app:barrierAllowsGoneWidgets="false"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="textButtonBrowsePhoto,wineMiniImage" />
+                    app:constraint_referenced_ids="textButtonBrowsePhoto,hexagonPreview" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/submitAddWine"
