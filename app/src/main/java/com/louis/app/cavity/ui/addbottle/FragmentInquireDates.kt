@@ -46,7 +46,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
         val year = Calendar.getInstance().get(Calendar.YEAR)
 
         binding.vintage.apply {
-            minValue = year - 20
+            minValue = year - 30
             maxValue = year
             value = year - 5
         }
