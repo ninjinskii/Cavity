@@ -1,6 +1,8 @@
 package com.louis.app.cavity.ui
 
+import android.app.ActivityManager.TaskDescription
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -30,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navHostFragment: Fragment
@@ -50,6 +53,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
 
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
+        polishAppSwitcherApparence()
         setupNavigation()
         observe()
 
@@ -81,6 +85,14 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
                 }
             }
         )
+    }
+
+    // We have to support old android 7.1 TaskDescription constructor
+    @Suppress("deprecation")
+    private fun polishAppSwitcherApparence() {
+        val appName = getString(R.string.app_name)
+        val bitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
+        setTaskDescription(TaskDescription(appName, bitmap, themeColor(R.attr.colorSurface)))
     }
 
     private fun setupNavigation() {
