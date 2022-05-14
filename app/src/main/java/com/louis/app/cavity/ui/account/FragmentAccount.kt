@@ -24,7 +24,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
-    private val accountViewModel: AccountViewModel by viewModels()
+    private val importExportViewModel: ImportExportViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +72,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
             }
         }
 
-        accountViewModel.workProgress.observe(viewLifecycleOwner) {
+        importExportViewModel.workProgress.observe(viewLifecycleOwner) {
             if (it != null) {
                 when (it.state) {
                     WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
@@ -95,9 +95,20 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     }
 
     private fun setListeners() {
-        binding.export.setOnClickListener {
+        binding.exportBtn.setOnClickListener {
             if (hasPermissions()) {
-                accountViewModel.export()
+                // accountViewModel.export()
+                val action = FragmentAccountDirections.accountToImportExport(isImport = false)
+                findNavController().navigate(action)
+            } else {
+                askPermission.launch(REQUIRED_PERMISSION)
+            }
+        }
+
+        binding.importBtn.setOnClickListener {
+            if (hasPermissions()) {
+                val action = FragmentAccountDirections.accountToImportExport(isImport = true)
+                findNavController().navigate(action)
             } else {
                 askPermission.launch(REQUIRED_PERMISSION)
             }
@@ -122,7 +133,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
     private fun handlePermisionResults(permission: Boolean) {
         if (permission) {
-            accountViewModel.export()
+            importExportViewModel.export()
         } else {
             binding.coordinator.showSnackbar(R.string.permissions_denied_external)
         }

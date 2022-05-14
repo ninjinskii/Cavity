@@ -72,6 +72,10 @@ interface CavityApiService {
     @GET("bottle")
     suspend fun getBottles(): List<Bottle>
 
+
+    @GET("history")
+    suspend fun getHistoryEntries(): List<HistoryEntry>
+
     @GET("wine/{wineId}/image")
     suspend fun getWineImage(@Path("wineId") wineId: String): FileTransfer
 

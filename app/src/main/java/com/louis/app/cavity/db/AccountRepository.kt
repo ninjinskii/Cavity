@@ -120,6 +120,11 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.getBottles() }
     }
 
+
+    suspend fun getHistoryEntries(): ApiResponse<List<HistoryEntry>> {
+        return doApiCall { cavityApi.getHistoryEntries() }
+    }
+
     suspend fun getWineImage(wine: Wine): ApiResponse<FileTransfer> {
         return doApiCall { cavityApi.getWineImage(wine.id.toString()) }
     }

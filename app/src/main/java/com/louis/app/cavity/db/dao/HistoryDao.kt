@@ -29,7 +29,7 @@ interface HistoryDao {
     suspend fun clearExistingReplenishments(bottleId: Long)
 
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
-    fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
+    suspend fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
 
     @Query("SELECT date FROM history_entry ORDER BY date ASC LIMIT 1")
     fun getOldestEntryDate(): Long

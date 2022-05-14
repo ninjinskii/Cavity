@@ -2,7 +2,8 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:transitionGroup="true">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -11,7 +12,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/server"
@@ -180,7 +182,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
-                android:text="@string/backup_erasure_warn"
+                android:text="@string/backup_erasure_warn_export"
                 android:textAppearance="?attr/textAppearanceBody1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -192,6 +194,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
+                android:visibility="gone"
                 app:cardBackgroundColor="@android:color/transparent"
                 app:cardElevation="0dp"
                 app:cardPreventCornerOverlap="false"
@@ -230,6 +233,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/confirmDanger"
                         style="@style/Widget.Cavity.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -244,10 +248,12 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/submit"
                 style="@style/Widget.Cavity.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
+                android:enabled="false"
                 android:text="@string/export"
                 app:icon="@drawable/ic_export"
                 app:layout_constraintBottom_toBottomOf="parent"

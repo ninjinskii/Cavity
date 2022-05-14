@@ -274,7 +274,8 @@
     <string name="backup">Sauvegarde en ligne</string>
     <string name="last_action">Dernière action: </string>
     <string name="current_device">Cet appareil</string>
-    <string name="backup_erasure_warn">La sauvegarde en ligne existante sera remplacée par la nouvelle.</string>
+    <string name="backup_erasure_warn_export">La sauvegarde en ligne existante sera remplacée par la cave de cet appareil.</string>
+    <string name="backup_erasure_warn_import">La cave de cet appareil sera remplacée par la sauvegarde en ligne.</string>
     <string name="healthcheck_export_warn">La sauvegarde en ligne contient des mouvements de stocks plus récents. L\'export de votre cave écrasera ces mouvements.</string>
     <string name="healthcheck_import_warn">La cave de cet appareil contient des mouvements de stocks plus récents. L\'import de votre sauvegarde écrasera ces mouvements.</string>
 

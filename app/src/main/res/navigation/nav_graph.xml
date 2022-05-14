@@ -240,6 +240,13 @@
         <action
             android:id="@+id/accountToHome"
             app:destination="@id/home_dest" />
+        <action
+            android:id="@+id/accountToImportExport"
+            app:destination="@id/fragmentImportExport">
+            <argument
+                android:name="isImport"
+                app:argType="boolean" />
+        </action>
     </fragment>
 
     <fragment
@@ -308,5 +315,14 @@
         <action
             android:id="@+id/loginToAccount"
             app:destination="@id/account_dest" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentImportExport"
+        android:name="com.louis.app.cavity.ui.account.FragmentImportExport"
+        tools:layout="@layout/fragment_import_export">
+        <argument
+            android:name="isImport"
+            app:argType="boolean" />
     </fragment>
 </navigation>
