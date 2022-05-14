@@ -38,6 +38,7 @@
                         android:layout_width="@dimen/small_icon"
                         android:layout_height="@dimen/small_icon"
                         android:layout_margin="@dimen/small_margin"
+                        android:contentDescription="@string/backup"
                         android:src="@drawable/ic_cloud"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -119,6 +120,7 @@
                         android:layout_width="@dimen/small_icon"
                         android:layout_height="@dimen/small_icon"
                         android:layout_margin="@dimen/small_margin"
+                        android:contentDescription="@string/current_device"
                         android:src="@drawable/ic_smartphone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
