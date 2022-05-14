@@ -42,7 +42,7 @@
                     android:layout_marginTop="@dimen/medium_margin"
                     android:layout_marginBottom="@dimen/large_margin"
                     android:src="@drawable/ic_glass"
-                    app:layout_constraintBottom_toTopOf="@id/loginLayout"
+                    app:layout_constraintBottom_toTopOf="@id/explanation"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -75,6 +75,7 @@
                     app:layout_constraintTop_toBottomOf="@id/explanation"
                     app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
                     app:rule="required"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Cavity.Field.Top"
                     app:startIconDrawable="@drawable/ic_person">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -99,6 +100,7 @@
                     app:layout_constraintTop_toBottomOf="@id/loginLayout"
                     app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
                     app:rule="required"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Cavity.Field.Middle"
                     app:startIconDrawable="@drawable/ic_password">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -121,7 +123,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/passwordLayout"
                     app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
-                    app:rule="required">
+                    app:rule="required"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Cavity.Field.Middle">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/ip"
@@ -160,7 +163,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/newAccount"
-                    app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
+                    app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Cavity.Field.Bottom" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
