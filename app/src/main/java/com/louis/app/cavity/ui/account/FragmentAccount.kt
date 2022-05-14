@@ -98,7 +98,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         binding.exportBtn.setOnClickListener {
             if (hasPermissions()) {
                 // accountViewModel.export()
-                val action = FragmentAccountDirections.accountToImportExport(isImport = false)
+                val action = FragmentAccountDirections.accountToImportExport(
+                    isImport = false,
+                    title = getString(R.string.export)
+                )
+
                 findNavController().navigate(action)
             } else {
                 askPermission.launch(REQUIRED_PERMISSION)
@@ -107,7 +111,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
         binding.importBtn.setOnClickListener {
             if (hasPermissions()) {
-                val action = FragmentAccountDirections.accountToImportExport(isImport = true)
+                val action = FragmentAccountDirections.accountToImportExport(
+                    isImport = true,
+                    title = getString(R.string.import_)
+                )
+
                 findNavController().navigate(action)
             } else {
                 askPermission.launch(REQUIRED_PERMISSION)

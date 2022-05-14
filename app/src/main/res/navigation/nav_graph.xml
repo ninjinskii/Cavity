@@ -320,9 +320,13 @@
     <fragment
         android:id="@+id/fragmentImportExport"
         android:name="com.louis.app.cavity.ui.account.FragmentImportExport"
+        android:label="{title}"
         tools:layout="@layout/fragment_import_export">
         <argument
             android:name="isImport"
             app:argType="boolean" />
+        <argument
+            android:name="title"
+            app:argType="string" />
     </fragment>
 </navigation>

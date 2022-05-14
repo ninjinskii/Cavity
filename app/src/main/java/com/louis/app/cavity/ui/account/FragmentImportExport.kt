@@ -8,6 +8,7 @@ import androidx.navigation.fragment.navArgs
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportExportBinding
 import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.setupNavigation
 
 class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     private var _binding: FragmentImportExportBinding? = null
@@ -19,7 +20,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentImportExportBinding.bind(view)
 
-//        setupNavigation(binding.toolbar)
+        setupNavigation(binding.appBar.toolbar)
         importExportViewModel.checkHealth(args.isImport)
 
         updateUiState()
