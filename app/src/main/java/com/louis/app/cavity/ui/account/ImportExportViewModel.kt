@@ -14,6 +14,7 @@ import com.louis.app.cavity.ui.account.worker.DownloadWorker
 import com.louis.app.cavity.ui.account.worker.UploadWorker
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.*
@@ -37,6 +38,14 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
         get() = _isLoading
+
+    private val _distantBottleCount = MutableLiveData<Int>()
+    val distantBottleCount: LiveData<Int>
+        get() = _distantBottleCount
+
+    private val _localBottleCount = MutableLiveData<Int>()
+    val localBottleCount: LiveData<Int>
+        get() = _localBottleCount
 
     private val _navigateToLogin = MutableLiveData<Event<Unit>>()
     val navigateToLogin: LiveData<Event<Unit>>
@@ -84,6 +93,34 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun fetchDistantBottleCount() {
+        _isLoading.postValue(true)
+
+        viewModelScope.launch(IO) {
+            try {
+                when (val response = accountRepository.getBottles()) {
+                    is ApiResponse.Success -> {
+                        val count = response.value.count { !it.consumed.toBoolean() }
+                        _distantBottleCount.postValue(count)
+                    }
+                    is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
+                    is ApiResponse.UnknownError -> _userFeedback.postOnce(R.string.base_error)
+                    is ApiResponse.UnauthorizedError -> _navigateToLogin.postOnce(Unit)
+                    is ApiResponse.UnregisteredError -> Unit
+                }
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
+    }
+
+    fun fetchLocalBottleCount() {
+        viewModelScope.launch(IO) {
+            val count = repository.getAllBottlesNotLive().count { !it.consumed.toBoolean() }
+            _localBottleCount.postValue(count)
+        }
+    }
+
     fun export() {
         if (_isLoading.value == true) {
             return
@@ -119,8 +156,10 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
                 TimeUnit.MILLISECONDS
             )
             .build().also {
-                //workRequestId.value = it.id
+                workRequestId.value = it.id
                 workManager.enqueue(it)
             }
     }
+
+    fun pruneWorks() = workManager.pruneWork()
 }

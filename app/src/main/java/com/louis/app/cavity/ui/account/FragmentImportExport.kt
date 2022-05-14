@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.work.WorkInfo
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportExportBinding
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.showSnackbar
 
 class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     private var _binding: FragmentImportExportBinding? = null
@@ -22,7 +24,12 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
         _binding = FragmentImportExportBinding.bind(view)
 
         setupNavigation(binding.appBar.toolbar)
-        importExportViewModel.checkHealth(args.isImport)
+
+        with(importExportViewModel) {
+            checkHealth(args.isImport)
+            fetchDistantBottleCount()
+            fetchLocalBottleCount()
+        }
 
         updateUiState()
         observe()
@@ -61,6 +68,47 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
             it.getContentIfNotHandled()?.let {
                 val action = FragmentImportExportDirections.importExportToLogin()
                 findNavController().navigate(action)
+            }
+        }
+
+        importExportViewModel.distantBottleCount.observe(viewLifecycleOwner) {
+            val text = resources.getQuantityString(R.plurals.bottles, it, it)
+            binding.bottles.text = text
+        }
+
+        importExportViewModel.localBottleCount.observe(viewLifecycleOwner) {
+            val text = resources.getQuantityString(R.plurals.bottles, it, it)
+            binding.deviceBottles.text = text
+        }
+
+        importExportViewModel.workProgress.observe(viewLifecycleOwner) {
+            if (it != null) {
+                when (it.state) {
+                    WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
+                        binding.progressBar.setVisible(true)
+                    }
+                    WorkInfo.State.FAILED -> {
+                        binding.progressBar.setVisible(false)
+                        binding.coordinator.showSnackbar(R.string.base_error)
+                        importExportViewModel.pruneWorks()
+                    }
+                    WorkInfo.State.SUCCEEDED -> {
+                        binding.progressBar.setVisible(false)
+                        binding.coordinator.showSnackbar(R.string.export_done)
+
+                        with(importExportViewModel) {
+                            fetchLocalBottleCount()
+                            fetchDistantBottleCount()
+                            pruneWorks()
+                        }
+                    }
+                    WorkInfo.State.CANCELLED -> {
+                        importExportViewModel.pruneWorks()
+                    }
+                    else -> Unit
+                }
+            } else {
+                binding.progressBar.setVisible(false)
             }
         }
     }

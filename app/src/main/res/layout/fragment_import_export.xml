@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:transitionGroup="true">
@@ -20,9 +22,6 @@
             android:layout_height="wrap_content"
             android:indeterminate="true"
             android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:trackThickness="1dp" />
 
         <androidx.core.widget.NestedScrollView
@@ -57,6 +56,7 @@
 
                         <ImageView
                             android:id="@+id/serverIcon"
+                            style="@style/Cavity.Widget.Icon"
                             android:layout_width="@dimen/small_icon"
                             android:layout_height="@dimen/small_icon"
                             android:layout_margin="@dimen/small_margin"
@@ -83,11 +83,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/medium_margin"
                             android:layout_marginVertical="@dimen/small_margin"
-                            android:text="@string/backup"
                             android:textAppearance="?attr/textAppearanceCaption"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/serverIcon"
-                            app:layout_constraintTop_toBottomOf="@id/backup" />
+                            app:layout_constraintTop_toBottomOf="@id/backup"
+                            tools:text="354 bouteilles" />
 
                         <TextView
                             android:id="@+id/lastAction"
@@ -96,18 +96,19 @@
                             android:layout_marginHorizontal="@dimen/medium_margin"
                             android:layout_marginTop="@dimen/small_margin"
                             android:layout_marginBottom="@dimen/medium_margin"
-                            android:text="@string/backup"
                             android:textAppearance="?attr/textAppearanceCaption"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/serverIcon"
-                            app:layout_constraintTop_toBottomOf="@id/bottles" />
+                            app:layout_constraintTop_toBottomOf="@id/bottles"
+                            tools:text="Dernière action: Offrir Gevrey Chambertin" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <ImageView
                     android:id="@+id/arrow"
+                    style="@style/Cavity.Widget.Icon"
                     android:layout_width="@dimen/large_icon"
                     android:layout_height="@dimen/large_icon"
                     android:layout_marginVertical="@dimen/large_margin"
@@ -139,6 +140,7 @@
 
                         <ImageView
                             android:id="@+id/deviceIcon"
+                            style="@style/Cavity.Widget.Icon"
                             android:layout_width="@dimen/small_icon"
                             android:layout_height="@dimen/small_icon"
                             android:layout_margin="@dimen/small_margin"
@@ -165,11 +167,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/medium_margin"
                             android:layout_marginVertical="@dimen/small_margin"
-                            android:text="@string/current_device"
                             android:textAppearance="?attr/textAppearanceCaption"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/deviceIcon"
-                            app:layout_constraintTop_toBottomOf="@id/cellar" />
+                            app:layout_constraintTop_toBottomOf="@id/cellar"
+                            tools:text="54 bouteilles" />
 
                         <TextView
                             android:id="@+id/deviceLastAction"
@@ -178,12 +180,12 @@
                             android:layout_marginHorizontal="@dimen/medium_margin"
                             android:layout_marginTop="@dimen/small_margin"
                             android:layout_marginBottom="@dimen/medium_margin"
-                            android:text="@string/current_device"
                             android:textAppearance="?attr/textAppearanceCaption"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/deviceIcon"
-                            app:layout_constraintTop_toBottomOf="@id/deviceBottles" />
+                            app:layout_constraintTop_toBottomOf="@id/deviceBottles"
+                            tools:text="Dernière action: Acheter Riesling" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
