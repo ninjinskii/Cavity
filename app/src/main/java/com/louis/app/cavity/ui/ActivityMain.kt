@@ -22,6 +22,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
+import com.louis.app.cavity.ui.account.ImportExportViewModel
 import com.louis.app.cavity.ui.account.LoginViewModel
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.tasting.TastingViewModel
@@ -39,6 +40,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private val addItemViewModel: AddItemViewModel by viewModels()
     private val tastingViewModel: TastingViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
+    private val importExportViewModel: ImportExportViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val isAndroid12 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
@@ -136,6 +138,18 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         }
 
         loginViewModel.userFeedbackString.observe(this) {
+            it.getContentIfNotHandled()?.let { string ->
+                binding.main.coordinator.showSnackbar(string)
+            }
+        }
+
+        importExportViewModel.userFeedback.observe(this) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                onShowSnackbarRequested(stringRes)
+            }
+        }
+
+        importExportViewModel.userFeedbackString.observe(this) {
             it.getContentIfNotHandled()?.let { string ->
                 binding.main.coordinator.showSnackbar(string)
             }

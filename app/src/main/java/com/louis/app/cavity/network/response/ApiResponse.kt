@@ -5,4 +5,5 @@ sealed class ApiResponse<out T> {
     data class Failure(val message: String) : ApiResponse<Nothing>()
     object UnknownError : ApiResponse<Nothing>()
     object UnregisteredError : ApiResponse<Nothing>()
+    object UnauthorizedError : ApiResponse<Nothing>()
 }

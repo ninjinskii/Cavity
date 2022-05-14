@@ -108,14 +108,17 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         _isLoading.postValue(true)
 
         viewModelScope.launch(IO) {
-            when (val response = call()) {
-                is ApiResponse.Success -> onSuccess(response)
-                is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
-                is ApiResponse.UnknownError -> _userFeedback.postOnce(R.string.base_error)
-                is ApiResponse.UnregisteredError -> _navigateToConfirm.postOnce(Unit)
+            try {
+                when (val response = call()) {
+                    is ApiResponse.Success -> onSuccess(response)
+                    is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
+                    is ApiResponse.UnknownError -> _userFeedback.postOnce(R.string.base_error)
+                    is ApiResponse.UnregisteredError -> _navigateToConfirm.postOnce(Unit)
+                    is ApiResponse.UnauthorizedError -> Unit
+                }
+            } finally {
+                _isLoading.postValue(false)
             }
-
-            _isLoading.postValue(false)
         }
     }
 }

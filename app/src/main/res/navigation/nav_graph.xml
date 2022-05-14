@@ -328,5 +328,8 @@
         <argument
             android:name="title"
             app:argType="string" />
+        <action
+            android:id="@+id/importExportToLogin"
+            app:destination="@id/fragmentLogin" />
     </fragment>
 </navigation>

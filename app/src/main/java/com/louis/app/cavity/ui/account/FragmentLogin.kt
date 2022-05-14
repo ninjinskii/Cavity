@@ -41,7 +41,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         }
 
         loginViewModel.navigateToConfirm.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let {
+            it.getContentIfNotHandled()?.let {
                 val action = FragmentLoginDirections.loginToConfirm()
                 findNavController().navigate(action)
             }
