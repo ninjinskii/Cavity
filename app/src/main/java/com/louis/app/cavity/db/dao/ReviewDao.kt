@@ -10,6 +10,9 @@ interface ReviewDao {
     @Insert
     suspend fun insertReview(review: Review): Long
 
+    @Insert
+    suspend fun insertReviews(reviews: List<Review>)
+
     @Update
     suspend fun updateReview(review: Review)
 

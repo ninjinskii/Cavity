@@ -8,6 +8,9 @@ interface TastingXFriendDao {
     @Insert
     suspend fun insertTastingXFriend(tasting: TastingXFriend)
 
+    @Insert
+    suspend fun insertTastingXFriends(tastings: List<TastingXFriend>)
+
     @Update
     suspend fun updateTastingXFriend(tasting: TastingXFriend)
 
@@ -16,4 +19,7 @@ interface TastingXFriendDao {
 
     @Query("SELECT * FROM tasting_friend_xref")
     suspend fun getAllTastingXFriendsNotLive(): List<TastingXFriend>
+
+    @Query("DELETE FROM tasting_friend_xref")
+    suspend fun deleteAll()
 }

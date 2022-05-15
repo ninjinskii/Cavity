@@ -120,9 +120,44 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.getBottles() }
     }
 
+    suspend fun getFriends(): ApiResponse<List<Friend>> {
+        return doApiCall { cavityApi.getFriends() }
+    }
+
+    suspend fun getGrapes(): ApiResponse<List<Grape>> {
+        return doApiCall { cavityApi.getGrapes() }
+    }
+
+    suspend fun getReviews(): ApiResponse<List<Review>> {
+        return doApiCall { cavityApi.getReviews() }
+    }
 
     suspend fun getHistoryEntries(): ApiResponse<List<HistoryEntry>> {
         return doApiCall { cavityApi.getHistoryEntries() }
+    }
+
+    suspend fun getTastings(): ApiResponse<List<Tasting>> {
+        return doApiCall { cavityApi.getTastings() }
+    }
+
+    suspend fun getTastingActions(): ApiResponse<List<TastingAction>> {
+        return doApiCall { cavityApi.getTastingActions() }
+    }
+
+    suspend fun getFReviews(): ApiResponse<List<FReview>> {
+        return doApiCall { cavityApi.getFReviews() }
+    }
+
+    suspend fun getQGrapes(): ApiResponse<List<QGrape>> {
+        return doApiCall { cavityApi.getQGrapes() }
+    }
+
+    suspend fun getTastingXFriend(): ApiResponse<List<TastingXFriend>> {
+        return doApiCall { cavityApi.getTastingFriendsXRef() }
+    }
+
+    suspend fun getHistoryXFriend(): ApiResponse<List<HistoryXFriend>> {
+        return doApiCall { cavityApi.getHistoryFriendsXRef() }
     }
 
     suspend fun getWineImage(wine: Wine): ApiResponse<FileTransfer> {

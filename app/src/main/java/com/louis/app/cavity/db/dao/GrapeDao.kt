@@ -10,6 +10,9 @@ interface GrapeDao {
     @Insert
     suspend fun insertGrape(grape: Grape): Long
 
+    @Insert
+    suspend fun insertGrapes(grapes: List<Grape>)
+
     @Update
     suspend fun updateGrape(grape: Grape)
 

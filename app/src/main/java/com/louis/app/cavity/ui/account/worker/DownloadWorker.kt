@@ -16,7 +16,6 @@ import com.louis.app.cavity.model.FileAssoc
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.network.response.ApiResponse
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileNotFoundException
@@ -45,28 +44,45 @@ class DownloadWorker(private val context: Context, params: WorkerParameters) :
     }
 
     private suspend fun downloadDatabase() = withContext(IO) {
-        with(accountRepository) {
-            launch {
-                val counties = getCounties()
-                if (counties is ApiResponse.Success) {
-                    repository.insertCounties(counties.value)
-                }
+        with(repository) {
+            transaction {
+                deleteAllCounties()
+                deleteAllWines()
+                deleteAllBottles()
+                deleteAllFriends()
+                deleteAllGrapes()
+                deleteAllReviews()
+                deleteAllHistoryEntries()
+                deleteAllTastings()
+                deleteAllTastingActions()
+                deleteAllFReviews()
+                deleteAllQGrapes()
+                deleteAllFriendHistoryXRefs()
+                deleteAllTastingFriendXRefs()
 
-                val wines = getWines()
-                if (wines is ApiResponse.Success) {
-                    repository.insertWines(wines.value)
-                }
-
-                val bottles = getBottles()
-                if (bottles is ApiResponse.Success) {
-                    repository.insertBottles(bottles.value)
-                }
-
-                if (wines is ApiResponse.Success && bottles is ApiResponse.Success) {
-                    downloadFiles(wines.value + bottles.value) //wines + bottles
-                }
+                insertCounties(validateResponse(accountRepository.getCounties()))
+                insertWines(validateResponse(accountRepository.getWines()))
+                insertBottles(validateResponse(accountRepository.getBottles()))
+                insertFriends(validateResponse(accountRepository.getFriends()))
+                insertGrapes(validateResponse(accountRepository.getGrapes()))
+                insertReviews(validateResponse(accountRepository.getReviews()))
+                insertHistoryEntries(validateResponse(accountRepository.getHistoryEntries()))
+                insertTastings(validateResponse(accountRepository.getTastings()))
+                insertTastingActions(validateResponse(accountRepository.getTastingActions()))
+                insertFilledReviews(validateResponse(accountRepository.getFReviews()))
+                insertQGrapes(validateResponse(accountRepository.getQGrapes()))
+                insertFriendHistoryXRefs(validateResponse(accountRepository.getHistoryXFriend()))
+                insertTastingFriendXRefs(validateResponse(accountRepository.getTastingXFriend()))
             }
         }
+    }
+
+    private fun <T> validateResponse(response: ApiResponse<List<T>>): List<T> {
+        if (response is ApiResponse.Success) {
+            return response.value
+        }
+
+        throw UncompleteImportException()
     }
 
     private suspend fun downloadFiles(fileAssocs: List<FileAssoc>) {

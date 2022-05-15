@@ -9,7 +9,7 @@ interface HistoryXFriendDao {
     suspend fun insertHistoryXFriend(fxh: HistoryXFriend)
 
     @Insert
-    suspend fun insertHistoryXFriend(fxh: List<HistoryXFriend>)
+    suspend fun insertHistoryXFriends(fxh: List<HistoryXFriend>)
 
     @Update
     suspend fun updateHistoryXFriend(fxh: HistoryXFriend)
@@ -19,4 +19,7 @@ interface HistoryXFriendDao {
 
     @Query("SELECT * FROM friend_history_entry_xref")
     suspend fun getAllHistoryXFriendsNotLive(): List<HistoryXFriend>
+
+    @Query("DELETE FROM friend_history_entry_xref")
+    suspend fun deleteAll()
 }

@@ -11,7 +11,7 @@ interface HistoryDao {
     suspend fun insertEntry(entry: HistoryEntry): Long
 
     @Insert
-    fun insertEntry(entry: List<HistoryEntry>)
+    suspend fun insertEntries(entry: List<HistoryEntry>)
 
     @Update
     suspend fun updateEntry(entry: HistoryEntry)

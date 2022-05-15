@@ -12,7 +12,7 @@ interface QuantifiedGrapeDao {
     suspend fun insertQGrape(qGrape: QGrape)
 
     @Insert
-    suspend fun insertQGrape(qGrapes: List<QGrape>)
+    suspend fun insertQGrapes(qGrapes: List<QGrape>)
 
     @Update
     suspend fun updateQGrape(qGrape: QGrape)
@@ -37,6 +37,9 @@ interface QuantifiedGrapeDao {
 
     @Query("DELETE FROM q_grape WHERE bottle_id=:bottleId")
     suspend fun clearAllQGrapesForBottle(bottleId: Long)
+
+    @Query("DELETE FROM q_grape")
+    suspend fun deleteAll()
 }
 
 data class QGrapeAndGrape(

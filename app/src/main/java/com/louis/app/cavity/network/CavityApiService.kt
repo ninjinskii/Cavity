@@ -72,9 +72,35 @@ interface CavityApiService {
     @GET("bottle")
     suspend fun getBottles(): List<Bottle>
 
+    @GET("friend")
+    suspend fun getFriends(): List<Friend>
+
+    @GET("grape")
+    suspend fun getGrapes(): List<Grape>
+
+    @GET("review")
+    suspend fun getReviews(): List<Review>
 
     @GET("history")
     suspend fun getHistoryEntries(): List<HistoryEntry>
+
+    @GET("tasting")
+    suspend fun getTastings(): List<Tasting>
+
+    @GET("tasting-action")
+    suspend fun getTastingActions(): List<TastingAction>
+
+    @GET("freview")
+    suspend fun getFReviews(): List<FReview>
+
+    @GET("qgrape")
+    suspend fun getQGrapes(): List<QGrape>
+
+    @GET("tasting-x-friend")
+    suspend fun getTastingFriendsXRef(): List<TastingXFriend>
+
+    @GET("history-x-friend")
+    suspend fun getHistoryFriendsXRef(): List<HistoryXFriend>
 
     @GET("wine/{wineId}/image")
     suspend fun getWineImage(@Path("wineId") wineId: String): FileTransfer

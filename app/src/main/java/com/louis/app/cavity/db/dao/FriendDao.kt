@@ -9,6 +9,9 @@ interface FriendDao {
     @Insert
     suspend fun insertFriend(friend: Friend)
 
+    @Insert
+    suspend fun insertFriends(friends: List<Friend>)
+
     @Update
     suspend fun updateFriend(friend: Friend)
 
@@ -20,4 +23,7 @@ interface FriendDao {
 
     @Query("SELECT * FROM friend")
     suspend fun getAllFriendsNotLive(): List<Friend>
+
+    @Query("DELETE FROM friend")
+    suspend fun deleteAll()
 }

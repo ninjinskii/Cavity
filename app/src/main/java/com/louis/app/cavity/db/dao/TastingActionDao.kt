@@ -22,4 +22,7 @@ interface TastingActionDao {
 
     @Query("DELETE FROM tasting_action WHERE bottle_id=:bottleId")
     suspend fun deleteTastingActionsForBottle(bottleId: Long)
+
+    @Query("DELETE FROM tasting_action")
+    suspend fun deleteAll()
 }

@@ -12,6 +12,9 @@ interface TastingDao {
     @Insert
     suspend fun insertTasting(tasting: Tasting): Long
 
+    @Insert
+    suspend fun insertTastings(tasting: List<Tasting>)
+
     @Update
     suspend fun updateTasting(tasting: Tasting)
 
@@ -48,6 +51,9 @@ interface TastingDao {
     @Transaction
     @Query("SELECT * FROM bottle WHERE bottle.tasting_id=:tastingId")
     suspend fun getBottlesWithTastingActionsForTastingNotLive(tastingId: Long): List<BottleWithTastingActions>
+
+    @Query("DELETE FROM tasting")
+    suspend fun deleteAll()
 }
 
 data class TastingWithBottles(
