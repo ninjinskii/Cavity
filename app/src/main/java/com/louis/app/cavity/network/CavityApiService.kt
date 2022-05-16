@@ -1,6 +1,7 @@
 package com.louis.app.cavity.network
 
 import com.louis.app.cavity.model.*
+import com.louis.app.cavity.network.response.ConfirmResponse
 import com.louis.app.cavity.network.response.FileTransfer
 import com.louis.app.cavity.network.response.LoginResponse
 import retrofit2.http.Body
@@ -13,7 +14,7 @@ interface CavityApiService {
     suspend fun register(@Body parameters: Map<String, String>)
 
     @POST("account/confirm")
-    suspend fun confirmAccount(@Body parameters: Map<String, String>)
+    suspend fun confirmAccount(@Body parameters: Map<String, String>): ConfirmResponse
 
     @POST("auth/login")
     suspend fun login(@Body parameters: Map<String, String>): LoginResponse

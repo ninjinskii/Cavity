@@ -6,6 +6,7 @@ import com.louis.app.cavity.model.*
 import com.louis.app.cavity.network.CavityApiClient
 import com.louis.app.cavity.network.CavityApiService
 import com.louis.app.cavity.network.response.ApiResponse
+import com.louis.app.cavity.network.response.ConfirmResponse
 import com.louis.app.cavity.network.response.FileTransfer
 import com.louis.app.cavity.network.response.LoginResponse
 import okhttp3.ResponseBody
@@ -41,7 +42,10 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.register(parameters) }
     }
 
-    suspend fun confirmAccount(email: String, registrationCode: String): ApiResponse<Unit> {
+    suspend fun confirmAccount(
+        email: String,
+        registrationCode: String
+    ): ApiResponse<ConfirmResponse> {
         val parameters = mapOf("email" to email, "registrationCode" to registrationCode)
         return doApiCall { cavityApi.confirmAccount(parameters) }
     }
