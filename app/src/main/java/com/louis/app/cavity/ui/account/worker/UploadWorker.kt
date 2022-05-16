@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.account.worker
 
 import android.app.Application
 import android.content.Context
-import android.net.Uri
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.louis.app.cavity.db.AccountRepository
@@ -41,10 +40,13 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                 val wines = repository.getAllWinesNotLive()
                 val bottles = repository.getAllBottlesNotLive()
 
+                // Get wines & bottles first, copy them to external dir and update their path
+                updateFileLocation(wines + bottles)
+
                 listOf(
                     postCounties(repository.getAllCountiesNotLive()),
-                    postWines(wines),
-                    postBottles(bottles),
+                    postWines(repository.getAllWinesNotLive()), // Re-request wines with updated path
+                    postBottles(repository.getAllBottlesNotLive()),
                     postFriends(repository.getAllFriendsNotLive()),
                     postGrapes(repository.getAllGrapesNotLive()),
                     postReviews(repository.getAllReviewsNotLive()),
@@ -60,19 +62,15 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                         throw UncompleteExportException()
                     }
                 }
-
-                copyFilesToExternalDirectory(wines + bottles)
             }
         }
     }
 
-    private fun copyFilesToExternalDirectory(fileAssocs: List<FileAssoc>) {
+    private suspend fun updateFileLocation(fileAssocs: List<FileAssoc>) {
         fileAssocs.forEach {
-            val uriString = it.getFilePath()
-            val uri = Uri.parse(uriString)
-
-            FileProcessor(context, uri).run {
-                copyToExternalDir(it)
+            FileProcessor(context, it).run {
+                copyToExternalDir()
+                updateFilePath()
             }
         }
     }

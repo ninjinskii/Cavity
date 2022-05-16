@@ -1,13 +1,26 @@
 package com.louis.app.cavity.ui.account.worker
 
+import android.app.Application
 import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
+import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.FileAssoc
+import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.util.L
 import java.io.*
 
-class FileProcessor(private val context: Context, private val uri: Uri) {
-    val extension: String?
+class FileProcessor(private val context: Context, private val fileAssoc: FileAssoc) {
+    private val repository = WineRepository.getInstance(context.applicationContext as Application)
+    private val uri = Uri.parse(fileAssoc.getFilePath())
+    private val externalPath = context.getExternalFilesDir(null)!!.path
+    private val externalSubPath = fileAssoc.getExternalSubPath()
+    private val externalFilename = fileAssoc.getExternalFilename()
+    private val outputFile = File("$externalPath$externalSubPath/${externalFilename}.$extension")
+    private val outputPath = "file:///${outputFile.path}"
+
+    private val extension: String?
         get() = MimeTypeMap.getSingleton()
             .getExtensionFromMimeType(context.contentResolver.getType(uri))
             ?: uri.path?.substringAfterLast(".", "")
@@ -15,13 +28,9 @@ class FileProcessor(private val context: Context, private val uri: Uri) {
     private val inputStream: InputStream?
         get() = context.contentResolver.openInputStream(uri)
 
-    fun copyToExternalDir(fileAssoc: FileAssoc) {
+    fun copyToExternalDir() {
         try {
-            val externalPath = context.getExternalFilesDir(null)!!.path
-            val extarnalFilename = fileAssoc.getExternalFilename()
-            val externalSubPath = fileAssoc.getExternalSubPath()
             val subDir = File("$externalPath$externalSubPath")
-            val outputFile = File("$externalPath$externalSubPath/${extarnalFilename}.$extension")
 
             if (!subDir.exists()) {
                 subDir.mkdir()
@@ -40,6 +49,16 @@ class FileProcessor(private val context: Context, private val uri: Uri) {
             // Do nothing
         } catch (e: FileNotFoundException) {
             // Do nothing
+        }
+    }
+
+    suspend fun updateFilePath() {
+        L.v("updating file path")
+        L.v(outputPath)
+        L.v(Uri.parse(outputPath).toString())
+        when (fileAssoc) {
+            is Wine -> repository.updateWine(fileAssoc.copy(imgPath = outputPath))
+            is Bottle -> repository.updateBottle(fileAssoc.copy(pdfPath = outputPath))
         }
     }
 }
