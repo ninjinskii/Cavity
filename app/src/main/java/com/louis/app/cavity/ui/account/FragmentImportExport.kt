@@ -2,6 +2,8 @@ package com.louis.app.cavity.ui.account
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -12,6 +14,7 @@ import com.louis.app.cavity.databinding.FragmentImportExportBinding
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
+import com.robinhood.ticker.TickerUtils
 
 class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     private var _binding: FragmentImportExportBinding? = null
@@ -31,9 +34,26 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
             fetchLocalBottleCount()
         }
 
+        initTickerViews()
         updateUiState()
         observe()
         setListeners()
+    }
+
+    private fun initTickerViews() {
+        val textAppearanceApplier = AppCompatTextView(requireContext()).apply {
+            TextViewCompat.setTextAppearance(this, R.style.TextAppearance_Cavity_Caption)
+        }
+
+        binding.bottles.apply {
+            textPaint.typeface = textAppearanceApplier.paint.typeface
+            setCharacterLists(TickerUtils.provideNumberList())
+        }
+
+        binding.deviceBottles.apply {
+            textPaint.typeface = textAppearanceApplier.paint.typeface
+            setCharacterLists(TickerUtils.provideNumberList())
+        }
     }
 
     private fun updateUiState() {
