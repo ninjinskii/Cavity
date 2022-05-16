@@ -49,6 +49,6 @@ data class Bottle(
     override fun getIcon() = R.drawable.ic_glass
 
     override fun getFilePath() = pdfPath
-    override fun getExternalFileName() = "${this.vintage}-${this.id}"
-    override fun getExternalSubDirectory() = Cavity.DOCUMENTS_DIRECTORY
+    override fun getExternalFilename() = "${this.vintage}-${this.id}"
+    override fun getExternalSubPath() = Cavity.DOCUMENTS_DIRECTORY
 }

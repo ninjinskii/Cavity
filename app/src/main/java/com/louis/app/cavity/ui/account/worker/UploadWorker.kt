@@ -7,11 +7,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.FileAssoc
-import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.network.response.ApiResponse
-import com.louis.app.cavity.network.response.FileTransfer
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -64,34 +61,20 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                     }
                 }
 
-                uploadFiles(wines + bottles)
+                copyFilesToExternalDirectory(wines + bottles)
             }
         }
     }
 
-    private suspend fun uploadFiles(fileAssocs: List<FileAssoc>) {
-        fileAssocs
-            .filter { it.getFilePath().isNotBlank() }
-            .forEach {
-                val uriString = it.getFilePath()
-                val uri = Uri.parse(uriString)
+    private fun copyFilesToExternalDirectory(fileAssocs: List<FileAssoc>) {
+        fileAssocs.forEach {
+            val uriString = it.getFilePath()
+            val uri = Uri.parse(uriString)
 
-                try {
-                    FileProcessor(context, uri).apply {
-                        extension?.let { ext ->
-                            getBase64()?.let { base64 ->
-                                val ft = FileTransfer(ext, base64)
-                                when (it) {
-                                    is Wine -> accountRepository.postWineImage(it, ft)
-                                    is Bottle -> accountRepository.postBottlePdf(it, ft)
-                                }
-                            }
-                        }
-                    }
-                } catch (e: SecurityException) {
-                    // Do nothing
-                }
+            FileProcessor(context, uri).run {
+                copyToExternalDir(it)
             }
+        }
     }
 
     class UncompleteExportException : Exception()

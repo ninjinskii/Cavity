@@ -97,8 +97,8 @@ class DownloadWorker(private val context: Context, params: WorkerParameters) :
                 if (ftResponse is ApiResponse.Success) {
                     val ft = ftResponse.value
                     val externalDir = context.getExternalFilesDir(null)!!.path
-                    val filename = it.getExternalFileName()
-                    val directory = it.getExternalSubDirectory()
+                    val filename = it.getExternalFilename()
+                    val directory = it.getExternalSubPath()
                     val outputFile = File("$externalDir$directory/${filename}.${ft.extension}")
                     val subDir = File("$externalDir$directory")
 
