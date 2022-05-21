@@ -180,7 +180,11 @@ class AccountRepository private constructor(private val app: Application) {
                 )
 
             val message = response?.errorBody()?.let {
-                converter.convert(it)!!.message
+                try {
+                    converter.convert(it)?.message
+                } catch (e: Exception) {
+                    null
+                }
             } ?: app.getString(R.string.base_error)
 
             ApiResponse.Failure(message)
