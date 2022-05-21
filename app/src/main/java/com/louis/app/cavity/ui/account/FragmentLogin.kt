@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.ui.widget.Rule
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
@@ -23,6 +24,10 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
     private val loginViewModel: LoginViewModel by activityViewModels()
     private lateinit var savedStateHandle: SavedStateHandle
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        TransitionHelper(this).setFadeThroughOnEnterAndExit()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,6 +41,8 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         observe()
         initFields()
         setListeners()
+
+        loginViewModel.tryConnectWithSavedToken()
     }
 
     private fun observe() {

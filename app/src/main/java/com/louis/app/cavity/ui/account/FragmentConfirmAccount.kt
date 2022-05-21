@@ -9,6 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentConfirmAccountBinding
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
@@ -16,6 +17,11 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
     private var _binding: FragmentConfirmAccountBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        TransitionHelper(this).setFadeThroughOnEnterAndExit()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

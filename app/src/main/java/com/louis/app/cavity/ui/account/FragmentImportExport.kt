@@ -9,8 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.work.WorkInfo
+import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportExportBinding
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
@@ -21,6 +23,14 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     private val binding get() = _binding!!
     private val importExportViewModel: ImportExportViewModel by viewModels()
     private val args: FragmentImportExportArgs by navArgs()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        TransitionHelper(this).setSharedAxisTransition(
+            MaterialSharedAxis.Z,
+            navigatingForward = false
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

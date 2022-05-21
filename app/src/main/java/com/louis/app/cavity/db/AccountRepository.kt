@@ -8,6 +8,7 @@ import com.louis.app.cavity.network.CavityApiService
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.ConfirmResponse
 import com.louis.app.cavity.network.response.LoginResponse
+import com.louis.app.cavity.network.response.UserResponse
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.HttpException
@@ -106,6 +107,10 @@ class AccountRepository private constructor(private val app: Application) {
     suspend fun postHistoryFriendsXRefs(historyFriendXRefs: List<HistoryXFriend>):
         ApiResponse<Unit> {
         return doApiCall { cavityApi.postHistoryFriendsXRef(historyFriendXRefs) }
+    }
+
+    suspend fun getAccount(): ApiResponse<UserResponse> {
+        return doApiCall { cavityApi.getAccount() }
     }
 
     suspend fun getCounties(): ApiResponse<List<County>> {

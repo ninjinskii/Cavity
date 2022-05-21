@@ -3,6 +3,7 @@ package com.louis.app.cavity.network
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.network.response.ConfirmResponse
 import com.louis.app.cavity.network.response.LoginResponse
+import com.louis.app.cavity.network.response.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -55,6 +56,9 @@ interface CavityApiService {
 
     @POST("history-x-friend")
     suspend fun postHistoryFriendsXRef(@Body historyXFriends: List<HistoryXFriend>)
+
+    @GET("account")
+    suspend fun getAccount(): UserResponse
 
     @GET("county")
     suspend fun getCounties(): List<County>
