@@ -9,11 +9,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAccountBinding
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
@@ -22,10 +23,17 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
-    private val importExportViewModel: ImportExportViewModel by viewModels()
+    private lateinit var transitionHelper: TransitionHelper
+
+    private var beforePermsNavTargetIsImport = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        postponeEnterTransition()
+        transitionHelper = TransitionHelper(this).apply {
+            setFadeThroughOnEnterAndExit()
+        }
 
         askPermission =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -45,6 +53,8 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                         .build()
 
                     findNavController().navigate(action, navOptions)
+                } else {
+                    startPostponedEnterTransition()
                 }
             }
     }
@@ -64,6 +74,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         loginViewModel.user.observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.email.text = it
+                startPostponedEnterTransition()
             } else {
                 val action = FragmentAccountDirections.accountToLogin()
                 findNavController().navigate(action)
@@ -73,30 +84,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
     private fun setListeners() {
         binding.exportBtn.setOnClickListener {
-            if (hasPermissions()) {
-                // accountViewModel.export()
-                val action = FragmentAccountDirections.accountToImportExport(
-                    isImport = false,
-                    title = getString(R.string.export)
-                )
-
-                findNavController().navigate(action)
-            } else {
-                askPermission.launch(REQUIRED_PERMISSION)
-            }
+            navigateToImportExport(false)
         }
 
         binding.importBtn.setOnClickListener {
-            if (hasPermissions()) {
-                val action = FragmentAccountDirections.accountToImportExport(
-                    isImport = true,
-                    title = getString(R.string.import_)
-                )
-
-                findNavController().navigate(action)
-            } else {
-                askPermission.launch(REQUIRED_PERMISSION)
-            }
+            navigateToImportExport(true)
         }
     }
 
@@ -118,9 +110,26 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
     private fun handlePermisionResults(permission: Boolean) {
         if (permission) {
-            importExportViewModel.export()
+            navigateToImportExport(beforePermsNavTargetIsImport)
         } else {
             binding.coordinator.showSnackbar(R.string.permissions_denied_external)
+        }
+    }
+
+    private fun navigateToImportExport(isImport: Boolean) {
+        if (hasPermissions()) {
+            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
+
+            val title = if (isImport) R.string.import_ else R.string.export
+            val action = FragmentAccountDirections.accountToImportExport(
+                isImport = isImport,
+                title = getString(title)
+            )
+
+            findNavController().navigate(action)
+        } else {
+            beforePermsNavTargetIsImport = isImport
+            askPermission.launch(REQUIRED_PERMISSION)
         }
     }
 
