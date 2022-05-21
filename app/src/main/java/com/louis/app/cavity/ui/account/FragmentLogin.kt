@@ -41,6 +41,8 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         observe()
         initFields()
         setListeners()
+
+        loginViewModel.tryConnectWithSavedToken()
     }
 
     private fun observe() {

@@ -89,10 +89,30 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         )
     }
 
+    fun tryConnectWithSavedToken() {
+        val token = prefsRepository.getApiToken()
+
+        if (token.isBlank()) {
+            return
+        }
+
+        // Do not use doApiCall(), we don't want error messages here since this action isn't user initiated
+        viewModelScope.launch(IO) {
+            val response = accountRepository.getAccount()
+
+            if (response is ApiResponse.Success) {
+                val email = response.value.email
+                prefsRepository.setLastLogin(email)
+                _user.postValue(email)
+            }
+        }
+    }
+
     fun getLastLogin() = prefsRepository.getLastLogin()
 
     fun logout() {
         _user.value = null
+        prefsRepository.setApiToken("")
     }
 
     private fun <T> doApiCall(
