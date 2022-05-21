@@ -10,6 +10,7 @@ class PrefsRepository private constructor(app: Application) {
         private const val PREF_SKEW_BOTTLE = "com.louis.app.cavity.PREF_SKEW_BOTTLE"
         private const val PREF_DEFAULT_CURRENCY = "com.louis.app.cavity.PREF_DEFAULT_CURRENCY"
         private const val PREF_API_TOKEN = "com.louis.app.cavity.PREF_API_TOKEN"
+        private const val PREF_LAST_LOGIN = "com.louis.app.cavity.PREF_LAST_LOGIN"
         private const val DEFAULT_CURRENCY = "€"
 
         @Volatile
@@ -37,11 +38,17 @@ class PrefsRepository private constructor(app: Application) {
         PREF_API_TOKEN.put(token)
     }
 
+    fun setLastLogin(email: String) {
+        PREF_LAST_LOGIN.put(email)
+    }
+
     fun getSkewBottle() = PREF_SKEW_BOTTLE.getBoolean()
 
     fun getDefaultCurrency() = PREF_DEFAULT_CURRENCY.getString() ?: DEFAULT_CURRENCY
 
     fun getApiToken() = PREF_API_TOKEN.getString() ?: ""
+
+    fun getLastLogin() = PREF_LAST_LOGIN.getString() ?: ""
 
     private fun String.put(string: String) {
         editor.putString(this, string)

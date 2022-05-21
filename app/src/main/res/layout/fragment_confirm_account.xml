@@ -51,7 +51,7 @@
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/digit1Layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="42dp"
+                    android:layout_width="44dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/medium_margin"
                     android:layout_marginLeft="@dimen/medium_margin"
@@ -74,7 +74,7 @@
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/digit2Layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="42dp"
+                    android:layout_width="44dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/small_margin"
                     app:layout_constraintBottom_toBottomOf="@id/digit1Layout"
@@ -96,7 +96,7 @@
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/digit3Layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="42dp"
+                    android:layout_width="44dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/small_margin"
                     app:layout_constraintBottom_toBottomOf="@id/digit1Layout"
@@ -118,7 +118,7 @@
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/digit4Layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="42dp"
+                    android:layout_width="44dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/small_margin"
                     app:layout_constraintBottom_toBottomOf="@id/digit1Layout"
@@ -140,7 +140,7 @@
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/digit5Layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="42dp"
+                    android:layout_width="44dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/small_margin"
                     app:layout_constraintBottom_toBottomOf="@id/digit1Layout"
@@ -162,7 +162,7 @@
                 <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                     android:id="@+id/digit6Layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="42dp"
+                    android:layout_width="44dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/small_margin"
                     android:layout_marginRight="@dimen/medium_margin"

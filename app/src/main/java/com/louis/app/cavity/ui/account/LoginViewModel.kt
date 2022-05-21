@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.PrefsRepository
-import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -16,12 +15,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class LoginViewModel(app: Application) : AndroidViewModel(app) {
-    private val repository = WineRepository.getInstance(app)
     private val prefsRepository = PrefsRepository.getInstance(app)
     private val accountRepository = AccountRepository.getInstance(app)
-
-    private var apiUrl = ""
-    private var token = ""
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
@@ -49,10 +44,6 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
 
     var inConfirmationUser: String? = null
 
-    private fun submitIpAndToken(ip: String, token: String) {
-        accountRepository.submitIpAndRetrieveToken(ip, token)
-    }
-
     fun login(email: String, password: String) {
         // In case the user create an account, quit the app, and then try to re-login
         inConfirmationUser = email
@@ -60,9 +51,8 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         doApiCall(
             call = { accountRepository.login(email, password) },
             onSuccess = {
-                token = it.value.token
-                prefsRepository.setApiToken(token)
-                submitIpAndToken(apiUrl, token)
+                prefsRepository.setApiToken(it.value.token)
+                prefsRepository.setLastLogin(email)
                 _user.postValue(it.value.email)
             }
         )
@@ -90,23 +80,19 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         doApiCall(
             call = { accountRepository.confirmAccount(email, registrationCode) },
             onSuccess = {
+                prefsRepository.setLastLogin(inConfirmationUser ?: "")
                 inConfirmationUser = null
-                token = it.value.token
-                prefsRepository.setApiToken(token)
-                submitIpAndToken(apiUrl, token)
+                prefsRepository.setApiToken(it.value.token)
                 _confirmedEvent.postOnce(Unit)
                 _user.postValue(email)
             }
         )
     }
 
+    fun getLastLogin() = prefsRepository.getLastLogin()
+
     fun logout() {
         _user.value = null
-    }
-
-    fun setApiUrl(url: String) {
-        apiUrl = url
-        submitIpAndToken(url, "")
     }
 
     private fun <T> doApiCall(
@@ -126,7 +112,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                     is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
                     is ApiResponse.UnknownError -> _userFeedback.postOnce(R.string.base_error)
                     is ApiResponse.UnregisteredError -> _navigateToConfirm.postOnce(Unit)
-                    is ApiResponse.UnauthorizedError -> Unit
+                    is ApiResponse.UnauthorizedError -> Unit // Shouldn't happen in this ViewModel
                 }
             } finally {
                 _isLoading.postValue(false)

@@ -32,6 +32,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         setupNavigation(binding.appBar.toolbar)
 
         observe()
+        initField()
         setListeners()
     }
 
@@ -55,13 +56,20 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         }
     }
 
+    private fun initField() {
+        val lastLogin = loginViewModel.getLastLogin()
+        binding.login.setText(lastLogin)
+
+        if (lastLogin.isNotBlank()) {
+            binding.login.requestFocus()
+        }
+    }
+
     private fun setListeners() {
         binding.buttonSubmit.setOnClickListener {
             with(binding) {
                 val email = login.text.toString()
                 val password = password.text.toString()
-                val apiUrl = "http://${ip.text.toString()}"
-                loginViewModel.setApiUrl(apiUrl)
 
                 when (newAccount.isChecked) {
                     true -> loginViewModel.register(email, password)
