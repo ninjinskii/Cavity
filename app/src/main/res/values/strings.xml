@@ -31,6 +31,8 @@
     <string name="friend_already_exists">Cet ami existe déjà.</string>
     <string name="no_negative">Entrez un nombre supérieur à 0.</string>
     <string name="camera_error">Échec de l\'initialisation de la caméra.</string>
+    <string name="invalid_email">Email non valide.</string>
+    <string name="weak_pwd">Le mot de passe doit contenir une majuscule, un chiffre et faire plus de 5 caractères.</string>
 
     <!-- App -->
     <string name="app_name">Cavity</string>

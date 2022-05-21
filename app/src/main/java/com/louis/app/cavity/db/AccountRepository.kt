@@ -9,7 +9,10 @@ import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.ConfirmResponse
 import com.louis.app.cavity.network.response.LoginResponse
 import okhttp3.ResponseBody
-import retrofit2.*
+import retrofit2.Converter
+import retrofit2.HttpException
+import retrofit2.Response
+import retrofit2.Retrofit
 
 class AccountRepository private constructor(private val app: Application) {
     companion object {
@@ -22,14 +25,16 @@ class AccountRepository private constructor(private val app: Application) {
             }
     }
 
-    private lateinit var retrofit: Retrofit
-    private lateinit var cavityApi: CavityApiService
-
-    fun submitIpAndRetrieveToken(ip: String, token: String) {
+    private val cavityApi by lazy {
         val locale = app.getString(R.string.locale)
-        retrofit = CavityApiClient.buildRetrofitInstance(ip, token, locale)
-        cavityApi = retrofit.create()
+        val prefsRepository = PrefsRepository.getInstance(app)
+
+        CavityApiClient.buildRetrofitInstance(locale, prefsRepository)
+            .also { retrofit = it }
+            .create(CavityApiService::class.java)
     }
+
+    private var retrofit: Retrofit? = null
 
     suspend fun login(email: String, password: String): ApiResponse<LoginResponse> {
         val parameters = mapOf("email" to email, "password" to password)
@@ -161,6 +166,7 @@ class AccountRepository private constructor(private val app: Application) {
         } catch (t: Throwable) {
             when (t) {
                 is HttpException -> when (t.code()) {
+                    401 -> ApiResponse.UnauthorizedError
                     412 -> ApiResponse.UnregisteredError
                     else -> parseError(t.response())
                 }
@@ -173,18 +179,21 @@ class AccountRepository private constructor(private val app: Application) {
 
     private fun parseError(response: Response<*>?): ApiResponse.Failure {
         return try {
-            val converter: Converter<ResponseBody, ApiResponse.Failure> = retrofit
-                .responseBodyConverter(
+            val converter: Converter<ResponseBody, ApiResponse.Failure>? = retrofit
+                ?.responseBodyConverter(
                     ApiResponse.Failure::class.java,
                     arrayOfNulls<Annotation>(0)
                 )
 
             val message = response?.errorBody()?.let {
-                converter.convert(it)!!.message
+                try {
+                    converter?.convert(it)?.message
+                } catch (e: Exception) {
+                    null
+                }
             } ?: app.getString(R.string.base_error)
 
             ApiResponse.Failure(message)
-
         } catch (e: IllegalArgumentException) {
             ApiResponse.Failure(app.getString(R.string.base_error))
         }

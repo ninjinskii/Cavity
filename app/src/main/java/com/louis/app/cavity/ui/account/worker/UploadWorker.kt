@@ -29,7 +29,6 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                 Result.failure()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
             Result.failure()
         }
     }

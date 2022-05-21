@@ -32,6 +32,8 @@
     <string name="friend_already_exists">This friend already exist.</string>
     <string name="no_negative">Enter a positive number.</string>
     <string name="camera_error">Camera initialization failed.</string>
+    <string name="invalid_email">Invalid email.</string>
+    <string name="weak_pwd">The password must contain a capital letter, a number and be more than 5 characters.</string>
 
     <!-- App -->
     <string name="app_name">Cavity</string>
@@ -273,6 +275,13 @@
     <string name="import_explanation">Download your last backup.</string>
     <string name="import_">Import</string>
     <string name="export_done">Backup done successfully.</string>
+    <string name="backup">Sauvegarde en ligne</string>
+    <string name="last_action">Last action: </string>
+    <string name="current_device">This device</string>
+    <string name="backup_erasure_warn_export">Your online backup will be replaced with the device wine cellar.</string>
+    <string name="backup_erasure_warn_import">The device wine cellar will be replaced with your online backup.</string>
+    <string name="healthcheck_export_warn">The online backup contains more recent stock movements. Exporting your cellar will overwrite these movements.</string>
+    <string name="healthcheck_import_warn">The cellar of this device contains more recent stock movements. Importing your backup will overwrite these movements.</string>
 
     <!-- a11y -->
     <string name="a11y_empty_state_icon">Illustration for empty list</string>
