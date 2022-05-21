@@ -20,6 +20,9 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     private val prefsRepository = PrefsRepository.getInstance(app)
     private val accountRepository = AccountRepository.getInstance(app)
 
+    private var apiUrl = ""
+    private var token = ""
+
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
         get() = _isLoading
@@ -46,8 +49,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
 
     var inConfirmationUser: String? = null
 
-    fun submitIp(ip: String) {
-        val token = prefsRepository.getApiToken()
+    private fun submitIpAndToken(ip: String, token: String) {
         accountRepository.submitIpAndRetrieveToken(ip, token)
     }
 
@@ -58,7 +60,9 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         doApiCall(
             call = { accountRepository.login(email, password) },
             onSuccess = {
-                prefsRepository.setApiToken(it.value.token)
+                token = it.value.token
+                prefsRepository.setApiToken(token)
+                submitIpAndToken(apiUrl, token)
                 _user.postValue(it.value.email)
             }
         )
@@ -87,6 +91,9 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
             call = { accountRepository.confirmAccount(email, registrationCode) },
             onSuccess = {
                 inConfirmationUser = null
+                token = it.value.token
+                prefsRepository.setApiToken(token)
+                submitIpAndToken(apiUrl, token)
                 _confirmedEvent.postOnce(Unit)
                 _user.postValue(email)
             }
@@ -95,6 +102,11 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
 
     fun logout() {
         _user.value = null
+    }
+
+    fun setApiUrl(url: String) {
+        apiUrl = url
+        submitIpAndToken(url, "")
     }
 
     private fun <T> doApiCall(

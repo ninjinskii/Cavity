@@ -1,19 +1,18 @@
 package com.louis.app.cavity.network
 
 import com.louis.app.cavity.model.*
-import com.louis.app.cavity.network.response.FileTransfer
+import com.louis.app.cavity.network.response.ConfirmResponse
 import com.louis.app.cavity.network.response.LoginResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Path
 
 interface CavityApiService {
     @POST("account")
     suspend fun register(@Body parameters: Map<String, String>)
 
     @POST("account/confirm")
-    suspend fun confirmAccount(@Body parameters: Map<String, String>)
+    suspend fun confirmAccount(@Body parameters: Map<String, String>): ConfirmResponse
 
     @POST("auth/login")
     suspend fun login(@Body parameters: Map<String, String>): LoginResponse
@@ -57,12 +56,6 @@ interface CavityApiService {
     @POST("history-x-friend")
     suspend fun postHistoryFriendsXRef(@Body historyXFriends: List<HistoryXFriend>)
 
-    @POST("wine/{wineId}/image")
-    suspend fun postWineImage(@Path("wineId") wineId: String, @Body file: FileTransfer)
-
-    @POST("bottle/{bottleId}/pdf")
-    suspend fun postBottlePdf(@Path("bottleId") bottleId: String, @Body file: FileTransfer)
-
     @GET("county")
     suspend fun getCounties(): List<County>
 
@@ -101,10 +94,4 @@ interface CavityApiService {
 
     @GET("history-x-friend")
     suspend fun getHistoryFriendsXRef(): List<HistoryXFriend>
-
-    @GET("wine/{wineId}/image")
-    suspend fun getWineImage(@Path("wineId") wineId: String): FileTransfer
-
-    @GET("bottle/{bottleId}/pdf")
-    suspend fun getBottlePdf(@Path("bottleId") bottleId: String): FileTransfer
 }

@@ -2,16 +2,12 @@ package com.louis.app.cavity.ui.account.worker
 
 import android.app.Application
 import android.content.Context
-import android.net.Uri
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.FileAssoc
-import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.network.response.ApiResponse
-import com.louis.app.cavity.network.response.FileTransfer
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -44,10 +40,13 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                 val wines = repository.getAllWinesNotLive()
                 val bottles = repository.getAllBottlesNotLive()
 
+                // Get wines & bottles first, copy them to external dir and update their path
+                updateFileLocation(wines + bottles)
+
                 listOf(
                     postCounties(repository.getAllCountiesNotLive()),
-                    postWines(wines),
-                    postBottles(bottles),
+                    postWines(repository.getAllWinesNotLive()), // Re-request wines with updated path
+                    postBottles(repository.getAllBottlesNotLive()),
                     postFriends(repository.getAllFriendsNotLive()),
                     postGrapes(repository.getAllGrapesNotLive()),
                     postReviews(repository.getAllReviewsNotLive()),
@@ -63,35 +62,17 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                         throw UncompleteExportException()
                     }
                 }
-
-                uploadFiles(wines + bottles)
             }
         }
     }
 
-    private suspend fun uploadFiles(fileAssocs: List<FileAssoc>) {
-        fileAssocs
-            .filter { it.getFilePath().isNotBlank() }
-            .forEach {
-                val uriString = it.getFilePath()
-                val uri = Uri.parse(uriString)
-
-                try {
-                    FileProcessor(context, uri).apply {
-                        extension?.let { ext ->
-                            getBase64()?.let { base64 ->
-                                val ft = FileTransfer(ext, base64)
-                                when (it) {
-                                    is Wine -> accountRepository.postWineImage(it, ft)
-                                    is Bottle -> accountRepository.postBottlePdf(it, ft)
-                                }
-                            }
-                        }
-                    }
-                } catch (e: SecurityException) {
-                    // Do nothing
-                }
+    private suspend fun updateFileLocation(fileAssocs: List<FileAssoc>) {
+        fileAssocs.forEach {
+            FileProcessor(context, it).run {
+                copyToExternalDir()
+                updateFilePath()
             }
+        }
     }
 
     class UncompleteExportException : Exception()

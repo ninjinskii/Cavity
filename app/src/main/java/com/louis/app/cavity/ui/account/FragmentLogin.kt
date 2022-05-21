@@ -61,8 +61,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
                 val email = login.text.toString()
                 val password = password.text.toString()
                 val apiUrl = "http://${ip.text.toString()}"
-
-                loginViewModel.submitIp(apiUrl)
+                loginViewModel.setApiUrl(apiUrl)
 
                 when (newAccount.isChecked) {
                     true -> loginViewModel.register(email, password)

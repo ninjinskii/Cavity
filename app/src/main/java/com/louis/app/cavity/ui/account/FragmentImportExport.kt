@@ -2,8 +2,10 @@ package com.louis.app.cavity.ui.account
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.work.WorkInfo
@@ -12,11 +14,12 @@ import com.louis.app.cavity.databinding.FragmentImportExportBinding
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
+import com.robinhood.ticker.TickerUtils
 
 class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     private var _binding: FragmentImportExportBinding? = null
     private val binding get() = _binding!!
-    private val importExportViewModel: ImportExportViewModel by activityViewModels()
+    private val importExportViewModel: ImportExportViewModel by viewModels()
     private val args: FragmentImportExportArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,9 +34,26 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
             fetchLocalBottleCount()
         }
 
+        initTickerViews()
         updateUiState()
         observe()
         setListeners()
+    }
+
+    private fun initTickerViews() {
+        val textAppearanceApplier = AppCompatTextView(requireContext()).apply {
+            TextViewCompat.setTextAppearance(this, R.style.TextAppearance_Cavity_Caption)
+        }
+
+        binding.bottles.apply {
+            textPaint.typeface = textAppearanceApplier.paint.typeface
+            setCharacterLists(TickerUtils.provideNumberList())
+        }
+
+        binding.deviceBottles.apply {
+            textPaint.typeface = textAppearanceApplier.paint.typeface
+            setCharacterLists(TickerUtils.provideNumberList())
+        }
     }
 
     private fun updateUiState() {
@@ -79,6 +99,18 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
         importExportViewModel.localBottleCount.observe(viewLifecycleOwner) {
             val text = resources.getQuantityString(R.plurals.bottles, it, it)
             binding.deviceBottles.text = text
+        }
+
+        importExportViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+
+        importExportViewModel.userFeedbackString.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { string ->
+                binding.coordinator.showSnackbar(string)
+            }
         }
 
         importExportViewModel.workProgress.observe(viewLifecycleOwner) {
