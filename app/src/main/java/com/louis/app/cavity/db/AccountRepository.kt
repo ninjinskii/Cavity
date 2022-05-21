@@ -169,7 +169,6 @@ class AccountRepository private constructor(private val app: Application) {
         return try {
             ApiResponse.Success(apiCall.invoke())
         } catch (t: Throwable) {
-            t.printStackTrace()
             when (t) {
                 is HttpException -> when (t.code()) {
                     401 -> ApiResponse.UnauthorizedError
