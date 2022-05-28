@@ -1,5 +1,1 @@
-- Création de compte disponible pour tous
-- Correction d'un problème faisant disparaître des entrées dans l'historique (bouteille offertes par quelqu'un)
-- Ajout de quelques années sur le millésime minimal lors de l'ajout d'une bouteille
-- Correction de la couleur violette de l'appli dans l'app switcher (Android 7.1)
-- Diverses améliorations graphiques
+- Réglage d'un soucis sur la création de compte sur certains appareils

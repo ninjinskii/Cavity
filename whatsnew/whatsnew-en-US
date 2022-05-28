@@ -1,5 +1,1 @@
-- Account management available for all
-- Fix an issue making history entries disappearing when someone give a bottle to you
-- Add some room to choose an older vintage when adding a bottle
-- Fix purple bar in app switcher (Android 7.1)
-- Multiple UI improvements
+- Fix an issue with some device when attempting to create an account
