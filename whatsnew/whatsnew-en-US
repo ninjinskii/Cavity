@@ -1,1 +1,1 @@
-- Fix an issue with some device when attempting to create an account
+- Add SSL certificate allowing Android 7 & 7.1 (Nougat) devices to reach API

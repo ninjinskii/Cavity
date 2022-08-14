@@ -1,1 +1,1 @@
-- Réglage d'un soucis sur la création de compte sur certains appareils
+- Ajout du certificat SSL nécessaire à la connexion des appareils sous Android 7 et 7.1 (Nougat)
