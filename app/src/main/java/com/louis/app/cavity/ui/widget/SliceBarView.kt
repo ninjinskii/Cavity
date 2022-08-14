@@ -20,6 +20,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.util.dpToPx
 import com.louis.app.cavity.util.spToPx
+import com.louis.app.cavity.util.themeColor
 import kotlin.math.cos
 import kotlin.math.roundToInt
 
@@ -36,9 +37,11 @@ class SliceBarView @JvmOverloads constructor(
         private const val TEXT_ANGLE = 50f
         private const val TEXT_SIZE_NORMAL = 16f
         private const val TEXT_SIZE_SMALL = 12f
+        private const val CURSOR_HEIGHT = 8f
     }
 
     private val backgroundColor = context.getColor(R.color.cavity_grey)
+    private val cursorColor = context.themeColor(R.attr.colorOnSurface)
     private val normalText = context.spToPx(TEXT_SIZE_NORMAL)
     private val smallText = context.spToPx(TEXT_SIZE_SMALL)
 
@@ -47,6 +50,14 @@ class SliceBarView @JvmOverloads constructor(
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
             strokeWidth = context.dpToPx(BAR_WIDTH)
+        }
+    }
+
+    private val cursorPaint by lazy {
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            color = cursorColor
+            strokeWidth = context.dpToPx(BAR_WIDTH / 2)
         }
     }
 
@@ -78,6 +89,7 @@ class SliceBarView @JvmOverloads constructor(
     private var startX = 0f
     private var endX = 0f
     private var barY = 0f
+    private var longPressX = -1f
 
     init {
         context.theme.obtainStyledAttributes(
@@ -146,7 +158,15 @@ class SliceBarView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> showTooltipOnClick(event.x, move = false)
-            MotionEvent.ACTION_MOVE -> showTooltipOnClick(event.x, move = true)
+            MotionEvent.ACTION_MOVE -> {
+                showTooltipOnClick(event.x, move = true)
+                longPressX = event.x
+                invalidate()
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                longPressX = -1f
+                invalidate()
+            }
         }
 
         return super.onTouchEvent(event)
@@ -180,6 +200,8 @@ class SliceBarView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        drawCursor(canvas)
+
         canvas.apply {
             strokePaint.color = backgroundColor
             drawLine(startX, barY, endX, barY, strokePaint)
@@ -208,6 +230,22 @@ class SliceBarView @JvmOverloads constructor(
 
                 currentPixel += progress
             }
+        }
+
+    }
+
+    private fun drawCursor(canvas: Canvas) {
+        // Only draw cursor if user is sliding his thumb along the SliceBar
+        if (longPressX != -1f) {
+            val cursorHeightDp = context.dpToPx(CURSOR_HEIGHT)
+            val barhHeightDp = context.dpToPx(BAR_WIDTH)
+            canvas.drawLine(
+                longPressX,
+                barY + barhHeightDp,
+                longPressX,
+                barY + barhHeightDp + cursorHeightDp,
+                cursorPaint
+            )
         }
     }
 }
