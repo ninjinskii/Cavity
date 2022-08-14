@@ -110,7 +110,6 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         statsViewModel.showYearPicker.observe(viewLifecycleOwner) {
             binding.years.setVisible(it)
         }
-
     }
 
     private fun hintViewPagerSlide() {

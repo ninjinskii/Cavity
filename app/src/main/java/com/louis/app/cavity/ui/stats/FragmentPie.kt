@@ -84,6 +84,8 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     private fun updatePieData(pieView: PieView, stats: List<Stat>) {
+        val total = stats.sumOf { it.count }
+        binding.total.text = resources.getString(R.string.total, total)
         pieView.setPieSlices(stats, anim = true)
     }
 

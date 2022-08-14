@@ -95,6 +95,17 @@
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <TextView
+        android:id="@+id/total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_margin"
+        android:textAppearance="?attr/textAppearanceCaption"
+        app:layout_constraintEnd_toEndOf="@id/buttonGroupSwitchStat"
+        app:layout_constraintStart_toStartOf="@id/buttonGroupSwitchStat"
+        app:layout_constraintTop_toBottomOf="@id/buttonGroupSwitchStat"
+        tools:text="Total: 55" />
+
+    <TextView
         android:id="@+id/comparisonText"
         style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="0dp"

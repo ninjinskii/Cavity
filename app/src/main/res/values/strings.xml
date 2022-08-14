@@ -224,6 +224,7 @@
     <string name="misc_total_price">Prix total de la cave</string>
     <string name="misc_total_consumed">Bouteilles bues</string>
     <string name="misc_total_stock">Bouteilles en stock</string>
+    <string name="total">Total: %1$d</string>
     <string name="stock">Stock</string>
 
     <!-- Tasting -->
