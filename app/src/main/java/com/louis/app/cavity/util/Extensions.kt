@@ -27,6 +27,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.louis.app.cavity.R
+import com.louis.app.cavity.db.dao.PriceByCurrency
 import com.louis.app.cavity.ui.ActivityMain
 
 // Boolean and Int helpers for database compatibility
@@ -207,4 +208,19 @@ fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false
         toolbar.title = getString(R.string.app_name)
         toolbar.setNavigationOnClickListener(null)
     }
+}
+
+// Random
+fun List<PriceByCurrency>.join(): String {
+    val builder = StringBuilder("")
+
+    forEachIndexed { index, priceByCurrency ->
+        if (index == size - 1) {
+            builder.append(priceByCurrency.toString())
+        } else {
+            builder.append("$priceByCurrency - ")
+        }
+    }
+
+    return builder.toString()
 }

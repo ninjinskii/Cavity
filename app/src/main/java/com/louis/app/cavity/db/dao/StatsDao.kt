@@ -9,8 +9,11 @@ import com.louis.app.cavity.util.ColorUtil
 
 @Dao
 interface StatsDao {
-    @Query("SELECT COUNT(*) FROM bottle INNER JOIN wine ON wine_id = wine.id WHERE county_id=:countyId")
+    @Query("SELECT COUNT(*) FROM bottle INNER JOIN wine ON wine_id = wine.id WHERE county_id=:countyId AND consumed != 1")
     fun getBottleCountForCounty(countyId: Long): LiveData<Int>
+
+    @Query("""SELECT SUM(price) as sum, currency FROM bottle INNER JOIN wine ON wine_id = wine.id WHERE price != -1 AND county_id=:countyId  GROUP BY currency""")
+    fun getCountyPriceByCurrency(countyId: Long): LiveData<List<PriceByCurrency>>
 
     @Query(
         """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 

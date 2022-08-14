@@ -302,6 +302,7 @@ class WineRepository private constructor(app: Application) {
 
     // Stats
     fun getBottleCountForCounty(countyId: Long) = statsDao.getBottleCountForCounty(countyId)
+    fun getCountyPriceByCurrency(countyId: Long) = statsDao.getCountyPriceByCurrency(countyId)
     fun getNamingsStatsForCounty(countyId: Long) = statsDao.getNamingsForCounty(countyId)
     fun getVintagesStatsForCounty(countyId: Long) = statsDao.getVintagesForCounty(countyId)
     fun getStockByCounty() = statsDao.getStockByCounty()

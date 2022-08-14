@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.louis.app.cavity.databinding.BottomSheetStatsBinding
+import com.louis.app.cavity.util.join
 
 class StatsBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetStatsBinding? = null
@@ -28,17 +29,7 @@ class StatsBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         statsViewModel.getTotalPriceByCurrency().observe(viewLifecycleOwner) {
-            val builder = StringBuilder("")
-
-            it.forEachIndexed { index, priceByCurrency ->
-                if (index == it.size - 1) {
-                    builder.append(priceByCurrency.toString())
-                } else {
-                    builder.append("$priceByCurrency - ")
-                }
-            }
-
-            binding.price.text = builder.toString()
+            binding.price.text = it.join()
         }
 
         statsViewModel.getTotalConsumed().observe(viewLifecycleOwner) {

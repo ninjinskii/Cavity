@@ -37,10 +37,35 @@
             android:layout_marginHorizontal="@dimen/medium_margin"
             android:layout_marginTop="@dimen/small_margin"
             android:textAppearance="?attr/textAppearanceCaption"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/separator"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/county"
             tools:text="85 bouteilles" />
+
+        <!-- Not translatable -->
+        <TextView
+            android:id="@+id/separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:text="·"
+            app:layout_constraintEnd_toStartOf="@id/price"
+            app:layout_constraintStart_toEndOf="@id/bottles"
+            app:layout_constraintTop_toBottomOf="@id/county"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/separator"
+            app:layout_constraintTop_toBottomOf="@id/county"
+            tools:text="5896 €" />
 
         <View
             android:id="@+id/divider"

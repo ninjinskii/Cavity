@@ -25,6 +25,10 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         repository.getBottleCountForCounty(it)
     }
 
+    val bottlePrice = observedCounty.switchMap {
+        repository.getCountyPriceByCurrency(it)
+    }
+
     val namingCount = observedCounty.switchMap {
         repository.getNamingsStatsForCounty(it)
     }

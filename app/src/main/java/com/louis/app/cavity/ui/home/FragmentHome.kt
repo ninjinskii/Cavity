@@ -24,10 +24,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
-import com.louis.app.cavity.util.TransitionHelper
-import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupNavigation
-import com.louis.app.cavity.util.themeColor
+import com.louis.app.cavity.util.*
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
     private lateinit var tabAdapter: ScrollableTabAdapter<County>
@@ -126,6 +123,10 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         homeViewModel.bottleCount.observe(viewLifecycleOwner) {
             binding.countyDetails.bottles.text =
                 resources.getQuantityString(R.plurals.bottles, it, it)
+        }
+
+        homeViewModel.bottlePrice.observe(viewLifecycleOwner) {
+            binding.countyDetails.price.text = it.join()
         }
 
         homeViewModel.namingCount.observe(viewLifecycleOwner) {
