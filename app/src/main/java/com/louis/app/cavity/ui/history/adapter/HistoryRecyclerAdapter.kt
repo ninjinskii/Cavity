@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistoryBinding
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
@@ -144,6 +145,13 @@ class HistoryRecyclerAdapter(
 
                 cardView.setOnClickListener {
                     onItemClick(entry)
+                }
+
+                cardView.setOnLongClickListener {
+                    MaterialAlertDialogBuilder(context)
+                        .setMessage(entry.model.historyEntry.comment)
+                        .show()
+                    true
                 }
             }
         }
