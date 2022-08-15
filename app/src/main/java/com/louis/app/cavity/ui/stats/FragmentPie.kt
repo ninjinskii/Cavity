@@ -6,11 +6,16 @@ import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.ui.stats.widget.PieView
 import com.louis.app.cavity.util.setVisible
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FragmentPie : Fragment(R.layout.fragment_pie) {
     private var _binding: FragmentPieBinding? = null
@@ -84,8 +89,14 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     private fun updatePieData(pieView: PieView, stats: List<Stat>) {
-        val total = stats.sumOf { it.count }
-        binding.total.text = resources.getString(R.string.total, total)
+        lifecycleScope.launch(Default) {
+            val total = stats.sumOf { it.count }
+
+            withContext(Main) {
+                binding.total.text = resources.getString(R.string.total, total)
+            }
+        }
+
         pieView.setPieSlices(stats, anim = true)
     }
 
