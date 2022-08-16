@@ -84,10 +84,14 @@ class DatePicker(
         if (!isDatePickerDisplayed) {
             isDatePickerDisplayed = true
 
-            datePicker.show(
-                childFragmentManager,
-                "random-tag"
-            )
+            try {
+                datePicker.show(
+                    childFragmentManager,
+                    "random-tag"
+                )
+            } catch (e: IllegalStateException) {
+                // Do nothing
+            }
         }
     }
 }
