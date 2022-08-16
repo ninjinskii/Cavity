@@ -11,6 +11,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.ui.stats.widget.PieView
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
@@ -40,7 +41,11 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     private fun setListeners() {
         binding.buttonStock.isChecked = true
 
-        binding.buttonGroupSwitchStat.addOnButtonCheckedListener { _, checkedId, _ ->
+        binding.buttonGroupSwitchStat.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) {
+                return@addOnButtonCheckedListener
+            }
+
             statsViewModel.setShouldShowYearPicker(checkedId != R.id.buttonStock)
 
             val stockType = when (checkedId) {
@@ -51,7 +56,6 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
 
             statsViewModel.setStatType(viewPagerPosition, stockType)
         }
-
     }
 
     private fun observe() {
