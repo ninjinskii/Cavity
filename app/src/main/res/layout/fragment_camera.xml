@@ -53,8 +53,8 @@
 
         <ImageView
             android:id="@+id/bottleTemplate"
-            android:layout_width="400dp"
-            android:layout_height="600dp"
+            android:layout_width="500dp"
+            android:layout_height="750dp"
             android:alpha="0.40"
             android:contentDescription="@string/a11y_bottle_template"
             android:scaleType="centerCrop"
