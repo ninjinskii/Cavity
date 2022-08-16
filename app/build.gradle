@@ -39,22 +39,22 @@ android {
 
 dependencies {
     def nav_version = "2.3.5"
-    def room_version = "2.4.1"
-    def camerax_version = "1.1.0-beta01"
-    def paging_version = "3.1.0"
-    def lifecycle_version = "2.4.1"
+    def room_version = "2.4.3"
+    def camerax_version = "1.1.0"
+    def paging_version = "3.1.1"
+    def lifecycle_version = "2.5.1"
     def work_version = "2.7.1"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     // Ktx core
-    implementation "androidx.core:core-ktx:1.7.0"
+    implementation "androidx.core:core-ktx:1.8.0"
 
     // AppCompat
-    implementation "androidx.appcompat:appcompat:1.4.1"
+    implementation "androidx.appcompat:appcompat:1.5.0"
 
     // ConstraintLayout
-    implementation "androidx.constraintlayout:constraintlayout:2.1.3"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
 
     // Tests
     testImplementation "junit:junit:4.12"
@@ -65,10 +65,10 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.1"
 
     // Material
-    implementation "com.google.android.material:material:1.6.0"
+    implementation "com.google.android.material:material:1.6.1"
 
     // Fragments
-    implementation "androidx.fragment:fragment-ktx:1.4.1"
+    implementation "androidx.fragment:fragment-ktx:1.5.2"
 
     // Navigation component - DO NOT UPDATE, it will mess the navigation logic in Cavity
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
@@ -105,7 +105,7 @@ dependencies {
     implementation "com.robinhood.ticker:ticker:2.0.4"
 
     // Splash Screen
-    implementation "androidx.core:core-splashscreen:1.0.0-beta01"
+    implementation "androidx.core:core-splashscreen:1.0.0"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
