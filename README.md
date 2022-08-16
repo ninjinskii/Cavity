@@ -12,8 +12,8 @@ It follows Material Design 2 principles to have a clear and simple user interfac
 - Stock management
 - Highlights peaking bottles
 - Stock history
-- Handle firends (Give a bottle to someone, share with a friend...)
-- Buy & comsumptions stats
+- Handle friends (Give a bottle to someone, share with a friend...)
+- Buy & consumptions stats
 - Search
 - Tasting sessions: decanting notification, chill a bottle
 
@@ -32,7 +32,7 @@ Cavity use Kotlin, Coroutines, Room, LiveData, ViewPager2 with a standard MVVM p
 
 ## Release process
 This project uses CI/CD.
-Workflows are trigerred when pushing a tag, and publish the app on the Play Store on production channel.
+Workflows are triggered when pushing a tag, and publish the app on the Play Store on production channel.
 
 Things to do to prepare a release:
 
