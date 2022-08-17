@@ -9,6 +9,7 @@ class PrefsRepository private constructor(app: Application) {
     companion object {
         private const val PREF_SKEW_BOTTLE = "com.louis.app.cavity.PREF_SKEW_BOTTLE"
         private const val PREF_DEFAULT_CURRENCY = "com.louis.app.cavity.PREF_DEFAULT_CURRENCY"
+        private const val PREF_TEMPLATE_SIZE = "com.louis.app.cavity.PREF_TEMPLATE_SIZE"
         private const val PREF_API_TOKEN = "com.louis.app.cavity.PREF_API_TOKEN"
         private const val PREF_LAST_LOGIN = "com.louis.app.cavity.PREF_LAST_LOGIN"
         private const val DEFAULT_CURRENCY = "€"
@@ -27,40 +28,53 @@ class PrefsRepository private constructor(app: Application) {
     private val editor = pref.edit()
 
     fun setSkewBottle(skew: Boolean) {
-        PREF_SKEW_BOTTLE.put(skew)
+        PREF_SKEW_BOTTLE put skew
     }
 
     fun setDefaultCurrency(currency: String) {
-        PREF_DEFAULT_CURRENCY.put(currency)
+        PREF_DEFAULT_CURRENCY put currency
+    }
+
+    fun setTemplateSize(templateSize: Float) {
+        PREF_TEMPLATE_SIZE put templateSize.coerceIn(0f, 1f)
     }
 
     fun setApiToken(token: String) {
-        PREF_API_TOKEN.put(token)
+        PREF_API_TOKEN put token
     }
 
     fun setLastLogin(email: String) {
-        PREF_LAST_LOGIN.put(email)
+        PREF_LAST_LOGIN put email
     }
 
     fun getSkewBottle() = PREF_SKEW_BOTTLE.getBoolean()
 
     fun getDefaultCurrency() = PREF_DEFAULT_CURRENCY.getString() ?: DEFAULT_CURRENCY
 
+    fun getTemplateSize() = PREF_TEMPLATE_SIZE.getFloat().coerceIn(0f, 1f)
+
     fun getApiToken() = PREF_API_TOKEN.getString() ?: ""
 
     fun getLastLogin() = PREF_LAST_LOGIN.getString() ?: ""
 
-    private fun String.put(string: String) {
+    private infix fun String.put(string: String) {
         editor.putString(this, string)
         editor.commit()
     }
 
-    private fun String.put(boolean: Boolean) {
+    private infix fun String.put(boolean: Boolean) {
         editor.putBoolean(this, boolean)
+        editor.commit()
+    }
+
+    private infix fun String.put(float: Float) {
+        editor.putFloat(this, float)
         editor.commit()
     }
 
     private fun String.getString(): String? = pref.getString(this, null)
 
     private fun String.getBoolean() = pref.getBoolean(this, true)
+
+    private fun String.getFloat() = pref.getFloat(this, 0.5f)
 }
