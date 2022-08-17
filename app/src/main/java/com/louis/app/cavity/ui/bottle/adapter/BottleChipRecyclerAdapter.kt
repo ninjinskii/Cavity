@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ChipActionBinding
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.util.toBoolean
 
 class BottleChipRecyclerAdapter(context: Context, private val onBottleClick: (Long) -> Unit) :
     ListAdapter<Bottle, BottleChipRecyclerAdapter.BottleChipViewHolder>(BottleItemDiffCallback()) {
@@ -50,7 +51,8 @@ class BottleChipRecyclerAdapter(context: Context, private val onBottleClick: (Lo
         override fun areItemsTheSame(oldItem: Bottle, newItem: Bottle) = oldItem.id == newItem.id
         override fun areContentsTheSame(oldItem: Bottle, newItem: Bottle) =
             oldItem.vintage == newItem.vintage &&
-                oldItem.isReadyToDrink() == newItem.isReadyToDrink()
+                    oldItem.isReadyToDrink() == newItem.isReadyToDrink() &&
+                    oldItem.isFavorite == newItem.isFavorite
     }
 
     inner class BottleChipViewHolder(private val binding: ChipActionBinding) :
@@ -60,6 +62,12 @@ class BottleChipRecyclerAdapter(context: Context, private val onBottleClick: (Lo
             with(binding.root) {
                 text = bottle.vintage.toString()
                 chipIcon = if (bottle.isReadyToDrink()) glassIcon else null
+                isCloseIconVisible = bottle.isFavorite.toBoolean()
+
+                // We are using the said "close icon" as a simple end icon
+                setOnCloseIconClickListener {
+                    binding.root.performClick()
+                }
 
                 setOnCheckedChangeListener(null)
                 isChecked = bottle.id == checkedId
