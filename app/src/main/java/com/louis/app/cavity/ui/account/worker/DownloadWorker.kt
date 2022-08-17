@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.network.response.ApiResponse
+import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
@@ -24,9 +25,11 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
             if (runAttemptCount < 1) {
                 Result.retry()
             } else {
+                Sentry.captureException(e)
                 Result.failure()
             }
         } catch (e: Exception) {
+            Sentry.captureException(e)
             Result.failure()
         }
     }

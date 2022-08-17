@@ -20,6 +20,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.Wine
+import io.sentry.Sentry
+import io.sentry.SentryLevel
 import java.util.concurrent.ExecutionException
 
 object TastingNotifier {
@@ -70,7 +72,10 @@ object TastingNotifier {
             try {
                 bitmap = futureBitmap.get()
             } catch (e: ExecutionException) {
-                // Do nothing
+                Sentry.captureMessage(
+                    "Image for tasting notification couldn't be loaded",
+                    SentryLevel.INFO
+                )
             }
         }
 

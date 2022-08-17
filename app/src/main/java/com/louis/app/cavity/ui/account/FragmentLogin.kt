@@ -34,7 +34,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
 
         _binding = FragmentLoginBinding.bind(view)
         savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
-        savedStateHandle.set(LOGIN_SUCCESSFUL, false)
+        savedStateHandle[LOGIN_SUCCESSFUL] = false
 
         setupNavigation(binding.appBar.toolbar)
 
@@ -59,7 +59,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
 
         loginViewModel.user.observe(viewLifecycleOwner) {
             if (it != null) {
-                savedStateHandle.set(LOGIN_SUCCESSFUL, true)
+                savedStateHandle[LOGIN_SUCCESSFUL] = true
                 findNavController().popBackStack()
             }
         }

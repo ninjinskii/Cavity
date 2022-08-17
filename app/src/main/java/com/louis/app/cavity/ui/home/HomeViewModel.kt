@@ -71,7 +71,6 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         emitSource(
             repository.getWineWithBottlesByCounty(countyId).map { winesWithBottles ->
                 winesWithBottles
-                    //.filter { !it.hidden.toBoolean() }
                     .sortedBy { it.wine.color.order }
                     .map { wineWithBottles ->
                         wineWithBottles.copy(

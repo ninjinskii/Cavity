@@ -62,5 +62,16 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+        <!-- Sentry configuration -->
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="https://6f4f3ab554cc40d6a84b57607709b780@o1364222.ingest.sentry.io/6658085" />
+        <meta-data
+            android:name="io.sentry.traces.sample-rate"
+            android:value="0.2" />
+        <meta-data
+            android:name="io.sentry.traces.user-interaction.enable"
+            android:value="true" />
+
     </application>
 </manifest>

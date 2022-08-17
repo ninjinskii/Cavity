@@ -29,26 +29,22 @@ class EmptyStateView @JvmOverloads constructor(
             R.styleable.EmptyStateView,
             defStyleAttr,
             0
-        ).apply {
-            try {
-                val iconRes = getResourceId(R.styleable.EmptyStateView_bigIcon, 0)
-                val textRes = getString(R.styleable.EmptyStateView_text)
-                val actionText = getString(R.styleable.EmptyStateView_actionText)
-                val secondaryActionText = getString(R.styleable.EmptyStateView_secondaryActionText)
+        ).use {
+            val iconRes = it.getResourceId(R.styleable.EmptyStateView_bigIcon, 0)
+            val textRes = it.getString(R.styleable.EmptyStateView_text)
+            val actionText = it.getString(R.styleable.EmptyStateView_actionText)
+            val secondaryActionText = it.getString(R.styleable.EmptyStateView_secondaryActionText)
 
-                with(binding) {
-                    icon.setImageResource(iconRes)
-                    text.text = textRes
-                    action.setVisible(!actionText.isNullOrEmpty(), invisible = true)
-                    action.text = actionText
-                    secondaryAction.setVisible(
-                        !secondaryActionText.isNullOrEmpty(),
-                        invisible = true
-                    )
-                    secondaryAction.text = secondaryActionText
-                }
-            } finally {
-                recycle()
+            with(binding) {
+                icon.setImageResource(iconRes)
+                text.text = textRes
+                action.setVisible(!actionText.isNullOrEmpty(), invisible = true)
+                action.text = actionText
+                secondaryAction.setVisible(
+                    !secondaryActionText.isNullOrEmpty(),
+                    invisible = true
+                )
+                secondaryAction.text = secondaryActionText
             }
         }
 

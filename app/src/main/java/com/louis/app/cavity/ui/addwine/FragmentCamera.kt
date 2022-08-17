@@ -29,6 +29,7 @@ import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.TAKEN_PHOTO_URI
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.showSnackbar
+import io.sentry.Sentry
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -124,6 +125,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             )
             preview.setSurfaceProvider(binding.previewView.surfaceProvider)
         } catch (e: Exception) {
+            Sentry.captureException(e)
             binding.coordinator.showSnackbar(R.string.camera_error)
         }
     }
@@ -160,6 +162,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
                     }
 
                     override fun onError(e: ImageCaptureException) {
+                        Sentry.captureException(e)
                         binding.coordinator.showSnackbar(R.string.base_error)
                     }
                 })

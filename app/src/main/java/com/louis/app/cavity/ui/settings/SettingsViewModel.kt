@@ -10,6 +10,7 @@ import com.louis.app.cavity.db.PrefsRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
+import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -46,6 +47,7 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
                     repository.importDbFromExternalDir(externalDir)
                     _userFeedback.postOnce(R.string.db_import_success)
                 } catch (e: IllegalStateException) {
+                    Sentry.captureException(e)
                     _userFeedback.postOnce(R.string.base_error)
                 } finally {
                     _isLoading.postValue(false)

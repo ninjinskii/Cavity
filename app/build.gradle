@@ -113,4 +113,7 @@ dependencies {
 
     // Work Manager
     implementation "androidx.work:work-runtime-ktx:$work_version"
+
+    // Sentry
+    implementation "io.sentry:sentry-android:6.3.1"
 }
