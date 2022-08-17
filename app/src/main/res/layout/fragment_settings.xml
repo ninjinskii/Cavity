@@ -81,6 +81,55 @@
                 android:layout_marginVertical="0dp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/templateSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/small_margin">
+
+                <TextView
+                    android:id="@+id/templateSizeTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginVertical="@dimen/small_margin"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/template_size_title"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/templateSizeText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginVertical="@dimen/small_margin"
+                    android:text="@string/template_size"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/templateSizeTitle" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/templateSizeSlider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin"
+                    android:valueFrom="0.4"
+                    android:valueTo="1.4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/templateSizeText" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                style="@style/Widget.Cavity.Divider"
+                android:layout_marginVertical="0dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/defaultCurrency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -154,6 +203,20 @@
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         </LinearLayout>
     </ScrollView>
+
+    <ImageView
+        android:id="@+id/bottleTemplateDemo"
+        android:layout_width="500dp"
+        android:layout_height="750dp"
+        android:layout_gravity="center"
+        android:alpha="0.40"
+        android:contentDescription="@string/a11y_bottle_template"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_bottle"
+        android:visibility="gone" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

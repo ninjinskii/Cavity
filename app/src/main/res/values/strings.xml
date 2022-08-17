@@ -255,6 +255,8 @@
     <!-- Settings -->
     <string name="skew_bottle_title">Incliner le gabarit</string>
     <string name="skew_bottle">Incline le gabarit de la bouteille lors de la prise d\'une photo.</string>
+    <string name="template_size_title">Taille du gabarit</string>
+    <string name="template_size">Modifiez la taille du gabarit pour la prise d\'une photo.</string>
     <string name="default_currency_title">Monnaie par défaut</string>
     <string name="default_currency">Choisissez la monnaie par défaut à utiliser lors de l\'ajout d\'une bouteille.</string>
 

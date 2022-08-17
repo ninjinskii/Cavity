@@ -8,8 +8,10 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.slider.Slider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSettingsBinding
+import com.louis.app.cavity.ui.addwine.FragmentCamera.Companion.TEMPLATE_ROTATION
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -91,6 +93,29 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
                 true
             }
         }
+
+        val templateSize = settingsViewModel.getTemplateSize()
+        binding.templateSizeSlider.apply {
+            value = templateSize
+            addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+                override fun onStartTrackingTouch(slider: Slider) {
+                    showBottleTemplate()
+                }
+
+                override fun onStopTrackingTouch(slider: Slider) {
+                    binding.bottleTemplateDemo.setVisible(false)
+                }
+            })
+
+            addOnChangeListener { _, value, fromUser ->
+                if (fromUser) {
+                    showBottleTemplate()
+                }
+
+                binding.bottleTemplateDemo.scaleX = value
+                binding.bottleTemplateDemo.scaleY = value
+            }
+        }
     }
 
     private fun setupCurrencyButtons() {
@@ -109,13 +134,21 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
         }
     }
 
+    private fun showBottleTemplate() {
+        binding.bottleTemplateDemo.setVisible(true)
+        binding.bottleTemplateDemo.rotation =
+            if (binding.toggleSkew.isChecked) TEMPLATE_ROTATION else 0f
+    }
+
     override fun onPause() {
         super.onPause()
 
         val checkedButtonId = binding.rbGroupCurrency.checkedButtonId
         val checkedButton = binding.rbGroupCurrency.findViewById<Button>(checkedButtonId)
+        val templateSize = binding.templateSizeSlider.value
 
         settingsViewModel.setDefaultCurrency(checkedButton.text.toString())
+        settingsViewModel.setTemplateSize(templateSize)
     }
 
     override fun onDestroy() {

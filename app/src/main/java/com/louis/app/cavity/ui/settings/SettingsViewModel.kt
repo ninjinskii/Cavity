@@ -34,9 +34,15 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
         prefsRepository.setDefaultCurrency(currency)
     }
 
+    fun setTemplateSize(templateSize: Float) {
+        prefsRepository.setTemplateSize(templateSize)
+    }
+
     fun getSkewBottle() = prefsRepository.getSkewBottle()
 
     fun getDefaultCurrency() = prefsRepository.getDefaultCurrency()
+
+    fun getTemplateSize() = prefsRepository.getTemplateSize()
 
     fun importDbFromExternalDir(externalDir: String) {
         viewModelScope.launch(IO) {

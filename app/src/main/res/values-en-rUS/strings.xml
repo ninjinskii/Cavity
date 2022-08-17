@@ -257,6 +257,8 @@
     <!-- Settings -->
     <string name="skew_bottle_title">Rotate the template</string>
     <string name="skew_bottle">Rotate the bottle template when taking a photo.</string>
+    <string name="template_size_title">Template size</string>
+    <string name="template_size">Shrink or grow the template when taking a photo.</string>
     <string name="default_currency_title">Default currency</string>
     <string name="default_currency">Select the default currency used when adding a bottle.</string>
 
