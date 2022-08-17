@@ -41,11 +41,11 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
     private suspend fun uploadDatabase() = withContext(IO) {
         with(accountRepository) {
             launch {
-                val wines = repository.getAllWinesNotLive()
-                val bottles = repository.getAllBottlesNotLive()
+//                val wines = repository.getAllWinesNotLive()
+//                val bottles = repository.getAllBottlesNotLive()
 
                 // Get wines & bottles first, copy them to external dir and update their path
-                updateFileLocation(wines + bottles)
+//                updateFileLocation(wines + bottles)
 
                 listOf(
                     postCounties(repository.getAllCountiesNotLive()),
