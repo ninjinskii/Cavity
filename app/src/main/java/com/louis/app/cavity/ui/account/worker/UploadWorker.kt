@@ -8,6 +8,9 @@ import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.FileAssoc
 import com.louis.app.cavity.network.response.ApiResponse
+import io.sentry.Hint
+import io.sentry.Sentry
+import io.sentry.util.HintUtils
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,9 +29,11 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
             if (runAttemptCount < 1) {
                 Result.retry()
             } else {
+                Sentry.captureException(e)
                 Result.failure()
             }
         } catch (e: Exception) {
+            Sentry.captureException(e)
             Result.failure()
         }
     }

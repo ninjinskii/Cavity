@@ -24,17 +24,13 @@ class LabeledData @JvmOverloads constructor(
             R.styleable.LabeledData,
             defStyleAttr,
             0
-        ).apply {
-            try {
-                val labelString = getString(R.styleable.LabeledData_label)
-                val iconResource = getResourceId(R.styleable.LabeledData_icon, 0)
+        ).use {
+            val labelString = it.getString(R.styleable.LabeledData_label)
+            val iconResource = it.getResourceId(R.styleable.LabeledData_icon, 0)
 
-                with(binding) {
-                    label.text = labelString
-                    icon.setImageResource(iconResource)
-                }
-            } finally {
-                recycle()
+            with(binding) {
+                label.text = labelString
+                icon.setImageResource(iconResource)
             }
         }
     }

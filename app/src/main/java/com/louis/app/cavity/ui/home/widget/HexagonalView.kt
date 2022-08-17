@@ -92,7 +92,7 @@ class HexagonalView @JvmOverloads constructor(
             .build()
     }
 
-    // Oh yeah? And what should I do then ?
+    // Don't know what to do to fix this warning without breaking things
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x.toInt()

@@ -110,7 +110,6 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
         with(binding) {
             vintage.value = editedBottle.vintage
             apogee.value = editedBottle.apogee
-            //count.setText(editedBottle.count.toString())
             price.setText(formattedPrice)
             currency.setText(editedBottle.currency, false)
             buyLocation.setText(editedBottle.buyLocation)

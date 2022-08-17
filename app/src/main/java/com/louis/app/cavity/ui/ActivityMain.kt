@@ -102,8 +102,8 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         binding.navView.setupWithNavController(navController)
 
         binding.navigationRail?.setOnItemSelectedListener {
-            val fromHomeToHome = navController.currentDestination?.id ?: 0 == R.id.home_dest &&
-                it.itemId == R.id.home_dest
+            val fromHomeToHome = (navController.currentDestination?.id ?: 0) == R.id.home_dest &&
+                    it.itemId == R.id.home_dest
 
             if (fromHomeToHome) {
                 return@setOnItemSelectedListener false

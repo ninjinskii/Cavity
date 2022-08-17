@@ -9,6 +9,7 @@ import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.ConfirmResponse
 import com.louis.app.cavity.network.response.LoginResponse
 import com.louis.app.cavity.network.response.UserResponse
+import io.sentry.Sentry
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.HttpException
@@ -175,9 +176,9 @@ class AccountRepository private constructor(private val app: Application) {
                     412 -> ApiResponse.UnregisteredError
                     else -> parseError(t.response())
                 }
-                else -> ApiResponse.UnknownError
-//                is IOException -> ApiResponse.UnknownError
-//                else -> throw t
+                else -> ApiResponse.UnknownError.also {
+                    Sentry.captureException(t)
+                }
             }
         }
     }

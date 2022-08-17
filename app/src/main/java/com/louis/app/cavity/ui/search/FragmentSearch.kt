@@ -421,7 +421,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private fun setupMenu() {
         binding.motionToolbar.addTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionStarted(motionLayout: MotionLayout?, p0: Int, p1: Int) {
-                if (motionLayout?.progress ?: 0F > 0.5F) {
+                if ((motionLayout?.progress ?: 0F) > 0.5F) {
                     with(binding) {
                         currentQuery.setVisible(true)
                         searchView.hideKeyboard()
