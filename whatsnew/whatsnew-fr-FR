@@ -1,9 +1,6 @@
-- Ajout de la possibilité d'afficher un commentaire de dégustation en entier en faisant un clique long sur un item de l'historique
-- Ajout d'un curseur indiquant la portion ciblée par un clique long sur les barres de statistiques / cépages
-- Les bouteilles bues ne sont plus comptées dans les statistiques régionnales
-- Les statistiques régionnales affichent désormais la valeur des vins de cette même région
-- Les statistiques globales affichent désormais le nombre total de bouteilles
-- Correction d'un soucis empêchant de voir la stat "stock" après avoir sélectionné un autre mode
-- Correction d'un éventuel crash lors de la sortie de stock d'une bouteille
+- Afficher un commentaire de dégustation en entier en faisant un clique long sur un item de l'historique
+- Ajout d'un curseur indiquant la portion ciblée par un clique
+- Les bouteilles bues ne sont plus comptées dans les stats régionnales
+- Les stats globales affichent désormais le nombre total de bouteilles
 - Les étiquettes de bouteilles affichent désormais s'ils elles font partie des coups de coeur
-- Ajout de la possibilité de personnaliser la taille du gabarit de bouteille pour cadrer les photos
+- Ajout de la personnalisation de la taille du gabarit de bouteille pour cadrer les photos

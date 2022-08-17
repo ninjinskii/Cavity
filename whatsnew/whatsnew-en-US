@@ -1,9 +1,6 @@
 - Long press a history item to display its full tasting comment
 - Add a cursor revealing which slice you are long pressing in stats / grape bars
 - Drinked bottles are no longer took into account in regional stats
-- Regional stats now display total value
 - Global stats now display total bottle count
-- Fix an issue that made impossible to see the "stock" stat after selecting another one
-- Fix a possible crash when drinking a bottle
 - Bottle chips now display a heart if the bottle is favorite
 - Add bottle template size customization to take photo
