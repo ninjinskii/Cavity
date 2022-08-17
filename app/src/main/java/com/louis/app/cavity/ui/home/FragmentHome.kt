@@ -75,7 +75,6 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
         setupScrollableTab()
         setViewPagerOrientation()
-        //setCountyDetailsShape()
         observe()
         setListeners()
     }
