@@ -13,6 +13,8 @@ class PrefsRepository private constructor(app: Application) {
         private const val PREF_API_TOKEN = "com.louis.app.cavity.PREF_API_TOKEN"
         private const val PREF_LAST_LOGIN = "com.louis.app.cavity.PREF_LAST_LOGIN"
         private const val DEFAULT_CURRENCY = "€"
+        private const val MAX_TEMPLATE_SCALE = 1.4f
+        private const val MIN_TEMPLATE_SCALE = 0.4f
 
         @Volatile
         var instance: PrefsRepository? = null
@@ -36,7 +38,7 @@ class PrefsRepository private constructor(app: Application) {
     }
 
     fun setTemplateSize(templateSize: Float) {
-        PREF_TEMPLATE_SIZE put templateSize.coerceIn(0f, 1f)
+        PREF_TEMPLATE_SIZE put templateSize.coerceIn(MIN_TEMPLATE_SCALE, MAX_TEMPLATE_SCALE)
     }
 
     fun setApiToken(token: String) {
@@ -51,7 +53,8 @@ class PrefsRepository private constructor(app: Application) {
 
     fun getDefaultCurrency() = PREF_DEFAULT_CURRENCY.getString() ?: DEFAULT_CURRENCY
 
-    fun getTemplateSize() = PREF_TEMPLATE_SIZE.getFloat().coerceIn(0f, 1f)
+    fun getTemplateSize() =
+        PREF_TEMPLATE_SIZE.getFloat().coerceIn(MIN_TEMPLATE_SCALE, MAX_TEMPLATE_SCALE)
 
     fun getApiToken() = PREF_API_TOKEN.getString() ?: ""
 
@@ -76,5 +79,5 @@ class PrefsRepository private constructor(app: Application) {
 
     private fun String.getBoolean() = pref.getBoolean(this, true)
 
-    private fun String.getFloat() = pref.getFloat(this, 0.5f)
+    private fun String.getFloat() = pref.getFloat(this, 0.9f)
 }

@@ -46,9 +46,9 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     private val settingsViewModel: SettingsViewModel by activityViewModels()
 
     companion object {
+        const val TEMPLATE_ROTATION = -45f
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
         private const val RATIO_16_9_VALUE = 16.0 / 9.0
-        private const val TEMPLATE_ROTATION = -45f
         private val REQUIRED_PERMISSIONS =
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
@@ -84,6 +84,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
 
         setListener()
         rotateTemplate(settingsViewModel.getSkewBottle())
+        scaleTemplate(settingsViewModel.getTemplateSize())
     }
 
     private fun startCamera() {
@@ -237,6 +238,11 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
                 if (shouldRotate) start() else reverse()
             }
         }
+    }
+
+    private fun scaleTemplate(scale: Float) {
+        binding.bottleTemplate.scaleX = scale
+        binding.bottleTemplate.scaleY = scale
     }
 
     override fun onDestroyView() {
