@@ -217,6 +217,7 @@
         android:contentDescription="@string/a11y_bottle_template"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_bottle"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:tint="?attr/colorOnSurface" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
