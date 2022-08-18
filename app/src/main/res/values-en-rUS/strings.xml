@@ -265,6 +265,7 @@
     <!-- Account -->
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="forgotten_password">Forgot password ?</string>
     <string name="ip">IP Address + port</string>
     <string name="confirm_mail_sent">A confirmation mail has been sent.</string>
     <string name="new_account">Create an account</string>
@@ -272,7 +273,7 @@
     <string name="confirm_account">Confirmation</string>
     <string name="confirm_account_explanation">A confirmation code has been sent to you email address.</string>
     <string name="logout">Logout</string>
-    <string name="account_explanation">Use a Cavity account to create online backups of your wine cellar and get it back wherever you need (work in progress).</string>
+    <string name="account_explanation">Use a Cavity account to create online backups of your wine cellar and get it back wherever you need.</string>
     <string name="export_explanation">Save the device wine cellar on the server</string>
     <string name="export">Export</string>
     <string name="import_explanation">Download your last backup.</string>

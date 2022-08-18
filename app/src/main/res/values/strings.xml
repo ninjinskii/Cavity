@@ -263,6 +263,7 @@
     <!-- Account -->
     <string name="email">Email</string>
     <string name="password">Mot de passe</string>
+    <string name="forgotten_password">Mot de passe oublié ?</string>
     <string name="ip">Adresse IP + port</string>
     <string name="confirm_mail_sent">Un mail de confirmation a été envoyé.</string>
     <string name="new_account">Créer un compte</string>
@@ -270,7 +271,7 @@
     <string name="confirm_account">Confirmation</string>
     <string name="confirm_account_explanation">Un code de confirmation vous a été envoyé sur votre adresse mail</string>
     <string name="logout">Se déconnecter</string>
-    <string name="account_explanation">Utiliser votre compte Cavity pour créer une sauvegarde en ligne de votre cave et la récupérer où vous le souhaitez (en cours de développement).</string>
+    <string name="account_explanation">Utiliser votre compte Cavity pour créer une sauvegarde en ligne de votre cave et la récupérer où vous le souhaitez.</string>
     <string name="export_explanation">Enregistre la cave de cet appareil sur un serveur distant.</string>
     <string name="export">Exporter</string>
     <string name="import_explanation">Récupérer votre dernière sauvegarde.</string>
