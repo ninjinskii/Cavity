@@ -97,6 +97,8 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
             return
         }
 
+        sneakyTryCount++
+
         // Do not use doApiCall(), we don't want error messages here since this action isn't user initiated
         viewModelScope.launch(IO) {
             val response = accountRepository.getAccount()
