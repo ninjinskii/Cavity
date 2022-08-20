@@ -43,6 +43,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         get() = _confirmedEvent
 
     var inConfirmationUser: String? = null
+    var sneakyTryCount = 0
 
     fun login(email: String, password: String) {
         // In case the user create an account, quit the app, and then try to re-login
@@ -92,7 +93,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     fun tryConnectWithSavedToken() {
         val token = prefsRepository.getApiToken()
 
-        if (token.isBlank()) {
+        if (token.isBlank() || sneakyTryCount >= 1) {
             return
         }
 
