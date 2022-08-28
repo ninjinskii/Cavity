@@ -29,5 +29,4 @@ data class Wine(
 ) : FileAssoc {
     override fun getFilePath() = imgPath
     override fun getExternalFilename() = "${this.name.replace(" ", "-")}-${this.id}"
-    override fun getExternalSubPath() = Cavity.PHOTOS_DIRECTORY
 }

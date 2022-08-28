@@ -41,16 +41,17 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
     private suspend fun uploadDatabase() = withContext(IO) {
         with(accountRepository) {
             launch {
-//                val wines = repository.getAllWinesNotLive()
-//                val bottles = repository.getAllBottlesNotLive()
+                val wines = repository.getAllWinesNotLive()
+                val bottles = repository.getAllBottlesNotLive()
+                val friends = repository.getAllFriendsNotLive()
 
-                // Get wines & bottles first, copy them to external dir and update their path
-//                updateFileLocation(wines + bottles)
+                // Get wines & bottles first, copy them to external dir
+                copyToExternalDir(wines + bottles + friends)
 
                 listOf(
                     postCounties(repository.getAllCountiesNotLive()),
-                    postWines(repository.getAllWinesNotLive()), // Re-request wines with updated path
-                    postBottles(repository.getAllBottlesNotLive()),
+                    postWines(wines),
+                    postBottles(bottles),
                     postFriends(repository.getAllFriendsNotLive()),
                     postGrapes(repository.getAllGrapesNotLive()),
                     postReviews(repository.getAllReviewsNotLive()),
@@ -70,13 +71,14 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
         }
     }
 
-    private suspend fun updateFileLocation(fileAssocs: List<FileAssoc>) {
-        fileAssocs.forEach {
-            FileProcessor(context, it).run {
-                copyToExternalDir()
-                updateFilePath()
+    private fun copyToExternalDir(fileAssocs: List<FileAssoc>) {
+        fileAssocs
+            .filter { it.getFilePath().isNotBlank() }
+            .forEach {
+                FileProcessor(context, it).run {
+                    copyToExternalDir()
+                }
             }
-        }
     }
 
     class UncompleteExportException : Exception()

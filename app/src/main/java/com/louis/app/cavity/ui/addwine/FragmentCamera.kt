@@ -174,7 +174,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         val externalDir = requireActivity().getExternalFilesDir(null)
 
         if (externalDir != null) {
-            val tempDir = File("$externalDir${Cavity.PHOTOS_DIRECTORY}")
+            val tempDir = File("$externalDir")
 
             tempDir.apply {
                 return if (!exists())
@@ -185,7 +185,6 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         }
 
         return null
-        // show permission asking if not allowed, else show file error
     }
 
     private fun hasPermissions() = REQUIRED_PERMISSIONS.all {

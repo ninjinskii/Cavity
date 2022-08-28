@@ -50,5 +50,4 @@ data class Bottle(
 
     override fun getFilePath() = pdfPath
     override fun getExternalFilename() = "${this.vintage}-${this.id}"
-    override fun getExternalSubPath() = Cavity.DOCUMENTS_DIRECTORY
 }
