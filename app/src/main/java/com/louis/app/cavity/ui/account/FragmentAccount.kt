@@ -25,7 +25,8 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     private val loginViewModel: LoginViewModel by activityViewModels()
     private lateinit var transitionHelper: TransitionHelper
 
-    private var beforePermsNavTargetIsImport = false
+    private var wannaImport = false
+    private var wannaImportFiles = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +91,10 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         binding.importBtn.setOnClickListener {
             navigateToImportExport(true)
         }
+
+        binding.imageBtn.setOnClickListener {
+            navigateToImportFiles()
+        }
     }
 
     private fun setupToolbar() {
@@ -103,21 +108,25 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         }
     }
 
-    private fun hasPermissions() = ContextCompat.checkSelfPermission(
+    private fun hasPermissions(perm: String) = ContextCompat.checkSelfPermission(
         requireContext(),
-        REQUIRED_PERMISSION
+        perm
     ) == PackageManager.PERMISSION_GRANTED
 
     private fun handlePermisionResults(permission: Boolean) {
         if (permission) {
-            navigateToImportExport(beforePermsNavTargetIsImport)
+            if (wannaImportFiles) {
+                navigateToImportFiles()
+            } else {
+                navigateToImportExport(wannaImport)
+            }
         } else {
             binding.coordinator.showSnackbar(R.string.permissions_denied_external)
         }
     }
 
     private fun navigateToImportExport(isImport: Boolean) {
-        if (hasPermissions()) {
+        if (hasPermissions(WRITE_PERMISSION)) {
             transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
 
             val title = if (isImport) R.string.import_ else R.string.export
@@ -128,8 +137,20 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
             findNavController().navigate(action)
         } else {
-            beforePermsNavTargetIsImport = isImport
-            askPermission.launch(REQUIRED_PERMISSION)
+            wannaImport = isImport
+            askPermission.launch(WRITE_PERMISSION)
+        }
+    }
+
+    private fun navigateToImportFiles() {
+        if (hasPermissions(READ_PERMISSION)) {
+            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
+
+            val action = FragmentAccountDirections.accountToImportFiles()
+            findNavController().navigate(action)
+        } else {
+            wannaImportFiles = true
+            askPermission.launch(READ_PERMISSION)
         }
     }
 
@@ -139,6 +160,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     }
 
     companion object {
-        private const val REQUIRED_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE
+        private const val WRITE_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE
+        private const val READ_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
     }
 }

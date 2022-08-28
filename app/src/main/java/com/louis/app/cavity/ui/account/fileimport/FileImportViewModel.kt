@@ -38,8 +38,12 @@ class FileImportViewModel(app: Application) : AndroidViewModel(app) {
                 val binder = binderFactory(uri)
 
                 if (binder != null) {
-                    binder.bind(repository, uri)
-                    binded++
+                    try {
+                        binder.bind(repository, uri) // Might throw NPE even if kotlin thinks differently
+                        binded++
+                    } catch (e: NullPointerException) {
+                        // Do nothing
+                    }
                 }
             }
 
@@ -48,7 +52,7 @@ class FileImportViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun binderFactory(uri: Uri): FileBinder? {
-        val filename = uri.lastPathSegment ?: return null
+        val filename = uri.lastPathSegment.toString()
         L.v(filename)
         val split = filename.split(".")
 
@@ -59,7 +63,7 @@ class FileImportViewModel(app: Application) : AndroidViewModel(app) {
 
         val extension = split.last()
         val name = split.first()
-        val isFriend = name.matches(Regex("-f[0-9]\b"))
+        val isFriend = name.matches(Regex("-f[0-9]*\b"))
 
         return when {
             extension == "pdf" -> BottleBinder()

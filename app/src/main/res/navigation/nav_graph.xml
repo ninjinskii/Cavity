@@ -241,6 +241,9 @@
             android:id="@+id/accountToHome"
             app:destination="@id/home_dest" />
         <action
+            android:id="@+id/accountToImportFiles"
+            app:destination="@id/fragmentImportFiles" />
+        <action
             android:id="@+id/accountToImportExport"
             app:destination="@id/fragmentImportExport">
             <argument
@@ -332,4 +335,10 @@
             android:id="@+id/importExportToLogin"
             app:destination="@id/fragmentLogin" />
     </fragment>
+
+    <fragment
+        android:id="@+id/fragmentImportFiles"
+        android:name="com.louis.app.cavity.ui.account.fileimport.FragmentImportFiles"
+        android:label="@string/file_import"
+        tools:layout="@layout/fragment_import_files" />
 </navigation>
