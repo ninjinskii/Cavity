@@ -280,8 +280,10 @@
     <string name="export">Export</string>
     <string name="import_explanation">Download your last backup.</string>
     <string name="import_">Import</string>
-    <string name="image_import">Import files</string>
-    <string name="image_import_explanation">Get your photos and your pdfs</string>
+    <string name="file_import">Import files</string>
+    <string name="file_import_explanation">Get your photos and your pdfs</string>
+    <string name="file_import_deeper_explanation">When you export your cellar, images and pdfs are not backed up. Instead a copy will be created on the device allowing you to get all your files on the same location.\nThus, you can find your files there: <b>Android/data/com.louis.app.cavity/files</b>.\nTo bind them with your wines / bottles / friens, after importing the cellar on a new device, you should get the files from the old device, and then put them on the new one without renaming them.\nLaslty, pick the files using the following button.</string>
+    <string name="file_imported">%1$d file(s) imported out of %2$d picked.</string>
     <string name="export_done">Backup done successfully.</string>
     <string name="import_done">Import done successfully.</string>
     <string name="backup">Sauvegarde en ligne</string>

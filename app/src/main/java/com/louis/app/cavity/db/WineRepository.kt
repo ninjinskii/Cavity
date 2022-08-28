@@ -257,6 +257,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun deleteFriend(friend: Friend) = friendDao.deleteFriend(friend)
     suspend fun deleteAllFriends() = friendDao.deleteAll()
     fun getAllFriends() = friendDao.getAllFriends()
+    suspend fun getFriendByIdNotLive(friendId: Long) = friendDao.getFriendByIdNotLive(friendId)
     suspend fun getAllFriendsNotLive() = friendDao.getAllFriendsNotLive()
 
     suspend fun insertFriendHistoryXRefs(fxh: List<HistoryXFriend>) =

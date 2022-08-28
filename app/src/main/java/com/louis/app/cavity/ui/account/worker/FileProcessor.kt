@@ -8,10 +8,11 @@ import android.os.StatFs
 import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
 import com.louis.app.cavity.model.FileAssoc
+import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.util.L
 import java.io.*
 
-class FileProcessor(private val context: Context, fileAssoc: FileAssoc) {
+class FileProcessor(private val context: Context, private val fileAssoc: FileAssoc) {
     private val uri = Uri.parse(fileAssoc.getFilePath())
     private val externalFilename = fileAssoc.getExternalFilename()
     private val externalPath = context.getExternalFilesDir(null)!!.path
@@ -29,6 +30,10 @@ class FileProcessor(private val context: Context, fileAssoc: FileAssoc) {
         // Most likely: the file doesn't exists or doesn't exists anymore
         if (extension == null || extension?.isBlank() == true) {
             return
+        }
+
+        if (fileAssoc is Friend) {
+            // Add -f
         }
 
         try {
