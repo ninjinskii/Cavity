@@ -18,6 +18,9 @@ interface CavityApiService {
     @POST("auth/login")
     suspend fun login(@Body parameters: Map<String, String>): LoginResponse
 
+    @POST("account/recover")
+    suspend fun recoverAccount(@Body parameters: Map<String, String>)
+
     @POST("county")
     suspend fun postCounties(@Body counties: List<County>)
 

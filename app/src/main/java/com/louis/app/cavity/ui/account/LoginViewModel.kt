@@ -118,6 +118,13 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         prefsRepository.setApiToken("")
     }
 
+    fun declareLostPassword(email: String) {
+        doApiCall(
+            call = { accountRepository.recoverPassword(email.trim()) },
+            onSuccess = { _userFeedback.postOnce(R.string.reset_ok) }
+        )
+    }
+
     private fun <T> doApiCall(
         call: suspend () -> ApiResponse<T>,
         onSuccess: (ApiResponse.Success<T>) -> Unit
