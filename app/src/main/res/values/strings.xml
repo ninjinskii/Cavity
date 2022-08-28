@@ -280,14 +280,14 @@
     <string name="import_">Importer</string>
     <string name="file_import">Importer les fichiers</string>
     <string name="file_import_explanation">Récupérez les photos de vos vins, vos amis et vos pdfs.</string>
-    <string name="file_import_deeper_explanation">Lorsque vous exportez votre cave, vos images et pdf ne sont pas sauvegardé en ligne. Au lieu de cela, une copie de tous les fichiers est générée sur l\'appareil afin de pouvoir récupérer le tout dans un seul endroit.\nVous pouvez alors récupérer ces fichiers dans le dossier <b>Android/data/com.louis.app.cavity/files</b>.\nPour les réassocier à vos vins / bouteilles / amis après un import de cave sur un nouvel appareil, il suffit de récupérer les fichiers sur l'ancien appareil, puis de les mettre sur le nouvel appareil sans les rennomer.\nEnfin, sélectionnez tous les fichiers que vous avez transvasé en utilisant le bouton ci dessous.</string>
+    <string name="file_import_deeper_explanation">Lorsque vous exportez votre cave, vos images et pdf ne sont pas sauvegardé en ligne. Au lieu de cela, une copie de tous les fichiers est générée sur l\'appareil afin de pouvoir récupérer le tout dans un seul endroit.\nVous pouvez alors récupérer ces fichiers dans le dossier <b>Android/data/com.louis.app.cavity/files</b>.\nPour les réassocier à vos vins / bouteilles / amis après un import de cave sur un nouvel appareil, il suffit de récupérer les fichiers sur l\'ancien appareil, puis de les mettre sur le nouvel appareil sans les rennomer.\nEnfin, sélectionnez tous les fichiers que vous avez transvasé en utilisant le bouton ci dessous.</string>
     <string name="file_imported">%1$d fichiers importé(s) sur %2$d sélectionné(s).</string>
     <string name="export_done">Sauvegarde effectuée.</string>
     <string name="import_done">Récupération effectuée.</string>
     <string name="backup">Sauvegarde en ligne</string>
     <string name="last_action">Dernière action: </string>
     <string name="current_device">Cet appareil</string>
-    <string name="backup_erasure_warn_export">La sauvegarde en ligne existante sera remplacée par la cave de cet appareil.\n\n<b><i>Note</i></b>: les images de vos vins, de vos amis et vos pdfs <b>ne sont pas</b> sauvegardés. Pour en savoir plus, rendez-vous dans "Importer les fichiers" dans l'écran de gestion du compte.</string>
+    <string name="backup_erasure_warn_export">La sauvegarde en ligne existante sera remplacée par la cave de cet appareil.\n<b><i>Note</i></b>: les images de vos vins, de vos amis et vos pdfs <b>ne sont pas</b> sauvegardés. Pour en savoir plus, rendez-vous dans \"Importer les fichiers\" dans l\'écran de gestion du compte.</string>
     <string name="backup_erasure_warn_import">La cave de cet appareil sera remplacée par la sauvegarde en ligne.</string>
     <string name="healthcheck_export_warn">La sauvegarde en ligne contient des mouvements de stocks plus récents. L\'export de votre cave écrasera ces mouvements.</string>
     <string name="healthcheck_import_warn">La cave de cet appareil contient des mouvements de stocks plus récents. L\'import de votre sauvegarde écrasera ces mouvements.</string>

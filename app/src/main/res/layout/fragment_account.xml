@@ -196,7 +196,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:layout_margin="@dimen/medium_margin"
-                        android:text="@string/image_import"
+                        android:text="@string/file_import"
                         android:textAppearance="?attr/textAppearanceOverline" />
 
                 </LinearLayout>
@@ -206,7 +206,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/large_margin"
-                android:text="@string/image_import_explanation"
+                android:text="@string/file_import_explanation"
                 android:textAppearance="?attr/textAppearanceBody1"
                 app:layout_constraintBottom_toBottomOf="@id/imageBtn"
                 app:layout_constraintEnd_toEndOf="parent"
