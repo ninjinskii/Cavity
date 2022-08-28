@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.account
 
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View
@@ -39,6 +40,8 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         savedStateHandle[LOGIN_SUCCESSFUL] = false
 
         setupNavigation(binding.appBar.toolbar)
+
+        (binding.icon.drawable as AnimatedVectorDrawable).start()
 
         observe()
         initFields()
