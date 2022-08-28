@@ -25,12 +25,11 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
             if (runAttemptCount < 1) {
                 Result.retry()
             } else {
-                //Sentry.captureException(e)
+                Sentry.captureException(e)
                 Result.failure()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
-//            Sentry.captureException(e)
+            Sentry.captureException(e)
             Result.failure()
         }
     }
