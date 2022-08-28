@@ -1,5 +1,7 @@
 package com.louis.app.cavity.ui.manager.friend
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.view.LayoutInflater
@@ -55,6 +57,7 @@ class FriendRecyclerAdapter(
                 friendName.text = friend.getChipText()
 
                 if (friend.imgPath.isNotEmpty()) {
+                    avatar.imageTintList = null
                     Glide.with(context)
                         .load(Uri.parse(friend.imgPath))
                         .centerCrop()
