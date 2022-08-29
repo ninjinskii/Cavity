@@ -3,24 +3,10 @@ package com.louis.app.cavity.ui.account.fileimport
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
-import androidx.work.BackoffPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import com.louis.app.cavity.R
-import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.network.response.ApiResponse
-import com.louis.app.cavity.ui.account.worker.DownloadWorker
-import com.louis.app.cavity.ui.account.worker.UploadWorker
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
-import com.louis.app.cavity.util.toBoolean
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 class FileImportViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
@@ -43,6 +29,9 @@ class FileImportViewModel(app: Application) : AndroidViewModel(app) {
                         binded++
                     } catch (e: NullPointerException) {
                         // Do nothing
+                    } catch (e: NumberFormatException) {
+                        // Cannot extract id from filename.
+                        // Do nothing
                     }
                 }
             }
@@ -53,7 +42,6 @@ class FileImportViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun binderFactory(uri: Uri): FileBinder? {
         val filename = uri.lastPathSegment.toString()
-        L.v(filename)
         val split = filename.split(".")
 
         // Weird file name. Dont bother.
