@@ -11,7 +11,10 @@ data class Friend(
     val id: Long = 0,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "img_path") val imgPath: String,
-) : Chipable {
+) : Chipable, FileAssoc {
     override fun getItemId() = id
     override fun getChipText() = name
+
+    override fun getFilePath() = imgPath
+    override fun getExternalFilename() = "${this.name}-f${this.id}"
 }

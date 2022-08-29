@@ -135,8 +135,12 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
                         importExportViewModel.pruneWorks()
                     }
                     WorkInfo.State.SUCCEEDED -> {
+                        val message =
+                            if (it.tags.contains("com.louis.app.cavity.upload-db")) R.string.export_done
+                            else R.string.import_done
+
                         binding.progressBar.setVisible(false)
-                        binding.coordinator.showSnackbar(R.string.export_done)
+                        binding.coordinator.showSnackbar(message)
 
                         with(importExportViewModel) {
                             fetchLocalBottleCount()

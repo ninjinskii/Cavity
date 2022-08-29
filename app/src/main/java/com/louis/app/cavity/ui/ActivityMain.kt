@@ -32,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navHostFragment: Fragment
@@ -181,16 +180,20 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
 
     private fun hasNavigationRail() = binding.navigationRail != null
 
-    fun requestMediaPersistentPermission(mediaUri: Uri) {
+    fun requestMediaPersistentPermission(mediaUri: Uri, silent: Boolean = false) {
         val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
 
         try {
             contentResolver?.takePersistableUriPermission(mediaUri, flags)
                 ?: throw NullPointerException()
         } catch (e: SecurityException) {
-            onShowSnackbarRequested(R.string.persistent_permission_error)
+            if (!silent) {
+                onShowSnackbarRequested(R.string.persistent_permission_error)
+            }
         } catch (e: NullPointerException) {
-            onShowSnackbarRequested(R.string.base_error)
+            if (!silent) {
+                onShowSnackbarRequested(R.string.base_error)
+            }
         }
     }
 
