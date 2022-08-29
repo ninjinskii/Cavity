@@ -147,6 +147,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
             transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
 
             val action = FragmentAccountDirections.accountToImportFiles()
+            wannaImportFiles = false
             findNavController().navigate(action)
         } else {
             wannaImportFiles = true
