@@ -2,14 +2,8 @@ package com.louis.app.cavity.ui.account.worker
 
 import android.content.Context
 import android.net.Uri
-import android.os.Build
-import android.os.Environment
-import android.os.StatFs
 import android.webkit.MimeTypeMap
-import androidx.annotation.RequiresApi
 import com.louis.app.cavity.model.FileAssoc
-import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.util.L
 import java.io.*
 
 class FileProcessor(private val context: Context, fileAssoc: FileAssoc) {
