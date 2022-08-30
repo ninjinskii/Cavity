@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.louis.app.cavity"
-    android:versionCode="9"
-    android:versionName="1.2.3">
+    android:versionCode="10"
+    android:versionName="1.2.4">
 
-    <uses-sdk android:maxSdkVersion="31" />
+    <uses-sdk android:maxSdkVersion="32" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />

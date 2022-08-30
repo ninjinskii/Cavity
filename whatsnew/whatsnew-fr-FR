@@ -1,6 +1,7 @@
-- Afficher un commentaire de dégustation en entier en faisant un clique long sur un item de l'historique
-- Ajout d'un curseur indiquant la portion ciblée par un clique
-- Les bouteilles bues ne sont plus comptées dans les stats régionnales
-- Les stats globales affichent désormais le nombre total de bouteilles
-- Les étiquettes de bouteilles affichent désormais s'ils elles font partie des coups de coeur
-- Ajout de la personnalisation de la taille du gabarit de bouteille pour cadrer les photos
+- Correction d'un crash lors de l'ouverture de l'app sur tablette
+- Correction d'un soucis faisant que les photos des amis sont un cercle gris
+- Correction d'une erreur lors de l'export des données si l'utilisateur à réalisé au moins un dégustation
+- Ajout de la fonctionnalité de récupération d'image sur un appareil différent
+- Correction du prix des stats régionnales, qui incluait les bouteilles consommées
+- Ajout de la récupération de mot de passe
+- Améliorations mineures de l'interface
