@@ -4,6 +4,9 @@ import android.app.Application
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate.*
 import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
+import io.sentry.SentryOptions
+import io.sentry.android.core.BuildConfig
+import io.sentry.android.core.SentryAndroid
 
 class Cavity : Application() {
     override fun onCreate() {
@@ -14,5 +17,11 @@ class Cavity : Application() {
         setDefaultNightMode(mode)
 
         TastingNotifier.createNotificationChannel(this)
+
+        SentryAndroid.init(this) { options ->
+            options.beforeSend = SentryOptions.BeforeSendCallback { event, _ ->
+                if (BuildConfig.DEBUG) null else event
+            }
+        }
     }
 }
