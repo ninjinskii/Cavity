@@ -40,14 +40,15 @@
                     android:layout_marginTop="@dimen/medium_margin"
                     android:layout_marginBottom="@dimen/large_margin"
                     android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_glass"
+                    android:scaleX="2.0"
+                    android:scaleY="2.0"
+                    android:src="@drawable/anim_cavity_launch"
                     app:layout_constraintBottom_toTopOf="@id/explanation"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.35"
-                    app:layout_constraintVertical_chainStyle="packed"
-                    app:tint="?attr/colorPrimary" />
+                    app:layout_constraintVertical_chainStyle="packed" />
 
                 <TextView
                     android:id="@+id/explanation"
@@ -124,6 +125,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/passwordLayout"
                     app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
+
+                <TextView
+                    android:id="@+id/forgottenPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginEnd="@dimen/medium_margin"
+                    android:text="@string/forgotten_password"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintBottom_toTopOf="@id/newAccount"
+                    app:layout_constraintEnd_toEndOf="@id/passwordLayout"
+                    app:layout_constraintTop_toBottomOf="@id/passwordLayout" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonSubmit"

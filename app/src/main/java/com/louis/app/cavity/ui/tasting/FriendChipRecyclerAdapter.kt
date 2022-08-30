@@ -38,6 +38,7 @@ class FriendChipRecyclerAdapter : ListAdapter<Friend, FriendChipRecyclerAdapter.
             binding.root.text = friend.name
 
             AvatarLoader.requestAvatar(itemView.context, friend.imgPath) {
+                binding.root.chipIconTint = null
                 binding.root.chipIcon = it
             }
         }

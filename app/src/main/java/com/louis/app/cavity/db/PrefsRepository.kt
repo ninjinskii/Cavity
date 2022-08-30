@@ -7,6 +7,7 @@ import com.louis.app.cavity.R
 
 class PrefsRepository private constructor(app: Application) {
     companion object {
+        const val MIN_TEMPLATE_SCALE = 0.4f
         private const val PREF_SKEW_BOTTLE = "com.louis.app.cavity.PREF_SKEW_BOTTLE"
         private const val PREF_DEFAULT_CURRENCY = "com.louis.app.cavity.PREF_DEFAULT_CURRENCY"
         private const val PREF_TEMPLATE_SIZE = "com.louis.app.cavity.PREF_TEMPLATE_SIZE"
@@ -14,7 +15,6 @@ class PrefsRepository private constructor(app: Application) {
         private const val PREF_LAST_LOGIN = "com.louis.app.cavity.PREF_LAST_LOGIN"
         private const val DEFAULT_CURRENCY = "€"
         private const val MAX_TEMPLATE_SCALE = 1.4f
-        private const val MIN_TEMPLATE_SCALE = 0.4f
 
         @Volatile
         var instance: PrefsRepository? = null

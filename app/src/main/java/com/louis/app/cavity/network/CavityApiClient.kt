@@ -34,7 +34,7 @@ object CavityApiClient {
         return Retrofit.Builder()
             .baseUrl(API_URL)
             .client(httpClient)
-            .addConverterFactory(moshiConverter)
+            .addConverterFactory(moshiConverter.withNullSerialization())
             .build()
     }
 }

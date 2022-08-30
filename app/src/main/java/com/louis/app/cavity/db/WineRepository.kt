@@ -257,6 +257,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun deleteFriend(friend: Friend) = friendDao.deleteFriend(friend)
     suspend fun deleteAllFriends() = friendDao.deleteAll()
     fun getAllFriends() = friendDao.getAllFriends()
+    suspend fun getFriendByIdNotLive(friendId: Long) = friendDao.getFriendByIdNotLive(friendId)
     suspend fun getAllFriendsNotLive() = friendDao.getAllFriendsNotLive()
 
     suspend fun insertFriendHistoryXRefs(fxh: List<HistoryXFriend>) =
@@ -302,7 +303,7 @@ class WineRepository private constructor(app: Application) {
 
     // Stats
     fun getBottleCountForCounty(countyId: Long) = statsDao.getBottleCountForCounty(countyId)
-    fun getCountyPriceByCurrency(countyId: Long) = statsDao.getCountyPriceByCurrency(countyId)
+    fun getPriceByCurrencyForCounty(countyId: Long) = statsDao.getPriceByCurrencyForCounty(countyId)
     fun getNamingsStatsForCounty(countyId: Long) = statsDao.getNamingsForCounty(countyId)
     fun getVintagesStatsForCounty(countyId: Long) = statsDao.getVintagesForCounty(countyId)
     fun getStockByCounty() = statsDao.getStockByCounty()

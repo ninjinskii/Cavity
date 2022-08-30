@@ -1,6 +1,7 @@
-- Long press a history item to display its full tasting comment
-- Add a cursor revealing which slice you are long pressing in stats / grape bars
-- Drinked bottles are no longer took into account in regional stats
-- Global stats now display total bottle count
-- Bottle chips now display a heart if the bottle is favorite
-- Add bottle template size customization to take photo
+- Fix a crash on app launch on tablets
+- Fix friends photos being a grey circle
+- Fix an export error if user has at least one tasting
+- Add photo backup on another device
+- Fix county price stats, which were including consumed bottles
+- Add password reset feature
+- Miscellaneous UI improvments

@@ -11,11 +11,15 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSettingsBinding
+import com.louis.app.cavity.db.PrefsRepository.Companion.MIN_TEMPLATE_SCALE
 import com.louis.app.cavity.ui.addwine.FragmentCamera.Companion.TEMPLATE_ROTATION
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
 class FragmentSettings : Fragment(R.layout.fragment_settings) {
     private var _binding: FragmentSettingsBinding? = null
@@ -39,6 +43,7 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
 
         observe()
         setListeners()
+        setupSliderFormatter()
         setupCurrencyButtons()
     }
 
@@ -114,6 +119,15 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
 
                 binding.bottleTemplateDemo.scaleX = value
                 binding.bottleTemplateDemo.scaleY = value
+            }
+        }
+    }
+
+    private fun setupSliderFormatter() {
+        binding.templateSizeSlider.setLabelFormatter {
+            DecimalFormat("#.##").run {
+                roundingMode = RoundingMode.CEILING
+                format(it - MIN_TEMPLATE_SCALE)
             }
         }
     }

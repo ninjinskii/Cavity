@@ -56,6 +56,10 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.confirmAccount(parameters) }
     }
 
+    suspend fun recoverPassword(email: String): ApiResponse<Unit> {
+        return doApiCall { cavityApi.recoverAccount(mapOf("email" to email)) }
+    }
+
     suspend fun postCounties(counties: List<County>): ApiResponse<Unit> {
         return doApiCall { cavityApi.postCounties(counties) }
     }
@@ -101,12 +105,12 @@ class AccountRepository private constructor(private val app: Application) {
     }
 
     suspend fun postTastingFriendsXRefs(tastingFriendXRefs: List<TastingXFriend>):
-        ApiResponse<Unit> {
+            ApiResponse<Unit> {
         return doApiCall { cavityApi.postTastingFriendsXRef(tastingFriendXRefs) }
     }
 
     suspend fun postHistoryFriendsXRefs(historyFriendXRefs: List<HistoryXFriend>):
-        ApiResponse<Unit> {
+            ApiResponse<Unit> {
         return doApiCall { cavityApi.postHistoryFriendsXRef(historyFriendXRefs) }
     }
 

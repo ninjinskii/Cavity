@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.account
 
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View
@@ -9,6 +10,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
@@ -37,6 +40,8 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         savedStateHandle[LOGIN_SUCCESSFUL] = false
 
         setupNavigation(binding.appBar.toolbar)
+
+        (binding.icon.drawable as AnimatedVectorDrawable).start()
 
         observe()
         initFields()
@@ -102,6 +107,19 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
                     }
                 }
             }
+        }
+
+        binding.forgottenPassword.setOnClickListener {
+            val resource = SimpleInputDialog.DialogContent(
+                R.string.forgotten_password,
+                null,
+                R.string.email,
+                null
+            ) { email ->
+                loginViewModel.declareLostPassword(email)
+            }
+
+            SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner).show(resource)
         }
     }
 

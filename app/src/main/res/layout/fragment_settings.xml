@@ -84,7 +84,7 @@
                 android:id="@+id/templateSize"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/small_margin">
+                android:paddingVertical="@dimen/small_margin">
 
                 <TextView
                     android:id="@+id/templateSizeTitle"
@@ -217,6 +217,7 @@
         android:contentDescription="@string/a11y_bottle_template"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_bottle"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:tint="?attr/colorOnSurface" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

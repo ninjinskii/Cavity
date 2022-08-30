@@ -43,6 +43,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         get() = _confirmedEvent
 
     var inConfirmationUser: String? = null
+    var sneakyTryCount = 0
 
     fun login(email: String, password: String) {
         // In case the user create an account, quit the app, and then try to re-login
@@ -92,9 +93,11 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     fun tryConnectWithSavedToken() {
         val token = prefsRepository.getApiToken()
 
-        if (token.isBlank()) {
+        if (token.isBlank() || sneakyTryCount >= 1) {
             return
         }
+
+        sneakyTryCount++
 
         // Do not use doApiCall(), we don't want error messages here since this action isn't user initiated
         viewModelScope.launch(IO) {
@@ -113,6 +116,13 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     fun logout() {
         _user.value = null
         prefsRepository.setApiToken("")
+    }
+
+    fun declareLostPassword(email: String) {
+        doApiCall(
+            call = { accountRepository.recoverPassword(email.trim()) },
+            onSuccess = { _userFeedback.postOnce(R.string.reset_ok) }
+        )
     }
 
     private fun <T> doApiCall(

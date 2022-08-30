@@ -1,5 +1,7 @@
 package com.louis.app.cavity.ui
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.HorizontalScrollView
@@ -54,6 +56,7 @@ class ChipLoader private constructor(
                     } else if (avatar && item is Friend) {
                         AvatarLoader.requestAvatar(context, item.imgPath) { avatar ->
                             chipIcon = avatar
+                            chipIconTint = null
                         }
                     }
 

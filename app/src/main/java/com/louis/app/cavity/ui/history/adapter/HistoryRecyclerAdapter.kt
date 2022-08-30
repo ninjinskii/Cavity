@@ -72,12 +72,12 @@ class HistoryRecyclerAdapter(
     class HistoryEntryDiffItemCallback : DiffUtil.ItemCallback<HistoryUiModel>() {
         override fun areItemsTheSame(oldItem: HistoryUiModel, newItem: HistoryUiModel): Boolean {
             val isSameEntry = oldItem is HistoryUiModel.EntryModel
-                && newItem is HistoryUiModel.EntryModel
-                && oldItem.model.historyEntry.id == newItem.model.historyEntry.id
+                    && newItem is HistoryUiModel.EntryModel
+                    && oldItem.model.historyEntry.id == newItem.model.historyEntry.id
 
             val isSameSeparator = oldItem is HistoryUiModel.HeaderModel
-                && newItem is HistoryUiModel.HeaderModel
-                && DateFormatter.roundToDay(oldItem.date) == DateFormatter.roundToDay(newItem.date)
+                    && newItem is HistoryUiModel.HeaderModel
+                    && DateFormatter.roundToDay(oldItem.date) == DateFormatter.roundToDay(newItem.date)
 
             return isSameEntry || isSameSeparator
         }
@@ -92,11 +92,15 @@ class HistoryRecyclerAdapter(
         fun bind(entry: HistoryUiModel.EntryModel?) {
             super.bind(entry ?: return)
 
-            val (markerColor, icon, label, _, showFriends) = entry.model.historyEntry.getResources()
+            val typeConsume = 0
+            val typeTasting = 4
+            val typeReplenishment = 1
+            val historyEntry = entry.model.historyEntry
+            val (markerColor, icon, label, _, showFriends) = historyEntry.getResources()
             val (bottle, wine) = entry.model.bottleAndWine
             val wineColor = ContextCompat.getColor(context, wine.color.colorRes)
             val colorCategory =
-                if (entry.model.historyEntry.type == 4)
+                if (historyEntry.type == 4)
                     ColorUtil.ColorCategory.PRIMARY
                 else
                     ColorUtil.ColorCategory.OTHER
@@ -115,9 +119,9 @@ class HistoryRecyclerAdapter(
                 marker.setBackgroundColor(resolvedMarkerColor)
 
                 comment.apply {
-                    when (entry.model.historyEntry.type) {
-                        0, 4 -> {
-                            val comment = entry.model.historyEntry.comment
+                    when (historyEntry.type) {
+                        typeConsume, typeTasting -> {
+                            val comment = historyEntry.comment
 
                             text = if (comment.isBlank()) {
                                 setTextAppearance(R.style.TextAppearance_Cavity_Body2_Italic)
@@ -130,7 +134,7 @@ class HistoryRecyclerAdapter(
                         else -> {
                             setTextAppearance(R.style.TextAppearance_Cavity_Body2)
 
-                            val data = if (entry.model.historyEntry.type == 1) {
+                            val data = if (historyEntry.type == typeReplenishment) {
                                 entry.model.bottleAndWine.bottle.buyLocation
                             } else {
                                 entry.model.friends.firstOrNull()?.name ?: ""
@@ -148,10 +152,20 @@ class HistoryRecyclerAdapter(
                 }
 
                 cardView.setOnLongClickListener {
-                    MaterialAlertDialogBuilder(context)
-                        .setMessage(entry.model.historyEntry.comment)
-                        .show()
-                    true
+                    val type = historyEntry.type
+                    val emptyComment = historyEntry.comment.isBlank()
+                    val isLongPressable =
+                        (type == typeConsume || type == typeTasting) && !emptyComment
+
+                    if (isLongPressable) {
+                        MaterialAlertDialogBuilder(context)
+                            .setMessage(entry.model.historyEntry.comment)
+                            .show()
+
+                        return@setOnLongClickListener isLongPressable
+                    }
+
+                    false
                 }
             }
         }

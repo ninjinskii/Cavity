@@ -263,6 +263,9 @@
     <!-- Account -->
     <string name="email">Email</string>
     <string name="password">Mot de passe</string>
+    <string name="forgotten_password">Mot de passe oublié ?</string>
+    <string name="forgotten_password_explanation">Un mail va vous être envoyé contenant les informations nécessaires à la modification de votre mot de passe.</string>
+    <string name="reset_ok">Demande prise en compte.</string>
     <string name="ip">Adresse IP + port</string>
     <string name="confirm_mail_sent">Un mail de confirmation a été envoyé.</string>
     <string name="new_account">Créer un compte</string>
@@ -270,16 +273,21 @@
     <string name="confirm_account">Confirmation</string>
     <string name="confirm_account_explanation">Un code de confirmation vous a été envoyé sur votre adresse mail</string>
     <string name="logout">Se déconnecter</string>
-    <string name="account_explanation">Utiliser votre compte Cavity pour créer une sauvegarde en ligne de votre cave et la récupérer où vous le souhaitez (en cours de développement).</string>
+    <string name="account_explanation">Utiliser votre compte Cavity pour créer une sauvegarde en ligne de votre cave et la récupérer où vous le souhaitez.</string>
     <string name="export_explanation">Enregistre la cave de cet appareil sur un serveur distant.</string>
     <string name="export">Exporter</string>
-    <string name="import_explanation">Récupérer votre dernière sauvegarde.</string>
+    <string name="import_explanation">Récupérez votre dernière sauvegarde.</string>
     <string name="import_">Importer</string>
+    <string name="file_import">Importer les fichiers</string>
+    <string name="file_import_explanation">Récupérez les photos de vos vins, vos amis et vos pdfs.</string>
+    <string name="file_import_deeper_explanation">Lorsque vous exportez votre cave, vos images et pdf ne sont pas sauvegardé en ligne. Au lieu de cela, une copie de tous les fichiers est générée sur l\'appareil afin de pouvoir récupérer le tout dans un seul endroit.\nVous pouvez alors récupérer ces fichiers dans le dossier <b>Android/data/com.louis.app.cavity/files</b>.\nPour les réassocier à vos vins / bouteilles / amis après un import de cave sur un nouvel appareil, il suffit de récupérer les fichiers sur l\'ancien appareil, puis de les mettre sur le nouvel appareil sans les rennomer.\nEnfin, sélectionnez tous les fichiers que vous avez transvasé en utilisant le bouton ci dessous.</string>
+    <string name="file_imported">%1$d fichiers importé(s) sur %2$d sélectionné(s).</string>
     <string name="export_done">Sauvegarde effectuée.</string>
+    <string name="import_done">Récupération effectuée.</string>
     <string name="backup">Sauvegarde en ligne</string>
     <string name="last_action">Dernière action: </string>
     <string name="current_device">Cet appareil</string>
-    <string name="backup_erasure_warn_export">La sauvegarde en ligne existante sera remplacée par la cave de cet appareil.</string>
+    <string name="backup_erasure_warn_export">La sauvegarde en ligne existante sera remplacée par la cave de cet appareil.\n<b><i>Note</i></b>: les images de vos vins, de vos amis et vos pdfs <b>ne sont pas</b> sauvegardés. Pour en savoir plus, rendez-vous dans \"Importer les fichiers\" dans l\'écran de gestion du compte.</string>
     <string name="backup_erasure_warn_import">La cave de cet appareil sera remplacée par la sauvegarde en ligne.</string>
     <string name="healthcheck_export_warn">La sauvegarde en ligne contient des mouvements de stocks plus récents. L\'export de votre cave écrasera ces mouvements.</string>
     <string name="healthcheck_import_warn">La cave de cet appareil contient des mouvements de stocks plus récents. L\'import de votre sauvegarde écrasera ces mouvements.</string>
