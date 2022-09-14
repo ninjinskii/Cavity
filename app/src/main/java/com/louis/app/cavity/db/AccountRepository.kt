@@ -19,7 +19,7 @@ import retrofit2.Retrofit
 class AccountRepository private constructor(private val app: Application) {
     companion object {
         @Volatile
-        var instance: AccountRepository? = null
+        private var instance: AccountRepository? = null
 
         fun getInstance(app: Application) =
             instance ?: synchronized(this) {

@@ -8,9 +8,8 @@ interface FileBinder {
     suspend fun bind(repository: WineRepository, uri: Uri)
 
     @Throws(NumberFormatException::class)
-    fun getBindedObjectId(uri: Uri): Long {
-        val str = uri.toString()
-        val end = str.split("-").last().split(".").first()
+    fun getBindedObjectId(name: String): Long {
+        val end = name.split("-").last().split(".").first()
 
         return if (end.startsWith("f")) {
             end.substring(1).toLong()

@@ -8,13 +8,10 @@ import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.FileAssoc
 import com.louis.app.cavity.network.response.ApiResponse
-import io.sentry.Hint
 import io.sentry.Sentry
-import io.sentry.util.HintUtils
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
 
 class UploadWorker(private val context: Context, params: WorkerParameters) :
     CoroutineWorker(context, params) {
@@ -52,7 +49,7 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                     postCounties(repository.getAllCountiesNotLive()),
                     postWines(wines),
                     postBottles(bottles),
-                    postFriends(repository.getAllFriendsNotLive()),
+                    postFriends(friends),
                     postGrapes(repository.getAllGrapesNotLive()),
                     postReviews(repository.getAllReviewsNotLive()),
                     postHistoryEntries(repository.getAllEntriesNotPagedNotLive()),
@@ -73,7 +70,6 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
 
     private fun copyToExternalDir(fileAssocs: List<FileAssoc>) {
         fileAssocs
-            .filter { it.getFilePath().isNotBlank() }
             .forEach {
                 FileProcessor(context, it).run {
                     copyToExternalDir()

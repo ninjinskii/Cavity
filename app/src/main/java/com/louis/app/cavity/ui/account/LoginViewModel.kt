@@ -42,8 +42,8 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     val confirmedEvent: LiveData<Event<Unit>>
         get() = _confirmedEvent
 
-    var inConfirmationUser: String? = null
-    var sneakyTryCount = 0
+    private var inConfirmationUser: String? = null
+    private var sneakyTryCount = 0
 
     fun login(email: String, password: String) {
         // In case the user create an account, quit the app, and then try to re-login

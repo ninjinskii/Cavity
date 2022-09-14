@@ -1,12 +1,20 @@
 package com.louis.app.cavity.ui.account.fileimport
 
 import android.app.Application
+import android.content.ContentResolver
 import android.net.Uri
-import androidx.lifecycle.*
+import android.provider.OpenableColumns
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
+import io.sentry.Sentry
+import io.sentry.SentryLevel
 import kotlinx.coroutines.launch
+import java.io.File
 
 class FileImportViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
@@ -15,23 +23,29 @@ class FileImportViewModel(app: Application) : AndroidViewModel(app) {
     val fileImportedEvent: LiveData<Event<Pair<Int, Int>>>
         get() = _fileImportedEvent
 
-    fun bindFiles(uris: List<Uri>) {
+    fun bindFiles(uris: List<Uri>, contentResolver: ContentResolver) {
         val total = uris.size
         var binded = 0
 
         viewModelScope.launch {
             for (uri in uris) {
-                val binder = binderFactory(uri)
+                val binder = binderFactory(uri, contentResolver)
 
                 if (binder != null) {
                     try {
-                        binder.bind(repository, uri) // Might throw NPE even if kotlin thinks differently
+                        // Might throw NPE even if kotlin thinks differently
+                        binder.bind(repository, uri)
                         binded++
                     } catch (e: NullPointerException) {
-                        // Do nothing
+                        Sentry.captureMessage(
+                            "File import: NPE when retieving id from filename",
+                            SentryLevel.INFO
+                        )
                     } catch (e: NumberFormatException) {
-                        // Cannot extract id from filename.
-                        // Do nothing
+                        Sentry.captureMessage(
+                            "File import: NumberFormatException when retrieving id from filename",
+                            SentryLevel.INFO
+                        )
                     }
                 }
             }
@@ -40,23 +54,38 @@ class FileImportViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private fun binderFactory(uri: Uri): FileBinder? {
-        val filename = uri.lastPathSegment.toString()
-        val split = filename.split(".")
+    private fun binderFactory(uri: Uri, contentResolver: ContentResolver): FileBinder? {
+        val filename = getFileName(uri, contentResolver)
+        val split = filename?.split(".")
 
-        // Weird file name. Dont bother.
-        if (split.size != 2) {
+        // Weird file name. Don't bother.
+        if (filename == null || split == null || split.size != 2) {
             return null
         }
 
         val extension = split.last()
-        val name = split.first()
-        val isFriend = name.matches(Regex("-f[0-9]*\b"))
+        val isFriend = filename.matches(Regex(".*-f[0-9]*\\..*"))
+        val name = filename.split(".").first()
 
         return when {
-            extension == "pdf" -> BottleBinder()
-            isFriend -> FriendBinder()
-            else -> WineBinder()
+            extension == "pdf" -> BottleBinder(name)
+            isFriend -> FriendBinder(name)
+            else -> WineBinder(name)
         }
     }
+
+    private fun getFileName(uri: Uri, contentResolver: ContentResolver): String? =
+        when (uri.scheme) {
+            ContentResolver.SCHEME_CONTENT -> getContentFileName(uri, contentResolver)
+            else -> uri.path?.let(::File)?.name
+        }
+
+    private fun getContentFileName(uri: Uri, contentResolver: ContentResolver): String? =
+        runCatching {
+            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                cursor.moveToFirst()
+                return@use cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME)
+                    .let(cursor::getString)
+            }
+        }.getOrNull()
 }

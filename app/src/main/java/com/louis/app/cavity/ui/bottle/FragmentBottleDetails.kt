@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.FileUriExposedException
 import android.view.View
 import android.widget.Checkable
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -37,6 +38,8 @@ import com.louis.app.cavity.ui.bottle.adapter.JumpSmoothScroller
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.tasting.SpaceItemDecoration
 import com.louis.app.cavity.util.*
+import io.sentry.Sentry
+import io.sentry.SentryLevel
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private lateinit var transitionHelper: TransitionHelper
@@ -401,8 +404,13 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         try {
             startActivity(intent)
         } catch (a: ActivityNotFoundException) {
+            Sentry.captureMessage("Cannot open pdf: no pdf reader", SentryLevel.INFO)
             binding.coordinator.showSnackbar(R.string.no_pdf_app)
         } catch (e: SecurityException) {
+            Sentry.captureMessage("Cannot open pdf: security exception", SentryLevel.INFO)
+            binding.coordinator.showSnackbar(R.string.base_error)
+        } catch (e: FileUriExposedException) {
+            Sentry.captureMessage("Cannot open pdf: pdf uri seems wrong", SentryLevel.INFO)
             binding.coordinator.showSnackbar(R.string.base_error)
         }
     }

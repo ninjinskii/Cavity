@@ -67,6 +67,6 @@ class FragmentImportFiles : Fragment(R.layout.fragment_import_files) {
             act.requestMediaPersistentPermission(it, silent = true)
         }
 
-        fileImportViewModel.bindFiles(uris)
+        fileImportViewModel.bindFiles(uris, requireContext().contentResolver)
     }
 }

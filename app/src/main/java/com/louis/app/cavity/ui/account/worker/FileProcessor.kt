@@ -4,7 +4,10 @@ import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import com.louis.app.cavity.model.FileAssoc
-import java.io.*
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.InputStream
 
 class FileProcessor(private val context: Context, fileAssoc: FileAssoc) {
     private val uri = Uri.parse(fileAssoc.getFilePath())
@@ -18,11 +21,17 @@ class FileProcessor(private val context: Context, fileAssoc: FileAssoc) {
             ?: uri.path?.substringAfterLast(".", "")
 
     private val inputStream: InputStream?
-        get() = context.contentResolver.openInputStream(uri)
+        get() = try {
+            context.contentResolver.openInputStream(uri)
+        } catch (e: FileNotFoundException) {
+            null
+        }
 
     fun copyToExternalDir() {
+        val inputFileExists = inputStream != null
+
         // Most likely: the file doesn't exists or doesn't exists anymore
-        if (extension == null || extension?.isBlank() == true) {
+        if (extension == null || extension?.isBlank() == true || !inputFileExists) {
             return
         }
 
