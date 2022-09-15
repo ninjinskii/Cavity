@@ -105,12 +105,12 @@ class AccountRepository private constructor(private val app: Application) {
     }
 
     suspend fun postTastingFriendsXRefs(tastingFriendXRefs: List<TastingXFriend>):
-            ApiResponse<Unit> {
+        ApiResponse<Unit> {
         return doApiCall { cavityApi.postTastingFriendsXRef(tastingFriendXRefs) }
     }
 
     suspend fun postHistoryFriendsXRefs(historyFriendXRefs: List<HistoryXFriend>):
-            ApiResponse<Unit> {
+        ApiResponse<Unit> {
         return doApiCall { cavityApi.postHistoryFriendsXRef(historyFriendXRefs) }
     }
 
@@ -176,7 +176,9 @@ class AccountRepository private constructor(private val app: Application) {
         } catch (t: Throwable) {
             when (t) {
                 is HttpException -> when (t.code()) {
-                    401 -> ApiResponse.UnauthorizedError
+                    401 -> ApiResponse.UnauthorizedError.also {
+                        Sentry.configureScope { scope -> scope.removeTag("username") }
+                    }
                     412 -> ApiResponse.UnregisteredError
                     else -> parseError(t.response())
                 }

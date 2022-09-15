@@ -11,6 +11,7 @@ import com.louis.app.cavity.db.PrefsRepository
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
+import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -54,6 +55,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
             onSuccess = {
                 prefsRepository.setApiToken(it.value.token)
                 prefsRepository.setLastLogin(email)
+                Sentry.configureScope { scope -> scope.setTag("username", email) }
                 _user.postValue(it.value.email)
             }
         )
@@ -105,6 +107,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
 
             if (response is ApiResponse.Success) {
                 val email = response.value.email
+                Sentry.configureScope { scope -> scope.setTag("username", email) }
                 prefsRepository.setLastLogin(email)
                 _user.postValue(email)
             }
@@ -116,6 +119,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     fun logout() {
         _user.value = null
         prefsRepository.setApiToken("")
+        Sentry.configureScope { scope -> scope.removeTag("username") }
     }
 
     fun declareLostPassword(email: String) {
