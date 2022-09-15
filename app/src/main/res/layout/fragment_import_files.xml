@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,6 +26,62 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/alert"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    app:cardBackgroundColor="@color/cavity_indigo_transparent"
+                    app:cardElevation="@dimen/no_elevation"
+                    app:cardPreventCornerOverlap="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
+                    app:shapeAppearance="@style/ShapeAppearance.Cavtiy.LargeComponent"
+                    app:strokeColor="@color/cavity_indigo"
+                    app:strokeWidth="1dp">
+
+                    <!-- Compound drawable does not allow image resizing -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <ImageView
+                            android:layout_width="@dimen/large_icon"
+                            android:layout_height="@dimen/large_icon"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/small_margin"
+                            android:contentDescription="@string/miscellaneous"
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/cavity_indigo" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/small_margin"
+                            android:layout_marginEnd="@dimen/small_margin"
+                            android:text="@string/file_import_alert"
+                            android:textAppearance="?attr/textAppearanceBody1" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:layout_marginVertical="@dimen/xlarge_margin"
+                    android:text="@string/file_import_title"
+                    android:textAppearance="?attr/textAppearanceHeadline5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/alert"
+                    app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
+
                 <TextView
                     android:id="@+id/explanation"
                     android:layout_width="0dp"
@@ -34,7 +91,8 @@
                     android:textAppearance="?attr/textAppearanceBody1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnImportFiles"

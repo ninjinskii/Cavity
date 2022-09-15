@@ -280,7 +280,9 @@
     <string name="import_">Importer</string>
     <string name="file_import">Importer les fichiers</string>
     <string name="file_import_explanation">Récupérez les photos de vos vins, vos amis et vos pdfs.</string>
-    <string name="file_import_deeper_explanation">Lorsque vous exportez votre cave, vos images et pdf ne sont pas sauvegardé en ligne. Au lieu de cela, une copie de tous les fichiers est générée sur l\'appareil afin de pouvoir récupérer le tout dans un seul endroit.\nVous pouvez alors récupérer ces fichiers dans le dossier <b>Android/data/com.louis.app.cavity/files</b>.\nPour les réassocier à vos vins / bouteilles / amis après un import de cave sur un nouvel appareil, il suffit de récupérer les fichiers sur l\'ancien appareil, puis de les mettre sur le nouvel appareil sans les rennomer.\nEnfin, sélectionnez tous les fichiers que vous avez transvasé en utilisant le bouton ci dessous.</string>
+    <string name="file_import_alert">Lorsque vous exportez votre cave, vos images et pdf ne sont pas sauvegardé en ligne. Au lieu de cela, une copie de tous les fichiers est générée sur l\'appareil.</string>
+    <string name="file_import_title">Comment récupérer vos fichiers ?</string>
+    <string name="file_import_deeper_explanation"><big><big><b>·</b></big></big> Récupérez les fichiers contenus dans <b>Android/data/com.louis.app.cavity/files</b> sur l\'appareil où <b>l\'export</b> a été réalisé\n <big><big><b>·</b></big></big> Copiez ces fichiers à l\'endroit souhaité sur l\'appareil cible sans les renommer\n <big><big><b>·</b></big></big> Utiliser le bouton ci-dessous et sélectionnez les fichiers en question</string>
     <string name="file_imported">%1$d fichiers importé(s) sur %2$d sélectionné(s).</string>
     <string name="export_done">Sauvegarde effectuée.</string>
     <string name="import_done">Récupération effectuée.</string>
