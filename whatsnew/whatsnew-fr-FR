@@ -1,7 +1,4 @@
-- Correction d'un crash lors de l'ouverture de l'app sur tablette
-- Correction d'un soucis faisant que les photos des amis sont un cercle gris
-- Correction d'une erreur lors de l'export des données si l'utilisateur à réalisé au moins un dégustation
-- Ajout de la fonctionnalité de récupération d'image sur un appareil différent
-- Correction du prix des stats régionnales, qui incluait les bouteilles consommées
-- Ajout de la récupération de mot de passe
-- Améliorations mineures de l'interface
+- Correction d'un soucis de l'affichage du total dans les stats dans certaines configurations
+- Correction d'un socuis empêchant certains fichiers d'être importés
+- Correction d'un crash lors de l'ouverture d'un pdf après un import
+- Diverses améliotations d'utilisations

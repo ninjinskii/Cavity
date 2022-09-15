@@ -1,7 +1,4 @@
-- Fix a crash on app launch on tablets
-- Fix friends photos being a grey circle
-- Fix an export error if user has at least one tasting
-- Add photo backup on another device
-- Fix county price stats, which were including consumed bottles
-- Add password reset feature
-- Miscellaneous UI improvments
+- Fix a bug causing total in stast to display incorrect data in some case
+- Fix a bug causing some images not being imported whil being elligible for import
+- Fix a crash when opening a pdf after an import.
+- Misceallenous quality of life changes
