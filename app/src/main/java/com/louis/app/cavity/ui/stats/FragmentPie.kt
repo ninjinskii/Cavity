@@ -11,7 +11,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.ui.stats.widget.PieView
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.Main
@@ -84,6 +83,16 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         statsViewModel.comparisonText.observe(viewLifecycleOwner) {
             binding.comparisonText.text = it
         }
+
+        statsViewModel.details.observe(viewLifecycleOwner) { stats ->
+            lifecycleScope.launch(Default) {
+                val total = stats.sumOf { it.count }
+
+                withContext(Main) {
+                    binding.total.text = resources.getString(R.string.total, total)
+                }
+            }
+        }
     }
 
     private fun maybeShowYearPicker() {
@@ -93,14 +102,6 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     private fun updatePieData(pieView: PieView, stats: List<Stat>) {
-        lifecycleScope.launch(Default) {
-            val total = stats.sumOf { it.count }
-
-            withContext(Main) {
-                binding.total.text = resources.getString(R.string.total, total)
-            }
-        }
-
         pieView.setPieSlices(stats, anim = true)
     }
 

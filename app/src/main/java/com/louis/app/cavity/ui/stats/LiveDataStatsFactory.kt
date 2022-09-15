@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import com.louis.app.cavity.db.WineRepository
-import com.louis.app.cavity.db.dao.BaseStat
+import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.db.dao.Year
 
 class LiveDataStatsFactory(
@@ -17,16 +17,16 @@ class LiveDataStatsFactory(
         MutableLiveData(StatType.STOCK)
     }
 
-    private val _comparisons: MutableList<LiveData<List<BaseStat>>> = MutableList(4) {
+    private val _comparisons: MutableList<LiveData<List<Stat>>> = MutableList(4) {
         createComparisonLiveStat(it)
     }
-    val comparisons: List<LiveData<List<BaseStat>>>
+    val comparisons: List<LiveData<List<Stat>>>
         get() = _comparisons
 
-    private val _results: MutableList<LiveData<List<BaseStat>>> = MutableList(4) {
+    private val _results: MutableList<LiveData<List<Stat>>> = MutableList(4) {
         createLiveStat(it)
     }
-    val results: List<LiveData<List<BaseStat>>>
+    val results: List<LiveData<List<Stat>>>
         get() = _results
 
     fun applyStatType(position: Int, statType: StatType) {
@@ -47,7 +47,7 @@ class LiveDataStatsFactory(
 
     // It can't be anything else.
     @Suppress("UNCHECKED_CAST")
-    private fun getStat(position: Int, year: Year, statType: StatType): LiveData<List<BaseStat>> {
+    private fun getStat(position: Int, year: Year, statType: StatType): LiveData<List<Stat>> {
         val start = year.yearStart
         val end = year.yearEnd
 
@@ -56,22 +56,22 @@ class LiveDataStatsFactory(
                 StatType.STOCK -> repository.getStockByCounty()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByCounty(start, end)
                 StatType.CONSUMPTIONS -> repository.getConsumptionsByCounty(start, end)
-            }
+            } as LiveData<List<Stat>>
             1 -> when (statType) {
                 StatType.STOCK -> repository.getStockByColor()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByColor(start, end)
                 StatType.CONSUMPTIONS -> repository.getConsumptionsByColor(start, end)
-            } as LiveData<List<BaseStat>>
+            } as LiveData<List<Stat>>
             2 -> when (statType) {
                 StatType.STOCK -> repository.getStockByVintage()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByVintage(start, end)
                 StatType.CONSUMPTIONS -> repository.getConsumptionsByVintage(start, end)
-            }
+            } as LiveData<List<Stat>>
             else -> when (statType) {
                 StatType.STOCK -> repository.getStockByNaming()
                 StatType.REPLENISHMENTS -> repository.getReplenishmentsByNaming(start, end)
                 StatType.CONSUMPTIONS -> repository.getConsumptionsByNaming(start, end)
-            }
+            } as LiveData<List<Stat>>
         }
     }
 }

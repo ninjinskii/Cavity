@@ -232,6 +232,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                 .centerCrop()
                 .into(binding.wineMiniImage)
 
+            binding.nestedScrollView.run { post { scrollTo(0, height) } }
             toggleImageViews(true)
         } else {
             toggleImageViews(false)

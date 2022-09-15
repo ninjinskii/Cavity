@@ -125,6 +125,7 @@ class HistoryRecyclerAdapter(
 
                             text = if (comment.isBlank()) {
                                 setTextAppearance(R.style.TextAppearance_Cavity_Body2_Italic)
+                                alpha = 0.38f
                                 context.getString(R.string.no_description)
                             } else {
                                 setTextAppearance(R.style.TextAppearance_Cavity_Body2)
