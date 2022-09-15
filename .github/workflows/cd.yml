@@ -48,6 +48,6 @@ jobs:
           packageName: com.louis.app.cavity
           releaseFile: app/build/outputs/bundle/release/app-release.aab
           releaseName: ${{ github.ref_name }}
-          track: beta
+          track: production
           status: completed
           whatsNewDirectory: whatsnew/
