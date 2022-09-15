@@ -226,7 +226,7 @@
     <string name="misc_total_price">Wine cellar value</string>
     <string name="misc_total_consumed">Drunk bottles</string>
     <string name="misc_total_stock">Bottles in stock</string>
-    <string name="total">Total: $1%d</string>
+    <string name="total">Total: %1$d</string>
     <string name="stock">Stock</string>
 
     <!-- Tasting -->
