@@ -124,15 +124,17 @@ class HistoryRecyclerAdapter(
                             val comment = historyEntry.comment
 
                             text = if (comment.isBlank()) {
-                                setTextAppearance(R.style.TextAppearance_Cavity_Body2_Italic)
                                 alpha = 0.38f
+                                setTextAppearance(R.style.TextAppearance_Cavity_Body2_Italic)
                                 context.getString(R.string.no_description)
                             } else {
+                                alpha = 1f
                                 setTextAppearance(R.style.TextAppearance_Cavity_Body2)
                                 comment
                             }
                         }
                         else -> {
+                            alpha = 1f
                             setTextAppearance(R.style.TextAppearance_Cavity_Body2)
 
                             val data = if (historyEntry.type == typeReplenishment) {
