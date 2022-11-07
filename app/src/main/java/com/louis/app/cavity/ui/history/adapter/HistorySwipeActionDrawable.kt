@@ -144,6 +144,9 @@ class HistorySwipeActionDrawable(resources: Resources, theme: Resources.Theme?) 
         canvas.drawCircle(w.toFloat(), 0f, interpolatedRadius, circlePaint)
     }
 
+    @Deprecated("Deprecated in Java",
+        ReplaceWith("Used by Android. No need to replace", "")
+    )
     override fun getOpacity() = PixelFormat.TRANSLUCENT
 
     override fun setAlpha(alpha: Int) {

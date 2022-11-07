@@ -47,7 +47,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         savedStateHandle.getLiveData<Boolean>(FragmentLogin.LOGIN_SUCCESSFUL)
             .observe(currentBackStackEntry) {
                 if (!it) {
-                    val startDestination = findNavController().graph.startDestination
+                    val startDestination = findNavController().graph.startDestinationId
                     val action = FragmentAccountDirections.accountToHome()
                     val navOptions = NavOptions.Builder()
                         .setPopUpTo(startDestination, true)

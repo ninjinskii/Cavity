@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = "1.6.10"
+    ext.kotlin_version = "1.7.20"
     repositories {
         google()
         mavenCentral()
@@ -11,9 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        // DO NOT UPDATE, it will mess the navigation logic in Cavity
-        //noinspection GradleDependency
-        classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.4.1'
+        classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3'
     }
 }
 

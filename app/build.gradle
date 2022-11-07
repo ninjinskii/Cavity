@@ -38,7 +38,7 @@ android {
 }
 
 dependencies {
-    def nav_version = "2.3.5"
+    def nav_version = "2.5.3"
     def room_version = "2.4.3"
     def camerax_version = "1.1.0"
     def paging_version = "3.1.1"
@@ -70,7 +70,7 @@ dependencies {
     // Fragments
     implementation "androidx.fragment:fragment-ktx:1.5.2"
 
-    // Navigation component - DO NOT UPDATE, it will mess the navigation logic in Cavity
+    // Navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
