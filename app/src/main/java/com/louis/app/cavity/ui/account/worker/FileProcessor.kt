@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import com.louis.app.cavity.model.FileAssoc
+import io.sentry.Sentry
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -24,6 +25,9 @@ class FileProcessor(private val context: Context, fileAssoc: FileAssoc) {
         get() = try {
             context.contentResolver.openInputStream(uri)
         } catch (e: FileNotFoundException) {
+            null
+        } catch (e: SecurityException) {
+            Sentry.captureMessage("SecurityException for file $outputFile")
             null
         }
 
