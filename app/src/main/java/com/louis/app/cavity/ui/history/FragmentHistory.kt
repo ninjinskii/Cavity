@@ -232,7 +232,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             .setValidator(object : CalendarConstraints.DateValidator {
                 override fun describeContents() = -1
 
-                override fun writeToParcel(p0: Parcel?, p1: Int) = Unit
+                override fun writeToParcel(p0: Parcel, p1: Int) = Unit
 
                 override fun isValid(date: Long) = date in min..max
             })

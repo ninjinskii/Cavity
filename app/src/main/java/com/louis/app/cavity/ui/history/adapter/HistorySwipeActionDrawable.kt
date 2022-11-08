@@ -86,9 +86,7 @@ class HistorySwipeActionDrawable(resources: Resources, theme: Resources.Theme?) 
             }
         }
 
-    override fun onBoundsChange(bounds: Rect?) {
-        if (bounds == null) return
-
+    override fun onBoundsChange(bounds: Rect) {
         iconTop = bounds.centerY() - (iconSize / 2)
         callback?.invalidateDrawable(this)
     }

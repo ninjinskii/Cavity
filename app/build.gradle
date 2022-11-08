@@ -4,12 +4,12 @@ apply plugin: "kotlin-kapt"
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.louis.app.cavity"
         minSdkVersion 24
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 11
         versionName "1.2.5"
 
@@ -48,10 +48,10 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     // Ktx core
-    implementation "androidx.core:core-ktx:1.8.0"
+    implementation "androidx.core:core-ktx:1.9.0"
 
     // AppCompat
-    implementation "androidx.appcompat:appcompat:1.5.0"
+    implementation "androidx.appcompat:appcompat:1.5.1"
 
     // ConstraintLayout
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
@@ -65,10 +65,10 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.1"
 
     // Material
-    implementation "com.google.android.material:material:1.6.1"
+    implementation "com.google.android.material:material:1.7.0"
 
     // Fragments
-    implementation "androidx.fragment:fragment-ktx:1.5.2"
+    implementation "androidx.fragment:fragment-ktx:1.5.4"
 
     // Navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"

@@ -54,12 +54,12 @@ class StickyItemDecorator(
         })
     }
 
-    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+    override fun onSingleTapUp(e: MotionEvent): Boolean {
         onHeaderClick()
         return true
     }
 
-    override fun onDown(e: MotionEvent?) = true
+    override fun onDown(e: MotionEvent) = true
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDrawOver(c, parent, state)
@@ -176,13 +176,13 @@ class StickyItemDecorator(
         return headerPosition
     }
 
-    override fun onShowPress(e: MotionEvent?) {
+    override fun onShowPress(e: MotionEvent) {
     }
 
-    override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, dX: Float, dY: Float) = false
+    override fun onScroll(e1: MotionEvent, e2: MotionEvent, dX: Float, dY: Float) = false
 
-    override fun onLongPress(e: MotionEvent?) {
+    override fun onLongPress(e: MotionEvent) {
     }
 
-    override fun onFling(e1: MotionEvent?, e2: MotionEvent?, vX: Float, vY: Float) = false
+    override fun onFling(e1: MotionEvent, e2: MotionEvent, vX: Float, vY: Float) = false
 }
