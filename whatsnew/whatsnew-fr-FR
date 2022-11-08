@@ -1,4 +1,3 @@
-- Correction d'un soucis de l'affichage du total dans les stats dans certaines configurations
-- Correction d'un socuis empêchant certains fichiers d'être importés
-- Correction d'un crash lors de l'ouverture d'un pdf après un import
-- Diverses améliotations d'utilisations
+- Correction d'un bug empêchant les exports de fonctionner
+- Ajout du support pour Android 13
+- Correction d'un bug rendant tous les commentaires de l'historique grisé après avoir fait défiler la page
