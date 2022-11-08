@@ -235,6 +235,7 @@
     <string name="opportunity_hint">John bithday, Christmas dinner…</string>
     <string name="tasting_date">Date</string>
     <string name="participants">Participants</string>
+    <string name="notification_warn">Cavity will send notifications to remind you to take care of your bottles.</string>
     <string name="jug_time">Decanting</string>
     <string name="fridge">Refrigerator</string>
     <string name="tasting_bottle_already_in_use">The bottle is already used in another tasting.</string>

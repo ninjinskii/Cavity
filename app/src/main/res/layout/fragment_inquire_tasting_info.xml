@@ -199,7 +199,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="@dimen/small_margin"
                             android:layout_marginEnd="@dimen/small_margin"
-                            android:text="Cavity vous enverra des notifications pour vous rappeler d'ouvrir vos bouteilles le moment venu."
+                            android:text="@string/notification_warn"
                             android:textAppearance="?attr/textAppearanceBody1" />
 
                     </LinearLayout>

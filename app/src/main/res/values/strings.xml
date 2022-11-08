@@ -233,6 +233,7 @@
     <string name="opportunity_hint">Anniversaire Guy, Repas de Noël…</string>
     <string name="tasting_date">Date</string>
     <string name="participants">Participants</string>
+    <string name="notification_warn">Cavity vous enverra des notifications pour vous rappeler d\'ouvrir vos bouteilles le moment venu.</string>
     <string name="jug_time">Passage en carafe</string>
     <string name="fridge">Mettre au réfrégirateur</string>
     <string name="tasting_bottle_already_in_use">La bouteille est déjà utilisée dans une autre dégustation.</string>
