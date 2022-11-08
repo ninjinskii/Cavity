@@ -17,8 +17,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.NavigationUiSaveStateControl
 import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
@@ -94,30 +95,37 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         setTaskDescription(TaskDescription(appName, bitmap, themeColor(R.attr.colorSurface)))
     }
 
+    @OptIn(NavigationUiSaveStateControl::class)
     private fun setupNavigation() {
         navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment)!!
         val navController = navHostFragment.findNavController()
 
-        binding.navView.setupWithNavController(navController)
-
-        binding.navigationRail?.setOnItemSelectedListener {
-            val fromHomeToHome = (navController.currentDestination?.id ?: 0) == R.id.home_dest &&
-                    it.itemId == R.id.home_dest
-
-            if (fromHomeToHome) {
-                return@setOnItemSelectedListener false
+        binding.navView.apply {
+            setupWithNavController(navController)
+            setNavigationItemSelectedListener { item ->
+                NavigationUI.onNavDestinationSelected(item, navController, false)
+                binding.drawer.close()
+                true
             }
-
-            val options = NavOptions.Builder()
-                .setPopUpTo(R.id.home_dest, false)
-                .build()
-
-            navController.navigate(it.itemId, null, options)
-            true
         }
 
-        navController.addOnDestinationChangedListener { controller, _, _ ->
-            updateNavigationRailState(controller)
+        binding.navigationRail?.apply {
+            setOnItemSelectedListener {
+                val fromHomeToHome =
+                    (navController.currentDestination?.id ?: 0) == R.id.home_dest &&
+                            it.itemId == R.id.home_dest
+
+                if (fromHomeToHome) {
+                    return@setOnItemSelectedListener false
+                }
+
+                NavigationUI.onNavDestinationSelected(it, navController, false)
+                true
+            }
+
+            navController.addOnDestinationChangedListener { controller, _, _ ->
+                updateNavigationRailState(controller)
+            }
         }
     }
 

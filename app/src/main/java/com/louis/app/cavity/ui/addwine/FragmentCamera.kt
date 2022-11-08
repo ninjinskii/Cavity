@@ -2,15 +2,12 @@ package com.louis.app.cavity.ui.addwine
 
 import android.Manifest
 import android.animation.ObjectAnimator
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
@@ -23,10 +20,10 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentCameraBinding
-import com.louis.app.cavity.ui.Cavity
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.TAKEN_PHOTO_URI
 import com.louis.app.cavity.ui.settings.SettingsViewModel
+import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.showSnackbar
 import io.sentry.Sentry
@@ -40,7 +37,7 @@ import kotlin.math.min
 class FragmentCamera : Fragment(R.layout.fragment_camera) {
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var snackbarProvider: SnackbarProvider
-    private lateinit var askPermissions: ActivityResultLauncher<Array<String>>
+    private lateinit var permissionChecker: PermissionChecker
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
     private val settingsViewModel: SettingsViewModel by activityViewModels()
@@ -61,10 +58,16 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             setFadeThrough(navigatingForward = false)
         }
 
-        askPermissions =
-            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-                handlePermisionResults(it)
+        permissionChecker = object : PermissionChecker(this, REQUIRED_PERMISSIONS) {
+            override fun onPermissionsAccepted() {
+                startCamera()
             }
+
+            override fun onPermissionsDenied() {
+                findNavController().navigateUp()
+                snackbarProvider.onShowSnackbarRequested(R.string.permissions_denied)
+            }
+        }
     }
 
 
@@ -73,13 +76,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         _binding = FragmentCameraBinding.bind(view)
 
         snackbarProvider = activity as SnackbarProvider
-
-        if (hasPermissions()) {
-            startCamera()
-        } else {
-            askPermissions.launch(REQUIRED_PERMISSIONS)
-        }
-
+        permissionChecker.askPermissionsIfNecessary()
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         setListener()
@@ -187,28 +184,12 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         return null
     }
 
-    private fun hasPermissions() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            requireContext(),
-            it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
     private fun aspectRatio(width: Int, height: Int): Int {
         val previewRatio = max(width, height).toDouble() / min(width, height)
         if (abs(previewRatio - RATIO_4_3_VALUE) <= abs(previewRatio - RATIO_16_9_VALUE)) {
             return AspectRatio.RATIO_4_3
         }
         return AspectRatio.RATIO_16_9
-    }
-
-    private fun handlePermisionResults(permissions: Map<String, Boolean>) {
-        if (permissions.all { it.value }) {
-            startCamera()
-        } else {
-            findNavController().navigateUp()
-            snackbarProvider.onShowSnackbarRequested(R.string.permissions_denied)
-        }
     }
 
     private fun setListener() {

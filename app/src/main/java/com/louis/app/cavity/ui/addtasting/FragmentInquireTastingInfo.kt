@@ -1,7 +1,10 @@
 package com.louis.app.cavity.ui.addtasting
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,11 +19,13 @@ import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
+import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.collectAs
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) {
     private lateinit var snackbarProvider: SnackbarProvider
+    private lateinit var permissionChecker: PermissionChecker
     private var _binding: FragmentInquireTastingInfoBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
@@ -29,6 +34,22 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
     )
 
     private lateinit var datePicker: DatePicker
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionChecker = object : PermissionChecker(this, arrayOf(NOTIFICATION_PERMISSION)) {
+                override fun onPermissionsAccepted() {
+                    submit()
+                }
+
+                override fun onPermissionsDenied() {
+                    snackbarProvider.onShowSnackbarRequested(R.string.permissions_denied_external)
+                }
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -91,8 +112,17 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         }
 
         binding.buttonSubmit.setOnClickListener {
-            submit()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestNotificationPermission()
+            } else {
+                submit()
+            }
         }
+    }
+
+    @RequiresApi(33)
+    private fun requestNotificationPermission() {
+        permissionChecker.askPermissionsIfNecessary()
     }
 
     private fun showAddFriendDialog() {
@@ -126,5 +156,10 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+        private const val NOTIFICATION_PERMISSION = Manifest.permission.POST_NOTIFICATIONS
     }
 }

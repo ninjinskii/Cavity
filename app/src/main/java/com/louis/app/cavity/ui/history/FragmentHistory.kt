@@ -118,16 +118,17 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         historyViewModel.entries.observe(viewLifecycleOwner) {
             historyAdapter.submitData(viewLifecycleOwner.lifecycle, it)
 
-            lifecycleScope.launch {
-                delay(100)
-                binding.emptyState.setVisible(historyAdapter.itemCount == 0)
-            }
-
             if (historyViewModel.filter.value is HistoryFilter.DateFilter) {
                 lifecycleScope.launch {
                     delay(1000)
                     historyViewModel.setFilter(HistoryFilter.NoFilter)
                 }
+            }
+        }
+
+        historyAdapter.addLoadStateListener { loadState ->
+            if (loadState.append.endOfPaginationReached) {
+                binding.emptyState.setVisible(historyAdapter.itemCount < 1)
             }
         }
     }
@@ -231,7 +232,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             .setValidator(object : CalendarConstraints.DateValidator {
                 override fun describeContents() = -1
 
-                override fun writeToParcel(p0: Parcel?, p1: Int) = Unit
+                override fun writeToParcel(p0: Parcel, p1: Int) = Unit
 
                 override fun isValid(date: Long) = date in min..max
             })

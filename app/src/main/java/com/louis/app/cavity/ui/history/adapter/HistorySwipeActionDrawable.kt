@@ -86,9 +86,7 @@ class HistorySwipeActionDrawable(resources: Resources, theme: Resources.Theme?) 
             }
         }
 
-    override fun onBoundsChange(bounds: Rect?) {
-        if (bounds == null) return
-
+    override fun onBoundsChange(bounds: Rect) {
         iconTop = bounds.centerY() - (iconSize / 2)
         callback?.invalidateDrawable(this)
     }
@@ -144,6 +142,9 @@ class HistorySwipeActionDrawable(resources: Resources, theme: Resources.Theme?) 
         canvas.drawCircle(w.toFloat(), 0f, interpolatedRadius, circlePaint)
     }
 
+    @Deprecated("Deprecated in Java",
+        ReplaceWith("Used by Android. No need to replace", "")
+    )
     override fun getOpacity() = PixelFormat.TRANSLUCENT
 
     override fun setAlpha(alpha: Int) {

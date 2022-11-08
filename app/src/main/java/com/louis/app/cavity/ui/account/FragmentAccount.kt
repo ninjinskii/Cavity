@@ -1,12 +1,8 @@
 package com.louis.app.cavity.ui.account
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
@@ -14,19 +10,20 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAccountBinding
+import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAccount : Fragment(R.layout.fragment_account) {
-    private lateinit var askPermission: ActivityResultLauncher<String>
+    private lateinit var readPermissionChecker: PermissionChecker
+    private lateinit var writePermissionChecker: PermissionChecker
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
     private lateinit var transitionHelper: TransitionHelper
 
     private var wannaImport = false
-    private var wannaImportFiles = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +33,26 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
             setFadeThroughOnEnterAndExit()
         }
 
-        askPermission =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-                handlePermisionResults(it)
+        readPermissionChecker =
+            object : PermissionChecker(this, arrayOf(READ_PERMISSION)) {
+                override fun onPermissionsAccepted() {
+                    navigateToImportFiles()
+                }
+
+                override fun onPermissionsDenied() {
+                    binding.coordinator.showSnackbar(R.string.permissions_denied_external)
+                }
             }
+
+        writePermissionChecker = object : PermissionChecker(this, arrayOf(WRITE_PERMISSION)) {
+            override fun onPermissionsAccepted() {
+                navigateToImportExport(wannaImport)
+            }
+
+            override fun onPermissionsDenied() {
+                binding.coordinator.showSnackbar(R.string.permissions_denied_external)
+            }
+        }
 
         val currentBackStackEntry = findNavController().currentBackStackEntry!!
         val savedStateHandle = currentBackStackEntry.savedStateHandle
@@ -47,7 +60,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         savedStateHandle.getLiveData<Boolean>(FragmentLogin.LOGIN_SUCCESSFUL)
             .observe(currentBackStackEntry) {
                 if (!it) {
-                    val startDestination = findNavController().graph.startDestination
+                    val startDestination = findNavController().graph.startDestinationId
                     val action = FragmentAccountDirections.accountToHome()
                     val navOptions = NavOptions.Builder()
                         .setPopUpTo(startDestination, true)
@@ -85,15 +98,17 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
     private fun setListeners() {
         binding.exportBtn.setOnClickListener {
-            navigateToImportExport(false)
+            wannaImport = false
+            writePermissionChecker.askPermissionsIfNecessary()
         }
 
         binding.importBtn.setOnClickListener {
-            navigateToImportExport(true)
+            wannaImport = true
+            writePermissionChecker.askPermissionsIfNecessary()
         }
 
         binding.imageBtn.setOnClickListener {
-            navigateToImportFiles()
+            readPermissionChecker.askPermissionsIfNecessary()
         }
     }
 
@@ -108,51 +123,23 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         }
     }
 
-    private fun hasPermissions(perm: String) = ContextCompat.checkSelfPermission(
-        requireContext(),
-        perm
-    ) == PackageManager.PERMISSION_GRANTED
-
-    private fun handlePermisionResults(permission: Boolean) {
-        if (permission) {
-            if (wannaImportFiles) {
-                navigateToImportFiles()
-            } else {
-                navigateToImportExport(wannaImport)
-            }
-        } else {
-            binding.coordinator.showSnackbar(R.string.permissions_denied_external)
-        }
-    }
-
     private fun navigateToImportExport(isImport: Boolean) {
-        if (hasPermissions(WRITE_PERMISSION)) {
-            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
+        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
 
-            val title = if (isImport) R.string.import_ else R.string.export
-            val action = FragmentAccountDirections.accountToImportExport(
-                isImport = isImport,
-                title = getString(title)
-            )
+        val title = if (isImport) R.string.import_ else R.string.export
+        val action = FragmentAccountDirections.accountToImportExport(
+            isImport = isImport,
+            title = getString(title)
+        )
 
-            findNavController().navigate(action)
-        } else {
-            wannaImport = isImport
-            askPermission.launch(WRITE_PERMISSION)
-        }
+        findNavController().navigate(action)
     }
 
     private fun navigateToImportFiles() {
-        if (hasPermissions(READ_PERMISSION)) {
-            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
+        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
 
-            val action = FragmentAccountDirections.accountToImportFiles()
-            wannaImportFiles = false
-            findNavController().navigate(action)
-        } else {
-            wannaImportFiles = true
-            askPermission.launch(READ_PERMISSION)
-        }
+        val action = FragmentAccountDirections.accountToImportFiles()
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
