@@ -364,9 +364,15 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 }
             }
 
-            addOnButtonCheckedListener { _, checkedId, isChecked ->
-                val id = if (isChecked) checkedId else View.NO_ID
-                searchViewModel.setCapacityFilter(id)
+            addOnButtonCheckedListener { group, checkedId, isChecked ->
+                if (group.checkedButtonId == View.NO_ID) {
+                    searchViewModel.setCapacityFilter(View.NO_ID)
+                    return@addOnButtonCheckedListener
+                }
+
+                if (isChecked) {
+                    searchViewModel.setCapacityFilter(checkedId)
+                }
             }
         }
     }
