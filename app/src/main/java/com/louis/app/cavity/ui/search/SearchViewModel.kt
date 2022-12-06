@@ -36,6 +36,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private var selectedFilter: WineFilter = NoFilter
     private var consumedFilter: WineFilter = NoFilter
     private var capacityFilter: WineFilter = NoFilter
+    private var friendFilter: WineFilter = NoFilter
 
     var selectedCounties = emptyList<County>()
         private set
@@ -46,6 +47,9 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     var selectedReviews = emptyList<Review>()
         private set
 
+    var selectedFriends = emptyList<Friend>()
+        private set
+
     private var currentBeyondDate: Long? = null
     private var currentUntilDate: Long? = null
 
@@ -54,6 +58,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     fun getAllGrapes() = repository.getAllGrapes()
 
     fun getAllReviews() = repository.getAllReviews()
+
+    fun getAllFriends() = repository.getAllFriends()
 
     fun setCountiesFilters(filteredCounties: List<County>) {
         selectedCounties = filteredCounties
@@ -189,6 +195,19 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         updateFilters()
     }
 
+    fun setFriendFilter(filteredFriends: List<Friend>) {
+        selectedFriends = filteredFriends
+
+        val friendFilters: List<WineFilter> = selectedFriends.map { FilterFriend(it.id) }
+
+        friendFilter =
+            if (friendFilters.isNotEmpty())
+                friendFilters.reduce { acc, filterFriend -> acc.orCombine(filterFriend) }
+            else NoFilter
+
+        updateFilters()
+    }
+
     private fun updateFilters() {
         if (consumedFilter is NoFilter) {
             consumedFilter = FilterConsumed(false)
@@ -196,7 +215,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
         val filters = listOf(
             countyFilter, colorFilter, otherFilter, vintageFilter, textFilter, priceFilter,
-            dateFilter, grapeFilter, reviewFilter, selectedFilter, capacityFilter, consumedFilter
+            dateFilter, grapeFilter, reviewFilter, selectedFilter, capacityFilter, consumedFilter,
+            friendFilter
         )
 
         val combinedFilters = filters.reduce { acc, wineFilter -> acc.andCombine(wineFilter) }

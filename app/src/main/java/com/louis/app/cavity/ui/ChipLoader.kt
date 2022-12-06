@@ -1,7 +1,5 @@
 package com.louis.app.cavity.ui
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.HorizontalScrollView
@@ -67,6 +65,8 @@ class ChipLoader private constructor(
                     chipGroup.addView(chip)
 
                     if (selectable) {
+                        chip.isCheckable = true
+
                         if (index == 0 && chipGroup.isSelectionRequired) {
                             chip.isChecked = preselectedItems.isEmpty()
                         }

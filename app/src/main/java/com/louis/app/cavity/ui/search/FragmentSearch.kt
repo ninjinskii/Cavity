@@ -27,6 +27,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.databinding.SearchFiltersBinding
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.ui.ChipLoader
@@ -204,6 +205,23 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .go()
         }
 
+        searchViewModel.getAllFriends().observe(viewLifecycleOwner) { friends ->
+            val preselectedReviews = searchViewModel.selectedFriends.map { it.id }
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .toInflate(R.layout.chip_friend)
+                .load(friends)
+                .into(filtersBinding.friendChipGroup)
+                .useAvatar(true)
+                .selectable(true) // friend chips are not selectablea by default
+                .preselect(preselectedReviews)
+                .doOnClick { prepareFriendFilters() }
+                .emptyText(getString(R.string.empty_friend))
+                .build()
+                .go()
+        }
+
         if (isPickMode) {
             addTastingViewModel.selectedBottles.observe(viewLifecycleOwner) {
                 this@FragmentSearch.binding.buttonSubmit.isEnabled = it.isNotEmpty()
@@ -262,7 +280,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             onEndIconClickListener = { searchViewModel.setBeyondFilter(null) }
             onDateChangedListener = { searchViewModel.setBeyondFilter(it) }
         }
-
 
         DatePicker(parentFragmentManager, filtersBinding.untilLayout, untilTitle).apply {
             onEndIconClickListener = { searchViewModel.setUntilFilter(null) }
@@ -413,6 +430,13 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         filtersBinding.reviewChipGroup.apply {
             val reviews = collectAs<Review>()
             searchViewModel.setReviewFilters(reviews)
+        }
+    }
+
+    private fun prepareFriendFilters() {
+        filtersBinding.friendChipGroup.apply {
+            val friends = collectAs<Friend>()
+            searchViewModel.setFriendFilter(friends)
         }
     }
 

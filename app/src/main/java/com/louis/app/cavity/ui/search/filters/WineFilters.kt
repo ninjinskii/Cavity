@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.search.filters
 
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.*
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 import com.louis.app.cavity.util.toInt
 
@@ -43,7 +44,7 @@ class FilterText(private val query: String) : WineFilter {
         return boundedBottle.filter {
             val slug =
                 it.wine.name + it.wine.naming + it.wine.cuvee +
-                    it.bottle.buyLocation + it.bottle.otherInfo
+                        it.bottle.buyLocation + it.bottle.otherInfo
 
             return@filter slug.contains(query, ignoreCase = true)
         }
@@ -105,6 +106,19 @@ class FilterConsumed(private val consumed: Boolean) : WineFilter {
 class FilterCapacity(private val bottleSize: BottleSize) : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
         return boundedBottle.filter { it.bottle.bottleSize == bottleSize }
+    }
+}
+
+class FilterFriend(private val friendId: Long) : WineFilter {
+    override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
+        val typeReceiveFromFriend = 3
+
+        return boundedBottle.filter {
+            return@filter it.historyEntriesWithFriends.find { entryWithFriends ->
+                entryWithFriends.historyEntry.type == typeReceiveFromFriend &&
+                        (friendId in entryWithFriends.friends.map { f -> f.id })
+            } != null
+        }
     }
 }
 

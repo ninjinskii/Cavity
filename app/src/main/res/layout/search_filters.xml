@@ -404,6 +404,44 @@
             app:layout_constraintTop_toBottomOf="@id/reviewScrollView" />
 
         <TextView
+            android:id="@+id/friendTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/gifted_by"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider6" />
+
+        <HorizontalScrollView
+            android:id="@+id/friendScrollView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/medium_margin"
+            android:scrollbars="none"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/friendTitle">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/friendChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/chip_group_default_height"
+                android:layout_marginTop="@dimen/small_margin"
+                app:selectionRequired="false"
+                app:singleLine="true"
+                app:singleSelection="false" />
+
+        </HorizontalScrollView>
+
+        <View
+            android:id="@+id/divider7"
+            style="@style/Widget.Cavity.Divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/friendScrollView" />
+
+        <TextView
             android:id="@+id/bottleSizeTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -411,7 +449,7 @@
             android:text="@string/capacity"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider6" />
+            app:layout_constraintTop_toBottomOf="@id/divider7" />
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/rbGroupSize"
@@ -419,14 +457,14 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/medium_margin"
             android:layout_marginTop="@dimen/small_margin"
-            android:layout_marginBottom="?attr/actionBarSize"
             android:paddingBottom="@dimen/small_margin"
             android:visibility="visible"
             app:checkedButton="@null"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottleSizeTitle"
+            android:layout_marginBottom="?attr/actionBarSize"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:selectionRequired="false"
             app:singleSelection="true">
 
@@ -463,5 +501,7 @@
                 android:textAppearance="?attr/textAppearanceSubtitle1" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

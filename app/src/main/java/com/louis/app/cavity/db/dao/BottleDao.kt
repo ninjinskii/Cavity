@@ -125,4 +125,10 @@ data class BoundedBottle(
         )
     )
     val reviews: List<Review>,
+    @Relation(
+        entity = HistoryEntry::class,
+        parentColumn = "id",
+        entityColumn = "bottle_id",
+    )
+    val historyEntriesWithFriends: List<HistoryEntryWithFriends>,
 )
