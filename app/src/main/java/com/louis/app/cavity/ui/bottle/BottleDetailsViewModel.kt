@@ -78,6 +78,14 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun clearPdfPath() {
+        bottle.value?.let {
+            viewModelScope.launch(IO) {
+                repository.updateBottle(it.copy(pdfPath = ""))
+            }
+        }
+    }
+
     fun revertBottleConsumption() {
         val bottleId = bottleId.value ?: return
         val wineId = bottle.value?.wineId ?: return

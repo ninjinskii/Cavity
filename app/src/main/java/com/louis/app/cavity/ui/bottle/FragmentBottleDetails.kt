@@ -391,8 +391,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun showPdf(pdf: Uri) {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.apply {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(pdf, "application/pdf")
             addFlags(
                 Intent.FLAG_GRANT_READ_URI_PERMISSION or
@@ -411,6 +410,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             binding.coordinator.showSnackbar(R.string.base_error)
         } catch (e: FileUriExposedException) {
             Sentry.captureMessage("Cannot open pdf: pdf uri seems wrong", SentryLevel.INFO)
+            bottleDetailsViewModel.clearPdfPath()
             binding.coordinator.showSnackbar(R.string.base_error)
         }
     }
