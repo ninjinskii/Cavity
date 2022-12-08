@@ -55,8 +55,8 @@ class WineRepository private constructor(app: Application) {
     fun getWineById(wineId: Long) = wineDao.getWineById(wineId)
     suspend fun getWineByIdNotLive(wineId: Long) = wineDao.getWineByIdNotLive(wineId)
     suspend fun getAllWinesNotLive() = wineDao.getAllWinesNotLive()
-    suspend fun getWineByAttrs(name: String, naming: String, color: WineColor) =
-        wineDao.getWineByAttrs(name, naming, color)
+    suspend fun getWineByColorAndOrganic(color: WineColor, isOrganic: Int) =
+        wineDao.getWineByColorAndOrganic(color, isOrganic)
 
     fun getNamingsForCounty(countyId: Long) = wineDao.getNamingsForCounty(countyId)
     fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
@@ -273,6 +273,7 @@ class WineRepository private constructor(app: Application) {
     suspend fun getAllEntriesNotPagedNotLive() = historyDao.getAllEntriesNotPagedNotLive()
     fun getYears() = historyDao.getYears()
     fun getEntriesByType(type1: Int, type2: Int) = historyDao.getEntriesByType(type1, type2)
+    fun getEntriesForWine(wineId: Long) = historyDao.getEntriesForWine(wineId)
     fun getEntriesForBottle(bottleId: Long) = historyDao.getEntriesForBottle(bottleId)
     fun getEntriesForBottleNotPaged(bottleId: Long) =
         historyDao.getEntriesForBottleNotPaged(bottleId)
