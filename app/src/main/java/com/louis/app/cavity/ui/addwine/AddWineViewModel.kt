@@ -7,10 +7,11 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.WineColor
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.util.*
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
@@ -88,13 +89,31 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         )
 
         viewModelScope.launch(IO) {
-            val duplicate = repository.getWineByAttrs(wine.name, wine.naming, wine.color)
+            val duplicate = getSimilarWineIfAny(wine)
 
-            when {
-                duplicate != null && duplicate.id != wine.id -> {
-                    _userFeedback.postOnce(R.string.wine_already_exists)
+            if (duplicate != null) {
+                when {
+                    duplicate.hidden.toBoolean() && !isEditMode -> {
+                        repository.updateWine(duplicate.copy(hidden = false.toInt()))
+                        _wineUpdatedEvent.postOnce(R.string.wine_already_exists_emergence)
+                    }
+                    else -> _userFeedback.postOnce(R.string.wine_already_exists)
                 }
 
+                return@launch
+            }
+
+            /*      if (duplicate != null && wine.hidden.toBoolean()) {
+                      _wineUpdatedEvent.postOnce(R.string.wine_already_exists_emergence)
+                      return@launch
+                  }
+
+                  if (duplicate != null && !wine.hidden.toBoolean()) {
+                      _userFeedback.postOnce(R.string.wine_already_exists)
+                      return@launch
+                  }*/
+
+            when {
                 isEditMode -> {
                     repository.updateWine(wine)
                     _wineUpdatedEvent.postOnce(R.string.wine_updated)
@@ -122,5 +141,51 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun reset() {
         wineId = 0
+    }
+
+    private suspend fun getSimilarWineIfAny(wine: Wine): Wine? {
+        val hiddenWines = repository.getWineByColorAndOrganic(wine.color, wine.isOrganic)
+
+        return withContext(Default) {
+            for (hiddenWine in hiddenWines) {
+                val hasCloseNames = levenshtein(hiddenWine.name, wine.name) <= 3
+                val hasCloseNamings = levenshtein(hiddenWine.naming, wine.naming) <= 3
+                val isSelf = hiddenWine.id == wineId && isEditMode
+
+                if (hasCloseNames && hasCloseNamings && !isSelf) {
+                    return@withContext hiddenWine
+                }
+            }
+
+            return@withContext null
+        }
+    }
+
+    private fun levenshtein(lhs: CharSequence, rhs: CharSequence): Int {
+        val lhsLength = lhs.length + 1
+        val rhsLength = rhs.length + 1
+
+        var cost = Array(lhsLength) { it }
+        var newCost = Array(lhsLength) { 0 }
+
+        for (i in 1 until rhsLength) {
+            newCost[0] = i
+
+            for (j in 1 until lhsLength) {
+                val match = if (lhs[j - 1] == rhs[i - 1]) 0 else 1
+
+                val costReplace = cost[j - 1] + match
+                val costInsert = cost[j] + 1
+                val costDelete = newCost[j - 1] + 1
+
+                newCost[j] = costInsert.coerceAtMost(costDelete).coerceAtMost(costReplace)
+            }
+
+            val swap = cost
+            cost = newCost
+            newCost = swap
+        }
+
+        return cost[lhsLength - 1]
     }
 }
