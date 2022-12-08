@@ -82,6 +82,14 @@
         <action
             android:id="@+id/wineOptionsToAddBottle"
             app:destination="@id/add_bottle_dest" />
+        <action
+            android:id="@+id/wineOptionsToHistory"
+            app:destination="@id/history_dest">
+            <argument
+                android:name="wineId"
+                android:defaultValue="-1L"
+                app:argType="long" />
+        </action>
     </dialog>
 
     <fragment
@@ -218,6 +226,10 @@
         android:name="com.louis.app.cavity.ui.history.FragmentHistory"
         android:label="@string/history"
         tools:layout="@layout/fragment_history">
+        <argument
+            android:name="wineId"
+            android:defaultValue="-1L"
+            app:argType="long" />
         <argument
             android:name="bottleId"
             android:defaultValue="-1L"
