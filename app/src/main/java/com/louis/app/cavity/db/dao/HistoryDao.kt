@@ -57,6 +57,10 @@ interface HistoryDao {
     fun getFavoriteEntries(): PagingSource<Int, BoundedHistoryEntry>
 
     @Transaction
+    @Query("SELECT * FROM history_entry INNER JOIN bottle ON bottle.id = bottle_id WHERE wine_id=:wineId ORDER BY date DESC")
+    fun getEntriesForWine(wineId: Long): PagingSource<Int, BoundedHistoryEntry>
+
+    @Transaction
     @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId ORDER BY date DESC")
     fun getEntriesForBottle(bottleId: Long): PagingSource<Int, BoundedHistoryEntry>
 

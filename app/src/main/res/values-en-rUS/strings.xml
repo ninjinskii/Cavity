@@ -144,6 +144,7 @@
     <string name="price_and_currency">%1$s %2$s</string>
     <string name="show_pdf">Open PDF</string>
     <string name="show_history">Show history</string>
+    <string name="show_history_wine">Show wine history</string>
     <string name="no_pdf">No PDF for this bottle.</string>
     <string name="no_pdf_app">No pdf reader found on the phone.</string>
     <string name="labeled_data">Icon</string>

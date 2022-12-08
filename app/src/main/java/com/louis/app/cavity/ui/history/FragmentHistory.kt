@@ -73,7 +73,10 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             isFitToContents = true
         }
 
-        historyViewModel.start(args.bottleId)
+        // Don't reapply external filters on configuration change
+        if (savedInstanceState == null) {
+            historyViewModel.applyExternalFilters(args.wineId, args.bottleId)
+        }
 
         initRecyclerView()
         observe()

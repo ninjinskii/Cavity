@@ -48,7 +48,11 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         }.cachedIn(viewModelScope)
     }
 
-    fun start(bottleId: Long) {
+    fun applyExternalFilters(wineId: Long, bottleId: Long) {
+        if (wineId != -1L) {
+            setFilter(HistoryFilter.WineFilter(wineId))
+        }
+
         if (bottleId != -1L) {
             setFilter(HistoryFilter.BottleFilter(bottleId))
         }
@@ -128,8 +132,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         } else false
     }
 
-    private fun getDataSource(filter: HistoryFilter):
-        PagingSource<Int, BoundedHistoryEntry> {
+    private fun getDataSource(filter: HistoryFilter): PagingSource<Int, BoundedHistoryEntry> {
         return when (filter) {
             is HistoryFilter.TypeFilter -> when (filter.chipId) {
                 R.id.chipReplenishments -> repository.getEntriesByType(1, 3)
@@ -140,6 +143,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                 R.id.chipFavorites -> repository.getFavoriteEntries()
                 else -> repository.getAllEntries()
             }
+            is HistoryFilter.WineFilter -> repository.getEntriesForWine(filter.wineId)
             is HistoryFilter.BottleFilter -> repository.getEntriesForBottle(filter.bottleId)
             is HistoryFilter.DateFilter -> repository.getEntriesForDate(filter.date)
             is HistoryFilter.NoFilter -> repository.getAllEntries()
@@ -151,6 +155,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 sealed class HistoryFilter {
     class DateFilter(val date: Long) : HistoryFilter() /* Workaround for paging fast scroll */
     class TypeFilter(@IdRes val chipId: Int) : HistoryFilter()
+    class WineFilter(val wineId: Long) : HistoryFilter()
     class BottleFilter(val bottleId: Long) : HistoryFilter()
     object NoFilter : HistoryFilter()
 }

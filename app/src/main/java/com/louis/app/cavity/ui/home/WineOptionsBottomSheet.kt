@@ -54,6 +54,13 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
                 findNavController().navigate(action)
             }
 
+            showHistory.setOnClickListener {
+                val action =
+                    WineOptionsBottomSheetDirections.wineOptionsToHistory(wineId = args.wineId)
+
+                findNavController().navigate(action)
+            }
+
             deleteWine.setOnClickListener {
                 context?.let { context ->
                     LifecycleMaterialDialogBuilder(context, viewLifecycleOwner)
