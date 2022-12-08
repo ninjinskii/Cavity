@@ -91,8 +91,6 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             val duplicate = getSimilarWineIfAny(wine)
 
-            L.v(duplicate.toString())
-
             if (duplicate != null) {
                 when {
                     duplicate.hidden.toBoolean() && !isEditMode -> {
