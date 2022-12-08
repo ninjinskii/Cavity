@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.search.filters
 
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.*
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.toBoolean
 import com.louis.app.cavity.util.toInt
 
