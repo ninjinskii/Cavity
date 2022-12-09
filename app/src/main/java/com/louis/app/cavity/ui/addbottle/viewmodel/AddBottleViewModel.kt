@@ -142,7 +142,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         val historyEntry = HistoryEntry(0, buyDate, bottleId, null, "", type, 0)
 
         repository.run {
-            revertBottleConsumption(bottleId)
             clearExistingReplenishments(bottleId)
 
             if (isAGift) {
