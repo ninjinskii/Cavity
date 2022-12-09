@@ -1,3 +1,6 @@
-- Correction d'un bug empêchant les exports de fonctionner
-- Ajout du support pour Android 13
-- Correction d'un bug rendant tous les commentaires de l'historique grisé après avoir fait défiler la page
+- Correction du filtre contenance de bouteille qui affiche de mauvais résultats
+- Ajout de la recherche des bouteilles offertes par des amis
+- Amélioration de la détection de doublons de vins
+- Ajout du filtre de l'historique par vin
+- Nettoyage des pdfs errroné suite à import
+- Correction de la disparition de la consommation d'une bouteille après son édition

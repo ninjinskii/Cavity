@@ -1,3 +1,6 @@
-- Fix a bug making export impossible
-- Add support for Android 13
-- Fix a bug that make all history entries comments to be grayed out after scrolling
+- Fix capacity filter showing wrong results
+- Add find bottle by friend feature
+- Improve wine duplicates detection
+- Add history filter by wine feature
+- Cleanup bottle with wrong pdf after using import feature
+- Fix bottle consumption disappearing after editing it
