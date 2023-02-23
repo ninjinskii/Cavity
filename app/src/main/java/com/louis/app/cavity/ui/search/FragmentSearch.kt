@@ -128,7 +128,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         lifecycleScope.launch {
             delay(800)
-            L.v("save'dInstaceState: ${savedInstanceState.toString()}")
             inflateFiltersStub(searchViewModel.onFragmentLeaveSavedState ?: savedInstanceState)
         }
     }
@@ -143,7 +142,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
 
         observe()
-        L.v(searchViewModel.selectedCounties.toString())
         initColorChips(savedInstanceState)
         initOtherChips(savedInstanceState)
         initDatePickers(savedInstanceState)
@@ -680,17 +678,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun loadHideShadowAnim() =
         AnimatorInflater.loadStateListAnimator(context, R.animator.hide_elevation)
-
-    /*private fun saveStaticViewsStateOnFragmentLeave(outState: Bundle) {
-        with(outState) {
-            putIntArray(CHIP_COLOR, filtersBinding.colorChipGroup.checkedChipIds.toIntArray())
-            putIntArray(CHIP_MISC, filtersBinding.otherChipGroup.checkedChipIds.toIntArray())
-            putFloat(SLIDER_VINTAGE_START, filtersBinding.vintageSlider.values[0])
-            putFloat(SLIDER_VINTAGE_END, filtersBinding.vintageSlider.values[1])
-            putFloat(SLIDER_PRICE_START, filtersBinding.priceSlider.values[0])
-            putFloat(SLIDER_PRICE_END, filtersBinding.priceSlider.values[1])
-        }
-    }*/
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
