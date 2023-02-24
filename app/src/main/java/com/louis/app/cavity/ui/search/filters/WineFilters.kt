@@ -108,13 +108,11 @@ class FilterCapacity(private val bottleSize: BottleSize) : WineFilter {
     }
 }
 
-class FilterFriend(private val friendId: Long) : WineFilter {
+class FilterFriend(private val friendId: Long, private val historyEntryType: Int) : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
-        val typeReceiveFromFriend = 3
-
         return boundedBottle.filter {
             return@filter it.historyEntriesWithFriends.find { entryWithFriends ->
-                entryWithFriends.historyEntry.type == typeReceiveFromFriend &&
+                entryWithFriends.historyEntry.type == historyEntryType &&
                         (friendId in entryWithFriends.friends.map { f -> f.id })
             } != null
         }

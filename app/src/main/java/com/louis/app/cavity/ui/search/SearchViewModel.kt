@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.County
@@ -20,6 +21,21 @@ import kotlinx.coroutines.launch
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
     private val globalFilter = MutableLiveData<WineFilter>(FilterConsumed(false))
+    private val searchControllerMap = mutableMapOf(
+        R.id.searchView to NoFilter,
+        R.id.chipSelected to NoFilter,
+        R.id.countyChipGroup to NoFilter,
+        R.id.colorChipGroup to NoFilter,
+        R.id.otherChipGroup to FilterConsumed(false),
+        R.id.vintageSlider to NoFilter,
+        R.id.beyondLayout to NoFilter,
+        R.id.untilLayout to NoFilter,
+        R.id.priceSlider to NoFilter,
+        R.id.grapeChipGroup to NoFilter,
+        R.id.reviewChipGroup to NoFilter,
+        R.id.friendChipGroup to NoFilter,
+        R.id.rbGroupSize to NoFilter
+    )
 
     val results: LiveData<List<BoundedBottle>> = repository
         .getBoundedBottles()
@@ -33,7 +49,12 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     var selectedFriends = emptyList<Friend>()
     var currentBeyondDate: Long? = null
     var currentUntilDate: Long? = null
-    var onFragmentLeaveSavedState : Bundle? = null
+    var onFragmentLeaveSavedState: Bundle? = null
+
+    var friendFilterMode = 1
+        private set(value) {
+            field = if (value !in 0..2) 0 else value
+        }
 
     fun getAllCounties() = repository.getAllCounties()
 
@@ -43,8 +64,27 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllFriends() = repository.getAllFriends()
 
-    fun submitFilter(wineFilter: WineFilter) {
-        globalFilter.value = wineFilter
+    fun cycleFriendFilterMode(): Int {
+        return ++friendFilterMode
+    }
+
+    fun shouldShowConsumedAndUnconsumedBottles(): Boolean {
+        return selectedFriends.isNotEmpty()
+    }
+
+    fun submitFilter(viewControllerId: Int, wineFilter: WineFilter) {
+        searchControllerMap[viewControllerId] = wineFilter
+        globalFilter.value =
+            searchControllerMap.values.reduce { acc, wFilter -> acc.andCombine(wFilter) }
+    }
+
+    fun submitFilters(wineFilters: Map<Int, WineFilter>) {
+        wineFilters.forEach { (viewControllerId, wineFilter) ->
+            searchControllerMap[viewControllerId] = wineFilter
+        }
+
+        globalFilter.value =
+            searchControllerMap.values.reduce { acc, wFilter -> acc.andCombine(wFilter) }
     }
 
     private fun filter(

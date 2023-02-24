@@ -4,6 +4,8 @@ import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.RotateAnimation
 import android.view.inputmethod.EditorInfo
 import android.widget.Checkable
 import androidx.activity.addCallback
@@ -17,6 +19,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -82,7 +85,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
     private var isPickMode = false
-    private var hasInflatedStubView = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -146,8 +148,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         initOtherChips(savedInstanceState)
         initDatePickers(savedInstanceState)
         initSliders(savedInstanceState)
+        initFriendTextSwitcher()
         initRadioButtons(savedInstanceState)
-        hasInflatedStubView = true
     }
 
     private fun setBottomSheetPeekHeight() {
@@ -165,6 +167,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun observe() {
         searchViewModel.getAllCounties().observe(viewLifecycleOwner) { counties ->
+            val chipGroupId = filtersBinding.countyChipGroup.id
             val preselectedCounties = searchViewModel.selectedCounties.map { it.id }
             ChipLoader.Builder()
                 .with(lifecycleScope)
@@ -172,13 +175,14 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .load(counties)
                 .into(filtersBinding.countyChipGroup)
                 .preselect(preselectedCounties)
-                .doOnClick { submitFilters() }
+                .doOnClick { searchViewModel.submitFilter(chipGroupId, getCountyFilter()) }
                 .emptyText(getString(R.string.empty_county))
                 .build()
                 .go()
         }
 
         searchViewModel.getAllGrapes().observe(viewLifecycleOwner) { grapes ->
+            val chipGroupId = filtersBinding.grapeChipGroup.id
             val preselectedGrapes = searchViewModel.selectedGrapes.map { it.id }
             ChipLoader.Builder()
                 .with(lifecycleScope)
@@ -186,7 +190,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .load(grapes)
                 .into(filtersBinding.grapeChipGroup)
                 .preselect(preselectedGrapes)
-                .doOnClick { submitFilters() }
+                .doOnClick { searchViewModel.submitFilter(chipGroupId, getGrapeFilter()) }
                 .emptyText(getString(R.string.empty_grape))
                 .build()
                 .go()
@@ -194,6 +198,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
 
         searchViewModel.getAllReviews().observe(viewLifecycleOwner) { reviews ->
+            val chipGroupId = filtersBinding.reviewChipGroup.id
             val preselectedReviews = searchViewModel.selectedReviews.map { it.id }
             ChipLoader.Builder()
                 .with(lifecycleScope)
@@ -201,7 +206,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .load(reviews)
                 .into(filtersBinding.reviewChipGroup)
                 .preselect(preselectedReviews)
-                .doOnClick { submitFilters() }
+                .doOnClick { searchViewModel.submitFilter(chipGroupId, getReviewFilter()) }
                 .emptyText(getString(R.string.empty_review))
                 .build()
                 .go()
@@ -218,7 +223,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .useAvatar(true)
                 .selectable(true) // friend chips are not selectablea by default
                 .preselect(preselectedReviews)
-                .doOnClick { submitFilters() }
+                .doOnClick { submitFriendFilter() }
                 .emptyText(getString(R.string.empty_friend))
                 .build()
                 .go()
@@ -250,7 +255,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
 
             setOnCheckedStateChangeListener { _, _ ->
-                submitFilters()
+                val filters = getViewGroupFilters(this)
+                searchViewModel.submitFilter(id, combineFilters(filters))
             }
         }
     }
@@ -273,7 +279,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             setVisible(isPickMode)
             isChecked = savedStateSelected ?: false
             setOnCheckedChangeListener { _, _ ->
-                submitFilters()
+                searchViewModel.submitFilter(id, getSelectedBottlesFilter())
             }
         }
 
@@ -285,29 +291,42 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
 
             setOnCheckedStateChangeListener { _, _ ->
-                submitFilters()
+                searchViewModel.submitFilter(id, getOtherFilter())
             }
         }
+
+        filtersBinding.chipConsume.isEnabled =
+            !searchViewModel.shouldShowConsumedAndUnconsumedBottles()
     }
 
     private fun initDatePickers(savedInstanceState: Bundle?) {
         val beyondTitle = getString(R.string.buying_date_beyond)
         val untilTitle = getString(R.string.buying_date_until)
+        val beyondLayout = filtersBinding.beyondLayout
+        val untilLayout = filtersBinding.untilLayout
+
         val onBeyondDateChanged = { date: Long? ->
-            searchViewModel.currentBeyondDate = date
-            submitFilters()
-        }
-        val onUntilDateChanged = { date: Long? ->
-            searchViewModel.currentUntilDate = date
-            submitFilters()
+            searchViewModel.apply {
+                currentBeyondDate = date
+                val filter = FilterDate(currentBeyondDate, currentUntilDate)
+                submitFilter(beyondLayout.id, filter)
+            }
         }
 
-        DatePicker(parentFragmentManager, filtersBinding.beyondLayout, beyondTitle).apply {
+        val onUntilDateChanged = { date: Long? ->
+            searchViewModel.apply {
+                currentUntilDate = date
+                val filter = FilterDate(currentBeyondDate, currentUntilDate)
+                submitFilter(untilLayout.id, filter)
+            }
+        }
+
+        DatePicker(parentFragmentManager, beyondLayout, beyondTitle).apply {
             onEndIconClickListener = { onBeyondDateChanged(null) }
             onDateChangedListener = { onBeyondDateChanged(it) }
         }
 
-        DatePicker(parentFragmentManager, filtersBinding.untilLayout, untilTitle).apply {
+        DatePicker(parentFragmentManager, untilLayout, untilTitle).apply {
             onEndIconClickListener = { onUntilDateChanged(null) }
             onDateChangedListener = { onUntilDateChanged(it) }
         }
@@ -327,12 +346,13 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             valueFrom = year - 20F
             valueTo = year
             values = listOf(
-                max(valueFrom, start ?: valueFrom), min(valueTo, end ?: valueTo)
+                max(valueFrom, start?.coerceAtMost(valueTo) ?: valueFrom),
+                min(valueTo, end?.coerceAtLeast(valueFrom) ?: valueTo)
             )
 
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
                 override fun onStopTrackingTouch(slider: RangeSlider) {
-                    submitFilters()
+                    searchViewModel.submitFilter(id, getVintageFilter())
                 }
 
                 override fun onStartTrackingTouch(slider: RangeSlider) = Unit
@@ -354,7 +374,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     // Making sure the view has its chance to restore its state before grabbing values
                     doOnLayout {
                         isEnabled = isChecked
-                        submitFilters()
+                        searchViewModel.submitFilter(id, getPriceFilter())
                     }
                 }
             }
@@ -364,16 +384,56 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             val start = savedInstanceState?.getFloat(SLIDER_PRICE_START)
             val end = savedInstanceState?.getFloat(SLIDER_PRICE_END)
 
-            values = listOf(max(valueFrom, start ?: valueFrom), min(valueTo, end ?: valueTo))
+            values = listOf(
+                max(valueFrom, start?.coerceAtMost(valueTo) ?: valueFrom),
+                min(valueTo, end?.coerceAtLeast(valueFrom) ?: valueTo)
+            )
             isEnabled = filtersBinding.togglePrice.isChecked
 
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
                 override fun onStopTrackingTouch(slider: RangeSlider) {
-                    submitFilters()
+                    searchViewModel.submitFilter(id, getPriceFilter())
                 }
 
                 override fun onStartTrackingTouch(slider: RangeSlider) = Unit
             })
+        }
+    }
+
+    private fun initFriendTextSwitcher() {
+        val friendFilterModeText =
+            listOf(R.string.drunk_with, R.string.gifted_by, R.string.gifted_to)
+        val index = searchViewModel.friendFilterMode
+
+        filtersBinding.friendTitle.apply {
+            setCurrentText(getString(friendFilterModeText[index]))
+
+            inAnimation =
+                AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_in_left)
+
+            outAnimation =
+                AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_out_right)
+        }
+
+        filtersBinding.cycleFriendFilter.setOnClickListener {
+            val mode = searchViewModel.cycleFriendFilterMode()
+            filtersBinding.friendTitle.setText(getString(friendFilterModeText[mode]))
+            submitFriendFilter()
+
+            val animation = RotateAnimation(
+                0f,
+                180f,
+                RotateAnimation.RELATIVE_TO_SELF,
+                0.5f,
+                RotateAnimation.RELATIVE_TO_SELF,
+                0.5f,
+            ).apply {
+                duration = resources.getInteger(R.integer.cavity_motion_short).toLong()
+                interpolator = FastOutSlowInInterpolator()
+                fillAfter = true
+            }
+
+            it.startAnimation(animation)
         }
     }
 
@@ -393,7 +453,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
 
             addOnButtonCheckedListener { _, _, _ ->
-                submitFilters()
+                val filters = getViewGroupFilters(this)
+                searchViewModel.submitFilter(id, combineFilters(filters))
             }
         }
     }
@@ -534,6 +595,19 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
     }
 
+    private fun submitFriendFilter() {
+        val chipGroupId = filtersBinding.friendChipGroup.id
+        val friendFilter = getFriendFilter()
+        val firstMapEntry = chipGroupId to friendFilter
+        val chipConsume = filtersBinding.chipConsume
+        chipConsume.isEnabled = !searchViewModel.shouldShowConsumedAndUnconsumedBottles()
+
+        val secondMapEntry = filtersBinding.otherChipGroup.id to getOtherFilter()
+        val filters = mapOf(firstMapEntry, secondMapEntry)
+
+        searchViewModel.submitFilters(filters)
+    }
+
     private fun initSearchView() {
         binding.searchView.apply {
             doAfterTextChanged { newText ->
@@ -544,7 +618,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     binding.currentQuery.text = ""
                 }
 
-                submitFilters()
+                searchViewModel.submitFilter(id, FilterText(text.toString()))
             }
 
             setOnEditorActionListener { _, i, _ ->
@@ -557,36 +631,33 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
     }
 
-    private fun submitFilters() {
-        if (_filtersBinding == null || !hasInflatedStubView) {
-            return
-        }
-
-        val filterConsumed = FilterConsumed(filtersBinding.chipConsume.isChecked)
-        val otherFilter =
-            getViewGroupFilters(filtersBinding.otherChipGroup, andCombine = true)
-                .andCombine(filterConsumed)
-
-        val filters = listOf(
-            getCountyFilter(), getGrapeFilter(), getReviewFilter(), getFriendFilter(),
-            getViewGroupFilters(filtersBinding.colorChipGroup),
-            otherFilter,
-            getViewGroupFilters(filtersBinding.rbGroupSize),
-            FilterDate(searchViewModel.currentBeyondDate, searchViewModel.currentUntilDate),
-            getVintageFilter(), getPriceFilter(), getSelectedBottlesFilter(),
-            FilterText(binding.searchView.text.toString())
-        )
-            .reduce { acc, wineFilter -> acc.andCombine(wineFilter) }
-
-        searchViewModel.submitFilter(filters)
-    }
-
     private fun getCountyFilter(): WineFilter {
         return filtersBinding.countyChipGroup
             .collectAs<County>()
             .also { searchViewModel.selectedCounties = it }
             .map { FilterCounty(it) }
             .fold(NoFilter as WineFilter) { acc, filterCounty -> acc.orCombine(filterCounty) }
+    }
+
+    private fun getOtherFilter(): WineFilter {
+        // We want to handle specific consumed filter ourselves in this method
+        val filters = getViewGroupFilters(filtersBinding.otherChipGroup)
+            .filter { wineFilter -> wineFilter !is FilterConsumed }
+            .toMutableList()
+
+        val consumed = filtersBinding.chipConsume.isChecked
+        val consumedFilter = when {
+            searchViewModel.shouldShowConsumedAndUnconsumedBottles() -> NoFilter
+            consumed -> FilterConsumed(true)
+            else -> FilterConsumed(false)
+        }
+
+        // Consumed have a special treatment since even if it is unchecked, a filter is necessary
+        filters.add(consumedFilter)
+
+        return filters.fold(NoFilter as WineFilter) { acc, filter ->
+            acc.andCombine(filter ?: NoFilter)
+        }
     }
 
     private fun getGrapeFilter(): WineFilter {
@@ -605,10 +676,19 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun getFriendFilter(): WineFilter {
+        val consumedHistoryType = 0
+        val givenToHistoryType = 2
+        val givenByHistoryType = 3
+        val filterMode = when (searchViewModel.friendFilterMode) {
+            0 -> consumedHistoryType
+            1 -> givenByHistoryType
+            else /* 2 */ -> givenToHistoryType
+        }
+
         return filtersBinding.friendChipGroup
             .collectAs<Friend>()
             .also { searchViewModel.selectedFriends = it }
-            .map { FilterFriend(it.id) }
+            .map { FilterFriend(it.id, filterMode) }
             .fold(NoFilter as WineFilter) { acc, filterFriend -> acc.orCombine(filterFriend) }
     }
 
@@ -647,15 +727,16 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         return if (filtersBinding.chipSelected.isChecked) FilterSelected() else NoFilter
     }
 
-    private fun getViewGroupFilters(viewGroup: ViewGroup, andCombine: Boolean = false): WineFilter {
-        return viewGroup.children.filter { (it as Checkable).isChecked }
+    private fun getViewGroupFilters(viewGroup: ViewGroup): MutableList<WineFilter?> {
+        return viewGroup.children.filter { (it as Checkable).isChecked && it.isEnabled }
             .map { it.getTag(R.string.tag_view_wine_filter) as WineFilter? }
-            .fold(NoFilter as WineFilter) { acc, filter ->
-                when {
-                    andCombine -> acc.andCombine(filter ?: NoFilter)
-                    else -> acc.orCombine(filter ?: NoFilter)
-                }
-            }
+            .toMutableList()
+    }
+
+    private fun combineFilters(wineFilters: List<WineFilter?>): WineFilter {
+        return wineFilters.fold(NoFilter as WineFilter) { acc, filter ->
+            acc.orCombine(filter ?: NoFilter)
+        }
     }
 
     private fun setupCustomBackNav() {
@@ -709,13 +790,16 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
 
         // Use save state when quitting fragment as well as when configuration change happens
-        val savedState = Bundle()
-        this.onSaveInstanceState(savedState)
-        searchViewModel.onFragmentLeaveSavedState = savedState
+        // But do not save wrong state if stub view has'nt been loaded yet
+        if (filtersBinding.root.isLaidOut) {
+            val savedState = Bundle()
+            this.onSaveInstanceState(savedState)
+            searchViewModel.onFragmentLeaveSavedState = savedState
+        }
     }
 
     override fun onDestroyView() {

@@ -403,7 +403,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reviewScrollView" />
 
-        <TextView
+        <TextSwitcher
             android:id="@+id/friendTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -411,7 +411,32 @@
             android:text="@string/gifted_by"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider6" />
+            app:layout_constraintTop_toBottomOf="@id/divider6">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+        </TextSwitcher>
+
+        <ImageView
+            android:id="@+id/cycleFriendFilter"
+            android:layout_width="@dimen/small_icon"
+            android:layout_height="@dimen/small_icon"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/friends"
+            android:src="@drawable/ic_swap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider6"
+            app:tint="?attr/colorPrimary" />
 
         <HorizontalScrollView
             android:id="@+id/friendScrollView"

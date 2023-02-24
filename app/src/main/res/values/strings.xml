@@ -136,6 +136,7 @@
     <string name="selected_bottles">Bouteilles sélectionnées (%1$d)</string>
     <string name="empty_search">Aucun résultat</string>
     <string name="filter_consumed">Consommées</string>
+    <string name="drunk_with">Bue avec</string>
 
     <!-- Bottle details -->
     <string name="edit_bottle">Éditer</string>
