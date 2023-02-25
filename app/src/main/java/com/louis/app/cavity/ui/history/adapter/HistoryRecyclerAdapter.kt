@@ -165,7 +165,7 @@ class HistoryRecyclerAdapter(
                             .setMessage(entry.model.historyEntry.comment)
                             .show()
 
-                        return@setOnLongClickListener isLongPressable
+                        return@setOnLongClickListener true
                     }
 
                     false

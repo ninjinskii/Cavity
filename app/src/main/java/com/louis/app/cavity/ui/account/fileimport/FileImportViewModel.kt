@@ -64,7 +64,7 @@ class FileImportViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         val extension = split.last()
-        val isFriend = filename.matches(Regex(".*-f[0-9]*\\..*"))
+        val isFriend = filename.matches(Regex(".*-f\\d*\\..*"))
         val name = filename.split(".").first()
 
         return when {
