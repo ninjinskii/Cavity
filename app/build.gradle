@@ -5,6 +5,8 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdk 33
+    namespace "com.louis.app.cavity"
+    testNamespace "com.louis.app.testcavity"
 
     defaultConfig {
         applicationId "com.louis.app.cavity"
