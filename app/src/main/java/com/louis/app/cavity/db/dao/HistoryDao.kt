@@ -72,6 +72,7 @@ interface HistoryDao {
     @Query("SELECT * FROM history_entry WHERE date < :date ORDER BY date DESC")
     fun getEntriesForDate(date: Long): PagingSource<Int, BoundedHistoryEntry>
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Transaction
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
     fun getBoundedEntriesNotPagedNotLive(): List<BoundedHistoryEntry>
