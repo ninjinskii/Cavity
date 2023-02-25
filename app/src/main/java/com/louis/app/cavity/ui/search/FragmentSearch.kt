@@ -295,8 +295,10 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
         }
 
-        filtersBinding.chipConsume.isEnabled =
-            !searchViewModel.shouldShowConsumedAndUnconsumedBottles()
+        filtersBinding.chipConsume.apply {
+            setVisible(!isPickMode)
+            isEnabled = !searchViewModel.shouldShowConsumedAndUnconsumedBottles()
+        }
     }
 
     private fun initDatePickers(savedInstanceState: Bundle?) {
@@ -415,25 +417,29 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_out_right)
         }
 
-        filtersBinding.cycleFriendFilter.setOnClickListener {
-            val mode = searchViewModel.cycleFriendFilterMode()
-            filtersBinding.friendTitle.setText(getString(friendFilterModeText[mode]))
-            submitFriendFilter()
+        filtersBinding.cycleFriendFilter.apply {
+            setVisible(!isPickMode)
 
-            val animation = RotateAnimation(
-                0f,
-                180f,
-                RotateAnimation.RELATIVE_TO_SELF,
-                0.5f,
-                RotateAnimation.RELATIVE_TO_SELF,
-                0.5f,
-            ).apply {
-                duration = resources.getInteger(R.integer.cavity_motion_short).toLong()
-                interpolator = FastOutSlowInInterpolator()
-                fillAfter = true
+            setOnClickListener {
+                val mode = searchViewModel.cycleFriendFilterMode()
+                filtersBinding.friendTitle.setText(getString(friendFilterModeText[mode]))
+                submitFriendFilter()
+
+                val animation = RotateAnimation(
+                    0f,
+                    180f,
+                    RotateAnimation.RELATIVE_TO_SELF,
+                    0.5f,
+                    RotateAnimation.RELATIVE_TO_SELF,
+                    0.5f,
+                ).apply {
+                    duration = resources.getInteger(R.integer.cavity_motion_short).toLong()
+                    interpolator = FastOutSlowInInterpolator()
+                    fillAfter = true
+                }
+
+                it.startAnimation(animation)
             }
-
-            it.startAnimation(animation)
         }
     }
 
@@ -647,6 +653,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         val consumed = filtersBinding.chipConsume.isChecked
         val consumedFilter = when {
+            isPickMode -> FilterConsumed(false)
             searchViewModel.shouldShowConsumedAndUnconsumedBottles() -> NoFilter
             consumed -> FilterConsumed(true)
             else -> FilterConsumed(false)
