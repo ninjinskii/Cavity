@@ -131,6 +131,18 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         historyAdapter.addLoadStateListener { loadState ->
             if (loadState.append.endOfPaginationReached) {
+                binding.emptyState.apply {
+                    val checkedId = binding.filterChipGroup.checkedChipId
+
+                    if (checkedId == R.id.chipFavorites) {
+                        setIcon(R.drawable.ic_star)
+                        setText(getString(R.string.empty_history_favorite))
+                    } else {
+                        setIcon(R.drawable.ic_history)
+                        setText(getString(R.string.empty_history))
+                    }
+                }
+
                 binding.emptyState.setVisible(historyAdapter.itemCount < 1)
             }
         }
@@ -171,20 +183,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     private fun setListeners() {
         binding.filterChipGroup.setOnCheckedChangeListener { _, checkedId ->
             historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
-
-            lifecycleScope.launch {
-                delay(100)
-
-                binding.emptyState.apply {
-                    if (checkedId == R.id.chipFavorites) {
-                        setIcon(R.drawable.ic_star)
-                        setText(getString(R.string.empty_history_favorite))
-                    } else {
-                        setIcon(R.drawable.ic_history)
-                        setText(getString(R.string.empty_history))
-                    }
-                }
-            }
         }
 
         binding.bottleDetails.buttonCloseBottomSheet.setOnClickListener {
