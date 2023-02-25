@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -42,17 +42,15 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         super.onCreate(savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (binding.countyDetailsScrim.isVisible) {
-                        hideCountyDetails()
-                    } else {
-                        remove()
-                        requireActivity().onBackPressed()
-                    }
-                }
-            })
+            this
+        ) {
+            if (binding.countyDetailsScrim.isVisible) {
+                hideCountyDetails()
+            } else {
+                remove()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

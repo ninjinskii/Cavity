@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -56,6 +57,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         polishAppSwitcherApparence()
         setupNavigation()
         observe()
+        setupOnBackPressed()
 
         if (hasNavigationRail()) {
             lockDrawer()
@@ -205,15 +207,18 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         }
     }
 
-    override fun onBackPressed() {
-        if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
-            binding.drawer.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
+    private fun setupOnBackPressed() {
+        onBackPressedDispatcher.addCallback(this) {
+            if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
+                binding.drawer.closeDrawer(GravityCompat.START)
+            } else {
+                isEnabled = false
+                onBackPressedDispatcher.onBackPressed()
 
-            if (hasNavigationRail()) {
-                val navController = navHostFragment.findNavController()
-                updateNavigationRailState(navController)
+                if (hasNavigationRail()) {
+                    val navController = navHostFragment.findNavController()
+                    updateNavigationRailState(navController)
+                }
             }
         }
     }
