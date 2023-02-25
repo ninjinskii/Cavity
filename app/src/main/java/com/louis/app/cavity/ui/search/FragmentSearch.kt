@@ -752,7 +752,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 binding.searchButton.performClick()
             } else {
                 remove()
-                requireActivity().onBackPressed()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
     }

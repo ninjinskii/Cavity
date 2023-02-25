@@ -50,7 +50,7 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
                 goToPreviousPage()
             } else {
                 remove()
-                requireActivity().onBackPressed()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
     }
