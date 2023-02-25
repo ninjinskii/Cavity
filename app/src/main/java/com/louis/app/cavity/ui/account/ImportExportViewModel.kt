@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.account
 import android.app.Application
 import androidx.lifecycle.*
 import androidx.work.BackoffPolicy
-import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.louis.app.cavity.R
@@ -21,6 +20,11 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
+
+    companion object {
+        private const val MIN_BACKOFF_SECONDS = 10L
+    }
+
     private val repository = WineRepository.getInstance(app)
     private val accountRepository = AccountRepository.getInstance(app)
     private val workManager = WorkManager.getInstance(app)
@@ -130,11 +134,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
 
         OneTimeWorkRequestBuilder<UploadWorker>()
             .addTag(UploadWorker.WORK_TAG)
-            .setBackoffCriteria(
-                BackoffPolicy.LINEAR,
-                OneTimeWorkRequest.MIN_BACKOFF_MILLIS, // 10 sec
-                TimeUnit.MILLISECONDS
-            )
+            .setBackoffCriteria(BackoffPolicy.LINEAR, MIN_BACKOFF_SECONDS, TimeUnit.SECONDS)
             .build().also {
                 workRequestId.value = it.id
                 workManager.enqueue(it)
@@ -150,11 +150,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
 
         OneTimeWorkRequestBuilder<DownloadWorker>()
             .addTag(DownloadWorker.WORK_TAG)
-            .setBackoffCriteria(
-                BackoffPolicy.LINEAR,
-                OneTimeWorkRequest.MIN_BACKOFF_MILLIS, // 10 sec
-                TimeUnit.MILLISECONDS
-            )
+            .setBackoffCriteria(BackoffPolicy.LINEAR, MIN_BACKOFF_SECONDS, TimeUnit.SECONDS)
             .build().also {
                 workRequestId.value = it.id
                 workManager.enqueue(it)
