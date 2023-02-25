@@ -7,6 +7,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
 import com.louis.app.cavity.util.DateFormatter
+import io.sentry.Sentry
 
 class DatePicker(
     fragmentManager: FragmentManager,
@@ -90,7 +91,7 @@ class DatePicker(
                     "random-tag"
                 )
             } catch (e: IllegalStateException) {
-                // Do nothing
+                Sentry.captureException(e)
             }
         }
     }

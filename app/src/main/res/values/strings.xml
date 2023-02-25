@@ -136,6 +136,7 @@
     <string name="selected_bottles">Bouteilles sélectionnées (%1$d)</string>
     <string name="empty_search">Aucun résultat</string>
     <string name="filter_consumed">Consommées</string>
+    <string name="drunk_with">Bue avec</string>
 
     <!-- Bottle details -->
     <string name="edit_bottle">Éditer</string>
@@ -302,6 +303,7 @@
     <string name="tag_modal_sheet_id" translatable="false">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
     <string name="tag_date_picker" translatable="false">com.louis.app.cavity.TAG_DATE_PICKER</string>
     <string name="tag_shared_prefs" translatable="false">com.louis.app.cavity.SHARED_PREFS</string>
+    <string name="tag_view_wine_filter" translatable="false">com.louis.app.cavity.TAG_VIEW_WINE_FILTER</string>
 
     <!-- Transition -->
     <string name="transition_bottle_details" translatable="false">transition-bottle-details-%1$d</string>

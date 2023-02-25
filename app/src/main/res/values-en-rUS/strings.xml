@@ -137,6 +137,7 @@
     <string name="selected_bottles">Selected botttles (%1$d)</string>
     <string name="empty_search">No result</string>
     <string name="filter_consumed">Drunk</string>
+    <string name="drunk_with">Drunk with</string>
     <!--    <string name="search_wine">Research</string>-->
 
     <!-- Bottle details -->
