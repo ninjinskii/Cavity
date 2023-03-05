@@ -181,7 +181,10 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun setListeners() {
-        binding.filterChipGroup.setOnCheckedChangeListener { _, checkedId ->
+        val filterChipGroup = binding.filterChipGroup
+
+        filterChipGroup.setOnCheckedStateChangeListener { _, _ ->
+            val checkedId = filterChipGroup.checkedChipId
             historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
         }
 

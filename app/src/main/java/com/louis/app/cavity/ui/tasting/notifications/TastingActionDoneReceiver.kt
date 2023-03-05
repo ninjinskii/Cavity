@@ -6,8 +6,9 @@ import android.content.Context
 import android.content.Intent
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.util.toInt
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class TastingActionDoneReceiver : BroadcastReceiver() {
@@ -24,7 +25,7 @@ class TastingActionDoneReceiver : BroadcastReceiver() {
             return
         }
 
-        GlobalScope.launch(IO) {
+        CoroutineScope(SupervisorJob()).launch(IO) {
             val tastingAction = repository.getTastingActionById(tastingActionId)
             tastingAction.done = true.toInt()
             repository.updateTastingAction(tastingAction)

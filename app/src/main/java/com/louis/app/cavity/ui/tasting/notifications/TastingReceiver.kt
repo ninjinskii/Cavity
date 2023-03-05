@@ -5,8 +5,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.louis.app.cavity.db.WineRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class TastingReceiver : BroadcastReceiver() {
@@ -23,7 +24,7 @@ class TastingReceiver : BroadcastReceiver() {
             return
         }
 
-        GlobalScope.launch(IO) {
+        CoroutineScope(SupervisorJob()).launch(IO) {
             val tasting = repository.getTastingById(tastingId) ?: return@launch
             val bottlesWithActions =
                 repository.getBottlesWithTastingActionsForTastingNotLive(tastingId)

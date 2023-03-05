@@ -10,7 +10,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
-import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.TransitionHelper
@@ -83,7 +82,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         }
 
         binding.passwordLayout.addRules(Rule(R.string.weak_pwd) {
-            val passwordMatcher = Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,}$")
+            val passwordMatcher = Regex("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,}$")
             passwordMatcher.find(it) != null
         })
     }

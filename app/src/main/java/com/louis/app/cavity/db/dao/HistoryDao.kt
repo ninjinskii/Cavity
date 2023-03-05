@@ -56,6 +56,7 @@ interface HistoryDao {
     @Query("SELECT * FROM history_entry WHERE favorite = 1 ORDER BY date DESC")
     fun getFavoriteEntries(): PagingSource<Int, BoundedHistoryEntry>
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Transaction
     @Query("SELECT * FROM history_entry INNER JOIN bottle ON bottle.id = bottle_id WHERE wine_id=:wineId ORDER BY date DESC")
     fun getEntriesForWine(wineId: Long): PagingSource<Int, BoundedHistoryEntry>

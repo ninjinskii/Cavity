@@ -5,6 +5,8 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdk 33
+    namespace "com.louis.app.cavity"
+    testNamespace "com.louis.app.testcavity"
 
     defaultConfig {
         applicationId "com.louis.app.cavity"
@@ -39,11 +41,11 @@ android {
 
 dependencies {
     def nav_version = "2.5.3"
-    def room_version = "2.4.3"
-    def camerax_version = "1.2.0"
+    def room_version = "2.5.0"
+    def camerax_version = "1.2.1"
     def paging_version = "3.1.1"
     def lifecycle_version = "2.5.1"
-    def work_version = "2.7.1"
+    def work_version = "2.8.0"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -51,7 +53,7 @@ dependencies {
     implementation "androidx.core:core-ktx:1.9.0"
 
     // AppCompat
-    implementation "androidx.appcompat:appcompat:1.5.1"
+    implementation "androidx.appcompat:appcompat:1.6.1"
 
     // ConstraintLayout
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
@@ -64,7 +66,7 @@ dependencies {
     // RecyclerView
     implementation "androidx.recyclerview:recyclerview:1.2.1"
 
-    // Material
+    // Material - 1.8.0 causes truble with dialog animations
     implementation "com.google.android.material:material:1.7.0"
 
     // Fragments
