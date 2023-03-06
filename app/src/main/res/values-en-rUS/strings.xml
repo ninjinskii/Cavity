@@ -166,6 +166,7 @@
     <string name="confirm_bottle_delete">Do you really want to remove the bottle ?</string>
     <string name="bottle_used_in_tasting">This bottle is used in a tasting.</string>
     <string name="retire">Withdraw</string>
+    <string name="back_in_stock">Bottle back in stock.</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>

@@ -67,6 +67,10 @@ interface BottleDao {
     @Query("SELECT * FROM bottle")
     fun getBoundedBottles(): LiveData<List<BoundedBottle>>
 
+    @Transaction
+    @Query("SELECT * FROM bottle WHERE id=:bottleId")
+    suspend fun getBoundedBottleByIdNotLive(bottleId: Long): BoundedBottle
+
     @Query("DELETE FROM bottle")
     suspend fun deleteAll()
 }

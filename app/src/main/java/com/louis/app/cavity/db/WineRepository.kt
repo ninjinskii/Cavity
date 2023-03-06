@@ -64,6 +64,8 @@ class WineRepository private constructor(app: Application) {
     fun getCountiesWithWines() = countyDao.getCountiesWithWines()
 
     fun getBoundedBottles() = bottleDao.getBoundedBottles()
+    suspend fun getBoundedBottleByIdNotLive(bottleId: Long) =
+        bottleDao.getBoundedBottleByIdNotLive(bottleId)
 
     suspend fun deleteAllWines() = wineDao.deleteAll()
 

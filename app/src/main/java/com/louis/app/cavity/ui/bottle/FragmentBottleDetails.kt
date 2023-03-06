@@ -256,6 +256,26 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 binding.coordinator.showSnackbar(stringRes)
             }
         }
+
+        bottleDetailsViewModel.revertConsumptionEvent.observe(viewLifecycleOwner) {
+            it?.getContentIfNotHandled()?.let { boundedBottle ->
+                // Bouteille remise en stock
+                binding.coordinator.showSnackbar(R.string.back_in_stock, R.string.cancel) {
+                    bottleDetailsViewModel.cancelRevertBottleConsumption(boundedBottle)
+                }
+            }
+        }
+
+        bottleDetailsViewModel.removeFromTastingEvent.observe(viewLifecycleOwner) {
+            it?.getContentIfNotHandled()?.let { tastingId ->
+                binding.coordinator.showSnackbar(
+                    R.string.bottle_removed_from_tasting,
+                    R.string.cancel
+                ) {
+                    bottleDetailsViewModel.cancelRemoveBottleFromTasting(tastingId)
+                }
+            }
+        }
     }
 
     private fun setListeners() {
