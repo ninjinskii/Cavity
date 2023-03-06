@@ -85,15 +85,13 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 val count = step1Bottle.count.coerceAtLeast(1)
                 val message = if (count > 1) R.string.bottles_added else R.string.bottle_added
 
-                for (i in 1..count) {
-                    repository.run {
-                        transaction {
-                            val bottleId = repository.insertBottle(bottle)
+                repository.transaction {
+                    for (i in 1..count) {
+                        val bottleId = repository.insertBottle(bottle)
 
-                            insertQGrapes(bottleId)
-                            insertFReviews(bottleId)
-                            insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
-                        }
+                        insertQGrapes(bottleId)
+                        insertFReviews(bottleId)
+                        insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
                     }
                 }
 
