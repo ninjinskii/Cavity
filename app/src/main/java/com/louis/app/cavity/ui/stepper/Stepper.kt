@@ -58,7 +58,16 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     private fun setupStepper() {
         if (showStepperProgress) {
             with(topBinding) {
-                previous.setOnClickListener { goToPreviousPage() }
+                previous.setOnClickListener {
+                    val pagerPosition = binding.viewPager.currentItem
+                    val isFirstPage = pagerPosition == 0
+
+                    when {
+                        isFirstPage -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                        else -> goToPreviousPage()
+                    }
+                }
+
                 next.setOnClickListener { goToNextPage() }
             }
         } else {
@@ -70,9 +79,6 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     private fun updateIcons(pagerPosition: Int) {
         val isLastPage = pagerPosition == steps.size - 1
         topBinding.next.isActivated = isLastPage
-
-        val isFirstPage = pagerPosition == 0
-        topBinding.previous.isEnabled = !isFirstPage
     }
 
     override fun onResume() {
