@@ -802,7 +802,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         // Use save state when quitting fragment as well as when configuration change happens
         // But do not save wrong state if stub view has'nt been loaded yet
-        if (filtersBinding.root.isLaidOut) {
+        if (_filtersBinding?.root?.isLaidOut == true) {
             val savedState = Bundle()
             this.onSaveInstanceState(savedState)
             searchViewModel.onFragmentLeaveSavedState = savedState
