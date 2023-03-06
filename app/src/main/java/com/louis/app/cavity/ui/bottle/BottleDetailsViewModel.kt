@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -25,6 +26,14 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
+
+    private val _revertConsumptionEvent = MutableLiveData<Event<BoundedBottle>>()
+    val revertConsumptionEvent: LiveData<Event<BoundedBottle>>
+        get() = _revertConsumptionEvent
+
+    private val _removeFromTastingEvent = MutableLiveData<Event<Pair<Long, Long?>>>()
+    val removeFromTastingEvent: LiveData<Event<Pair<Long, Long?>>>
+        get() = _removeFromTastingEvent
 
     val bottle = bottleId.switchMap { repository.getBottleById(it) }
 
@@ -88,13 +97,17 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun revertBottleConsumption() {
         val bottleId = bottleId.value ?: return
-        val wineId = bottle.value?.wineId ?: return
 
         viewModelScope.launch(IO) {
-            val wine = repository.getWineByIdNotLive(wineId)
-            repository.updateWine(wine.copy(hidden = false.toInt()))
+            val boundedBottle = repository.getBoundedBottleByIdNotLive(bottleId)
+            val wine = boundedBottle.wine
 
-            repository.revertBottleConsumption(bottleId)
+            repository.transaction {
+                repository.updateWine(wine.copy(hidden = false.toInt()))
+                repository.revertBottleConsumption(bottleId)
+            }
+
+            _revertConsumptionEvent.postOnce(boundedBottle)
         }
     }
 
@@ -103,7 +116,19 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             val bottle = repository.getBottleByIdNotLive(bottleId)
+            val tastingId = bottle.tastingId
+
             bottle.tastingId = null
+            repository.updateBottle(bottle)
+
+            _removeFromTastingEvent.postOnce(bottleId to tastingId)
+        }
+    }
+
+    fun cancelRemoveBottleFromTasting(bottleId: Long, tastingId: Long?) {
+        viewModelScope.launch(IO) {
+            val bottle = repository.getBottleByIdNotLive(bottleId)
+            bottle.tastingId = tastingId
             repository.updateBottle(bottle)
         }
     }

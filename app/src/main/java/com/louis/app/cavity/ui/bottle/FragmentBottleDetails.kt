@@ -46,6 +46,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private var _binding: FragmentBottleDetailsBinding? = null
     private val binding get() = _binding!!
     private val bottleDetailsViewModel: BottleDetailsViewModel by viewModels()
+    private val consumeGiftBottleViewModel: ConsumeGiftBottleViewModel by viewModels()
     private val args: FragmentBottleDetailsArgs by navArgs()
 
     private var hasRevealGrapeBar = false
@@ -254,6 +255,28 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         bottleDetailsViewModel.userFeedback.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { stringRes ->
                 binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+
+        bottleDetailsViewModel.revertConsumptionEvent.observe(viewLifecycleOwner) {
+            it?.getContentIfNotHandled()?.let { boundedBottle ->
+                binding.coordinator.showSnackbar(R.string.back_in_stock, R.string.cancel) {
+                    consumeGiftBottleViewModel.consumeBottle(boundedBottle)
+                }
+            }
+        }
+
+        bottleDetailsViewModel.removeFromTastingEvent.observe(viewLifecycleOwner) {
+            it?.getContentIfNotHandled()?.let { bottleToTasting ->
+                binding.coordinator.showSnackbar(
+                    R.string.bottle_removed_from_tasting,
+                    R.string.cancel
+                ) {
+                    bottleDetailsViewModel.cancelRemoveBottleFromTasting(
+                        bottleId = bottleToTasting.first,
+                        tastingId =bottleToTasting.second
+                    )
+                }
             }
         }
     }

@@ -164,6 +164,7 @@
     <string name="confirm_bottle_delete">Voulez-vous vraiment jeter cette bouteille ?</string>
     <string name="bottle_used_in_tasting">Cette bouteille est utilisée dans une dégustation.</string>
     <string name="retire">Retirer</string>
+    <string name="back_in_stock">Bouteille remise en stock.</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>
