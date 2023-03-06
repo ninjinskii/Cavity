@@ -31,8 +31,8 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     val revertConsumptionEvent: LiveData<Event<BoundedBottle>>
         get() = _revertConsumptionEvent
 
-    private val _removeFromTastingEvent = MutableLiveData<Event<Long?>>()
-    val removeFromTastingEvent: LiveData<Event<Long?>>
+    private val _removeFromTastingEvent = MutableLiveData<Event<Pair<Long, Long?>>>()
+    val removeFromTastingEvent: LiveData<Event<Pair<Long, Long?>>>
         get() = _removeFromTastingEvent
 
     val bottle = bottleId.switchMap { repository.getBottleById(it) }
@@ -121,28 +121,11 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
             bottle.tastingId = null
             repository.updateBottle(bottle)
 
-            _removeFromTastingEvent.postOnce(tastingId)
+            _removeFromTastingEvent.postOnce(bottleId to tastingId)
         }
     }
 
-    fun cancelRevertBottleConsumption(boundedBottle: BoundedBottle) {
-        viewModelScope.launch(IO) {
-            with(repository) {
-                transaction {
-                    updateBottle(boundedBottle.bottle)
-                    clearExistingReplenishments(boundedBottle.bottle.id)
-
-                    for ((historyEntry, friends) in boundedBottle.historyEntriesWithFriends) {
-                        insertHistoryEntryAndFriends(historyEntry, friends.map { it.id })
-                    }
-                }
-            }
-        }
-    }
-
-    fun cancelRemoveBottleFromTasting(tastingId: Long?) {
-        val bottleId = bottleId.value ?: return
-
+    fun cancelRemoveBottleFromTasting(bottleId: Long, tastingId: Long?) {
         viewModelScope.launch(IO) {
             val bottle = repository.getBottleByIdNotLive(bottleId)
             bottle.tastingId = tastingId

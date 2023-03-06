@@ -89,7 +89,13 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
                 val comment = binding.tasteComment.text.toString()
                 val friends = collectAs<Friend>()
 
-                consumeGiftBottleViewModel.consumeBottle(args.bottleId, comment, friends)
+                consumeGiftBottleViewModel.consumeBottle(
+                    args.bottleId,
+                    comment,
+                    friends,
+                    consumeGiftBottleViewModel.date,
+                    isAGift = false
+                )
             }
 
             findNavController().navigateUp()

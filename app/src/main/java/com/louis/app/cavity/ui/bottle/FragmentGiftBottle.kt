@@ -93,7 +93,13 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
                     return@setOnClickListener
                 }
 
-                consumeGiftBottleViewModel.giftBottle(args.bottleId, "", friend.id)
+                consumeGiftBottleViewModel.consumeBottle(
+                    args.bottleId,
+                    "",
+                    listOf(friend),
+                    consumeGiftBottleViewModel.date,
+                    isAGift = true
+                )
             }
 
             findNavController().navigateUp()

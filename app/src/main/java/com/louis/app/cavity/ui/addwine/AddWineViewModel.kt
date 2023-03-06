@@ -148,8 +148,10 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
 
         return withContext(Default) {
             for (hiddenWine in hiddenWines) {
-                val hasCloseNames = levenshtein(hiddenWine.name, wine.name) <= 3
-                val hasCloseNamings = levenshtein(hiddenWine.naming, wine.naming) <= 3
+                val hasCloseNames =
+                    levenshtein(hiddenWine.name, wine.name) <= WINE_DUPLICATE_THRESHOLD
+                val hasCloseNamings =
+                    levenshtein(hiddenWine.naming, wine.naming) <= WINE_DUPLICATE_THRESHOLD
                 val isSelf = hiddenWine.id == wineId && isEditMode
 
                 if (hasCloseNames && hasCloseNamings && !isSelf) {
@@ -187,5 +189,9 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         return cost[lhsLength - 1]
+    }
+
+    companion object {
+        private const val WINE_DUPLICATE_THRESHOLD = 3
     }
 }
