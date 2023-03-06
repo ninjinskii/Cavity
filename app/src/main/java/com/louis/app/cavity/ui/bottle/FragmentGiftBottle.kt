@@ -77,12 +77,6 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
                 .build()
                 .go()
         }
-
-        consumeGiftBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes)
-            }
-        }
     }
 
     private fun setListeners() {
