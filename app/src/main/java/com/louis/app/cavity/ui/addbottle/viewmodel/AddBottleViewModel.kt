@@ -35,7 +35,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         get() = _completedEvent
 
     val editedBottleHistoryEntry = _editedBottle.switchMap {
-        repository.getEntriesForBottleNotPaged(it?.id ?: 0)
+        repository.getReplenishmentForBottleNotPaged(it?.id ?: 0)
     }
 
     val buyLocations = repository.getAllBuyLocations()

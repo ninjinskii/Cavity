@@ -236,6 +236,24 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             }
         }
 
+        bottleDetailsViewModel.replenishmentEntry.observe(viewLifecycleOwner) {
+            val isAGift = it?.friends?.isNotEmpty() == true
+
+            binding.givenBy.apply {
+                setVisible(isAGift)
+                val friend = it?.friends?.firstOrNull() ?: return@apply
+                val friendName = friend.name
+                val imgPath = friend.imgPath
+                AvatarLoader.requestAvatar(requireContext(), imgPath) { avatarBitmap ->
+                    avatarBitmap?.let { drawable ->
+                        setIcon(drawable)
+                    }
+                }
+
+                setData(friendName)
+            }
+        }
+
         bottleDetailsViewModel.getWineById(args.wineId).observe(viewLifecycleOwner) {
             with(binding) {
                 bottleName.text = it.name
