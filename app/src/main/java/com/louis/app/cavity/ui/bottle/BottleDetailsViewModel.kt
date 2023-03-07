@@ -32,6 +32,8 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     val reviews = bottleId.switchMap { repository.getFReviewAndReviewForBottle(it) }
 
+    val replenishmentEntry = bottleId.switchMap { repository.getReplenishmentForBottleNotPaged(it) }
+
     fun getWineById(wineId: Long) = repository.getWineById(wineId)
 
     fun getBottlesForWine(wineId: Long) = repository.getBottlesForWine(wineId)

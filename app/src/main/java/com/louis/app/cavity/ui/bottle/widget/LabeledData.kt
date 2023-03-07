@@ -1,8 +1,10 @@
 package com.louis.app.cavity.ui.bottle.widget
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.ImageViewCompat
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.LabeledDataBinding
 
@@ -41,5 +43,12 @@ class LabeledData @JvmOverloads constructor(
 
     fun setData(data: String) {
         binding.data.text = data
+    }
+
+    fun setIcon(icon: Drawable) {
+        with(binding.icon) {
+            setImageDrawable(icon)
+            ImageViewCompat.setImageTintList(this, null)
+        }
     }
 }

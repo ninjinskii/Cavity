@@ -279,6 +279,17 @@
                     app:layout_constraintTop_toBottomOf="@id/capacity" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                    android:id="@+id/givenBy"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    app:icon="@drawable/ic_gift"
+                    app:label="@string/gifted_by"
+                    app:layout_constraintEnd_toEndOf="@id/buyDate"
+                    app:layout_constraintStart_toStartOf="@id/buyLocation"
+                    app:layout_constraintTop_toBottomOf="@id/buyLocation" />
+
+                <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/otherInfo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -287,7 +298,7 @@
                     app:label="@string/other_info"
                     app:layout_constraintEnd_toEndOf="@id/buyDate"
                     app:layout_constraintStart_toStartOf="@id/buyLocation"
-                    app:layout_constraintTop_toBottomOf="@id/buyLocation" />
+                    app:layout_constraintTop_toBottomOf="@id/givenBy" />
 
                 <View
                     android:id="@+id/divider1"
