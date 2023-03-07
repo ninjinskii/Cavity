@@ -1,6 +1,6 @@
-- Correction du filtre contenance de bouteille qui affiche de mauvais résultats
-- Ajout de la recherche des bouteilles offertes par des amis
-- Amélioration de la détection de doublons de vins
-- Ajout du filtre de l'historique par vin
-- Nettoyage des pdfs errroné suite à import
-- Correction de la disparition de la consommation d'une bouteille après son édition
+- Nouveaux filtres par amis dans la recherche
+- Possibilité d'annuler une annulation de consommation
+- Correction d'un bug causant la préselection d'amis lors de l'ajout/modification de bouteilles
+- Les régions vides sont désormais automatiquement cachées dans l'acceuil
+- Correction d'un bug causant certaines bouteilles de ne pas remonter dans la recherche
+- Diverses améliorations de l'interface graphique

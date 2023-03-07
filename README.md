@@ -36,11 +36,12 @@ Workflows are triggered when pushing a tag, and publish the app on the Play Stor
 
 Things to do to prepare a release:
 
+- Merge target code into master branch
 - Update `/whatsnew directory`
 - Update `/app/build.gradle`: increment version code & update __version name__
 - Update `/app/src/AndroidManifest.xml`: increment version code & update __version name__
 - Check for database changes & migration
-- Merge target code into master branch
+- Commit previous changes, using name: `[version name]`
 - Create and push a tag named __version name__
 
 ## Run the monkey
