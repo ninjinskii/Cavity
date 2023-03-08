@@ -87,7 +87,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             }
         )
 
-        homeViewModel.getAllCounties().observe(viewLifecycleOwner) {
+        homeViewModel.getNonEmptyCounties().observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
 
             with(binding) {
