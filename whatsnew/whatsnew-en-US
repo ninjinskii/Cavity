@@ -1,6 +1,1 @@
-- Search: new friend filters
-- Can now cancel the action of reverting a bottle consumption
-- Fix a bug causing a random friend to be preselected when editing/adding a bottle
-- Empty counties are now hidden in home screen
-- Fix a bug causing certain bottle not to surface in search
-- Various user interface improvements
+- Fix counties not being hidden when empty in home screen

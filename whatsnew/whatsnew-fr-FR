@@ -1,6 +1,1 @@
-- Nouveaux filtres par amis dans la recherche
-- Possibilité d'annuler une annulation de consommation
-- Correction d'un bug causant la préselection d'amis lors de l'ajout/modification de bouteilles
-- Les régions vides sont désormais automatiquement cachées dans l'acceuil
-- Correction d'un bug causant certaines bouteilles de ne pas remonter dans la recherche
-- Diverses améliorations de l'interface graphique
+- Correction d'un soucis laissant apparaître les régions vides dans l'acceuil
