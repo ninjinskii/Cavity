@@ -96,6 +96,7 @@ class WineRepository private constructor(app: Application) {
     }
 
     fun getAllCounties() = countyDao.getAllCounties()
+    fun getNonEmptyCounties() = countyDao.getNonEmptyCounties()
     suspend fun getAllCountiesNotLive() = countyDao.getAllCountiesNotLive()
     suspend fun updateCounties(counties: List<County>) = countyDao.updateCounties(counties)
     suspend fun deleteCounty(countyId: Long) = countyDao.deleteCounty(countyId)
