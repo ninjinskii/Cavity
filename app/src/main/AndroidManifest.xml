@@ -3,7 +3,7 @@
     android:versionCode="17"
     android:versionName="1.4.2">
 
-    <uses-sdk android:maxSdkVersion="32" />
+    <uses-sdk android:maxSdkVersion="33" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
