@@ -1,1 +1,1 @@
-- Correction de l'ordre d'apparition des régions qui n'était plus respecté
+- Correction d'un soucis rendant l'application indisponible sous Android 13
