@@ -6,6 +6,15 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
+    <View
+        android:id="@+id/marker"
+        android:layout_width="@dimen/marker_width"
+        android:layout_height="0dp"
+        android:background="@color/cavity_red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/wineImage"
         android:layout_width="0dp"
