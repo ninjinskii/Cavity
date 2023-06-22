@@ -91,7 +91,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
             title = R.string.add_county,
             hint = R.string.county
         ) {
-            addItemViewModel.insertCounty(it)
+            addItemViewModel.insertCounty(it.trim())
         }
 
         simpleInputDialog.show(dialogResources)
