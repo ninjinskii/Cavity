@@ -134,7 +134,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private suspend fun getSimilarWineIfAny(wine: Wine): Wine? {
-        val hiddenWines = repository.getWineByColorAndOrganic(wine.color, wine.isOrganic)
+        val hiddenWines = repository.getWineByAttributes(wine.color, wine.isOrganic, wine.cuvee)
 
         return withContext(Default) {
             for (hiddenWine in hiddenWines) {
