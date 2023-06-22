@@ -59,14 +59,9 @@ class BottleRecyclerAdapter(
             ViewCompat.setTransitionName(binding.root, bottle.id.toString())
 
             with(binding) {
+                marker.setVisible(bottle.consumed.toBoolean())
                 checkedIcon.setVisible(bottle.isSelected)
                 vintage.text = bottle.vintage.toString()
-
-                val alpha = if (bottle.consumed.toBoolean()) 0.5f else 1f
-                root.alpha = alpha
-                wineColorNameNaming.root.alpha = alpha
-                vintage.alpha = alpha
-                wineImage?.alpha = alpha
             }
 
             with(binding.wineColorNameNaming) {

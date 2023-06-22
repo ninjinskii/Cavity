@@ -22,7 +22,7 @@
 
             <View
                 android:id="@+id/marker"
-                android:layout_width="@dimen/history_marker_width"
+                android:layout_width="@dimen/marker_width"
                 android:layout_height="0dp"
                 android:background="?attr/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
