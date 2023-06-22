@@ -32,6 +32,11 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(Dispatchers.IO) {
             val counties = repository.getAllCountiesNotLive()
 
+            if (checkCountyAlredyExists(counties, countyName)) {
+                _userFeedback.postOnce(R.string.county_already_exists)
+                return@launch
+            }
+
             try {
                 repository.insertCounty(County(name = countyName, prefOrder = counties.size))
                 _userFeedback.postOnce(R.string.county_added)
@@ -80,5 +85,10 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
                 _userFeedback.postOnce(R.string.friend_already_exists)
             }
         }
+    }
+
+    private fun checkCountyAlredyExists(counties: List<County>, countyName: String): Boolean {
+        val names = counties.map { it.name.lowercase() }
+        return countyName.lowercase() in names
     }
 }

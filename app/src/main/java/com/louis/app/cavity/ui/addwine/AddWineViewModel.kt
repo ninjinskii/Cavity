@@ -103,16 +103,6 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
                 return@launch
             }
 
-            /*      if (duplicate != null && wine.hidden.toBoolean()) {
-                      _wineUpdatedEvent.postOnce(R.string.wine_already_exists_emergence)
-                      return@launch
-                  }
-
-                  if (duplicate != null && !wine.hidden.toBoolean()) {
-                      _userFeedback.postOnce(R.string.wine_already_exists)
-                      return@launch
-                  }*/
-
             when {
                 isEditMode -> {
                     repository.updateWine(wine)
@@ -148,10 +138,15 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
 
         return withContext(Default) {
             for (hiddenWine in hiddenWines) {
+                val hiddenWineName = hiddenWine.name.lowercase()
+                val wineName = wine.name.lowercase()
+                val hiddenWineNaming = hiddenWine.naming.lowercase()
+                val wineNaming = wine.naming.lowercase()
+
                 val hasCloseNames =
-                    levenshtein(hiddenWine.name, wine.name) <= WINE_DUPLICATE_THRESHOLD
+                    levenshtein(hiddenWineName, wineName) <= WINE_DUPLICATE_THRESHOLD
                 val hasCloseNamings =
-                    levenshtein(hiddenWine.naming, wine.naming) <= WINE_DUPLICATE_THRESHOLD
+                    levenshtein(hiddenWineNaming, wineNaming) <= WINE_DUPLICATE_THRESHOLD
                 val isSelf = hiddenWine.id == wineId && isEditMode
 
                 if (hasCloseNames && hasCloseNamings && !isSelf) {
