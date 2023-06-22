@@ -220,4 +220,12 @@
         android:visibility="gone"
         app:tint="?attr/colorOnSurface" />
 
+    <TextView
+        android:id="@+id/appVersion"
+        style="@style/TextAppearance.Cavity.Overline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/small_margin" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

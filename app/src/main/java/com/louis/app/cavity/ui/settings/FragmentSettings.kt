@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
+import com.louis.app.cavity.BuildConfig
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSettingsBinding
 import com.louis.app.cavity.db.PrefsRepository.Companion.MIN_TEMPLATE_SCALE
@@ -19,7 +20,6 @@ import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import kotlin.math.roundToInt
 
 class FragmentSettings : Fragment(R.layout.fragment_settings) {
     private var _binding: FragmentSettingsBinding? = null
@@ -45,6 +45,7 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
         setListeners()
         setupSliderFormatter()
         setupCurrencyButtons()
+        setupAppVersion()
     }
 
     private fun observe() {
@@ -146,6 +147,10 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
 
             button.text = currencies[index]
         }
+    }
+
+    private fun setupAppVersion() {
+        binding.appVersion.text = BuildConfig.VERSION_NAME
     }
 
     private fun showBottleTemplate() {
