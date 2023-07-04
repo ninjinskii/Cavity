@@ -1,1 +1,4 @@
-- Correction d'un soucis rendant l'application indisponible sous Android 13
+- Amélioration de la détection de doublons
+- Changement de l'indicateur visuel de bouteilles consommées dans la recherche pour le rendre plus cohérent avec le reste de l'application
+- Affichage de la version de l'app dans les paramètres
+- Mise à jour des dépendances

@@ -1,1 +1,4 @@
-- Fix Android 13 devices not being able to download app
+- Improve wine duplicate detection
+- Update the consumed bottle indicator in search screen to make it more consistent with the ovarall app
+- Display app version in settings screen
+- Depedencies update
