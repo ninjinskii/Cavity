@@ -14,6 +14,7 @@
     <string name="notification_channel">Tasting reminders</string>
     <string name="warning">Warning !</string>
     <string name="locale">en-US</string>
+    <string name="unknown">Unknown</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Please enter a region name.</string>

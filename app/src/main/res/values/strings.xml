@@ -13,6 +13,7 @@
     <string name="notification_channel">Rappels dégustations</string>
     <string name="warning">Attention !</string>
     <string name="locale">fr-FR</string>
+    <string name="unknown">Inconnu</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>

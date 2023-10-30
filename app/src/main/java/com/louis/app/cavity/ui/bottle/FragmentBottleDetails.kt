@@ -485,7 +485,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 }
             }
 
-            apogee.setData(bottle.apogee.toString())
+            apogee.setData(bottle.apogee?.toString() ?: getString(R.string.unknown))
             buyLocation.setData(bottle.buyLocation)
             buyDate.setData(DateFormatter.formatDate(bottle.buyDate))
             capacity.setData(getString(bottle.bottleSize.stringRes))

@@ -96,6 +96,16 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
             onEndIconClickListener = { dateManager.setBuyDate(System.currentTimeMillis()) }
             onDateChangedListener = { dateManager.setBuyDate(it) }
         }
+
+        binding.apogeeEnabled.setOnCheckedChangeListener { _, isChecked ->
+            val opacity = if (isChecked) 1f else 0.3f
+
+            with(binding) {
+                apogee.isEnabled = isChecked
+                apogee.alpha = opacity
+                apogeeText.alpha = opacity
+            }
+        }
     }
 
     private fun observe() {
@@ -109,7 +119,8 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
         with(binding) {
             vintage.value = editedBottle.vintage
-            apogee.value = editedBottle.apogee
+            apogee.value =
+                editedBottle.apogee ?: editedBottle.vintage.also { apogeeEnabled.isChecked = false }
             price.setText(formattedPrice)
             currency.setText(editedBottle.currency, false)
             buyLocation.setText(editedBottle.buyLocation)
@@ -120,6 +131,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
     private fun savePartialBottle() {
         with(binding) {
+            val apogee = if (apogeeEnabled.isChecked) apogee.value else null
             val count = count.text.toString().trim().toInt()
             val price = price.text.toString().trim()
             val formattedPrice = if (price.isEmpty()) -1F else price.toFloat()
@@ -128,7 +140,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
             dateManager.submitDates(
                 vintage.value,
-                apogee.value,
+                apogee,
                 count,
                 formattedPrice,
                 currency,
@@ -139,8 +151,8 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
     override fun requestNextPage(): Boolean {
         val isFormValid = binding.countLayout.validate() &&
-            binding.priceLayout.validate() &&
-            binding.buyDateLayout.validate()
+                binding.priceLayout.validate() &&
+                binding.buyDateLayout.validate()
 
         if (isFormValid) {
             savePartialBottle()

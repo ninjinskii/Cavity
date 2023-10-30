@@ -2,7 +2,6 @@ package com.louis.app.cavity.model
 
 import androidx.room.*
 import com.louis.app.cavity.R
-import com.louis.app.cavity.ui.Cavity
 import java.util.*
 
 @Entity(
@@ -19,7 +18,7 @@ data class Bottle(
     val id: Long = 0,
     @ColumnInfo(name = "wine_id", index = true) val wineId: Long,
     val vintage: Int,
-    val apogee: Int,
+    val apogee: Int?,
     @ColumnInfo(name = "is_favorite") var isFavorite: Int,
     val price: Float,
     val currency: String,
@@ -39,7 +38,7 @@ data class Bottle(
 
     fun isReadyToDrink(): Boolean {
         val year = Calendar.getInstance().get(Calendar.YEAR)
-        return year >= apogee
+        return if (apogee != null) year >= apogee else false
     }
 
     fun hasPdf() = pdfPath.isNotBlank()

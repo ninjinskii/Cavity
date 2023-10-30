@@ -20,7 +20,7 @@ class DateManager(private val editedBottle: Bottle?) {
 
     fun submitDates(
         vintage: Int,
-        apogee: Int,
+        apogee: Int?,
         count: Int,
         price: Float,
         currency: String,
@@ -41,7 +41,7 @@ class DateManager(private val editedBottle: Bottle?) {
     data class Step1Bottle(
         val id: Long,
         val vintage: Int,
-        val apogee: Int,
+        val apogee: Int?,
         val count: Int,
         val price: Float,
         val currency: String,
