@@ -82,17 +82,12 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
     }
 
     private fun initDatePicker() {
-        val constraint = CalendarConstraints.Builder()
-            .setValidator(DateValidatorPointForward.now())
-            .build()
-
         datePicker = DatePicker(
             childFragmentManager,
             associatedTextLayout = binding.dateLayout,
             title = getString(R.string.tasting_date),
             clearable = false,
-            defaultDate = System.currentTimeMillis(),
-            constraint
+            defaultDate = System.currentTimeMillis()
         ).apply {
             onDateChangedListener = { addTastingViewModel.tastingDate = it }
         }
