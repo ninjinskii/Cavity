@@ -11,7 +11,7 @@ import com.louis.app.cavity.R
 class RuledTextInputLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.textInputStyle
+    defStyleAttr: Int = com.google.android.material.R.attr.textInputStyle
 ) :
     TextInputLayout(context, attrs, defStyleAttr), TextInputLayout.OnEditTextAttachedListener {
 
@@ -31,7 +31,7 @@ class RuledTextInputLayout @JvmOverloads constructor(
             attrs,
             R.styleable.RuledTextInputLayout,
             defStyleAttr,
-            R.style.Widget_MaterialComponents_TextInputLayout_FilledBox //com.google.android.material.R.style.Widget_Design_TextInputLayout,
+            com.google.android.material.R.style.Widget_MaterialComponents_TextInputLayout_FilledBox
         ).use {
             flags = it.getInteger(R.styleable.RuledTextInputLayout_rule, RULE_ABSENT)
             setDefaultRules()

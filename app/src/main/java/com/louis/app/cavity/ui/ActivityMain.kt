@@ -94,7 +94,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private fun polishAppSwitcherApparence() {
         val appName = getString(R.string.app_name)
         val bitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
-        setTaskDescription(TaskDescription(appName, bitmap, themeColor(R.attr.colorSurface)))
+        setTaskDescription(TaskDescription(appName, bitmap, themeColor(com.google.android.material.R.attr.colorSurface)))
     }
 
     @OptIn(NavigationUiSaveStateControl::class)
@@ -159,7 +159,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private fun showTastingIndicator(show: Boolean) {
         if (hasNavigationRail()) {
             binding.navigationRail!!.getOrCreateBadge(R.id.tasting_dest).apply {
-                backgroundColor = binding.navigationRail!!.context.themeColor(R.attr.colorPrimary)
+                backgroundColor = binding.navigationRail!!.context.themeColor(com.google.android.material.R.attr.colorPrimary)
                 isVisible = show
             }
         } else {

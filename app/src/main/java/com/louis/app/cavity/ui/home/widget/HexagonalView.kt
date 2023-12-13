@@ -27,8 +27,8 @@ import kotlin.math.round
 class HexagonalView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.materialCardViewStyle,
-    defStyleRes: Int = R.style.Widget_MaterialComponents_CardView
+    defStyleAttr: Int = com.google.android.material.R.attr.materialCardViewStyle,
+    defStyleRes: Int = com.google.android.material.R.style.Widget_MaterialComponents_CardView
 ) :
     MaterialCardView(context, attrs, defStyleAttr) {
 

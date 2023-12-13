@@ -41,7 +41,7 @@ class SliceBarView @JvmOverloads constructor(
     }
 
     private val backgroundColor = context.getColor(R.color.cavity_grey)
-    private val cursorColor = context.themeColor(R.attr.colorOnSurface)
+    private val cursorColor = context.themeColor(com.google.android.material.R.attr.colorOnSurface)
     private val normalText = context.spToPx(TEXT_SIZE_NORMAL)
     private val smallText = context.spToPx(TEXT_SIZE_SMALL)
 
@@ -67,7 +67,7 @@ class SliceBarView @JvmOverloads constructor(
 
     private val textPaint by lazy {
         textAppearanceApplier.paint.apply {
-            color = ContextCompat.getColor(context, R.color.material_on_surface_emphasis_medium)
+            color = ContextCompat.getColor(context, com.google.android.material.R.color.material_on_surface_emphasis_medium)
         }
     }
 

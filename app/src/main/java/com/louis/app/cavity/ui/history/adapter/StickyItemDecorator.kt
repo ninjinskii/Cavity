@@ -179,10 +179,20 @@ class StickyItemDecorator(
     override fun onShowPress(e: MotionEvent) {
     }
 
-    override fun onScroll(e1: MotionEvent, e2: MotionEvent, dX: Float, dY: Float) = false
-
     override fun onLongPress(e: MotionEvent) {
     }
 
-    override fun onFling(e1: MotionEvent, e2: MotionEvent, vX: Float, vY: Float) = false
+    override fun onScroll(
+        e1: MotionEvent?,
+        e2: MotionEvent,
+        distanceX: Float,
+        distanceY: Float
+    ) = false
+
+    override fun onFling(
+        e1: MotionEvent?,
+        e2: MotionEvent,
+        velocityX: Float,
+        velocityY: Float
+    ) = false
 }

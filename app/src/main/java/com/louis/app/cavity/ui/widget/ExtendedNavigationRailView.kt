@@ -8,8 +8,8 @@ import com.louis.app.cavity.R
 class ExtendedNavigationRailView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.navigationRailStyle,
-    defStyleRes: Int = R.style.Widget_MaterialComponents_NavigationRailView
+    defStyleAttr: Int = com.google.android.material.R.attr.navigationRailStyle,
+    defStyleRes: Int = com.google.android.material.R.style.Widget_MaterialComponents_NavigationRailView
 ) :
     NavigationRailView(context, attrs, defStyleAttr, defStyleRes) {
 

@@ -36,7 +36,7 @@ class PieView @JvmOverloads constructor(
     private val transparent = Color.TRANSPARENT
     private val textColor = ContextCompat.getColor(
         context,
-        R.color.material_on_surface_emphasis_medium
+        com.google.android.material.R.color.material_on_surface_emphasis_medium
     )
 
     private val textPath = Path()

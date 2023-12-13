@@ -38,7 +38,7 @@ class TransitionHelper(private val fragment: Fragment) {
                 endContainerColor = it.endContainerColor
                 startElevation = it.startElevation
                 endElevation = it.endElevation
-            } ?: setAllContainerColors(resolveColor(R.attr.colorSurface))
+            } ?: setAllContainerColors(resolveColor(com.google.android.material.R.attr.colorSurface))
         }
 
         if (enter) {
