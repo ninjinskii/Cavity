@@ -188,11 +188,18 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             addItemDecoration(SpaceItemDecoration(space))
         }
 
+        var firstTime = true
+
         bottleDetailsViewModel.getBottlesForWine(args.wineId).observe(viewLifecycleOwner) {
             val checkedBottleId = bottleDetailsViewModel.getBottleId()
             val id = bottleAdapter.submitListWithPreselection(it, checkedBottleId ?: -1L)
-            smoothScrollToCheckedChip(id, it)
             bottleDetailsViewModel.setBottleId(id)
+
+            // Avoid weird DiffUtil animations conflict
+            if (firstTime) {
+                smoothScrollToCheckedChip(id, it)
+                firstTime = false
+            }
         }
 
         val colorUtil = ColorUtil(requireContext())
@@ -292,7 +299,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 ) {
                     bottleDetailsViewModel.cancelRemoveBottleFromTasting(
                         bottleId = bottleToTasting.first,
-                        tastingId =bottleToTasting.second
+                        tastingId = bottleToTasting.second
                     )
                 }
             }
@@ -422,7 +429,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                         isFirstResource: Boolean
                     ) = false.also { startPostponedEnterTransition() }
                 })
-
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.bottlePicture)
@@ -466,16 +472,13 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 if (formattedPrice.isEmpty()) "" else "$formattedPrice ${bottle.currency}"
 
             buttonGroupInteract.setVisible(!consumed && !hasTasting)
-            warningBanner.setVisible(consumed || hasTasting)
-            bottlesList.setVisible(!consumed)
-            vintageIfConsumed.setVisible(consumed)
+            warningBanner.setVisible(consumed || hasTasting, true)
 
             val stringRes = if (consumed) R.string.consumed else R.string.bottle_used_in_tasting
             val buttonStringRes = if (consumed) R.string.cancel else R.string.retire
 
             bannerText.text = getString(stringRes)
             buttonRevertConsumption.text = getString(buttonStringRes)
-            vintageIfConsumed.text = bottle.vintage.toString()
 
             buttonRevertConsumption.setOnClickListener {
                 if (consumed) {

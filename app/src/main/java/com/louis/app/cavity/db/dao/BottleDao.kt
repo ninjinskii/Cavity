@@ -30,7 +30,7 @@ interface BottleDao {
     @Query("SELECT * FROM bottle")
     suspend fun getAllBottlesNotLive(): List<Bottle>
 
-    @Query("SELECT * FROM bottle WHERE wine_id=:wineId AND consumed = 0 ORDER BY vintage")
+    @Query("SELECT * FROM bottle WHERE wine_id=:wineId ORDER BY consumed ASC,vintage")
     fun getBottlesForWine(wineId: Long): LiveData<List<Bottle>>
 
     @Query("SELECT * FROM bottle WHERE wine_id=:wineId")
