@@ -11,16 +11,17 @@ import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val repository = WineRepository.getInstance(app)
 
-    // Reuse when find a way to jump scroll into paged list
-//    private val _scrollTo = MutableLiveData<Event<Int>>()
-//    val scrollTo: LiveData<Event<Int>>
-//        get() = _scrollTo
+    private val _scrollTo = MutableLiveData<Event<Int>>()
+    val scrollTo: LiveData<Event<Int>>
+        get() = _scrollTo
 
     private val _selectedEntry = MutableLiveData<BoundedHistoryEntry?>(null)
     val selectedEntry: LiveData<BoundedHistoryEntry?>
@@ -58,8 +59,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    // Reuse when find a way to jump scroll into paged list
-    /*fun requestScrollToDate(timestamp: Long) {
+    fun requestScrollToDate(timestamp: Long) {
         viewModelScope.launch(IO) {
             val entries = repository.getAllEntriesNotPagedNotLive()
             val offset = 1
@@ -90,7 +90,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                 }
             }
         }
-    }*/
+    }
 
     fun requestDatePicker() {
         viewModelScope.launch(IO) {
@@ -145,7 +145,6 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
             }
             is HistoryFilter.WineFilter -> repository.getEntriesForWine(filter.wineId)
             is HistoryFilter.BottleFilter -> repository.getEntriesForBottle(filter.bottleId)
-            is HistoryFilter.DateFilter -> repository.getEntriesForDate(filter.date)
             is HistoryFilter.NoFilter -> repository.getAllEntries()
         }
     }
@@ -153,9 +152,8 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 }
 
 sealed class HistoryFilter {
-    class DateFilter(val date: Long) : HistoryFilter() /* Workaround for paging fast scroll */
     class TypeFilter(@IdRes val chipId: Int) : HistoryFilter()
     class WineFilter(val wineId: Long) : HistoryFilter()
     class BottleFilter(val bottleId: Long) : HistoryFilter()
-    object NoFilter : HistoryFilter()
+    data object NoFilter : HistoryFilter()
 }

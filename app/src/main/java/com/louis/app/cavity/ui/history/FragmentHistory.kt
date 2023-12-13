@@ -27,14 +27,13 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHistoryBinding
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.ui.ChipLoader
+import com.louis.app.cavity.ui.bottle.adapter.JumpSmoothScroller
 import com.louis.app.cavity.ui.history.adapter.HistoryDivider
 import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter
 import com.louis.app.cavity.ui.history.adapter.HistoryRecyclerAdapter.Companion.TYPE_SEPARATOR
 import com.louis.app.cavity.ui.history.adapter.ReboundingSwipeActionCallback
 import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
 import com.louis.app.cavity.util.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
@@ -120,13 +119,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         historyViewModel.entries.observe(viewLifecycleOwner) {
             historyAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-
-            if (historyViewModel.filter.value is HistoryFilter.DateFilter) {
-                lifecycleScope.launch {
-                    delay(1000)
-                    historyViewModel.setFilter(HistoryFilter.NoFilter)
-                }
-            }
         }
 
         historyAdapter.addLoadStateListener { loadState ->
@@ -149,25 +141,13 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun observe() {
-        // Reuse when find a way to jump scroll into paged list
-        /*historyViewModel.scrollTo.observe(viewLifecycleOwner) {
+        historyViewModel.scrollTo.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { pos ->
-                L.v("Start scrolling to position: $pos")
                 val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 5)
                 scroller.targetPosition = pos
-                val item = (binding.historyEntryList.adapter as HistoryRecyclerAdapter)
-
-
-                lifecycleScope.launch(Main) {
-                    repeat(20) {
-                        delay(100)
-                        item.refresh()
-                    }
-                }
-
                 binding.historyEntryList.layoutManager?.startSmoothScroll(scroller)
             }
-        }*/
+        }
 
         historyViewModel.selectedEntry.observe(viewLifecycleOwner) {
             bindBottomSheet(it)
@@ -250,10 +230,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         datePicker.addOnPositiveButtonClickListener {
             it?.let { timestamp ->
-                // TODO: Reuse when find a way to jump scroll into paged list
-                //historyViewModel.requestScrollToDate(timestamp)
-
-                historyViewModel.setFilter(HistoryFilter.DateFilter(timestamp))
+                historyViewModel.requestScrollToDate(timestamp)
             }
         }
 
