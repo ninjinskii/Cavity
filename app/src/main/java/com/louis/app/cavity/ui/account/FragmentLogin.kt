@@ -1,9 +1,12 @@
 package com.louis.app.cavity.ui.account
 
+import android.content.Context
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.SavedStateHandle
@@ -25,10 +28,19 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
     private lateinit var savedStateHandle: SavedStateHandle
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TransitionHelper(this).setFadeThroughOnEnterAndExit()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback {
+            remove()
+            findNavController().navigateUp()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -120,6 +132,11 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
 
             SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner).show(resource)
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        onBackPressedCallback.remove()
     }
 
     override fun onDestroyView() {
