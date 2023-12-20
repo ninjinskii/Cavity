@@ -52,7 +52,8 @@ class BottleChipRecyclerAdapter(context: Context, private val onBottleClick: (Lo
         override fun areContentsTheSame(oldItem: Bottle, newItem: Bottle) =
             oldItem.vintage == newItem.vintage &&
                     oldItem.isReadyToDrink() == newItem.isReadyToDrink() &&
-                    oldItem.isFavorite == newItem.isFavorite
+                    oldItem.isFavorite == newItem.isFavorite &&
+                    oldItem.consumed == newItem.consumed
     }
 
     inner class BottleChipViewHolder(private val binding: ChipActionBinding) :
@@ -63,6 +64,15 @@ class BottleChipRecyclerAdapter(context: Context, private val onBottleClick: (Lo
                 text = bottle.vintage.toString()
                 chipIcon = if (bottle.isReadyToDrink()) glassIcon else null
                 isCloseIconVisible = bottle.isFavorite.toBoolean()
+
+                if (bottle.consumed.toBoolean()) {
+                    chipBackgroundColor =
+                        context.getColorStateList(R.color.chip_background_consumed)
+                    chipStrokeColor = context.getColorStateList(R.color.chip_stroke_consumed)
+                } else {
+                    chipBackgroundColor = null
+                    chipStrokeColor = context.getColorStateList(R.color.chip_stroke)
+                }
 
                 // We are using the said "close icon" as a simple end icon
                 setOnCloseIconClickListener {
