@@ -5,13 +5,18 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.work.WorkInfo
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAccountBinding
+import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.account.worker.PruneWorker
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
@@ -21,6 +26,8 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
+    private val importExportViewModel: ImportExportViewModel by viewModels()
+
     private lateinit var transitionHelper: TransitionHelper
 
     private var wannaImport = false
@@ -94,6 +101,40 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                 findNavController().navigate(action)
             }
         }
+
+        loginViewModel.deletedEvent.observe(viewLifecycleOwner) {
+            importExportViewModel.cleanAccountDatabase()
+        }
+
+        importExportViewModel.workProgress.observe(viewLifecycleOwner) {
+            if (it != null) {
+                when (it.state) {
+                    WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
+                        binding.progressBar.setVisible(true)
+                    }
+
+                    WorkInfo.State.FAILED -> {
+                        binding.progressBar.setVisible(false)
+                        importExportViewModel.pruneWorks()
+                    }
+
+                    WorkInfo.State.SUCCEEDED -> {
+                        if (it.tags.contains(PruneWorker.WORK_TAG)) {
+                            binding.progressBar.setVisible(false)
+                            loginViewModel.logout()
+                        }
+                    }
+
+                    WorkInfo.State.CANCELLED -> {
+                        importExportViewModel.pruneWorks()
+                    }
+
+                    else -> Unit
+                }
+            } else {
+                binding.progressBar.setVisible(false)
+            }
+        }
     }
 
     private fun setListeners() {
@@ -109,6 +150,23 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
         binding.imageBtn.setOnClickListener {
             readPermissionChecker.askPermissionsIfNecessary()
+        }
+
+        binding.deleteBtn.setOnClickListener {
+            val resources = SimpleInputDialog.DialogContent(
+                title = R.string.delete_account,
+                hint = R.string.password,
+                icon = R.drawable.ic_password,
+            ) {
+                loginViewModel.deleteAccount(it)
+            }
+
+            SimpleInputDialog(
+                requireContext(),
+                layoutInflater,
+                viewLifecycleOwner,
+                passwordInput = true
+            ).show(resources)
         }
     }
 

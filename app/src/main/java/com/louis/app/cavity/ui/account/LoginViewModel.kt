@@ -43,6 +43,10 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     val confirmedEvent: LiveData<Event<Unit>>
         get() = _confirmedEvent
 
+    private val _deletedEvent = MutableLiveData<Event<Unit>>()
+    val deletedEvent: LiveData<Event<Unit>>
+        get() = _deletedEvent
+
     private var inConfirmationUser: String? = null
     private var sneakyTryCount = 0
 
@@ -127,6 +131,19 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
             call = { accountRepository.recoverPassword(email.trim()) },
             onSuccess = { _userFeedback.postOnce(R.string.reset_ok) }
         )
+    }
+
+    fun deleteAccount(password: String) {
+        _user.value?.let { email ->
+            doApiCall(
+                call = { accountRepository.deleteAccount(email, password) },
+                onSuccess = {
+                    _deletedEvent.postOnce(Unit)
+                    prefsRepository.setLastLogin("")
+                    Sentry.configureScope { scope -> scope.removeTag("username") }
+                }
+            )
+        }
     }
 
     private fun <T> doApiCall(

@@ -273,6 +273,8 @@
     <string name="password">Password</string>
     <string name="forgotten_password">Forgot password ?</string>
     <string name="forgotten_password_explanation">A mail containing password reset instructions will be sent to you.</string>
+    <string name="delete_account">Delete your account</string>
+    <string name="delete_account_explanation">Wipe all your account data definitely.</string>
     <string name="reset_ok">You will receive a mail soon.</string>
     <string name="ip">IP Address + port</string>
     <string name="confirm_mail_sent">A confirmation mail has been sent.</string>

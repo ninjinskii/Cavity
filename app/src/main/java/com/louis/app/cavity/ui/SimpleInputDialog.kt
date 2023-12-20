@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui
 
 import android.content.Context
+import android.text.InputType
 import android.view.LayoutInflater
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -15,7 +16,8 @@ import com.louis.app.cavity.util.showKeyboard
 class SimpleInputDialog(
     private val context: Context,
     private val layoutInflater: LayoutInflater,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val passwordInput: Boolean = false
 ) :
     DefaultLifecycleObserver {
 
@@ -37,6 +39,11 @@ class SimpleInputDialog(
     }
 
     private fun customizeEditText(@StringRes hint: Int, @DrawableRes icon: Int?) {
+        if (this.passwordInput) {
+            dialogBinding.input.inputType =
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+
         dialogBinding.inputLayout.hint = context.getString(hint)
         icon?.let {
             dialogBinding.inputLayout.startIconDrawable = ContextCompat.getDrawable(context, icon)
