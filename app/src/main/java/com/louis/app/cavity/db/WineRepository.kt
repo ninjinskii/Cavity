@@ -341,6 +341,7 @@ class WineRepository private constructor(app: Application) {
     fun getTotalPriceByCurrency() = statsDao.getTotalPriceByCurrency()
     fun getTotalConsumedBottles() = statsDao.getTotalConsumedBottles()
     fun getTotalStockBottles() = statsDao.getTotalStockBottles()
+    fun getBottlesByIds(ids: List<Long>) = statsDao.getBottlesByIds(ids)
 
 
     // Tastings

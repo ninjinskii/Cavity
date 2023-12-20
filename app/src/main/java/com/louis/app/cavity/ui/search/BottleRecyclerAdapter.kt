@@ -3,11 +3,10 @@ package com.louis.app.cavity.ui.search
 import android.net.Uri
 import android.transition.TransitionManager
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,13 +16,11 @@ import com.louis.app.cavity.databinding.ItemBottleBinding
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.util.TransitionHelper
-import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
 class BottleRecyclerAdapter(
-    private val transitionHelper: TransitionHelper,
+    private val onItemClicked: (View, BoundedBottle) -> Unit,
     private val pickMode: Boolean,
     private val onPicked: (BoundedBottle, Boolean) -> Unit
 ) :
@@ -78,16 +75,7 @@ class BottleRecyclerAdapter(
                     binding.checkedIcon.setVisible(bottle.isSelected)
                     onPicked(boundedBottle, bottle.isSelected)
                 } else {
-                    val transition =
-                        itemView.context.getString(R.string.transition_bottle_details, wine.id)
-                    val extra = FragmentNavigatorExtras(binding.root to transition)
-                    val action = FragmentSearchDirections.searchToBottleDetails(wine.id, bottle.id)
-
-                    itemView.apply {
-                        hideKeyboard()
-                        transitionHelper.setElevationScale()
-                        findNavController().navigate(action, extra)
-                    }
+                    onItemClicked(itemView, boundedBottle)
                 }
             }
 

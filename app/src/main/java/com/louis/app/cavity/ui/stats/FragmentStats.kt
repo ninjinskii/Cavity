@@ -7,8 +7,10 @@ import android.view.animation.Interpolator
 import android.view.animation.PathInterpolator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
 import com.louis.app.cavity.db.dao.Year
@@ -28,6 +30,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 
         TransitionHelper(this).apply {
             setFadeThrough(navigatingForward = false)
+            setSharedAxisTransition(MaterialSharedAxis.X, navigatingForward = true)
         }
     }
 
@@ -94,7 +97,17 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     }
 
     private fun initRecyclerViews() {
-        val statsAdapter = StatsRecyclerAdapter()
+        val statsAdapter = StatsRecyclerAdapter(
+            onItemClicked = { itemBottlesIds, label ->
+                val statType = getString(statsViewModel.getStatTypeLabel())
+                val action = FragmentStatsDirections.statsToStatsDetails(
+                    "$statType - $label",
+                    itemBottlesIds.toLongArray()
+                )
+
+                findNavController().navigate(action)
+            }
+        )
 
         binding.statDetailsList.apply {
             adapter = statsAdapter

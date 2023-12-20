@@ -83,9 +83,7 @@ data class HistoryEntry(
         if (bottleId != other.bottleId) return false
         if (tastingId != other.tastingId) return false
         if (comment != other.comment) return false
-        if (type != other.type) return false
-
-        return true
+        return type == other.type
     }
 
     override fun hashCode(): Int {

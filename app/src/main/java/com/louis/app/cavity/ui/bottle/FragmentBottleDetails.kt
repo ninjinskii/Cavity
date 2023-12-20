@@ -56,24 +56,26 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         transitionHelper = TransitionHelper(this).apply {
             val previousDestination = findNavController().previousBackStackEntry?.destination?.id
-            val enterOptions = if (previousDestination == R.id.search_dest) {
-                TransitionHelper.ContainerTransformOptions(
-                    Color.TRANSPARENT,
-                    requireContext().themeColor(com.google.android.material.R.attr.colorSurface),
-                    startElevation = resources.getDimension(R.dimen.container_drop_elevation),
-                    endElevation = resources.getDimension(R.dimen.app_bar_elevation)
-                ).also {
-                    val returnOptions = TransitionHelper.ContainerTransformOptions(
+            val enterOptions =
+                if (previousDestination == R.id.search_dest) {
+                    // Background is not colorSurface in search_dest, causing weird animations
+                    TransitionHelper.ContainerTransformOptions(
                         Color.TRANSPARENT,
-                        requireContext().getColor(R.color.surface_elevation_4dp),
-                        startElevation = resources.getDimension(R.dimen.app_bar_elevation),
-                        endElevation = resources.getDimension(R.dimen.container_drop_elevation)
-                    )
-                    setContainerTransformTransition(returnOptions, enter = false)
+                        requireContext().themeColor(com.google.android.material.R.attr.colorSurface),
+                        startElevation = resources.getDimension(R.dimen.container_drop_elevation),
+                        endElevation = resources.getDimension(R.dimen.app_bar_elevation)
+                    ).also {
+                        val returnOptions = TransitionHelper.ContainerTransformOptions(
+                            Color.TRANSPARENT,
+                            requireContext().getColor(R.color.surface_elevation_4dp),
+                            startElevation = resources.getDimension(R.dimen.app_bar_elevation),
+                            endElevation = resources.getDimension(R.dimen.container_drop_elevation)
+                        )
+                        setContainerTransformTransition(returnOptions, enter = false)
+                    }
+                } else {
+                    null
                 }
-            } else {
-                null
-            }
 
             setContainerTransformTransition(enterOptions, enter = true)
             setFadeThrough(navigatingForward = false)
@@ -292,7 +294,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 ) {
                     bottleDetailsViewModel.cancelRemoveBottleFromTasting(
                         bottleId = bottleToTasting.first,
-                        tastingId =bottleToTasting.second
+                        tastingId = bottleToTasting.second
                     )
                 }
             }

@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Ignore
 import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.TypeConverters
+import com.louis.app.cavity.db.StatsBottleIdsTypeConverter
 import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.util.ColorUtil
 
@@ -20,7 +23,8 @@ interface StatsDao {
                     (SELECT COUNT(*) 
                     FROM bottle INNER JOIN wine ON wine_id = wine.id 
                     WHERE wine.county_id=:countyId AND bottle.consumed = 0) * 100
-                    AS percentage 
+                    AS percentage,
+                    GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                 FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE bottle.consumed = 0 AND wine.county_id=:countyId
@@ -33,7 +37,8 @@ interface StatsDao {
                     (SELECT COUNT(*) 
                     FROM bottle INNER JOIN wine ON wine_id = wine.id 
                     WHERE wine.county_id=:countyId AND bottle.consumed = 0) * 100
-                    AS percentage 
+                    AS percentage,
+                    GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                 FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE bottle.consumed = 0 AND wine.county_id=:countyId
@@ -44,7 +49,8 @@ interface StatsDao {
     @Query(
         """SELECT county.name AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM bottle WHERE bottle.consumed = 0) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                 FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
                 INNER JOIN county ON county_id = county.id
@@ -57,7 +63,8 @@ interface StatsDao {
         """SELECT county.name AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                     FROM history_entry
                     INNER JOIN bottle ON bottle_id = bottle.id
                     INNER JOIN wine ON wine_id = wine.id
@@ -71,7 +78,8 @@ interface StatsDao {
         """SELECT county.name AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                     FROM history_entry
                     INNER JOIN bottle ON bottle_id = bottle.id
                     INNER JOIN wine ON wine_id = wine.id
@@ -84,7 +92,8 @@ interface StatsDao {
     @Query(
         """SELECT wine.color AS wcolor, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM bottle WHERE bottle.consumed = 0) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                 FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
                 WHERE bottle.consumed = 0
@@ -96,7 +105,8 @@ interface StatsDao {
         """SELECT wine.color AS wcolor, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                     FROM history_entry
                     INNER JOIN bottle ON bottle_id = bottle.id
                     INNER JOIN wine ON wine_id = wine.id
@@ -109,7 +119,8 @@ interface StatsDao {
         """SELECT wine.color AS wcolor, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                     FROM history_entry
                     INNER JOIN bottle ON bottle_id = bottle.id
                     INNER JOIN wine ON wine_id = wine.id
@@ -121,7 +132,8 @@ interface StatsDao {
     @Query(
         """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM bottle WHERE bottle.consumed = 0) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                 FROM bottle
                 WHERE bottle.consumed = 0
                 GROUP BY bottle.vintage ORDER BY percentage DESC, bottle.vintage"""
@@ -132,7 +144,8 @@ interface StatsDao {
         """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                     FROM history_entry
                     INNER JOIN bottle ON bottle_id = bottle.id
                     WHERE history_entry.date BETWEEN :start AND :end AND (type = 1 OR type = 3)
@@ -144,7 +157,8 @@ interface StatsDao {
         """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                     FROM history_entry
                     INNER JOIN bottle ON bottle_id = bottle.id
                     WHERE history_entry.date BETWEEN :start AND :end AND (type = 0 OR type = 2 OR type = 4)
@@ -155,7 +169,8 @@ interface StatsDao {
     @Query(
         """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM bottle WHERE bottle.consumed = 0) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                 FROM bottle
                 INNER JOIN wine on wine_id = wine.id
                 WHERE bottle.consumed = 0
@@ -167,7 +182,8 @@ interface StatsDao {
         """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                     FROM history_entry
                     INNER JOIN bottle ON bottle_id = bottle.id
                     INNER JOIN wine ON wine_id = wine.id
@@ -180,7 +196,8 @@ interface StatsDao {
         """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM history_entry 
                         WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
-                        AS percentage 
+                        AS percentage,
+                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                     FROM history_entry
                     INNER JOIN bottle ON bottle_id = bottle.id
                     INNER JOIN wine ON wine_id = wine.id
@@ -197,6 +214,10 @@ interface StatsDao {
 
     @Query("""SELECT COUNT(*) FROM bottle WHERE consumed = 0""")
     fun getTotalStockBottles(): LiveData<Int>
+
+    @Transaction
+    @Query("""SELECT * FROM bottle WHERE id IN (:ids)""")
+    fun getBottlesByIds(ids: List<Long>): LiveData<List<BoundedBottle>>
 }
 
 interface Stat {
@@ -204,12 +225,14 @@ interface Stat {
     val count: Int
     val percentage: Float
     val color: Int
+    val bottleIds: List<Long>
 }
 
 data class BaseStat(
     override val label: String,
     override val count: Int,
     override val percentage: Float,
+    @field:TypeConverters(StatsBottleIdsTypeConverter::class) override val bottleIds: List<Long>
 ) : Stat {
     @Ignore
     override val color = ColorUtil.next()
@@ -219,6 +242,7 @@ data class WineColorStat(
     val wcolor: WineColor,
     override val count: Int,
     override val percentage: Float,
+    @field:TypeConverters(StatsBottleIdsTypeConverter::class) override val bottleIds: List<Long>
 ) : Stat {
     @Ignore
     override val label = wcolor.name

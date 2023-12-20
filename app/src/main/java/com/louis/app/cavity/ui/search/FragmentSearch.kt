@@ -21,6 +21,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,7 @@ import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.databinding.SearchFiltersBinding
+import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
@@ -467,7 +469,16 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun initRecyclerView() {
         bottlesAdapter = BottleRecyclerAdapter(
-            transitionHelper,
+            onItemClicked = { itemView: View, bottle: BoundedBottle ->
+                val transition = getString(R.string.transition_bottle_details, bottle.wine.id)
+                val action =
+                    FragmentSearchDirections.searchToBottleDetails(bottle.wine.id, bottle.bottle.id)
+                val extra = FragmentNavigatorExtras(itemView to transition)
+
+                itemView.hideKeyboard()
+                transitionHelper.setElevationScale()
+                findNavController().navigate(action, extra)
+            },
             isPickMode,
             onPicked = { bottle, isChecked ->
                 addTastingViewModel.onBottleStateChanged(bottle, isChecked)
@@ -592,6 +603,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     binding.scrim.alpha = 0.76f
                     binding.bottleList.addOnItemTouchListener(recyclerViewDisabler)
                 }
+
                 isCollapsed() -> {
                     toggleState()
                     binding.scrim.alpha = 0f
@@ -617,7 +629,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private fun initSearchView() {
         binding.searchView.apply {
             doAfterTextChanged { newText ->
-                if (newText != null && newText.isNotEmpty()) {
+                if (!newText.isNullOrEmpty()) {
                     binding.currentQuery.text =
                         context?.getString(R.string.query_feedback, newText).orEmpty()
                 } else {
