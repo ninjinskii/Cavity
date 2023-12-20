@@ -42,9 +42,9 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val isAndroid12 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+        val isAndroid31 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
-        if (!isAndroid12) {
+        if (!isAndroid31) {
             setTheme(R.style.CavityTheme)
         } else {
             initSplashScreen()

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
+import android.os.Build
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -97,9 +98,18 @@ fun Context.dpToPx(dp: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
 }
 
+// Took care of it for Adroid API >= 34
+@Suppress("DEPRECATION")
 fun Context.pxToSp(px: Int): Float {
-    return px / resources.displayMetrics.scaledDensity
+    val isAndroid34 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+
+    return if (isAndroid34) {
+        px / TypedValue.deriveDimension(TypedValue.COMPLEX_UNIT_SP, px.toFloat(), resources.displayMetrics)
+    } else {
+        px / resources.displayMetrics.scaledDensity
+    }
 }
+
 
 fun Context.spToPx(sp: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics)
