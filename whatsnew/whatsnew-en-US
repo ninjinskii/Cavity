@@ -1,4 +1,7 @@
-- Improve wine duplicate detection
-- Update the consumed bottle indicator in search screen to make it more consistent with the ovarall app
-- Display app version in settings screen
+- Add display bottles capability for a stat
+- Delete account
+- Show consumed bottle in bottle details screen
+- Improve history date search
+- Apogee is no logner required to create a bottle
+- Fix a crash when going back in login screen
 - Depedencies update

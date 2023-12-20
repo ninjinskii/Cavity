@@ -1,4 +1,8 @@
-- Amélioration de la détection de doublons
-- Changement de l'indicateur visuel de bouteilles consommées dans la recherche pour le rendre plus cohérent avec le reste de l'application
-- Affichage de la version de l'app dans les paramètres
-- Mise à jour des dépendances
+- Possibilité d'afficher les bouteilles liées à une statistique
+- Suppression de compte
+- Afficher les bouteille bues pour le vin dans la vue de détail des bouteilles
+- Amélioration de la recherche par date dans l'historique
+- Ne force plus la date d'apogée
+- Ne force plus de dates futures pour les dégustations
+- Correction d'un crash en faisant retour dans l'écran de login
+- Mise à jour des dépendences
