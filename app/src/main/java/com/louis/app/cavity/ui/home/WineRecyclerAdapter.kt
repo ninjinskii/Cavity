@@ -34,6 +34,6 @@ class WineRecyclerAdapter(
             oldItem.wine.id == newItem.wine.id
 
         override fun areContentsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =
-            oldItem.wine == newItem.wine && oldItem.bottles == newItem.bottles
+            oldItem.wine == newItem.wine && oldItem.bottles.size == newItem.bottles.size
     }
 }

@@ -1,7 +1,5 @@
 package com.louis.app.cavity.ui.manager.friend
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.view.LayoutInflater

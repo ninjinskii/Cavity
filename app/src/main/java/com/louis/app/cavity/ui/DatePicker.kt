@@ -17,8 +17,7 @@ class DatePicker(
     private val defaultDate: Long? = null,
     private val constraint: CalendarConstraints? = null,
 ) {
-    var isDatePickerDisplayed = false
-        private set
+    private var isDatePickerDisplayed = false
 
     private var picker: MaterialDatePicker<Long>? = null
 
