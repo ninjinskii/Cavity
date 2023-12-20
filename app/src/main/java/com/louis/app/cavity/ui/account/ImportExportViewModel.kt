@@ -10,6 +10,7 @@ import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.ui.account.worker.DownloadWorker
+import com.louis.app.cavity.ui.account.worker.PruneWorker
 import com.louis.app.cavity.ui.account.worker.UploadWorker
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit
 class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
 
     companion object {
-        private const val MIN_BACKOFF_SECONDS = 10L
+       private const val MIN_BACKOFF_SECONDS = 10L
     }
 
     private val repository = WineRepository.getInstance(app)
@@ -107,6 +108,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
                         val count = response.value.count { !it.consumed.toBoolean() }
                         _distantBottleCount.postValue(count)
                     }
+
                     is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
                     is ApiResponse.UnknownError -> _userFeedback.postOnce(R.string.base_error)
                     is ApiResponse.UnauthorizedError -> _navigateToLogin.postOnce(Unit)
@@ -158,4 +160,16 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun pruneWorks() = workManager.pruneWork()
+
+    fun cleanAccountDatabase() {
+        workManager.cancelAllWorkByTag(PruneWorker.WORK_TAG)
+
+        OneTimeWorkRequestBuilder<PruneWorker>()
+            .addTag(PruneWorker.WORK_TAG)
+            .setBackoffCriteria(BackoffPolicy.LINEAR, MIN_BACKOFF_SECONDS, TimeUnit.SECONDS)
+            .build().also {
+                workRequestId.value = it.id
+                workManager.enqueue(it)
+            }
+    }
 }

@@ -5,6 +5,7 @@ import com.louis.app.cavity.network.response.ConfirmResponse
 import com.louis.app.cavity.network.response.LoginResponse
 import com.louis.app.cavity.network.response.UserResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 
@@ -20,6 +21,9 @@ interface CavityApiService {
 
     @POST("account/recover")
     suspend fun recoverAccount(@Body parameters: Map<String, String>)
+
+    @POST("account/delete")
+    suspend fun deleteAccount(@Body parameters: Map<String, String>)
 
     @POST("county")
     suspend fun postCounties(@Body counties: List<County>)
@@ -101,4 +105,43 @@ interface CavityApiService {
 
     @GET("history-x-friend")
     suspend fun getHistoryFriendsXRef(): List<HistoryXFriend>
+
+    @DELETE("county")
+    suspend fun deleteCounties()
+
+    @DELETE("wine")
+    suspend fun deleteWines()
+
+    @DELETE("bottle")
+    suspend fun deleteBottles()
+
+    @DELETE("friend")
+    suspend fun deleteFriends()
+
+    @DELETE("grape")
+    suspend fun deleteGrapes()
+
+    @DELETE("review")
+    suspend fun deleteReviews()
+
+    @DELETE("history")
+    suspend fun deleteHistoryEntries()
+
+    @DELETE("tasting")
+    suspend fun deleteTastings()
+
+    @DELETE("tasting-action")
+    suspend fun deleteTastingActions()
+
+    @DELETE("freview")
+    suspend fun deleteFReviews()
+
+    @DELETE("qgrape")
+    suspend fun deleteQGrapes()
+
+    @DELETE("tasting-x-friend")
+    suspend fun deleteTastingFriendsXRef()
+
+    @DELETE("history-x-friend")
+    suspend fun deleteHistoryFriendsXRef()
 }

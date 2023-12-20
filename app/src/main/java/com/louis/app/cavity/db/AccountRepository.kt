@@ -56,6 +56,17 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.confirmAccount(parameters) }
     }
 
+    suspend fun deleteAccount(email: String, password: String): ApiResponse<Unit> {
+        return doApiCall {
+            cavityApi.deleteAccount(
+                mapOf(
+                    "email" to email,
+                    "password" to password
+                )
+            )
+        }
+    }
+
     suspend fun recoverPassword(email: String): ApiResponse<Unit> {
         return doApiCall { cavityApi.recoverAccount(mapOf("email" to email)) }
     }
@@ -105,12 +116,12 @@ class AccountRepository private constructor(private val app: Application) {
     }
 
     suspend fun postTastingFriendsXRefs(tastingFriendXRefs: List<TastingXFriend>):
-        ApiResponse<Unit> {
+            ApiResponse<Unit> {
         return doApiCall { cavityApi.postTastingFriendsXRef(tastingFriendXRefs) }
     }
 
     suspend fun postHistoryFriendsXRefs(historyFriendXRefs: List<HistoryXFriend>):
-        ApiResponse<Unit> {
+            ApiResponse<Unit> {
         return doApiCall { cavityApi.postHistoryFriendsXRef(historyFriendXRefs) }
     }
 
@@ -170,6 +181,58 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.getHistoryFriendsXRef() }
     }
 
+    suspend fun deleteCounties(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteCounties() }
+    }
+
+    suspend fun deleteWines(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteWines() }
+    }
+
+    suspend fun deleteBottles(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteBottles() }
+    }
+
+    suspend fun deleteFriends(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteFriends() }
+    }
+
+    suspend fun deleteGrapes(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteGrapes() }
+    }
+
+    suspend fun deleteReviews(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteReviews() }
+    }
+
+    suspend fun deleteHistoryEntries(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteHistoryEntries() }
+    }
+
+    suspend fun deleteTastings(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteTastings() }
+    }
+
+    suspend fun deleteTastingActions(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteTastingActions() }
+    }
+
+    suspend fun deleteFReviews(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteFReviews() }
+    }
+
+    suspend fun deleteQGrapes(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteQGrapes() }
+    }
+
+    suspend fun deleteTastingXFriend(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteTastingFriendsXRef() }
+    }
+
+    suspend fun deleteHistoryXFriend(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteHistoryFriendsXRef() }
+    }
+
     private suspend fun <T> doApiCall(apiCall: suspend () -> T): ApiResponse<T> {
         return try {
             ApiResponse.Success(apiCall.invoke())
@@ -179,9 +242,11 @@ class AccountRepository private constructor(private val app: Application) {
                     401 -> ApiResponse.UnauthorizedError.also {
                         Sentry.configureScope { scope -> scope.removeTag("username") }
                     }
+
                     412 -> ApiResponse.UnregisteredError
                     else -> parseError(t.response())
                 }
+
                 else -> ApiResponse.UnknownError.also {
                     Sentry.captureException(t)
                 }

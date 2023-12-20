@@ -271,6 +271,8 @@
     <string name="password">Mot de passe</string>
     <string name="forgotten_password">Mot de passe oublié ?</string>
     <string name="forgotten_password_explanation">Un mail va vous être envoyé contenant les informations nécessaires à la modification de votre mot de passe.</string>
+    <string name="delete_account">Supprimer votre compte</string>
+    <string name="delete_account_explanation">Supprime toutes les données enregistrées qui sont liées à votre compte. Non réversible.</string>
     <string name="reset_ok">Demande prise en compte.</string>
     <string name="ip">Adresse IP + port</string>
     <string name="confirm_mail_sent">Un mail de confirmation a été envoyé.</string>
