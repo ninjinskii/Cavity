@@ -143,14 +143,7 @@
         tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/searchToBottleDetails"
-            app:destination="@id/fragmentBottleDetails">
-            <argument
-                android:name="wineId"
-                app:argType="long" />
-            <argument
-                android:name="bottleId"
-                app:argType="long" />
-        </action>
+            app:destination="@id/fragmentBottleDetails" />
     </fragment>
 
     <fragment
@@ -298,7 +291,12 @@
         android:id="@+id/stats_dest"
         android:name="com.louis.app.cavity.ui.stats.FragmentStats"
         android:label="@string/stats"
-        tools:layout="@layout/fragment_stats" />
+        tools:layout="@layout/fragment_stats">
+
+        <action
+            android:id="@+id/statsToStatsDetails"
+            app:destination="@id/fragmentStatsDetails" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragmentAddTasting"
@@ -353,4 +351,26 @@
         android:name="com.louis.app.cavity.ui.account.fileimport.FragmentImportFiles"
         android:label="@string/file_import"
         tools:layout="@layout/fragment_import_files" />
+
+    <fragment
+        android:id="@+id/fragmentStatsDetails"
+        android:name="com.louis.app.cavity.ui.stats.FragmentStatsDetails"
+        tools:layout="@layout/fragment_stats_details">
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="bottleIds"
+            app:argType="long[]" />
+        <action
+            android:id="@+id/statsDetailsToBottleDetails"
+            app:destination="@id/fragmentBottleDetails">
+            <argument
+                android:name="wineId"
+                app:argType="long" />
+            <argument
+                android:name="bottleId"
+                app:argType="long" />
+        </action>
+    </fragment>
 </navigation>

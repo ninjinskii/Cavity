@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.stats
 
 import android.app.Application
+import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.db.dao.Year
@@ -83,6 +84,13 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
                 stopComparison()
             }
         }
+    }
+
+    @StringRes
+    fun getStatTypeLabel(): Int {
+        return currentItemPosition.value?.let {
+            statFactory.getStatTypeLabel(it)
+        } ?: -1
     }
 
     private fun stopComparison() {

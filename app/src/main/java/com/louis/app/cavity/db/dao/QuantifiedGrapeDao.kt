@@ -64,6 +64,9 @@ data class QGrapeAndGrape(
 
     @Ignore
     override val color = ColorUtil.next()
+
+    @Ignore
+    override val bottleIds = emptyList<Long>()
 }
 
 

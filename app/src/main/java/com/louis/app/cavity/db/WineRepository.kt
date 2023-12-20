@@ -341,6 +341,7 @@ class WineRepository private constructor(app: Application) {
     fun getTotalPriceByCurrency() = statsDao.getTotalPriceByCurrency()
     fun getTotalConsumedBottles() = statsDao.getTotalConsumedBottles()
     fun getTotalStockBottles() = statsDao.getTotalStockBottles()
+    fun getBottlesByIds(ids: List<Long>) = statsDao.getBottlesByIds(ids)
 
 
     // Tastings
@@ -397,8 +398,6 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun deleteAllTastingActions() = tastingActionDao.deleteAll()
 
-    // This is called from a background thread, so blocking operations are not that bad
-    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun importDbFromExternalDir(externalDirPath: String) {
         val file = File("$externalDirPath/db.json")
 

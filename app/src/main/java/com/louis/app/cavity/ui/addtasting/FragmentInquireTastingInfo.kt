@@ -8,8 +8,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointForward
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireTastingInfoBinding
 import com.louis.app.cavity.model.Friend

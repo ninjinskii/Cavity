@@ -9,7 +9,9 @@ import com.louis.app.cavity.databinding.ItemStatBinding
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.db.dao.WineColorStat
 
-class StatsRecyclerAdapter :
+class StatsRecyclerAdapter(
+    private val onItemClicked: (itemBottlesIds: List<Long>, label: String) -> Unit
+) :
     ListAdapter<Stat, StatsRecyclerAdapter.StatViewHolder>(StatItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatViewHolder {
@@ -29,8 +31,8 @@ class StatsRecyclerAdapter :
 
         override fun areContentsTheSame(oldItem: Stat, newItem: Stat) =
             oldItem.label == newItem.label &&
-                oldItem.percentage == newItem.percentage &&
-                oldItem.color == newItem.color
+                    oldItem.percentage == newItem.percentage &&
+                    oldItem.color == newItem.color
     }
 
     inner class StatViewHolder(private val binding: ItemStatBinding) :
@@ -46,6 +48,14 @@ class StatsRecyclerAdapter :
 
                 val resolvedColor = ctx.getColor(stat.color)
                 color.setBackgroundColor(resolvedColor)
+
+                root.setOnClickListener {
+                    val label =
+                        if (stat is WineColorStat) it.context.getString(stat.wcolor.stringRes)
+                        else stat.label
+
+                    onItemClicked(stat.bottleIds, label)
+                }
             }
         }
     }
