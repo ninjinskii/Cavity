@@ -9,7 +9,6 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.ripple.RippleDrawableCompat
 
 /**
  * A RecyclerView that don't dispatch touch events to its children, useful when being used as
@@ -61,7 +60,7 @@ class ForwardTouchRecyclerView @JvmOverloads constructor(
     private fun forwardTouch(e: MotionEvent) {
         val targetBackground = targetView?.background ?: return
 
-        if (targetBackground is RippleDrawableCompat || targetBackground is RippleDrawable) {
+        if (targetBackground is RippleDrawable) {
             targetBackground.setHotspot(e.x, e.y)
 
             when (e.action) {
