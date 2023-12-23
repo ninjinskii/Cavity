@@ -1,7 +1,1 @@
-- Add display bottles capability for a stat
-- Delete account
-- Show consumed bottle in bottle details screen
-- Improve history date search
-- Apogee is no logner required to create a bottle
-- Fix a crash when going back in login screen
-- Depedencies update
+- Fix a crash at startup for old users
