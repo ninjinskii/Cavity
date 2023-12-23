@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.louis.app.cavity.db.dao.*
 import com.louis.app.cavity.model.*
 
@@ -23,7 +25,7 @@ import com.louis.app.cavity.model.*
         HistoryXFriend::class,
         TastingAction::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class CavityDatabase : RoomDatabase() {
@@ -46,6 +48,12 @@ abstract class CavityDatabase : RoomDatabase() {
         @Volatile
         private var instance: CavityDatabase? = null
 
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Nothing to do
+            }
+        }
+
         fun getInstance(context: Context): CavityDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(context).also { instance = it }
@@ -57,7 +65,9 @@ abstract class CavityDatabase : RoomDatabase() {
                 context.applicationContext,
                 CavityDatabase::class.java,
                 "cavity.db"
-            ).build()
+            )
+                .addMigrations(MIGRATION_1_2)
+                .build()
         }
     }
 }
