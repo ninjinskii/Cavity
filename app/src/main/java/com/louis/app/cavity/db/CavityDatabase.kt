@@ -50,7 +50,33 @@ abstract class CavityDatabase : RoomDatabase() {
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                // Nothing to do
+                database.execSQL("BEGIN TRANSACTION;")
+
+                database.execSQL("CREATE TABLE `bottle_temp` " +
+                    "(`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    " `wine_id` INTEGER NOT NULL," +
+                    " `vintage` INTEGER NOT NULL," +
+                    " `apogee` INTEGER," +
+                    " `is_favorite` INTEGER NOT NULL," +
+                    " `price` REAL NOT NULL," +
+                    " `currency` TEXT NOT NULL," +
+                    " `other_info` TEXT NOT NULL," +
+                    " `buy_location` TEXT NOT NULL," +
+                    " `buy_date` INTEGER NOT NULL," +
+                    " `tasting_taste_comment` TEXT NOT NULL," +
+                    " `bottle_size` TEXT NOT NULL," +
+                    " `pdf_path` TEXT NOT NULL," +
+                    " `consumed` INTEGER NOT NULL," +
+                    " `tasting_id` INTEGER," +
+                    " FOREIGN KEY(`wine_id`) REFERENCES `wine`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE );")
+
+                database.execSQL("INSERT INTO bottle_temp(id, wine_id, vintage, apogee, is_favorite, price, currency, other_info, buy_location, buy_date, tasting_taste_comment, bottle_size, pdf_path, consumed, tasting_id) SELECT * FROM bottle;")
+
+                database.execSQL("DROP TABLE bottle;")
+
+                database.execSQL("ALTER TABLE bottle_temp RENAME TO bottle;")
+
+                database.execSQL("COMMIT;")
             }
         }
 
