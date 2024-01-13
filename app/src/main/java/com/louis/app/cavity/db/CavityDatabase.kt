@@ -68,7 +68,12 @@ abstract class CavityDatabase : RoomDatabase() {
                     " `pdf_path` TEXT NOT NULL," +
                     " `consumed` INTEGER NOT NULL," +
                     " `tasting_id` INTEGER," +
-                    " FOREIGN KEY(`wine_id`) REFERENCES `wine`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE );")
+                    " FOREIGN KEY(`wine_id`) REFERENCES `wine`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE );"
+                )
+
+                database.execSQL("CREATE INDEX index_bottle_wine_id ON bottle_temp(wine_id ASC);")
+
+                database.execSQL("CREATE INDEX index_bottle_tasting_id ON bottle_temp(tasting_id ASC);")
 
                 database.execSQL("INSERT INTO bottle_temp(id, wine_id, vintage, apogee, is_favorite, price, currency, other_info, buy_location, buy_date, tasting_taste_comment, bottle_size, pdf_path, consumed, tasting_id) SELECT * FROM bottle;")
 
