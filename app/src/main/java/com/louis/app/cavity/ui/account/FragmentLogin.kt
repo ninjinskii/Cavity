@@ -73,7 +73,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
             }
         }
 
-        loginViewModel.user.observe(viewLifecycleOwner) {
+        loginViewModel.account.observe(viewLifecycleOwner) {
             if (it != null) {
                 savedStateHandle[LOGIN_SUCCESSFUL] = true
                 findNavController().popBackStack()

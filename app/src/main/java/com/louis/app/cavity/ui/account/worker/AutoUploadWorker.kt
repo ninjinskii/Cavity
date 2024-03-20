@@ -12,6 +12,7 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.FileAssoc
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.network.response.ApiResponse
+import com.louis.app.cavity.ui.account.Environment
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
 import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers.IO
@@ -112,6 +113,8 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
                         throw UncompleteExportException()
                     }
                 }
+
+                postAccountLastUser(Environment.getDeviceName())
             }
         }
     }

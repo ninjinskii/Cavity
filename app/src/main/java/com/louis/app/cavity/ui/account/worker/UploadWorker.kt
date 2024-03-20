@@ -8,6 +8,7 @@ import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.FileAssoc
 import com.louis.app.cavity.network.response.ApiResponse
+import com.louis.app.cavity.ui.account.Environment
 import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -64,6 +65,8 @@ class UploadWorker(private val context: Context, params: WorkerParameters) :
                         throw UncompleteExportException()
                     }
                 }
+
+                postAccountLastUser(Environment.getDeviceName())
             }
         }
     }

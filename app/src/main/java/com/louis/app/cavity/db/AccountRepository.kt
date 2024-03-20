@@ -6,9 +6,7 @@ import com.louis.app.cavity.model.*
 import com.louis.app.cavity.network.CavityApiClient
 import com.louis.app.cavity.network.CavityApiService
 import com.louis.app.cavity.network.response.ApiResponse
-import com.louis.app.cavity.network.response.ConfirmResponse
 import com.louis.app.cavity.network.response.LoginResponse
-import com.louis.app.cavity.network.response.UserResponse
 import io.sentry.Sentry
 import okhttp3.ResponseBody
 import retrofit2.Converter
@@ -51,7 +49,7 @@ class AccountRepository private constructor(private val app: Application) {
     suspend fun confirmAccount(
         email: String,
         registrationCode: String
-    ): ApiResponse<ConfirmResponse> {
+    ): ApiResponse<LoginResponse> {
         val parameters = mapOf("email" to email, "registrationCode" to registrationCode)
         return doApiCall { cavityApi.confirmAccount(parameters) }
     }
@@ -65,6 +63,10 @@ class AccountRepository private constructor(private val app: Application) {
                 )
             )
         }
+    }
+
+    suspend fun postAccountLastUser(deviceName: String): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postAccountLastUser(mapOf("lastUser" to deviceName)) }
     }
 
     suspend fun recoverPassword(email: String): ApiResponse<Unit> {
@@ -125,7 +127,7 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.postHistoryFriendsXRef(historyFriendXRefs) }
     }
 
-    suspend fun getAccount(): ApiResponse<UserResponse> {
+    suspend fun getAccount(): ApiResponse<LoginResponse> {
         return doApiCall { cavityApi.getAccount() }
     }
 
@@ -237,6 +239,7 @@ class AccountRepository private constructor(private val app: Application) {
         return try {
             ApiResponse.Success(apiCall.invoke())
         } catch (t: Throwable) {
+            t.printStackTrace()
             when (t) {
                 is HttpException -> when (t.code()) {
                     401 -> ApiResponse.UnauthorizedError.also {

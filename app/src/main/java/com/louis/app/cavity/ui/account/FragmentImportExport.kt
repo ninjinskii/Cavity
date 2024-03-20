@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -22,6 +23,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     private var _binding: FragmentImportExportBinding? = null
     private val binding get() = _binding!!
     private val importExportViewModel: ImportExportViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels()
     private val args: FragmentImportExportArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,10 +84,16 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
             warn.text = getString(healthcheck)
             submit.text = getString(btn)
             submit.setIconResource(btnSrc)
+            cellar.text = getString(R.string.current_device, Environment.getDeviceName())
         }
     }
 
     private fun observe() {
+        loginViewModel.account.observe(viewLifecycleOwner) {
+            val fallback = getString(R.string.unknown)
+            binding.backup.text = getString(R.string.backup, it?.lastUser ?: fallback)
+        }
+
         importExportViewModel.healthy.observe(viewLifecycleOwner) {
             changeWarningVisibilty(!it)
         }
@@ -129,11 +137,13 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
                     WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
                         binding.progressBar.setVisible(true)
                     }
+
                     WorkInfo.State.FAILED -> {
                         binding.progressBar.setVisible(false)
                         binding.coordinator.showSnackbar(R.string.base_error)
                         importExportViewModel.pruneWorks()
                     }
+
                     WorkInfo.State.SUCCEEDED -> {
                         val message =
                             if (it.tags.contains("com.louis.app.cavity.upload-db")) R.string.export_done
@@ -142,15 +152,19 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
                         binding.progressBar.setVisible(false)
                         binding.coordinator.showSnackbar(message)
 
+                        loginViewModel.tryConnectWithSavedToken()
+
                         with(importExportViewModel) {
                             fetchLocalBottleCount()
                             fetchDistantBottleCount()
                             pruneWorks()
                         }
                     }
+
                     WorkInfo.State.CANCELLED -> {
                         importExportViewModel.pruneWorks()
                     }
+
                     else -> Unit
                 }
             } else {

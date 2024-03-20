@@ -71,12 +71,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/medium_margin"
-                            android:text="@string/backup"
                             android:textAppearance="?attr/textAppearanceBody1"
                             app:layout_constraintBottom_toBottomOf="@id/serverIcon"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/serverIcon"
-                            app:layout_constraintTop_toTopOf="@id/serverIcon" />
+                            app:layout_constraintTop_toTopOf="@id/serverIcon"
+                            tools:text="@string/backup" />
 
                         <com.robinhood.ticker.TickerView
                             android:id="@+id/bottles"
@@ -103,7 +103,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/serverIcon"
                             app:layout_constraintTop_toBottomOf="@id/bottles"
-                            tools:text="Dernière action: Offrir Gevrey Chambertin" />
+                            tools:text="Dernière action: 14 mars 2024" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -156,12 +156,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/medium_margin"
-                            android:text="@string/current_device"
                             android:textAppearance="?attr/textAppearanceBody1"
                             app:layout_constraintBottom_toBottomOf="@id/deviceIcon"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/deviceIcon"
-                            app:layout_constraintTop_toTopOf="@id/deviceIcon" />
+                            app:layout_constraintTop_toTopOf="@id/deviceIcon"
+                            tools:text="@string/current_device" />
 
                         <com.robinhood.ticker.TickerView
                             android:id="@+id/deviceBottles"
@@ -188,7 +188,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/deviceIcon"
                             app:layout_constraintTop_toBottomOf="@id/deviceBottles"
-                            tools:text="Dernière action: Acheter Riesling" />
+                            tools:text="Dernière action: 16 mars 2024" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>

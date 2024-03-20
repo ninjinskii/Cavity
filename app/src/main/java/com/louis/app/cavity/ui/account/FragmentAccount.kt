@@ -92,9 +92,9 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     }
 
     private fun observe() {
-        loginViewModel.user.observe(viewLifecycleOwner) {
+        loginViewModel.account.observe(viewLifecycleOwner) {
             if (it != null) {
-                binding.email.text = it
+                binding.email.text = it.email
                 startPostponedEnterTransition()
             } else {
                 val action = FragmentAccountDirections.accountToLogin()
@@ -103,7 +103,9 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         }
 
         loginViewModel.deletedEvent.observe(viewLifecycleOwner) {
-            importExportViewModel.cleanAccountDatabase()
+            it.getContentIfNotHandled()?.let {
+                importExportViewModel.cleanAccountDatabase()
+            }
         }
 
         importExportViewModel.workProgress.observe(viewLifecycleOwner) {
@@ -115,7 +117,6 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
                     WorkInfo.State.FAILED -> {
                         binding.progressBar.setVisible(false)
-                        importExportViewModel.pruneWorks()
                     }
 
                     WorkInfo.State.SUCCEEDED -> {
@@ -123,10 +124,6 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                             binding.progressBar.setVisible(false)
                             loginViewModel.logout()
                         }
-                    }
-
-                    WorkInfo.State.CANCELLED -> {
-                        importExportViewModel.pruneWorks()
                     }
 
                     else -> Unit
