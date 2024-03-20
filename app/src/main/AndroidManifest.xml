@@ -29,17 +29,17 @@
         android:theme="@style/Theme.Cavity.SplashScreen">
 
         <receiver
-            android:name=".ui.tasting.notifications.TastingReceiver"
+            android:name="com.louis.app.cavity.ui.notifications.TastingReceiver"
             android:enabled="true"
             android:exported="false" />
 
         <receiver
-            android:name=".ui.tasting.notifications.TastingActionDoneReceiver"
+            android:name="com.louis.app.cavity.ui.notifications.TastingActionDoneReceiver"
             android:enabled="true"
             android:exported="false" />
 
         <receiver
-            android:name=".ui.tasting.notifications.BootCompletedReceiver"
+            android:name="com.louis.app.cavity.ui.notifications.BootCompletedReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

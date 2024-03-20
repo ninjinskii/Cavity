@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
-import com.louis.app.cavity.ui.tasting.notifications.TastingAlarmScheduler
+import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation

@@ -7,12 +7,14 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
 import com.louis.app.cavity.BuildConfig
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSettingsBinding
 import com.louis.app.cavity.db.PrefsRepository.Companion.MIN_TEMPLATE_SCALE
+import com.louis.app.cavity.ui.account.ImportExportViewModel
 import com.louis.app.cavity.ui.addwine.FragmentCamera.Companion.TEMPLATE_ROTATION
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
@@ -25,6 +27,7 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val settingsViewModel: SettingsViewModel by activityViewModels()
+    private val importExportViewModel: ImportExportViewModel by viewModels()
     private var clickCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,6 +123,32 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
 
                 binding.bottleTemplateDemo.scaleX = value
                 binding.bottleTemplateDemo.scaleY = value
+            }
+        }
+
+        binding.toggleAutoBackup.apply {
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
+
+            isChecked = settingsViewModel.getAutoBackup()
+
+            setOnCheckedChangeListener { _, isChecked ->
+                settingsViewModel.setAutoBackup(isChecked)
+
+                if (isChecked) {
+                    importExportViewModel.enableAutoBackups()
+                } else {
+                    importExportViewModel.disableAutoBackups()
+                }
+            }
+        }
+
+        binding.autoBackup.apply {
+            setOnClickListener {
+                binding.toggleAutoBackup.toggle()
             }
         }
     }

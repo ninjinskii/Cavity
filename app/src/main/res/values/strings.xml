@@ -10,7 +10,7 @@
     <string name="permissions_denied_external">Cavity a besoin de ces autorisations pour fonctionner.</string>
     <string name="persistent_permission_error">Impossible d\'ouvrir le fichier correctement.</string>
     <string name="db_import_success">La base de données a été importée correctement.</string>
-    <string name="notification_channel">Rappels dégustations</string>
+    <string name="tasting_channel_text">Rappels dégustations</string>
     <string name="warning">Attention !</string>
     <string name="locale">fr-FR</string>
     <string name="unknown">Inconnu</string>
@@ -265,6 +265,8 @@
     <string name="template_size">Modifiez la taille du gabarit pour la prise d\'une photo.</string>
     <string name="default_currency_title">Monnaie par défaut</string>
     <string name="default_currency">Choisissez la monnaie par défaut à utiliser lors de l\'ajout d\'une bouteille.</string>
+    <string name="auto_backup_title">Sauvegardes automatiques</string>
+    <string name="auto_backup">Déclenchez une sauvegarde automatique tous les 15 jours. Nécessite un compte Cavity.</string>
 
     <!-- Account -->
     <string name="email">Email</string>
@@ -301,6 +303,15 @@
     <string name="backup_erasure_warn_import">La cave de cet appareil sera remplacée par la sauvegarde en ligne.</string>
     <string name="healthcheck_export_warn">La sauvegarde en ligne contient des mouvements de stocks plus récents. L\'export de votre cave écrasera ces mouvements.</string>
     <string name="healthcheck_import_warn">La cave de cet appareil contient des mouvements de stocks plus récents. L\'import de votre sauvegarde écrasera ces mouvements.</string>
+
+    <!-- Auto backups -->
+    <string name="auto_backup_channel">Rapport de sauvegarde automatiques</string>
+    <string name="auto_backup_channel_text">Prévient en cas d\'erreur lors d\'une sauvegarde automatique</string>
+    <string name="auto_backup_failed_title">Échec de la sauvegarde automatique</string>
+    <string name="auto_backup_unauthorized">Connectez vous à votre compte Cavity pour faire fonctionner à nouveau les sauvegardes automatiques</string>
+    <string name="auto_backup_overwrite_data">Une sauvegarde contenant des mouvements de stocks plus récents que ceux de cet appareil a été trouvée sur votre compte, la sauvegarde automatique à été annulée pour éviter d\'écraser ces mouvements de stocks</string>
+    <string name="auto_backup_done_title">Sauvegarde automatique effectuée</string>
+    <string name="auto_backup_done">Vos données ont été synchronisées sur votre compte en ligne</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

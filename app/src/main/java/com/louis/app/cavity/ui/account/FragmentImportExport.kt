@@ -39,7 +39,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
         setupNavigation(binding.appBar.toolbar)
 
         with(importExportViewModel) {
-            checkHealth(args.isImport)
+            fetchHealth(args.isImport)
             fetchDistantBottleCount()
             fetchLocalBottleCount()
         }

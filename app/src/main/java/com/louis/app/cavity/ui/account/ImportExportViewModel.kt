@@ -3,12 +3,17 @@ package com.louis.app.cavity.ui.account
 import android.app.Application
 import androidx.lifecycle.*
 import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.network.response.ApiResponse
+import com.louis.app.cavity.ui.account.worker.AutoUploadWorker
 import com.louis.app.cavity.ui.account.worker.DownloadWorker
 import com.louis.app.cavity.ui.account.worker.PruneWorker
 import com.louis.app.cavity.ui.account.worker.UploadWorker
@@ -23,7 +28,7 @@ import java.util.concurrent.TimeUnit
 class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
 
     companion object {
-       private const val MIN_BACKOFF_SECONDS = 10L
+        private const val MIN_BACKOFF_SECONDS = 10L
     }
 
     private val repository = WineRepository.getInstance(app)
@@ -64,7 +69,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedbackString: LiveData<Event<String>>
         get() = _userFeedbackString
 
-    fun checkHealth(isImport: Boolean) {
+    fun fetchHealth(isImport: Boolean) {
         val isExport = !isImport
 
         _isLoading.value = true
@@ -74,15 +79,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
                 accountRepository.getHistoryEntries().let { response ->
                     when (response) {
                         is ApiResponse.Success -> {
-                            val distantHistoryEntries = response.value
-                            val localHistoryEntries = repository.getAllEntriesNotPagedNotLive()
-                            val distantNewer =
-                                distantHistoryEntries.maxByOrNull { it.date }?.date ?: 0
-                            val localNewer = localHistoryEntries.maxByOrNull { it.date }?.date ?: 0
-                            val healthy =
-                                if (isExport) localNewer >= distantNewer
-                                else distantNewer >= localNewer
-
+                            val healthy = checkHealth(isExport, response.value)
                             _healthy.postValue(healthy)
                         }
 
@@ -96,6 +93,19 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
                 _isLoading.postValue(false)
             }
         }
+    }
+
+    private suspend fun checkHealth(
+        isExport: Boolean,
+        distantHistoryEntries: List<HistoryEntry>
+    ): Boolean {
+        val localHistoryEntries = repository.getAllEntriesNotPagedNotLive()
+        val distantNewer =
+            distantHistoryEntries.maxByOrNull { it.date }?.date ?: 0
+        val localNewer = localHistoryEntries.maxByOrNull { it.date }?.date ?: 0
+
+        return if (isExport) localNewer >= distantNewer
+        else distantNewer >= localNewer
     }
 
     fun fetchDistantBottleCount() {
@@ -160,6 +170,26 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun pruneWorks() = workManager.pruneWork()
+
+    fun enableAutoBackups() {
+        disableAutoBackups()
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
+
+        PeriodicWorkRequestBuilder<AutoUploadWorker>(15, TimeUnit.DAYS, 4, TimeUnit.HOURS)
+            .addTag(AutoUploadWorker.WORK_TAG)
+            .setInitialDelay(1, TimeUnit.HOURS)
+            .setConstraints(constraints)
+            .build().also {
+                workManager.enqueue(it)
+            }
+    }
+
+    fun disableAutoBackups() {
+        workManager.cancelAllWorkByTag(AutoUploadWorker.WORK_TAG)
+    }
 
     fun cleanAccountDatabase() {
         workManager.cancelAllWorkByTag(PruneWorker.WORK_TAG)

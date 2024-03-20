@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.tasting.notifications
+package com.louis.app.cavity.ui.notifications
 
 import android.app.Application
 import android.content.BroadcastReceiver
@@ -32,8 +32,8 @@ class TastingReceiver : BroadcastReceiver() {
             bottlesWithActions.forEach { bottle ->
                 bottle.tastingActions.forEach {
                     val notification =
-                        TastingNotifier.buildNotification(context, tasting, bottle.wine, it)
-                    TastingNotifier.notify(context, notification)
+                        NotificationBuilder.buildTastingNotification(context, tasting, bottle.wine, it)
+                    NotificationBuilder.notify(context, notification)
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.tasting.notifications
+package com.louis.app.cavity.ui.notifications
 
 import android.app.AlarmManager
 import android.app.PendingIntent

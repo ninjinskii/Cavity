@@ -10,7 +10,7 @@ import com.louis.app.cavity.databinding.FragmentInquireScheduleBinding
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.stepper.Step
-import com.louis.app.cavity.ui.tasting.notifications.TastingAlarmScheduler
+import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
