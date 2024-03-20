@@ -23,7 +23,9 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.ui.AutoBackupChecker
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
+import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.*
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
@@ -32,6 +34,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val recyclePool by lazy {
         RecyclerView.RecycledViewPool().apply {
             setMaxRecycledViews(R.layout.item_wine, 15)
@@ -73,6 +76,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
         setupScrollableTab()
         setViewPagerOrientation()
+        setupToolbarMenu()
         observe()
         setListeners()
     }
@@ -116,6 +120,11 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         binding.viewPager.orientation = orientation
     }
 
+    private fun setupToolbarMenu() {
+        AutoBackupChecker(settingsViewModel, viewLifecycleOwner, findNavController())
+            .setupToolbarMenu(binding.appBar.toolbar)
+    }
+
     private fun observe() {
         homeViewModel.bottleCount.observe(viewLifecycleOwner) {
             binding.countyDetails.bottles.text =
@@ -132,6 +141,10 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
         homeViewModel.vintagesCount.observe(viewLifecycleOwner) {
             binding.countyDetails.vintages.setSlices(it, anim = true)
+        }
+
+        settingsViewModel.autoBackupStateWarning.observe(viewLifecycleOwner) {
+            binding.appBar.toolbar.menu.findItem(R.id.fixAutBackup)?.setVisible(it)
         }
     }
 
@@ -197,7 +210,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             endView = binding.tab
             startElevation = binding.countyDetails.root.cardElevation
             endElevation = resources.getDimension(R.dimen.app_bar_elevation)
-            endContainerColor = requireContext().themeColor(com.google.android.material.R.attr.colorSurface)
+            endContainerColor =
+                requireContext().themeColor(com.google.android.material.R.attr.colorSurface)
             scrimColor = Color.TRANSPARENT
             addTarget(binding.tab)
         }

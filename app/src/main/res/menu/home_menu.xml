@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/fixAutBackup"
+        android:icon="@drawable/ic_cloud_sync"
+        android:title="@string/auto_backup_failed_title"
+        android:visible="false"
+        app:iconTint="?attr/colorError"
+        app:showAsAction="always" />
+
+</menu>

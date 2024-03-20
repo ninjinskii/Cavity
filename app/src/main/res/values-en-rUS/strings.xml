@@ -285,6 +285,7 @@
     <string name="confirm_account">Confirmation</string>
     <string name="confirm_account_explanation">A confirmation code has been sent to you email address.</string>
     <string name="logout">Logout</string>
+    <string name="login">Login</string>
     <string name="account_explanation">Use a Cavity account to create online backups of your wine cellar and get it back wherever you need.</string>
     <string name="export_explanation">Save the device wine cellar on the server</string>
     <string name="export">Export</string>
@@ -298,9 +299,9 @@
     <string name="file_imported">%1$d file(s) imported out of %2$d picked.</string>
     <string name="export_done">Backup done successfully.</string>
     <string name="import_done">Import done successfully.</string>
-    <string name="backup">Sauvegarde en ligne</string>
+    <string name="backup">Online backup (from %s)</string>
     <string name="last_action">Last action: </string>
-    <string name="current_device">This device</string>
+    <string name="current_device">This device (%s)</string>
     <string name="backup_erasure_warn_export">Your online backup will be replaced with the device wine cellar.\n<b><i>Note</i></b>: wine, friend photos and pdfs <b>will not</b> be backed up. For more details, go to \"Import files\" in the account management screen.</string>
     <string name="backup_erasure_warn_import">The device wine cellar will be replaced with your online backup.</string>
     <string name="healthcheck_export_warn">The online backup contains more recent stock movements. Exporting your cellar will overwrite these movements.</string>
@@ -310,7 +311,7 @@
     <string name="auto_backup_channel">Auto backups report</string>
     <string name="auto_backup_channel_text">Raise warning when an automatic backup fails</string>
     <string name="auto_backup_failed_title">Auto backup failed</string>
-    <string name="auto_backup_unauthorized">Login into your Cavity account to make auto backups work again</string>
+    <string name="auto_backup_unauthorized">Log in to your Cavity account to fix auto backups</string>
     <string name="auto_backup_overwrite_data">A backup containing newer stock movements than those of this device was found on your account, the automatic backup was canceled to avoid overwriting these stock movements</string>
     <string name="auto_backup_done_title">Auto backup successfully done</string>
     <string name="auto_backup_done">Your data was uploaded into your online account</string>
