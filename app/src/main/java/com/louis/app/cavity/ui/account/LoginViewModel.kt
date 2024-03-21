@@ -147,6 +147,14 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun updateAccountLastUpdateLocally() {
+        val copy = _account.value?.copy(lastUpdateTime = System.currentTimeMillis())
+
+        copy?.let {
+            _account.value = it
+        }
+    }
+
     private fun <T> doApiCall(
         call: suspend () -> ApiResponse<T>,
         onSuccess: (ApiResponse.Success<T>) -> Unit

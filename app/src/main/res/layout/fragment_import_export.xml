@@ -91,7 +91,7 @@
                             app:ticker_defaultPreferredScrollingDirection="any"
                             tools:text="354 bouteilles" />
 
-                        <TextView
+                        <com.robinhood.ticker.TickerView
                             android:id="@+id/lastAction"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"

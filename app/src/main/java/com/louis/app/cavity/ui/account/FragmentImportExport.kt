@@ -13,6 +13,7 @@ import androidx.work.WorkInfo
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportExportBinding
+import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -66,6 +67,11 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
             textPaint.typeface = textAppearanceApplier.paint.typeface
             setCharacterLists(TickerUtils.provideNumberList())
         }
+
+        binding.lastAction.apply {
+            textPaint.typeface = textAppearanceApplier.paint.typeface
+            setCharacterLists(TickerUtils.provideAlphabeticalList())
+        }
     }
 
     private fun updateUiState() {
@@ -92,6 +98,9 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
         loginViewModel.account.observe(viewLifecycleOwner) {
             val fallback = getString(R.string.unknown)
             binding.backup.text = getString(R.string.backup, it?.lastUser ?: fallback)
+
+            val date = DateFormatter.formatDate(it?.lastUpdateTime, "dd MMMM yyyy, HH:mm")
+            binding.lastAction.text = getString(R.string.last_action, date)
         }
 
         importExportViewModel.healthy.observe(viewLifecycleOwner) {
@@ -152,7 +161,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
                         binding.progressBar.setVisible(false)
                         binding.coordinator.showSnackbar(message)
 
-                        loginViewModel.tryConnectWithSavedToken()
+                        loginViewModel.updateAccountLastUpdateLocally()
 
                         with(importExportViewModel) {
                             fetchLocalBottleCount()

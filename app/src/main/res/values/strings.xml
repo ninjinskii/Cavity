@@ -298,7 +298,7 @@
     <string name="export_done">Sauvegarde effectuée.</string>
     <string name="import_done">Récupération effectuée.</string>
     <string name="backup">Sauvegarde en ligne (depuis %s)</string>
-    <string name="last_action">Dernière action: </string>
+    <string name="last_action">Dernière sauvegarde: %s</string>
     <string name="current_device">Cet appareil (%s)</string>
     <string name="backup_erasure_warn_export">La sauvegarde en ligne existante sera remplacée par la cave de cet appareil.\n<b><i>Note</i></b>: les images de vos vins, de vos amis et vos pdfs <b>ne sont pas</b> sauvegardés. Pour en savoir plus, rendez-vous dans \"Importer les fichiers\" dans l\'écran de gestion du compte.</string>
     <string name="backup_erasure_warn_import">La cave de cet appareil sera remplacée par la sauvegarde en ligne.</string>
