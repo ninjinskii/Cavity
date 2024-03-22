@@ -1,8 +1,11 @@
 package com.louis.app.cavity.ui.account
 
 import android.Manifest
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -14,6 +17,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAccountBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.account.worker.PruneWorker
+import com.louis.app.cavity.ui.settings.SettingsViewModel
+import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
@@ -26,6 +31,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val importExportViewModel: ImportExportViewModel by viewModels()
 
     private lateinit var transitionHelper: TransitionHelper
@@ -95,6 +101,10 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         loginViewModel.account.observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.email.text = it.email
+
+                val date = DateFormatter.formatDate(it.lastUpdateTime, "dd MMMM yyyy, HH:mm")
+                binding.lastBackup.text = getString(R.string.last_action, date)
+                setupLastBackupStatus()
                 startPostponedEnterTransition()
             } else {
                 val action = FragmentAccountDirections.accountToLogin()
@@ -132,6 +142,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                 binding.progressBar.setVisible(false)
             }
         }
+
+        importExportViewModel.autoBackupWorkProgress.observe(viewLifecycleOwner) {
+            setupLastBackupStatus()
+            loginViewModel.updateAccountLastUpdateLocally()
+        }
     }
 
     private fun setListeners() {
@@ -165,6 +180,34 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                 passwordInput = true
             ).show(resources)
         }
+
+        binding.toggleAutoBackup.apply {
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
+
+            isChecked = settingsViewModel.getAutoBackup()
+
+            setOnCheckedChangeListener { _, isChecked ->
+                settingsViewModel.setAutoBackup(isChecked)
+
+                if (isChecked) {
+                    importExportViewModel.enableAutoBackups()
+                } else {
+                    importExportViewModel.disableAutoBackups()
+                }
+            }
+        }
+    }
+
+    private fun setupLastBackupStatus() {
+        val status = loginViewModel.getLastAutoBackupStatus()
+        val message = if (status != 0) status else R.string.backup_status_disabled
+
+        binding.backupStatusMore.text = getString(message)
+        binding.backupStateIcon.imageTintList = getColorForStatus(status)
     }
 
     private fun setupToolbar() {
@@ -195,6 +238,17 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
         val action = FragmentAccountDirections.accountToImportFiles()
         findNavController().navigate(action)
+    }
+
+    private fun getColorForStatus(@StringRes status: Int): ColorStateList {
+        val colorRes = when (status) {
+            R.string.backup_status_active -> R.color.cavity_green
+            R.string.backup_status_pause -> R.color.cavity_yellow
+            R.string.backup_status_suspicious -> R.color.cavity_yellow
+            else /* 0 */ -> R.color.cavity_grey
+        }
+
+        return ColorStateList.valueOf(requireContext().getColor(colorRes))
     }
 
     override fun onDestroyView() {

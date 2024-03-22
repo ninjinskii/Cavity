@@ -121,6 +121,8 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getLastLogin() = prefsRepository.getLastLogin()
 
+    fun getLastAutoBackupStatus() = prefsRepository.getLastAutoBackupResult()
+
     fun logout() {
         _account.value = null
         prefsRepository.setApiToken("")

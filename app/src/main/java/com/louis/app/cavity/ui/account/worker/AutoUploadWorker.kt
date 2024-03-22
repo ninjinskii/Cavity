@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.AccountRepository
@@ -32,32 +33,52 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
             if (health == HealthResult.OK) {
                 uploadDatabase()
                 sendNotification(R.string.auto_backup_done_title, R.string.auto_backup_done)
-                Result.success()
+                prefsRepository.setLastAutoBackupResult(health.stringRes)
+
+                val data = Data.Builder().putInt(WORK_DATA_HEALTH_STATE, health.stringRes).build()
+                Result.success(data)
             } else {
-                val message =
-                    if (health == HealthResult.WILL_OVERWRITE)
+                val message = when(health) {
+                    HealthResult.PREVENT_OVERWRITE -> {
                         R.string.auto_backup_overwrite_data
-                    else
+                    }
+                    HealthResult.NOT_MATCHING -> {
                         R.string.auto_backup_not_matching
+                    }
+                    else /* HealthResult.FAILED */ -> {
+                        R.string.auto_backup_unavailable
+                    }
+                }
 
                 sendNotification(
                     R.string.auto_backup_failed_title,
                     message
                 )
-                Result.failure()
+                prefsRepository.setLastAutoBackupResult(health.stringRes)
+
+                val data = Data.Builder().putInt(WORK_DATA_HEALTH_STATE, health.stringRes).build()
+                Result.failure(data)
             }
         } catch (e: UncompleteExportException) {
             if (runAttemptCount < 1) {
                 Result.retry()
             } else {
                 sendNotification(R.string.auto_backup_failed_title, R.string.base_error)
+                prefsRepository.setLastAutoBackupResult(HealthResult.FAILED.stringRes)
                 Sentry.captureException(e)
-                Result.failure()
+                val data =
+                    Data.Builder().putInt(WORK_DATA_HEALTH_STATE, HealthResult.FAILED.stringRes).build()
+
+                Result.failure(data)
             }
         } catch (e: Exception) {
             sendNotification(R.string.auto_backup_failed_title, R.string.base_error)
+            prefsRepository.setLastAutoBackupResult(HealthResult.FAILED.stringRes)
             Sentry.captureException(e)
-            Result.failure()
+            val data =
+                Data.Builder().putInt(WORK_DATA_HEALTH_STATE, HealthResult.FAILED.stringRes).build()
+
+            Result.failure(data)
         }
     }
 
@@ -65,18 +86,18 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
         accountRepository.getHistoryEntries().let { response ->
             when (response) {
                 is ApiResponse.Success -> checkHealth(response.value)
-                is ApiResponse.Failure -> false
-                is ApiResponse.UnknownError -> false
+                is ApiResponse.Failure -> HealthResult.FAILED
+                is ApiResponse.UnknownError -> HealthResult.FAILED
                 is ApiResponse.UnauthorizedError -> {
                     prefsRepository.setApiToken("")
                     sendNotification(
                         R.string.auto_backup_failed_title,
                         R.string.auto_backup_unauthorized
                     )
-                    false
+                    HealthResult.FAILED
                 }
 
-                is ApiResponse.UnregisteredError -> false
+                is ApiResponse.UnregisteredError -> HealthResult.FAILED
             }
         }
     }
@@ -92,7 +113,7 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
 
         return when {
             localOldest != distantOldest -> HealthResult.NOT_MATCHING
-            localNewest < distantNewest -> HealthResult.WILL_OVERWRITE
+            localNewest < distantNewest -> HealthResult.PREVENT_OVERWRITE
             else -> HealthResult.OK
         }
     }
@@ -185,11 +206,13 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
 
     companion object {
         const val WORK_TAG = "com.louis.app.cavity.auto-upload-db"
+        const val WORK_DATA_HEALTH_STATE = "com.louis.app.cavity.WORK_DATA_HEALTH_STATE"
     }
 
-    enum class HealthResult {
-        OK,
-        NOT_MATCHING,
-        WILL_OVERWRITE
+    enum class HealthResult(@StringRes val stringRes: Int) {
+        OK(R.string.backup_status_active),
+        NOT_MATCHING(R.string.backup_status_suspicious),
+        PREVENT_OVERWRITE(R.string.backup_status_pause),
+        FAILED(R.string.backup_status_error)
     }
 }

@@ -7,264 +7,333 @@
     android:layout_height="match_parent"
     android:transitionGroup="true">
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="?attr/actionBarSize"
+            android:transitionName="appbar"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/appBar"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:transitionName="appbar"
-                app:layout_constraintTop_toTopOf="parent">
+                app:menu="@menu/account_menu"
+                app:titleCentered="true"
+                app:titleTextColor="?attr/colorOnSurface" />
 
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:menu="@menu/account_menu"
-                    app:titleCentered="true"
-                    app:titleTextColor="?attr/colorOnSurface" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-            </com.google.android.material.appbar.AppBarLayout>
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBar"
+            app:trackThickness="1dp" />
 
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/progressBar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appBar"
-                app:trackThickness="1dp" />
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/appBar" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <com.louis.app.cavity.ui.home.widget.HexagonalView
-                android:id="@+id/exportBtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/small_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                app:layout_constraintEnd_toStartOf="@id/importBtn"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/email"
-                app:layout_constraintWidth_max="200dp"
-                app:strokeColor="?attr/colorPrimary"
-                app:strokeWidth="1dp">
+                <TextView
+                    android:id="@+id/accountInfoTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/cavity_account_info"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Cannot resize compund drawable with XML only -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    tools:ignore="UseCompoundDrawables">
+                <ImageView
+                    android:id="@+id/accountIcon"
+                    android:layout_width="@dimen/small_icon"
+                    android:layout_height="@dimen/small_icon"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginRight="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:contentDescription="@string/cavity_account"
+                    android:src="@drawable/ic_person"
+                    app:layout_constraintStart_toStartOf="@id/accountInfoTitle"
+                    app:layout_constraintTop_toBottomOf="@id/accountInfoTitle"
+                    app:tint="?attr/colorOnSurface" />
 
-                    <ImageView
-                        android:layout_width="@dimen/large_icon"
-                        android:layout_height="@dimen/large_icon"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/export"
-                        android:src="@drawable/ic_export"
-                        app:tint="?attr/colorPrimary" />
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    app:layout_constraintBottom_toBottomOf="@id/accountIcon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/accountIcon"
+                    app:layout_constraintTop_toTopOf="@id/accountIcon"
+                    tools:text="azerty@azerty.com" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/medium_margin"
-                        android:text="@string/export"
-                        android:textAppearance="?attr/textAppearanceOverline" />
+                <ImageView
+                    android:id="@+id/backupStateIcon"
+                    android:layout_width="@dimen/small_icon"
+                    android:layout_height="@dimen/small_icon"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    android:layout_marginRight="@dimen/small_margin"
+                    android:contentDescription="@string/cavity_account"
+                    android:padding="@dimen/xsmall_margin"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/switch_thumb"
+                    app:layout_constraintStart_toStartOf="@id/accountInfoTitle"
+                    app:layout_constraintTop_toBottomOf="@id/accountIcon"
+                    app:tint="@color/cavity_green" />
 
-                </LinearLayout>
-            </com.louis.app.cavity.ui.home.widget.HexagonalView>
+                <TextView
+                    android:id="@+id/backupStatus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:ellipsize="end"
+                    android:text="@string/auto_backup_state"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    app:layout_constraintBottom_toTopOf="@id/backupStatusMore"
+                    app:layout_constraintEnd_toStartOf="@id/toggleAutoBackup"
+                    app:layout_constraintStart_toEndOf="@id/backupStateIcon"
+                    app:layout_constraintTop_toTopOf="@id/backupStateIcon" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/large_margin"
-                android:text="@string/export_explanation"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBottom_toBottomOf="@id/exportBtn"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/exportBtn"
-                app:layout_constraintTop_toTopOf="@id/exportBtn" />
+                <TextView
+                    android:id="@+id/backupStatusMore"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/backup_status_active"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintBottom_toBottomOf="@id/backupStateIcon"
+                    app:layout_constraintEnd_toStartOf="@id/toggleAutoBackup"
+                    app:layout_constraintStart_toStartOf="@id/backupStatus" />
 
-            <com.louis.app.cavity.ui.home.widget.HexagonalView
-                android:id="@+id/importBtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/small_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/exportBtn"
-                app:layout_constraintTop_toBottomOf="@id/exportBtn"
-                app:layout_constraintWidth_max="200dp"
-                app:strokeColor="?attr/colorPrimary"
-                app:strokeWidth="1dp">
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/toggleAutoBackup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    app:layout_constraintBottom_toBottomOf="@id/backupStateIcon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/backupStateIcon" />
 
-                <!-- Cannot resize compund drawable with XML only -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    tools:ignore="UseCompoundDrawables">
+                <ImageView
+                    android:id="@+id/lastBackupIcon"
+                    android:layout_width="@dimen/small_icon"
+                    android:layout_height="@dimen/small_icon"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    android:layout_marginRight="@dimen/small_margin"
+                    android:contentDescription="@string/cavity_account"
+                    android:src="@drawable/ic_cloud_sync"
+                    app:layout_constraintStart_toStartOf="@id/accountInfoTitle"
+                    app:layout_constraintTop_toBottomOf="@id/backupStatusMore"
+                    app:tint="?attr/colorOnSurface" />
 
-                    <ImageView
-                        android:layout_width="@dimen/large_icon"
-                        android:layout_height="@dimen/large_icon"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/export"
-                        android:src="@drawable/ic_import"
-                        app:tint="?attr/colorPrimary" />
+                <TextView
+                    android:id="@+id/lastBackup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/last_action"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    app:layout_constraintBottom_toBottomOf="@id/lastBackupIcon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/lastBackupIcon"
+                    app:layout_constraintTop_toTopOf="@id/lastBackupIcon" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/medium_margin"
-                        android:text="@string/import_"
-                        android:textAppearance="?attr/textAppearanceOverline" />
 
-                </LinearLayout>
-            </com.louis.app.cavity.ui.home.widget.HexagonalView>
+                <View
+                    android:id="@+id/divider1"
+                    style="@style/Widget.Cavity.Divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lastBackup" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/large_margin"
-                android:gravity="right"
-                android:text="@string/import_explanation"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBottom_toBottomOf="@id/importBtn"
-                app:layout_constraintEnd_toStartOf="@id/importBtn"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/importBtn" />
+                <TextView
+                    android:id="@+id/backup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/new_backup"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider1" />
 
-            <com.louis.app.cavity.ui.home.widget.HexagonalView
-                android:id="@+id/imageBtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/small_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
-                app:layout_constraintEnd_toStartOf="@id/importBtn"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/importBtn"
-                app:layout_constraintVertical_bias="0.0"
-                app:layout_constraintWidth_max="200dp"
-                app:strokeColor="?attr/colorPrimary"
-                app:strokeWidth="1dp">
+                <TextView
+                    android:id="@+id/backupText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/export_explanation"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/backup" />
 
-                <!-- Cannot resize compund drawable with XML only -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    tools:ignore="UseCompoundDrawables">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/exportBtn"
+                    style="@style/Widget.Cavity.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/backup"
+                    app:icon="@drawable/ic_export"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/backupText" />
 
-                    <ImageView
-                        android:layout_width="@dimen/large_icon"
-                        android:layout_height="@dimen/large_icon"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/export"
-                        android:src="@drawable/ic_image_search"
-                        app:tint="?attr/colorPrimary" />
+                <View
+                    android:id="@+id/divider2"
+                    style="@style/Widget.Cavity.Divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/exportBtn" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/medium_margin"
+                <TextView
+                    android:id="@+id/importTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/import_"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                <com.louis.app.cavity.ui.home.widget.HexagonalView
+                    android:id="@+id/importBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    app:layout_constraintEnd_toStartOf="@id/imageBtn"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/importTitle"
+                    app:layout_constraintWidth_max="200dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="1dp">
+
+                    <!-- Cannot resize compund drawable with XML only -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="@string/file_import"
-                        android:textAppearance="?attr/textAppearanceOverline" />
+                        android:orientation="vertical"
+                        tools:ignore="UseCompoundDrawables">
 
-                </LinearLayout>
-            </com.louis.app.cavity.ui.home.widget.HexagonalView>
+                        <ImageView
+                            android:layout_width="@dimen/large_icon"
+                            android:layout_height="@dimen/large_icon"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/export"
+                            android:src="@drawable/ic_import"
+                            app:tint="?attr/colorPrimary" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/large_margin"
-                android:text="@string/file_import_explanation"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBottom_toBottomOf="@id/imageBtn"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/imageBtn"
-                app:layout_constraintTop_toTopOf="@id/imageBtn" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/medium_margin"
+                            android:gravity="center"
+                            android:text="@string/import_explanation"
+                            android:textAppearance="?attr/textAppearanceBody2" />
 
-            <com.louis.app.cavity.ui.home.widget.HexagonalView
-                android:id="@+id/deleteBtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/small_margin"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/imageBtn"
-                app:layout_constraintTop_toBottomOf="@id/imageBtn"
-                app:layout_constraintWidth_max="200dp"
-                app:strokeColor="?attr/colorPrimary"
-                app:strokeWidth="1dp">
+                    </LinearLayout>
+                </com.louis.app.cavity.ui.home.widget.HexagonalView>
 
-                <!-- Cannot resize compund drawable with XML only -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    tools:ignore="UseCompoundDrawables">
+                <com.louis.app.cavity.ui.home.widget.HexagonalView
+                    android:id="@+id/imageBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/importBtn"
+                    app:layout_constraintTop_toBottomOf="@id/importTitle"
+                    app:layout_constraintWidth_max="200dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="1dp">
 
-                    <ImageView
-                        android:layout_width="@dimen/large_icon"
-                        android:layout_height="@dimen/large_icon"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/export"
-                        android:src="@drawable/ic_close"
-                        app:tint="?attr/colorPrimary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/medium_margin"
+                    <!-- Cannot resize compund drawable with XML only -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="@string/delete_account"
-                        android:textAppearance="?attr/textAppearanceOverline" />
+                        android:orientation="vertical"
+                        tools:ignore="UseCompoundDrawables">
 
-                </LinearLayout>
-            </com.louis.app.cavity.ui.home.widget.HexagonalView>
+                        <ImageView
+                            android:layout_width="@dimen/large_icon"
+                            android:layout_height="@dimen/large_icon"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/export"
+                            android:src="@drawable/ic_image_search"
+                            app:tint="?attr/colorPrimary" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/large_margin"
-                android:gravity="right"
-                android:text="@string/delete_account_explanation"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBottom_toBottomOf="@id/deleteBtn"
-                app:layout_constraintEnd_toStartOf="@id/deleteBtn"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/deleteBtn" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/medium_margin"
+                            android:gravity="center"
+                            android:text="@string/file_import"
+                            android:textAppearance="?attr/textAppearanceBody2" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+                    </LinearLayout>
+                </com.louis.app.cavity.ui.home.widget.HexagonalView>
+
+                <View
+                    android:id="@+id/divider4"
+                    style="@style/Widget.Cavity.Divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/imageBtn" />
+
+                <TextView
+                    android:id="@+id/deleteAccountTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/delete_account"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider4" />
+
+                <TextView
+                    android:id="@+id/deleteAccountText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/delete_account_explanation"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/deleteAccountTitle" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/deleteBtn"
+                    style="@style/Widget.Cavity.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/delete"
+                    app:icon="@drawable/ic_close"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/deleteAccountText" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -280,6 +280,7 @@
     <string name="confirm_mail_sent">Un mail de confirmation a été envoyé.</string>
     <string name="new_account">Créer un compte</string>
     <string name="cavity_account">Compte Cavity</string>
+    <string name="cavity_account_info">Infos du compte</string>
     <string name="confirm_account">Confirmation</string>
     <string name="confirm_account_explanation">Un code de confirmation vous a été envoyé sur votre adresse mail</string>
     <string name="logout">Se déconnecter</string>
@@ -287,6 +288,8 @@
     <string name="account_explanation">Utiliser votre compte Cavity pour créer une sauvegarde en ligne de votre cave et la récupérer où vous le souhaitez.</string>
     <string name="export_explanation">Enregistre la cave de cet appareil sur un serveur distant.</string>
     <string name="export">Exporter</string>
+    <string name="new_backup">Créer une sauvegarde</string>
+    <string name="backup">Sauvegarder</string>
     <string name="import_explanation">Récupérez votre dernière sauvegarde.</string>
     <string name="import_">Importer</string>
     <string name="file_import">Importer les fichiers</string>
@@ -297,7 +300,7 @@
     <string name="file_imported">%1$d fichiers importé(s) sur %2$d sélectionné(s).</string>
     <string name="export_done">Sauvegarde effectuée.</string>
     <string name="import_done">Récupération effectuée.</string>
-    <string name="backup">Sauvegarde en ligne (depuis %s)</string>
+    <string name="backup_device_name">Sauvegarde en ligne (depuis %s)</string>
     <string name="last_action">Dernière sauvegarde: %s</string>
     <string name="current_device">Cet appareil (%s)</string>
     <string name="backup_erasure_warn_export">La sauvegarde en ligne existante sera remplacée par la cave de cet appareil.\n<b><i>Note</i></b>: les images de vos vins, de vos amis et vos pdfs <b>ne sont pas</b> sauvegardés. Pour en savoir plus, rendez-vous dans \"Importer les fichiers\" dans l\'écran de gestion du compte.</string>
@@ -314,6 +317,13 @@
     <string name="auto_backup_not_matching">Assurez vous d\'être connedté au bon compte et relancez une sauvegarde manuellement</string>
     <string name="auto_backup_done_title">Sauvegarde automatique effectuée</string>
     <string name="auto_backup_done">Vos données ont été synchronisées sur votre compte en ligne</string>
+    <string name="auto_backup_state">Statut de la sauvegarde automatique</string>
+    <string name="auto_backup_unavailable">Une erreur technique empêche la sauvegarde automatique</string>
+    <string name="backup_status_active">Active</string>
+    <string name="backup_status_error">Indisponible</string>
+    <string name="backup_status_pause">Pause</string>
+    <string name="backup_status_suspicious">Action involontaire suspectée</string>
+    <string name="backup_status_disabled">Désactivée</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

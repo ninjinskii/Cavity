@@ -97,7 +97,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     private fun observe() {
         loginViewModel.account.observe(viewLifecycleOwner) {
             val fallback = getString(R.string.unknown)
-            binding.backup.text = getString(R.string.backup, it?.lastUser ?: fallback)
+            binding.backup.text = getString(R.string.backup_device_name, it?.lastUser ?: fallback)
 
             val date = DateFormatter.formatDate(it?.lastUpdateTime, "dd MMMM yyyy, HH:mm")
             binding.lastAction.text = getString(R.string.last_action, date)

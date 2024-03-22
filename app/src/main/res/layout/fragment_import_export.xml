@@ -61,7 +61,7 @@
                             android:layout_width="@dimen/small_icon"
                             android:layout_height="@dimen/small_icon"
                             android:layout_margin="@dimen/small_margin"
-                            android:contentDescription="@string/backup"
+                            android:contentDescription="@string/backup_device_name"
                             android:src="@drawable/ic_cloud"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -76,7 +76,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/serverIcon"
                             app:layout_constraintTop_toTopOf="@id/serverIcon"
-                            tools:text="@string/backup" />
+                            tools:text="@string/backup_device_name" />
 
                         <com.robinhood.ticker.TickerView
                             android:id="@+id/bottles"

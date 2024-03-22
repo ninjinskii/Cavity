@@ -40,6 +40,11 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
         workManager.getWorkInfoByIdLiveData(it)
     }
 
+    private val autoBackupWorkRequestId = MutableLiveData<UUID>()
+    val autoBackupWorkProgress = autoBackupWorkRequestId.switchMap {
+        workManager.getWorkInfoByIdLiveData(it)
+    }
+
     // Determines whether or not the data we want to export are older than the backup data
     private val _healthy = MutableLiveData(true)
     val healthy: LiveData<Boolean>
@@ -177,11 +182,12 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
             .setRequiredNetworkType(NetworkType.UNMETERED)
             .build()
 
-        PeriodicWorkRequestBuilder<AutoUploadWorker>(15, TimeUnit.DAYS, 4, TimeUnit.HOURS)
+        PeriodicWorkRequestBuilder<AutoUploadWorker>(15, TimeUnit.MINUTES)
             .addTag(AutoUploadWorker.WORK_TAG)
-            .setInitialDelay(1, TimeUnit.HOURS)
+//            .setInitialDelay(1, TimeUnit.HOURS)
             .setConstraints(constraints)
             .build().also {
+                autoBackupWorkRequestId.value = it.id
                 workManager.enqueue(it)
             }
     }
