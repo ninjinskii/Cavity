@@ -28,12 +28,22 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
 
     override suspend fun doWork(): Result {
         return try {
-            if (!checkHealth()) {
+            val health = checkHealth()
+            if (health == HealthResult.OK) {
                 uploadDatabase()
                 sendNotification(R.string.auto_backup_done_title, R.string.auto_backup_done)
                 Result.success()
             } else {
-                sendNotification(R.string.auto_backup_failed_title, R.string.auto_backup_overwrite_data)
+                val message =
+                    if (health == HealthResult.WILL_OVERWRITE)
+                        R.string.auto_backup_overwrite_data
+                    else
+                        R.string.auto_backup_not_matching
+
+                sendNotification(
+                    R.string.auto_backup_failed_title,
+                    message
+                )
                 Result.failure()
             }
         } catch (e: UncompleteExportException) {
@@ -54,7 +64,7 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
     private suspend fun checkHealth() = withContext(IO) {
         accountRepository.getHistoryEntries().let { response ->
             when (response) {
-                is ApiResponse.Success -> checkHealth(isExport = true, response.value)
+                is ApiResponse.Success -> checkHealth(response.value)
                 is ApiResponse.Failure -> false
                 is ApiResponse.UnknownError -> false
                 is ApiResponse.UnauthorizedError -> {
@@ -71,17 +81,20 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
         }
     }
 
-    private suspend fun checkHealth(
-        isExport: Boolean,
-        distantHistoryEntries: List<HistoryEntry>
-    ): Boolean {
+    private suspend fun checkHealth(distantHistoryEntries: List<HistoryEntry>): HealthResult {
         val localHistoryEntries = repository.getAllEntriesNotPagedNotLive()
-        val distantNewer =
-            distantHistoryEntries.maxByOrNull { it.date }?.date ?: 0
-        val localNewer = localHistoryEntries.maxByOrNull { it.date }?.date ?: 0
+        val distantMinMax = distantHistoryEntries.minMaxByOrNull { it.date }
+        val localMinMax = localHistoryEntries.minMaxByOrNull { it.date }
+        val distantOldest = distantMinMax?.first?.date ?: 0
+        val distantNewest = distantMinMax?.second?.date ?: 0
+        val localOldest = localMinMax?.first?.date ?: 0
+        val localNewest = localMinMax?.second?.date ?: 0
 
-        return if (isExport) localNewer >= distantNewer
-        else distantNewer >= localNewer
+        return when {
+            localOldest != distantOldest -> HealthResult.NOT_MATCHING
+            localNewest < distantNewest -> HealthResult.WILL_OVERWRITE
+            else -> HealthResult.OK
+        }
     }
 
     private suspend fun uploadDatabase() = withContext(IO) {
@@ -119,6 +132,41 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
         }
     }
 
+    private fun <T> Iterable<T>.minMaxByOrNull(selector: (T) -> Long): Pair<T, T>? {
+        val iterator = iterator()
+
+        if (!iterator.hasNext()) {
+            return null
+        }
+
+        var max = iterator.next()
+        var min = max
+
+        if (!iterator.hasNext()) {
+            return min to max
+        }
+
+        var maxValue = selector(max)
+        var minValue = selector(min)
+
+        do {
+            val element = iterator.next()
+            val value = selector(element)
+
+            if (maxValue < value) {
+                max = element
+                maxValue = value
+            }
+
+            if (minValue > value) {
+                min = element
+                minValue = value
+            }
+        } while (iterator.hasNext())
+
+        return min to max
+    }
+
     private fun copyToExternalDir(fileAssocs: List<FileAssoc>) {
         fileAssocs
             .forEach {
@@ -137,5 +185,11 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
 
     companion object {
         const val WORK_TAG = "com.louis.app.cavity.auto-upload-db"
+    }
+
+    enum class HealthResult {
+        OK,
+        NOT_MATCHING,
+        WILL_OVERWRITE
     }
 }

@@ -100,12 +100,11 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
         distantHistoryEntries: List<HistoryEntry>
     ): Boolean {
         val localHistoryEntries = repository.getAllEntriesNotPagedNotLive()
-        val distantNewer =
-            distantHistoryEntries.maxByOrNull { it.date }?.date ?: 0
-        val localNewer = localHistoryEntries.maxByOrNull { it.date }?.date ?: 0
+        val distantNewest = distantHistoryEntries.maxByOrNull { it.date }?.date ?: 0
+        val localNewest = localHistoryEntries.maxByOrNull { it.date }?.date ?: 0
 
-        return if (isExport) localNewer >= distantNewer
-        else distantNewer >= localNewer
+        return if (isExport) localNewest >= distantNewest
+        else distantNewest >= localNewest
     }
 
     fun fetchDistantBottleCount() {
