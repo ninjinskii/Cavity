@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.domain.backup.FileProcessor
 import com.louis.app.cavity.model.FileAssoc
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.ui.account.Environment
