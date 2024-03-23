@@ -14,6 +14,7 @@ import androidx.work.WorkInfo
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportExportBinding
+import com.louis.app.cavity.ui.account.worker.UploadWorker
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
@@ -155,14 +156,18 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
                     }
 
                     WorkInfo.State.SUCCEEDED -> {
-                        val message =
-                            if (it.tags.contains("com.louis.app.cavity.upload-db")) R.string.export_done
-                            else R.string.import_done
+                        val message: Int
+                        val isUpload = it.tags.contains(UploadWorker.WORK_TAG)
+
+                        message = if (isUpload) {
+                            loginViewModel.updateAccountLastUpdateLocally()
+                            R.string.export_done
+                        } else {
+                            R.string.import_done
+                        }
 
                         binding.progressBar.setVisible(false)
                         binding.coordinator.showSnackbar(message)
-
-                        loginViewModel.updateAccountLastUpdateLocally()
 
                         with(importExportViewModel) {
                             fetchLocalBottleCount()
