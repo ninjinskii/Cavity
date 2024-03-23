@@ -225,6 +225,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
                 if (isChecked) {
                     importExportViewModel.enableAutoBackups()
+                    // TODO: lancer le même check auto qui se lance lors de l'arrivée de ce fragment (pas encore fait)
                 } else {
                     importExportViewModel.disableAutoBackups()
                     updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_USER_DISABLED)

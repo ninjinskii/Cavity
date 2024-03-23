@@ -1,6 +1,8 @@
 package com.louis.app.cavity.domain.backup
 
 import android.content.Context
+import androidx.annotation.StringRes
+import com.louis.app.cavity.R
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.FileAssoc
@@ -72,6 +74,16 @@ class BackupBuilder(private val context: Context) {
                 }
             }
         }
+
+    @StringRes
+    fun getTextForHealthResult(backupHealthResult: HealthResult, isExport: Boolean): Int? {
+        return when (backupHealthResult) {
+            HealthResult.Ok -> null
+            HealthResult.MayBeAccountSwitch -> R.string.auto_backup_account_switch
+            HealthResult.WillOverwriteTarget ->
+                if (isExport) R.string.healthcheck_export_warn else R.string.healthcheck_import_warn
+        }
+    }
 
     private fun backupFilesToExternalDir(fileAssocs: List<FileAssoc>) {
         fileAssocs

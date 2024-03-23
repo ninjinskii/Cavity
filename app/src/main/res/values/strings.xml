@@ -317,6 +317,7 @@
     <string name="auto_backup_unauthorized">Connectez vous à votre compte Cavity pour faire fonctionner à nouveau les sauvegardes automatiques</string>
     <string name="auto_backup_overwrite_data">Une sauvegarde contenant des mouvements de stocks plus récents que ceux de cet appareil a été trouvée sur votre compte</string>
     <string name="auto_backup_not_matching">Assurez vous d\'être connecté au bon compte et relancez une sauvegarde manuellement</string>
+    <string name="auto_backup_account_switch">Le mouvement de stock le plus vieux de chacune des caves n\'est pas le même, ce qui peut induire une action involontaire de votre part. Assurez-vous d\'être connecté au bon compte avant de réessayer.</string>
     <string name="auto_backup_done_title">Sauvegarde automatique effectuée</string>
     <string name="auto_backup_done">Vos données ont été synchronisées sur votre compte en ligne</string>
     <string name="auto_backup_state">Statut de la sauvegarde automatique</string>

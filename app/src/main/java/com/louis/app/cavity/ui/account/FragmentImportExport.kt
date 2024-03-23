@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.account
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
@@ -103,8 +104,8 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
             binding.lastAction.text = getString(R.string.last_action, date)
         }
 
-        importExportViewModel.healthy.observe(viewLifecycleOwner) {
-            changeWarningVisibilty(!it)
+        importExportViewModel.health.observe(viewLifecycleOwner) { stringRes ->
+            changeWarningVisibilty(stringRes)
         }
 
         importExportViewModel.isLoading.observe(viewLifecycleOwner) {
@@ -184,7 +185,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
 
     private fun setListeners() {
         binding.confirmDanger.setOnClickListener {
-            changeWarningVisibilty(visible = false)
+            changeWarningVisibilty(null)
         }
 
         binding.submit.setOnClickListener {
@@ -194,10 +195,13 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
         }
     }
 
-    private fun changeWarningVisibilty(visible: Boolean) {
+    private fun changeWarningVisibilty(@StringRes text: Int?) {
+        val isWarn = text !== null
+
         with(binding) {
-            submit.isEnabled = !visible
-            healthcheckWarn.setVisible(visible)
+            submit.isEnabled = !isWarn
+            text?.let { warn.text = getString(it) }
+            healthcheckWarn.setVisible(isWarn)
         }
     }
 

@@ -47,9 +47,9 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
         workManager.getWorkInfoByIdLiveData(it)
     }
 
-    private val _healthy = MutableLiveData(true)
-    val healthy: LiveData<Boolean>
-        get() = _healthy
+    private val _health = MutableLiveData<Int?>()
+    val health: LiveData<Int?>
+        get() = _health
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
@@ -90,7 +90,8 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
                             val target = if (isExport) distantEntries else localEntries
                             val source = if (isExport) localEntries else distantEntries
                             val health = backupBuilder.checkHealth(source, target)
-                            _healthy.postValue(health is BackupBuilder.HealthResult.Ok)
+                            val stringRes = backupBuilder.getTextForHealthResult(health, isExport)
+                            _health.postValue(stringRes)
                         }
 
                         is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
@@ -103,18 +104,6 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
                 _isLoading.postValue(false)
             }
         }
-    }
-
-    private suspend fun checkHealth(
-        isExport: Boolean,
-        distantHistoryEntries: List<HistoryEntry>
-    ): Boolean {
-        val localHistoryEntries = repository.getAllEntriesNotPagedNotLive()
-        val distantNewest = distantHistoryEntries.maxByOrNull { it.date }?.date ?: 0
-        val localNewest = localHistoryEntries.maxByOrNull { it.date }?.date ?: 0
-
-        return if (isExport) localNewest >= distantNewest
-        else distantNewest >= localNewest
     }
 
     fun fetchDistantBottleCount() {
