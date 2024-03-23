@@ -83,7 +83,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedbackString: LiveData<Event<String>>
         get() = _userFeedbackString
 
-    var avoidAutoHealthCheckSpam = false
+    var preventHealthCheckSpam = false
         get() = field.also { field = true }
 
     fun fetchHealth(isImport: Boolean) {

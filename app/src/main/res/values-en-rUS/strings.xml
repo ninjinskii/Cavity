@@ -15,7 +15,6 @@
     <string name="warning">Warning !</string>
     <string name="locale">en-US</string>
     <string name="unknown">Unknown</string>
-    <string name="loading">Loading…</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Please enter a region name.</string>
@@ -287,7 +286,6 @@
     <string name="confirm_account">Confirmation</string>
     <string name="confirm_account_explanation">A confirmation code has been sent to you email address.</string>
     <string name="logout">Logout</string>
-    <string name="login">Login</string>
     <string name="account_explanation">Use a Cavity account to create online backups of your wine cellar and get it back wherever you need.</string>
     <string name="export_explanation">Save the device wine cellar on the server</string>
     <string name="export">Export</string>
@@ -324,7 +322,6 @@
     <string name="auto_backup_done">Your data was uploaded into your online account</string>
     <string name="auto_backup_state">Auto backup state</string>
     <string name="auto_backup_unavailable">A technical issue happened</string>
-    <string name="auto_backup_waiting">Backup status will be updated as soon as an automatic backup will launch itself</string>
     <string name="backup_status_active">Active</string>
     <string name="backup_status_error">Unavailable</string>
     <string name="backup_status_pause">Paused</string>

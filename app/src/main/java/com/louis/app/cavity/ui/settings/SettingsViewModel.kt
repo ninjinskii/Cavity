@@ -26,10 +26,6 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
-    private val _autoBackupStateWarning = MutableLiveData(false)
-    val autoBackupStateWarning: LiveData<Boolean>
-        get() = _autoBackupStateWarning
-
     fun setSkewBottle(skew: Boolean) {
         prefsRepository.setSkewBottle(skew)
     }
@@ -44,7 +40,6 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setAutoBackup(autoBackup: Boolean) {
         prefsRepository.setAutoBackup(autoBackup)
-        fetchCanAutoBackup()
     }
 
     fun getSkewBottle() = prefsRepository.getSkewBottle()
@@ -71,12 +66,5 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
                 }
             }
         }
-    }
-
-    fun fetchCanAutoBackup() {
-        val autoBackupEnabled = getAutoBackup()
-        val hasToken = prefsRepository.run { getApiToken().isNotEmpty() }
-
-        _autoBackupStateWarning.value = if (autoBackupEnabled) !hasToken else false
     }
 }

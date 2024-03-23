@@ -7,7 +7,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.work.WorkInfo
@@ -25,8 +24,8 @@ import com.robinhood.ticker.TickerUtils
 class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     private var _binding: FragmentImportExportBinding? = null
     private val binding get() = _binding!!
-    private val importExportViewModel: ImportExportViewModel by viewModels()
     private val loginViewModel: LoginViewModel by activityViewModels()
+    private val importExportViewModel: ImportExportViewModel by activityViewModels()
     private val args: FragmentImportExportArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -158,6 +157,8 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
                     WorkInfo.State.SUCCEEDED -> {
                         val message: Int
                         val isUpload = it.tags.contains(UploadWorker.WORK_TAG)
+
+                        importExportViewModel.preventHealthCheckSpam = false
 
                         message = if (isUpload) {
                             loginViewModel.updateAccountLastUpdateLocally()

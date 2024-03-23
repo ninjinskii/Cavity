@@ -7,14 +7,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
 import com.louis.app.cavity.BuildConfig
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSettingsBinding
 import com.louis.app.cavity.db.PrefsRepository.Companion.MIN_TEMPLATE_SCALE
-import com.louis.app.cavity.ui.AutoBackupChecker
 import com.louis.app.cavity.ui.addwine.FragmentCamera.Companion.TEMPLATE_ROTATION
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
@@ -41,21 +39,13 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSettingsBinding.bind(view)
 
-        settingsViewModel.fetchCanAutoBackup()
-
         setupNavigation(binding.appBar.toolbar)
 
-        setupToolbarMenu()
         observe()
         setListeners()
         setupSliderFormatter()
         setupCurrencyButtons()
         setupAppVersion()
-    }
-
-    private fun setupToolbarMenu() {
-        AutoBackupChecker(settingsViewModel, viewLifecycleOwner, findNavController())
-            .setupToolbarMenu(binding.appBar.toolbar)
     }
 
     private fun observe() {
@@ -67,10 +57,6 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
 
         settingsViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.progressBar.setVisible(it)
-        }
-
-        settingsViewModel.autoBackupStateWarning.observe(viewLifecycleOwner) {
-            binding.appBar.toolbar.menu.findItem(R.id.fixAutBackup)?.setVisible(it)
         }
     }
 

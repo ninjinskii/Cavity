@@ -11,7 +11,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.work.WorkInfo
@@ -21,6 +20,7 @@ import com.louis.app.cavity.databinding.FragmentAccountBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.account.worker.AutoUploadWorker
 import com.louis.app.cavity.ui.account.worker.PruneWorker
+import com.louis.app.cavity.ui.account.worker.UploadWorker
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.PermissionChecker
@@ -38,7 +38,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
     private val settingsViewModel: SettingsViewModel by activityViewModels()
-    private val importExportViewModel: ImportExportViewModel by viewModels()
+    private val importExportViewModel: ImportExportViewModel by activityViewModels()
 
     private lateinit var transitionHelper: TransitionHelper
 
@@ -100,7 +100,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
         if (!settingsViewModel.getAutoBackup()) {
             updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_USER_DISABLED)
-        } else if(!importExportViewModel.avoidAutoHealthCheckSpam) {
+        } else if (!importExportViewModel.preventHealthCheckSpam) {
             importExportViewModel.autoBackupHealthCheck()
         }
 
@@ -142,8 +142,14 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                     }
 
                     WorkInfo.State.SUCCEEDED -> {
+                        binding.progressBar.setVisible(false)
+
+                        if (it.tags.contains(UploadWorker.WORK_TAG)) {
+                            loginViewModel.updateAccountLastUpdateLocally()
+                            updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_SUCCESS)
+                        }
+
                         if (it.tags.contains(PruneWorker.WORK_TAG)) {
-                            binding.progressBar.setVisible(false)
                             loginViewModel.logout()
                         }
                     }
@@ -345,6 +351,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        importExportViewModel.preventHealthCheckSpam = false
     }
 
     data class BackupStatusUi(
