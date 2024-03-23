@@ -317,7 +317,7 @@
     <string name="auto_backup_failed_title">Auto backup failed</string>
     <string name="auto_backup_unauthorized">Log in to your Cavity account to fix auto backups</string>
     <string name="auto_backup_overwrite_data">A backup containing newer stock movements than those of this device was found on your account</string>
-    <string name="auto_backup_not_matching">Make sure to be logged in the right acount and try again manually</string>
+    <string name="auto_backup_not_matching">Make sure to be logged in the right account and try again manually</string>
     <string name="auto_backup_done_title">Auto backup successfully done</string>
     <string name="auto_backup_done">Your data was uploaded into your online account</string>
     <string name="auto_backup_state">Auto backup state</string>

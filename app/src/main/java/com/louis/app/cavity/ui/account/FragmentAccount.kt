@@ -23,7 +23,6 @@ import com.louis.app.cavity.ui.account.worker.AutoUploadWorker
 import com.louis.app.cavity.ui.account.worker.PruneWorker
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
@@ -158,6 +157,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
             if (it?.state == WorkInfo.State.RUNNING) {
                 val healthState =
                     it.progress.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
+
                 updateAutoBackupStatus(healthState)
 
                 if (healthState == AutoUploadWorker.HEALTH_STATE_SUCCESS) {
@@ -271,7 +271,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
             binding.backupStatusDetails.setVisible(!success)
         }
 
-        L.v(healthState.toString())
+        binding.backupStatuProgressBar.setVisible(false)
 
         val uiInfo: BackupStatusUi? = when (healthState) {
             AutoUploadWorker.HEALTH_STATE_SUCCESS ->

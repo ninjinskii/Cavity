@@ -116,11 +116,20 @@
                     android:id="@+id/backupStatusMore"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/loading"
                     android:textAppearance="?attr/textAppearanceCaption"
                     app:layout_constraintBottom_toBottomOf="@id/backupStateIcon"
                     app:layout_constraintEnd_toStartOf="@id/toggleAutoBackup"
                     app:layout_constraintStart_toStartOf="@id/backupStatus" />
+
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/backupStatuProgressBar"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    app:layout_constraintBottom_toBottomOf="@id/backupStatusMore"
+                    app:layout_constraintStart_toStartOf="@id/backupStatusMore"
+                    app:layout_constraintTop_toTopOf="@id/backupStatusMore"
+                    app:trackThickness="1dp" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/toggleAutoBackup"
