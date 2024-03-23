@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -27,6 +29,8 @@ import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
+import com.louis.app.cavity.util.spToPx
+import com.robinhood.ticker.TickerUtils
 
 class FragmentAccount : Fragment(R.layout.fragment_account) {
     private lateinit var readPermissionChecker: PermissionChecker
@@ -95,7 +99,12 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
         setupNavigation(binding.toolbar)
 
+        if (!settingsViewModel.getAutoBackup()) {
+            updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_USER_DISABLED)
+        }
+
         observe()
+        initTickerView()
         setListeners()
         setupToolbar()
     }
@@ -146,19 +155,27 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         }
 
         importExportViewModel.autoBackupWorkProgress.observe(viewLifecycleOwner) {
-            L.v("observer progress")
-            L.v(it.progress.toString())
-
-            if (it.state == WorkInfo.State.RUNNING) {
-                L.v("observer progress while running only")
-                L.v(it.progress.toString())
+            if (it?.state == WorkInfo.State.RUNNING) {
                 val healthState =
                     it.progress.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
                 updateAutoBackupStatus(healthState)
 
+                if (healthState == AutoUploadWorker.HEALTH_STATE_SUCCESS) {
+                    loginViewModel.updateAccountLastUpdateLocally()
+                }
             }
+        }
+    }
 
-//            loginViewModel.updateAccountLastUpdateLocally()
+    private fun initTickerView() {
+        val textAppearanceApplier = AppCompatTextView(requireContext()).apply {
+            TextViewCompat.setTextAppearance(this, R.style.TextAppearance_Cavity_Body1)
+        }
+
+        binding.lastBackup.apply {
+            textPaint.typeface = textAppearanceApplier.paint.typeface
+            textPaint.textSize = requireContext().spToPx(18f)
+            setCharacterLists(TickerUtils.provideAlphabeticalList())
         }
     }
 
@@ -250,7 +267,10 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         val success = healthState == AutoUploadWorker.HEALTH_STATE_SUCCESS
                 || healthState == AutoUploadWorker.HEALTH_STATE_USER_DISABLED
 
-        binding.backupStatusDetails.setVisible(!success)
+        if (healthState != -1) {
+            binding.backupStatusDetails.setVisible(!success)
+        }
+
         L.v(healthState.toString())
 
         val uiInfo: BackupStatusUi? = when (healthState) {
@@ -278,7 +298,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
             AutoUploadWorker.HEALTH_STATE_PREVENT_ACCOUNT_SWITCH ->
                 BackupStatusUi(
                     R.string.backup_status_pause,
-                    R.string.auto_backup_account_switch,
+                    R.string.auto_backup_not_matching,
                     R.color.cavity_yellow
                 )
 
