@@ -20,17 +20,18 @@ class BackupBuilder(private val context: Context) {
             val targetNewest = target.maxByOrNull { it.date }?.date ?: 0
             val targetOldest = target.minByOrNull { it.date }
 
-            val isOverwritingTargetBackup = sourceNewest < targetNewest
+            val isOverwritingTarget = sourceNewest < targetNewest
             val couldBeAccountSwitch =
-                (sourceOldest?.date ?: 0) != (targetOldest?.date ?: 0)
+                target.isNotEmpty()
+                        && (sourceOldest?.date ?: targetOldest?.date) != (targetOldest?.date ?: 0)
                         && sourceOldest?.id !== targetOldest?.id
 
             if (couldBeAccountSwitch) {
                 return@withContext HealthResult.MayBeAccountSwitch
             }
 
-            if (isOverwritingTargetBackup) {
-                return@withContext HealthResult.WillOverwriteDistantBackup
+            if (isOverwritingTarget) {
+                return@withContext HealthResult.WillOverwriteTarget
             }
 
             return@withContext HealthResult.Ok
@@ -85,7 +86,7 @@ class BackupBuilder(private val context: Context) {
 
     sealed class HealthResult {
         data object Ok : HealthResult()
-        data object WillOverwriteDistantBackup : HealthResult()
+        data object WillOverwriteTarget : HealthResult()
         data object MayBeAccountSwitch : HealthResult()
     }
 }

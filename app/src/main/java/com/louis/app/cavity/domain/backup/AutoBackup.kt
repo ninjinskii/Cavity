@@ -49,7 +49,7 @@ class AutoBackup<T>(
             }
 
             BackupBuilder.HealthResult.MayBeAccountSwitch -> listener.onPreventAccountSwitch()
-            BackupBuilder.HealthResult.WillOverwriteDistantBackup -> listener.onPreventOverwriting()
+            BackupBuilder.HealthResult.WillOverwriteTarget -> listener.onPreventOverwriting()
         }
     }
 }
