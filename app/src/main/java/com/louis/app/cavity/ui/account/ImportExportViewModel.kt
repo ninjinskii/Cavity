@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
+import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
@@ -12,9 +13,9 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.domain.backup.BackupBuilder
-import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.ui.account.worker.AutoUploadWorker
+import com.louis.app.cavity.ui.account.worker.AutoUploadWorker.Companion.WORK_DATA_HEALTHCHECK_ONLY
 import com.louis.app.cavity.ui.account.worker.DownloadWorker
 import com.louis.app.cavity.ui.account.worker.PruneWorker
 import com.louis.app.cavity.ui.account.worker.UploadWorker
@@ -30,6 +31,8 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
 
     companion object {
         private const val MIN_BACKOFF_SECONDS = 10L
+        private const val AUTO_BACKUP_PERIODICITY_IN_DAYS = 15L
+        private const val AUTO_BACKUP_INITIAL_DELAY_IN_HOURS = 1L
     }
 
     private val repository = WineRepository.getInstance(app)
@@ -44,6 +47,11 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
 
     private val autoBackupWorkRequestId = MutableLiveData<UUID>()
     val autoBackupWorkProgress = autoBackupWorkRequestId.switchMap {
+        workManager.getWorkInfoByIdLiveData(it)
+    }
+
+    private val healthCheckWorkRequestId = MutableLiveData<UUID>()
+    val healthCheckWorkProgress = healthCheckWorkRequestId.switchMap {
         workManager.getWorkInfoByIdLiveData(it)
     }
 
@@ -74,6 +82,9 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     private val _userFeedbackString = MutableLiveData<Event<String>>()
     val userFeedbackString: LiveData<Event<String>>
         get() = _userFeedbackString
+
+    var avoidAutoHealthCheckSpam = false
+        get() = field.also { field = true }
 
     fun fetchHealth(isImport: Boolean) {
         val isExport = !isImport
@@ -169,16 +180,33 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
 
     fun pruneWorks() = workManager.pruneWork()
 
-    fun enableAutoBackups() {
-        disableAutoBackups()
+    fun autoBackupHealthCheck() {
+        workManager.cancelAllWorkByTag(AutoUploadWorker.WORK_TAG_HEALTHCHECK)
 
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.UNMETERED)
             .build()
 
-        PeriodicWorkRequestBuilder<AutoUploadWorker>(15, TimeUnit.MINUTES)
+        OneTimeWorkRequestBuilder<AutoUploadWorker>()
+            .addTag(AutoUploadWorker.WORK_TAG_HEALTHCHECK)
+            .setInputData(Data.Builder().putBoolean(WORK_DATA_HEALTHCHECK_ONLY, true).build())
+            .setConstraints(constraints)
+            .build().also {
+                healthCheckWorkRequestId.value = it.id
+                workManager.enqueue(it)
+            }
+    }
+
+    fun enableAutoBackups() {
+        cancelCurrentAutoBackup()
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
+
+        PeriodicWorkRequestBuilder<AutoUploadWorker>(AUTO_BACKUP_PERIODICITY_IN_DAYS, TimeUnit.DAYS)
             .addTag(AutoUploadWorker.WORK_TAG)
-//            .setInitialDelay(1, TimeUnit.HOURS)
+            .setInitialDelay(AUTO_BACKUP_INITIAL_DELAY_IN_HOURS, TimeUnit.HOURS)
             .setConstraints(constraints)
             .build().also {
                 autoBackupWorkRequestId.value = it.id
@@ -186,7 +214,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun disableAutoBackups() {
+    fun cancelCurrentAutoBackup() {
         workManager.cancelAllWorkByTag(AutoUploadWorker.WORK_TAG)
     }
 

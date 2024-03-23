@@ -8,9 +8,6 @@ import com.louis.app.cavity.network.response.ApiResponse
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
-// On affiche pas le bon texte quand on est en risque d'overwrite
-// Gérer le chagement de statut de la backup lors du décocahge du switch
-// Supprimer le last backup state de prefs repository ?
 class AutoBackup<T>(
     private val wineRepository: WineRepository,
     private val accountRepository: AccountRepository,
@@ -20,7 +17,7 @@ class AutoBackup<T>(
 
     private val backupBuilder = BackupBuilder(context)
 
-    suspend fun tryBackup(): T = withContext(IO) {
+    suspend fun tryBackup(healthCheckOnly: Boolean): T = withContext(IO) {
         val localHistoryEntries = wineRepository.getAllEntriesNotPagedNotLive()
         val distantHistoryEntries: List<HistoryEntry> =
             accountRepository.getHistoryEntries().let { response ->
@@ -39,7 +36,10 @@ class AutoBackup<T>(
         when (backupBuilder.checkHealth(localHistoryEntries, distantHistoryEntries)) {
             BackupBuilder.HealthResult.Ok -> {
                 return@withContext try {
-                    backupBuilder.backup(accountRepository, wineRepository)
+                    if (!healthCheckOnly) {
+                        backupBuilder.backup(accountRepository, wineRepository)
+                    }
+
                     listener.onSuccess()
                 } catch (e: BackupBuilder.UncompleteExportException) {
                     listener.onFailure(canRetry = true, exception = e)

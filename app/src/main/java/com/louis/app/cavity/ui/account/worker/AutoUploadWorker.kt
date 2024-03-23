@@ -13,16 +13,18 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.domain.backup.AutoBackup
 import com.louis.app.cavity.domain.backup.BackupFinishedListener
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
-import com.louis.app.cavity.util.L
 import io.sentry.Sentry
 import kotlinx.coroutines.delay
 
+// This worker is designed to be used with a one shot work or a periodic work,
+// using progress as a return value when used periodically
 class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
     CoroutineWorker(context, params) {
 
     private val repository = WineRepository.getInstance(context as Application)
     private val accountRepository = AccountRepository.getInstance(context as Application)
     private val prefsRepository = PrefsRepository.getInstance(context as Application)
+    private val healthCheckOnly = inputData.getBoolean(WORK_DATA_HEALTHCHECK_ONLY, false)
 
     override suspend fun doWork(): Result {
         val listener = object : BackupFinishedListener<Data> {
@@ -38,11 +40,10 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
                 exception?.let { Sentry.captureException(it) }
                 sendNotification(R.string.auto_backup_failed_title, R.string.base_error)
 
-                val data = Data.Builder()
+                return Data.Builder()
                     .putInt(WORK_DATA_HEALTH_STATE_KEY, HEALTH_STATE_FAILED)
                     .build()
 
-                return data
 //                return if (canRetry && runAttemptCount < 1) Result.retry() else Result.failure(data)
             }
 
@@ -84,12 +85,14 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
         val autoBackup = AutoBackup(repository, accountRepository, context, listener)
 
         return try {
-            val result = autoBackup.tryBackup()
-            L.v("setProgerss")
-            L.v(result.toString())
-            setProgress(result)
-            delay(2000)
-            Result.success()
+            // Tricky part: if this worker is run as non periodic (e.g. as healthcheck)
+            // We have to pass the health result in the Result.success() call to get picked up by the healthcheck observers
+            // Note also that periodic work never really succeed, so we cant rely only on Result.success() since periodic work observer
+            // wont receive the data
+            val result = autoBackup.tryBackup(healthCheckOnly)
+            setProgress(result)     // If this worker is run periodically, we can get this data by using WorkInfo#progress
+            delay(200)      // Let the observers catch the progress
+            Result.success(result)  // If this worker is run in one shot, we can get this data by using WorkInfo#outputData
         } catch (e: Exception) {
             Sentry.captureException(e)
             val data = Data.Builder()
@@ -102,13 +105,19 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
     }
 
     private fun sendNotification(@StringRes title: Int, @StringRes content: Int) {
+        if (healthCheckOnly) {
+            return
+        }
+
         val notification = NotificationBuilder.buildAutoBackupNotification(context, title, content)
         NotificationBuilder.notify(context, notification)
     }
 
     companion object {
         const val WORK_TAG = "com.louis.app.cavity.auto-upload-db"
+        const val WORK_TAG_HEALTHCHECK = "com.louis.app.cavity.auto-upload-healthcheck"
         const val WORK_DATA_HEALTH_STATE_KEY = "com.louis.app.cavity.WORK_DATA_HEALTH_STATE_KEY"
+        const val WORK_DATA_HEALTHCHECK_ONLY = "com.louis.app.cavity.WORK_DATA_HEALTHCHECK_ONLY"
         const val HEALTH_STATE_SUCCESS = 0
         const val HEALTH_STATE_FAILED = 1
         const val HEALTH_STATE_PREVENT_OVERWRITE = 2
