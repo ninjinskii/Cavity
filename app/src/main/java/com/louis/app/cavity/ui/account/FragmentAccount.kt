@@ -114,7 +114,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                 binding.email.text = it.email
 
                 val date = DateFormatter.formatDate(it.lastUpdateTime, "dd MMMM yyyy, HH:mm")
-                binding.lastBackup.text = getString(R.string.last_action, date)
+                binding.lastBackupDate.text = date
                 startPostponedEnterTransition()
             } else {
                 val action = FragmentAccountDirections.accountToLogin()
@@ -169,12 +169,12 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
     private fun initTickerView() {
         val textAppearanceApplier = AppCompatTextView(requireContext()).apply {
-            TextViewCompat.setTextAppearance(this, R.style.TextAppearance_Cavity_Body1)
+            TextViewCompat.setTextAppearance(this, R.style.TextAppearance_Cavity_Caption)
         }
 
-        binding.lastBackup.apply {
+        binding.lastBackupDate.apply {
             textPaint.typeface = textAppearanceApplier.paint.typeface
-            textPaint.textSize = requireContext().spToPx(18f)
+            textPaint.textSize = requireContext().spToPx(15f)
             setCharacterLists(TickerUtils.provideAlphabeticalList())
         }
     }

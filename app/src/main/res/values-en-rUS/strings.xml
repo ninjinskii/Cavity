@@ -305,6 +305,7 @@
     <string name="import_done">Import done successfully.</string>
     <string name="backup_device_name">Online backup (from %s)</string>
     <string name="last_action">Last backup: %s</string>
+    <string name="last_action_2">Last backup:</string>
     <string name="current_device">This device (%s)</string>
     <string name="backup_erasure_warn_export">Your online backup will be replaced with the device wine cellar.\n<b><i>Note</i></b>: wine, friend photos and pdfs <b>will not</b> be backed up. For more details, go to \"Import files\" in the account management screen.</string>
     <string name="backup_erasure_warn_import">The device wine cellar will be replaced with your online backup.</string>

@@ -105,6 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="@string/auto_backup_state"
                     android:textAppearance="?attr/textAppearanceBody1"
                     app:layout_constraintBottom_toTopOf="@id/backupStatusMore"
@@ -163,17 +164,29 @@
                     app:layout_constraintTop_toBottomOf="@id/backupStatusDetails"
                     app:tint="?attr/colorOnSurface" />
 
-                <com.robinhood.ticker.TickerView
+                <TextView
                     android:id="@+id/lastBackup"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
-                    app:layout_constraintBottom_toBottomOf="@id/lastBackupIcon"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/last_action_2"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    app:layout_constraintBottom_toTopOf="@id/lastBackupDate"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/lastBackupIcon"
-                    app:layout_constraintTop_toTopOf="@id/lastBackupIcon"
-                    tools:text="@string/last_action" />
+                    app:layout_constraintTop_toTopOf="@id/lastBackupIcon" />
 
+                <com.robinhood.ticker.TickerView
+                    android:id="@+id/lastBackupDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:layout_constraintBottom_toBottomOf="@id/lastBackupIcon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/lastBackup"
+                    tools:text="23 mars 2024, 17:37" />
 
                 <View
                     android:id="@+id/divider1"
