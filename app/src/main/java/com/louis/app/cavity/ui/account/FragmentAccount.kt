@@ -23,6 +23,7 @@ import com.louis.app.cavity.ui.account.worker.AutoUploadWorker
 import com.louis.app.cavity.ui.account.worker.PruneWorker
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
@@ -100,6 +101,8 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
         if (!settingsViewModel.getAutoBackup()) {
             updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_USER_DISABLED)
+        } else {
+            importExportViewModel.autoBackupHealthCheck()
         }
 
         observe()
@@ -154,14 +157,32 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         }
 
         importExportViewModel.autoBackupWorkProgress.observe(viewLifecycleOwner) {
-            if (it?.state == WorkInfo.State.RUNNING) {
-                val healthState =
-                    it.progress.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
+            if (it !== null) {
+                // The healtcheck work is not run periodically, so he can succeed
+                val isHealthCheck = it.state == WorkInfo.State.SUCCEEDED
+                val isRealBackup =
+                    it.progress.getBoolean(AutoUploadWorker.WORK_DATA_HEALTHCHECK_ONLY, false)
 
-                updateAutoBackupStatus(healthState)
+                L.v("isHealthCheck: $isHealthCheck")
+                L.v("isRealBackup: $isRealBackup")
 
-                if (healthState == AutoUploadWorker.HEALTH_STATE_SUCCESS) {
-                    loginViewModel.updateAccountLastUpdateLocally()
+                if (isHealthCheck) {
+                    val healthState =
+                        it.outputData.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
+
+                    updateAutoBackupStatus(healthState)
+                }
+
+                if (it.state == WorkInfo.State.RUNNING && isRealBackup) {
+                    L.v("should not run unless running a manual backup")
+                    val healthState =
+                        it.progress.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
+
+                    updateAutoBackupStatus(healthState)
+
+                    if (healthState == AutoUploadWorker.HEALTH_STATE_SUCCESS) {
+                        loginViewModel.updateAccountLastUpdateLocally()
+                    }
                 }
             }
         }
@@ -224,10 +245,10 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                 settingsViewModel.setAutoBackup(isChecked)
 
                 if (isChecked) {
-                    importExportViewModel.enableAutoBackups()
-                    // TODO: lancer le même check auto qui se lance lors de l'arrivée de ce fragment (pas encore fait)
+//                    importExportViewModel.enableAutoBackups()
+                    importExportViewModel.autoBackupHealthCheck()
                 } else {
-                    importExportViewModel.disableAutoBackups()
+                    importExportViewModel.cancelCurrentAutoBackup()
                     updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_USER_DISABLED)
                 }
             }
