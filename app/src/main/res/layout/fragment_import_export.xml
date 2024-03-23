@@ -88,6 +88,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/serverIcon"
                             app:layout_constraintTop_toBottomOf="@id/backup"
+                            app:ticker_animationDuration="@integer/cavity_motion_xlong"
                             app:ticker_defaultPreferredScrollingDirection="any"
                             tools:text="354 bouteilles" />
 
@@ -103,6 +104,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/serverIcon"
                             app:layout_constraintTop_toBottomOf="@id/bottles"
+                            app:ticker_animationDuration="@integer/cavity_motion_xlong"
+                            app:ticker_defaultPreferredScrollingDirection="any"
                             tools:text="Dernière action: 14 mars 2024" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -173,6 +176,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/deviceIcon"
                             app:layout_constraintTop_toBottomOf="@id/cellar"
+                            app:ticker_animationDuration="@integer/cavity_motion_xlong"
                             app:ticker_defaultPreferredScrollingDirection="any"
                             tools:text="54 bouteilles" />
 

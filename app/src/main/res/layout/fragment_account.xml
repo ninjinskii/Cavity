@@ -186,6 +186,8 @@
                     app:layout_constraintBottom_toBottomOf="@id/lastBackupIcon"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/lastBackup"
+                    app:ticker_animationDuration="@integer/cavity_motion_xlong"
+                    app:ticker_defaultPreferredScrollingDirection="any"
                     tools:text="23 mars 2024, 17:37" />
 
                 <View
