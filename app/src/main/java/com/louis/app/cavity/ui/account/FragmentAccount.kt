@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -16,9 +17,11 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAccountBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.account.worker.AutoUploadWorker
 import com.louis.app.cavity.ui.account.worker.PruneWorker
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
@@ -104,7 +107,6 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
                 val date = DateFormatter.formatDate(it.lastUpdateTime, "dd MMMM yyyy, HH:mm")
                 binding.lastBackup.text = getString(R.string.last_action, date)
-                setupLastBackupStatus()
                 startPostponedEnterTransition()
             } else {
                 val action = FragmentAccountDirections.accountToLogin()
@@ -144,8 +146,19 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         }
 
         importExportViewModel.autoBackupWorkProgress.observe(viewLifecycleOwner) {
-            setupLastBackupStatus()
-            loginViewModel.updateAccountLastUpdateLocally()
+            L.v("observer progress")
+            L.v(it.progress.toString())
+
+            if (it.state == WorkInfo.State.RUNNING) {
+                L.v("observer progress while running only")
+                L.v(it.progress.toString())
+                val healthState =
+                    it.progress.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
+                updateAutoBackupStatus(healthState)
+
+            }
+
+//            loginViewModel.updateAccountLastUpdateLocally()
         }
     }
 
@@ -197,17 +210,10 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                     importExportViewModel.enableAutoBackups()
                 } else {
                     importExportViewModel.disableAutoBackups()
+                    updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_USER_DISABLED)
                 }
             }
         }
-    }
-
-    private fun setupLastBackupStatus() {
-        val status = loginViewModel.getLastAutoBackupStatus()
-        val message = if (status != 0) status else R.string.backup_status_disabled
-
-        binding.backupStatusMore.text = getString(message)
-        binding.backupStateIcon.imageTintList = getColorForStatus(status)
     }
 
     private fun setupToolbar() {
@@ -240,21 +246,80 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         findNavController().navigate(action)
     }
 
-    private fun getColorForStatus(@StringRes status: Int): ColorStateList {
-        val colorRes = when (status) {
-            R.string.backup_status_active -> R.color.cavity_green
-            R.string.backup_status_pause -> R.color.cavity_yellow
-            R.string.backup_status_suspicious -> R.color.cavity_yellow
-            else /* 0 */ -> R.color.cavity_grey
+    private fun updateAutoBackupStatus(healthState: Int) {
+        val success = healthState == AutoUploadWorker.HEALTH_STATE_SUCCESS
+                || healthState == AutoUploadWorker.HEALTH_STATE_USER_DISABLED
+
+        binding.backupStatusDetails.setVisible(!success)
+        L.v(healthState.toString())
+
+        val uiInfo: BackupStatusUi? = when (healthState) {
+            AutoUploadWorker.HEALTH_STATE_SUCCESS ->
+                BackupStatusUi(
+                    R.string.backup_status_active,
+                    R.string.auto_backup_done,
+                    R.color.cavity_green
+                )
+
+            AutoUploadWorker.HEALTH_STATE_FAILED ->
+                BackupStatusUi(
+                    R.string.backup_status_error,
+                    R.string.auto_backup_unavailable,
+                    R.color.cavity_red
+                )
+
+            AutoUploadWorker.HEALTH_STATE_UNAUTHORIZED ->
+                BackupStatusUi(
+                    R.string.backup_status_pause,
+                    R.string.auto_backup_unauthorized,
+                    R.color.cavity_yellow
+                )
+
+            AutoUploadWorker.HEALTH_STATE_PREVENT_ACCOUNT_SWITCH ->
+                BackupStatusUi(
+                    R.string.backup_status_pause,
+                    R.string.auto_backup_account_switch,
+                    R.color.cavity_yellow
+                )
+
+            AutoUploadWorker.HEALTH_STATE_PREVENT_OVERWRITE ->
+                BackupStatusUi(
+                    R.string.backup_status_pause,
+                    R.string.auto_backup_overwrite_data,
+                    R.color.cavity_yellow
+                )
+
+            AutoUploadWorker.HEALTH_STATE_USER_DISABLED ->
+                BackupStatusUi(
+                    R.string.backup_status_disabled,
+                    null,
+                    R.color.cavity_grey
+                )
+
+            else -> null
         }
 
-        return ColorStateList.valueOf(requireContext().getColor(colorRes))
+        uiInfo?.let { backupStatusUI ->
+            with(binding) {
+                backupStatusMore.text = getString(backupStatusUI.title)
+                backupStatusDetails.text = backupStatusUI.text?.let { getString(it) }
+                backupStateIcon.imageTintList =
+                    ColorStateList.valueOf(requireContext().getColor(backupStatusUI.color))
+            }
+        }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    data class BackupStatusUi(
+        @StringRes val title: Int,
+        @StringRes val text: Int?,
+        @ColorRes val color: Int
+    )
 
     companion object {
         private const val WRITE_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE

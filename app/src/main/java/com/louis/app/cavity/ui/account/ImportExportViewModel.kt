@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.domain.backup.BackupBuilder
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.ui.account.worker.AutoUploadWorker
@@ -34,6 +35,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
     private val accountRepository = AccountRepository.getInstance(app)
     private val workManager = WorkManager.getInstance(app)
+    private val backupBuilder = BackupBuilder(app)
 
     private val workRequestId = MutableLiveData<UUID>()
     val workProgress = workRequestId.switchMap {
@@ -81,11 +83,15 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             try {
+                val localEntries = repository.getAllEntriesNotPagedNotLive()
                 accountRepository.getHistoryEntries().let { response ->
                     when (response) {
                         is ApiResponse.Success -> {
-                            val healthy = checkHealth(isExport, response.value)
-                            _healthy.postValue(healthy)
+                            val distantEntries = response.value
+                            val target = if (isExport) distantEntries else localEntries
+                            val source = if (isExport) localEntries else distantEntries
+                            val health = backupBuilder.checkHealth(source, target)
+                            _healthy.postValue(health is BackupBuilder.HealthResult.Ok)
                         }
 
                         is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)

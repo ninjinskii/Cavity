@@ -1,0 +1,91 @@
+package com.louis.app.cavity.domain.backup
+
+import android.content.Context
+import com.louis.app.cavity.db.AccountRepository
+import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.model.FileAssoc
+import com.louis.app.cavity.model.HistoryEntry
+import com.louis.app.cavity.network.response.ApiResponse
+import com.louis.app.cavity.ui.account.Environment
+import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+class BackupBuilder(private val context: Context) {
+    suspend fun checkHealth(source: List<HistoryEntry>, target: List<HistoryEntry>): HealthResult =
+        withContext(Default) {
+            val sourceNewest = source.maxByOrNull { it.date }?.date ?: 0
+            val sourceOldest = source.minByOrNull { it.date }
+            val targetNewest = target.maxByOrNull { it.date }?.date ?: 0
+            val targetOldest = target.minByOrNull { it.date }
+
+            val isOverwritingTargetBackup = sourceNewest < targetNewest
+            val couldBeAccountSwitch =
+                (sourceOldest?.date ?: 0) != (targetOldest?.date ?: 0)
+                        && sourceOldest?.id !== targetOldest?.id
+
+            if (couldBeAccountSwitch) {
+                return@withContext HealthResult.MayBeAccountSwitch
+            }
+
+            if (isOverwritingTargetBackup) {
+                return@withContext HealthResult.WillOverwriteDistantBackup
+            }
+
+            return@withContext HealthResult.Ok
+        }
+
+    suspend fun backup(accountRepository: AccountRepository, wineRepository: WineRepository) =
+        withContext(IO) {
+            with(accountRepository) {
+                launch {
+                    val wines = wineRepository.getAllWinesNotLive()
+                    val bottles = wineRepository.getAllBottlesNotLive()
+                    val friends = wineRepository.getAllFriendsNotLive()
+
+                    // Get wines & bottles first, copy them to external dir
+                    backupFilesToExternalDir(wines + bottles + friends)
+
+                    listOf(
+                        postCounties(wineRepository.getAllCountiesNotLive()),
+                        postWines(wines),
+                        postBottles(bottles),
+                        postFriends(friends),
+                        postGrapes(wineRepository.getAllGrapesNotLive()),
+                        postReviews(wineRepository.getAllReviewsNotLive()),
+                        postHistoryEntries(wineRepository.getAllEntriesNotPagedNotLive()),
+                        postTastings(wineRepository.getAllTastingsNotLive()),
+                        postTastingActions(wineRepository.getAllTastingActionsNotLive()),
+                        postFReviews(wineRepository.getAllFReviewsNotLive()),
+                        postQGrapes(wineRepository.getAllQGrapesNotLive()),
+                        postTastingFriendsXRefs(wineRepository.getAllTastingXFriendsNotLive()),
+                        postHistoryFriendsXRefs(wineRepository.getAllHistoryXFriendsNotLive())
+                    ).forEach {
+                        if (it !is ApiResponse.Success) {
+                            throw UncompleteExportException()
+                        }
+                    }
+
+                    postAccountLastUser(Environment.getDeviceName())
+                }
+            }
+        }
+
+    private fun backupFilesToExternalDir(fileAssocs: List<FileAssoc>) {
+        fileAssocs
+            .forEach {
+                FileProcessor(context, it).run {
+                    copyToExternalDir()
+                }
+            }
+    }
+
+    class UncompleteExportException : Exception()
+
+    sealed class HealthResult {
+        data object Ok : HealthResult()
+        data object WillOverwriteDistantBackup : HealthResult()
+        data object MayBeAccountSwitch : HealthResult()
+    }
+}

@@ -13,7 +13,9 @@ import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.domain.backup.AutoBackup
 import com.louis.app.cavity.domain.backup.BackupFinishedListener
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
+import com.louis.app.cavity.util.L
 import io.sentry.Sentry
+import kotlinx.coroutines.delay
 
 class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
     CoroutineWorker(context, params) {
@@ -23,60 +25,79 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
     private val prefsRepository = PrefsRepository.getInstance(context as Application)
 
     override suspend fun doWork(): Result {
-        val listener = object : BackupFinishedListener<Result> {
-            override fun onSuccess(): Result {
+        val listener = object : BackupFinishedListener<Data> {
+            override fun onSuccess(): Data {
                 sendNotification(R.string.auto_backup_done_title, R.string.auto_backup_done)
-                val data = Data.Builder().put().build() // to think
-                return Result.success(data)
+
+                return Data.Builder()
+                    .putInt(WORK_DATA_HEALTH_STATE_KEY, HEALTH_STATE_SUCCESS)
+                    .build()
             }
 
-            override fun onFailure(canRetry: Boolean, exception: Exception?): Result {
+            override fun onFailure(canRetry: Boolean, exception: Exception?): Data {
                 exception?.let { Sentry.captureException(it) }
                 sendNotification(R.string.auto_backup_failed_title, R.string.base_error)
-                val data = Data.Builder().put().build()
-                return if (canRetry && runAttemptCount < 1) Result.retry() else Result.failure(data)
+
+                val data = Data.Builder()
+                    .putInt(WORK_DATA_HEALTH_STATE_KEY, HEALTH_STATE_FAILED)
+                    .build()
+
+                return data
+//                return if (canRetry && runAttemptCount < 1) Result.retry() else Result.failure(data)
             }
 
-            override fun onUnauthorized(): Result {
+            override fun onUnauthorized(): Data {
                 prefsRepository.setApiToken("")
                 sendNotification(
                     R.string.auto_backup_failed_title,
                     R.string.auto_backup_unauthorized
                 )
 
-                val data = Data.Builder().put().build()
-                return Result.failure(data)
+                return Data.Builder()
+                    .putInt(WORK_DATA_HEALTH_STATE_KEY, HEALTH_STATE_UNAUTHORIZED)
+                    .build()
             }
 
-            override fun onPreventOverwriting(): Result {
+            override fun onPreventOverwriting(): Data {
                 sendNotification(
                     R.string.auto_backup_failed_title,
                     R.string.auto_backup_overwrite_data
                 )
 
-                val data = Data.Builder().put().build()
-                return Result.failure(data)
+                return Data.Builder()
+                    .putInt(WORK_DATA_HEALTH_STATE_KEY, HEALTH_STATE_PREVENT_OVERWRITE)
+                    .build()
             }
 
-            override fun onPreventAccountSwitch(): Result {
+            override fun onPreventAccountSwitch(): Data {
                 sendNotification(
                     R.string.auto_backup_failed_title,
                     R.string.auto_backup_not_matching
                 )
 
-                val data = Data.Builder().put().build()
-                return Result.failure(data)
+                return Data.Builder()
+                    .putInt(WORK_DATA_HEALTH_STATE_KEY, HEALTH_STATE_PREVENT_ACCOUNT_SWITCH)
+                    .build()
             }
         }
 
         val autoBackup = AutoBackup(repository, accountRepository, context, listener)
 
         return try {
-            autoBackup.tryBackup()
+            val result = autoBackup.tryBackup()
+            L.v("setProgerss")
+            L.v(result.toString())
+            setProgress(result)
+            delay(2000)
+            Result.success()
         } catch (e: Exception) {
             Sentry.captureException(e)
-            val data = Data.Builder().put().build()
-            Result.failure(data)
+            val data = Data.Builder()
+                .putInt(WORK_DATA_HEALTH_STATE_KEY, HEALTH_STATE_FAILED)
+                .build()
+
+            setProgress(data)
+            Result.failure()
         }
     }
 
@@ -87,7 +108,13 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
 
     companion object {
         const val WORK_TAG = "com.louis.app.cavity.auto-upload-db"
-        const val WORK_DATA_HEALTH_STATE = "com.louis.app.cavity.WORK_DATA_HEALTH_STATE"
+        const val WORK_DATA_HEALTH_STATE_KEY = "com.louis.app.cavity.WORK_DATA_HEALTH_STATE_KEY"
+        const val HEALTH_STATE_SUCCESS = 0
+        const val HEALTH_STATE_FAILED = 1
+        const val HEALTH_STATE_PREVENT_OVERWRITE = 2
+        const val HEALTH_STATE_PREVENT_ACCOUNT_SWITCH = 3
+        const val HEALTH_STATE_UNAUTHORIZED = 4
+        const val HEALTH_STATE_USER_DISABLED = 5
     }
 
 }

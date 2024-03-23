@@ -321,10 +321,11 @@
     <string name="auto_backup_done">Your data was uploaded into your online account</string>
     <string name="auto_backup_state">Auto backup state</string>
     <string name="auto_backup_unavailable">A technical issue happened</string>
+    <string name="auto_backup_waiting">Backup status will be updated as soon as an automatic backup will launch itself</string>
     <string name="backup_status_active">Active</string>
     <string name="backup_status_error">Unavailable</string>
     <string name="backup_status_pause">Paused</string>
-    <string name="backup_status_suspicious">Suspecting a mistake</string>
+    <string name="auto_backup_account_switch">Suspecting a mistake</string>
     <string name="backup_status_disabled">Disabled</string>
 
     <!-- a11y -->
