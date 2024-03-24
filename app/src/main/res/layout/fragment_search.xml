@@ -128,6 +128,7 @@
                         app:layout_constraintEnd_toStartOf="@id/currentQuery"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:ticker_animationDuration="@integer/cavity_motion_xlong"
                         app:ticker_defaultPreferredScrollingDirection="any"
                         tools:text="12 résultats" />
 

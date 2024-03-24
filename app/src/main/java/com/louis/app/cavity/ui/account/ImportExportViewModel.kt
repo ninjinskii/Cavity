@@ -3,12 +3,19 @@ package com.louis.app.cavity.ui.account
 import android.app.Application
 import androidx.lifecycle.*
 import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.domain.backup.BackupBuilder
 import com.louis.app.cavity.network.response.ApiResponse
+import com.louis.app.cavity.ui.account.worker.AutoUploadWorker
+import com.louis.app.cavity.ui.account.worker.AutoUploadWorker.Companion.WORK_DATA_HEALTHCHECK_ONLY
 import com.louis.app.cavity.ui.account.worker.DownloadWorker
 import com.louis.app.cavity.ui.account.worker.PruneWorker
 import com.louis.app.cavity.ui.account.worker.UploadWorker
@@ -23,22 +30,34 @@ import java.util.concurrent.TimeUnit
 class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
 
     companion object {
-       private const val MIN_BACKOFF_SECONDS = 10L
+        private const val MIN_BACKOFF_SECONDS = 10L
+        private const val AUTO_BACKUP_PERIODICITY_IN_DAYS = 15L
+        private const val AUTO_BACKUP_INITIAL_DELAY_IN_HOURS = 1L
     }
 
     private val repository = WineRepository.getInstance(app)
     private val accountRepository = AccountRepository.getInstance(app)
     private val workManager = WorkManager.getInstance(app)
+    private val backupBuilder = BackupBuilder(app)
 
     private val workRequestId = MutableLiveData<UUID>()
     val workProgress = workRequestId.switchMap {
         workManager.getWorkInfoByIdLiveData(it)
     }
 
-    // Determines whether or not the data we want to export are older than the backup data
-    private val _healthy = MutableLiveData(true)
-    val healthy: LiveData<Boolean>
-        get() = _healthy
+    private val autoBackupWorkRequestId = MutableLiveData<UUID>()
+    val autoBackupWorkProgress = autoBackupWorkRequestId.switchMap {
+        workManager.getWorkInfoByIdLiveData(it)
+    }
+
+    private val healthCheckWorkRequestId = MutableLiveData<UUID>()
+    val healthCheckWorkProgress = healthCheckWorkRequestId.switchMap {
+        workManager.getWorkInfoByIdLiveData(it)
+    }
+
+    private val _health = MutableLiveData<Int?>()
+    val health: LiveData<Int?>
+        get() = _health
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
@@ -64,26 +83,26 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedbackString: LiveData<Event<String>>
         get() = _userFeedbackString
 
-    fun checkHealth(isImport: Boolean) {
+    var preventHealthCheckSpam = false
+        get() = field.also { field = true }
+
+    fun fetchHealth(isImport: Boolean) {
         val isExport = !isImport
 
         _isLoading.value = true
 
         viewModelScope.launch(IO) {
             try {
+                val localEntries = repository.getAllEntriesNotPagedNotLive()
                 accountRepository.getHistoryEntries().let { response ->
                     when (response) {
                         is ApiResponse.Success -> {
-                            val distantHistoryEntries = response.value
-                            val localHistoryEntries = repository.getAllEntriesNotPagedNotLive()
-                            val distantNewer =
-                                distantHistoryEntries.maxByOrNull { it.date }?.date ?: 0
-                            val localNewer = localHistoryEntries.maxByOrNull { it.date }?.date ?: 0
-                            val healthy =
-                                if (isExport) localNewer >= distantNewer
-                                else distantNewer >= localNewer
-
-                            _healthy.postValue(healthy)
+                            val distantEntries = response.value
+                            val target = if (isExport) distantEntries else localEntries
+                            val source = if (isExport) localEntries else distantEntries
+                            val health = backupBuilder.checkHealth(source, target)
+                            val stringRes = backupBuilder.getTextForHealthResult(health, isExport)
+                            _health.postValue(stringRes)
                         }
 
                         is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
@@ -160,6 +179,44 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun pruneWorks() = workManager.pruneWork()
+
+    fun autoBackupHealthCheck() {
+        workManager.cancelAllWorkByTag(AutoUploadWorker.WORK_TAG_HEALTHCHECK)
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
+
+        OneTimeWorkRequestBuilder<AutoUploadWorker>()
+            .addTag(AutoUploadWorker.WORK_TAG_HEALTHCHECK)
+            .setInputData(Data.Builder().putBoolean(WORK_DATA_HEALTHCHECK_ONLY, true).build())
+            .setConstraints(constraints)
+            .build().also {
+                healthCheckWorkRequestId.value = it.id
+                workManager.enqueue(it)
+            }
+    }
+
+    fun enableAutoBackups() {
+        cancelCurrentAutoBackup()
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
+
+        PeriodicWorkRequestBuilder<AutoUploadWorker>(AUTO_BACKUP_PERIODICITY_IN_DAYS, TimeUnit.DAYS)
+            .addTag(AutoUploadWorker.WORK_TAG)
+            .setInitialDelay(AUTO_BACKUP_INITIAL_DELAY_IN_HOURS, TimeUnit.HOURS)
+            .setConstraints(constraints)
+            .build().also {
+                autoBackupWorkRequestId.value = it.id
+                workManager.enqueue(it)
+            }
+    }
+
+    fun cancelCurrentAutoBackup() {
+        workManager.cancelAllWorkByTag(AutoUploadWorker.WORK_TAG)
+    }
 
     fun cleanAccountDatabase() {
         workManager.cancelAllWorkByTag(PruneWorker.WORK_TAG)

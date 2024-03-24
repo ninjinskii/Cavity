@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.tasting.notifications
+package com.louis.app.cavity.ui.notifications
 
 import android.app.Application
 import android.content.BroadcastReceiver
@@ -30,7 +30,7 @@ class TastingActionDoneReceiver : BroadcastReceiver() {
             tastingAction.done = true.toInt()
             repository.updateTastingAction(tastingAction)
 
-            TastingNotifier.cancelNotification(context, tastingActionId.toInt())
+            NotificationBuilder.cancelNotification(context, tastingActionId.toInt())
         }
     }
 }

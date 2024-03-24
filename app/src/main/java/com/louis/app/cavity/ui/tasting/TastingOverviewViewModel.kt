@@ -8,7 +8,7 @@ import com.louis.app.cavity.db.dao.BoundedTasting
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.TastingAction
-import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
+import com.louis.app.cavity.ui.notifications.NotificationBuilder
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
@@ -58,14 +58,14 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
             val wine = repository.getWineByIdNotLive(bottle.wineId)
             val tasting = repository.getTastingById(bottle.tastingId ?: return@launch)
 
-            val notification = TastingNotifier.buildNotification(
+            val notification = NotificationBuilder.buildTastingNotification(
                 context,
                 tasting ?: return@launch,
                 wine,
                 tastingAction
             )
 
-            TastingNotifier.notify(context, notification)
+            NotificationBuilder.notify(context, notification)
         }
     }
 

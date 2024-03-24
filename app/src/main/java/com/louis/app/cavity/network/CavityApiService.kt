@@ -1,9 +1,7 @@
 package com.louis.app.cavity.network
 
 import com.louis.app.cavity.model.*
-import com.louis.app.cavity.network.response.ConfirmResponse
 import com.louis.app.cavity.network.response.LoginResponse
-import com.louis.app.cavity.network.response.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -14,7 +12,7 @@ interface CavityApiService {
     suspend fun register(@Body parameters: Map<String, String>)
 
     @POST("account/confirm")
-    suspend fun confirmAccount(@Body parameters: Map<String, String>): ConfirmResponse
+    suspend fun confirmAccount(@Body parameters: Map<String, String>): LoginResponse
 
     @POST("auth/login")
     suspend fun login(@Body parameters: Map<String, String>): LoginResponse
@@ -24,6 +22,9 @@ interface CavityApiService {
 
     @POST("account/delete")
     suspend fun deleteAccount(@Body parameters: Map<String, String>)
+
+    @POST("account/lastuser")
+    suspend fun postAccountLastUser(@Body parameters: Map<String, String>)
 
     @POST("county")
     suspend fun postCounties(@Body counties: List<County>)
@@ -65,7 +66,7 @@ interface CavityApiService {
     suspend fun postHistoryFriendsXRef(@Body historyXFriends: List<HistoryXFriend>)
 
     @GET("account")
-    suspend fun getAccount(): UserResponse
+    suspend fun getAccount(): LoginResponse
 
     @GET("county")
     suspend fun getCounties(): List<County>

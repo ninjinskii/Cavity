@@ -38,11 +38,17 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
         prefsRepository.setTemplateSize(templateSize)
     }
 
+    fun setAutoBackup(autoBackup: Boolean) {
+        prefsRepository.setAutoBackup(autoBackup)
+    }
+
     fun getSkewBottle() = prefsRepository.getSkewBottle()
 
     fun getDefaultCurrency() = prefsRepository.getDefaultCurrency()
 
     fun getTemplateSize() = prefsRepository.getTemplateSize()
+
+    fun getAutoBackup() = prefsRepository.getAutoBackup()
 
     fun importDbFromExternalDir(externalDir: String) {
         viewModelScope.launch(IO) {

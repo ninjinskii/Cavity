@@ -61,7 +61,7 @@
                             android:layout_width="@dimen/small_icon"
                             android:layout_height="@dimen/small_icon"
                             android:layout_margin="@dimen/small_margin"
-                            android:contentDescription="@string/backup"
+                            android:contentDescription="@string/backup_device_name"
                             android:src="@drawable/ic_cloud"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -71,12 +71,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/medium_margin"
-                            android:text="@string/backup"
                             android:textAppearance="?attr/textAppearanceBody1"
                             app:layout_constraintBottom_toBottomOf="@id/serverIcon"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/serverIcon"
-                            app:layout_constraintTop_toTopOf="@id/serverIcon" />
+                            app:layout_constraintTop_toTopOf="@id/serverIcon"
+                            tools:text="@string/backup_device_name" />
 
                         <com.robinhood.ticker.TickerView
                             android:id="@+id/bottles"
@@ -88,10 +88,11 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/serverIcon"
                             app:layout_constraintTop_toBottomOf="@id/backup"
+                            app:ticker_animationDuration="@integer/cavity_motion_xlong"
                             app:ticker_defaultPreferredScrollingDirection="any"
                             tools:text="354 bouteilles" />
 
-                        <TextView
+                        <com.robinhood.ticker.TickerView
                             android:id="@+id/lastAction"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -103,7 +104,9 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/serverIcon"
                             app:layout_constraintTop_toBottomOf="@id/bottles"
-                            tools:text="Dernière action: Offrir Gevrey Chambertin" />
+                            app:ticker_animationDuration="@integer/cavity_motion_xlong"
+                            app:ticker_defaultPreferredScrollingDirection="any"
+                            tools:text="Dernière action: 14 mars 2024" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -156,12 +159,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/medium_margin"
-                            android:text="@string/current_device"
                             android:textAppearance="?attr/textAppearanceBody1"
                             app:layout_constraintBottom_toBottomOf="@id/deviceIcon"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/deviceIcon"
-                            app:layout_constraintTop_toTopOf="@id/deviceIcon" />
+                            app:layout_constraintTop_toTopOf="@id/deviceIcon"
+                            tools:text="@string/current_device" />
 
                         <com.robinhood.ticker.TickerView
                             android:id="@+id/deviceBottles"
@@ -173,6 +176,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/deviceIcon"
                             app:layout_constraintTop_toBottomOf="@id/cellar"
+                            app:ticker_animationDuration="@integer/cavity_motion_xlong"
                             app:ticker_defaultPreferredScrollingDirection="any"
                             tools:text="54 bouteilles" />
 
@@ -188,7 +192,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/deviceIcon"
                             app:layout_constraintTop_toBottomOf="@id/deviceBottles"
-                            tools:text="Dernière action: Acheter Riesling" />
+                            tools:text="Dernière action: 16 mars 2024" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>

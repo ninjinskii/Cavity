@@ -9,6 +9,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.PrefsRepository
 import com.louis.app.cavity.network.response.ApiResponse
+import com.louis.app.cavity.network.response.LoginResponse
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import io.sentry.Sentry
@@ -31,9 +32,9 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedbackString: LiveData<Event<String>>
         get() = _userFeedbackString
 
-    private val _user = MutableLiveData<String?>(null)
-    val user: LiveData<String?>
-        get() = _user
+    private val _account = MutableLiveData<LoginResponse?>(null)
+    val account: LiveData<LoginResponse?>
+        get() = _account
 
     private val _navigateToConfirm = MutableLiveData<Event<Unit>>()
     val navigateToConfirm: LiveData<Event<Unit>>
@@ -60,7 +61,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                 prefsRepository.setApiToken(it.value.token)
                 prefsRepository.setLastLogin(email)
                 Sentry.configureScope { scope -> scope.setTag("username", email) }
-                _user.postValue(it.value.email)
+                _account.postValue(it.value)
             }
         )
     }
@@ -91,7 +92,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                 inConfirmationUser = null
                 prefsRepository.setApiToken(it.value.token)
                 _confirmedEvent.postOnce(Unit)
-                _user.postValue(email)
+                _account.postValue(it.value)
             }
         )
     }
@@ -113,7 +114,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                 val email = response.value.email
                 Sentry.configureScope { scope -> scope.setTag("username", email) }
                 prefsRepository.setLastLogin(email)
-                _user.postValue(email)
+                _account.postValue(response.value)
             }
         }
     }
@@ -121,7 +122,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     fun getLastLogin() = prefsRepository.getLastLogin()
 
     fun logout() {
-        _user.value = null
+        _account.value = null
         prefsRepository.setApiToken("")
         Sentry.configureScope { scope -> scope.removeTag("username") }
     }
@@ -134,15 +135,23 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun deleteAccount(password: String) {
-        _user.value?.let { email ->
+        _account.value?.let { account ->
             doApiCall(
-                call = { accountRepository.deleteAccount(email, password) },
+                call = { accountRepository.deleteAccount(account.email, password) },
                 onSuccess = {
                     _deletedEvent.postOnce(Unit)
                     prefsRepository.setLastLogin("")
                     Sentry.configureScope { scope -> scope.removeTag("username") }
                 }
             )
+        }
+    }
+
+    fun updateAccountLastUpdateLocally() {
+        val copy = _account.value?.copy(lastUpdateTime = System.currentTimeMillis())
+
+        copy?.let {
+            _account.value = it
         }
     }
 

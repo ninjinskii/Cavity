@@ -15,7 +15,7 @@ import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addtasting.SpaceGridItemDecoration
-import com.louis.app.cavity.ui.tasting.notifications.TastingNotifier
+import com.louis.app.cavity.ui.notifications.NotificationBuilder
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -61,7 +61,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         val tastingOverviewAdapter = BottleActionAdapter(
             onActionCheckedChange = { tastingAction, isChecked ->
                 if (isChecked) {
-                    TastingNotifier.cancelNotification(requireContext(), tastingAction.id.toInt())
+                    NotificationBuilder.cancelNotification(requireContext(), tastingAction.id.toInt())
                 } else {
                     tastingOverviewViewModel.requestNotificationsForTastingAction(
                         requireContext(),

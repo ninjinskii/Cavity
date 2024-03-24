@@ -96,7 +96,7 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     // Leak Canary
-    //debugImplementation "com.squareup.leakcanary:leakcanary-android:2.6"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.13"
 
     // Moshi
     implementation "com.squareup.moshi:moshi-kotlin:1.11.0"

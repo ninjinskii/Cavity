@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.tasting.notifications
+package com.louis.app.cavity.ui.notifications
 
 import android.Manifest
 import android.app.Notification
@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import androidx.annotation.StringRes
 import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -26,18 +27,44 @@ import com.louis.app.cavity.model.Wine
 import io.sentry.Sentry
 import io.sentry.SentryLevel
 import java.util.concurrent.ExecutionException
+import kotlin.random.Random
 
-object TastingNotifier {
-    private const val CHANNEL_ID = "com.louis.app.cavity.TASTING_CHANNEL"
+object NotificationBuilder {
+    private const val TASTING_CHANNEL_ID = "com.louis.app.cavity.TASTING_CHANNEL"
+    private const val AUTO_BACKUPS_CHANNEL_ID = "com.louis.app.cavity.AUTO_BACKUPS_CHANNEL"
     private const val GROUP_ID = "com.louis.app.cavity.TASTING_GROUP"
 
+    fun buildAutoBackupNotification(
+        context: Context,
+        @StringRes title: Int,
+        @StringRes content: Int
+    ): NotificationWithId {
+        val pendingIntent = NavDeepLinkBuilder(context).run {
+            setGraph(R.navigation.nav_graph)
+            setDestination(R.id.fragmentLogin)
+            createTaskStackBuilder()
+            createPendingIntent()
+        }
+
+        val notification = NotificationCompat.Builder(context, AUTO_BACKUPS_CHANNEL_ID)
+            .setContentTitle(context.getString(title))
+            .setContentText(context.getString(content))
+            .setSmallIcon(R.drawable.ic_glass)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+
+        return NotificationWithId(Random.nextLong(1000), notification)
+    }
+
     @WorkerThread
-    fun buildNotification(
+    fun buildTastingNotification(
         context: Context,
         tasting: Tasting,
         wine: Wine,
         tastingAction: TastingAction
-    ): TastingActionNotification {
+    ): NotificationWithId {
 
         val pendingIntent = NavDeepLinkBuilder(context).run {
             setGraph(R.navigation.nav_graph)
@@ -88,7 +115,7 @@ object TastingNotifier {
             TastingAction.Action.UNCORK -> R.string.uncork
         }
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, TASTING_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_glass)
             .setContentTitle(wine.naming)
             .setContentText(context.getString(content))
@@ -102,10 +129,10 @@ object TastingNotifier {
 
         //Glide.with(context).clear(futureBitmap)
 
-        return TastingActionNotification(tastingAction.id, notification.build())
+        return NotificationWithId(tastingAction.id, notification.build())
     }
 
-    fun notify(context: Context, notification: TastingActionNotification) {
+    fun notify(context: Context, notification: NotificationWithId) {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
@@ -115,19 +142,45 @@ object TastingNotifier {
         }
 
         NotificationManagerCompat.from(context)
-            .notify(notification.tastingActionId.toInt(), notification.notification)
+            .notify(notification.id.toInt(), notification.notification)
     }
 
-    fun cancelNotification(context: Context, tastingActionId: Int) {
-        NotificationManagerCompat.from(context).cancel(tastingActionId)
+    fun cancelNotification(context: Context, id: Int) {
+        NotificationManagerCompat.from(context).cancel(id)
     }
 
-    fun createNotificationChannel(context: Context) {
+    fun createNotificationChannels(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = context.getString(R.string.tasting)
-            val descriptionText = context.getString(R.string.notification_channel)
+            val tastingName = context.getString(R.string.tasting)
+            val tastingDescriptionText = context.getString(R.string.tasting_channel_text)
+            val autoBackupName = context.getString(R.string.auto_backup_channel)
+            val autoBackupDescriptionText = context.getString(R.string.auto_backup_channel_text)
+
+            createNotificationChannel(
+                context,
+                tastingName,
+                tastingDescriptionText,
+                TASTING_CHANNEL_ID
+            )
+
+            createNotificationChannel(
+                context,
+                autoBackupName,
+                autoBackupDescriptionText,
+                AUTO_BACKUPS_CHANNEL_ID
+            )
+        }
+    }
+
+    private fun createNotificationChannel(
+        context: Context,
+        name: String,
+        descriptionText: String,
+        channelId: String
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            val channel = NotificationChannel(channelId, name, importance).apply {
                 description = descriptionText
             }
 
@@ -138,4 +191,4 @@ object TastingNotifier {
     }
 }
 
-data class TastingActionNotification(val tastingActionId: Long, val notification: Notification)
+data class NotificationWithId(val id: Long, val notification: Notification)

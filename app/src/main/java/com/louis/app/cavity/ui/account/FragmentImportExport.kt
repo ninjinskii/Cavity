@@ -2,16 +2,19 @@ package com.louis.app.cavity.ui.account
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.work.WorkInfo
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportExportBinding
+import com.louis.app.cavity.ui.account.worker.UploadWorker
+import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -21,7 +24,8 @@ import com.robinhood.ticker.TickerUtils
 class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     private var _binding: FragmentImportExportBinding? = null
     private val binding get() = _binding!!
-    private val importExportViewModel: ImportExportViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels()
+    private val importExportViewModel: ImportExportViewModel by activityViewModels()
     private val args: FragmentImportExportArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +43,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
         setupNavigation(binding.appBar.toolbar)
 
         with(importExportViewModel) {
-            checkHealth(args.isImport)
+            fetchHealth(args.isImport)
             fetchDistantBottleCount()
             fetchLocalBottleCount()
         }
@@ -64,6 +68,11 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
             textPaint.typeface = textAppearanceApplier.paint.typeface
             setCharacterLists(TickerUtils.provideNumberList())
         }
+
+        binding.lastAction.apply {
+            textPaint.typeface = textAppearanceApplier.paint.typeface
+            setCharacterLists(TickerUtils.provideAlphabeticalList())
+        }
     }
 
     private fun updateUiState() {
@@ -82,12 +91,21 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
             warn.text = getString(healthcheck)
             submit.text = getString(btn)
             submit.setIconResource(btnSrc)
+            cellar.text = getString(R.string.current_device, Environment.getDeviceName())
         }
     }
 
     private fun observe() {
-        importExportViewModel.healthy.observe(viewLifecycleOwner) {
-            changeWarningVisibilty(!it)
+        loginViewModel.account.observe(viewLifecycleOwner) {
+            val fallback = getString(R.string.unknown)
+            binding.backup.text = getString(R.string.backup_device_name, it?.lastUser ?: fallback)
+
+            val date = DateFormatter.formatDate(it?.lastUpdateTime, "dd MMMM yyyy, HH:mm")
+            binding.lastAction.text = getString(R.string.last_action, date)
+        }
+
+        importExportViewModel.health.observe(viewLifecycleOwner) { stringRes ->
+            changeWarningVisibilty(stringRes)
         }
 
         importExportViewModel.isLoading.observe(viewLifecycleOwner) {
@@ -129,15 +147,25 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
                     WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
                         binding.progressBar.setVisible(true)
                     }
+
                     WorkInfo.State.FAILED -> {
                         binding.progressBar.setVisible(false)
                         binding.coordinator.showSnackbar(R.string.base_error)
                         importExportViewModel.pruneWorks()
                     }
+
                     WorkInfo.State.SUCCEEDED -> {
-                        val message =
-                            if (it.tags.contains("com.louis.app.cavity.upload-db")) R.string.export_done
-                            else R.string.import_done
+                        val message: Int
+                        val isUpload = it.tags.contains(UploadWorker.WORK_TAG)
+
+                        importExportViewModel.preventHealthCheckSpam = false
+
+                        message = if (isUpload) {
+                            loginViewModel.updateAccountLastUpdateLocally()
+                            R.string.export_done
+                        } else {
+                            R.string.import_done
+                        }
 
                         binding.progressBar.setVisible(false)
                         binding.coordinator.showSnackbar(message)
@@ -148,9 +176,11 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
                             pruneWorks()
                         }
                     }
+
                     WorkInfo.State.CANCELLED -> {
                         importExportViewModel.pruneWorks()
                     }
+
                     else -> Unit
                 }
             } else {
@@ -161,7 +191,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
 
     private fun setListeners() {
         binding.confirmDanger.setOnClickListener {
-            changeWarningVisibilty(visible = false)
+            changeWarningVisibilty(null)
         }
 
         binding.submit.setOnClickListener {
@@ -171,10 +201,13 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
         }
     }
 
-    private fun changeWarningVisibilty(visible: Boolean) {
+    private fun changeWarningVisibilty(@StringRes text: Int?) {
+        val isWarn = text !== null
+
         with(binding) {
-            submit.isEnabled = !visible
-            healthcheckWarn.setVisible(visible)
+            submit.isEnabled = !isWarn
+            text?.let { warn.text = getString(it) }
+            healthcheckWarn.setVisible(isWarn)
         }
     }
 

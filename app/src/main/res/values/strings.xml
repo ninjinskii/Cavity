@@ -10,7 +10,7 @@
     <string name="permissions_denied_external">Cavity a besoin de ces autorisations pour fonctionner.</string>
     <string name="persistent_permission_error">Impossible d\'ouvrir le fichier correctement.</string>
     <string name="db_import_success">La base de données a été importée correctement.</string>
-    <string name="notification_channel">Rappels dégustations</string>
+    <string name="tasting_channel_text">Rappels dégustations</string>
     <string name="warning">Attention !</string>
     <string name="locale">fr-FR</string>
     <string name="unknown">Inconnu</string>
@@ -265,6 +265,8 @@
     <string name="template_size">Modifiez la taille du gabarit pour la prise d\'une photo.</string>
     <string name="default_currency_title">Monnaie par défaut</string>
     <string name="default_currency">Choisissez la monnaie par défaut à utiliser lors de l\'ajout d\'une bouteille.</string>
+    <string name="auto_backup_title">Sauvegardes automatiques</string>
+    <string name="auto_backup">Déclenchez une sauvegarde automatique tous les 15 jours. Nécessite un compte Cavity.</string>
 
     <!-- Account -->
     <string name="email">Email</string>
@@ -278,12 +280,15 @@
     <string name="confirm_mail_sent">Un mail de confirmation a été envoyé.</string>
     <string name="new_account">Créer un compte</string>
     <string name="cavity_account">Compte Cavity</string>
+    <string name="cavity_account_info">Infos du compte</string>
     <string name="confirm_account">Confirmation</string>
     <string name="confirm_account_explanation">Un code de confirmation vous a été envoyé sur votre adresse mail</string>
     <string name="logout">Se déconnecter</string>
     <string name="account_explanation">Utiliser votre compte Cavity pour créer une sauvegarde en ligne de votre cave et la récupérer où vous le souhaitez.</string>
     <string name="export_explanation">Enregistre la cave de cet appareil sur un serveur distant.</string>
     <string name="export">Exporter</string>
+    <string name="new_backup">Créer une sauvegarde</string>
+    <string name="backup">Sauvegarder</string>
     <string name="import_explanation">Récupérez votre dernière sauvegarde.</string>
     <string name="import_">Importer</string>
     <string name="file_import">Importer les fichiers</string>
@@ -294,13 +299,31 @@
     <string name="file_imported">%1$d fichiers importé(s) sur %2$d sélectionné(s).</string>
     <string name="export_done">Sauvegarde effectuée.</string>
     <string name="import_done">Récupération effectuée.</string>
-    <string name="backup">Sauvegarde en ligne</string>
-    <string name="last_action">Dernière action: </string>
-    <string name="current_device">Cet appareil</string>
+    <string name="backup_device_name">Sauvegarde en ligne (depuis %s)</string>
+    <string name="last_action">Dernière sauvegarde: %s</string>
+    <string name="last_action_2">Dernière sauvegarde:</string>
+    <string name="current_device">Cet appareil (%s)</string>
     <string name="backup_erasure_warn_export">La sauvegarde en ligne existante sera remplacée par la cave de cet appareil.\n<b><i>Note</i></b>: les images de vos vins, de vos amis et vos pdfs <b>ne sont pas</b> sauvegardés. Pour en savoir plus, rendez-vous dans \"Importer les fichiers\" dans l\'écran de gestion du compte.</string>
     <string name="backup_erasure_warn_import">La cave de cet appareil sera remplacée par la sauvegarde en ligne.</string>
     <string name="healthcheck_export_warn">La sauvegarde en ligne contient des mouvements de stocks plus récents. L\'export de votre cave écrasera ces mouvements.</string>
     <string name="healthcheck_import_warn">La cave de cet appareil contient des mouvements de stocks plus récents. L\'import de votre sauvegarde écrasera ces mouvements.</string>
+
+    <!-- Auto backups -->
+    <string name="auto_backup_channel">Rapport de sauvegarde automatiques</string>
+    <string name="auto_backup_channel_text">Prévient en cas d\'erreur lors d\'une sauvegarde automatique</string>
+    <string name="auto_backup_failed_title">Échec de la sauvegarde automatique</string>
+    <string name="auto_backup_unauthorized">Connectez vous à votre compte Cavity pour faire fonctionner à nouveau les sauvegardes automatiques</string>
+    <string name="auto_backup_overwrite_data">Une sauvegarde contenant des mouvements de stocks plus récents que ceux de cet appareil a été trouvée sur votre compte. Assurez-vous de ne pas faire d\'erreur puis lancez une sauvegarde manuellement</string>
+    <string name="auto_backup_not_matching">Assurez vous d\'être connecté au bon compte et relancez une sauvegarde manuellement</string>
+    <string name="auto_backup_account_switch">Le mouvement de stock le plus vieux de chacune des caves n\'est pas le même, ce qui peut induire une action involontaire de votre part. Assurez-vous d\'être connecté au bon compte avant de réessayer.</string>
+    <string name="auto_backup_done_title">Sauvegarde automatique effectuée</string>
+    <string name="auto_backup_done">Vos données ont été synchronisées sur votre compte en ligne</string>
+    <string name="auto_backup_state">Statut de la sauvegarde automatique</string>
+    <string name="auto_backup_unavailable">Une erreur technique empêche la sauvegarde automatique</string>
+    <string name="backup_status_active">Active</string>
+    <string name="backup_status_error">Indisponible</string>
+    <string name="backup_status_pause">En pause</string>
+    <string name="backup_status_disabled">Désactivée</string>
 
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>

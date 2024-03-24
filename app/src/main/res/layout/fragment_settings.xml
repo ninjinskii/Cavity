@@ -133,7 +133,7 @@
                 android:id="@+id/defaultCurrency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/small_margin">
+                android:paddingVertical="@dimen/small_margin">
 
                 <TextView
                     android:id="@+id/defaultCurrencyTitle"
@@ -203,8 +203,6 @@
 
                 </com.google.android.material.button.MaterialButtonToggleGroup>
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </LinearLayout>
     </ScrollView>
 

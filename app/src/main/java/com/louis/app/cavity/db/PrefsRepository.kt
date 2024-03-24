@@ -13,6 +13,7 @@ class PrefsRepository private constructor(app: Application) {
         private const val PREF_TEMPLATE_SIZE = "com.louis.app.cavity.PREF_TEMPLATE_SIZE"
         private const val PREF_API_TOKEN = "com.louis.app.cavity.PREF_API_TOKEN"
         private const val PREF_LAST_LOGIN = "com.louis.app.cavity.PREF_LAST_LOGIN"
+        private const val PREF_AUTO_BACKUP = "com.louis.app.cavity.PREF_AUTO_BACKUP"
         private const val DEFAULT_CURRENCY = "€"
         private const val MAX_TEMPLATE_SCALE = 1.4f
 
@@ -49,6 +50,10 @@ class PrefsRepository private constructor(app: Application) {
         PREF_LAST_LOGIN put email
     }
 
+    fun setAutoBackup(autoBackup: Boolean) {
+        PREF_AUTO_BACKUP put autoBackup
+    }
+
     fun getSkewBottle() = PREF_SKEW_BOTTLE.getBoolean()
 
     fun getDefaultCurrency() = PREF_DEFAULT_CURRENCY.getString() ?: DEFAULT_CURRENCY
@@ -59,6 +64,8 @@ class PrefsRepository private constructor(app: Application) {
     fun getApiToken() = PREF_API_TOKEN.getString() ?: ""
 
     fun getLastLogin() = PREF_LAST_LOGIN.getString() ?: ""
+
+    fun getAutoBackup() = PREF_AUTO_BACKUP.getBoolean()
 
     private infix fun String.put(string: String) {
         editor.putString(this, string)
@@ -77,7 +84,7 @@ class PrefsRepository private constructor(app: Application) {
 
     private fun String.getString(): String? = pref.getString(this, null)
 
-    private fun String.getBoolean() = pref.getBoolean(this, true)
+    private fun String.getBoolean() = pref.getBoolean(this, false)
 
     private fun String.getFloat() = pref.getFloat(this, 0.9f)
 }
