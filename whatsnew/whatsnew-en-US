@@ -1,1 +1,2 @@
-- Fix a crash at startup for old users
+- Add auto backup feature for Caivty account owners
+- Update account ui accordingly

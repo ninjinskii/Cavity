@@ -13,8 +13,8 @@ android {
         applicationId "com.louis.app.cavity"
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 25
-        versionName "1.5.5"
+        versionCode 26
+        versionName "1.6.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
