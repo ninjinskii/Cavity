@@ -3,7 +3,6 @@ package com.louis.app.cavity.db
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.annotation.StringRes
 import com.louis.app.cavity.R
 
 class PrefsRepository private constructor(app: Application) {
@@ -15,7 +14,6 @@ class PrefsRepository private constructor(app: Application) {
         private const val PREF_API_TOKEN = "com.louis.app.cavity.PREF_API_TOKEN"
         private const val PREF_LAST_LOGIN = "com.louis.app.cavity.PREF_LAST_LOGIN"
         private const val PREF_AUTO_BACKUP = "com.louis.app.cavity.PREF_AUTO_BACKUP"
-        private const val PREF_LAST_AUTO_BACKUP_RESULT = "com.louis.app.cavity.PREF_LAST_AUTO_BACKUP_RESULT"
         private const val DEFAULT_CURRENCY = "€"
         private const val MAX_TEMPLATE_SCALE = 1.4f
 
@@ -56,10 +54,6 @@ class PrefsRepository private constructor(app: Application) {
         PREF_AUTO_BACKUP put autoBackup
     }
 
-    fun setLastAutoBackupResult(@StringRes result: Int) {
-        PREF_LAST_AUTO_BACKUP_RESULT put result
-    }
-
     fun getSkewBottle() = PREF_SKEW_BOTTLE.getBoolean()
 
     fun getDefaultCurrency() = PREF_DEFAULT_CURRENCY.getString() ?: DEFAULT_CURRENCY
@@ -73,15 +67,8 @@ class PrefsRepository private constructor(app: Application) {
 
     fun getAutoBackup() = PREF_AUTO_BACKUP.getBoolean()
 
-    fun getLastAutoBackupResult() = PREF_LAST_AUTO_BACKUP_RESULT.getInt()
-
     private infix fun String.put(string: String) {
         editor.putString(this, string)
-        editor.commit()
-    }
-
-    private infix fun String.put(int: Int) {
-        editor.putInt(this, int)
         editor.commit()
     }
 
@@ -100,6 +87,4 @@ class PrefsRepository private constructor(app: Application) {
     private fun String.getBoolean() = pref.getBoolean(this, false)
 
     private fun String.getFloat() = pref.getFloat(this, 0.9f)
-
-    private fun String.getInt() = pref.getInt(this, 0)
 }
