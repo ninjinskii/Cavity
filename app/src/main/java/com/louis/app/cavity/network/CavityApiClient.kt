@@ -1,5 +1,6 @@
 package com.louis.app.cavity.network
 
+import com.louis.app.cavity.BuildConfig
 import com.louis.app.cavity.db.PrefsRepository
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -9,6 +10,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object CavityApiClient {
     private const val API_URL = "https://cavity.fr"
+    // hostname -I | awk '{print $1}'  -> to get backend ip.
+    // Update .../debug/res/xml/network_security_config.xml accordingly
+    private const val DEV_API_URL = "http://192.168.1.13:5000"
 
     private val moshiConverter: MoshiConverterFactory by lazy {
         val moshi = Moshi.Builder()
@@ -31,8 +35,10 @@ object CavityApiClient {
             }
             .build()
 
+        val apiUrl = if (BuildConfig.DEBUG) DEV_API_URL else API_URL
+
         return Retrofit.Builder()
-            .baseUrl(API_URL)
+            .baseUrl(apiUrl)
             .client(httpClient)
             .addConverterFactory(moshiConverter.withNullSerialization())
             .build()

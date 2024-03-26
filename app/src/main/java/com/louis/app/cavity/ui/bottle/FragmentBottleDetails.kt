@@ -31,6 +31,8 @@ import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
+import com.louis.app.cavity.domain.error.ErrorReporter
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.bottle.adapter.BottleChipRecyclerAdapter
@@ -38,11 +40,10 @@ import com.louis.app.cavity.ui.bottle.adapter.JumpSmoothScroller
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.tasting.SpaceItemDecoration
 import com.louis.app.cavity.util.*
-import io.sentry.Sentry
-import io.sentry.SentryLevel
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private lateinit var transitionHelper: TransitionHelper
+    private lateinit var errorReporter: ErrorReporter
     private var _binding: FragmentBottleDetailsBinding? = null
     private val binding get() = _binding!!
     private val bottleDetailsViewModel: BottleDetailsViewModel by viewModels()
@@ -80,6 +81,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             setContainerTransformTransition(enterOptions, enter = true)
             setFadeThrough(navigatingForward = false)
         }
+
+        errorReporter = SentryErrorReporter.getInstance(requireContext())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -452,13 +455,13 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         try {
             startActivity(intent)
         } catch (a: ActivityNotFoundException) {
-            Sentry.captureMessage("Cannot open pdf: no pdf reader", SentryLevel.INFO)
+            errorReporter.captureMessage("Cannot open pdf: no pdf reader")
             binding.coordinator.showSnackbar(R.string.no_pdf_app)
         } catch (e: SecurityException) {
-            Sentry.captureMessage("Cannot open pdf: security exception", SentryLevel.INFO)
+            errorReporter.captureMessage("Cannot open pdf: security exception")
             binding.coordinator.showSnackbar(R.string.base_error)
         } catch (e: FileUriExposedException) {
-            Sentry.captureMessage("Cannot open pdf: pdf uri seems wrong", SentryLevel.INFO)
+            errorReporter.captureMessage("Cannot open pdf: pdf uri seems wrong")
             bottleDetailsViewModel.clearPdfPath()
             binding.coordinator.showSnackbar(R.string.base_error)
         }

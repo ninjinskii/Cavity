@@ -9,15 +9,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
-import io.sentry.Sentry
-import io.sentry.SentryLevel
 import kotlinx.coroutines.launch
 import java.io.File
 
 class FileImportViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = WineRepository.getInstance(app)
+    private val errorReporter = SentryErrorReporter.getInstance(app)
 
     private val _fileImportedEvent = MutableLiveData<Event<Pair<Int, Int>>>()
     val fileImportedEvent: LiveData<Event<Pair<Int, Int>>>
@@ -37,14 +37,12 @@ class FileImportViewModel(app: Application) : AndroidViewModel(app) {
                         binder.bind(repository, uri)
                         binded++
                     } catch (e: NullPointerException) {
-                        Sentry.captureMessage(
-                            "File import: NPE when retieving id from filename",
-                            SentryLevel.INFO
+                        errorReporter.captureMessage(
+                            "File import: NPE when retieving id from filename"
                         )
                     } catch (e: NumberFormatException) {
-                        Sentry.captureMessage(
-                            "File import: NumberFormatException when retrieving id from filename",
-                            SentryLevel.INFO
+                        errorReporter.captureMessage(
+                            "File import: NumberFormatException when retrieving id from filename"
                         )
                     }
                 }

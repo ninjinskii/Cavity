@@ -20,13 +20,14 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentCameraBinding
+import com.louis.app.cavity.domain.error.ErrorReporter
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.TAKEN_PHOTO_URI
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.showSnackbar
-import io.sentry.Sentry
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -38,6 +39,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var snackbarProvider: SnackbarProvider
     private lateinit var permissionChecker: PermissionChecker
+    private lateinit var errorReporter: ErrorReporter
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
     private val settingsViewModel: SettingsViewModel by activityViewModels()
@@ -57,6 +59,8 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             setFadeThrough(navigatingForward = true)
             setFadeThrough(navigatingForward = false)
         }
+
+        errorReporter = SentryErrorReporter.getInstance(requireContext())
 
         permissionChecker = object : PermissionChecker(this, REQUIRED_PERMISSIONS) {
             override fun onPermissionsAccepted() {
@@ -123,7 +127,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             )
             preview.setSurfaceProvider(binding.previewView.surfaceProvider)
         } catch (e: Exception) {
-            Sentry.captureException(e)
+            errorReporter.captureException(e)
             binding.coordinator.showSnackbar(R.string.camera_error)
         }
     }
@@ -160,7 +164,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
                     }
 
                     override fun onError(e: ImageCaptureException) {
-                        Sentry.captureException(e)
+                        errorReporter.captureException(e)
                         binding.coordinator.showSnackbar(R.string.base_error)
                     }
                 })

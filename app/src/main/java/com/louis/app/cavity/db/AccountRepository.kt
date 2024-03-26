@@ -2,12 +2,13 @@ package com.louis.app.cavity.db
 
 import android.app.Application
 import com.louis.app.cavity.R
+import com.louis.app.cavity.domain.error.ErrorReporter
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.network.CavityApiClient
 import com.louis.app.cavity.network.CavityApiService
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.LoginResponse
-import io.sentry.Sentry
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.HttpException
@@ -24,6 +25,8 @@ class AccountRepository private constructor(private val app: Application) {
                 instance ?: AccountRepository(app).also { instance = it }
             }
     }
+
+    private val errorReporter = SentryErrorReporter.getInstance(app)
 
     private val cavityApi by lazy {
         val locale = app.getString(R.string.locale)
@@ -242,7 +245,7 @@ class AccountRepository private constructor(private val app: Application) {
             when (t) {
                 is HttpException -> when (t.code()) {
                     401 -> ApiResponse.UnauthorizedError.also {
-                        Sentry.configureScope { scope -> scope.removeTag("username") }
+                        errorReporter.removeScopeTag(ErrorReporter.USERNAME_ERROR_TAG)
                     }
 
                     412 -> ApiResponse.UnregisteredError
@@ -250,7 +253,7 @@ class AccountRepository private constructor(private val app: Application) {
                 }
 
                 else -> ApiResponse.UnknownError.also {
-                    Sentry.captureException(t)
+                    errorReporter.captureException(t)
                 }
             }
         }

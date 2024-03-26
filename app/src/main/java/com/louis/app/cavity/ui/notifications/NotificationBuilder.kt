@@ -21,11 +21,10 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.FutureTarget
 import com.louis.app.cavity.R
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.Wine
-import io.sentry.Sentry
-import io.sentry.SentryLevel
 import java.util.concurrent.ExecutionException
 import kotlin.random.Random
 
@@ -65,6 +64,7 @@ object NotificationBuilder {
         wine: Wine,
         tastingAction: TastingAction
     ): NotificationWithId {
+        val errorReporter = SentryErrorReporter.getInstance(context)
 
         val pendingIntent = NavDeepLinkBuilder(context).run {
             setGraph(R.navigation.nav_graph)
@@ -102,10 +102,7 @@ object NotificationBuilder {
             try {
                 bitmap = futureBitmap.get()
             } catch (e: ExecutionException) {
-                Sentry.captureMessage(
-                    "Image for tasting notification couldn't be loaded",
-                    SentryLevel.INFO
-                )
+                errorReporter.captureMessage("Image for tasting notification couldn't be loaded")
             }
         }
 

@@ -6,8 +6,8 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textfield.TextInputLayout.END_ICON_NONE
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.util.DateFormatter
-import io.sentry.Sentry
 
 class DatePicker(
     fragmentManager: FragmentManager,
@@ -17,6 +17,8 @@ class DatePicker(
     private val defaultDate: Long? = null,
     private val constraint: CalendarConstraints? = null,
 ) {
+
+    private val errorReporter = SentryErrorReporter.getInstance(associatedTextLayout.context)
     private var isDatePickerDisplayed = false
 
     private var picker: MaterialDatePicker<Long>? = null
@@ -90,7 +92,7 @@ class DatePicker(
                     "random-tag"
                 )
             } catch (e: IllegalStateException) {
-                Sentry.captureException(e)
+                errorReporter.captureException(e)
             }
         }
     }
