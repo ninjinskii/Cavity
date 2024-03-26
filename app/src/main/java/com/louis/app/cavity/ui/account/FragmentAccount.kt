@@ -249,6 +249,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                 }
             }
         }
+
+        binding.toggleDeleteAccount.setOnClickListener {
+            binding.deleteAccountText.setVisible(true)
+            binding.deleteBtn.setVisible(true)
+        }
     }
 
     private fun setupToolbar() {

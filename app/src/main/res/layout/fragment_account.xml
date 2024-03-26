@@ -194,56 +194,17 @@
                     android:id="@+id/divider1"
                     style="@style/Widget.Cavity.Divider"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lastBackup" />
+                    app:layout_constraintTop_toBottomOf="@id/lastBackupDate" />
 
                 <TextView
                     android:id="@+id/backup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/new_backup"
+                    android:text="@string/backup"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider1" />
-
-                <TextView
-                    android:id="@+id/backupText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/export_explanation"
-                    android:textAppearance="?attr/textAppearanceBody1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/backup" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/exportBtn"
-                    style="@style/Widget.Cavity.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/backup"
-                    app:icon="@drawable/ic_export"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/backupText" />
-
-                <View
-                    android:id="@+id/divider2"
-                    style="@style/Widget.Cavity.Divider"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/exportBtn" />
-
-                <TextView
-                    android:id="@+id/importTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/import_"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider2" />
 
                 <com.louis.app.cavity.ui.home.widget.HexagonalView
                     android:id="@+id/importBtn"
@@ -251,9 +212,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/small_margin"
                     android:layout_marginTop="@dimen/medium_margin"
-                    app:layout_constraintEnd_toStartOf="@id/imageBtn"
+                    app:layout_constraintEnd_toStartOf="@id/exportBtn"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/importTitle"
+                    app:layout_constraintTop_toBottomOf="@id/backup"
                     app:layout_constraintWidth_max="200dp"
                     app:strokeColor="?attr/colorPrimary"
                     app:strokeWidth="1dp">
@@ -287,7 +248,7 @@
                 </com.louis.app.cavity.ui.home.widget.HexagonalView>
 
                 <com.louis.app.cavity.ui.home.widget.HexagonalView
-                    android:id="@+id/imageBtn"
+                    android:id="@+id/exportBtn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/small_margin"
@@ -295,7 +256,7 @@
                     android:layout_marginBottom="@dimen/medium_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/importBtn"
-                    app:layout_constraintTop_toBottomOf="@id/importTitle"
+                    app:layout_constraintTop_toBottomOf="@id/backup"
                     app:layout_constraintWidth_max="200dp"
                     app:strokeColor="?attr/colorPrimary"
                     app:strokeWidth="1dp">
@@ -313,7 +274,7 @@
                             android:layout_height="@dimen/large_icon"
                             android:layout_gravity="center"
                             android:contentDescription="@string/export"
-                            android:src="@drawable/ic_image_search"
+                            android:src="@drawable/ic_export"
                             app:tint="?attr/colorPrimary" />
 
                         <TextView
@@ -322,11 +283,39 @@
                             android:layout_gravity="center"
                             android:layout_margin="@dimen/medium_margin"
                             android:gravity="center"
-                            android:text="@string/file_import"
+                            android:text="@string/export_explanation"
                             android:textAppearance="?attr/textAppearanceBody2" />
 
                     </LinearLayout>
                 </com.louis.app.cavity.ui.home.widget.HexagonalView>
+
+                <View
+                    android:id="@+id/divider2"
+                    style="@style/Widget.Cavity.Divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/exportBtn" />
+
+                <TextView
+                    android:id="@+id/importTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/files"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/imageBtn"
+                    style="@style/Widget.Cavity.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:text="@string/file_import"
+                    app:icon="@drawable/ic_image_search"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/importTitle" />
 
                 <View
                     android:id="@+id/divider4"
@@ -336,13 +325,26 @@
 
                 <TextView
                     android:id="@+id/deleteAccountTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/delete_account"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:layout_constraintEnd_toStartOf="@id/toggleDeleteAccount"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider4" />
+
+                <ImageView
+                    android:id="@+id/toggleDeleteAccount"
+                    android:layout_width="@dimen/small_icon"
+                    android:layout_height="@dimen/small_icon"
+                    android:layout_margin="@dimen/small_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/a11y_more_options"
+                    android:src="@drawable/ic_flat_arrow_down"
+                    app:layout_constraintBottom_toBottomOf="@id/deleteAccountTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/deleteAccountTitle" />
 
                 <TextView
                     android:id="@+id/deleteAccountText"
@@ -351,6 +353,7 @@
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/delete_account_explanation"
                     android:textAppearance="?attr/textAppearanceBody1"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/deleteAccountTitle" />
@@ -362,6 +365,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/medium_margin"
                     android:text="@string/delete"
+                    android:visibility="gone"
                     app:icon="@drawable/ic_close"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

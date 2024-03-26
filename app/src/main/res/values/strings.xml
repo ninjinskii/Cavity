@@ -307,6 +307,7 @@
     <string name="backup_erasure_warn_import">La cave de cet appareil sera remplacée par la sauvegarde en ligne.</string>
     <string name="healthcheck_export_warn">La sauvegarde en ligne contient des mouvements de stocks plus récents. L\'export de votre cave écrasera ces mouvements.</string>
     <string name="healthcheck_import_warn">La cave de cet appareil contient des mouvements de stocks plus récents. L\'import de votre sauvegarde écrasera ces mouvements.</string>
+    <string name="files">Fichiers</string>
 
     <!-- Auto backups -->
     <string name="auto_backup_channel">Rapport de sauvegarde automatiques</string>
