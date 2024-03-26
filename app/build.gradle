@@ -16,6 +16,14 @@ android {
         versionCode 26
         versionName "1.6.0"
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                compilerArgumentProviders(
+                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
+                )
+            }
+        }
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -81,6 +89,8 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-paging:$room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
+
     kapt "androidx.room:room-compiler:$room_version"
 
     // Glide
@@ -119,4 +129,22 @@ dependencies {
 
     // Sentry
     implementation "io.sentry:sentry-android:7.6.0"
+}
+
+class RoomSchemaArgProvider implements CommandLineArgumentProvider {
+
+    @InputDirectory
+    @PathSensitive(PathSensitivity.RELATIVE)
+    File schemaDir
+
+    RoomSchemaArgProvider(File schemaDir) {
+        this.schemaDir = schemaDir
+    }
+
+    @Override
+    Iterable<String> asArguments() {
+        // Note: If you're using KAPT and javac, change the line below to
+        // return ["-Aroom.schemaLocation=${schemaDir.path}".toString()].
+        return ["room.schemaLocation=${schemaDir.path}".toString()]
+    }
 }
