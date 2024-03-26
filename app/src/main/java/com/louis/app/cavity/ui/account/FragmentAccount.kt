@@ -175,7 +175,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         }
 
         importExportViewModel.healthCheckWorkProgress.observe(viewLifecycleOwner) {
-            if (it !== null && it.state.isFinished) {
+            if (it !== null && it.state.isFinished && settingsViewModel.getAutoBackup()) {
                 val healthState =
                     it.outputData.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
 
