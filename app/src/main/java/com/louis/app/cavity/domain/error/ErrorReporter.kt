@@ -3,7 +3,7 @@ package com.louis.app.cavity.domain.error
 interface ErrorReporter {
 
     companion object {
-        const val USERNAME_ERROR_TAG = "com.louis.app.cavity.USERNAME_ERROR_TAG"
+        const val USERNAME_ERROR_TAG = "username"
     }
 
     fun captureException(throwable: Throwable)
