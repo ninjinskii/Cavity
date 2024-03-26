@@ -7,12 +7,13 @@ import androidx.work.WorkerParameters
 import com.louis.app.cavity.db.AccountRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.domain.backup.BackupBuilder
-import io.sentry.Sentry
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 
 class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     private val repository = WineRepository.getInstance(context as Application)
     private val accountRepository = AccountRepository.getInstance(context as Application)
     private val backupBuilder = BackupBuilder(context)
+    private val errorReporter = SentryErrorReporter.getInstance(context)
 
     override suspend fun doWork(): Result {
         return try {
@@ -22,11 +23,11 @@ class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker
             if (runAttemptCount < 1) {
                 Result.retry()
             } else {
-                Sentry.captureException(e)
+                errorReporter.captureException(e)
                 Result.failure()
             }
         } catch (e: Exception) {
-            Sentry.captureException(e)
+                errorReporter.captureException(e)
             Result.failure()
         }
     }

@@ -5,15 +5,15 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.louis.app.cavity.db.AccountRepository
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.network.response.ApiResponse
-import io.sentry.Sentry
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PruneWorker(context: Context, params: WorkerParameters) :
-    CoroutineWorker(context, params) {
+class PruneWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     private val accountRepository = AccountRepository.getInstance(context as Application)
+    private val errorReporter = SentryErrorReporter.getInstance(context)
 
     override suspend fun doWork(): Result {
         return try {
@@ -23,11 +23,11 @@ class PruneWorker(context: Context, params: WorkerParameters) :
             if (runAttemptCount < 1) {
                 Result.retry()
             } else {
-                Sentry.captureException(e)
+                errorReporter.captureException(e)
                 Result.failure()
             }
         } catch (e: Exception) {
-            Sentry.captureException(e)
+            errorReporter.captureException(e)
             Result.failure()
         }
     }

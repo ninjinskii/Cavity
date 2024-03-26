@@ -12,8 +12,8 @@ import com.louis.app.cavity.db.PrefsRepository
 import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.domain.backup.AutoBackup
 import com.louis.app.cavity.domain.backup.BackupFinishedListener
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
-import io.sentry.Sentry
 import kotlinx.coroutines.delay
 
 // This worker is designed to be used with a one shot work or a periodic work,
@@ -25,6 +25,7 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
     private val accountRepository = AccountRepository.getInstance(context as Application)
     private val prefsRepository = PrefsRepository.getInstance(context as Application)
     private val healthCheckOnly = inputData.getBoolean(WORK_DATA_HEALTHCHECK_ONLY, false)
+    private val errorReporter = SentryErrorReporter.getInstance(context)
 
     override suspend fun doWork(): Result {
         val listener = object : BackupFinishedListener<Data> {
@@ -37,7 +38,7 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
             }
 
             override fun onFailure(canRetry: Boolean, exception: Exception?): Data {
-                exception?.let { Sentry.captureException(it) }
+                exception?.let { errorReporter.captureException(it) }
                 sendNotification(R.string.auto_backup_failed_title, R.string.base_error)
 
                 return Data.Builder()
@@ -94,7 +95,7 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
             delay(200)      // Let the observers catch the progress
             Result.success(result)  // If this worker is run in one shot, we can get this data by using WorkInfo#outputData
         } catch (e: Exception) {
-            Sentry.captureException(e)
+            errorReporter.captureException(e)
             val data = Data.Builder()
                 .putInt(WORK_DATA_HEALTH_STATE_KEY, HEALTH_STATE_FAILED)
                 .build()

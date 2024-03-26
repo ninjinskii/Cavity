@@ -3,8 +3,8 @@ package com.louis.app.cavity.domain.backup
 import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.FileAssoc
-import io.sentry.Sentry
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -15,6 +15,7 @@ class FileProcessor(private val context: Context, fileAssoc: FileAssoc) {
     private val externalFilename = fileAssoc.getExternalFilename()
     private val externalPath = context.getExternalFilesDir(null)!!.path
     private val outputFile = File("$externalPath/${externalFilename}.$extension")
+    private val errorReporter = SentryErrorReporter.getInstance(context)
 
     private val extension: String?
         get() = MimeTypeMap.getSingleton()
@@ -27,7 +28,7 @@ class FileProcessor(private val context: Context, fileAssoc: FileAssoc) {
         } catch (e: FileNotFoundException) {
             null
         } catch (e: SecurityException) {
-            Sentry.captureMessage("SecurityException for file $outputFile")
+            errorReporter.captureMessage("SecurityException for file $outputFile")
             null
         }
 

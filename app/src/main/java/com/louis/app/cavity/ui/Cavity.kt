@@ -3,10 +3,7 @@ package com.louis.app.cavity.ui
 import android.app.Application
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate.*
-import com.louis.app.cavity.BuildConfig
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
-import io.sentry.SentryOptions
-import io.sentry.android.core.SentryAndroid
 
 class Cavity : Application() {
     override fun onCreate() {
@@ -17,11 +14,5 @@ class Cavity : Application() {
         setDefaultNightMode(mode)
 
         NotificationBuilder.createNotificationChannels(this)
-
-        SentryAndroid.init(this) { options ->
-            options.beforeSend = SentryOptions.BeforeSendCallback { event, _ ->
-                if (BuildConfig.DEBUG) null else event
-            }
-        }
     }
 }
