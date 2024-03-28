@@ -1,2 +1,3 @@
-- Add auto backup feature for Caivty account owners
-- Update account ui accordingly
+- Minor acount UI fixes
+- Simpliefied Cavity account UI
+- Fix a crash at app startup for legacy users
