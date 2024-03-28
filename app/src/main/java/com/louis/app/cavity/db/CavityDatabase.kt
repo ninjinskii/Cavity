@@ -1,6 +1,7 @@
 package com.louis.app.cavity.db
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -26,7 +27,11 @@ import com.louis.app.cavity.model.*
         TastingAction::class,
     ],
     version = 2,
-    exportSchema = false
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ]
+
 )
 abstract class CavityDatabase : RoomDatabase() {
     abstract fun countyDao(): CountyDao
@@ -48,48 +53,6 @@ abstract class CavityDatabase : RoomDatabase() {
         @Volatile
         private var instance: CavityDatabase? = null
 
-        private val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                try {
-                    database.beginTransaction()
-
-                    database.execSQL("DROP TABLE IF EXISTS bottle_temp;")
-
-                    database.execSQL(
-                        "CREATE TABLE `bottle_temp` " +
-                            "(`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                            " `wine_id` INTEGER NOT NULL," +
-                            " `vintage` INTEGER NOT NULL," +
-                            " `apogee` INTEGER," +
-                            " `is_favorite` INTEGER NOT NULL," +
-                            " `price` REAL NOT NULL," +
-                            " `currency` TEXT NOT NULL," +
-                            " `other_info` TEXT NOT NULL," +
-                            " `buy_location` TEXT NOT NULL," +
-                            " `buy_date` INTEGER NOT NULL," +
-                            " `tasting_taste_comment` TEXT NOT NULL," +
-                            " `bottle_size` TEXT NOT NULL," +
-                            " `pdf_path` TEXT NOT NULL," +
-                            " `consumed` INTEGER NOT NULL," +
-                            " `tasting_id` INTEGER," +
-                            " FOREIGN KEY(`wine_id`) REFERENCES `wine`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE);"
-                    )
-
-                    database.execSQL("CREATE INDEX IF NOT EXISTS index_bottle_wine_id ON bottle_temp(wine_id ASC);")
-
-                    database.execSQL("CREATE INDEX IF NOT EXISTS index_bottle_tasting_id ON bottle_temp(tasting_id ASC);")
-
-                    database.execSQL("INSERT INTO bottle_temp(id, wine_id, vintage, apogee, is_favorite, price, currency, other_info, buy_location, buy_date, tasting_taste_comment, bottle_size, pdf_path, consumed, tasting_id) SELECT * FROM bottle;")
-
-                    database.execSQL("DROP TABLE bottle;")
-
-                    database.execSQL("ALTER TABLE bottle_temp RENAME TO bottle;")
-                } finally {
-                    database.endTransaction()
-                }
-            }
-        }
-
         fun getInstance(context: Context): CavityDatabase {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase(context).also { instance = it }
@@ -102,7 +65,6 @@ abstract class CavityDatabase : RoomDatabase() {
                 CavityDatabase::class.java,
                 "cavity.db"
             )
-                .addMigrations(MIGRATION_1_2)
                 .build()
         }
     }
