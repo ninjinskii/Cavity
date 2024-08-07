@@ -251,8 +251,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         }
 
         binding.toggleDeleteAccount.setOnClickListener {
-            binding.deleteAccountText.setVisible(true)
-            binding.deleteBtn.setVisible(true)
+            with(binding) {
+                deleteAccountText.setVisible(true)
+                deleteBtn.setVisible(true)
+                scrollView.postDelayed({ binding.scrollView.fullScroll(View.FOCUS_DOWN) }, 500)
+            }
         }
     }
 
