@@ -1,22 +1,20 @@
 package com.louis.app.cavity.ui.home.widget
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
 import com.louis.app.cavity.R
-import com.louis.app.cavity.model.Chipable
 
 class ScrollableTabAdapter<T>(
     private val onTabClick: (View, Int) -> Unit,
     private val onLongTabClick: (T, Int) -> Unit
 ) :
-    RecyclerView.Adapter<ScrollableTabAdapter<T>.TabViewHolder>() {
-
-    private val tabs = mutableListOf<T>()
+    ListAdapter<T, ScrollableTabAdapter<T>.TabViewHolder>(ScrollableItemDiffCallback<T>()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_county, parent, false)
@@ -24,21 +22,26 @@ class ScrollableTabAdapter<T>(
     }
 
     override fun onBindViewHolder(holder: TabViewHolder, position: Int) {
-        holder.bind(tabs[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount() = tabs.size
+    override fun getItemId(position: Int): Long {
+        if (itemCount <= 0) {
+            return NO_ID
+        }
 
-    override fun getItemId(position: Int) = (tabs[position] as? Chipable)?.getItemId() ?: NO_ID
+        return currentList[position].toString().hashCode().toLong() + position
+    }
 
-    fun getItem(position: Int) = tabs[position]
+    public override fun getItem(position: Int): T = super.getItem(position)
 
-    // We don't want any fancy animations and this list is very small
-    @SuppressLint("NotifyDataSetChanged")
-    fun addAll(list: List<T>) {
-        tabs.clear()
-        tabs.addAll(list)
-        notifyDataSetChanged()
+    // TODO: disable animations ?
+
+    class ScrollableItemDiffCallback<T> : DiffUtil.ItemCallback<T>() {
+        override fun areItemsTheSame(oldItem: T & Any, newItem: T & Any) =
+            oldItem.toString() == newItem.toString()
+
+        override fun areContentsTheSame(oldItem: T & Any, newItem: T & Any) = true
     }
 
     inner class TabViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
