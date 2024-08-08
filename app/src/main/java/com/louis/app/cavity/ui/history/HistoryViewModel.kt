@@ -11,6 +11,7 @@ import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -61,7 +62,9 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 
     fun requestScrollToDate(timestamp: Long) {
         viewModelScope.launch(IO) {
+            val filter = _filter.value ?: HistoryFilter.NoFilter
             val entries = repository.getAllEntriesNotPagedNotLive()
+            val filtered = rawFilter(entries, filter)
             val offset = 1
 
             withContext(Default) {
@@ -69,7 +72,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                 var currentDay = -1L
                 var dateFounded = false
 
-                for ((position, entry) in entries.withIndex()) {
+                for ((position, entry) in filtered.withIndex()) {
                     val day = DateFormatter.roundToDay(entry.date)
 
                     if (day != currentDay) {
@@ -94,7 +97,15 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 
     fun requestDatePicker() {
         viewModelScope.launch(IO) {
-            val oldestEntryDate = repository.getOldestEntryDate()
+            val filter = _filter.value ?: HistoryFilter.NoFilter
+            val entries = repository.getAllEntriesNotPagedNotLive()
+            val filtered = rawFilter(entries, filter)
+
+            if (filtered.isEmpty() || filter is HistoryFilter.WineFilter) {
+                return@launch
+            }
+
+            val oldestEntryDate = filtered.last().date
             _showDatePicker.postOnce(oldestEntryDate)
         }
     }
@@ -143,9 +154,31 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
                 R.id.chipFavorites -> repository.getFavoriteEntries()
                 else -> repository.getAllEntries()
             }
+
             is HistoryFilter.WineFilter -> repository.getEntriesForWine(filter.wineId)
             is HistoryFilter.BottleFilter -> repository.getEntriesForBottle(filter.bottleId)
             is HistoryFilter.NoFilter -> repository.getAllEntries()
+        }
+    }
+
+    // Meant to be used when user wants to use date navigation with a filter on.
+    // We have to get all history entries (not paged) & reapply filters ourselves without SQL query
+    // to get correct position
+    private fun rawFilter(source: List<HistoryEntry>, filter: HistoryFilter): List<HistoryEntry> {
+        return when (filter) {
+            is HistoryFilter.TypeFilter -> when (filter.chipId) {
+                R.id.chipReplenishments -> source.filter { it.type == 1 || it.type == 3 }
+                R.id.chipComsumptions -> source.filter { it.type == 0 || it.type == 2 }
+                R.id.chipTastings -> source.filter { it.type == 4 }
+                R.id.chipGiftedTo -> source.filter { it.type == 2 }
+                R.id.chipGiftedBy -> source.filter { it.type == 3 }
+                R.id.chipFavorites -> source.filter { it.favorite.toBoolean() }
+                else -> source
+            }
+
+            is HistoryFilter.WineFilter -> source // No support for wines
+            is HistoryFilter.BottleFilter -> source.filter { it.bottleId == filter.bottleId }
+            is HistoryFilter.NoFilter -> source
         }
     }
 

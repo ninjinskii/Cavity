@@ -283,7 +283,6 @@ class WineRepository private constructor(app: Application) {
 
     fun getEntriesForDate(date: Long) = historyDao.getEntriesForDate(date)
     fun getFavoriteEntries() = historyDao.getFavoriteEntries()
-    fun getOldestEntryDate() = historyDao.getOldestEntryDate()
 
     suspend fun clearExistingReplenishments(bottleId: Long) =
         historyDao.clearExistingReplenishments(bottleId)
