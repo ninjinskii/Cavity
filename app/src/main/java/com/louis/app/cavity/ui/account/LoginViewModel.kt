@@ -150,7 +150,9 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun updateAccountLastUpdateLocally() {
-        val copy = _account.value?.copy(lastUpdateTime = System.currentTimeMillis())
+        val deviceName = Environment.getDeviceName()
+        val copy =
+            _account.value?.copy(lastUpdateTime = System.currentTimeMillis(), lastUser = deviceName)
 
         copy?.let {
             _account.value = it
