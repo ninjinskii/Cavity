@@ -3,11 +3,6 @@ package com.louis.app.cavity.db
 import android.app.Application
 import androidx.room.withTransaction
 import com.louis.app.cavity.model.*
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.withContext
-import java.io.*
 
 class WineRepository private constructor(app: Application) {
     companion object {
@@ -36,11 +31,6 @@ class WineRepository private constructor(app: Application) {
     private val statsDao = database.statsDao()
     private val tastingDao = database.tastingDao()
     private val tastingActionDao = database.tastingActionDao()
-
-    // Only used for db migration from Cavity 2 for now.
-    private val moshi by lazy {
-        Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-    }
 
     suspend fun <T> transaction(databaseQueries: suspend () -> T) = database.withTransaction {
         databaseQueries()
@@ -397,74 +387,4 @@ class WineRepository private constructor(app: Application) {
 
     suspend fun deleteAllTastingActions() = tastingActionDao.deleteAll()
 
-    suspend fun importDbFromExternalDir(externalDirPath: String) {
-        val file = File("$externalDirPath/db.json")
-
-        if (!file.exists()) {
-            throw IllegalStateException("Cannot find '[externalDir]/files/db.json")
-        }
-
-        val adapter = moshi.adapter(DbTablesJsonAdapter::class.java)
-        val data = StringBuffer("")
-
-        withContext(IO) {
-            try {
-                val fIn = FileInputStream(file)
-                val isr = InputStreamReader(fIn)
-                val buffreader = BufferedReader(isr)
-                var readString: String? = buffreader.readLine()
-
-                while (readString != null) {
-                    data.append(readString)
-                    readString = buffreader.readLine()
-                }
-                isr.close()
-            } catch (ioe: IOException) {
-                ioe.printStackTrace()
-            }
-
-            if (data.isEmpty()) {
-                throw IllegalStateException("Cannot read data from json file")
-            }
-
-            doImportDbFromExternal(adapter.fromJson(data.toString()))
-        }
-
-    }
-
-    private suspend fun doImportDbFromExternal(tables: DbTablesJsonAdapter?) {
-        if (tables == null) {
-            throw IllegalStateException("Moshi returned a null object")
-        }
-
-        database.withTransaction {
-            deleteAllCounties()
-            deleteAllWines()
-            deleteAllReviews()
-            deleteAllFReviews()
-            deleteAllGrapes()
-            deleteAllBottles()
-            deleteAllHistoryEntries()
-
-            with(tables) {
-                counties.forEach { insertCounty(it) }
-                insertWines(wines)
-                reviews.forEach { insertReview(it) }
-                grapes.forEach { insertGrape(it) }
-                insertBottles(bottles)
-                insertFilledReviews(fReviews)
-                historyEntries.forEach { insertHistoryEntry(it) }
-            }
-        }
-    }
-
-    class DbTablesJsonAdapter(
-        val counties: List<County>,
-        val wines: List<Wine>,
-        val reviews: List<Review>,
-        val fReviews: List<FReview>,
-        val grapes: List<Grape>,
-        val bottles: List<Bottle>,
-        val historyEntries: List<HistoryEntry>
-    )
 }
