@@ -183,14 +183,9 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     fun autoBackupHealthCheck() {
         workManager.cancelAllWorkByTag(AutoUploadWorker.WORK_TAG_HEALTHCHECK)
 
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.UNMETERED)
-            .build()
-
         OneTimeWorkRequestBuilder<AutoUploadWorker>()
             .addTag(AutoUploadWorker.WORK_TAG_HEALTHCHECK)
             .setInputData(Data.Builder().putBoolean(WORK_DATA_HEALTHCHECK_ONLY, true).build())
-            .setConstraints(constraints)
             .build().also {
                 healthCheckWorkRequestId.value = it.id
                 workManager.enqueue(it)
