@@ -47,7 +47,7 @@ jobs:
 
       - name: Read changelog file
         id: get_changelog
-        run: echo "::set-output name=changelog::$(cat metadata/en-US/changelogs/${{ steps.get_version_code.version_code }})"
+        run: echo "::set-output name=changelog::$(cat metadata/en-US/changelogs/${{ steps.get_version_code.version_code }}.txt)"
 
       - name: Create github release
         id: create_release
