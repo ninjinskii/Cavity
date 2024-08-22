@@ -42,9 +42,12 @@ jobs:
         id: get_version_code
         run: echo "::set-output name=code::$(./gradlew -q printVersionCode)"
 
+      - name: ls
+        run: ls
+
       - name: Read changelog file
         id: get_changelog
-        run: echo "::set-output name=changelog::$(cat metadata/en-US/changelogs/${{ steps.get_version_code.code }}.txt)"
+        run: echo "::set-output name=changelog::$(cat ./metadata/en-US/changelogs/${{ steps.get_version_code.outputs.code }}.txt)"
 
       - name: Create github release
         id: create_release
@@ -55,12 +58,11 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
           body: |
-            ${{ steps.get_changelog.changelog }}
+            ${{ steps.get_changelog.outputs.changelog }}
           draft: false
           prerelease: false
 
       - name: Upload release apk
-        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
