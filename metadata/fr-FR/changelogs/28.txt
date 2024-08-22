@@ -1,0 +1,8 @@
+- Transition de Play Store à F-Droid
+- Stats: l'ordre de la abnrre de défilement des années à été inversées pour les entrées / sorties
+- Correction du retour à lé première région lors de la suppression d'un vin
+- Correction de la navigation par date dans l'historique lorsqu'un filtre est actif
+- Correction du status de la sauvegarde automatique chargeant à l'infini quand l'utilisateur n'est pas en wi-fi
+- Correction du dernier appareil ayant réalisé la sauvegarde qui ne se met pas à jour directement après une sauvegarde manuelle
+- Correction des ices de calendries qui ne s'affichaient pas dans la saisie des dates dans la recherche
+
