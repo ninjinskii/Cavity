@@ -23,10 +23,7 @@ jobs:
       - name: Grant rights gradlew
         run: chmod +x ./gradlew
 
-      - name: Gradle build
-        run: ./gradlew build
-
-      - name: Build Release APK
+      - name: Build release APK
         run: ./gradlew assembleRelease
 
       - name: Sign APK
@@ -43,11 +40,11 @@ jobs:
 
       - name: Read version code
         id: get_version_code
-        run: echo "::set-output name=version_code::$(./gradlew -q printVersionCode)"
+        run: echo "::set-output name=code::$(./gradlew -q printVersionCode)"
 
       - name: Read changelog file
         id: get_changelog
-        run: echo "::set-output name=changelog::$(cat metadata/en-US/changelogs/${{ steps.get_version_code.version_code }}.txt)"
+        run: echo "::set-output name=changelog::$(cat metadata/en-US/changelogs/${{ steps.get_version_code.code }}.txt)"
 
       - name: Create github release
         id: create_release
@@ -62,7 +59,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: Upload release apk
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
