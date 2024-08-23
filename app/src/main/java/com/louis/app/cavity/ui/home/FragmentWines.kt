@@ -28,9 +28,9 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     private fun initRecyclerView() {
         val transitionHelper = TransitionHelper(requireParentFragment())
         val icons = ContextCompat.getDrawable(requireContext(), R.drawable.ic_bio)!! to
-            ContextCompat.getDrawable(requireContext(), R.drawable.ic_glass)!!.also {
-                it.setTint(Color.WHITE)
-            }
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_glass)!!.also {
+                    it.setTint(Color.WHITE)
+                }
 
         val wineAdapter = WineRecyclerAdapter(transitionHelper, icons)
         val colCount = resources.getInteger(R.integer.honeycomb_cols)
@@ -67,7 +67,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.wineList.adapter = null
         _binding = null
     }
 

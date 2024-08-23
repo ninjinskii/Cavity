@@ -4,12 +4,14 @@
     android:id="@+id/toolbarLayout"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
+    android:background="@null"
     android:transitionName="appbar">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@null"
         app:title="@string/app_name"
         app:titleCentered="true"
         app:titleTextColor="?attr/colorOnSurface" />
