@@ -23,7 +23,6 @@
 
     <dimen name="hexagonal_fab_width">56dp</dimen>
     <dimen name="margin_hexagone_text">0dp</dimen>
-    <dimen name="margin_honeycomb_top">?attr/actionBarSize</dimen>
 
     <dimen name="review_height">120dp</dimen>
 
