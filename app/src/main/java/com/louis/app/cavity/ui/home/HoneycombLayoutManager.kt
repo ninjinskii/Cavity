@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.HORIZONTAL
 import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.VERTICAL
-import com.louis.app.cavity.util.L
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -103,7 +102,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             val otherSide: Int
             val view = recycler.getViewForPosition(i)
 
-            L.v("Laying out view BOTTOM")
             addView(view)
 
             if (orientation == VERTICAL) {
@@ -174,7 +172,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             val otherSide: Int
             val view = recycler.getViewForPosition(i)
 
-            L.v("Laying out view TOP")
             addView(view, 0)
 
             anchorPosition--
@@ -320,10 +317,9 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         for (i in lastVisibleChild until childCount) {
             val child = getChildAt(i)!!
             val padding = getMainAxisPadding()
-            // 1810   224
-            // L.v("totalSpace: ${oHelper.totalSpace}, paddingBottom: $paddingBottom")
             val limit =
-                if (clipToPadding) oHelper.totalSpace + oHelper.startAfterPadding else oHelper.totalSpace + padding
+                if (clipToPadding) oHelper.totalSpace + oHelper.startAfterPadding
+                else oHelper.totalSpace + padding
 
             if (oHelper.getDecoratedStart(child) <= limit) {
                 lastVisibleChild++
@@ -334,13 +330,11 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         }
 
         for (i in childCount - 1 downTo lastVisibleChild + 1) {
-            L.v("recycle view at bottom")
             removeAndRecycleViewAt(i, recycler)
         }
 
         for (i in firstVisibleChild - 1 downTo 0) {
             removeAndRecycleViewAt(i, recycler)
-            L.v("recycle view at top")
         }
 
         anchorPosition += firstVisibleChild
@@ -366,11 +360,8 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     }
 
     private fun getPositionInRow(position: Int, childRow: Boolean): Int {
-        return if (childRow) {
-            position % groupItemCount - colCount
-        } else {
-            position % groupItemCount
-        }
+        val childRowFactor = if (childRow) colCount else 0
+        return position % groupItemCount - childRowFactor
     }
 
     private fun getMainAxisPadding() = oHelper.startAfterPadding + oHelper.endPadding
