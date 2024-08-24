@@ -66,7 +66,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
     private fun fillTowardsEnd(recycler: RecyclerView.Recycler, extra: Int = 0) {
         val toFill =
-            oHelper.endAfterPadding + extra + if (clipToPadding) 0 else getMainAxisPadding()
+            oHelper.endAfterPadding + extra + if (clipToPadding) 0 else oHelper.endPadding
         var filled: Int // No used currently. Might be necessary to better compute actual scrolled distance in doOnScroll()
         val marginX: Int
         val marginY: Int
