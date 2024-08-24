@@ -98,33 +98,16 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 break
             }
 
-            val towardsEndSide: Int
-            val otherSide: Int
             val view = recycler.getViewForPosition(i)
-
             addView(view)
 
-            if (orientation == VERTICAL) {
-                measureChildWithMargins(view, width - (width / colCount), 0)
-                towardsEndSide = view.measuredHeight + view.marginTop + view.marginBottom
-                otherSide = view.measuredWidth + view.marginLeft + view.marginRight
-            } else {
-                measureChildWithMargins(view, 0, height - (height / colCount))
-                towardsEndSide = view.measuredWidth + view.marginLeft + view.marginRight
-                otherSide = view.measuredHeight + view.marginTop + view.marginBottom
-            }
+            val (towardsEndSide, otherSide) = measureOriented(view)
 
             val isInChildRow = isItemInChildRow(i)
             val positionInRow = getPositionInRow(i, isInChildRow)
             val isRowCompleted = isRowCompleted(positionInRow, isInChildRow, reverse = false)
 
-            val left = if (isInChildRow) {
-                val childRowOffset = otherSide / 2
-                childRowOffset + otherSide * positionInRow
-            } else {
-                otherSide * positionInRow
-            }
-
+            val left = getLeft(otherSide, positionInRow, isInChildRow)
             val end = start + towardsEndSide
             val right = left + otherSide
 
@@ -142,15 +125,16 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         val marginY: Int
         var end: Int
 
-
-        if (childCount == 0) return
+        if (childCount == 0) {
+            return
+        }
 
         val firstChild = getChildAt(0)!!
         val firstChildPos = getPosition(firstChild)
 
-
-
-        if (firstChildPos == 0) return
+        if (firstChildPos == 0) {
+            return
+        }
 
         var filled = oHelper.getDecoratedStart(firstChild)
 
@@ -166,37 +150,22 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         end = oHelper.getDecoratedStart(firstChild) + (towardsEndLastSide apply OVERLAPING_FACTOR)
 
         for (i in firstChildPos - 1 downTo 0) {
-            if (end < toFill) break
+            if (end < toFill) {
+                break
+            }
 
-            val towardsEndSide: Int
-            val otherSide: Int
             val view = recycler.getViewForPosition(i)
-
             addView(view, 0)
 
             anchorPosition--
 
-            if (orientation == VERTICAL) {
-                measureChildWithMargins(view, width - (width / colCount), 0)
-                towardsEndSide = view.measuredHeight + view.marginTop + view.marginBottom
-                otherSide = view.measuredWidth + view.marginLeft + view.marginRight
-            } else {
-                measureChildWithMargins(view, 0, height - (height / colCount))
-                towardsEndSide = view.measuredWidth + view.marginLeft + view.marginRight
-                otherSide = view.measuredHeight + view.marginTop + view.marginBottom
-            }
+            val (towardsEndSide, otherSide) = measureOriented(view)
 
             val isInChildRow = isItemInChildRow(i)
             val positionInRow = getPositionInRow(i, isInChildRow)
             val isRowCompleted = isRowCompleted(positionInRow, isInChildRow, reverse = true)
 
-            val left = if (isInChildRow) {
-                val childRowOffset = otherSide / 2
-                childRowOffset + otherSide * positionInRow
-            } else {
-                otherSide * positionInRow
-            }
-
+            val left = getLeft(otherSide, positionInRow, isInChildRow)
             val start = end - towardsEndSide
             val right = left + otherSide
 
@@ -206,6 +175,29 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 end = start + (towardsEndSide apply OVERLAPING_FACTOR)
                 filled += towardsEndSide
             }
+        }
+    }
+
+    private fun measureOriented(view: View): Pair<Int, Int> {
+        return if (orientation == VERTICAL) {
+            measureChildWithMargins(view, width - (width / colCount), 0)
+            val towardsEndSide = view.measuredHeight + view.marginTop + view.marginBottom
+            val otherSide = view.measuredWidth + view.marginLeft + view.marginRight
+            towardsEndSide to otherSide
+        } else {
+            measureChildWithMargins(view, 0, height - (height / colCount))
+            val towardsEndSide = view.measuredWidth + view.marginLeft + view.marginRight
+            val otherSide = view.measuredHeight + view.marginTop + view.marginBottom
+            towardsEndSide to otherSide
+        }
+    }
+
+    private fun getLeft(otherSide: Int, positionInRow: Int, isInChildRow: Boolean): Int {
+        return if (isInChildRow) {
+            val childRowOffset = otherSide / 2
+            childRowOffset + otherSide * positionInRow
+        } else {
+            otherSide * positionInRow
         }
     }
 
