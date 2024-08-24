@@ -323,7 +323,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             // 1810   224
             // L.v("totalSpace: ${oHelper.totalSpace}, paddingBottom: $paddingBottom")
             val limit =
-                if (clipToPadding) oHelper.totalSpace + oHelper.endPadding else oHelper.totalSpace + padding
+                if (clipToPadding) oHelper.totalSpace + oHelper.startAfterPadding else oHelper.totalSpace + padding
 
             if (oHelper.getDecoratedStart(child) <= limit) {
                 lastVisibleChild++
