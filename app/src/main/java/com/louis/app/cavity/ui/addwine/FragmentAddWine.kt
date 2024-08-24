@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.content.ActivityNotFoundException
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -45,9 +46,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         super.onCreate(savedInstanceState)
 
         transitionHelper = TransitionHelper(this).apply {
+            val transformOptions = TransitionHelper.ContainerTransformOptions(
+                Color.TRANSPARENT,
+                Color.TRANSPARENT
+            )
+
             setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = false)
             setFadeThrough(navigatingForward = true)
-            setContainerTransformTransition(options = null, enter = true) // Appbar
+            setContainerTransformTransition(options = transformOptions, enter = true) // Appbar
         }
 
         pickImage = registerForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri ->

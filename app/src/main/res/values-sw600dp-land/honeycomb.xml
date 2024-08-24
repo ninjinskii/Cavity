@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="honeycomb_cols">2</integer>
+    <integer name="honeycomb_cols">3</integer>
     <bool name="flat_hexagones">true</bool>
-    <dimen name="hexagones_margin">@dimen/xlarge_margin</dimen>
+    <dimen name="hexagones_margin">@dimen/large_margin</dimen>
 </resources>
