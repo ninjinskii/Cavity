@@ -37,8 +37,8 @@
 
         <TextView
             android:id="@+id/menuBackground"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="@dimen/small_margin"
             android:background="@drawable/shape_background_title"
             android:textColor="@android:color/transparent"
