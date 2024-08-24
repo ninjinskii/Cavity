@@ -67,7 +67,8 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     }
 
     private fun fillTowardsEnd(recycler: RecyclerView.Recycler, extra: Int = 0) {
-        val toFill = if (clipToPadding) oHelper.endAfterPadding + extra else oHelper.endAfterPadding + extra
+        val toFill =
+            if (clipToPadding) oHelper.endAfterPadding + extra else oHelper.endAfterPadding + extra + paddingTop + paddingBottom
         var filled: Int // No used currently. Might be necessary to better compute actual scrolled distance in doOnScroll()
         val marginX: Int
         val marginY: Int
@@ -259,6 +260,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                     oHelper.offsetChildren(-scrollBy)
                     scrolled += scrollBy
                     if (lastChildPosition == state.itemCount - 1) break
+                    L.v("fillTowardsEnd")
                     fillTowardsEnd(recycler)
                 }
                 scrolled
@@ -329,8 +331,10 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
         for (i in lastVisibleChild until childCount) {
             val child = getChildAt(i)!!
-            val padding = if (orientation == VERTICAL) paddingBottom else paddingRight
-            val limit = if (clipToPadding) oHelper.totalSpace - padding else oHelper.totalSpace + paddingTop
+            val padding =
+                if (orientation == VERTICAL) paddingBottom + paddingTop else paddingRight + paddingLeft
+            val limit =
+                if (clipToPadding) oHelper.totalSpace - padding else oHelper.totalSpace + paddingTop + paddingBottom
 
             if (oHelper.getDecoratedStart(child) <= limit) {
                 lastVisibleChild++
