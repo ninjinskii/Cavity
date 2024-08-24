@@ -31,9 +31,6 @@ interface HistoryDao {
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
     suspend fun getAllEntriesNotPagedNotLive(): List<HistoryEntry>
 
-    @Query("SELECT date FROM history_entry ORDER BY date ASC LIMIT 1")
-    fun getOldestEntryDate(): Long
-
     // Divide by 1000 to convert Java milliseconds timestamps to unix timestamp (seconds)
     @Query(
         """SELECT DISTINCT strftime('%Y', date / 1000, 'unixepoch') as year,

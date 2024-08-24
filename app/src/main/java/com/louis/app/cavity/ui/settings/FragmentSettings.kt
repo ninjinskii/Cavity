@@ -25,7 +25,6 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val settingsViewModel: SettingsViewModel by activityViewModels()
-    private var clickCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,31 +71,12 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
 
             setOnCheckedChangeListener { _, isChecked ->
                 settingsViewModel.setSkewBottle(isChecked)
-                clickCount++
-            }
-
-            setOnLongClickListener {
-                if (clickCount == 10) {
-                    val externalDir = requireContext().getExternalFilesDir(null)!!.path
-                    settingsViewModel.importDbFromExternalDir(externalDir)
-                }
-
-                true
             }
         }
 
         binding.skewBottle.apply {
             setOnClickListener {
                 binding.toggleSkew.toggle()
-            }
-
-            setOnLongClickListener {
-                if (clickCount == 10) {
-                    val externalDir = requireContext().getExternalFilesDir(null)!!.path
-                    settingsViewModel.importDbFromExternalDir(externalDir)
-                }
-
-                true
             }
         }
 

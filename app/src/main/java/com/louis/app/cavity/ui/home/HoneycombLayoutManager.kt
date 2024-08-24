@@ -54,8 +54,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         }
     }
 
-    // TODO: fix weird anchor position when scrolling to end and turn phone in horizontal mode
-
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
         detachAndScrapAttachedViews(recycler)
 
@@ -66,7 +64,8 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     }
 
     private fun fillTowardsEnd(recycler: RecyclerView.Recycler, extra: Int = 0) {
-        val toFill = oHelper.endAfterPadding + extra
+        val toFill =
+            oHelper.endAfterPadding + extra + if (clipToPadding) 0 else oHelper.endPadding
         var filled: Int // No used currently. Might be necessary to better compute actual scrolled distance in doOnScroll()
         val marginX: Int
         val marginY: Int
@@ -95,35 +94,20 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         }
 
         for (i in startPos until itemCount) {
-            if (start > toFill) break
+            if (start > toFill) {
+                break
+            }
 
-            val towardsEndSide: Int
-            val otherSide: Int
             val view = recycler.getViewForPosition(i)
-
             addView(view)
 
-            if (orientation == VERTICAL) {
-                measureChildWithMargins(view, width - (width / colCount), 0)
-                towardsEndSide = view.measuredHeight + view.marginTop + view.marginBottom
-                otherSide = view.measuredWidth + view.marginLeft + view.marginRight
-            } else {
-                measureChildWithMargins(view, 0, height - (height / colCount))
-                towardsEndSide = view.measuredWidth + view.marginLeft + view.marginRight
-                otherSide = view.measuredHeight + view.marginTop + view.marginBottom
-            }
+            val (towardsEndSide, otherSide) = measureOriented(view)
 
             val isInChildRow = isItemInChildRow(i)
             val positionInRow = getPositionInRow(i, isInChildRow)
             val isRowCompleted = isRowCompleted(positionInRow, isInChildRow, reverse = false)
 
-            val left = if (isInChildRow) {
-                val childRowOffset = otherSide / 2
-                childRowOffset + otherSide * positionInRow
-            } else {
-                otherSide * positionInRow
-            }
-
+            val left = getLeft(otherSide, positionInRow, isInChildRow)
             val end = start + towardsEndSide
             val right = left + otherSide
 
@@ -141,22 +125,23 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         val marginY: Int
         var end: Int
 
-
-        if (childCount == 0) return
+        if (childCount == 0) {
+            return
+        }
 
         val firstChild = getChildAt(0)!!
         val firstChildPos = getPosition(firstChild)
 
-
-
-        if (firstChildPos == 0) return
+        if (firstChildPos == 0) {
+            return
+        }
 
         var filled = oHelper.getDecoratedStart(firstChild)
 
         marginX = firstChild.marginLeft + firstChild.marginRight
         marginY = firstChild.marginTop + firstChild.marginBottom
 
-        val toFill = oHelper.startAfterPadding
+        val toFill = if (clipToPadding) oHelper.startAfterPadding else 0
 
         val towardsEndLastSide =
             if (orientation == VERTICAL) firstChild.measuredHeight + marginY
@@ -165,37 +150,22 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         end = oHelper.getDecoratedStart(firstChild) + (towardsEndLastSide apply OVERLAPING_FACTOR)
 
         for (i in firstChildPos - 1 downTo 0) {
-            if (end < toFill) break
+            if (end < toFill) {
+                break
+            }
 
-            val towardsEndSide: Int
-            val otherSide: Int
             val view = recycler.getViewForPosition(i)
-
             addView(view, 0)
 
             anchorPosition--
 
-            if (orientation == VERTICAL) {
-                measureChildWithMargins(view, width - (width / colCount), 0)
-                towardsEndSide = view.measuredHeight + view.marginTop + view.marginBottom
-                otherSide = view.measuredWidth + view.marginLeft + view.marginRight
-            } else {
-                measureChildWithMargins(view, 0, height - (height / colCount))
-                towardsEndSide = view.measuredWidth + view.marginLeft + view.marginRight
-                otherSide = view.measuredHeight + view.marginTop + view.marginBottom
-            }
+            val (towardsEndSide, otherSide) = measureOriented(view)
 
             val isInChildRow = isItemInChildRow(i)
             val positionInRow = getPositionInRow(i, isInChildRow)
             val isRowCompleted = isRowCompleted(positionInRow, isInChildRow, reverse = true)
 
-            val left = if (isInChildRow) {
-                val childRowOffset = otherSide / 2
-                childRowOffset + otherSide * positionInRow
-            } else {
-                otherSide * positionInRow
-            }
-
+            val left = getLeft(otherSide, positionInRow, isInChildRow)
             val start = end - towardsEndSide
             val right = left + otherSide
 
@@ -205,6 +175,29 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 end = start + (towardsEndSide apply OVERLAPING_FACTOR)
                 filled += towardsEndSide
             }
+        }
+    }
+
+    private fun measureOriented(view: View): Pair<Int, Int> {
+        return if (orientation == VERTICAL) {
+            measureChildWithMargins(view, width - (width / colCount), 0)
+            val towardsEndSide = view.measuredHeight + view.marginTop + view.marginBottom
+            val otherSide = view.measuredWidth + view.marginLeft + view.marginRight
+            towardsEndSide to otherSide
+        } else {
+            measureChildWithMargins(view, 0, height - (height / colCount))
+            val towardsEndSide = view.measuredWidth + view.marginLeft + view.marginRight
+            val otherSide = view.measuredHeight + view.marginTop + view.marginBottom
+            towardsEndSide to otherSide
+        }
+    }
+
+    private fun getLeft(otherSide: Int, positionInRow: Int, isInChildRow: Boolean): Int {
+        return if (isInChildRow) {
+            val childRowOffset = otherSide / 2
+            childRowOffset + otherSide * positionInRow
+        } else {
+            otherSide * positionInRow
         }
     }
 
@@ -224,13 +217,14 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         return when {
             childCount == 0 -> 0
             d < 0 -> {
-                val toFill = oHelper.startAfterPadding
+                val clipPadding = if (clipToPadding) 0 else oHelper.startAfterPadding
+                val toFill = if (clipToPadding) oHelper.startAfterPadding else 0
                 var scrolled = 0
 
                 while (scrolled > d) {
                     val firstChild = getChildAt(0)!!
                     val firstChildTop = oHelper.getDecoratedStart(firstChild)
-                    val hangingTop = max(0, toFill - firstChildTop)
+                    val hangingTop = max(0, toFill - firstChildTop + clipPadding)
                     val scrollBy = min(hangingTop, scrolled - d)
                     oHelper.offsetChildren(scrollBy)
                     scrolled -= scrollBy
@@ -239,6 +233,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 }
                 scrolled
             }
+
             d > 0 -> {
                 val toFill = oHelper.endAfterPadding
                 var scrolled = 0
@@ -256,6 +251,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 }
                 scrolled
             }
+
             else -> 0
         }.also {
             recycleViewsOutOfBounds(recycler)
@@ -268,8 +264,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         anchorOffset =
             if (childCount > 0) {
                 val view = getChildAt(0)!!
-                val padding = if (orientation == VERTICAL) paddingTop else paddingLeft
-                oHelper.getDecoratedStart(view) - padding
+                oHelper.getDecoratedStart(view) - oHelper.startAfterPadding
             } else 0
     }
 
@@ -292,15 +287,16 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         if (orientation == HORIZONTAL) 0 else doOnScroll(dy, recycler, state)
 
     private fun recycleViewsOutOfBounds(recycler: RecyclerView.Recycler) {
-        if (childCount == 0) return
-        val childCount = childCount
+        if (childCount == 0) {
+            return
+        }
 
+        val childCount = childCount
         var firstVisibleChild = 0
 
         for (i in 0 until childCount) {
             val child = getChildAt(i)!!
-            val padding = if (orientation == VERTICAL) paddingTop else paddingLeft
-            val top = if (clipToPadding) padding else 0
+            val top = if (clipToPadding) oHelper.startAfterPadding else 0
             if (oHelper.getDecoratedEnd(child) < top) {
                 firstVisibleChild++
             } else {
@@ -312,8 +308,10 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
         for (i in lastVisibleChild until childCount) {
             val child = getChildAt(i)!!
-            val padding = if (orientation == VERTICAL) paddingBottom else paddingRight
-            val limit = if (clipToPadding) oHelper.totalSpace - padding else oHelper.totalSpace
+            val padding = getMainAxisPadding()
+            val limit =
+                if (clipToPadding) oHelper.totalSpace + oHelper.startAfterPadding
+                else oHelper.totalSpace + padding
 
             if (oHelper.getDecoratedStart(child) <= limit) {
                 lastVisibleChild++
@@ -323,8 +321,13 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             }
         }
 
-        for (i in childCount - 1 downTo lastVisibleChild + 1) removeAndRecycleViewAt(i, recycler)
-        for (i in firstVisibleChild - 1 downTo 0) removeAndRecycleViewAt(i, recycler)
+        for (i in childCount - 1 downTo lastVisibleChild + 1) {
+            removeAndRecycleViewAt(i, recycler)
+        }
+
+        for (i in firstVisibleChild - 1 downTo 0) {
+            removeAndRecycleViewAt(i, recycler)
+        }
 
         anchorPosition += firstVisibleChild
     }
@@ -349,12 +352,11 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     }
 
     private fun getPositionInRow(position: Int, childRow: Boolean): Int {
-        return if (childRow) {
-            position % groupItemCount - colCount
-        } else {
-            position % groupItemCount
-        }
+        val childRowFactor = if (childRow) colCount else 0
+        return position % groupItemCount - childRowFactor
     }
+
+    private fun getMainAxisPadding() = oHelper.startAfterPadding + oHelper.endPadding
 
     private infix fun Int.apply(value: Double) = (this * value).roundToInt()
 

@@ -1,9 +1,9 @@
-name: Build & deploy to Play Store
+name: Build & deploy to F-Droid Store
 
 on:
   push:
     tags:
-      - '*'
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   build:
@@ -18,36 +18,53 @@ jobs:
           java-version: 17
 
       - name: Check release name
-        run: echo 'Deploy to Play Store with release name ${{ github.ref_name }}'
+        run: echo 'Deploy to F-Droid Store with release name ${{ github.ref_name }}'
 
       - name: Grant rights gradlew
         run: chmod +x ./gradlew
 
-      - name: Gradle build
-        run: ./gradlew build
+      - name: Build release APK
+        run: ./gradlew assembleRelease
 
-      - name: Build Release AAB
-        run: ./gradlew bundleRelease
-
-      - name: Sign AAB
-        uses: r0adkll/sign-android-release@v1
+      - name: Sign APK
+        uses: upup-company/apksigner-android@v1
+        id: sign_app
         with:
-          releaseDirectory: app/build/outputs/bundle/release
+          releaseDirectory: app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
 
-      - name: Create service_account.json
-        run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
+      - name: Read version code
+        id: get_version_code
+        run: echo "::set-output name=code::$(./gradlew -q printVersionCode)"
 
-      - name: Deploy to Play Store
-        uses: r0adkll/upload-google-play@v1
+      - name: Read changelog file
+        id: get_changelog
+        run: echo "::set-output name=changelog::$(cat ./metadata/en-US/changelogs/${{ steps.get_version_code.outputs.code }}.txt)"
+
+      - name: Create github release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          serviceAccountJson: service_account.json
-          packageName: com.louis.app.cavity
-          releaseFiles: app/build/outputs/bundle/release/app-release.aab
-          releaseName: ${{ github.ref_name }}
-          track: production
-          status: completed
-          whatsNewDirectory: whatsnew/
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: |
+            ${{ steps.get_changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+
+      - name: Upload release apk
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{steps.sign_app.outputs.signedReleaseFile}}
+          asset_name: cavity.apk
+          asset_content_type: application/vnd.android.package-archive

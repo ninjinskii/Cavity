@@ -91,11 +91,13 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             binding.emptyState.setVisible(it.isEmpty())
 
             with(binding) {
-                tab.adapter = tabAdapter
-                viewPager.adapter =
-                    WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
+                if (tabAdapter.itemCount != it.size) {
+                    tab.adapter = tabAdapter
+                    viewPager.adapter =
+                        WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
+                }
 
-                tabAdapter.addAll(it)
+                tabAdapter.submitList(it)
                 tab.setUpWithViewPager(viewPager)
 
                 (view?.parent as? ViewGroup)?.doOnPreDraw {
@@ -231,7 +233,6 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.tab.adapter = null
         _binding = null
     }
 }

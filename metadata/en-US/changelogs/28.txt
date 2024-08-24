@@ -1,0 +1,7 @@
+- Moving from Play Store to F-Droid
+- Stats: reverse year order when looking at consumptions/replenishments
+- Fixed a bug make county reset to 0 when deleting a wine
+- Fixed history navigation when a history filter is enabled
+- Fixed auto update status loading indefinitly when not using wi-fi
+- Fixed last udpate device not being updated live
+- Fixed missing calendar icons in search date inputs

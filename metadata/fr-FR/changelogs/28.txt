@@ -1,0 +1,9 @@
+Fonctionnalités:
+Stats: l'ordre de la barre de défilement des années à été inversée pour les entrées / sorties
+
+Correctifs:
+Retour à la première région lors de la suppression d'un vin
+Navigation par date dans l'historique lorsqu'un filtre est actif
+Status de la sauvegarde automatique chargeant à l'infini quand l'utilisateur n'est pas en wi-fi
+Affichage instantanné du dernier appareil lors d'une sauvegarde manuelle
+Icônes de croix affichées dans les saisie de dates de la recherche

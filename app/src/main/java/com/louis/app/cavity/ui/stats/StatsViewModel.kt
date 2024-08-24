@@ -24,6 +24,7 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
     val years: LiveData<List<Year>> = repository.getYears().map {
         it.toMutableList().apply {
+            reverse()
             add(0, groupedYears)
             add(groupedYears)
         }
