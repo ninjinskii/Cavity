@@ -55,8 +55,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         }
     }
 
-    // TODO: fix weird anchor position when scrolling to end and turn phone in horizontal mode
-
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
         detachAndScrapAttachedViews(recycler)
 
@@ -68,7 +66,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
     private fun fillTowardsEnd(recycler: RecyclerView.Recycler, extra: Int = 0) {
         val toFill =
-            if (clipToPadding) oHelper.endAfterPadding + extra else oHelper.endAfterPadding + extra + paddingTop + paddingBottom
+            oHelper.endAfterPadding + extra + if (clipToPadding) 0 else getMainAxisPadding()
         var filled: Int // No used currently. Might be necessary to better compute actual scrolled distance in doOnScroll()
         val marginX: Int
         val marginY: Int
@@ -105,6 +103,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             val otherSide: Int
             val view = recycler.getViewForPosition(i)
 
+            L.v("Laying out view BOTTOM")
             addView(view)
 
             if (orientation == VERTICAL) {
@@ -175,6 +174,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             val otherSide: Int
             val view = recycler.getViewForPosition(i)
 
+            L.v("Laying out view TOP")
             addView(view, 0)
 
             anchorPosition--
@@ -228,10 +228,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         return when {
             childCount == 0 -> 0
             d < 0 -> {
-                val clipPadding = when {
-                    !clipToPadding -> if (orientation == VERTICAL) paddingTop else paddingLeft
-                    else -> 0
-                }
+                val clipPadding = if (clipToPadding) 0 else oHelper.startAfterPadding
                 val toFill = if (clipToPadding) oHelper.startAfterPadding else 0
                 var scrolled = 0
 
@@ -247,6 +244,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 }
                 scrolled
             }
+
             d > 0 -> {
                 val toFill = oHelper.endAfterPadding
                 var scrolled = 0
@@ -260,11 +258,11 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                     oHelper.offsetChildren(-scrollBy)
                     scrolled += scrollBy
                     if (lastChildPosition == state.itemCount - 1) break
-                    L.v("fillTowardsEnd")
                     fillTowardsEnd(recycler)
                 }
                 scrolled
             }
+
             else -> 0
         }.also {
             recycleViewsOutOfBounds(recycler)
@@ -277,8 +275,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         anchorOffset =
             if (childCount > 0) {
                 val view = getChildAt(0)!!
-                val padding = if (orientation == VERTICAL) paddingTop else paddingLeft
-                oHelper.getDecoratedStart(view) - padding
+                oHelper.getDecoratedStart(view) - oHelper.startAfterPadding
             } else 0
     }
 
@@ -301,25 +298,16 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         if (orientation == HORIZONTAL) 0 else doOnScroll(dy, recycler, state)
 
     private fun recycleViewsOutOfBounds(recycler: RecyclerView.Recycler) {
-        // Le souvcis initial était que les vues qui devaient etre layout vers le bas au fur et à mesure que l'on scrolle étaient recyclée tout de suite
-        // Pour utiliser un clippading false avec du adding top, on peut ajouter le padding top à la limite de recyclage.
-        // Mainteneant il faudrait faire vérifier que ça marche pour le padding bottom, et le faire fonctionner pour quand ya les deux paddings en même temps
         if (childCount == 0) {
             return
         }
 
         val childCount = childCount
-        val clipPadding = when {
-            !clipToPadding -> if (orientation == VERTICAL) paddingTop else paddingLeft
-            else -> 0
-        }
-
         var firstVisibleChild = 0
 
         for (i in 0 until childCount) {
             val child = getChildAt(i)!!
-            val padding = if (orientation == VERTICAL) paddingTop else paddingLeft
-            val top = if (clipToPadding) padding else 0
+            val top = if (clipToPadding) oHelper.startAfterPadding else 0
             if (oHelper.getDecoratedEnd(child) < top) {
                 firstVisibleChild++
             } else {
@@ -331,10 +319,11 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
         for (i in lastVisibleChild until childCount) {
             val child = getChildAt(i)!!
-            val padding =
-                if (orientation == VERTICAL) paddingBottom + paddingTop else paddingRight + paddingLeft
+            val padding = getMainAxisPadding()
+            // 1810   224
+            // L.v("totalSpace: ${oHelper.totalSpace}, paddingBottom: $paddingBottom")
             val limit =
-                if (clipToPadding) oHelper.totalSpace - padding else oHelper.totalSpace + paddingTop + paddingBottom
+                if (clipToPadding) oHelper.totalSpace + oHelper.endPadding else oHelper.totalSpace + padding
 
             if (oHelper.getDecoratedStart(child) <= limit) {
                 lastVisibleChild++
@@ -383,6 +372,8 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             position % groupItemCount
         }
     }
+
+    private fun getMainAxisPadding() = oHelper.startAfterPadding + oHelper.endPadding
 
     private infix fun Int.apply(value: Double) = (this * value).roundToInt()
 
