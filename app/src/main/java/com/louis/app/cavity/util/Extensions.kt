@@ -1,6 +1,5 @@
 package com.louis.app.cavity.util
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
@@ -116,7 +115,6 @@ fun Context.spToPx(sp: Float): Float {
 }
 
 @ColorInt
-@SuppressLint("Recycle")
 fun Context.themeColor(
     @AttrRes themeAttrId: Int
 ): Int {
