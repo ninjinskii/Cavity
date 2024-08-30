@@ -80,6 +80,26 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
             }
         }
 
+        binding.toggleErrorReportConsent.apply {
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
+
+            isChecked = settingsViewModel.getErrorReportingConsent()
+
+            setOnCheckedChangeListener { _, isChecked ->
+                settingsViewModel.setErrorReportingConsent(isChecked)
+            }
+        }
+
+        binding.errorReportConsent.apply {
+            setOnClickListener {
+                binding.toggleErrorReportConsent.toggle()
+            }
+        }
+
         val templateSize = settingsViewModel.getTemplateSize()
         binding.templateSizeSlider.apply {
             value = templateSize

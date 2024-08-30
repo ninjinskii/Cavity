@@ -14,6 +14,8 @@ class PrefsRepository private constructor(app: Application) {
         private const val PREF_API_TOKEN = "com.louis.app.cavity.PREF_API_TOKEN"
         private const val PREF_LAST_LOGIN = "com.louis.app.cavity.PREF_LAST_LOGIN"
         private const val PREF_AUTO_BACKUP = "com.louis.app.cavity.PREF_AUTO_BACKUP"
+        private const val PREF_ERROR_REPORTING_CONSENT =
+            "com.louis.app.cavity.PREF_ERROR_REPORTING_CONSENT"
         private const val DEFAULT_CURRENCY = "€"
         private const val MAX_TEMPLATE_SCALE = 1.4f
 
@@ -54,6 +56,10 @@ class PrefsRepository private constructor(app: Application) {
         PREF_AUTO_BACKUP put autoBackup
     }
 
+    fun setErrorReportingConsent(consent: Boolean) {
+        PREF_ERROR_REPORTING_CONSENT put consent
+    }
+
     fun getSkewBottle() = PREF_SKEW_BOTTLE.getBoolean()
 
     fun getDefaultCurrency() = PREF_DEFAULT_CURRENCY.getString() ?: DEFAULT_CURRENCY
@@ -66,6 +72,8 @@ class PrefsRepository private constructor(app: Application) {
     fun getLastLogin() = PREF_LAST_LOGIN.getString() ?: ""
 
     fun getAutoBackup() = PREF_AUTO_BACKUP.getBoolean()
+
+    fun getErrorReportingConsent() = PREF_ERROR_REPORTING_CONSENT.getBoolean()
 
     private infix fun String.put(string: String) {
         editor.putString(this, string)
