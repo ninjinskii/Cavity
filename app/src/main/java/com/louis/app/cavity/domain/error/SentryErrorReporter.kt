@@ -1,7 +1,9 @@
 package com.louis.app.cavity.domain.error
 
+import android.app.Application
 import android.content.Context
 import com.louis.app.cavity.BuildConfig
+import com.louis.app.cavity.db.PrefsRepository
 import io.sentry.Sentry
 import io.sentry.SentryLevel
 import io.sentry.SentryOptions
@@ -11,9 +13,16 @@ class SentryErrorReporter private constructor(context: Context) : ErrorReporter 
 
     companion object {
         @Volatile
-        private var instance: SentryErrorReporter? = null
+        private var instance: ErrorReporter? = null
 
-        fun getInstance(context: Context): SentryErrorReporter {
+        fun getInstance(context: Context): ErrorReporter {
+            val prefsRepository =
+                PrefsRepository.getInstance(context.applicationContext as Application)
+
+            if (!prefsRepository.getErrorReportingConsent()) {
+                return FakeErrorReporter()
+            }
+
             return instance ?: synchronized(this) {
                 instance ?: SentryErrorReporter(context).also { instance = it }
             }

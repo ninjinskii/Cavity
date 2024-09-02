@@ -34,6 +34,10 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
         prefsRepository.setAutoBackup(autoBackup)
     }
 
+    fun setErrorReportingConsent(consent: Boolean) {
+        prefsRepository.setErrorReportingConsent(consent)
+    }
+
     fun getSkewBottle() = prefsRepository.getSkewBottle()
 
     fun getDefaultCurrency() = prefsRepository.getDefaultCurrency()
@@ -42,4 +46,5 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAutoBackup() = prefsRepository.getAutoBackup()
 
+    fun getErrorReportingConsent() = prefsRepository.getErrorReportingConsent()
 }

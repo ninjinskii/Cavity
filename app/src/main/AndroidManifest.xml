@@ -71,6 +71,8 @@
         <meta-data
             android:name="io.sentry.traces.user-interaction.enable"
             android:value="true" />
-
+        <meta-data
+            android:name="io.sentry.auto-init"
+            android:value="false" />
     </application>
 </manifest>
