@@ -32,12 +32,13 @@ Cavity use Kotlin, Coroutines, Room, LiveData, ViewPager2 with a standard MVVM p
 
 ## Release process
 This project uses CI/CD.
-Workflows are triggered when pushing a tag, and publish the app on the Play Store on production channel.
+Workflows are triggered when pushing a tag using this pattern : x.x.x, and create a github release with apk file linked
+F-Droid store automatically picks up the apk file from there.
 
 Things to do to prepare a release:
 
 - Merge target code into master branch
-- Update `/whatsnew directory`
+- Update `/metadata/<languages>/changelogs.txt`
 - Update `/app/build.gradle`: increment version code & update __version name__
 - Update `/app/src/AndroidManifest.xml`: increment version code & update __version name__
 - Check for database changes & migration
@@ -56,7 +57,3 @@ Run this command from your terminal:
 ```
 
 where `-v 1000` is the number of inputs sent to the phone.
-
-
-
-<sup><sup>Google Play and the Google Play logo are trademarks of Google LLC.</sup></sup>
