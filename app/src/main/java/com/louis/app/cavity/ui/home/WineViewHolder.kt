@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.home
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -40,7 +41,7 @@ class WineViewHolder(
         val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
         ViewCompat.setTransitionName(hexagone, wine.id.toString())
-//        tryBlurEffect(binding.wineNaming)
+        tryBlurEffect()
 
         with(binding) {
             wineName.text = wine.name
@@ -73,13 +74,13 @@ class WineViewHolder(
         }
     }
 
-//    private fun tryBlurEffect(view: View) {
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-//            return
-//        }
-//
-//        binding.wineImage.setTargets(listOf(itemView.findViewById(R.id.wineNaming), itemView.findViewById(R.id.bottlesCount), itemView.findViewById(R.id.icons), itemView.findViewById(R.id.wineName)))
-//    }
+    private fun tryBlurEffect() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            return
+        }
+
+        binding.wineImage.setTargets(colorables)
+    }
 
     private fun loadImage(imgPath: String) {
         Glide.with(itemView.context)
