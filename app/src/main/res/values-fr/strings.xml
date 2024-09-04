@@ -269,6 +269,8 @@
     <string name="auto_backup">Déclenchez une sauvegarde automatique tous les 15 jours. Nécessite un compte Cavity.</string>
     <string name="error_reporting_title">Rapport d\'erreur</string>
     <string name="error_reporting">Active le rapport d\'erreur pour envoyer des informations de contexte quand un crash survient. Cela permet au développeur de savoir dès qu\'une erreur survient sur votre appareil et aide à la résoudre.</string>
+    <string name="prevent_screenshots_title">Empêcher les captures d\'écran</string>
+    <string name="prevent_screenshots">Mesure de prévention de la vie privée empêchant la prise de capture d\'écran et l\'affichage du contenu de l\'application dans le menu des applications récentes.</string>
 
     <!-- Account -->
     <string name="email">Email</string>

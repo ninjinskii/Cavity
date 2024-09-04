@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.WindowManager
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
 import com.louis.app.cavity.ui.account.LoginViewModel
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.tasting.TastingViewModel
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.showSnackbar
@@ -40,6 +42,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private val addItemViewModel: AddItemViewModel by viewModels()
     private val tastingViewModel: TastingViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val isAndroid31 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
@@ -50,6 +53,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
             initSplashScreen()
         }
 
+        checkPreventScreenshot()
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
@@ -64,13 +68,29 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         }
     }
 
+    private fun checkPreventScreenshot() {
+        val isPreventScreenshotsEnabled = settingsViewModel.getPreventScreenshots()
+        val isAndroid33 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+        val secureFlag = WindowManager.LayoutParams.FLAG_SECURE
+
+        if (isPreventScreenshotsEnabled) {
+            window.setFlags(secureFlag, secureFlag)
+        } else {
+            window.clearFlags(secureFlag)
+        }
+
+        if (isAndroid33) {
+            setRecentsScreenshotEnabled(!isPreventScreenshotsEnabled)
+        }
+    }
+
     private fun initSplashScreen() {
         var isSplashScreenFinished = false
 
         installSplashScreen()
 
         lifecycleScope.launch(Dispatchers.Default) {
-            delay(1900)
+            delay(300)
             isSplashScreenFinished = true
         }
 
@@ -94,7 +114,13 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private fun polishAppSwitcherApparence() {
         val appName = getString(R.string.app_name)
         val bitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
-        setTaskDescription(TaskDescription(appName, bitmap, themeColor(com.google.android.material.R.attr.colorSurface)))
+        setTaskDescription(
+            TaskDescription(
+                appName,
+                bitmap,
+                themeColor(com.google.android.material.R.attr.colorSurface)
+            )
+        )
     }
 
     @OptIn(NavigationUiSaveStateControl::class)
@@ -159,7 +185,9 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private fun showTastingIndicator(show: Boolean) {
         if (hasNavigationRail()) {
             binding.navigationRail!!.getOrCreateBadge(R.id.tasting_dest).apply {
-                backgroundColor = binding.navigationRail!!.context.themeColor(com.google.android.material.R.attr.colorPrimary)
+                backgroundColor =
+                    binding.navigationRail!!.context
+                        .themeColor(com.google.android.material.R.attr.colorPrimary)
                 isVisible = show
             }
         } else {
