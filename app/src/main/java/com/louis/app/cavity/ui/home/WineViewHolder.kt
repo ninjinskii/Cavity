@@ -1,12 +1,15 @@
 package com.louis.app.cavity.ui.home
 
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.model.Bottle
@@ -20,6 +23,16 @@ class WineViewHolder(
     private val onItemLongClick: (wine: Wine, bottles: List<Bottle>) -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
+
+    private val colorables = binding.run {
+        listOf(wineName, wineNaming, bottlesCount, icons)
+    }
+
+    private val isLightTheme =
+        itemView.context
+            .obtainStyledAttributes(intArrayOf(com.google.android.material.R.attr.isLightTheme))
+            .use { it.getBoolean(0, false) }
+
 
     fun bind(wineWithBottles: WineWithBottles) {
         val hexagone = binding.root
@@ -40,7 +53,10 @@ class WineViewHolder(
 
             hexagone.setMarkerColor(wineColor)
 
-            if (wine.imgPath.isNotEmpty()) {
+            val hasImage = wine.imgPath.isNotEmpty()
+            updateColorables(hasImage)
+
+            if (hasImage) {
                 loadImage(wine.imgPath)
             } else {
                 binding.wineImage.setImageDrawable(null)
@@ -68,7 +84,32 @@ class WineViewHolder(
     private fun loadImage(imgPath: String) {
         Glide.with(itemView.context)
             .load(Uri.parse(imgPath))
+            .run {
+                val drawable =
+                    if (isLightTheme)
+                        ResourcesCompat.getDrawable(
+                            itemView.resources,
+                            R.drawable.ic_image_search,
+                            itemView.context.theme
+                        )?.apply {
+                            setTint(Color.BLACK)
+                            alpha = 10
+                        }
+                    else null
+
+                error(drawable)
+            }
             .centerCrop()
             .into(binding.wineImage)
+    }
+
+    private fun updateColorables(hasImage: Boolean) {
+        if (isLightTheme) {
+            colorables.forEach {
+                val radius = if (hasImage) 0f else 4f
+                it.setShadowLayer(radius, 0f, 0f, Color.BLACK)
+            }
+        }
+
     }
 }
