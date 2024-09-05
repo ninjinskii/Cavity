@@ -120,6 +120,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             MaterialSharedAxis.Z,
             true
         )
+        recyleViewsOnExit()
 
         val action = FragmentHomeDirections.homeToAddBottle(wine.id, -1L)
         findNavController().navigate(action)
@@ -130,6 +131,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             MaterialSharedAxis.Z,
             navigatingForward = true
         )
+        recyleViewsOnExit()
 
         val action = FragmentHomeDirections.homeToWineOptions(
             wine.id,
