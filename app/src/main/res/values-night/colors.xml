@@ -15,5 +15,7 @@
 
     <color name="under_backdrop">#121212</color>
 
+    <color name="splash_background">#121212</color>
+
     <bool name="light_statusbar">false</bool>
 </resources>

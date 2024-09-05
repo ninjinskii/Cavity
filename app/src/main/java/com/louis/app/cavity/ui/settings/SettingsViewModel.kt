@@ -38,6 +38,10 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
         prefsRepository.setErrorReportingConsent(consent)
     }
 
+    fun setPreventScrenshots(preventScreenshots: Boolean) {
+        prefsRepository.setPreventScreenshots(preventScreenshots)
+    }
+
     fun getSkewBottle() = prefsRepository.getSkewBottle()
 
     fun getDefaultCurrency() = prefsRepository.getDefaultCurrency()
@@ -47,4 +51,6 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     fun getAutoBackup() = prefsRepository.getAutoBackup()
 
     fun getErrorReportingConsent() = prefsRepository.getErrorReportingConsent()
+
+    fun getPreventScreenshots() = prefsRepository.getPreventScreenshots()
 }

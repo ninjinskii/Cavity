@@ -271,6 +271,8 @@
     <string name="auto_backup">Trigger an automatic backup every 15 days. Requires a Cavity account to work.</string>
     <string name="error_reporting_title">Error reporting</string>
     <string name="error_reporting">Enable error reporting to send context data whenever a crash happens. This let the developer know an unexpected error occurs on your device and helps fixing it.</string>
+    <string name="prevent_screenshots_title">Prevent screenshots</string>
+    <string name="prevent_screenshots">Privacy prevention measure forbidding screenshots and hiding app content in recent apps menu.</string>
 
     <!-- Account -->
     <string name="email">Email</string>
