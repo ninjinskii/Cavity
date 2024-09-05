@@ -46,18 +46,20 @@ class EffectImageView @JvmOverloads constructor(
 
         // Image is now drawn as usual, now draw blur behind targeted views
 
-        targets.forEach {
-            it.second.setRenderEffect(blur)
-            it.second.setPosition(0, 0, it.first.width, it.first.height)
-            it.second.translationX = it.first.left.toFloat()
-            it.second.translationY = it.first.top.toFloat()
+        targets.forEach { pair ->
+            val (view, renderNode) = pair
 
-            val blurCanvas = it.second.beginRecording()
-            blurCanvas.translate(-it.first.left.toFloat(), -it.first.top.toFloat())
-            blurCanvas.drawRenderNode(underlyingContentNode)
-            it.second.endRecording()
-            canvas.drawRenderNode(it.second)
+            with(renderNode) {
+                setRenderEffect(blur)
+                setPosition(0, 0, view.width, view.height)
+                translationX = view.left.toFloat()
+                translationY = view.top.toFloat()
+                val blurCanvas = beginRecording()
+                blurCanvas.translate(-view.left.toFloat(), -view.top.toFloat())
+                blurCanvas.drawRenderNode(underlyingContentNode)
+                endRecording()
+                canvas.drawRenderNode(this)
+            }
         }
-
     }
 }
