@@ -27,6 +27,11 @@ import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.*
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
+
+    companion object {
+        const val VIEW_POOL_SIZE = 40
+    }
+
     private lateinit var tabAdapter: ScrollableTabAdapter<County>
     private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentHomeBinding? = null
@@ -34,7 +39,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val recyclePool by lazy {
         RecyclerView.RecycledViewPool().apply {
-            setMaxRecycledViews(R.layout.item_wine, 15)
+            setMaxRecycledViews(R.layout.item_wine, VIEW_POOL_SIZE)
         }
     }
 
@@ -103,10 +108,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 (view?.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
                 }
+
+                viewPager.offscreenPageLimit = 1
             }
-            // Potential delayed coroutine and offscreen limit upgrade
-            /*viewPager.offscreenPageLimit = 5
-            tab.setUpWithViewPager(viewPager)*/
         }
     }
 

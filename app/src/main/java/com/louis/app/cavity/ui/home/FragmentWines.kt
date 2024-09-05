@@ -18,6 +18,7 @@ import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
+
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
     private val binding get() = _binding!!
@@ -67,11 +68,28 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             adapter = wineAdapter
         }
 
+        prePopulateRecyclerViewPool()
+
         val countyId = arguments?.getLong(COUNTY_ID)
 
         homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
             wineAdapter.submitList(it)
+        }
+    }
+
+    private fun prePopulateRecyclerViewPool() {
+        val viewPool = binding.wineList.recycledViewPool
+        val recylerView = binding.wineList
+        val isPoolEmpty = viewPool.getRecycledViewCount(R.layout.item_wine) == 0
+
+        if (isPoolEmpty) {
+            repeat(FragmentHome.VIEW_POOL_SIZE) {
+                val viewHolder =
+                    recylerView.adapter?.createViewHolder(recylerView, R.layout.item_wine)
+
+                recylerView.recycledViewPool.putRecycledView(viewHolder)
+            }
         }
     }
 
