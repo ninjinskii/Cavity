@@ -111,7 +111,7 @@ class HexagonalView @JvmOverloads constructor(
         markerPath.run {
             if (isFlat) {
                 moveTo(w * 0.25f, h.toFloat())
-                lineTo(0f, h /2f)
+                lineTo(0f, h / 2f)
                 lineTo(0f, h.toFloat())
                 close()
             } else {

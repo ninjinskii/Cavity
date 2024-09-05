@@ -48,6 +48,10 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     private var anchorOffset = 0
     private var extra = 0 // Predictive animations
 
+    // Useful if you plan to use a RecyclerViewPool.
+    // Beware of transition breaking bc view are recycled too early
+    private var recycleOnDetach = false
+
     init {
         if (colCount < 2) {
             throw IllegalArgumentException("Honeycomb layout manager require at least two rows.")
@@ -362,8 +366,11 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
     override fun onDetachedFromWindow(view: RecyclerView?, recycler: RecyclerView.Recycler) {
         super.onDetachedFromWindow(view, recycler)
-        removeAndRecycleAllViews(recycler)
-        recycler.clear()
+
+        if (recycleOnDetach) {
+            removeAndRecycleAllViews(recycler)
+            recycler.clear()
+        }
     }
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {

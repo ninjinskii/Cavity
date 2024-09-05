@@ -103,7 +103,11 @@ fun Context.pxToSp(px: Int): Float {
     val isAndroid34 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
 
     return if (isAndroid34) {
-        px / TypedValue.deriveDimension(TypedValue.COMPLEX_UNIT_SP, px.toFloat(), resources.displayMetrics)
+        px / TypedValue.deriveDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            px.toFloat(),
+            resources.displayMetrics
+        )
     } else {
         px / resources.displayMetrics.scaledDensity
     }
@@ -118,11 +122,8 @@ fun Context.spToPx(sp: Float): Float {
 fun Context.themeColor(
     @AttrRes themeAttrId: Int
 ): Int {
-    return obtainStyledAttributes(
-        intArrayOf(themeAttrId)
-    ).use {
-        it.getColor(0, Color.MAGENTA)
-    }
+    return obtainStyledAttributes(intArrayOf(themeAttrId))
+        .use { it.getColor(0, Color.MAGENTA) }
 }
 
 @Suppress("UNCHECKED_CAST")

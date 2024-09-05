@@ -7,10 +7,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
+import androidx.transition.Transition
+import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
+import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.toBoolean
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
@@ -26,13 +32,25 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     private fun initRecyclerView() {
-        val transitionHelper = TransitionHelper(requireParentFragment())
         val icons = ContextCompat.getDrawable(requireContext(), R.drawable.ic_bio)!! to
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_glass)!!.also {
                     it.setTint(Color.WHITE)
                 }
 
-        val wineAdapter = WineRecyclerAdapter(transitionHelper, icons)
+        val wineAdapter = WineRecyclerAdapter(
+            icons,
+            onItemClick = { wine, bottles, itemView ->
+                if (bottles.isNotEmpty()) {
+                    navigateToBottleDetails(wine, itemView)
+                } else {
+                    navigateToAddBottle(wine)
+                }
+            },
+            onItemLongClick = { wine, _ ->
+                navigateToWineOptionsBottomSheet(wine)
+            }
+        )
+
         val colCount = resources.getInteger(R.integer.honeycomb_cols)
         val flat = resources.getBoolean(R.bool.flat_hexagones)
         val orientation =
@@ -63,6 +81,67 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 arguments?.getLong(COUNTY_ID) ?: return@setOnActionClickListener
             )
         }
+    }
+
+    private fun recyleViewsOnExit() {
+        val exitTransition = parentFragment?.exitTransition as Transition?
+        exitTransition?.addListener(
+            object : Transition.TransitionListener {
+                override fun onTransitionEnd(transition: Transition) {
+                    exitTransition.removeListener(this)
+
+                    val recyclerView = binding.wineList
+                    recyclerView.layoutManager?.apply {
+                        removeAndRecycleAllViews(recyclerView.Recycler())
+                        recyclerView.Recycler().clear()
+                    }
+                }
+
+                override fun onTransitionStart(transition: Transition) = Unit
+                override fun onTransitionCancel(transition: Transition) = Unit
+                override fun onTransitionPause(transition: Transition) = Unit
+                override fun onTransitionResume(transition: Transition) = Unit
+            })
+    }
+
+    private fun navigateToBottleDetails(wine: Wine, itemView: View) {
+        TransitionHelper(requireParentFragment()).setElevationScale()
+        recyleViewsOnExit()
+
+        val transition =
+            requireContext().getString(R.string.transition_bottle_details, wine.id)
+        val extra = FragmentNavigatorExtras(itemView to transition)
+        val action = FragmentHomeDirections.homeToBottleDetails(wine.id, -1)
+        findNavController().navigate(action, extra)
+    }
+
+    private fun navigateToAddBottle(wine: Wine) {
+        TransitionHelper(requireParentFragment()).setSharedAxisTransition(
+            MaterialSharedAxis.Z,
+            true
+        )
+        recyleViewsOnExit()
+
+        val action = FragmentHomeDirections.homeToAddBottle(wine.id, -1L)
+        findNavController().navigate(action)
+    }
+
+    private fun navigateToWineOptionsBottomSheet(wine: Wine) {
+        TransitionHelper(requireParentFragment()).setSharedAxisTransition(
+            MaterialSharedAxis.Z,
+            navigatingForward = true
+        )
+        recyleViewsOnExit()
+
+        val action = FragmentHomeDirections.homeToWineOptions(
+            wine.id,
+            wine.countyId,
+            wine.name,
+            wine.naming,
+            wine.isOrganic.toBoolean(),
+            wine.color
+        )
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
