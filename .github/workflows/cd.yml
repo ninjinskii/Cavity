@@ -1,4 +1,4 @@
-name: Build & deploy to F-Droid Store
+name: Build & prepare Github release with linked apk
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
           java-version: 17
 
       - name: Check release name
-        run: echo 'Deploy to F-Droid Store with release name ${{ github.ref_name }}'
+        run: echo 'Create Github release with name ${{ github.ref_name }}'
 
       - name: Grant rights gradlew
         run: chmod +x ./gradlew
