@@ -14,6 +14,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
@@ -22,6 +23,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
+
+    private lateinit var honeycombMangaer: HoneycombLayoutManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,7 +52,9 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             onItemLongClick = { wine, _ ->
                 navigateToWineOptionsBottomSheet(wine)
             }
-        )
+        ).apply {
+            setHasStableIds(true)
+        }
 
         val colCount = resources.getInteger(R.integer.honeycomb_cols)
         val flat = resources.getBoolean(R.bool.flat_hexagones)
@@ -60,8 +65,10 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 HoneycombLayoutManager.Orientation.VERTICAL
             }
 
+        honeycombMangaer = HoneycombLayoutManager(colCount, orientation)
+
         binding.wineList.apply {
-            layoutManager = HoneycombLayoutManager(colCount, orientation)
+            layoutManager = honeycombMangaer
             setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
             setHasFixedSize(true)
             adapter = wineAdapter
@@ -159,6 +166,16 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             wine.color
         )
         findNavController().navigate(action)
+    }
+
+    override fun onPause() {
+        honeycombMangaer.delayRecycling = true
+        super.onPause()
+    }
+
+    override fun onResume() {
+        honeycombMangaer.delayRecycling = false
+        super.onResume()
     }
 
     override fun onDestroyView() {
