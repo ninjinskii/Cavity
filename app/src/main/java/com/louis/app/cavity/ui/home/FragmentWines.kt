@@ -31,9 +31,14 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                     it.setTint(Color.WHITE)
                 }
 
+        val isLightTheme = requireContext().theme
+            .obtainStyledAttributes(intArrayOf(com.google.android.material.R.attr.isLightTheme))
+            .use { it.getBoolean(0, false) }
+
         val wineAdapter = WineRecyclerAdapter(
             icons,
-            TransitionHelper(requireParentFragment())
+            TransitionHelper(requireParentFragment()),
+            isLightTheme
         ).apply {
             setHasStableIds(true)
         }

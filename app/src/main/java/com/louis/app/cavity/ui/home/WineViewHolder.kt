@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
@@ -15,25 +16,21 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
+import com.louis.app.cavity.ui.home.widget.EffectImageView
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.toBoolean
 
 class WineViewHolder(
     private val binding: ItemWineBinding,
     private val drawables: Pair<Drawable, Drawable>,
-    private val transitionHelper: TransitionHelper
+    private val transitionHelper: TransitionHelper,
+    private val isLightTheme: Boolean
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
     private val colorables = binding.run {
         listOf(wineName, wineNaming, bottlesCount, icons)
     }
-
-    private val isLightTheme =
-        itemView.context
-            .obtainStyledAttributes(intArrayOf(com.google.android.material.R.attr.isLightTheme))
-            .use { it.getBoolean(0, false) }
-
 
     fun bind(wineWithBottles: WineWithBottles) {
         val hexagone = binding.root
@@ -60,7 +57,7 @@ class WineViewHolder(
             if (hasImage) {
                 loadImage(wine.imgPath)
             } else {
-                binding.wineImage.setImageDrawable(null)
+                (binding.wineImage as AppCompatImageView).setImageDrawable(null)
             }
         }
 
@@ -103,7 +100,9 @@ class WineViewHolder(
             return
         }
 
-        binding.wineImage.setTargets(colorables)
+        if (binding.wineImage is EffectImageView) {
+            binding.wineImage.setTargets(colorables)
+        }
     }
 
     private fun loadImage(imgPath: String) {
@@ -125,7 +124,7 @@ class WineViewHolder(
                 error(drawable)
             }
             .centerCrop()
-            .into(binding.wineImage)
+            .into(binding.wineImage as AppCompatImageView)
     }
 
     private fun updateColorables(hasImage: Boolean) {
