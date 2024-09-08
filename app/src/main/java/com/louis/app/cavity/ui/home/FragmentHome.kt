@@ -11,6 +11,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -25,11 +26,13 @@ import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
 
     companion object {
-        const val VIEW_POOL_SIZE = 40
+        const val VIEW_POOL_SIZE = 25
     }
 
     private lateinit var tabAdapter: ScrollableTabAdapter<County>
@@ -80,6 +83,14 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         setViewPagerOrientation()
         observe()
         setListeners()
+
+//        lifecycleScope.launch {
+//            repeat(1000) {
+//                delay(500)
+//                val num = recyclePool.getRecycledViewCount(R.layout.item_wine)
+//                L.v("$num")
+//            }
+//        }
     }
 
     private fun setupScrollableTab() {
@@ -109,7 +120,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                     startPostponedEnterTransition()
                 }
 
-                viewPager.offscreenPageLimit = 1
+//                viewPager.offscreenPageLimit = 1
             }
         }
     }

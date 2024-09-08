@@ -7,6 +7,7 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
+import androidx.core.view.postDelayed
 import androidx.recyclerview.widget.OrientationHelper.createHorizontalHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -68,11 +69,15 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
         if (state.itemCount > 0) {
             val extra = if (state.isPreLayout) extra else 0
-            fillTowardsEnd(recycler, extra)
+            fillTowardsEnd(recycler, extra, state.isPreLayout)
         }
     }
 
-    private fun fillTowardsEnd(recycler: RecyclerView.Recycler, extra: Int = 0) {
+    private fun fillTowardsEnd(
+        recycler: RecyclerView.Recycler,
+        extra: Int = 0,
+        isPreLayout: Boolean = false
+    ) {
         val toFill =
             oHelper.endAfterPadding + extra + if (clipToPadding) 0 else oHelper.endPadding
         var filled: Int // No used currently. Might be necessary to better compute actual scrolled distance in doOnScroll()
@@ -93,6 +98,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 else lastChild.measuredWidth + marginX
 
             this.extra = towardsEndSide
+            L.v("extra:  $extra")
             startPos = lastChildPos + 1
             start = oHelper.getDecoratedEnd(lastChild) - (towardsEndSide apply OVERLAPING_FACTOR)
             filled = start
@@ -134,6 +140,10 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             L.v("i: $i")
 
             val (towardsEndSide, otherSide) = measureOriented(view)
+
+//            if (isPreLayout) {
+//                toFill += towardsEndSide
+//            }
 
             val left = getLeft(otherSide, positionInRow, isInChildRow)
             val end = start + towardsEndSide
@@ -430,7 +440,8 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             recycler.clear()
         }
 
-        // TODO: try to set hasTransientState to all view when swithcing fragment, isntead of messing with timers
+        L.v("recycling")
+
         if (delayRecycling) {
             recycling()
 //            view?.postDelayed(500, recycling)
@@ -457,19 +468,20 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             else -> -1
         }
 
-        prefetchRange = if (!reverse) {
-            val start = currentLayoutPos + 1
-            val end = currentLayoutPos + colCount + childRowFactor
-            L.v("prefecth registry updated from : $start to $end")
+        val start: Int
+        val end: Int
 
-            start..end
+        if (!reverse) {
+            start = currentLayoutPos + 1
+            end = currentLayoutPos + colCount + childRowFactor
+            L.v("prefecth registry updated from : $start to $end")
         } else {
-            val start = currentLayoutPos - colCount + childRowFactor
-            val end = currentLayoutPos - 1
+            start = currentLayoutPos - colCount + childRowFactor
+            end = currentLayoutPos - 1
             L.v("prefecth registry updated from : $start to $end")
-
-            start..end
         }
+
+        prefetchRange = start..end
     }
 
     override fun collectAdjacentPrefetchPositions(

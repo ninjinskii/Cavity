@@ -24,8 +24,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
 
-    private lateinit var honeycombMangaer: HoneycombLayoutManager
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWinesBinding.bind(view)
@@ -65,10 +63,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 HoneycombLayoutManager.Orientation.VERTICAL
             }
 
-        honeycombMangaer = HoneycombLayoutManager(colCount, orientation)
-
         binding.wineList.apply {
-            layoutManager = honeycombMangaer
+            layoutManager = HoneycombLayoutManager(colCount, orientation)
             setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
             setHasFixedSize(true)
             adapter = wineAdapter
@@ -108,24 +104,24 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     private fun recyleViewsOnExit() {
-        val exitTransition = parentFragment?.exitTransition as Transition?
-        exitTransition?.addListener(
-            object : Transition.TransitionListener {
-                override fun onTransitionEnd(transition: Transition) {
-                    exitTransition.removeListener(this)
-
-                    val recyclerView = binding.wineList
-                    recyclerView.layoutManager?.apply {
-                        removeAndRecycleAllViews(recyclerView.Recycler())
-                        recyclerView.Recycler().clear()
-                    }
-                }
-
-                override fun onTransitionStart(transition: Transition) = Unit
-                override fun onTransitionCancel(transition: Transition) = Unit
-                override fun onTransitionPause(transition: Transition) = Unit
-                override fun onTransitionResume(transition: Transition) = Unit
-            })
+//        val exitTransition = parentFragment?.exitTransition as Transition?
+//        exitTransition?.addListener(
+//            object : Transition.TransitionListener {
+//                override fun onTransitionEnd(transition: Transition) {
+//                    exitTransition.removeListener(this)
+//
+//                    val recyclerView = binding.wineList
+//                    recyclerView.layoutManager?.apply {
+//                        removeAndRecycleAllViews(recyclerView.Recycler())
+//                        recyclerView.Recycler().clear()
+//                    }
+//                }
+//
+//                override fun onTransitionStart(transition: Transition) = Unit
+//                override fun onTransitionCancel(transition: Transition) = Unit
+//                override fun onTransitionPause(transition: Transition) = Unit
+//                override fun onTransitionResume(transition: Transition) = Unit
+//            })
     }
 
     private fun navigateToBottleDetails(wine: Wine, itemView: View) {
@@ -169,12 +165,12 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     override fun onPause() {
-        honeycombMangaer.delayRecycling = true
+//        honeycombMangaer.delayRecycling = true
         super.onPause()
     }
 
     override fun onResume() {
-        honeycombMangaer.delayRecycling = false
+//        honeycombMangaer.delayRecycling = false
         super.onResume()
     }
 
