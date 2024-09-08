@@ -4,11 +4,13 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.use
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 
@@ -17,9 +19,18 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+    private lateinit var honeycombLayoutManager: HoneycombLayoutManager
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWinesBinding.bind(view)
+
+        L.v(
+            "onViewCreated: item in pool: ${
+                (parentFragment as FragmentHome).getRecycledViewPool()
+                    .getRecycledViewCount(R.layout.item_wine)
+            }"
+        )
 
         initRecyclerView()
         setListeners()
@@ -52,8 +63,10 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 HoneycombLayoutManager.Orientation.VERTICAL
             }
 
+        honeycombLayoutManager = HoneycombLayoutManager(colCount, orientation)
+
         binding.wineList.apply {
-            layoutManager = HoneycombLayoutManager(colCount, orientation)
+            layoutManager = honeycombLayoutManager
             setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
             setHasFixedSize(true)
             adapter = wineAdapter
@@ -92,34 +105,13 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         }
     }
 
-    private fun recyleViewsOnExit() {
-//        val exitTransition = parentFragment?.exitTransition as Transition?
-//        exitTransition?.addListener(
-//            object : Transition.TransitionListener {
-//                override fun onTransitionEnd(transition: Transition) {
-//                    exitTransition.removeListener(this)
-//
-//                    val recyclerView = binding.wineList
-//                    recyclerView.layoutManager?.apply {
-//                        removeAndRecycleAllViews(recyclerView.Recycler())
-//                        recyclerView.Recycler().clear()
-//                    }
-//                }
-//
-//                override fun onTransitionStart(transition: Transition) = Unit
-//                override fun onTransitionCancel(transition: Transition) = Unit
-//                override fun onTransitionPause(transition: Transition) = Unit
-//                override fun onTransitionResume(transition: Transition) = Unit
-//            })
-    }
-
     override fun onPause() {
-//        honeycombMangaer.delayRecycling = true
+        honeycombLayoutManager.skipNextRecycleOnDetach = true
         super.onPause()
     }
 
     override fun onResume() {
-//        honeycombMangaer.delayRecycling = false
+        honeycombLayoutManager.skipNextRecycleOnDetach = false
         super.onResume()
     }
 

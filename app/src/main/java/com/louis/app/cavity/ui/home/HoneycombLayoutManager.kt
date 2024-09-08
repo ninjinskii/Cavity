@@ -7,7 +7,6 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
-import androidx.core.view.postDelayed
 import androidx.recyclerview.widget.OrientationHelper.createHorizontalHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -51,8 +50,15 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     private var anchorOffset = 0
     private var prefetchRange = IntRange(0, 0)
     private var extra = 0 // Predictive animations
+    private var recycleOnDetach = true
 
-    var delayRecycling = false
+    /**
+     * It seems like onDetachedFromWindow is called once when starting to transition out of fragment
+     * and also after fragment transaction completes.
+     * If this parameter is set to true, the view won't be recycled right away, leaving room for
+     * fragment transiton to occur with all recycler view items. Then they'll be recycled
+     */
+    var skipNextRecycleOnDetach = false
 
     init {
         if (colCount < 2) {
@@ -63,7 +69,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     }
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
-        L.v("onLayoutChildren")
+//        L.v("onLayoutChildren")
         recycler.setViewCacheSize(colCount)
         detachAndScrapAttachedViews(recycler)
 
@@ -136,9 +142,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             val view = recycler.getViewForPosition(i)
             addView(view)
 
-            L.v("anchorPOsition: $anchorPosition")
-            L.v("i: $i")
-
             val (towardsEndSide, otherSide) = measureOriented(view)
 
 //            if (isPreLayout) {
@@ -198,8 +201,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
             val view = recycler.getViewForPosition(i)
             addView(view, 0)
-
-            L.v("anchorPOsition: $anchorPosition")
 
             anchorPosition--
 
@@ -432,22 +433,22 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
     private infix fun Int.apply(value: Double) = (this * value).roundToInt()
 
+    override fun removeAndRecycleAllViews(recycler: RecyclerView.Recycler) {
+        L.v("actually recycling, itemCount : $itemCount")
+        super.removeAndRecycleAllViews(recycler)
+    }
+
     override fun onDetachedFromWindow(view: RecyclerView?, recycler: RecyclerView.Recycler) {
+        L.v("onDetachedFromWindow, itemCount : $itemCount")
         super.onDetachedFromWindow(view, recycler)
 
-        val recycling = {
-            removeAndRecycleAllViews(recycler)
-            recycler.clear()
+        if (skipNextRecycleOnDetach || !recycleOnDetach) {
+            skipNextRecycleOnDetach = false
+            return
         }
 
-        L.v("recycling")
-
-        if (delayRecycling) {
-            recycling()
-//            view?.postDelayed(500, recycling)
-        } else {
-            recycling()
-        }
+        removeAndRecycleAllViews(recycler)
+        recycler.clear()
     }
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
@@ -474,11 +475,11 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         if (!reverse) {
             start = currentLayoutPos + 1
             end = currentLayoutPos + colCount + childRowFactor
-            L.v("prefecth registry updated from : $start to $end")
+//            L.v("prefecth registry updated from : $start to $end")
         } else {
             start = currentLayoutPos - colCount + childRowFactor
             end = currentLayoutPos - 1
-            L.v("prefecth registry updated from : $start to $end")
+//            L.v("prefecth registry updated from : $start to $end")
         }
 
         prefetchRange = start..end
@@ -490,7 +491,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         state: RecyclerView.State,
         layoutPrefetchRegistry: LayoutPrefetchRegistry
     ) {
-        L.v("collectAdjacent")
         val delta = if (orientation === HORIZONTAL) dx else dy
         val offset = abs(delta)
         val invalidScroll = childCount == 0 || delta == 0
@@ -505,14 +505,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 layoutPrefetchRegistry.addPosition(it, offset)
             }
         }
-    }
-
-    override fun collectInitialPrefetchPositions(
-        adapterItemCount: Int,
-        layoutPrefetchRegistry: LayoutPrefetchRegistry?
-    ) {
-        L.v("collectInitialPrefetchPositions")
-        super.collectInitialPrefetchPositions(adapterItemCount, layoutPrefetchRegistry)
     }
 
     override fun supportsPredictiveItemAnimations() = true
