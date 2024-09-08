@@ -44,6 +44,8 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     private val binding get() = _binding!!
     private val settingsViewModel: SettingsViewModel by activityViewModels()
 
+    private var camera: Camera? = null
+
     companion object {
         const val TEMPLATE_ROTATION = -45f
         private const val RATIO_4_3_VALUE = 4.0 / 3.0
@@ -119,7 +121,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
 
         try {
             cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(
+            camera = cameraProvider.bindToLifecycle(
                 this,
                 CameraSelector.DEFAULT_BACK_CAMERA,
                 preview,
@@ -128,6 +130,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             preview.setSurfaceProvider(binding.previewView.surfaceProvider)
         } catch (e: Exception) {
             errorReporter.captureException(e)
+            camera = null
             binding.coordinator.showSnackbar(R.string.camera_error)
         }
     }
@@ -145,6 +148,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
                     override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                         with(binding.coordinator) {
                             postDelayed(50) {
+                                binding.toggleTorch.isChecked = false
                                 foreground = ColorDrawable(Color.WHITE)
 
                                 postDelayed(100) {
@@ -212,6 +216,20 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
                 rotateTemplate(shouldRotate = isChecked)
             }
         }
+
+        binding.toggleTorch.apply {
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
+
+            jumpDrawablesToCurrentState()
+
+            setOnCheckedChangeListener { _, isChecked ->
+                setTorchState(isChecked)
+            }
+        }
     }
 
     private fun rotateTemplate(shouldRotate: Boolean) {
@@ -229,6 +247,10 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         binding.bottleTemplate.scaleY = scale
     }
 
+    private fun setTorchState(on: Boolean) {
+        camera?.cameraControl?.enableTorch(on)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -236,6 +258,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
 
     override fun onDestroy() {
         super.onDestroy()
+        camera = null
         cameraExecutor.shutdown()
     }
 }
