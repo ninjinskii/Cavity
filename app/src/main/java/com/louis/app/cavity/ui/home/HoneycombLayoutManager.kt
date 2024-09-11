@@ -51,6 +51,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     private var prefetchRange = IntRange(0, 0)
     private var extra = 0 // Predictive animations
     private var recycleOnDetach = true
+    private var preLayoutDone = false
 
     /**
      * It seems like onDetachedFromWindow is called once when starting to transition out of fragment
@@ -60,7 +61,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
      */
     var skipNextRecycleOnDetach = false
 
-    // TODO: fix predictive animations not working util fillTowardEnd is called. (It doesnt work if recycler has not benn scrolled ever or if last scroll was triggering fillTowardsStart)
     init {
         if (colCount < 2) {
             throw IllegalArgumentException("Honeycomb layout manager require at least two rows.")
@@ -82,29 +82,27 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
         detachAndScrapAttachedViews(recycler)
 
-        if (state.itemCount > 0) {
-            val extra = if (state.isPreLayout) extra else 0
-            fillTowardsEnd(recycler, state, extra)
+        if (state.isPreLayout) {
+            preLayoutDone = false
         }
 
-        L.v("preLayout childCount: $childCount")
+        if (state.itemCount > 0) {
+            fillTowardsEnd(recycler, state)
+        }
     }
 
     private fun fillTowardsEnd(
         recycler: RecyclerView.Recycler,
-        state: RecyclerView.State,
-        preLayoutExtra: Int = 0
+        state: RecyclerView.State
     ) {
-        val toFill =
-            oHelper.endAfterPadding + preLayoutExtra + if (clipToPadding) 0 else oHelper.endPadding
-        var filled: Int // No used currently. Might be necessary to better compute actual scrolled distance in doOnScroll()
+        val toFill = oHelper.endAfterPadding + if (clipToPadding) 0 else oHelper.endPadding
         val marginX: Int
         val marginY: Int
         val startPos: Int
         var start: Int
 
         if (childCount > 0) {
-            val lastChild = getChildAt(childCount - 1)!!
+            val lastChild = getLastChild()!!
             val lastChildPos = getPosition(lastChild)
 
             marginX = lastChild.marginLeft + lastChild.marginRight
@@ -114,18 +112,15 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 if (orientation == VERTICAL) lastChild.measuredHeight + marginY
                 else lastChild.measuredWidth + marginX
 
-            extra = towardsEndSide apply OVERLAPING_FACTOR
             startPos = lastChildPos + 1
             start = oHelper.getDecoratedEnd(lastChild) - (towardsEndSide apply OVERLAPING_FACTOR)
-            filled = start
         } else {
             startPos = ensureStartLayoutFromRowBeiginning(anchorPosition)
-            filled = 0
             start = oHelper.startAfterPadding + if (anchorPosition < itemCount) anchorOffset else 0
         }
 
         for (i in startPos until itemCount) {
-            if (start > toFill) {
+            if (start > toFill + extra) {
                 break
             }
 
@@ -136,6 +131,10 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             val view = recycler.getViewForPosition(i)
             addView(view)
 
+            if (state.isPreLayout) {
+                L.v("prelayout $i")
+            }
+
             val (towardsEndSide, otherSide) = measureOriented(view)
 
             val left = getLeft(otherSide, positionInRow, isInChildRow)
@@ -144,12 +143,24 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
             layoutOriented(view, start, end, left, right)
 
+//            if (state.isPreLayout && !preLayoutEntireRow && preLayoutDone) {
+//                // Prelayout only first item of row
+//                preLayoutDone = true
+//                break
+//            }
+
             if (isRowCompleted) {
                 start = end - (towardsEndSide apply OVERLAPING_FACTOR)
-                filled += towardsEndSide apply OVERLAPING_FACTOR
 
                 // Only prefecth items for last item in row. So the computation happens only once
                 updatePrefetchPosition(i, isInChildRow, state, reverse = false)
+            }
+
+            if (state.isPreLayout && start > toFill && !preLayoutDone) {
+                extra = getLastChild()?.measuredHeight ?: 0
+                preLayoutDone = true
+            } else {
+                extra = 0
             }
         }
     }
@@ -169,8 +180,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         if (firstChildPos == 0) {
             return
         }
-
-        var filled = oHelper.getDecoratedStart(firstChild)
 
         marginX = firstChild.marginLeft + firstChild.marginRight
         marginY = firstChild.marginTop + firstChild.marginBottom
@@ -207,7 +216,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
             if (isRowCompleted) {
                 end = start + (towardsEndSide apply OVERLAPING_FACTOR)
-                filled += towardsEndSide
 
                 // Only prefecth items for last item in row. So the computation happens only once
                 updatePrefetchPosition(i, isInChildRow, state, reverse = true)
@@ -277,7 +285,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 var scrolled = 0
 
                 while (scrolled < d) {
-                    val lastChild = getChildAt(childCount - 1)!!
+                    val lastChild = getLastChild()!!
                     val lastChildPosition = getPosition(lastChild)
                     val lastChildBottom = oHelper.getDecoratedEnd(lastChild)
                     val hangingBottom = max(0, lastChildBottom - toFill)
@@ -421,13 +429,9 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
     private infix fun Int.apply(value: Double) = (this * value).roundToInt()
 
-    override fun removeAndRecycleAllViews(recycler: RecyclerView.Recycler) {
-        L.v("actually recycling, itemCount : $itemCount")
-        super.removeAndRecycleAllViews(recycler)
-    }
+    private fun getLastChild() = getChildAt(childCount - 1)
 
     override fun onDetachedFromWindow(view: RecyclerView?, recycler: RecyclerView.Recycler) {
-        L.v("onDetachedFromWindow, itemCount : $itemCount")
         super.onDetachedFromWindow(view, recycler)
 
         if (skipNextRecycleOnDetach || !recycleOnDetach) {
@@ -464,11 +468,9 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         if (!reverse) {
             start = currentLayoutPos + 1
             end = currentLayoutPos + colCount + childRowFactor
-            L.v("prefecth registry updated from : $start to $end")
         } else {
             start = currentLayoutPos - colCount + childRowFactor
             end = currentLayoutPos - 1
-            L.v("prefecth registry updated from : $start to $end")
         }
 
         prefetchRange = start.coerceIn(0, state.itemCount - 1)..end.coerceIn(0, state.itemCount - 1)
