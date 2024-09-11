@@ -106,6 +106,12 @@ class WineViewHolder(
     }
 
     private fun loadImage(imgPath: String) {
+        /**
+         * Note to my future self: do not try to merge ic_image_search with ic_image_not_found
+         * even though they are the same, it will cause alpha issue in add wine fragemnt.
+         * Cannot override alpha in there, will work once but not twice.
+         * This must has smething to do with what glide does to resources
+         */
         Glide.with(itemView.context)
             .load(Uri.parse(imgPath))
             .run {
@@ -113,7 +119,7 @@ class WineViewHolder(
                     if (isLightTheme)
                         ResourcesCompat.getDrawable(
                             itemView.resources,
-                            R.drawable.ic_image_search,
+                            R.drawable.ic_image_not_found,
                             itemView.context.theme
                         )?.apply {
                             setTint(Color.BLACK)
