@@ -19,7 +19,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
 
-    private lateinit var honeycombLayoutManager: HoneycombLayoutManager
+    private var honeycombLayoutManager: HoneycombLayoutManager? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -106,17 +106,18 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     override fun onPause() {
-        honeycombLayoutManager.skipNextRecycleOnDetach = true
+        honeycombLayoutManager?.skipNextRecycleOnDetach = true
         super.onPause()
     }
 
     override fun onResume() {
-        honeycombLayoutManager.skipNextRecycleOnDetach = false
+        honeycombLayoutManager?.skipNextRecycleOnDetach = false
         super.onResume()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        honeycombLayoutManager = null
         _binding = null
     }
 
