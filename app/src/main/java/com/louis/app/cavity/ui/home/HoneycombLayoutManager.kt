@@ -157,7 +157,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             }
 
             if (state.isPreLayout && start > toFill && !preLayoutDone) {
-                extra = getLastChild()?.measuredHeight ?: 0
+                extra = towardsEndSide
                 preLayoutDone = true
             } else {
                 extra = 0
