@@ -60,6 +60,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
      */
     var skipNextRecycleOnDetach = false
 
+    // TODO: fix predictive animations not working util fillTowardEnd is called. (It doesnt work if recycler has not benn scrolled ever or if last scroll was triggering fillTowardsStart)
     init {
         if (colCount < 2) {
             throw IllegalArgumentException("Honeycomb layout manager require at least two rows.")
@@ -83,12 +84,15 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
         if (state.itemCount > 0) {
             val extra = if (state.isPreLayout) extra else 0
-            fillTowardsEnd(recycler, extra)
+            fillTowardsEnd(recycler, state, extra)
         }
+
+        L.v("preLayout childCount: $childCount")
     }
 
     private fun fillTowardsEnd(
         recycler: RecyclerView.Recycler,
+        state: RecyclerView.State,
         preLayoutExtra: Int = 0
     ) {
         val toFill =
@@ -125,38 +129,14 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 break
             }
 
-            if (preLayoutExtra > 0) {
-                L.v("prelayout: laying out item $i")
-            }
-
             val isInChildRow = isItemInChildRow(i)
             val positionInRow = getPositionInRow(i, isInChildRow)
             val isRowCompleted = isRowCompleted(positionInRow, isInChildRow, reverse = false)
-
-//          Anonther way to fix mis layout behavirs on screen rotation from recyclerview's bottom
-//          Fiexed by the ensureStartLayoutFromRowBeiginning()
-//            val faultyLayout = positionInRow != 0 && startPos == anchorPosition && i == startPos
-//
-//            if (faultyLayout) {
-//                // Depending on anchor position, the first view to be laid out (after rotation)
-//                // might be laid out in the presumed postion in row (base on anchorPosition)
-//                // However, other views from this row might not have been laid out
-//                // (cause: hexagon size change, colCount cahnge), resulting in a blank.
-//                // To fix this, we still need to layout the view to get its coordinates and update
-//                // the anchor, but then we remove it to let them be laid out by fillTowardsStart()
-//                // when user start scrolling to top
-//                anchorPosition++
-//                continue
-//            }
 
             val view = recycler.getViewForPosition(i)
             addView(view)
 
             val (towardsEndSide, otherSide) = measureOriented(view)
-
-//            if (isPreLayout) {
-//                toFill += towardsEndSide
-//            }
 
             val left = getLeft(otherSide, positionInRow, isInChildRow)
             val end = start + towardsEndSide
@@ -169,13 +149,12 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 filled += towardsEndSide apply OVERLAPING_FACTOR
 
                 // Only prefecth items for last item in row. So the computation happens only once
-                // TODO: consider giving offset for layoutRegistry.addposition here
-                updatePrefetchPosition(i, isInChildRow, reverse = false)
+                updatePrefetchPosition(i, isInChildRow, state, reverse = false)
             }
         }
     }
 
-    private fun fillTowardsStart(recycler: RecyclerView.Recycler) {
+    private fun fillTowardsStart(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
         val marginX: Int
         val marginY: Int
         var end: Int
@@ -216,7 +195,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
             val (towardsEndSide, otherSide) = measureOriented(view)
 
-            // TODO: consider moving this before if(end < toFill) to update prefecth event if we dont have to layout a new view
             val isInChildRow = isItemInChildRow(i)
             val positionInRow = getPositionInRow(i, isInChildRow)
             val isRowCompleted = isRowCompleted(positionInRow, isInChildRow, reverse = true)
@@ -232,8 +210,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 filled += towardsEndSide
 
                 // Only prefecth items for last item in row. So the computation happens only once
-                // TODO: consider giving offset for layoutRegistry.addposition here
-                updatePrefetchPosition(i, isInChildRow, reverse = true)
+                updatePrefetchPosition(i, isInChildRow, state, reverse = true)
             }
         }
     }
@@ -290,7 +267,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                     oHelper.offsetChildren(scrollBy)
                     scrolled -= scrollBy
                     if (anchorPosition == 0) break
-                    fillTowardsStart(recycler)
+                    fillTowardsStart(recycler, state)
                 }
                 scrolled
             }
@@ -308,7 +285,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                     oHelper.offsetChildren(-scrollBy)
                     scrolled += scrollBy
                     if (lastChildPosition == state.itemCount - 1) break
-                    fillTowardsEnd(recycler)
+                    fillTowardsEnd(recycler, state)
                 }
                 scrolled
             }
@@ -472,6 +449,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     private fun updatePrefetchPosition(
         currentLayoutPos: Int,
         isInChildRow: Boolean,
+        state: RecyclerView.State,
         reverse: Boolean
     ) {
         val childRowFactor = when {
@@ -486,14 +464,14 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         if (!reverse) {
             start = currentLayoutPos + 1
             end = currentLayoutPos + colCount + childRowFactor
-//            L.v("prefecth registry updated from : $start to $end")
+            L.v("prefecth registry updated from : $start to $end")
         } else {
             start = currentLayoutPos - colCount + childRowFactor
             end = currentLayoutPos - 1
-//            L.v("prefecth registry updated from : $start to $end")
+            L.v("prefecth registry updated from : $start to $end")
         }
 
-        prefetchRange = start..end
+        prefetchRange = start.coerceIn(0, state.itemCount - 1)..end.coerceIn(0, state.itemCount - 1)
     }
 
     override fun collectAdjacentPrefetchPositions(
@@ -511,10 +489,7 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         }
 
         prefetchRange.forEach {
-            // TODO: consider using coerceIn() in updatePrefetch positions
-            if (it > 0 && it < state.itemCount) {
-                layoutPrefetchRegistry.addPosition(it, offset)
-            }
+            layoutPrefetchRegistry.addPosition(it, offset)
         }
     }
 
