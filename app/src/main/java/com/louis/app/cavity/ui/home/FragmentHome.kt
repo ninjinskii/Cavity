@@ -11,7 +11,6 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -26,8 +25,6 @@ import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
 
@@ -35,8 +32,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         const val VIEW_POOL_SIZE = 25
     }
 
-    private lateinit var tabAdapter: ScrollableTabAdapter<County>
     private lateinit var transitionHelper: TransitionHelper
+    private var tabAdapter: ScrollableTabAdapter<County>? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -83,14 +80,6 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         setViewPagerOrientation()
         observe()
         setListeners()
-
-//        lifecycleScope.launch {
-//            repeat(1000) {
-//                delay(500)
-//                val num = recyclePool.getRecycledViewCount(R.layout.item_wine)
-//                L.v("$num")
-//            }
-//        }
     }
 
     private fun setupScrollableTab() {
@@ -107,13 +96,13 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             binding.emptyState.setVisible(it.isEmpty())
 
             with(binding) {
-                if (tabAdapter.itemCount != it.size) {
+                if (tabAdapter?.itemCount != it.size) {
                     tab.adapter = tabAdapter
                     viewPager.adapter =
                         WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
                 }
 
-                tabAdapter.submitList(it)
+                tabAdapter?.submitList(it)
                 tab.setUpWithViewPager(viewPager)
 
                 (view?.parent as? ViewGroup)?.doOnPreDraw {
@@ -156,7 +145,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         var currentCounty = 0L
 
         binding.tab.addOnPageChangeListener {
-            currentCounty = tabAdapter.getItemId(it)
+            currentCounty = tabAdapter?.getItemId(it) ?: 0
         }
 
         binding.emptyState.setOnActionClickListener {
@@ -248,6 +237,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        tabAdapter = null
         _binding = null
     }
 }
