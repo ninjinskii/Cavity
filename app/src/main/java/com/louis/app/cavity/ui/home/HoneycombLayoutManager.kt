@@ -119,7 +119,9 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
             start = oHelper.startAfterPadding + if (anchorPosition < itemCount) anchorOffset else 0
         }
 
-        for (i in startPos until itemCount) {
+        val limit = if (state.isPreLayout) itemCount + 1 else itemCount
+
+        for (i in startPos until limit) {
             if (start > toFill + extra) {
                 break
             }
@@ -130,10 +132,6 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
             val view = recycler.getViewForPosition(i)
             addView(view)
-
-            if (state.isPreLayout) {
-                L.v("prelayout $i")
-            }
 
             val (towardsEndSide, otherSide) = measureOriented(view)
 
@@ -156,11 +154,8 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
                 updatePrefetchPosition(i, isInChildRow, state, reverse = false)
             }
 
-            if (state.isPreLayout && start > toFill && !preLayoutDone) {
-                extra = towardsEndSide
-                preLayoutDone = true
-            } else {
-                extra = 0
+            if (state.isPreLayout && start > toFill) {
+                extra = towardsEndSide apply (1 - OVERLAPING_FACTOR)
             }
         }
     }
