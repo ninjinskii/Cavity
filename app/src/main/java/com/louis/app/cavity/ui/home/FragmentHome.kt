@@ -145,7 +145,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         var currentCounty = 0L
 
         binding.tab.addOnPageChangeListener {
-            currentCounty = tabAdapter?.getItemId(it) ?: 0
+            currentCounty = tabAdapter?.getItem(it)?.getItemId() ?: 0
         }
 
         binding.emptyState.setOnActionClickListener {

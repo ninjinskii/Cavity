@@ -33,8 +33,6 @@ class ScrollableTabAdapter<T>(
 
     public override fun getItem(position: Int): T = super.getItem(position)
 
-    // TODO: disable animations ?
-
     class ScrollableItemDiffCallback<T> : DiffUtil.ItemCallback<T>() {
         override fun areItemsTheSame(oldItem: T & Any, newItem: T & Any) =
             oldItem.toString() == newItem.toString()
