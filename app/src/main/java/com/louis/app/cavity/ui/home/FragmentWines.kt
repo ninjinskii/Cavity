@@ -106,12 +106,12 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     override fun onPause() {
-        honeycombLayoutManager?.skipNextRecycleOnDetach = true
+        honeycombLayoutManager?.config?.skipNextRecycleOnDetach = true
         super.onPause()
     }
 
     override fun onResume() {
-        honeycombLayoutManager?.skipNextRecycleOnDetach = false
+        honeycombLayoutManager?.config?.skipNextRecycleOnDetach = false
         super.onResume()
     }
 
