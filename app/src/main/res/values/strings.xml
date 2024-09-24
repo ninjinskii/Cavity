@@ -53,6 +53,7 @@
     <string name="wine_photo">Wine photo</string>
     <string name="add_photo">Add photo</string>
     <string name="take_photo">Photograph</string>
+    <string name="toggle_torch">Toggle torch</string>
     <string name="naming">Appellation</string>
     <string name="name">Name</string>
     <string name="county">Region</string>
