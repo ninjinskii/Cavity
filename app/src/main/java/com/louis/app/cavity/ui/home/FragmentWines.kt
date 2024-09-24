@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 
@@ -24,13 +23,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWinesBinding.bind(view)
-
-        L.v(
-            "onViewCreated: item in pool: ${
-                (parentFragment as FragmentHome).getRecycledViewPool()
-                    .getRecycledViewCount(R.layout.item_wine)
-            }"
-        )
 
         initRecyclerView()
         setListeners()
