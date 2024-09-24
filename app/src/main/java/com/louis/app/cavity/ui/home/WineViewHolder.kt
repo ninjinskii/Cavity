@@ -4,36 +4,33 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
-import android.view.View
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
-import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.ui.home.widget.EffectImageView
+import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.toBoolean
 
 class WineViewHolder(
     private val binding: ItemWineBinding,
     private val drawables: Pair<Drawable, Drawable>,
-    private val onItemClick: (wine: Wine, bottles: List<Bottle>, itemView: View) -> Unit,
-    private val onItemLongClick: (wine: Wine, bottles: List<Bottle>) -> Unit
+    private val transitionHelper: TransitionHelper,
+    private val isLightTheme: Boolean
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
     private val colorables = binding.run {
         listOf(wineName, wineNaming, bottlesCount, icons)
     }
-
-    private val isLightTheme =
-        itemView.context
-            .obtainStyledAttributes(intArrayOf(com.google.android.material.R.attr.isLightTheme))
-            .use { it.getBoolean(0, false) }
-
 
     fun bind(wineWithBottles: WineWithBottles) {
         val hexagone = binding.root
@@ -60,16 +57,40 @@ class WineViewHolder(
             if (hasImage) {
                 loadImage(wine.imgPath)
             } else {
-                binding.wineImage.setImageDrawable(null)
+                (binding.wineImage as AppCompatImageView).setImageDrawable(null)
             }
         }
 
         itemView.setOnClickListener {
-            onItemClick(wine, bottles, binding.root)
+            if (bottles.isNotEmpty()) {
+                transitionHelper.setElevationScale()
+
+                val transition =
+                    itemView.context.getString(R.string.transition_bottle_details, wine.id)
+                val extra = FragmentNavigatorExtras(hexagone to transition)
+                val action = FragmentHomeDirections.homeToBottleDetails(wine.id, -1)
+                itemView.findNavController().navigate(action, extra)
+            } else {
+                transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
+
+                val action = FragmentHomeDirections.homeToAddBottle(wine.id, -1L)
+                itemView.findNavController().navigate(action)
+            }
         }
 
         itemView.setOnLongClickListener {
-            onItemLongClick(wine, bottles)
+            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
+
+            val action = FragmentHomeDirections.homeToWineOptions(
+                wine.id,
+                wine.countyId,
+                wine.name,
+                wine.naming,
+                wine.isOrganic.toBoolean(),
+                wine.color
+            )
+            itemView.findNavController().navigate(action)
+
             true
         }
     }
@@ -79,10 +100,18 @@ class WineViewHolder(
             return
         }
 
-        binding.wineImage.setTargets(colorables)
+        if (binding.wineImage is EffectImageView) {
+            binding.wineImage.setTargets(colorables)
+        }
     }
 
     private fun loadImage(imgPath: String) {
+        /**
+         * Note to my future self: do not try to merge ic_image_search with ic_image_not_found
+         * even though they are the same, it will cause alpha issue in add wine fragemnt.
+         * Cannot override alpha in there, will work once but not twice.
+         * This must has smething to do with what glide does to resources
+         */
         Glide.with(itemView.context)
             .load(Uri.parse(imgPath))
             .run {
@@ -90,7 +119,7 @@ class WineViewHolder(
                     if (isLightTheme)
                         ResourcesCompat.getDrawable(
                             itemView.resources,
-                            R.drawable.ic_image_search,
+                            R.drawable.ic_image_not_found,
                             itemView.context.theme
                         )?.apply {
                             setTint(Color.BLACK)
@@ -101,7 +130,7 @@ class WineViewHolder(
                 error(drawable)
             }
             .centerCrop()
-            .into(binding.wineImage)
+            .into(binding.wineImage as AppCompatImageView)
     }
 
     private fun updateColorables(hasImage: Boolean) {

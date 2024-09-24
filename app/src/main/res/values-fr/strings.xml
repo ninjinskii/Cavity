@@ -51,6 +51,7 @@
     <string name="bio_wine">Le vin est bio</string>
     <string name="wine_photo">Photo du vin</string>
     <string name="add_photo">Ajouter une photo</string>
+    <string name="toggle_torch">Allumer le flash</string>
     <string name="take_photo">Photographier</string>
     <string name="naming">Appellation</string>
     <string name="name">Nom</string>

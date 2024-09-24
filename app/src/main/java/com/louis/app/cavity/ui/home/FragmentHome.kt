@@ -27,14 +27,19 @@ import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.*
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
-    private lateinit var tabAdapter: ScrollableTabAdapter<County>
+
+    companion object {
+        const val VIEW_POOL_SIZE = 25
+    }
+
     private lateinit var transitionHelper: TransitionHelper
+    private var tabAdapter: ScrollableTabAdapter<County>? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val recyclePool by lazy {
         RecyclerView.RecycledViewPool().apply {
-            setMaxRecycledViews(R.layout.item_wine, 15)
+            setMaxRecycledViews(R.layout.item_wine, VIEW_POOL_SIZE)
         }
     }
 
@@ -91,22 +96,21 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             binding.emptyState.setVisible(it.isEmpty())
 
             with(binding) {
-                if (tabAdapter.itemCount != it.size) {
+                if (tabAdapter?.itemCount != it.size) {
                     tab.adapter = tabAdapter
                     viewPager.adapter =
                         WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
                 }
 
-                tabAdapter.submitList(it)
+                tabAdapter?.submitList(it)
                 tab.setUpWithViewPager(viewPager)
 
                 (view?.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
                 }
+
+//                viewPager.offscreenPageLimit = 1
             }
-            // Potential delayed coroutine and offscreen limit upgrade
-            /*viewPager.offscreenPageLimit = 5
-            tab.setUpWithViewPager(viewPager)*/
         }
     }
 
@@ -141,7 +145,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         var currentCounty = 0L
 
         binding.tab.addOnPageChangeListener {
-            currentCounty = tabAdapter.getItemId(it)
+            currentCounty = tabAdapter?.getItem(it)?.getItemId() ?: 0
         }
 
         binding.emptyState.setOnActionClickListener {
@@ -233,6 +237,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        tabAdapter = null
         _binding = null
     }
 }

@@ -35,7 +35,7 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
 
     private fun observe() {
         loginViewModel.confirmedEvent.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let {
+            it.getContentIfNotHandled()?.let {
                 val action = FragmentConfirmAccountDirections.confirmToAccount()
                 val navOptions = NavOptions.Builder()
                     .setPopUpTo(R.id.fragmentLogin, true)
