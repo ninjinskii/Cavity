@@ -1,10 +1,13 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import androidx.room.withTransaction
 import com.louis.app.cavity.db.CavityDatabase
+import com.louis.app.cavity.domain.error.ErrorReporter
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.QGrape
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Companion.handleDatabaseError
 
 class GrapeRepository private constructor(app: Application) {
     companion object {
@@ -17,28 +20,35 @@ class GrapeRepository private constructor(app: Application) {
             }
     }
 
+    private val errorReporter: ErrorReporter = SentryErrorReporter.getInstance(app)
     private val database = CavityDatabase.getInstance(app)
     private val grapeDao = database.grapeDao()
     private val qGrapeDao = database.qGrapeDao()
 
-    suspend fun <T> transaction(databaseQueries: suspend () -> T) = database.withTransaction {
-        databaseQueries()
-    }
-
-    suspend fun updateGrape(grape: Grape) {
-        if (grape.name.isBlank()) {
-            throw IllegalArgumentException("Grape name is blank.")
+    suspend fun updateGrape(grape: Grape): RepositoryUpsertResult<Long> {
+        if (!grape.hasValidName()) {
+            return InvalidName
         }
 
-        grapeDao.updateGrape(grape)
+        try {
+            grapeDao.updateGrape(grape)
+            return Success(grape.id)
+        } catch (e: Exception) {
+            return handleDatabaseError(e, errorReporter)
+        }
     }
 
-    suspend fun insertGrape(grape: Grape): Long {
-        if (grape.name.isBlank()) {
-            throw IllegalArgumentException("Grape name is blank.")
+    suspend fun insertGrape(grape: Grape): RepositoryUpsertResult<Long> {
+        if (!grape.hasValidName()) {
+            return InvalidName
         }
 
-        return grapeDao.insertGrape(grape)
+        try {
+            val grapeId = grapeDao.insertGrape(grape)
+            return Success(grapeId)
+        } catch (e: Exception) {
+            return handleDatabaseError(e, errorReporter)
+        }
     }
 
     suspend fun insertGrapes(grapes: List<Grape>) = grapeDao.insertGrapes(grapes)

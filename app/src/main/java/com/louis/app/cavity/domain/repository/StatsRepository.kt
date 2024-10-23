@@ -1,7 +1,6 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import androidx.room.withTransaction
 import com.louis.app.cavity.db.CavityDatabase
 
 class StatsRepository private constructor(app: Application) {
@@ -17,10 +16,6 @@ class StatsRepository private constructor(app: Application) {
 
     private val database = CavityDatabase.getInstance(app)
     private val statsDao = database.statsDao()
-
-    suspend fun <T> transaction(databaseQueries: suspend () -> T) = database.withTransaction {
-        databaseQueries()
-    }
 
     fun getBottleCountForCounty(countyId: Long) = statsDao.getBottleCountForCounty(countyId)
     fun getPriceByCurrencyForCounty(countyId: Long) = statsDao.getPriceByCurrencyForCounty(countyId)

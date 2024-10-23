@@ -214,8 +214,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
             }
         }
 
-        tastingViewModel.undoneTastings.observe(this) { tastings ->
-            val hasTastingToday = tastings.any { DateFormatter.isToday(it.tasting.date) }
+        tastingViewModel.hasTastingToday.observe(this) { hasTastingToday ->
             showTastingIndicator(hasTastingToday)
         }
     }

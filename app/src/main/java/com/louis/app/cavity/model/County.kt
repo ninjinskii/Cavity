@@ -16,4 +16,6 @@ data class County(
     override fun getChipText() = name
 
     override fun toString() = name
+
+    fun hasValidName() = name.isNotBlank()
 }

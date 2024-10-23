@@ -80,7 +80,7 @@ class BackupBuilder(private val context: Context) {
                         postFReviews(reviewRepository.getAllFReviewsNotLive()),
                         postQGrapes(grapeRepository.getAllQGrapesNotLive()),
                         postTastingFriendsXRefs(tastingRepository.getAllTastingXFriendsNotLive()),
-                        postHistoryFriendsXRefs(friendRepository.getAllHistoryXFriendsNotLive())
+                        postHistoryFriendsXRefs(historyRepository.getAllHistoryXFriendsNotLive())
                     ).forEach {
                         if (it !is ApiResponse.Success) {
                             throw UncompleteExportException()

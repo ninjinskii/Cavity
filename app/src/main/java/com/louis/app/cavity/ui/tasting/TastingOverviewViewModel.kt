@@ -107,9 +107,9 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
                 )
 
                 bottleRepository.run {
-                    transaction {
+                    tastingRepository.transaction {
                         consumeBottle(bottle.id)
-                        historyRepository.insertHistoryEntryAndFriends(entry, friends.map { it.id })
+                        historyRepository.insertHistoryEntry(entry, friends.map { it.id })
                         tastingRepository.deleteTastingActionsForBottle(bottle.id)
                     }
                 }

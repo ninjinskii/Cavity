@@ -3,8 +3,11 @@ package com.louis.app.cavity.domain.repository
 import android.app.Application
 import androidx.room.withTransaction
 import com.louis.app.cavity.db.CavityDatabase
+import com.louis.app.cavity.domain.error.ErrorReporter
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.model.HistoryXFriend
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Companion.handleDatabaseError
 
 class FriendRepository private constructor(app: Application) {
     companion object {
@@ -17,41 +20,49 @@ class FriendRepository private constructor(app: Application) {
             }
     }
 
+    private val errorReporter: ErrorReporter = SentryErrorReporter.getInstance(app)
     private val database = CavityDatabase.getInstance(app)
     private val friendDao = database.friendDao()
-    private val historyXFriendDao = database.historyXFriendDao()
 
     suspend fun <T> transaction(databaseQueries: suspend () -> T) = database.withTransaction {
         databaseQueries()
     }
 
-    suspend fun insertFriend(friend: Friend) {
-        if (friend.name.isBlank()) {
-            throw IllegalArgumentException("Friend name is blank.")
+    suspend fun insertFriend(friend: Friend): RepositoryUpsertResult<Long> {
+        if (!friend.hasValidName()) {
+            return InvalidName
         }
 
-        friendDao.insertFriend(friend)
+        try {
+            val friendId = friendDao.insertFriend(friend)
+            return Success(friendId)
+        } catch (e: Exception) {
+            return handleDatabaseError(e, errorReporter)
+        }
     }
 
     suspend fun insertFriends(friends: List<Friend>) = friendDao.insertFriends(friends)
 
-    suspend fun updateFriend(friend: Friend) {
-        if (friend.name.isBlank()) {
-            throw IllegalArgumentException("Friend name is blank.")
+    suspend fun updateFriend(friend: Friend): RepositoryUpsertResult<Long> {
+        if (!friend.hasValidName()) {
+            return InvalidName
         }
 
-        friendDao.updateFriend(friend)
+        try {
+            friendDao.updateFriend(friend)
+            return Success(friend.id)
+        } catch (e: Exception) {
+            return handleDatabaseError(e, errorReporter)
+        }
     }
 
     suspend fun deleteFriend(friend: Friend) = friendDao.deleteFriend(friend)
+
     suspend fun deleteAllFriends() = friendDao.deleteAll()
+
     fun getAllFriends() = friendDao.getAllFriends()
+
     suspend fun getFriendByIdNotLive(friendId: Long) = friendDao.getFriendByIdNotLive(friendId)
+
     suspend fun getAllFriendsNotLive() = friendDao.getAllFriendsNotLive()
-
-    suspend fun insertFriendHistoryXRefs(fxh: List<HistoryXFriend>) =
-        historyXFriendDao.insertHistoryXFriends(fxh)
-
-    suspend fun getAllHistoryXFriendsNotLive() = historyXFriendDao.getAllHistoryXFriendsNotLive()
-    suspend fun deleteAllFriendHistoryXRefs() = historyXFriendDao.deleteAll()
 }
