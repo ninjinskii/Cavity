@@ -1,0 +1,5 @@
+- Possibilité d'allumer le flash lors de la prise de photo
+- Nouvelle options de confidentialité pour cacher l'écran quand l'application est en arrière plan et empêcher les screenshots
+- Correction de la région qui n'est pas élecitonnée quand on crée un vin
+- Ajout d'un fond flou sur les vins en dessous du texte (Android > 12)
+- Diverse améliorations d'interface
