@@ -26,11 +26,13 @@ class TastingActionDoneReceiver : BroadcastReceiver() {
         }
 
         CoroutineScope(SupervisorJob()).launch(IO) {
+            NotificationBuilder.cancelNotification(context, tastingActionId.toInt())
+
             val tastingAction = repository.getTastingActionById(tastingActionId)
+            tastingAction ?: return@launch
+
             tastingAction.done = true.toInt()
             repository.updateTastingAction(tastingAction)
-
-            NotificationBuilder.cancelNotification(context, tastingActionId.toInt())
         }
     }
 }

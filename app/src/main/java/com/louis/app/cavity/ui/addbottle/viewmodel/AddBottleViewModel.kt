@@ -9,9 +9,6 @@ import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.domain.repository.ReviewRepository
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.FReview
-import com.louis.app.cavity.model.HistoryEntry
-import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
@@ -89,73 +86,21 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             val isEdit = _editedBottle.value != null
+            val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
+            val uiFReviews = reviewManager.fReviews.value ?: emptyList()
+            val gift = step4Bottle?.giftedBy != null
 
             if (!isEdit) {
                 val count = step1Bottle.count.coerceAtLeast(1)
                 val message = if (count > 1) R.string.bottles_added else R.string.bottle_added
 
-                // TODO: view model shoud'nt deal with transactions
-                historyRepository.transaction {
-                    for (i in 1..count) {
-                        val bottleId = bottleRepository.insertBottle(bottle)
-
-                        insertQGrapes(bottleId)
-                        insertFReviews(bottleId)
-                        insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
-                    }
-                }
-
+                bottleRepository.insertBottles(bottle, uiQGrapes, uiFReviews, gift, count)
                 _completedEvent.postOnce(message)
             } else {
                 val message = R.string.bottle_updated
-                val bottleId = _editedBottle.value!!.id
 
-
-                bottleRepository.transaction {
-                    bottleRepository.updateBottle(bottle)
-                    insertQGrapes(bottleId)
-                    insertFReviews(bottleId)
-                    insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
-                }
-
-
+                bottleRepository.updateBottle(bottle, uiQGrapes, uiFReviews, gift)
                 _completedEvent.postOnce(message)
-            }
-        }
-    }
-
-    private suspend fun insertQGrapes(bottleId: Long) {
-        val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
-        val qGrapes = uiQGrapes
-            .filter { it.percentage > 0 }
-            .map { QGrape(bottleId, it.grapeId, it.percentage) }
-
-        grapeRepository.replaceQGrapesForBottle(bottleId, qGrapes)
-    }
-
-    private suspend fun insertFReviews(bottleId: Long) {
-        val uiFReviews = reviewManager.fReviews.value ?: emptyList()
-        val fReviews = uiFReviews.map {
-            FReview(bottleId, it.reviewId, it.value)
-        }
-
-        reviewRepository.replaceFReviewsForBottle(bottleId, fReviews)
-    }
-
-    private suspend fun insertHistoryEntry(bottleId: Long, buyDate: Long, friendId: Long?) {
-        val isAGift = friendId != null
-        val typeReplenishment = 1
-        val typeGiftedBy = 3
-        val type = if (isAGift) typeGiftedBy else typeReplenishment
-        val historyEntry = HistoryEntry(0, buyDate, bottleId, null, "", type, 0)
-
-        historyRepository.run {
-            clearExistingReplenishments(bottleId)
-
-            if (isAGift) {
-                bottleRepository.declareGiftedBottle(historyEntry, friendId!!)
-            } else {
-                insertHistoryEntry(historyEntry)
             }
         }
     }

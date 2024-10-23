@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.grape.QuantifiedGrapeHelper
 import com.louis.app.cavity.domain.repository.GrapeRepository
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.util.Event
@@ -47,18 +48,17 @@ class GrapeManager(
 
     fun addGrapeAndQGrape(grapeName: String) {
         viewModelScope.launch(IO) {
-            try {
-                val grape = Grape(0, grapeName)
-                val grapeId = repository.insertGrape(grape)
-                val defaultValue = qGrapeHelper.requestAddQGrape()
+            val grape = Grape(0, grapeName)
+            val result = repository.insertGrape(grape)
+            val defaultValue = qGrapeHelper.requestAddQGrape()
 
-                withContext(Main) {
-                    _qGrapes += QGrapeUiModel(grapeId, grapeName, defaultValue)
+            withContext(Main) {
+                when (result) {
+                    is Success -> _qGrapes += QGrapeUiModel(result.value, grapeName, defaultValue)
+                    is AlreadyExists -> _userFeedback.postOnce(R.string.grape_already_exists)
+                    is InvalidName -> _userFeedback.postOnce(R.string.empty_grape_name)
+                    else -> _userFeedback.postOnce(R.string.base_error)
                 }
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_grape_name)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.grape_already_exists)
             }
         }
     }

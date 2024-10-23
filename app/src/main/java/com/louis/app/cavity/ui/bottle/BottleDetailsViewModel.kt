@@ -9,6 +9,7 @@ import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
+import com.louis.app.cavity.domain.repository.ReviewRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -21,6 +22,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val wineRepository = WineRepository.getInstance(app)
     private val bottleRepository = BottleRepository.getInstance(app)
     private val grapeRepository = GrapeRepository.getInstance(app)
+    private val reviewRepository = ReviewRepository.getInstance(app)
     private val historyRepository = HistoryRepository.getInstance(app)
 
     private val bottleId = MutableLiveData<Long>()
@@ -45,7 +47,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     val grapes = bottleId.switchMap { grapeRepository.getQGrapesAndGrapeForBottle(it) }
 
-    val reviews = bottleId.switchMap { bottleRepository.getFReviewAndReviewForBottle(it) }
+    val reviews = bottleId.switchMap { reviewRepository.getFReviewAndReviewForBottle(it) }
 
     val replenishmentEntry =
         bottleId.switchMap { historyRepository.getReplenishmentForBottleNotPaged(it) }
@@ -108,7 +110,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
-            val boundedBottle = wineRepository.getBoundedBottleByIdNotLive(bottleId)
+            val boundedBottle = bottleRepository.getBoundedBottleByIdNotLive(bottleId)
             val wine = boundedBottle.wine
 
             wineRepository.transaction {

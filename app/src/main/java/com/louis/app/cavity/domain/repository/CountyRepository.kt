@@ -1,9 +1,12 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import androidx.room.withTransaction
 import com.louis.app.cavity.db.CavityDatabase
+import com.louis.app.cavity.domain.error.ErrorReporter
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Companion.handleDatabaseError
 
 class CountyRepository private constructor(app: Application) {
     companion object {
@@ -16,42 +19,49 @@ class CountyRepository private constructor(app: Application) {
             }
     }
 
+    private val errorReporter: ErrorReporter = SentryErrorReporter.getInstance(app)
     private val database = CavityDatabase.getInstance(app)
     private val countyDao = database.countyDao()
 
-    suspend fun <T> transaction(databaseQueries: suspend () -> T) = database.withTransaction {
-        databaseQueries()
-    }
-
-    // County
-    suspend fun insertCounty(county: County) {
-        if (county.name.isBlank()) {
-            throw IllegalArgumentException("County name is blank.")
+    suspend fun insertCounty(county: County): RepositoryUpsertResult<Long> {
+        if (!county.hasValidName()) {
+            return InvalidName
         }
 
-        countyDao.insertCounties(county)
+        try {
+            val countyId = countyDao.insertCounty(county)
+            return Success(countyId)
+        } catch (e: Exception) {
+            return handleDatabaseError(e, errorReporter)
+        }
     }
 
-    suspend fun insertCounties(counties: List<County>) {
-        if (counties.any { it.name.isBlank() }) {
-            throw IllegalArgumentException("County name is blank.")
+    suspend fun insertCounties(counties: List<County>) = countyDao.insertCounties(counties)
+
+    suspend fun updateCounty(county: County): RepositoryUpsertResult<Long> {
+        if (!county.hasValidName()) {
+            return InvalidName
         }
 
-        countyDao.insertCounties(counties)
-    }
-
-    suspend fun updateCounty(county: County) {
-        if (county.name.isBlank()) {
-            throw IllegalArgumentException("County name is blank.")
+        try {
+            countyDao.updateCounty(county)
+            return Success(county.id)
+        } catch (e: Exception) {
+            return handleDatabaseError(e, errorReporter)
         }
-
-        countyDao.updateCounty(county)
     }
 
     fun getAllCounties() = countyDao.getAllCounties()
+
     fun getNonEmptyCounties() = countyDao.getNonEmptyCounties()
+
+    fun getCountiesWithWines() = countyDao.getCountiesWithWines()
+
     suspend fun getAllCountiesNotLive() = countyDao.getAllCountiesNotLive()
+
     suspend fun updateCounties(counties: List<County>) = countyDao.updateCounties(counties)
+
     suspend fun deleteCounty(countyId: Long) = countyDao.deleteCounty(countyId)
+
     suspend fun deleteAllCounties() = countyDao.deleteAll()
 }

@@ -12,4 +12,6 @@ data class Grape(
 ) : Chipable {
     override fun getItemId() = id
     override fun getChipText() = name
+
+    fun hasValidName() = name.isNotBlank()
 }

@@ -4,8 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.TastingRepository
+import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
 
 class TastingViewModel(app: Application) : AndroidViewModel(app) {
@@ -18,4 +20,8 @@ class TastingViewModel(app: Application) : AndroidViewModel(app) {
 
     val undoneTastings = tastingRepository.getUndoneTastings()
     val friends = friendRepository.getAllFriends()
+
+    val hasTastingToday = tastingRepository.getUndoneTastings().map { tastings ->
+        tastings.any { DateFormatter.isToday(it.tasting.date) && !it.tasting.done }
+    }
 }

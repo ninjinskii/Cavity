@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
+import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.CountyRepository
 import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val countyRepository = CountyRepository.getInstance(app)
-    private val wineRepository = WineRepository.getInstance(app)
+    private val bottleRepository = BottleRepository.getInstance(app)
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
@@ -46,7 +47,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         R.id.rbGroupSize to NoFilter
     )
 
-    val results: LiveData<List<BoundedBottle>> = wineRepository
+    val results: LiveData<List<BoundedBottle>> = bottleRepository
         .getBoundedBottles()
         .combineAsync(globalFilter) { receiver, bottles, filter ->
             filter(receiver, bottles, filter)

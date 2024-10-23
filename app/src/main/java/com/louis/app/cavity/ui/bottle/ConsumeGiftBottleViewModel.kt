@@ -9,6 +9,7 @@ import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.HistoryEntry
+import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -44,11 +45,13 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
         val historyEntry = HistoryEntry(0, date, bottleId, null, comment, type, 0)
 
         viewModelScope.launch(IO) {
-            bottleRepository.transaction {
+            L.v("Bottle consumption not available for now")
+            // TODO: use service
+            /*bottleRepository.transaction {
                 bottleRepository.consumeBottle(bottleId)
                 bottleRepository.removeTastingForBottle(bottleId)
-                historyRepository.insertHistoryEntryAndFriends(historyEntry, friendIds)
-            }
+                historyRepository.insertHistoryEntry(historyEntry, friendIds)
+            }*/
         }
     }
 

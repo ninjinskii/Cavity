@@ -64,7 +64,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                 tastingRepository.deleteAllTastingActions()
                 reviewRepository.deleteAllFReviews()
                 grapeRepository.deleteAllQGrapes()
-                friendRepository.deleteAllFriendHistoryXRefs()
+                historyRepository.deleteAllFriendHistoryXRefs()
                 tastingRepository.deleteAllTastingFriendXRefs()
 
                 countyRepository.insertCounties(validateResponse(getCounties()))
@@ -78,7 +78,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                 tastingRepository.insertTastingActions(validateResponse(getTastingActions()))
                 reviewRepository.insertFilledReviews(validateResponse(getFReviews()))
                 grapeRepository.insertQGrapes(validateResponse(getQGrapes()))
-                friendRepository.insertFriendHistoryXRefs(validateResponse(getHistoryXFriend()))
+                historyRepository.insertFriendHistoryXRefs(validateResponse(getHistoryXFriend()))
                 tastingRepository.insertTastingFriendXRefs(validateResponse(getTastingXFriend()))
             }
         }

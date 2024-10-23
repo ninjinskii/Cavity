@@ -10,6 +10,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.repository.CountyRepository
 import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
 import com.louis.app.cavity.domain.repository.ReviewRepository
 import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.County
@@ -34,7 +35,7 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
 
     var friendPickingImage: Friend? = null
 
-    fun getCountiesWithWines() = wineRepository.getCountiesWithWines()
+    fun getCountiesWithWines() = countyRepository.getCountiesWithWines()
 
     fun getGrapeWithQuantifiedGrapes() = grapeRepository.getGrapeWithQuantifiedGrapes()
 
@@ -44,14 +45,15 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
 
     fun updateCounty(county: County) {
         viewModelScope.launch(IO) {
-            try {
-                countyRepository.updateCounty(county)
-                _userFeedback.postOnce(R.string.county_renamed)
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_county_name)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.county_already_exists)
+            val result = countyRepository.updateCounty(county)
+            val message = when (result) {
+                is Success -> R.string.county_renamed
+                is AlreadyExists -> R.string.county_already_exists
+                is InvalidName -> R.string.empty_county_name
+                else -> R.string.base_error
             }
+
+            _userFeedback.postOnce(message)
         }
     }
 
@@ -75,14 +77,15 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
 
     fun updateGrape(grape: Grape) {
         viewModelScope.launch(IO) {
-            try {
-                grapeRepository.updateGrape(grape)
-                _userFeedback.postOnce(R.string.grape_renamed)
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_grape_name)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.grape_already_exists)
+            val result = grapeRepository.updateGrape(grape)
+            val message = when (result) {
+                is Success -> R.string.grape_renamed
+                is AlreadyExists -> R.string.grape_already_exists
+                is InvalidName -> R.string.empty_grape_name
+                else -> R.string.base_error
             }
+
+            _userFeedback.postOnce(message)
         }
     }
 

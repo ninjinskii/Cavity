@@ -1,10 +1,13 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import androidx.room.withTransaction
 import com.louis.app.cavity.db.CavityDatabase
+import com.louis.app.cavity.domain.error.ErrorReporter
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Companion.handleDatabaseError
 
 class ReviewRepository private constructor(app: Application) {
     companion object {
@@ -17,30 +20,37 @@ class ReviewRepository private constructor(app: Application) {
             }
     }
 
+    private val errorReporter: ErrorReporter = SentryErrorReporter.getInstance(app)
     private val database = CavityDatabase.getInstance(app)
     private val reviewDao = database.reviewDao()
     private val fReviewDao = database.fReviewDao()
 
-    suspend fun <T> transaction(databaseQueries: suspend () -> T) = database.withTransaction {
-        databaseQueries()
-    }
-
-    suspend fun insertReview(review: Review): Long {
-        if (review.contestName.isBlank()) {
-            throw IllegalArgumentException("Review contestName is blank.")
+    suspend fun insertReview(review: Review): RepositoryUpsertResult<Long> {
+        if (!review.hasValidName()) {
+            return Failure
         }
 
-        return reviewDao.insertReview(review)
+        try {
+            val reviewId = reviewDao.insertReview(review)
+            return Success(reviewId)
+        } catch (e: Exception) {
+            return handleDatabaseError(e, errorReporter)
+        }
     }
 
     suspend fun insertReviews(reviews: List<Review>) = reviewDao.insertReviews(reviews)
 
-    suspend fun updateReview(review: Review) {
-        if (review.contestName.isBlank()) {
-            throw IllegalArgumentException("Review contestName is blank.")
+    suspend fun updateReview(review: Review): RepositoryUpsertResult<Long> {
+        if (!review.hasValidName()) {
+            return Failure
         }
 
-        reviewDao.updateReview(review)
+        try {
+            reviewDao.updateReview(review)
+            return Success(review.id)
+        } catch (e: Exception) {
+            return handleDatabaseError(e, errorReporter)
+        }
     }
 
     suspend fun deleteReview(review: Review) = reviewDao.deleteReview(review)
@@ -49,6 +59,9 @@ class ReviewRepository private constructor(app: Application) {
     fun getReviewWithFilledReviews() = reviewDao.getReviewWithFilledReviews()
     suspend fun getAllFReviewsNotLive() = fReviewDao.getAllFReviewsNotLive()
     suspend fun insertFilledReviews(fReviews: List<FReview>) = fReviewDao.insertFReviews(fReviews)
+
+    fun getFReviewAndReviewForBottle(bottleId: Long) =
+        fReviewDao.getFReviewAndReviewForBottle(bottleId)
 
     suspend fun getFReviewAndReviewForBottleNotLive(bottleId: Long) =
         fReviewDao.getFReviewAndReviewForBottleNotLive(bottleId)

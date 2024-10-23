@@ -6,7 +6,7 @@ import com.louis.app.cavity.domain.error.ErrorReporter
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.network.CavityApiClient
-import com.louis.app.cavity.network.CavityApiService
+import com.louis.app.cavity.network.CavityApi
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.LoginResponse
 import okhttp3.ResponseBody
@@ -34,7 +34,7 @@ class AccountRepository private constructor(private val app: Application) {
 
         CavityApiClient.buildRetrofitInstance(locale, prefsRepository)
             .also { retrofit = it }
-            .create(CavityApiService::class.java)
+            .create(CavityApi::class.java)
     }
 
     private var retrofit: Retrofit? = null

@@ -18,4 +18,6 @@ data class Friend(
 
     override fun getFilePath() = imgPath
     override fun getExternalFilename() = "${this.name}-f${this.id}"
+
+    fun hasValidName() = name.isNotBlank()
 }
