@@ -170,7 +170,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             }
 
             override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {
-                if (currentId == R.id.start) shaper.interpolation = 1f
+                if (currentId == R.id.start) {
+                    shaper.interpolation = 1f
+                }
             }
 
             override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {

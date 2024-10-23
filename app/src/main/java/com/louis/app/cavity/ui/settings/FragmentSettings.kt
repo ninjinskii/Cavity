@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.settings
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
@@ -74,10 +75,8 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
             }
         }
 
-        binding.skewBottle.apply {
-            setOnClickListener {
-                binding.toggleSkew.toggle()
-            }
+        binding.skewBottle.setOnClickListener {
+            binding.toggleSkew.toggle()
         }
 
         binding.toggleErrorReportConsent.apply {
@@ -94,10 +93,35 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
             }
         }
 
-        binding.errorReportConsent.apply {
-            setOnClickListener {
-                binding.toggleErrorReportConsent.toggle()
+        binding.errorReportConsent.setOnClickListener {
+            binding.toggleErrorReportConsent.toggle()
+        }
+
+        binding.togglePreventScreenshots.apply {
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
+
+            isChecked = settingsViewModel.getPreventScreenshots()
+
+            setOnCheckedChangeListener { _, isChecked ->
+                val secureFlag = WindowManager.LayoutParams.FLAG_SECURE
+                val activity = requireActivity()
+
+                if (isChecked) {
+                    activity.window.setFlags(secureFlag, secureFlag)
+                } else {
+                    activity.window.clearFlags(secureFlag)
+                }
+
+                settingsViewModel.setPreventScrenshots(isChecked)
             }
+        }
+
+        binding.preventScreenshots.setOnClickListener {
+            binding.togglePreventScreenshots.toggle()
         }
 
         val templateSize = settingsViewModel.getTemplateSize()

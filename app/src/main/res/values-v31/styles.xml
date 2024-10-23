@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Cavity.SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">?attr/colorSurface</item>
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/anim_cavity_launch</item>
         <item name="windowSplashScreenAnimationDuration">2200</item>
         <item name="postSplashScreenTheme">@style/CavityTheme</item>

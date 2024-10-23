@@ -141,9 +141,11 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
             doApiCall(
                 call = { accountRepository.deleteAccount(account.email, password) },
                 onSuccess = {
-                    _deletedEvent.postOnce(Unit)
+                    inConfirmationUser = null
                     prefsRepository.setLastLogin("")
+                    prefsRepository.setApiToken("")
                     errorReporter.removeScopeTag(ErrorReporter.USERNAME_ERROR_TAG)
+                    _deletedEvent.postOnce(Unit)
                 }
             )
         }

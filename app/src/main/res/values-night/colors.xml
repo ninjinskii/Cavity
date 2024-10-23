@@ -10,10 +10,13 @@
     <color name="divider_color">#12ffffff</color>
 
     <color name="title_background">#86121212</color>
+    <color name="wine_text_background">#00000000</color>
 
     <color name="thumb_plain">@color/surface_elevation_4dp</color>
 
     <color name="under_backdrop">#121212</color>
+
+    <color name="splash_background">#121212</color>
 
     <bool name="light_statusbar">false</bool>
 </resources>

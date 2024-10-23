@@ -34,6 +34,7 @@
     <color name="divider_color">#12000000</color>
 
     <color name="title_background">#86ffffff</color>
+    <color name="wine_text_background">#33282828</color>
 
     <color name="scrim">#50000000</color>
 
@@ -42,6 +43,7 @@
     <color name="under_backdrop">@color/under_surface</color>
 
     <color name="android_7_splash_background">#121212</color>
+    <color name="splash_background">#ffffff</color>
 
     <bool name="light_statusbar">true</bool>
 </resources>

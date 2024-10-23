@@ -7,7 +7,7 @@
     android:background="@null"
     android:transitionName="appbar">
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <com.louis.app.cavity.ui.home.widget.ForwardTouchToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"

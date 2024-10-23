@@ -11,14 +11,15 @@ import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.util.TransitionHelper
 
 class WineRecyclerAdapter(
+    private val drawables: Pair<Drawable, Drawable>,
     private val transitionHelper: TransitionHelper,
-    private val drawables: Pair<Drawable, Drawable>
+    private val isLightTheme: Boolean
 ) :
     ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return WineViewHolder(binding, transitionHelper, drawables)
+        return WineViewHolder(binding, drawables, transitionHelper, isLightTheme)
     }
 
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) {

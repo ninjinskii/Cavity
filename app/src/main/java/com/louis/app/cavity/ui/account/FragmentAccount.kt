@@ -127,6 +127,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         loginViewModel.deletedEvent.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
                 importExportViewModel.cleanAccountDatabase()
+                loginViewModel.logout()
             }
         }
 

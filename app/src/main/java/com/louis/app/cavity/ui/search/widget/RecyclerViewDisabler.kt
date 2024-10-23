@@ -14,5 +14,5 @@ class RecyclerViewDisabler(private val onDisableRecyclerTouch: () -> Unit) : OnI
         }
     }
 
-    override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+    override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) = Unit
 }
