@@ -1,0 +1,5 @@
+- You can now turn on torch when taking pictures
+- New privacy setting allowing you to block screenshots and hide screen when a app is in background
+- Fix region not autoselecting when adding a new wine
+- Add a blur background effect to wine text (Android > 12)
+- Various UI fixes and improvements
