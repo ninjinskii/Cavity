@@ -18,7 +18,7 @@ class EffectImageView @JvmOverloads constructor(
 ) :
     AppCompatImageView(context, attrs, defStyleAttr) {
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @RequiresApi(Build.VERSION_CODES.S)
     private val underlyingContentNode = RenderNode("underlying-content")
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -26,7 +26,7 @@ class EffectImageView @JvmOverloads constructor(
 
     private val targets = mutableListOf<Pair<View, RenderNode>>()
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @RequiresApi(Build.VERSION_CODES.S)
     fun setTargets(views: List<View>) {
         this.targets.clear()
         this.targets.addAll(views.map { it to RenderNode("blur-${it.id}") })
