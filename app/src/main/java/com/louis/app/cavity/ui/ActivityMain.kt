@@ -14,7 +14,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnLayout
+import androidx.core.view.doOnNextLayout
 import androidx.core.view.forEach
+import androidx.core.view.marginEnd
+import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +36,8 @@ import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.tasting.TastingViewModel
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.L
+import com.louis.app.cavity.util.doOnEachNextLayout
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.themeColor
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +66,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
 
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
+        applyInsets()
         polishAppSwitcherApparence()
         setupNavigation()
         observe()
@@ -107,6 +116,27 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
                 }
             }
         )
+    }
+
+    private fun applyInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.navView) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+
+            view.updatePadding(top = insets.top, left = insets.left, bottom = insets.bottom)
+        /*    view.doOnLayout {
+                view.layoutParams.width = it.width + insets.left
+                view.requestLayout()
+            }*/
+
+            WindowInsetsCompat.CONSUMED
+        }
+
+        /*binding.navView.doOnLayout {
+            it.layoutParams.width = it.width + leftInset
+            it.requestLayout()
+        }*/
     }
 
     // We have to support old android 7.1 TaskDescription constructor

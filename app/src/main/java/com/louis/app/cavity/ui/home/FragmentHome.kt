@@ -6,9 +6,16 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
+import androidx.core.view.marginRight
+import androidx.core.view.marginStart
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -25,6 +32,7 @@ import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.*
+import kotlin.math.max
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
 
@@ -76,10 +84,94 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             setupNavigation(binding.appBar.toolbar, hasNavigationRail)
         }
 
+        applyInsets()
         setupScrollableTab()
         setViewPagerOrientation()
         observe()
         setListeners()
+    }
+
+    private fun applyInsets() {
+        val scrollableTabPadding = binding.tab.paddingBottom
+        ViewCompat.setOnApplyWindowInsetsListener(binding.tab) { view, windowInsets ->
+            val gestureInsets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            ).bottom
+
+            view.updatePadding(bottom = gestureInsets + scrollableTabPadding)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        val root = binding.countyDetails.constraint
+        val rootPadding = root.paddingBottom
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, windowInsets ->
+            val gestureInsets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            ).bottom
+
+            view.updatePadding(bottom = gestureInsets + rootPadding)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        (binding.viewPager.getChildAt(0) as? RecyclerView)?.let {
+            it.clipToPadding = false
+            ViewCompat.setOnApplyWindowInsetsListener(it) { view, windowInsets ->
+                val systemBarsInsets = windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+                )
+
+                // Inset both left & right in case of inset to prevent content from note being centered
+                view.updatePadding(
+                    left = max(systemBarsInsets.left, systemBarsInsets.right),
+                    right = max(systemBarsInsets.left, systemBarsInsets.right)
+                )
+
+                val isTabletLayout = resources.getBoolean(R.bool.flat_hexagones)
+                if (isTabletLayout) WindowInsetsCompat.CONSUMED else windowInsets
+            }
+        }
+
+        val toolbar = binding.appBar.toolbarLayout
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+
+            // Inset both left & right in case of inset to prevent content from note being centered
+            view.updatePadding(
+                left = max(insets.left, insets.right),
+                right = max(insets.left, insets.right),
+                top = insets.top
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+
+        binding.menuBackground?.let {
+            var menuBackgrorundX: Float? = null
+            ViewCompat.setOnApplyWindowInsetsListener(it) { view, windowInsets ->
+                val insets = windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+                )
+
+                view.x =
+                    (menuBackgrorundX ?: it.x.also { x ->
+                        menuBackgrorundX = x
+                    }) + max(insets.left, insets.right) + it.marginStart
+                WindowInsetsCompat.CONSUMED
+            }
+        }
+
+        val fabMargin = binding.fab.marginRight
+        ViewCompat.setOnApplyWindowInsetsListener(binding.fab) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.updateMargins(right = fabMargin + max(insets.left, insets.right))
+
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun setupScrollableTab() {

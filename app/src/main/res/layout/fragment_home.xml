@@ -25,15 +25,14 @@
             android:id="@+id/titleBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/small_margin"
             android:background="@drawable/shape_background_title"
+            android:padding="@dimen/small_margin"
             android:text="@string/app_name"
-            android:textColor="@android:color/transparent"
             android:textAppearance="?attr/textAppearanceHeadline5"
-            app:layout_constraintBottom_toBottomOf="@id/appBar"
+            android:textColor="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="@id/appBar"
             app:layout_constraintStart_toStartOf="@id/appBar"
-            app:layout_constraintTop_toTopOf="@id/appBar" />
+            app:layout_constraintTop_toTopOf="@id/menuBackground" />
 
         <TextView
             android:id="@+id/menuBackground"
@@ -43,8 +42,7 @@
             android:background="@drawable/shape_background_title"
             android:textColor="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="@id/appBar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/appBar" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <include
             android:id="@+id/appBar"

@@ -5,14 +5,14 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
-    compileSdk 34
+    compileSdk 35
     namespace "com.louis.app.cavity"
     testNamespace "com.louis.app.testcavity"
 
     defaultConfig {
         applicationId "com.louis.app.cavity"
         minSdkVersion 24
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 30
         versionName "1.7.1"
 

@@ -6,6 +6,9 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
@@ -24,8 +27,21 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWinesBinding.bind(view)
 
+        applyInsets()
         initRecyclerView()
         setListeners()
+    }
+
+    private fun applyInsets() {
+        val wineListPadding = binding.wineList.paddingTop
+        ViewCompat.setOnApplyWindowInsetsListener(binding.wineList) { view, windowInsets ->
+            val actionBarInsets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.systemGestures()
+            ).top
+
+            view.updatePadding(top = actionBarInsets + wineListPadding)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initRecyclerView() {

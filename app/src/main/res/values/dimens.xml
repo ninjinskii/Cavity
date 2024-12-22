@@ -23,6 +23,7 @@
 
     <dimen name="hexagonal_fab_width">56dp</dimen>
     <dimen name="margin_hexagone_text">0dp</dimen>
+    <dimen name="margin_hexagone_icon">@dimen/medium_margin</dimen>
 
     <dimen name="review_height">120dp</dimen>
 
