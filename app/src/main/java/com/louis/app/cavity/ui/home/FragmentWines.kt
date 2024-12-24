@@ -36,7 +36,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         val wineListPadding = binding.wineList.paddingTop
         ViewCompat.setOnApplyWindowInsetsListener(binding.wineList) { view, windowInsets ->
             val actionBarInsets = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.systemGestures()
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
             ).top
 
             view.updatePadding(top = actionBarInsets + wineListPadding)

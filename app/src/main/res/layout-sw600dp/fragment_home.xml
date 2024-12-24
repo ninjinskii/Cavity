@@ -22,23 +22,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/titleBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_background_title"
-            android:padding="@dimen/small_margin"
-            android:text="@string/app_name"
-            android:textAppearance="?attr/textAppearanceHeadline5"
-            android:textColor="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="@id/appBar"
-            app:layout_constraintStart_toStartOf="@id/appBar"
-            app:layout_constraintTop_toTopOf="@id/appBar" />
-
         <include
             android:id="@+id/appBar"
             layout="@layout/app_bar" />
-
 
         <com.louis.app.cavity.ui.home.widget.ScrollableTab
             android:id="@+id/tab"

@@ -21,33 +21,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/titleBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_background_title"
-            android:padding="@dimen/small_margin"
-            android:text="@string/app_name"
-            android:textAppearance="?attr/textAppearanceHeadline5"
-            android:textColor="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="@id/appBar"
-            app:layout_constraintStart_toStartOf="@id/appBar"
-            app:layout_constraintTop_toTopOf="@id/menuBackground" />
-
-        <TextView
-            android:id="@+id/menuBackground"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="@dimen/small_margin"
-            android:background="@drawable/shape_background_title"
-            android:textColor="@android:color/transparent"
-            app:layout_constraintBottom_toBottomOf="@id/appBar"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <include
             android:id="@+id/appBar"
             layout="@layout/app_bar" />
-
 
         <com.louis.app.cavity.ui.home.widget.ScrollableTab
             android:id="@+id/tab"

@@ -12,8 +12,6 @@ import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.core.view.marginRight
-import androidx.core.view.marginStart
-import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
@@ -99,7 +97,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             ).bottom
 
             view.updatePadding(bottom = gestureInsets + scrollableTabPadding)
-            WindowInsetsCompat.CONSUMED
+            windowInsets
         }
 
         val root = binding.countyDetails.constraint
@@ -110,12 +108,13 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             ).bottom
 
             view.updatePadding(bottom = gestureInsets + rootPadding)
-            WindowInsetsCompat.CONSUMED
+            windowInsets
         }
 
         (binding.viewPager.getChildAt(0) as? RecyclerView)?.let {
             it.clipToPadding = false
             ViewCompat.setOnApplyWindowInsetsListener(it) { view, windowInsets ->
+                val isTabletLayout = resources.getBoolean(R.bool.flat_hexagones)
                 val systemBarsInsets = windowInsets.getInsets(
                     WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
                 )
@@ -123,10 +122,11 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 // Inset both left & right in case of inset to prevent content from note being centered
                 view.updatePadding(
                     left = max(systemBarsInsets.left, systemBarsInsets.right),
-                    right = max(systemBarsInsets.left, systemBarsInsets.right)
+                    right = max(systemBarsInsets.left, systemBarsInsets.right),
+                    top = if (isTabletLayout) systemBarsInsets.top else view.paddingTop,
+                    bottom = if (isTabletLayout) systemBarsInsets.top else view.paddingTop, // checker si on est sur de vouloir tout en top ici alors quon est sur la propriété bottom
                 )
 
-                val isTabletLayout = resources.getBoolean(R.bool.flat_hexagones)
                 if (isTabletLayout) WindowInsetsCompat.CONSUMED else windowInsets
             }
         }
@@ -143,22 +143,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 right = max(insets.left, insets.right),
                 top = insets.top
             )
-            WindowInsetsCompat.CONSUMED
-        }
 
-        binding.menuBackground?.let {
-            var menuBackgrorundX: Float? = null
-            ViewCompat.setOnApplyWindowInsetsListener(it) { view, windowInsets ->
-                val insets = windowInsets.getInsets(
-                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-                )
-
-                view.x =
-                    (menuBackgrorundX ?: it.x.also { x ->
-                        menuBackgrorundX = x
-                    }) + max(insets.left, insets.right) + it.marginStart
-                WindowInsetsCompat.CONSUMED
-            }
+            windowInsets
         }
 
         val fabMargin = binding.fab.marginRight
@@ -170,7 +156,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
             layoutParams.updateMargins(right = fabMargin + max(insets.left, insets.right))
 
-            WindowInsetsCompat.CONSUMED
+            windowInsets
         }
     }
 
