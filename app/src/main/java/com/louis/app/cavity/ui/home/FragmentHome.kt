@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
@@ -16,7 +15,6 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
@@ -30,7 +28,6 @@ import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.*
-import kotlin.math.max
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
 
@@ -91,40 +88,31 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     private fun applyInsets() {
         val scrollableTabPadding = binding.tab.paddingBottom
-        ViewCompat.setOnApplyWindowInsetsListener(binding.tab) { view, windowInsets ->
-            val gestureInsets = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-            ).bottom
-
-            view.updatePadding(bottom = gestureInsets + scrollableTabPadding)
+        binding.tab.prepareWindowInsets { view, windowInsets, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom + scrollableTabPadding)
             windowInsets
         }
 
         val root = binding.countyDetails.constraint
         val rootPadding = root.paddingBottom
-        ViewCompat.setOnApplyWindowInsetsListener(root) { view, windowInsets ->
-            val gestureInsets = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-            ).bottom
 
-            view.updatePadding(bottom = gestureInsets + rootPadding)
+        root.prepareWindowInsets { view, windowInsets, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom + rootPadding)
             windowInsets
         }
 
         (binding.viewPager.getChildAt(0) as? RecyclerView)?.let {
             it.clipToPadding = false
-            ViewCompat.setOnApplyWindowInsetsListener(it) { view, windowInsets ->
-                val isTabletLayout = resources.getBoolean(R.bool.flat_hexagones)
-                val systemBarsInsets = windowInsets.getInsets(
-                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-                )
 
-                // Inset both left & right in case of inset to prevent content from note being centered
+            // Force symetrical horizontal insets
+            it.prepareWindowInsets(true) { view, windowInsets, left, top, right, bottom ->
+                val isTabletLayout = resources.getBoolean(R.bool.flat_hexagones)
+
                 view.updatePadding(
-                    left = max(systemBarsInsets.left, systemBarsInsets.right),
-                    right = max(systemBarsInsets.left, systemBarsInsets.right),
-                    top = if (isTabletLayout) systemBarsInsets.top else view.paddingTop,
-                    bottom = if (isTabletLayout) systemBarsInsets.top else view.paddingTop, // checker si on est sur de vouloir tout en top ici alors quon est sur la propriété bottom
+                    left = left,
+                    right = right,
+                    top = if (isTabletLayout) top else view.paddingTop,
+                    bottom = if (isTabletLayout) bottom else view.paddingBottom
                 )
 
                 if (isTabletLayout) WindowInsetsCompat.CONSUMED else windowInsets
@@ -132,30 +120,15 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
 
         val toolbar = binding.appBar.toolbarLayout
-        ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, windowInsets ->
-            val insets = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-            )
-
-            // Inset both left & right in case of inset to prevent content from note being centered
-            view.updatePadding(
-                left = max(insets.left, insets.right),
-                right = max(insets.left, insets.right),
-                top = insets.top
-            )
-
+        toolbar.prepareWindowInsets(true) { view, windowInsets, left, top, right, _ ->
+            view.updatePadding(left = left, right = right, top = top)
             windowInsets
         }
 
         val fabMargin = binding.fab.marginRight
-        ViewCompat.setOnApplyWindowInsetsListener(binding.fab) { view, windowInsets ->
-            val insets = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-            )
-
+        binding.fab.prepareWindowInsets (true) { view, windowInsets, _, _, right, _ ->
             val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-            layoutParams.updateMargins(right = fabMargin + max(insets.left, insets.right))
-
+            layoutParams.updateMargins(right = fabMargin + right)
             windowInsets
         }
     }
@@ -306,9 +279,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     fun navigateToAddWine(countyId: Long) {
         transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
 
-        val extra = FragmentNavigatorExtras(binding.appBar.root to "appbar")
         val action = FragmentHomeDirections.homeToAddWine(countyId = countyId)
-        findNavController().navigate(action, extra)
+        findNavController().navigate(action)
     }
 
     fun getRecycledViewPool() = recyclePool

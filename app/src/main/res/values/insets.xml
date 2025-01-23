@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Force content to have same left & right insets to keep content centered -->
+    <bool name="equalize_left_and_right_insets">true</bool>
+</resources>
