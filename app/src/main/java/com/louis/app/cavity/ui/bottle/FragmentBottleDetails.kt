@@ -13,7 +13,6 @@ import android.widget.Checkable
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
@@ -178,14 +177,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             windowInsets
         }
 
-        binding.container?.prepareWindowInsets(false) { view, _, left, top, right, bottom ->
+        binding.container?.prepareWindowInsets(false)
+        { view, windowInsets, left, top, right, bottom ->
             view.updatePadding(left = left, top = top, right = right)
 
             val marginLayoutParams =
                 binding.bottlesList.layoutParams as ViewGroup.MarginLayoutParams
             marginLayoutParams.updateMargins(bottom = bottom)
 
-            WindowInsetsCompat.CONSUMED
+            windowInsets
         }
     }
 

@@ -112,9 +112,11 @@
                 app:shapeAppearance="@style/ShapeAppearanceOverlay.Cavity.Backdrop">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/headerConstraint"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/surface_elevation_4dp">
+                    android:background="@color/surface_elevation_4dp"
+                    android:paddingHorizontal="12dp">
 
                     <com.robinhood.ticker.TickerView
                         android:id="@+id/matchingWines"
@@ -167,6 +169,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@color/surface_elevation_4dp"
+                android:clipToPadding="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"

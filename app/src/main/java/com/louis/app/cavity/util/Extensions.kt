@@ -14,9 +14,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.use
-import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.marginBottom
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
+import androidx.core.view.marginTop
 import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -99,6 +102,14 @@ fun NestedScrollView.isViewVisible(view: View): Boolean {
 
 fun Context.dpToPx(dp: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
+}
+
+fun View.extractPadding(): Rect {
+    return Rect(paddingLeft, paddingTop, paddingRight, paddingBottom)
+}
+
+fun View.extractMargin(): Rect {
+    return Rect(marginLeft, marginTop, marginRight, marginBottom)
 }
 
 // Took care of it for Adroid API >= 34

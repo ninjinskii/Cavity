@@ -8,14 +8,19 @@ import android.view.animation.AnimationUtils
 import android.view.animation.RotateAnimation
 import android.view.inputmethod.EditorInfo
 import android.widget.Checkable
+import android.widget.HorizontalScrollView
 import androidx.activity.addCallback
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
+import androidx.core.view.doOnAttach
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
@@ -37,6 +42,7 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.search.filters.*
+import com.louis.app.cavity.ui.search.widget.InsettableInfo
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.*
@@ -87,6 +93,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private val hideShadowAnim by lazy { loadHideShadowAnim() }
     private var isHeaderShadowDisplayed = false
     private var isPickMode = false
+    private var insetBottom = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -123,6 +130,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
         }
 
+        applyInsets()
         initRecyclerView()
         initTickerView()
         setupMenu()
@@ -133,6 +141,102 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         lifecycleScope.launch {
             delay(800)
             inflateFiltersStub(searchViewModel.onFragmentLeaveSavedState ?: savedInstanceState)
+        }
+    }
+
+    private fun applyInsets() {
+        binding.main.prepareWindowInsets { view, windowInsets, _, top, _, bottom ->
+            insetBottom = bottom
+            view.updatePadding(top = top)
+            windowInsets
+        }
+
+        binding.motionToolbar.prepareWindowInsets { view, _, left, _, right, _ ->
+            view.updatePadding(left = left, right = right)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        /*binding.bottomSheet.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.updateMargins(left = left, right = right)
+            windowInsets
+        }*/
+
+        binding.headerConstraint.prepareWindowInsets { view, _, left, _, right, _ ->
+            view.updatePadding(left = left, right = right)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        binding.bottleList.prepareWindowInsets(false) { view, _, left, _, right, bottom ->
+            view.updatePadding(left = left, right = right, bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        /* binding.bottomSheet.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+             view.updatePadding(left = left, right = right)
+             WindowInsetsCompat.CONSUMED
+         }*/
+
+        // We want to inset individually each views in the layout to ensure horizontal scroll view
+        // are edge to edge. At the date of this comment, this is the only screen that takes care
+        // of horizontal scroll view edge to edge.
+        binding.filtersStub.setOnInflateListener { _, inflatedView ->
+            inflatedView.doOnAttach {
+                val leftRightInsettable = intArrayOf(
+                    R.id.chipSelected, R.id.countyScrollView, R.id.colorScrollView,
+                    R.id.otherScrollView, R.id.divider1, R.id.vintageTitle, R.id.vintageSlider,
+                    R.id.divider2, R.id.dateTitle, R.id.divider3, R.id.priceTitle, R.id.priceSlider,
+                    R.id.warning, R.id.divider4, R.id.grapeTitle, R.id.grapeScrollView,
+                    R.id.divider5, R.id.reviewTitle, R.id.reviewScrollView, R.id.divider6,
+                    R.id.divider7, R.id.friendTitle, R.id.friendScrollView, R.id.bottleSizeTitle
+                ).map { InsettableInfo(inflatedView.findViewById(it)) }
+
+                val leftInsettable = intArrayOf(R.id.beyondLayout)
+                    .map { InsettableInfo(inflatedView.findViewById(it)) }
+
+                val rightInsettable =
+                    intArrayOf(R.id.untilLayout, R.id.togglePrice, R.id.cycleFriendFilter)
+                        .map { InsettableInfo(inflatedView.findViewById(it)) }
+
+                inflatedView.prepareWindowInsets { view, _, left, _, right, bottom ->
+                    // Udpdates stub root scroll view bottom padding
+                    view.updatePadding(bottom = bottom)
+
+                    leftRightInsettable.forEach {
+                        val layoutParams = it.view.layoutParams as ViewGroup.MarginLayoutParams
+
+                        when (it.view) {
+                            is RangeSlider ->
+                                layoutParams.updateMargins(
+                                    left = left + it.initialMargin.left,
+                                    right = right + it.initialMargin.right
+                                )
+
+                            is HorizontalScrollView ->
+                                it.view.updatePadding(
+                                    left = left + it.initialPadding.left,
+                                    right = right + it.initialPadding.right
+                                )
+
+                            else -> it.view.updatePadding(left = left, right = right)
+                        }
+                    }
+
+                    leftInsettable.forEach {
+                        it.view.updatePadding(left = left)
+                    }
+
+                    rightInsettable.forEach {
+                        val layoutParams = it.view.layoutParams as ViewGroup.MarginLayoutParams
+                        layoutParams.updateMargins(right = right + it.initialMargin.right)
+                    }
+
+                    WindowInsetsCompat.CONSUMED
+                }
+
+                // Apply insets manually on stub view
+                inflatedView.requestApplyInsets()
+            }
         }
     }
 
@@ -163,7 +267,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         val filtersBottom = filtersBinding.reviewScrollView.bottom
         val fill = height - filtersBottom - backdropHeaderHeight
 
-        val peekHeight = max(backdropHeaderHeight, fill)
+        val peekHeight = max(backdropHeaderHeight + insetBottom, fill)
         bottomSheetBehavior?.setPeekHeight(peekHeight, true)
     }
 
@@ -542,7 +646,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 if (id == R.id.end) {
                     binding.searchView.showKeyboard()
                     if (binding.toggleBackdrop.isChecked) {
-                        bottomSheetBehavior?.peekHeight = backdropHeaderHeight
+                        bottomSheetBehavior?.peekHeight = backdropHeaderHeight + insetBottom
                     }
                 } else {
                     setBottomSheetPeekHeight()

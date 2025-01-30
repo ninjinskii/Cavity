@@ -3,6 +3,8 @@ package com.louis.app.cavity.ui.addbottle
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
@@ -15,6 +17,7 @@ import com.louis.app.cavity.ui.addbottle.viewmodel.ReviewManager
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.hideKeyboard
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard
 
@@ -32,9 +35,17 @@ class FragmentInquireReviews : Step(R.layout.fragment_inquire_review) {
 
         reviewManager = addBottleViewModel.reviewManager
 
+        applyInsets()
         initRecyclerView()
         observe()
         setListeners()
+    }
+
+    private fun applyInsets() {
+        binding.reviewList.prepareWindowInsets { view, _, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initRecyclerView() {

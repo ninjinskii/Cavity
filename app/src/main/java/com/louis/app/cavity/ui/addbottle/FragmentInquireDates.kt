@@ -3,6 +3,8 @@ package com.louis.app.cavity.ui.addbottle
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
@@ -15,6 +17,7 @@ import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import java.util.*
 
@@ -27,19 +30,26 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
         ownerProducer = { requireParentFragment() }
     )
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireDatesBinding.bind(view)
 
         dateManager = addBottleViewModel.dateManager
 
+        applyInsets()
         initNumberPickers()
         initQuantityRule()
         initCurrencyDropdown()
         initBuyLocationDropdown()
         setListeners()
         observe()
+    }
+
+    private fun applyInsets() {
+        binding.nestedScrollView.prepareWindowInsets { view, _, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initNumberPickers() {
