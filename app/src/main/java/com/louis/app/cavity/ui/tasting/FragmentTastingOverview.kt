@@ -2,8 +2,12 @@ package com.louis.app.cavity.ui.tasting
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,6 +21,7 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addtasting.SpaceGridItemDecoration
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
@@ -51,9 +56,29 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         setupNavigation(binding.appBar.toolbar)
         tastingOverviewViewModel.start(args.tastingId)
 
+        applyInsets()
         initRecyclerView()
         observe()
         setListeners()
+    }
+
+    private fun applyInsets() {
+        binding.appBar.toolbarLayout.prepareWindowInsets { view, _, left, top, right, _ ->
+            view.updatePadding(left = left, right = right, top = top)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        binding.bottleTastingActionsList.prepareWindowInsets { view, _, left, _, right, bottom ->
+            view.updatePadding(left = left, right = right, bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        binding.buttonSubmit.prepareWindowInsets { view, _, left, _, right, _ ->
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.updateMargins(left = left, right = right)
+
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initRecyclerView() {
@@ -61,7 +86,10 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
         val tastingOverviewAdapter = BottleActionAdapter(
             onActionCheckedChange = { tastingAction, isChecked ->
                 if (isChecked) {
-                    NotificationBuilder.cancelNotification(requireContext(), tastingAction.id.toInt())
+                    NotificationBuilder.cancelNotification(
+                        requireContext(),
+                        tastingAction.id.toInt()
+                    )
                 } else {
                     tastingOverviewViewModel.requestNotificationsForTastingAction(
                         requireContext(),
@@ -119,6 +147,8 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
                 .setMessage(R.string.confirm_tasting_explanation)
                 .setPositiveButton(R.string.ok) { _, _ ->
                     tastingOverviewViewModel.confirmTasting()
+                }
+                .setNegativeButton(R.string.cancel) { _, _ ->
                 }
                 .show()
         }

@@ -2,6 +2,8 @@ package com.louis.app.cavity.ui.manager.grape
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +14,7 @@ import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.FragmentManager
 import com.louis.app.cavity.ui.manager.ManagerViewModel
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 
 class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
@@ -28,8 +31,21 @@ class FragmentManageGrape : Fragment(R.layout.fragment_manage_base) {
 
         simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
 
+        applyInsets()
         initRecyclerView()
         initEmptyState()
+    }
+
+    private fun applyInsets() {
+        binding.coordinator.prepareWindowInsets { view, windowInsets, left, _, right, _ ->
+            view.updatePadding(left = left, right = right)
+            windowInsets
+        }
+
+        binding.recyclerView.prepareWindowInsets { view, _, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initRecyclerView() {

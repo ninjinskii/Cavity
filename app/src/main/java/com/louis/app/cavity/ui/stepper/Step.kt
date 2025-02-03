@@ -20,5 +20,9 @@ abstract class Step(@LayoutRes layout: Int) : Fragment(layout) {
         }
     }
 
+    fun setPeekSiblingsSteps(peekSiblingsSteps: Boolean) {
+        stepperFragment?.setPeekSiblingsSteps(peekSiblingsSteps)
+    }
+
     open fun requestNextPage() = true
 }

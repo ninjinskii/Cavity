@@ -5,7 +5,9 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.button.MaterialButton
@@ -16,6 +18,7 @@ import com.louis.app.cavity.databinding.FragmentSettingsBinding
 import com.louis.app.cavity.db.PrefsRepository.Companion.MIN_TEMPLATE_SCALE
 import com.louis.app.cavity.ui.addwine.FragmentCamera.Companion.TEMPLATE_ROTATION
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
@@ -41,11 +44,24 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
 
         setupNavigation(binding.appBar.toolbar)
 
+        applyInsets()
         observe()
         setListeners()
         setupSliderFormatter()
         setupCurrencyButtons()
         setupAppVersion()
+    }
+
+    private fun applyInsets() {
+        binding.scrollView.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+            view.updatePadding(left = left, right = right, bottom = bottom, top = top)
+            windowInsets
+        }
+
+        binding.appVersion.prepareWindowInsets(false) { view, _, _, _, right, bottom ->
+            view.updatePadding(right = right, bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun observe() {

@@ -2,6 +2,8 @@ package com.louis.app.cavity.ui.addtasting
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,6 +13,7 @@ import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
@@ -33,18 +36,34 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
 
         snackbarProvider = activity as SnackbarProvider
 
+        applyInsets()
         initRecylerView()
         observe()
-        setListener()
+        setupToolbar()
+    }
+
+    private fun applyInsets() {
+        binding.appBar.toolbarLayout.prepareWindowInsets { view, _, left, _, right, _ ->
+            view.updatePadding(left = left, right = right)
+            WindowInsetsCompat.CONSUMED
+        }
+
+
+
+        binding.tastingBottleList.prepareWindowInsets { view, _, left, _, right, bottom ->
+            view.updatePadding(bottom = bottom, left = left, right = right)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initRecylerView() {
         val tastingBottleAdapter = TastingBottleAdapter()
         val space = requireContext().resources.getDimension(R.dimen.small_margin)
+        val colCount = resources.getInteger(R.integer.grid_cols)
 
         binding.tastingBottleList.apply {
             adapter = tastingBottleAdapter
-            layoutManager = GridLayoutManager(requireContext(), 1)
+            layoutManager = GridLayoutManager(requireContext(), colCount)
             setHasFixedSize(true)
             addItemDecoration(SpaceGridItemDecoration(space.toInt()))
         }
@@ -78,19 +97,30 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
         }
     }
 
-    private fun setListener() {
-        binding.buttonSubmit.setOnClickListener {
-            if (needConfirmDialog()) {
-                LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
-                    .setMessage(R.string.confirm_switch_tasting)
-                    .setPositiveButton(R.string.ok) { _, _ ->
-                        addTastingViewModel.saveTasting()
-                    }
-                    .show()
-            } else {
-                addTastingViewModel.saveTasting()
-            }
+    private fun setupToolbar() {
+        binding.appBar.toolbar.apply {
+            inflateMenu(R.menu.confirm_menu)
+            setOnMenuItemClickListener { menuItem ->
+                if (menuItem.itemId == R.id.buttonSubmit) {
+                    submitTasting()
+                    return@setOnMenuItemClickListener true
+                }
 
+                false
+            }
+        }
+    }
+
+    private fun submitTasting() {
+        if (needConfirmDialog()) {
+            LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
+                .setMessage(R.string.confirm_switch_tasting)
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    addTastingViewModel.saveTasting()
+                }
+                .show()
+        } else {
+            addTastingViewModel.saveTasting()
         }
     }
 

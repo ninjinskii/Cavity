@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.graphics.Insets
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
@@ -34,6 +35,8 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     abstract val showStepperProgress: Boolean
     abstract val steps: List<() -> Step>
 
+    private var peekSiblingSteps = true
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentStepperBinding.bind(view)
@@ -46,28 +49,34 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     }
 
     private fun applyInsets() {
-
         val initialPreviousMargin = topBinding.previous.marginLeft
         val initialNextMargin = topBinding.previous.marginRight
 
-        topBinding.root.prepareWindowInsets { view, windowInsets, left, top, right, _ ->
+        topBinding.root.prepareWindowInsets { view, _, left, top, right, bottom ->
             view.updatePadding(top = top)
             (topBinding.previous.layoutParams as ViewGroup.MarginLayoutParams)
                 .updateMargins(left = initialPreviousMargin + left)
             (topBinding.next.layoutParams as ViewGroup.MarginLayoutParams)
                 .updateMargins(right = initialNextMargin + right)
 
-            windowInsets
+            // We took care of top inset, so we dont propagate it to children
+            WindowInsetsCompat.Builder().setInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout(),
+                Insets.of(left, 0, right, bottom)
+            ).build()
         }
 
-        binding.viewPager.prepareWindowInsets { view, _, left, top, right, bottom ->
-            val recyclerView = (view as? ViewGroup)?.getChildAt(0) as RecyclerView
-            recyclerView.apply {
+        binding.viewPager.prepareWindowInsets { view, windowInsets, left, _, right, _ ->
+            val recyclerView = (view as? ViewGroup)?.getChildAt(0) as? RecyclerView
+            recyclerView?.apply {
                 clipToPadding = false
-                updatePadding(left = left, right = right)
+                updatePadding(
+                    left = if (peekSiblingSteps) left else 0,
+                    right = if (peekSiblingSteps) right else 0
+                )
             }
 
-            WindowInsetsCompat.CONSUMED
+            windowInsets
         }
     }
 
@@ -125,6 +134,12 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun setPeekSiblingsSteps(peekSiblingsSteps: Boolean) {
+        this.peekSiblingSteps = peekSiblingsSteps
+        binding.root.requestApplyInsets()
+
     }
 
     fun goToNextPage(): Int {

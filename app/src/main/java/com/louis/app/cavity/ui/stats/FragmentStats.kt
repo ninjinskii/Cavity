@@ -5,6 +5,9 @@ import android.view.View
 import android.view.animation.BounceInterpolator
 import android.view.animation.Interpolator
 import android.view.animation.PathInterpolator
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,11 +19,11 @@ import com.louis.app.cavity.databinding.FragmentStatsBinding
 import com.louis.app.cavity.db.dao.Year
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentStats : Fragment(R.layout.fragment_stats) {
-    private lateinit var statsPagerAdapter: StatsPagerAdapter
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
     private val statsViewModel: StatsViewModel by viewModels()
@@ -40,12 +43,36 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 
         setupNavigation(binding.toolbar)
 
+        applyInsets()
         setupScrollableTab()
         setupViewPager()
         setupToolbar()
         initRecyclerViews()
         observe()
         hintViewPagerSlide()
+    }
+
+    private fun applyInsets() {
+        binding.appBar.prepareWindowInsets { view, _, left, top, right, _ ->
+            view.updatePadding(left = left, right = right, top = top)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        val isLandLayout = binding.patch != null
+
+        binding.statDetailsList.prepareWindowInsets { view, _, _, _, _, bottom ->
+            val padding = if (binding.years.isVisible && isLandLayout) 0 else bottom
+            view.updatePadding(bottom = padding)
+
+            WindowInsetsCompat.CONSUMED
+        }
+
+        if (isLandLayout) {
+            binding.years.prepareWindowInsets { view, _, _, _, _, bottom ->
+                view.updatePadding(bottom = bottom)
+                WindowInsetsCompat.CONSUMED
+            }
+        }
     }
 
     private fun setupScrollableTab() {
@@ -72,14 +99,16 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     }
 
     private fun setupViewPager() {
-        statsPagerAdapter = StatsPagerAdapter(this)
+        val statsPagerAdapter = StatsPagerAdapter(this, viewLifecycleOwner)
 
-        binding.viewPager.adapter = statsPagerAdapter
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                statsViewModel.notifyPageChanged(position)
-            }
-        })
+        binding.viewPager.apply {
+            adapter = statsPagerAdapter
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    statsViewModel.notifyPageChanged(position)
+                }
+            })
+        }
     }
 
     private fun setupToolbar() {
@@ -122,6 +151,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     private fun observe() {
         statsViewModel.showYearPicker.observe(viewLifecycleOwner) {
             binding.years.setVisible(it)
+            updateStatDetailsListInset()
         }
     }
 
@@ -132,6 +162,10 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             .translationX(0f)
             .translationY(0f)
             .start()
+    }
+
+    private fun updateStatDetailsListInset() {
+        binding.statDetailsList.requestApplyInsets()
     }
 
     override fun onDestroyView() {
@@ -149,3 +183,5 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         }
     }
 }
+
+

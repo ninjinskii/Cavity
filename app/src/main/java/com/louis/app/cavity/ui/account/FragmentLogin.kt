@@ -7,6 +7,8 @@ import android.util.Patterns
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.SavedStateHandle
@@ -16,6 +18,7 @@ import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
@@ -54,11 +57,24 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
 
         (binding.icon.drawable as AnimatedVectorDrawable).start()
 
+        applyInsets()
         observe()
         initFields()
         setListeners()
 
         loginViewModel.tryConnectWithSavedToken()
+    }
+
+    private fun applyInsets() {
+        binding.appBar.toolbarLayout.prepareWindowInsets { view, _, left, top, right, _ ->
+            view.updatePadding(left = left, right = right, top = top)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        binding.scrollView.prepareWindowInsets { view, _, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun observe() {
@@ -111,6 +127,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
                             loginViewModel.register(email, password)
                         }
                     }
+
                     else -> {
                         loginLayout.error = null
                         passwordLayout.error = null

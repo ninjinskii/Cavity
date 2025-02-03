@@ -109,6 +109,11 @@ class RuledTextInputLayout @JvmOverloads constructor(
             if (!hasFocus) validate(requestFocusIfFail = false)
         }
     }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        clearRules(clearDefaultRules = false)
+    }
 }
 
 data class Rule(@StringRes val onTestFailed: Int, val test: (String) -> Boolean)
