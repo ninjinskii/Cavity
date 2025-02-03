@@ -73,6 +73,7 @@ class BottleActionViewHolder(
 
     fun clearTextWatcher() {
         binding.comment.removeTextChangedListener(watcher)
+        watcher = null
     }
 
     private fun addActionViews(actions: List<TastingAction>) {

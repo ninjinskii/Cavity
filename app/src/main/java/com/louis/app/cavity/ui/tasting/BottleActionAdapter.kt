@@ -36,9 +36,9 @@ class BottleActionAdapter(
         holder.bind(getItem(position))
     }
 
-    override fun onViewDetachedFromWindow(holder: BottleActionViewHolder) {
-        super.onViewDetachedFromWindow(holder)
+    override fun onViewRecycled(holder: BottleActionViewHolder) {
         holder.clearTextWatcher()
+        super.onViewRecycled(holder)
     }
 
     class BottleWithTastingActionsItemDiffCallback :
