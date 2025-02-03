@@ -271,10 +271,13 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
 
         val height = binding.root.height
-        val filtersBottom = filtersBinding.reviewScrollView.bottom
+        val childCount = filtersBinding.constraint.childCount
+        val lastChild = filtersBinding.constraint.getChildAt(childCount - 1)
+        val initialPadding = lastChild.paddingBottom
+        val filtersBottom = lastChild.bottom
         val fill = height - filtersBottom - backdropHeaderHeight
 
-        val peekHeight = max(backdropHeaderHeight + insetBottom, fill)
+        val peekHeight = max(backdropHeaderHeight + insetBottom, fill + initialPadding - insetBottom)
         bottomSheetBehavior?.setPeekHeight(peekHeight, true)
     }
 
