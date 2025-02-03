@@ -266,8 +266,6 @@
     <string name="template_size">Modifiez la taille du gabarit pour la prise d\'une photo.</string>
     <string name="default_currency_title">Monnaie par défaut</string>
     <string name="default_currency">Choisissez la monnaie par défaut à utiliser lors de l\'ajout d\'une bouteille.</string>
-    <string name="auto_backup_title">Sauvegardes automatiques</string>
-    <string name="auto_backup">Déclenchez une sauvegarde automatique tous les 15 jours. Nécessite un compte Cavity.</string>
     <string name="error_reporting_title">Rapport d\'erreur</string>
     <string name="error_reporting">Active le rapport d\'erreur pour envoyer des informations de contexte quand un crash survient. Cela permet au développeur de savoir dès qu\'une erreur survient sur votre appareil et aide à la résoudre.</string>
     <string name="prevent_screenshots_title">Empêcher les captures d\'écran</string>
@@ -277,11 +275,9 @@
     <string name="email">Email</string>
     <string name="password">Mot de passe</string>
     <string name="forgotten_password">Mot de passe oublié ?</string>
-    <string name="forgotten_password_explanation">Un mail va vous être envoyé contenant les informations nécessaires à la modification de votre mot de passe.</string>
     <string name="delete_account">Supprimer votre compte</string>
     <string name="delete_account_explanation">Supprime toutes les données enregistrées qui sont liées à votre compte. Non réversible.</string>
     <string name="reset_ok">Demande prise en compte.</string>
-    <string name="ip">Adresse IP + port</string>
     <string name="confirm_mail_sent">Un mail de confirmation a été envoyé.</string>
     <string name="new_account">Créer un compte</string>
     <string name="cavity_account">Compte Cavity</string>
@@ -292,12 +288,10 @@
     <string name="account_explanation">Utiliser votre compte Cavity pour créer une sauvegarde en ligne de votre cave et la récupérer où vous le souhaitez.</string>
     <string name="export_explanation">Enregistre la cave de cet appareil sur un serveur distant.</string>
     <string name="export">Exporter</string>
-    <string name="new_backup">Créer une sauvegarde</string>
     <string name="backup">Sauvegarder</string>
     <string name="import_explanation">Récupérez votre dernière sauvegarde.</string>
     <string name="import_">Importer</string>
     <string name="file_import">Importer les fichiers</string>
-    <string name="file_import_explanation">Récupérez les photos de vos vins, vos amis et vos pdfs.</string>
     <string name="file_import_alert">Lorsque vous exportez votre cave, vos images et pdf ne sont pas sauvegardé en ligne. Au lieu de cela, une copie de tous les fichiers est générée sur l\'appareil.</string>
     <string name="file_import_title">Comment récupérer vos fichiers ?</string>
     <string name="file_import_deeper_explanation"><big><big><b>·</b></big></big> Récupérez les fichiers contenus dans <b>Android/data/com.louis.app.cavity/files</b> sur l\'appareil où <b>l\'export</b> a été réalisé\n <big><big><b>·</b></big></big> Copiez ces fichiers à l\'endroit souhaité sur l\'appareil cible sans les renommer\n <big><big><b>·</b></big></big> Utiliser le bouton ci-dessous et sélectionnez les fichiers en question</string>
@@ -305,7 +299,7 @@
     <string name="export_done">Sauvegarde effectuée.</string>
     <string name="import_done">Récupération effectuée.</string>
     <string name="backup_device_name">Sauvegarde en ligne (depuis %s)</string>
-    <string name="last_action">Dernière sauvegarde: %s</string>
+    <string name="last_action">Dernière sauv.: %s</string>
     <string name="last_action_2">Dernière sauvegarde:</string>
     <string name="current_device">Cet appareil (%s)</string>
     <string name="backup_erasure_warn_export">La sauvegarde en ligne existante sera remplacée par la cave de cet appareil.\n<b><i>Note</i></b>: les images de vos vins, de vos amis et vos pdfs <b>ne sont pas</b> sauvegardés. Pour en savoir plus, rendez-vous dans \"Importer les fichiers\" dans l\'écran de gestion du compte.</string>

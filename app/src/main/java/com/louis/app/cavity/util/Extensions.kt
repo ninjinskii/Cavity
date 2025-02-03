@@ -14,6 +14,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.use
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.marginBottom
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
+import androidx.core.view.marginTop
 import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -29,6 +35,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.PriceByCurrency
 import com.louis.app.cavity.ui.ActivityMain
+import kotlin.math.max
 
 // Boolean and Int helpers for database compatibility
 fun Int.toBoolean() = this == 1
@@ -95,6 +102,14 @@ fun NestedScrollView.isViewVisible(view: View): Boolean {
 
 fun Context.dpToPx(dp: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
+}
+
+fun View.extractPadding(): Rect {
+    return Rect(paddingLeft, paddingTop, paddingRight, paddingBottom)
+}
+
+fun View.extractMargin(): Rect {
+    return Rect(marginLeft, marginTop, marginRight, marginBottom)
 }
 
 // Took care of it for Adroid API >= 34
@@ -216,6 +231,35 @@ fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false
     } else {
         toolbar.title = getString(R.string.app_name)
         toolbar.setNavigationOnClickListener(null)
+    }
+}
+
+// Insets
+/** Use XML property to determine if horizontal insets should be equal to center content or not
+ * You may override the xml property in some case (eg home screen, because of massive horizontal scrollable content */
+fun View.prepareWindowInsets(
+    overrideSymetricalHorizontalInsetsWith: Boolean? = null,
+    onApply: (
+        view: View,
+        windowInsets: WindowInsetsCompat,
+        left: Int, top: Int, right: Int, bottom: Int
+    ) -> WindowInsetsCompat,
+) {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
+        val insets = windowInsets.getInsets(
+            WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+        )
+
+        val forceCenteredContent =
+            overrideSymetricalHorizontalInsetsWith
+                ?: context?.resources?.getBoolean(R.bool.equalize_left_and_right_insets)
+                ?: false
+
+        val horizontalInsetsMax = max(insets.left, insets.right)
+        val left = if (forceCenteredContent) horizontalInsetsMax else insets.left
+        val right = if (forceCenteredContent) horizontalInsetsMax else insets.right
+
+        onApply(view, windowInsets, left, insets.top, right, insets.bottom)
     }
 }
 

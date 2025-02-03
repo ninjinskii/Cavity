@@ -2,8 +2,12 @@ package com.louis.app.cavity.ui.manager
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.IdRes
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -42,9 +46,25 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
 
         setupNavigation(binding.toolbar)
 
+        applyInsets()
         setupWithViewPager()
         observe()
         setListener()
+    }
+
+    private fun applyInsets() {
+        binding.appBarLayout.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+            view.updatePadding(left = left, right = right, top = top)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        val initialMargin = binding.fab.extractMargin()
+        binding.fab.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.updateMargins(bottom = bottom + initialMargin.bottom)
+
+            windowInsets
+        }
     }
 
     private fun setupWithViewPager() {

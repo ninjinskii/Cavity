@@ -21,6 +21,13 @@
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
+            android:id="@id/insetHelper"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
             android:id="@id/motionLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -40,12 +47,20 @@
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@id/motionLayout"
+            android:id="@id/insetHelper"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@id/motionLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintBottom_toBottomOf="@id/insetHelper"
             android:elevation="4dp"
             motion:motionProgress="1" />
         <Constraint

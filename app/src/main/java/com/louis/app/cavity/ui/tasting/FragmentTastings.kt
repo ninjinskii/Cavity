@@ -2,7 +2,11 @@ package com.louis.app.cavity.ui.tasting
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -13,6 +17,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
 import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.extractMargin
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
@@ -39,8 +45,32 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
 
         setupNavigation(binding.appBar.toolbar)
 
+        applyInsets()
         initRecyclerView()
         setListener()
+    }
+
+    private fun applyInsets() {
+        binding.appBar.toolbarLayout.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+            view.updatePadding(left = left, right = right, top = top)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        binding.tastingList.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+            view.updatePadding(bottom = bottom, left = left, right = right)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        val initialMargin = binding.buttonAddTasting.extractMargin()
+        binding.buttonAddTasting.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.updateMargins(
+                right = right + initialMargin.right,
+                bottom = bottom + initialMargin.bottom
+            )
+
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initRecyclerView() {

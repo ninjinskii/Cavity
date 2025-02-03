@@ -10,7 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:transitionName="appbar"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -40,6 +40,7 @@
         android:id="@+id/statDetailsList"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipToPadding="false"
         android:translationZ="-1dp"
         app:layout_constraintBottom_toTopOf="@id/years"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +50,7 @@
 
     <!-- An ungly "patch" to hide scrolling down RecyclerView items without hiding ScrollableTab -->
     <View
+        android:id="@+id/patch"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="?attr/colorSurface"

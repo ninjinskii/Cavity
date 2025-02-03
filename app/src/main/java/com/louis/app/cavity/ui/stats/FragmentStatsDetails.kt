@@ -2,7 +2,9 @@ package com.louis.app.cavity.ui.stats
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -16,6 +18,7 @@ import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.ui.search.BottleRecyclerAdapter
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.hideKeyboard
+import com.louis.app.cavity.util.prepareWindowInsets
 
 class FragmentStatsDetails : Fragment(R.layout.fragment_stats_details) {
 
@@ -42,8 +45,21 @@ class FragmentStatsDetails : Fragment(R.layout.fragment_stats_details) {
 
         binding.title.text = args.title
 
+        applyInsets()
         initRecyclerView()
         setListeners()
+    }
+
+    private fun applyInsets() {
+        binding.root.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+            view.updatePadding(left = left, right = right, top = top)
+            windowInsets
+        }
+
+        binding.bottleList.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+            view.updatePadding(bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initRecyclerView() {
@@ -51,7 +67,10 @@ class FragmentStatsDetails : Fragment(R.layout.fragment_stats_details) {
             onItemClicked = { itemView: View, bottle: BoundedBottle ->
                 val transition = getString(R.string.transition_bottle_details, bottle.wine.id)
                 val action =
-                    FragmentStatsDetailsDirections.statsDetailsToBottleDetails(bottle.wine.id, bottle.bottle.id)
+                    FragmentStatsDetailsDirections.statsDetailsToBottleDetails(
+                        bottle.wine.id,
+                        bottle.bottle.id
+                    )
                 val extra = FragmentNavigatorExtras(itemView to transition)
 
                 itemView.hideKeyboard()

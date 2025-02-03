@@ -14,26 +14,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingHorizontal="@dimen/small_margin"
+        android:layout_marginHorizontal="@dimen/small_margin"
         android:paddingTop="@dimen/small_margin"
-        android:paddingBottom="@dimen/xlarge_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBar"
         tools:listitem="@layout/item_tasting_bottle" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonSubmit"
-        style="@style/Widget.Cavity.Button.OutlinedButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
-        android:text="@string/submit"
-        app:icon="@drawable/ic_check"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

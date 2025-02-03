@@ -10,11 +10,14 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
+import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +33,7 @@ import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.tasting.TastingViewModel
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.themeColor
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +50,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val isAndroid31 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+        val isAndroid35 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
 
         if (!isAndroid31) {
             setTheme(R.style.CavityTheme)
@@ -53,11 +58,16 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
             initSplashScreen()
         }
 
+        if (isAndroid35) {
+            enableEdgeToEdge()
+        }
+
         checkPreventScreenshot()
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
+        applyInsets()
         polishAppSwitcherApparence()
         setupNavigation()
         observe()
@@ -107,6 +117,34 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
                 }
             }
         )
+    }
+
+    private fun applyInsets() {
+        binding.navView.prepareWindowInsets { view, windowInsets, left, top, _, bottom ->
+            view.updatePadding(top = top, left = left, bottom = bottom)
+            val screenWidth = when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
+                    val windowMetrics = windowManager.currentWindowMetrics
+                    val screenInsets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(
+                        WindowInsetsCompat.Type.systemBars() or
+                                WindowInsetsCompat.Type.displayCutout()
+                    )
+
+                    windowMetrics.bounds.width() - screenInsets.left - screenInsets.right
+                }
+
+                else -> {
+                    // Mandatory for api < R
+                    @Suppress("DEPRECATION")
+                    windowManager.defaultDisplay.width
+                }
+            }
+
+            view.measure(screenWidth, 0)
+            view.layoutParams.width = view.measuredWidth + left
+
+            windowInsets
+        }
     }
 
     // We have to support old android 7.1 TaskDescription constructor

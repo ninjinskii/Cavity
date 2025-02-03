@@ -6,9 +6,11 @@ import android.os.Parcel
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.marginStart
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -77,10 +79,23 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             historyViewModel.applyExternalFilters(args.wineId, args.bottleId)
         }
 
+        applyInsets()
         initRecyclerView()
         observe()
         setListeners()
         applyBottomSheetShape()
+    }
+
+    private fun applyInsets() {
+        binding.coordinator.prepareWindowInsets { view, windowInsets, left, top, right, _ ->
+            view.updatePadding(top = top, left = left, right = right)
+            windowInsets
+        }
+
+        binding.historyEntryList.prepareWindowInsets { view, _, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initRecyclerView() {

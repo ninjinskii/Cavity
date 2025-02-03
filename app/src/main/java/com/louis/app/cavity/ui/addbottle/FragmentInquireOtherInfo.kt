@@ -9,7 +9,9 @@ import android.widget.Checkable
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
+import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -56,9 +58,17 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         binding.autoAnimate.layoutTransition.setAnimateParentHierarchy(false)
         binding.rbNormal.isChecked = true
 
+        applyInsets()
         setListeners()
         observe()
         initFriendsChips()
+    }
+
+    private fun applyInsets() {
+        binding.nestedScrollView.prepareWindowInsets { view, _, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun setListeners() {

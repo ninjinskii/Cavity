@@ -6,11 +6,14 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import androidx.core.os.bundleOf
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
@@ -24,8 +27,17 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWinesBinding.bind(view)
 
+        applyInsets()
         initRecyclerView()
         setListeners()
+    }
+
+    private fun applyInsets() {
+        val wineListPadding = binding.wineList.paddingTop
+        binding.wineList.prepareWindowInsets { view, _, _, top, _, _ ->
+            view.updatePadding(top = top + wineListPadding)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initRecyclerView() {

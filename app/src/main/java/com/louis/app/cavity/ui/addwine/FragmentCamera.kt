@@ -8,12 +8,16 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
+import android.view.ViewGroup
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.doOnLayout
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 import androidx.core.view.postDelayed
+import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -27,6 +31,7 @@ import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.TAKEN_PHOTO_URI
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.showSnackbar
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -85,6 +90,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         permissionChecker.askPermissionsIfNecessary()
         cameraExecutor = Executors.newSingleThreadExecutor()
 
+        applyInsets()
         setListener()
         rotateTemplate(settingsViewModel.getSkewBottle())
         scaleTemplate(settingsViewModel.getTemplateSize())
@@ -198,6 +204,22 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             return AspectRatio.RATIO_4_3
         }
         return AspectRatio.RATIO_16_9
+    }
+
+    private fun applyInsets() {
+        val infoPanelMargin = binding.infoPanel.marginTop
+        binding.infoPanel.prepareWindowInsets { view, windowInsets, _, top, _, _ ->
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.updateMargins(top = infoPanelMargin + top)
+            windowInsets
+        }
+
+        val buttonCaptureMargin = binding.buttonCapture.marginBottom
+        binding.buttonCapture.prepareWindowInsets { view, windowInsets, _, _, _, bottom ->
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.updateMargins(bottom = buttonCaptureMargin + bottom)
+            windowInsets
+        }
     }
 
     private fun setListener() {

@@ -4,7 +4,11 @@ import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +23,8 @@ import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.collectAs
+import com.louis.app.cavity.util.extractMargin
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) {
@@ -56,11 +62,34 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         setupNavigation(binding.appBar.toolbar)
 
         snackbarProvider = activity as SnackbarProvider
+        super.setPeekSiblingsSteps(false)
 
+        applyInsets()
         initFriendChips()
         initDatePicker()
         observe()
         setListeners()
+    }
+
+    private fun applyInsets() {
+        binding.constraint.prepareWindowInsets { view, windowInsets, left, _, right, _ ->
+            view.updatePadding(left = left, right = right)
+            windowInsets
+        }
+
+        binding.appBar.toolbarLayout.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+            view.updatePadding(left = left, right = right)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        val initialMargin = binding.buttonSubmit.extractMargin()
+
+        binding.buttonSubmit.prepareWindowInsets { view, _, _, _, _, bottom ->
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.updateMargins(bottom = initialMargin.bottom + bottom)
+
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initFriendChips() {

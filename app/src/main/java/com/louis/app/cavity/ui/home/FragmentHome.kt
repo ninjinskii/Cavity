@@ -6,12 +6,15 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
+import androidx.core.view.marginRight
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
@@ -76,10 +79,58 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             setupNavigation(binding.appBar.toolbar, hasNavigationRail)
         }
 
+        applyInsets()
         setupScrollableTab()
         setViewPagerOrientation()
         observe()
         setListeners()
+    }
+
+    private fun applyInsets() {
+        val scrollableTabPadding = binding.tab.paddingBottom
+        binding.tab.prepareWindowInsets { view, windowInsets, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom + scrollableTabPadding)
+            windowInsets
+        }
+
+        val root = binding.countyDetails.constraint
+        val rootPadding = root.paddingBottom
+
+        root.prepareWindowInsets { view, windowInsets, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom + rootPadding)
+            windowInsets
+        }
+
+        (binding.viewPager.getChildAt(0) as? RecyclerView)?.let {
+            it.clipToPadding = false
+
+            // Force symetrical horizontal insets
+            it.prepareWindowInsets(true) { view, windowInsets, left, top, right, bottom ->
+                val isTabletLayout = resources.getBoolean(R.bool.flat_hexagones)
+
+                view.updatePadding(
+                    left = left,
+                    right = right,
+                    top = if (isTabletLayout) top else view.paddingTop,
+                    bottom = if (isTabletLayout) bottom else view.paddingBottom
+                )
+
+                if (isTabletLayout) WindowInsetsCompat.CONSUMED else windowInsets
+            }
+        }
+
+        val toolbar = binding.appBar.toolbarLayout
+        toolbar.prepareWindowInsets(true) { view, windowInsets, left, top, right, _ ->
+            view.updatePadding(left = left, right = right, top = top)
+            windowInsets
+        }
+
+        val fabMargin = binding.fab.marginRight
+        binding.fab.prepareWindowInsets (true) { view, windowInsets, _, _, right, _ ->
+            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.updateMargins(right = fabMargin + right)
+            windowInsets
+        }
     }
 
     private fun setupScrollableTab() {
@@ -228,9 +279,8 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     fun navigateToAddWine(countyId: Long) {
         transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
 
-        val extra = FragmentNavigatorExtras(binding.appBar.root to "appbar")
         val action = FragmentHomeDirections.homeToAddWine(countyId = countyId)
-        findNavController().navigate(action, extra)
+        findNavController().navigate(action)
     }
 
     fun getRecycledViewPool() = recyclePool

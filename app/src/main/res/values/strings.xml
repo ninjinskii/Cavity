@@ -10,7 +10,6 @@
     <string name="permissions_denied">Cavity needs these authorizations to take pictures.</string>
     <string name="permissions_denied_external">Cavity needs these authorizations to work.</string>
     <string name="persistent_permission_error">Unable to open the file correctly.</string>
-    <string name="db_import_success">The database has been imported correctly.</string>
     <string name="tasting_channel_text">Tasting reminders</string>
     <string name="warning">Warning !</string>
     <string name="locale">en</string>
@@ -268,8 +267,6 @@
     <string name="template_size">Shrink or grow the template when taking a photo.</string>
     <string name="default_currency_title">Default currency</string>
     <string name="default_currency">Select the default currency used when adding a bottle.</string>
-    <string name="auto_backup_title">Auto backups</string>
-    <string name="auto_backup">Trigger an automatic backup every 15 days. Requires a Cavity account to work.</string>
     <string name="error_reporting_title">Error reporting</string>
     <string name="error_reporting">Enable error reporting to send context data whenever a crash happens. This let the developer know an unexpected error occurs on your device and helps fixing it.</string>
     <string name="prevent_screenshots_title">Prevent screenshots</string>
@@ -279,11 +276,9 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="forgotten_password">Forgot password ?</string>
-    <string name="forgotten_password_explanation">A mail containing password reset instructions will be sent to you.</string>
     <string name="delete_account">Delete your account</string>
     <string name="delete_account_explanation">Wipe all your account data definitely.</string>
     <string name="reset_ok">You will receive a mail soon.</string>
-    <string name="ip">IP Address + port</string>
     <string name="confirm_mail_sent">A confirmation mail has been sent.</string>
     <string name="new_account">Create an account</string>
     <string name="cavity_account">Cavity account</string>
@@ -294,12 +289,10 @@
     <string name="account_explanation">Use a Cavity account to create online backups of your wine cellar and get it back wherever you need.</string>
     <string name="export_explanation">Save the device wine cellar on the server</string>
     <string name="export">Export</string>
-    <string name="new_backup">Make a backup</string>
     <string name="backup">Backup</string>
     <string name="import_explanation">Download your last backup.</string>
     <string name="import_">Import</string>
     <string name="file_import">Import files</string>
-    <string name="file_import_explanation">Get your photos and your pdfs</string>
     <string name="file_import_alert">When you export your cellar, images and pdfs are not backed up. Instead a copy will be created on the device.</string>
     <string name="file_import_title">How to get back my files ?</string>
     <string name="file_import_deeper_explanation"><big><big><b>·</b></big></big> Copy all files loacated in <b>Android/data/com.louis.app.cavity/files</b> on the device who has trigerred the export.\n<big><big><b>·</b></big></big> Put the files on target device without renaming them\n<big><big><b>·</b></big></big> Click the button below and select those files</string>

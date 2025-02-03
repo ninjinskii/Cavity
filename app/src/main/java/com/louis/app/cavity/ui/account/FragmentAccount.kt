@@ -8,6 +8,8 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -25,6 +27,7 @@ import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
@@ -104,10 +107,23 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
             importExportViewModel.autoBackupHealthCheck()
         }
 
+        applyInsets()
         observe()
         initTickerView()
         setListeners()
         setupToolbar()
+    }
+
+    private fun applyInsets() {
+        binding.appBar.prepareWindowInsets { view, _, left, top, right, _ ->
+            view.updatePadding(left = left, right = right, top = top)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        binding.scrollView.prepareWindowInsets { view, _, left, _, right, bottom ->
+            view.updatePadding(left = left, right = right, bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun observe() {

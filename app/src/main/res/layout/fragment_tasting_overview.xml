@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,14 +15,37 @@
             android:id="@+id/appBar"
             layout="@layout/app_bar" />
 
+        <LinearLayout
+            android:id="@+id/frame"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/small_margin"
+            android:background="?attr/colorSurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBar"
+            app:layout_constraintWidth_max="@dimen/large_screen_preffered_width">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSubmit"
+                style="@style/Widget.Cavity.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/confirm_tasting"
+                app:icon="@drawable/ic_toast_wine" />
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/bottleTastingActionsList"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:clipToPadding="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBar" />
+            app:layout_constraintTop_toBottomOf="@+id/frame"
+            tools:listitem="@layout/item_tasting_bottle_actions" />
 
         <com.louis.app.cavity.ui.widget.EmptyStateView
             android:id="@+id/emptyState"
@@ -35,19 +59,6 @@
             app:layout_constraintStart_toStartOf="@id/bottleTastingActionsList"
             app:layout_constraintTop_toTopOf="@id/bottleTastingActionsList"
             app:text="@string/empty_tasting_bottle" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonSubmit"
-            style="@style/Widget.Cavity.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
-            android:text="@string/confirm_tasting"
-            app:icon="@drawable/ic_toast_wine"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

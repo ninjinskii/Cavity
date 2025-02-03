@@ -8,7 +8,9 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -81,10 +83,23 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             binding.appBar.toolbar.title = getString(R.string.edit_wine_title)
         }
 
+        applyInsets()
         inflateChips()
         initDropdown()
         setListeners()
         observe()
+    }
+
+    private fun applyInsets() {
+        binding.appBar.toolbarLayout.prepareWindowInsets { view, _, left, top, right, _ ->
+            view.updatePadding(left = left, top = top, right = right)
+            WindowInsetsCompat.CONSUMED
+        }
+
+        binding.nestedScrollView.prepareWindowInsets { view, _, left, _, right, bottom ->
+            view.updatePadding(left =  left, right = right, bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun inflateChips() {

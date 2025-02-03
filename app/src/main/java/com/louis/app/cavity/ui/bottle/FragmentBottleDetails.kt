@@ -8,12 +8,16 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.FileUriExposedException
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Checkable
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -96,6 +100,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         _binding = FragmentBottleDetailsBinding.bind(view)
 
+        applyInsets()
         setupToolbarShape()
         initRecyclerViews()
         observe()
@@ -138,6 +143,50 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         val titleStart = binding.backButton.run { right + marginEnd }
         val titleEnd = binding.favorite.run { left + marginStart }
         binding.bottleName.maxWidth = titleEnd - titleStart
+    }
+
+    private fun applyInsets() {
+        val globalMotionLayout = binding.globalMotionLayout
+        val motionLayout = binding.motionLayout
+
+        globalMotionLayout?.prepareWindowInsets { _, windowInsets, _, top, _, _ ->
+            globalMotionLayout.getConstraintSet(R.id.start)
+                .setMargin(R.id.insetHelper, ConstraintSet.TOP, top)
+            globalMotionLayout.getConstraintSet(R.id.end)
+                .setMargin(R.id.insetHelper, ConstraintSet.TOP, top)
+
+            windowInsets
+        }
+
+        motionLayout?.prepareWindowInsets { _, windowInsets, _, top, _, _ ->
+            motionLayout.getConstraintSet(R.id.start).apply {
+                setMargin(R.id.backButton, ConstraintSet.TOP, top)
+                setMargin(R.id.favorite, ConstraintSet.TOP, top)
+            }
+
+            motionLayout.getConstraintSet(R.id.end).apply {
+                setMargin(R.id.backButton, ConstraintSet.TOP, top)
+                setMargin(R.id.favorite, ConstraintSet.TOP, top)
+            }
+
+            windowInsets
+        }
+
+        binding.scrollView.prepareWindowInsets(false) { view, windowInsets, _, _, right, bottom ->
+            view.updatePadding(bottom = bottom, right = right)
+            windowInsets
+        }
+
+        binding.container?.prepareWindowInsets(false)
+        { view, windowInsets, left, top, right, bottom ->
+            view.updatePadding(left = left, top = top, right = right)
+
+            val marginLayoutParams =
+                binding.bottlesList.layoutParams as ViewGroup.MarginLayoutParams
+            marginLayoutParams.updateMargins(bottom = bottom)
+
+            windowInsets
+        }
     }
 
     private fun setupToolbarShape() {

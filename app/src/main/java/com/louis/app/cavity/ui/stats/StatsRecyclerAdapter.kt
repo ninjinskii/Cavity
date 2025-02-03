@@ -4,19 +4,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemStatBinding
 import com.louis.app.cavity.db.dao.Stat
-import com.louis.app.cavity.db.dao.WineColorStat
 
 class StatsRecyclerAdapter(
     private val onItemClicked: (itemBottlesIds: List<Long>, label: String) -> Unit
 ) :
-    ListAdapter<Stat, StatsRecyclerAdapter.StatViewHolder>(StatItemDiffCallback()) {
+    ListAdapter<Stat, StatViewHolder>(StatItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatViewHolder {
         val binding = ItemStatBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return StatViewHolder(binding)
+        return StatViewHolder(binding, onItemClicked)
     }
 
     override fun onBindViewHolder(holder: StatViewHolder, position: Int) {
@@ -33,30 +31,5 @@ class StatsRecyclerAdapter(
             oldItem.label == newItem.label &&
                     oldItem.percentage == newItem.percentage &&
                     oldItem.color == newItem.color
-    }
-
-    inner class StatViewHolder(private val binding: ItemStatBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(stat: Stat) {
-            val ctx = itemView.context
-
-            with(binding) {
-                label.text =
-                    if (stat is WineColorStat) ctx.getString(stat.wcolor.stringRes) else stat.label
-                count.text = stat.count.toString()
-
-                val resolvedColor = ctx.getColor(stat.color)
-                color.setBackgroundColor(resolvedColor)
-
-                root.setOnClickListener {
-                    val label =
-                        if (stat is WineColorStat) it.context.getString(stat.wcolor.stringRes)
-                        else stat.label
-
-                    onItemClicked(stat.bottleIds, label)
-                }
-            }
-        }
     }
 }
