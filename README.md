@@ -15,6 +15,11 @@ After installing the F-Droid client, you can download app here:
 alt="Get it on F-Droid"
 height="80">](https://f-droid.org/packages/com.louis.app.cavity)
 
+IzzyOnDroid:
+[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png"
+alt="IzzyOnDroid"
+height="80">](https://apt.izzysoft.de/packages/com.louis.app.cavity)
+
 ## Features
 - Stock management
 - Highlights peaking bottles
