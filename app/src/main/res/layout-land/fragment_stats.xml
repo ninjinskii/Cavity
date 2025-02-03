@@ -53,6 +53,7 @@
         android:id="@+id/patch"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="?attr/colorSurface"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/statDetailsList"
         app:layout_constraintStart_toStartOf="@id/statDetailsList"

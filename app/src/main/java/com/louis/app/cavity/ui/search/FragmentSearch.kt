@@ -9,6 +9,7 @@ import android.view.animation.RotateAnimation
 import android.view.inputmethod.EditorInfo
 import android.widget.Checkable
 import android.widget.HorizontalScrollView
+import android.widget.ImageView
 import androidx.activity.addCallback
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -156,12 +157,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             WindowInsetsCompat.CONSUMED
         }
 
-        /*binding.bottomSheet.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
-            val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
-            layoutParams.updateMargins(left = left, right = right)
-            windowInsets
-        }*/
-
         binding.headerConstraint.prepareWindowInsets { view, _, left, _, right, _ ->
             view.updatePadding(left = left, right = right)
             WindowInsetsCompat.CONSUMED
@@ -172,10 +167,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             WindowInsetsCompat.CONSUMED
         }
 
-        /* binding.bottomSheet.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
-             view.updatePadding(left = left, right = right)
-             WindowInsetsCompat.CONSUMED
-         }*/
+        var selectedChipInitialMargin: Int? = null
+        var cycleFriendInitialMargin: Int? = null
 
         // We want to inset individually each views in the layout to ensure horizontal scroll view
         // are edge to edge. At the date of this comment, this is the only screen that takes care
@@ -183,7 +176,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         binding.filtersStub.setOnInflateListener { _, inflatedView ->
             inflatedView.doOnAttach {
                 val leftRightInsettable = intArrayOf(
-                    R.id.chipSelected, R.id.countyScrollView, R.id.colorScrollView,
+                    R.id.countyScrollView, R.id.colorScrollView,
                     R.id.otherScrollView, R.id.divider1, R.id.vintageTitle, R.id.vintageSlider,
                     R.id.divider2, R.id.dateTitle, R.id.divider3, R.id.priceTitle, R.id.priceSlider,
                     R.id.warning, R.id.divider4, R.id.grapeTitle, R.id.grapeScrollView,
@@ -194,9 +187,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 val leftInsettable = intArrayOf(R.id.beyondLayout)
                     .map { InsettableInfo(inflatedView.findViewById(it)) }
 
-                val rightInsettable =
-                    intArrayOf(R.id.untilLayout, R.id.togglePrice, R.id.cycleFriendFilter)
-                        .map { InsettableInfo(inflatedView.findViewById(it)) }
+                val rightInsettable = intArrayOf(R.id.untilLayout, R.id.togglePrice)
+                    .map { InsettableInfo(inflatedView.findViewById(it)) }
 
                 inflatedView.prepareWindowInsets { view, _, left, _, right, bottom ->
                     // Udpdates stub root scroll view bottom padding
@@ -230,6 +222,21 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                         val layoutParams = it.view.layoutParams as ViewGroup.MarginLayoutParams
                         layoutParams.updateMargins(right = right + it.initialMargin.right)
                     }
+
+                    val selectedChip = inflatedView.findViewById<Chip>(R.id.chipSelected)
+                    val selectedLayoutParams =
+                        selectedChip.layoutParams as ViewGroup.MarginLayoutParams
+                    val selectedBaseMargin = selectedChipInitialMargin
+                        ?: selectedChip.extractMargin().left.also { selectedChipInitialMargin = it }
+
+                    selectedLayoutParams.updateMargins(left = left + selectedBaseMargin)
+
+                    val cycleFriend = inflatedView.findViewById<ImageView>(R.id.cycleFriendFilter)
+                    val cycleLayoutParams = cycleFriend.layoutParams as ViewGroup.MarginLayoutParams
+                    val cycleBaseMargin = cycleFriendInitialMargin
+                        ?: cycleFriend.extractMargin().right.also { cycleFriendInitialMargin = it }
+
+                    cycleLayoutParams.updateMargins(right = right + cycleBaseMargin)
 
                     WindowInsetsCompat.CONSUMED
                 }

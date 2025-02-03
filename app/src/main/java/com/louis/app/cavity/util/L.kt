@@ -1,7 +1,6 @@
 package com.louis.app.cavity.util
 
 import android.util.Log
-import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
 
 class L {

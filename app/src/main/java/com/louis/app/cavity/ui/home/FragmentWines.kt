@@ -6,7 +6,6 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
 import androidx.core.os.bundleOf
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
@@ -14,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
@@ -34,12 +34,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     private fun applyInsets() {
         val wineListPadding = binding.wineList.paddingTop
-        ViewCompat.setOnApplyWindowInsetsListener(binding.wineList) { view, windowInsets ->
-            val actionBarInsets = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-            ).top
-
-            view.updatePadding(top = actionBarInsets + wineListPadding)
+        binding.wineList.prepareWindowInsets { view, _, _, top, _, _ ->
+            view.updatePadding(top = top + wineListPadding)
             WindowInsetsCompat.CONSUMED
         }
     }
