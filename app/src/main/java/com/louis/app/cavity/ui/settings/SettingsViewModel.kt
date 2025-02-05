@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.db.PrefsRepository
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.postOnce
 
 class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     private val prefsRepository = PrefsRepository.getInstance(app)
@@ -17,6 +18,10 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
         get() = _isLoading
+
+    private val _windowFocusChangedEvent = MutableLiveData<Event<Boolean>>()
+    val windowFocusChangedEvent: LiveData<Event<Boolean>>
+        get() = _windowFocusChangedEvent
 
     fun setSkewBottle(skew: Boolean) {
         prefsRepository.setSkewBottle(skew)
@@ -53,4 +58,12 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     fun getErrorReportingConsent() = prefsRepository.getErrorReportingConsent()
 
     fun getPreventScreenshots() = prefsRepository.getPreventScreenshots()
+
+    fun notifyWindowFocusChanged(hasFocus: Boolean) {
+        _windowFocusChangedEvent.postOnce(hasFocus)
+    }
+
+    fun clearWindowFocusChangedEvent() {
+        _windowFocusChangedEvent.value?.getContentIfNotHandled()
+    }
 }
