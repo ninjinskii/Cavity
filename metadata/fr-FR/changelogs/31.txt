@@ -1,0 +1,5 @@
+- Ajout du support Android 15
+- Interface bords à bords pour Android 15
+- Corrrection d'un bug de camera en mode multifenêtre avec une autre application de camera
+- Correction d'un crash à l'ouverture sur Android 11
+- Divers correction mineurs d'interface graphiques

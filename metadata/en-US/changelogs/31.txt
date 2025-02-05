@@ -1,0 +1,5 @@
+- Add Android 15 support
+- Edge to edge implemented for Android 15 device
+- Fix a camera still consuming resources when losing focus with another camera app
+- Fix a startup crash on Android 11
+- Miscellanous UI fixes
