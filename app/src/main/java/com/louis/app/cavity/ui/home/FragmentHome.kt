@@ -105,14 +105,14 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             it.clipToPadding = false
 
             // Force symetrical horizontal insets
-            it.prepareWindowInsets(true) { view, windowInsets, left, top, right, bottom ->
+            it.prepareWindowInsets(true) { view, windowInsets, left, top, right, _ ->
                 val isTabletLayout = resources.getBoolean(R.bool.flat_hexagones)
 
                 view.updatePadding(
                     left = left,
                     right = right,
                     top = if (isTabletLayout) top else view.paddingTop,
-                    bottom = if (isTabletLayout) bottom else view.paddingBottom
+                    bottom = if (isTabletLayout) 0 else view.paddingBottom
                 )
 
                 if (isTabletLayout) WindowInsetsCompat.CONSUMED else windowInsets
