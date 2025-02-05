@@ -67,6 +67,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             setFadeThrough(navigatingForward = false)
         }
 
+        settingsViewModel.clearWindowFocusChangedEvent()
         errorReporter = SentryErrorReporter.getInstance(requireContext())
 
         permissionChecker = object : PermissionChecker(this, REQUIRED_PERMISSIONS) {
@@ -91,6 +92,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         applyInsets()
+        observe()
         setListener()
         rotateTemplate(settingsViewModel.getSkewBottle())
         scaleTemplate(settingsViewModel.getTemplateSize())
@@ -103,6 +105,11 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             { bindPreview(cameraProviderFuture.get()) },
             ContextCompat.getMainExecutor(requireContext())
         )
+    }
+
+    private fun stopCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        cameraProviderFuture.get()?.unbindAll()
     }
 
     private fun bindPreview(cameraProvider: ProcessCameraProvider) {
@@ -204,6 +211,19 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             return AspectRatio.RATIO_4_3
         }
         return AspectRatio.RATIO_16_9
+    }
+
+    private fun observe() {
+        settingsViewModel.windowFocusChangedEvent.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { windowHasFocus ->
+                if (windowHasFocus) {
+                    startCamera()
+                } else {
+                    stopCamera()
+                }
+            }
+
+        }
     }
 
     private fun applyInsets() {

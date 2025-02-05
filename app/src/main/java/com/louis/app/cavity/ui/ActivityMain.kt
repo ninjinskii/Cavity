@@ -289,6 +289,11 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         }
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        settingsViewModel.notifyWindowFocusChanged(hasFocus)
+    }
+
     override fun onShowSnackbarRequested(stringRes: Int) {
         val currentDestination = navHostFragment.findNavController().currentDestination
         val isHome = currentDestination?.id == R.id.home_dest

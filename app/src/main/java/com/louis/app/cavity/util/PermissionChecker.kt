@@ -33,11 +33,12 @@ abstract class PermissionChecker(private val fragment: Fragment, private val per
         }
     }
 
-    fun askPermissionsIfNecessary() {
-        if (hasPermissions()) {
-            onPermissionsAccepted()
-        } else {
+    fun askPermissionsIfNecessary(runIfAlreadyAccepted: Boolean = true) {
+        if (!hasPermissions()) {
             launcher.launch(perms)
+            return
+        } else if (runIfAlreadyAccepted) {
+            onPermissionsAccepted()
         }
     }
 
