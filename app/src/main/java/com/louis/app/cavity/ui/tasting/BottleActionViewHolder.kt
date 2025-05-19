@@ -16,7 +16,6 @@ import com.louis.app.cavity.databinding.ItemTastingBottleActionsBinding
 import com.louis.app.cavity.db.dao.BottleWithTastingActions
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.TastingAction
-import com.louis.app.cavity.util.pxToSp
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 
@@ -27,10 +26,6 @@ class BottleActionViewHolder(
     private val onCloseIconClicked: (Bottle) -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
-
-    private val textSize = itemView.context.run {
-        pxToSp(resources.getDimension(R.dimen.body2TextSize).toInt())
-    }
 
     private var watcher: TextWatcher? = null
 
@@ -87,9 +82,8 @@ class BottleActionViewHolder(
             }
 
             val checkbox = MaterialCheckBox(itemView.context).apply {
-                // We need to use typeface here, cause Checkbox textAppearance does not work programmatically
+                setTextAppearance(R.style.TextAppearance_Cavity_Body2)
                 typeface = ResourcesCompat.getFont(context, R.font.forum)
-                textSize = this@BottleActionViewHolder.textSize
                 text = itemView.context.getString(actionText)
                 isChecked = it.done.toBoolean()
                 setOnCheckedChangeListener { _, isChecked ->

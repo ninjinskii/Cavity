@@ -77,7 +77,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
             windowInsets
         }
 
-        binding.appBar.toolbarLayout.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+        binding.appBar.toolbarLayout.prepareWindowInsets { view, _, left, _, right, _ ->
             view.updatePadding(left = left, right = right)
             WindowInsetsCompat.CONSUMED
         }

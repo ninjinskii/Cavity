@@ -51,12 +51,12 @@ class FragmentStatsDetails : Fragment(R.layout.fragment_stats_details) {
     }
 
     private fun applyInsets() {
-        binding.root.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+        binding.root.prepareWindowInsets { view, windowInsets, left, top, right, _ ->
             view.updatePadding(left = left, right = right, top = top)
             windowInsets
         }
 
-        binding.bottleList.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+        binding.bottleList.prepareWindowInsets { view, _, _, _, _, bottom ->
             view.updatePadding(bottom = bottom)
             WindowInsetsCompat.CONSUMED
         }

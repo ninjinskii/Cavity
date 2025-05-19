@@ -53,13 +53,13 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
     }
 
     private fun applyInsets() {
-        binding.appBarLayout.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+        binding.appBarLayout.prepareWindowInsets { view, _, left, top, right, _ ->
             view.updatePadding(left = left, right = right, top = top)
             WindowInsetsCompat.CONSUMED
         }
 
         val initialMargin = binding.fab.extractMargin()
-        binding.fab.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+        binding.fab.prepareWindowInsets { view, windowInsets, _, _, _, bottom ->
             val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
             layoutParams.updateMargins(bottom = bottom + initialMargin.bottom)
 
