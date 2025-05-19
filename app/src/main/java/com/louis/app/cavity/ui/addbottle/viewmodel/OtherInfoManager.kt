@@ -2,13 +2,13 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import androidx.annotation.IdRes
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
 import com.louis.app.cavity.util.toInt
 
 class OtherInfoManager(
-    private val repository: WineRepository,
+    private val repository: FriendRepository,
     editedBottle: Bottle?
 ) {
     private var pdfPath: String = ""

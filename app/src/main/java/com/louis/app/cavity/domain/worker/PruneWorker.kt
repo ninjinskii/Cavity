@@ -1,10 +1,10 @@
-package com.louis.app.cavity.ui.account.worker
+package com.louis.app.cavity.domain.worker
 
 import android.app.Application
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.louis.app.cavity.db.AccountRepository
+import com.louis.app.cavity.domain.repository.AccountRepository
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.network.response.ApiResponse
 import kotlinx.coroutines.Dispatchers.IO
