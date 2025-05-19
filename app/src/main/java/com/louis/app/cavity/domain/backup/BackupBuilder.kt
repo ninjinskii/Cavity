@@ -26,7 +26,7 @@ class BackupBuilder(private val context: Context) {
             val couldBeAccountSwitch =
                 target.isNotEmpty()
                         && (sourceOldest?.date ?: targetOldest?.date) != (targetOldest?.date ?: 0)
-                        && sourceOldest?.id !== targetOldest?.id
+                        && sourceOldest?.id != targetOldest?.id
 
             if (couldBeAccountSwitch) {
                 return@withContext HealthResult.MayBeAccountSwitch

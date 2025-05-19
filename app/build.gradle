@@ -55,51 +55,51 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.test:monitor:1.6.1'
-    def nav_version = "2.7.7"
+    def nav_version = "2.8.9"
     def room_version = "2.6.1"
-    def camerax_version = "1.3.0"
-    def paging_version = "3.2.1"
+    def camerax_version = "1.4.2"
+    def paging_version = "3.3.6"
     def lifecycle_version = "2.8.4"
-    def work_version = "2.9.0"
+    def work_version = "2.10.1"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    testImplementation("androidx.room:room-testing:2.6.1")
-
-
     // Ktx core
-    implementation "androidx.core:core-ktx:1.12.0"
+    implementation "androidx.core:core-ktx:1.16.0"
 
     // AppCompat
-    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.appcompat:appcompat:1.7.0"
 
     // ConstraintLayout
-    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation "androidx.constraintlayout:constraintlayout:2.2.1"
 
     // Tests
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit-ktx:1.1.5"
     androidTestImplementation "androidx.test:runner:1.5.2"
+    implementation 'androidx.test:monitor:1.6.1'
 
     // RecyclerView
-    implementation "androidx.recyclerview:recyclerview:1.3.2"
+    implementation "androidx.recyclerview:recyclerview:1.4.0"
 
     // Material
     implementation "com.google.android.material:material:1.12.0"
 
     // Fragments
-    implementation "androidx.fragment:fragment-ktx:1.8.2"
+    implementation "androidx.fragment:fragment-ktx:1.8.6"
 
     // Navigation component
+    // Navigation component 2.9.0 is causing a crash on navigation with arguments, 100% of the times on statistics bottle picking. Wait & see
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     // Room
+    // Room 2.7.1 is causing a memory leak on HistoryViewModel when leaving HistoryFragment. Wait & see
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-paging:$room_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
+    testImplementation("androidx.room:room-testing:2.6.1")
 
     kapt "androidx.room:room-compiler:$room_version"
 

@@ -1,13 +1,14 @@
-Cavity is a wine cellar manager for Android.
+<i>Cavity</i> est un gestionnaire de cave à vin pour Android.
 
 Une application qui permet la gestion de son stock de vins, afin de toujours trouver la bonne bouteille pour chaque occasion.
 
-Fonctionnalités:
-Gestion de stock
-Mise en avant des bouteilles prêtes à boire
-Historqiue de d'achat/consommation
-Gestion des amis (offrir une bouteiile, boire avec un ami...)
-Statistiques de consommation et d'équilibre de la cave
-Recherche
-Dégustation: l'application vous aide à préparer une soirée où vous allez ouvrir plusieurs bouteilles
-Sauvegarde en ligne automatique (optionnel: besoin de créer un compte), pour récupérer votre cave quelque soit votre téléphone
+<b>Fonctionnalités:</b>
+
+* Gestion de stock
+* Mise en avant des bouteilles prêtes à boire
+* Historqiue de d'achat/consommation
+* Gestion des amis (offrir une bouteille, boire avec un ami...)
+* Statistiques de consommation et d'équilibre de la cave
+* Recherche
+* Dégustation: l'application vous aide à préparer une soirée où vous allez ouvrir plusieurs bouteilles
+* Sauvegarde en ligne automatique (optionnel: besoin de créer un compte), pour récupérer votre cave quelque soit votre téléphone

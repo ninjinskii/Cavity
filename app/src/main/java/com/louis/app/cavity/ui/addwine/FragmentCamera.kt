@@ -140,7 +140,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
                 preview,
                 imageCapture
             )
-            preview.setSurfaceProvider(binding.previewView.surfaceProvider)
+            preview.surfaceProvider = binding.previewView.surfaceProvider
         } catch (e: Exception) {
             errorReporter.captureException(e)
             camera = null

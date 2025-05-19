@@ -51,18 +51,18 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
     }
 
     private fun applyInsets() {
-        binding.appBar.toolbarLayout.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+        binding.appBar.toolbarLayout.prepareWindowInsets { view, _, left, top, right, _ ->
             view.updatePadding(left = left, right = right, top = top)
             WindowInsetsCompat.CONSUMED
         }
 
-        binding.tastingList.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+        binding.tastingList.prepareWindowInsets { view, _, left, _, right, bottom ->
             view.updatePadding(bottom = bottom, left = left, right = right)
             WindowInsetsCompat.CONSUMED
         }
 
         val initialMargin = binding.buttonAddTasting.extractMargin()
-        binding.buttonAddTasting.prepareWindowInsets { view, windowInsets, left, top, right, bottom ->
+        binding.buttonAddTasting.prepareWindowInsets { view, _, _, _, right, bottom ->
             val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
             layoutParams.updateMargins(
                 right = right + initialMargin.right,

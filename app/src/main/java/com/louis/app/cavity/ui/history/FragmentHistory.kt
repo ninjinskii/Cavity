@@ -96,6 +96,11 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             view.updatePadding(bottom = bottom)
             WindowInsetsCompat.CONSUMED
         }
+
+        binding.bottomSheet.prepareWindowInsets { view, _, _, _, _, bottom ->
+            view.updatePadding(bottom = bottom)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun initRecyclerView() {
