@@ -62,7 +62,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         bottleRepository.deleteBottles(stock)
 
         when {
-            consumed.size > 0 -> wineRepository.hideWineById(wineId)
+            consumed.isNotEmpty() -> wineRepository.hideWineById(wineId)
             else -> wineRepository.deleteWineById(wineId)
         }
 

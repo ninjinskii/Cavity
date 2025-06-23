@@ -4,12 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.dao.BoundedBottle
+import com.louis.app.cavity.domain.history.HistoryEntryType
+import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.HistoryEntry
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -17,7 +18,6 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val bottleRepository = BottleRepository.getInstance(app)
     private val historyRepository = HistoryRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
-
 
     var date: Long = System.currentTimeMillis()
 
@@ -34,37 +34,35 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         val friendIds = friends.map { it.id }
-        val typeConsume = 0
-        val typeGiftTo = 2
-        val typeTasting = 4
         val type = when {
-            isTasting -> typeTasting
-            isAGift -> typeGiftTo
-            else -> typeConsume
+            isTasting -> HistoryEntryType.TASTING
+            isAGift -> HistoryEntryType.GIFTED_TO
+            else -> HistoryEntryType.REMOVE
         }
         val historyEntry = HistoryEntry(0, date, bottleId, null, comment, type, 0)
 
         viewModelScope.launch(IO) {
-            L.v("Bottle consumption not available for now")
-            // TODO: use service
-            /*bottleRepository.transaction {
+            bottleRepository.transaction {
                 bottleRepository.consumeBottle(bottleId)
                 bottleRepository.removeTastingForBottle(bottleId)
                 historyRepository.insertHistoryEntry(historyEntry, friendIds)
-            }*/
+            }
         }
     }
 
+    /**
+     * Note: this method work only if boundedBottle has already been consumed once in the past
+     * The point of it is to cancel a consumption cancelling so we need to get bottle associated infos.
+     */
     fun consumeBottle(boundedBottle: BoundedBottle) {
         val (bottle, _, _, _, historyEntryWithFriends) = boundedBottle
-        val consumptionType = listOf(0, 2, 4)
         val consumption = historyEntryWithFriends.find { entryWithFriends ->
-            entryWithFriends.historyEntry.type in consumptionType
+            entryWithFriends.historyEntry.type.isConsumption()
         }
 
         val consumptionEntry = consumption?.historyEntry ?: return
         val consumptionFriend = consumption.friends
-        val isAGift = consumptionEntry.type == 2
+        val isAGift = consumptionEntry.type == HistoryEntryType.GIFTED_TO
         val comment = consumptionEntry.comment
         val date = consumptionEntry.date
         val isTasting = bottle.tastingId != null

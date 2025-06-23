@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemFriendBinding
 import com.louis.app.cavity.model.Friend
+import androidx.core.net.toUri
 
 class FriendRecyclerAdapter(
     private val onRename: (Friend) -> Unit,
@@ -57,7 +58,7 @@ class FriendRecyclerAdapter(
                 if (friend.imgPath.isNotEmpty()) {
                     avatar.imageTintList = null
                     Glide.with(context)
-                        .load(Uri.parse(friend.imgPath))
+                        .load(friend.imgPath.toUri())
                         .centerCrop()
                         .into(avatar)
                 }

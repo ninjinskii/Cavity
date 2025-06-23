@@ -15,6 +15,7 @@ import com.louis.app.cavity.model.TastingBottle
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 import com.louis.app.cavity.util.toInt
+import androidx.core.net.toUri
 
 class TastingBottleAdapter :
     ListAdapter<TastingBottle, TastingBottleAdapter.TastingBottleViewHolder>
@@ -54,7 +55,7 @@ class TastingBottleAdapter :
             with(binding) {
                 Glide
                     .with(itemView.context)
-                    .load(Uri.parse(wine.imgPath))
+                    .load(wine.imgPath.toUri())
                     .centerCrop()
                     .into(wineImage)
 

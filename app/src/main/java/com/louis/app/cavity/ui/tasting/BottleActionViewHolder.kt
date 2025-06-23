@@ -18,6 +18,7 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
+import androidx.core.net.toUri
 
 class BottleActionViewHolder(
     private val binding: ItemTastingBottleActionsBinding,
@@ -51,7 +52,7 @@ class BottleActionViewHolder(
 
         Glide
             .with(itemView.context)
-            .load(Uri.parse(wine.imgPath))
+            .load(wine.imgPath.toUri())
             .centerCrop()
             .into(binding.wineImage)
 

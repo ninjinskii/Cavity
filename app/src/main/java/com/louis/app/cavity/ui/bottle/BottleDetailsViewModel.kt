@@ -17,6 +17,7 @@ import com.louis.app.cavity.util.toBoolean
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import androidx.core.net.toUri
 
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val wineRepository = WineRepository.getInstance(app)
@@ -91,7 +92,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
             val path = bottle.pdfPath
 
             if (path.isNotBlank()) {
-                _pdfEvent.postOnce(Uri.parse(path))
+                _pdfEvent.postOnce(path.toUri())
             } else {
                 _userFeedback.postOnce(R.string.no_pdf)
             }
@@ -158,7 +159,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         val hasOtherConsumedBottle = consumed.size > 1
-        val hasStock = stock.size > 0
+        val hasStock = stock.isNotEmpty()
         val isSameBottle = consumed.firstOrNull()?.id == deletedBottleId
 
         if (wine.hidden.toBoolean() && !hasOtherConsumedBottle && !hasStock && isSameBottle) {

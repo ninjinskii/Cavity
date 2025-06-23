@@ -64,13 +64,15 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 grapeManager = GrapeManager(viewModelScope, grapeRepository, bottle, _userFeedback)
                 reviewManager =
                     ReviewManager(viewModelScope, reviewRepository, bottle, _userFeedback)
-                otherInfoManager = OtherInfoManager(friendRepository, bottle)
+                otherInfoManager =
+                    OtherInfoManager(viewModelScope, friendRepository, historyRepository, bottle)
             }
         } else {
             dateManager = DateManager(null)
             grapeManager = GrapeManager(viewModelScope, grapeRepository, null, _userFeedback)
             reviewManager = ReviewManager(viewModelScope, reviewRepository, null, _userFeedback)
-            otherInfoManager = OtherInfoManager(friendRepository, null)
+            otherInfoManager =
+                OtherInfoManager(viewModelScope, friendRepository, historyRepository, null)
         }
     }
 
@@ -88,7 +90,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             val isEdit = _editedBottle.value != null
             val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
             val uiFReviews = reviewManager.fReviews.value ?: emptyList()
-            val gift = step4Bottle?.giftedBy != null
+            val gift = step4Bottle?.giftedBy?.isNotEmpty() == true
 
             if (!isEdit) {
                 val count = step1Bottle.count.coerceAtLeast(1)

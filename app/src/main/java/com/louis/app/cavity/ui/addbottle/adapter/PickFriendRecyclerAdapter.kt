@@ -11,14 +11,17 @@ import com.louis.app.cavity.databinding.ItemPickFriendBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.util.setVisible
 
-class PickFriendRecyclerAdapter(private val onSingleItemSelected: ((item: Friend) -> Unit)?) :
+class PickFriendRecyclerAdapter(
+    private val handleMultipleChoices: Boolean,
+    private val onSingleItemSelected: ((item: Friend) -> Unit)?
+) :
     ListAdapter<PickableFriend, PickFriendViewHolder>(PickFriendItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PickFriendViewHolder {
         val binding =
             ItemPickFriendBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return PickFriendViewHolder(binding, onSingleItemSelected)
+        return PickFriendViewHolder(binding, handleMultipleChoices, onSingleItemSelected)
     }
 
     override fun onBindViewHolder(holder: PickFriendViewHolder, position: Int) {
@@ -26,11 +29,6 @@ class PickFriendRecyclerAdapter(private val onSingleItemSelected: ((item: Friend
     }
 
     override fun getItemCount() = currentList.size
-
-    // TODO: move this logic in view model
-    fun init(friends: List<Friend>) {
-        submitList(friends.map { PickableFriend(it, false) })
-    }
 
     fun getSelectedFriends(): List<Friend> {
         return currentList.filter { it.checked }.map { it.friend }
@@ -47,6 +45,7 @@ class PickFriendRecyclerAdapter(private val onSingleItemSelected: ((item: Friend
 
 class PickFriendViewHolder(
     private val binding: ItemPickFriendBinding,
+    private val handleMultipleChoices: Boolean,
     private val onSingleItemSelected: ((item: Friend) -> Unit)?
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -58,15 +57,17 @@ class PickFriendViewHolder(
             .placeholder(R.drawable.ic_person)
             .into(image)
 
-        val handleMultipleChoices = onSingleItemSelected == null
         checkbox.setVisible(handleMultipleChoices)
+        checkbox.isChecked = pickableFriend.checked
         text.text = pickableFriend.friend.name
 
         binding.root.setOnClickListener {
-            onSingleItemSelected?.invoke(pickableFriend.friend) ?: checkbox.toggle()
+            onSingleItemSelected?.invoke(pickableFriend.friend)
+            checkbox.toggle()
+            pickableFriend.checked = checkbox.isChecked
         }
     }
 }
 
-data class PickableFriend(val friend: Friend, val checked: Boolean)
+data class PickableFriend(val friend: Friend, var checked: Boolean)
 

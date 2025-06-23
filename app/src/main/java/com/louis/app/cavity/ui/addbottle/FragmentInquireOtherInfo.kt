@@ -10,10 +10,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.forEach
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogChipablePickBinding
@@ -22,6 +22,7 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
+import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.adapter.PickFriendRecyclerAdapter
@@ -61,7 +62,6 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         applyInsets()
         setListeners()
         observe()
-        initFriendsChips()
     }
 
     private fun applyInsets() {
@@ -88,16 +88,15 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             giftedBy.setOnCheckedChangeListener { _, isChecked ->
                 buttonAddFriend.setVisible(isChecked)
                 friendTitle.setVisible(isChecked)
-                friend.root.setVisible(isChecked)
+                // friend.root.setVisible(isChecked)
 
                 if (isChecked) {
-                    showPickFriendDialog()
+                    binding.friendChipGroup.showPickFriendDialog()
                 }
             }
 
             buttonAddFriend.setOnClickListener { showAddFriendDialog() }
         }
-
     }
 
     private fun observe() {
@@ -126,37 +125,25 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 }
             }
         }
+
+        otherInfoManager.getAllFriends().observe(viewLifecycleOwner) {
+            binding.friendChipGroup.setFriends(it)
+        }
     }
 
     private fun bindFriend(friend: Friend) {
-        with(binding.friend) {
+        with(binding.friendChipGroup) {
             AvatarLoader.requestAvatar(
                 requireContext(),
                 friend.imgPath
             ) { avatarBitmap ->
                 avatarBitmap?.let { drawable ->
-                    avatar.setImageDrawable(drawable)
+                    // avatar.setImageDrawable(drawable)
                 }
             }
 
-            friendName.text = friend.getChipText()
+            //friendName.text = friend.getChipText()
         }
-    }
-
-    private fun initFriendsChips() {
-
-        /*otherInfoManager.getAllFriends().observe(viewLifecycleOwner) {
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .toInflate(R.layout.chip_friend_entry)
-                .load(it)
-                .into(binding.friendChipGroup)
-                .useAvatar(true)
-                .emptyText(getString(R.string.placeholder_friend))
-                .build()
-                .go()
-        }*/
     }
 
     private fun updateFields(editedBottle: Bottle) {
@@ -200,32 +187,6 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         binding.buttonAddPdf.text = getString(R.string.remove_pdf)
     }
 
-    private fun showPickFriendDialog() {
-        val dialogBinding = DialogChipablePickBinding.inflate(layoutInflater)
-        val dialog = LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
-            .setTitle(R.string.gifted_by_friend)
-            .setView(dialogBinding.root)
-
-        var actual: AlertDialog? = null
-
-        with(dialogBinding.friendList) {
-            val adapter = PickFriendRecyclerAdapter { chipable ->
-                bindFriend(chipable)
-                actual?.dismiss()
-            }
-
-            layoutManager = LinearLayoutManager(requireContext())
-            this.adapter = adapter
-
-            // TODO: this is UI thread
-            otherInfoManager.getAllFriends().observe(viewLifecycleOwner) {
-                adapter.init(it)
-                actual = dialog.show()
-            }
-
-        }
-    }
-
     private fun showAddFriendDialog() {
         val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.add_friend,
@@ -240,23 +201,18 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     }
 
     override fun requestNextPage(): Boolean {
-        return true
-        /*with(binding) {
-            friendChipGroup.apply {
-                val friend = if (giftedBy.isChecked) collectAsSingle<Friend>()?.id else null
+        with(binding) {
+            otherInfoManager.submitOtherInfo(
+                otherInfo.text.toString(),
+                rbGroupSize.checkedButtonId,
+                addToFavorite.isChecked,
+                otherInfoManager.selectedFriends.value?.map { it.id } ?: emptyList()
+            )
 
-                otherInfoManager.submitOtherInfo(
-                    otherInfo.text.toString(),
-                    rbGroupSize.checkedButtonId,
-                    addToFavorite.isChecked,
-                    friend
-                )
-
-                addBottleViewModel.insertBottle()
-            }
+            addBottleViewModel.insertBottle()
         }
 
-        return true*/
+        return true
     }
 
     override fun onDestroyView() {

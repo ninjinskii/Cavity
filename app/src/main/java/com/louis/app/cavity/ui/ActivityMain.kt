@@ -39,6 +39,7 @@ import com.louis.app.cavity.util.themeColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.core.view.get
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private lateinit var binding: ActivityMainBinding
@@ -228,7 +229,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
                 isVisible = show
             }
         } else {
-            val tastingItem = binding.navView.menu.getItem(1)
+            val tastingItem = binding.navView.menu[1]
 
             if (show) {
                 tastingItem.setActionView(R.layout.dot)
