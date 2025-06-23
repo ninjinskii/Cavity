@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false">
+        android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:clipToPadding="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/autoAnimate"
@@ -155,8 +151,8 @@
                     app:layout_constraintTop_toTopOf="@+id/friendTitle"
                     app:tint="?attr/colorOnBackground" />
 
-            <include
-                    android:id="@+id/friend"
+            <com.louis.app.cavity.ui.widget.FriendPickerView
+                    android:id="@+id/friendChipGroup"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_margin"
@@ -164,9 +160,7 @@
                     app:layout_constraintTop_toBottomOf="@id/friendTitle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:visibility="visible"
-                    layout="@layout/item_friend" />
-
+                    android:visibility="visible" />
 
             <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonAddPdf"
@@ -180,7 +174,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/friend"
+                    app:layout_constraintTop_toBottomOf="@id/friendChipGroup"
                     app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

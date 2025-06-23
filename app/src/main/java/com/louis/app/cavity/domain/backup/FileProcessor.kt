@@ -8,9 +8,10 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.InputStream
+import androidx.core.net.toUri
 
 class FileProcessor(private val context: Context, fileAssoc: FileAssoc) {
-    private val uri = Uri.parse(fileAssoc.getFilePath())
+    private val uri = fileAssoc.getFilePath().toUri()
     private val externalFilename = fileAssoc.getExternalFilename()
     private val externalPath = context.getExternalFilesDir(null)!!.path
     private val outputFile = File("$externalPath/${externalFilename}.$extension")

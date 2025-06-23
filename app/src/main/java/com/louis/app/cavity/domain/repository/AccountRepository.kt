@@ -270,13 +270,13 @@ class AccountRepository private constructor(private val app: Application) {
             val message = response?.errorBody()?.let {
                 try {
                     converter?.convert(it)?.message
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     null
                 }
             } ?: app.getString(R.string.base_error)
 
             ApiResponse.Failure(message)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             ApiResponse.Failure(app.getString(R.string.base_error))
         }
     }

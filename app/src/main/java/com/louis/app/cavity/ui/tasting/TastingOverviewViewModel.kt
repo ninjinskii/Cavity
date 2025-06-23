@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.*
 import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.db.dao.BoundedTasting
+import com.louis.app.cavity.domain.history.HistoryEntryType
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.domain.repository.TastingRepository
@@ -102,7 +103,7 @@ class TastingOverviewViewModel(app: Application) : AndroidViewModel(app) {
                     bottle.id,
                     tasting.id,
                     comment = bottle.tastingTasteComment,
-                    type = 4,
+                    type = HistoryEntryType.TASTING,
                     favorite = 0
                 )
 

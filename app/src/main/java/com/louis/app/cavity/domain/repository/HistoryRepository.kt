@@ -40,6 +40,9 @@ class HistoryRepository private constructor(app: Application) {
     fun getReplenishmentForBottleNotPaged(bottleId: Long) =
         historyDao.getReplenishmentForBottleNotPaged(bottleId)
 
+    fun getReplenishmentForBottleNotPagedNotLive(bottleId: Long) =
+        historyDao.getReplenishmentForBottleNotPagedNotLive(bottleId)
+
     fun getEntriesForDate(date: Long) = historyDao.getEntriesForDate(date)
 
     fun getFavoriteEntries() = historyDao.getFavoriteEntries()
@@ -87,10 +90,10 @@ class HistoryRepository private constructor(app: Application) {
 
     private suspend fun ensureEntryTypeUnicityForBottle(entry: HistoryEntry) {
         when {
-            isReplenishment(entry.type) ->
+            entry.type.isReplenishment() ->
                 historyDao.clearReplenishmentsForBottle(entry.bottleId)
 
-            isConsumption(entry.type) ->
+            entry.type.isConsumption() ->
                 historyDao.clearConsumptionsForBottle(entry.bottleId)
         }
     }

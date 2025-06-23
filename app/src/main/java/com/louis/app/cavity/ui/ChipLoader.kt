@@ -72,6 +72,8 @@ class ChipLoader private constructor(
                         }
 
                         chip.isChecked = item.getItemId() in preselectedItems
+                    } else {
+                        chip.isCheckable = false
                     }
                 }
             }
@@ -117,8 +119,8 @@ class ChipLoader private constructor(
     private fun findParentScrollView(view: View): HorizontalScrollView? {
         return try {
             val parent = view.parent
-            if (parent is HorizontalScrollView) parent else findParentScrollView(parent as View)
-        } catch (e: ClassCastException) {
+            parent as? HorizontalScrollView ?: findParentScrollView(parent as View)
+        } catch (_: ClassCastException) {
             null
         }
     }

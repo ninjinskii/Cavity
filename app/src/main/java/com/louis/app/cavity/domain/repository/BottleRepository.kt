@@ -4,17 +4,16 @@ import android.app.Application
 import androidx.room.withTransaction
 import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.domain.history.HistoryEntryType
-import com.louis.app.cavity.domain.history.toInt
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.FReview
+import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.ui.addbottle.viewmodel.FReviewUiModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.QGrapeUiModel
-import com.louis.app.cavity.util.L
 
 
-// TODO: need service
+// TODO: need service - not sure at this point
 class BottleRepository private constructor(app: Application) {
     companion object {
         @Volatile
@@ -32,6 +31,10 @@ class BottleRepository private constructor(app: Application) {
     private val fReviewDao = database.fReviewDao()
     private val historyDao = database.historyDao()
 
+    suspend fun <T> transaction(databaseQueries: suspend () -> T) = database.withTransaction {
+        databaseQueries()
+    }
+
     suspend fun insertBottle(bottle: Bottle) = bottleDao.insertBottle(bottle)
 
     suspend fun insertBottles(bottles: List<Bottle>) = bottleDao.insertBottles(bottles)
@@ -46,7 +49,7 @@ class BottleRepository private constructor(app: Application) {
         database.withTransaction {
             repeat(count) {
                 val bottleId = insertBottle(bottle)
-                insertBottleMetadata(bottleId, bottle.buyDate, uiQGrapes, uiFReviews, isAGift)
+                insertBottleMetadata(bottleId, bottle.buyDate, uiQGrapes, uiFReviews, emptyList())
             }
         }
     }
@@ -59,7 +62,6 @@ class BottleRepository private constructor(app: Application) {
     ) {
         database.withTransaction {
             updateBottle(bottle)
-            L.v("bottle.id ${bottle.id}")
             insertBottleMetadata(bottle.id, bottle.buyDate, uiQGrapes, uiFReviews, isAGift)
         }
     }
@@ -111,13 +113,13 @@ class BottleRepository private constructor(app: Application) {
 
     suspend fun deleteAllBottles() = bottleDao.deleteAll()
 
-    // TODO: move this method to a service
+    // TODO: move this method to a service - not sure at this point. Maybe try in viewmodel
     private suspend fun insertBottleMetadata(
         bottleId: Long,
         buyDate: Long,
         uiQGrapes: List<QGrapeUiModel>,
         uiFReviews: List<FReviewUiModel>,
-        isAGift: Boolean
+        givenBy: List<Friend>
     ) {
         database.withTransaction {
             val fReviews = uiFReviews.map { FReview(bottleId, it.reviewId, it.value) }
@@ -130,10 +132,11 @@ class BottleRepository private constructor(app: Application) {
             fReviewDao.clearAllFReviewsForBottle(bottleId)
             fReviewDao.insertFReviews(fReviews)
 
-            val type = if (isAGift) HistoryEntryType.GIVEN_BY else HistoryEntryType.REPLENISHMENT
-            val entry = HistoryEntry(0, buyDate, bottleId, null, "", type.toInt(), 0)
+            val type = if (givenBy.isNotEmpty()) HistoryEntryType.GIVEN_BY else HistoryEntryType.ADD
+            val entry = HistoryEntry(0, buyDate, bottleId, null, "", type, 0)
             historyDao.clearReplenishmentsForBottle(bottleId)
             historyDao.insertEntry(entry)
+            // TODO: missing history entry - friends xref
         }
     }
 }

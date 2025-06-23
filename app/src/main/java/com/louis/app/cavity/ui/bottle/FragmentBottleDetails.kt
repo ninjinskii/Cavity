@@ -44,6 +44,7 @@ import com.louis.app.cavity.ui.bottle.adapter.JumpSmoothScroller
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.tasting.SpaceItemDecoration
 import com.louis.app.cavity.util.*
+import androidx.core.net.toUri
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private lateinit var transitionHelper: TransitionHelper
@@ -324,7 +325,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 cuvee.setData(it.cuvee)
             }
 
-            showImage(Uri.parse(it.imgPath))
+            showImage(it.imgPath.toUri())
         }
 
         bottleDetailsViewModel.pdfEvent.observe(viewLifecycleOwner) {
