@@ -90,18 +90,18 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             val isEdit = _editedBottle.value != null
             val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
             val uiFReviews = reviewManager.fReviews.value ?: emptyList()
-            val gift = step4Bottle?.giftedBy?.isNotEmpty() == true
+            val giftedBy = step4Bottle?.giftedBy ?: emptyList()
 
             if (!isEdit) {
                 val count = step1Bottle.count.coerceAtLeast(1)
                 val message = if (count > 1) R.string.bottles_added else R.string.bottle_added
 
-                bottleRepository.insertBottles(bottle, uiQGrapes, uiFReviews, gift, count)
+                bottleRepository.insertBottles(bottle, uiQGrapes, uiFReviews, giftedBy, count)
                 _completedEvent.postOnce(message)
             } else {
                 val message = R.string.bottle_updated
 
-                bottleRepository.updateBottle(bottle, uiQGrapes, uiFReviews, gift)
+                bottleRepository.updateBottle(bottle, uiQGrapes, uiFReviews, giftedBy)
                 _completedEvent.postOnce(message)
             }
         }
