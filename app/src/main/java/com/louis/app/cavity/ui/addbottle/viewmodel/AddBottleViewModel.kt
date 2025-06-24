@@ -3,11 +3,12 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 import android.app.Application
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.domain.repository.BottleRepository
+import com.louis.app.cavity.domain.repository.FriendRepository
+import com.louis.app.cavity.domain.repository.GrapeRepository
+import com.louis.app.cavity.domain.repository.HistoryRepository
+import com.louis.app.cavity.domain.repository.ReviewRepository
 import com.louis.app.cavity.model.Bottle
-import com.louis.app.cavity.model.FReview
-import com.louis.app.cavity.model.HistoryEntry
-import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
@@ -20,7 +21,11 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     lateinit var reviewManager: ReviewManager
     lateinit var otherInfoManager: OtherInfoManager
 
-    private val repository = WineRepository.getInstance(app)
+    private val bottleRepository = BottleRepository.getInstance(app)
+    private val grapeRepository = GrapeRepository.getInstance(app)
+    private val reviewRepository = ReviewRepository.getInstance(app)
+    private val historyRepository = HistoryRepository.getInstance(app)
+    private val friendRepository = FriendRepository.getInstance(app)
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
@@ -35,10 +40,10 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         get() = _completedEvent
 
     val editedBottleHistoryEntry = _editedBottle.switchMap {
-        repository.getReplenishmentForBottleNotPaged(it?.id ?: 0)
+        historyRepository.getReplenishmentForBottleNotPaged(it?.id ?: 0)
     }
 
-    val buyLocations = repository.getAllBuyLocations()
+    val buyLocations = bottleRepository.getAllBuyLocations()
 
     private var wineId = 0L
 
@@ -52,19 +57,22 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
         if (bottleId != 0L) {
             viewModelScope.launch(IO) {
-                val bottle = repository.getBottleByIdNotLive(bottleId)
+                val bottle = bottleRepository.getBottleByIdNotLive(bottleId)
                 _editedBottle.postValue(bottle)
 
                 dateManager = DateManager(bottle)
-                grapeManager = GrapeManager(viewModelScope, repository, bottle, _userFeedback)
-                reviewManager = ReviewManager(viewModelScope, repository, bottle, _userFeedback)
-                otherInfoManager = OtherInfoManager(repository, bottle)
+                grapeManager = GrapeManager(viewModelScope, grapeRepository, bottle, _userFeedback)
+                reviewManager =
+                    ReviewManager(viewModelScope, reviewRepository, bottle, _userFeedback)
+                otherInfoManager =
+                    OtherInfoManager(viewModelScope, friendRepository, historyRepository, bottle)
             }
         } else {
             dateManager = DateManager(null)
-            grapeManager = GrapeManager(viewModelScope, repository, null, _userFeedback)
-            reviewManager = ReviewManager(viewModelScope, repository, null, _userFeedback)
-            otherInfoManager = OtherInfoManager(repository, null)
+            grapeManager = GrapeManager(viewModelScope, grapeRepository, null, _userFeedback)
+            reviewManager = ReviewManager(viewModelScope, reviewRepository, null, _userFeedback)
+            otherInfoManager =
+                OtherInfoManager(viewModelScope, friendRepository, historyRepository, null)
         }
     }
 
@@ -80,72 +88,21 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             val isEdit = _editedBottle.value != null
+            val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
+            val uiFReviews = reviewManager.fReviews.value ?: emptyList()
+            val giftedBy = step4Bottle?.giftedBy ?: emptyList()
 
             if (!isEdit) {
                 val count = step1Bottle.count.coerceAtLeast(1)
                 val message = if (count > 1) R.string.bottles_added else R.string.bottle_added
 
-                repository.transaction {
-                    for (i in 1..count) {
-                        val bottleId = repository.insertBottle(bottle)
-
-                        insertQGrapes(bottleId)
-                        insertFReviews(bottleId)
-                        insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
-                    }
-                }
-
+                bottleRepository.insertBottles(bottle, uiQGrapes, uiFReviews, giftedBy, count)
                 _completedEvent.postOnce(message)
             } else {
                 val message = R.string.bottle_updated
-                val bottleId = _editedBottle.value!!.id
 
-                repository.run {
-                    transaction {
-                        updateBottle(bottle)
-                        insertQGrapes(bottleId)
-                        insertFReviews(bottleId)
-                        insertHistoryEntry(bottleId, bottle.buyDate, step4Bottle?.giftedBy)
-                    }
-                }
-
+                bottleRepository.updateBottle(bottle, uiQGrapes, uiFReviews, giftedBy)
                 _completedEvent.postOnce(message)
-            }
-        }
-    }
-
-    private suspend fun insertQGrapes(bottleId: Long) {
-        val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
-        val qGrapes = uiQGrapes
-            .filter { it.percentage > 0 }
-            .map { QGrape(bottleId, it.grapeId, it.percentage) }
-
-        repository.replaceQGrapesForBottle(bottleId, qGrapes)
-    }
-
-    private suspend fun insertFReviews(bottleId: Long) {
-        val uiFReviews = reviewManager.fReviews.value ?: emptyList()
-        val fReviews = uiFReviews.map {
-            FReview(bottleId, it.reviewId, it.value)
-        }
-
-        repository.replaceFReviewsForBottle(bottleId, fReviews)
-    }
-
-    private suspend fun insertHistoryEntry(bottleId: Long, buyDate: Long, friendId: Long?) {
-        val isAGift = friendId != null
-        val typeReplenishment = 1
-        val typeGiftedBy = 3
-        val type = if (isAGift) typeGiftedBy else typeReplenishment
-        val historyEntry = HistoryEntry(0, buyDate, bottleId, null, "", type, 0)
-
-        repository.run {
-            clearExistingReplenishments(bottleId)
-
-            if (isAGift) {
-                declareGiftedBottle(historyEntry, friendId!!)
-            } else {
-                insertHistoryEntry(historyEntry)
             }
         }
     }

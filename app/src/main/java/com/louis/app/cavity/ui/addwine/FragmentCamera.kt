@@ -39,6 +39,7 @@ import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import androidx.core.graphics.drawable.toDrawable
 
 class FragmentCamera : Fragment(R.layout.fragment_camera) {
     private lateinit var cameraExecutor: ExecutorService
@@ -162,7 +163,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
                         with(binding.coordinator) {
                             postDelayed(50) {
                                 binding.toggleTorch.isChecked = false
-                                foreground = ColorDrawable(Color.WHITE)
+                                foreground = Color.WHITE.toDrawable()
 
                                 postDelayed(100) {
                                     foreground = null

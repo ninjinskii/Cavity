@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.search.filters
 
 import com.louis.app.cavity.db.dao.BoundedBottle
+import com.louis.app.cavity.domain.history.toInt
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.util.toBoolean
 import com.louis.app.cavity.util.toInt
@@ -112,7 +113,7 @@ class FilterFriend(private val friendId: Long, private val historyEntryType: Int
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
         return boundedBottle.filter {
             return@filter it.historyEntriesWithFriends.find { entryWithFriends ->
-                entryWithFriends.historyEntry.type == historyEntryType &&
+                entryWithFriends.historyEntry.type.toInt() == historyEntryType &&
                         (friendId in entryWithFriends.friends.map { f -> f.id })
             } != null
         }

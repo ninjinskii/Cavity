@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.louis.app.cavity.domain.backup.FileAssoc
 
 @Entity(tableName = "friend", indices = [Index(value = ["name"], unique = true)])
 data class Friend(
@@ -17,4 +18,6 @@ data class Friend(
 
     override fun getFilePath() = imgPath
     override fun getExternalFilename() = "${this.name}-f${this.id}"
+
+    fun hasValidName() = name.isNotBlank()
 }

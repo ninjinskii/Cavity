@@ -115,7 +115,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         setupNavigation(binding.fakeToolbar)
 
-        isPickMode = arguments?.getBoolean(PICK_MODE) ?: false
+        isPickMode = arguments?.getBoolean(PICK_MODE) == true
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_EXPANDED
@@ -393,7 +393,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         filtersBinding.chipSelected.apply {
             setVisible(isPickMode)
-            isChecked = savedStateSelected ?: false
+            isChecked = savedStateSelected == true
             setOnCheckedChangeListener { _, _ ->
                 searchViewModel.submitFilter(id, getSelectedBottlesFilter())
             }
@@ -480,7 +480,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         filtersBinding.togglePrice.apply {
             val savedState = savedInstanceState?.getBoolean(SWITCH_PRICE_ENABLED)
 
-            isChecked = savedState ?: false
+            isChecked = savedState == true
             thumbDrawable = ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.switch_thumb,
