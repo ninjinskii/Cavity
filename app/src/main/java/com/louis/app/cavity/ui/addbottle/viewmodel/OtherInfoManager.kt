@@ -29,8 +29,8 @@ class OtherInfoManager(
 
     var partialBottle: Step4Bottle? = null
 
-    private val _selectedFriends = MutableLiveData<MutableList<Friend>>(mutableListOf())
-    val selectedFriends: LiveData<MutableList<Friend>>
+    private val _selectedFriends = MutableLiveData<List<Friend>>(emptyList())
+    val selectedFriends: LiveData<List<Friend>>
         get() = _selectedFriends
 
     init {
@@ -51,6 +51,10 @@ class OtherInfoManager(
 
     fun setPdfPath(path: String) {
         pdfPath = path
+    }
+
+    fun setSelectedFriends(friends: List<Friend>) {
+        _selectedFriends.value = friends
     }
 
     fun submitOtherInfo(

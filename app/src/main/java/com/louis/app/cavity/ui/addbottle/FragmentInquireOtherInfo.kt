@@ -84,11 +84,15 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 // friend.root.setVisible(isChecked)
 
                 if (isChecked) {
-                    binding.friendChipGroup.showPickFriendDialog()
+                    friendChipGroup.showPickFriendDialog()
                 }
             }
 
             buttonAddFriend.setOnClickListener { showAddFriendDialog() }
+        }
+
+        binding.friendChipGroup.setOnFriendSelectedListener {
+            otherInfoManager.setSelectedFriends(it)
         }
     }
 
@@ -121,6 +125,10 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         otherInfoManager.getAllFriends().observe(viewLifecycleOwner) {
             binding.friendChipGroup.setFriends(it)
+        }
+
+        otherInfoManager.selectedFriends.observe(viewLifecycleOwner) {
+            binding.friendChipGroup.setSelectedFriends(it)
         }
     }
 
@@ -200,6 +208,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 rbGroupSize.checkedButtonId,
                 addToFavorite.isChecked,
                 otherInfoManager.selectedFriends.value?.map { it.id } ?: throw Exception()
+                // friendChipGroup.getSelectedFriends().map { it.id }
             )
 
             addBottleViewModel.submitBottleForm()
