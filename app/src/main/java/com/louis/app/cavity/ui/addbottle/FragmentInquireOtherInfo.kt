@@ -7,25 +7,18 @@ import android.view.View
 import android.widget.Checkable
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.DialogChipablePickBinding
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
-import com.louis.app.cavity.ui.ChipLoader
-import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
-import com.louis.app.cavity.ui.addbottle.adapter.PickFriendRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel
@@ -76,7 +69,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             if (!otherInfoManager.hasPdf) {
                 try {
                     pickPdf.launch(arrayOf("application/pdf"))
-                } catch (e: ActivityNotFoundException) {
+                } catch (_: ActivityNotFoundException) {
                     binding.coordinator.showSnackbar(R.string.no_file_explorer)
                 }
             } else {
@@ -206,10 +199,10 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 otherInfo.text.toString(),
                 rbGroupSize.checkedButtonId,
                 addToFavorite.isChecked,
-                otherInfoManager.selectedFriends.value?.map { it.id } ?: emptyList()
+                otherInfoManager.selectedFriends.value?.map { it.id } ?: throw Exception()
             )
 
-            addBottleViewModel.insertBottle()
+            addBottleViewModel.submitBottleForm()
         }
 
         return true

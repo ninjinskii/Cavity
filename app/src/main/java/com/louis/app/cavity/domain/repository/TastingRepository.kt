@@ -1,13 +1,11 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import androidx.room.withTransaction
-import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.TastingXFriend
 
-class TastingRepository private constructor(app: Application) {
+class TastingRepository private constructor(app: Application) : Repository(app) {
     companion object {
         @Volatile
         var instance: TastingRepository? = null
@@ -18,14 +16,9 @@ class TastingRepository private constructor(app: Application) {
             }
     }
 
-    private val database = CavityDatabase.getInstance(app)
     private val tastingXFriendDao = database.tastingXFriendDao()
     private val tastingDao = database.tastingDao()
     private val tastingActionDao = database.tastingActionDao()
-
-    suspend fun <T> transaction(databaseQueries: suspend () -> T) = database.withTransaction {
-        databaseQueries()
-    }
 
     suspend fun insertTasting(tasting: Tasting) = tastingDao.insertTasting(tasting)
     suspend fun insertTastings(tastings: List<Tasting>) = tastingDao.insertTastings(tastings)
@@ -45,12 +38,10 @@ class TastingRepository private constructor(app: Application) {
         tastingXFriendDao.insertTastingXFriends(tastings)
 
     suspend fun insertTastingFriendXRef(tastingId: Long, friends: List<Long>) {
-        if (!database.inTransaction()) {
-            throw IllegalStateException("This method should be called inside a transaction")
-        }
-
-        friends.forEach {
-            tastingXFriendDao.insertTastingXFriend(TastingXFriend(tastingId, it))
+        assertTransaction {
+            friends.forEach {
+                tastingXFriendDao.insertTastingXFriend(TastingXFriend(tastingId, it))
+            }
         }
     }
 
