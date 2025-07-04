@@ -102,6 +102,13 @@ fun NestedScrollView.isViewVisible(view: View): Boolean {
     return view.getLocalVisibleRect(scrollBounds)
 }
 
+fun Fragment.clearInputMethodLeak() {
+    val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+    val rootView = view ?: return
+    imm?.hideSoftInputFromWindow(rootView.windowToken, 0)
+    imm?.restartInput(rootView)
+}
+
 fun Context.dpToPx(dp: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
 }
