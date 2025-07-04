@@ -95,6 +95,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private var isHeaderShadowDisplayed = false
     private var isPickMode = false
     private var insetBottom = 0
+    private var datePickerBeyond: DatePicker? = null
+    private var datePickerUntil: DatePicker? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -439,12 +441,12 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
         }
 
-        DatePicker(parentFragmentManager, beyondLayout, beyondTitle).apply {
+        datePickerBeyond = DatePicker(parentFragmentManager, beyondLayout, beyondTitle).apply {
             onEndIconClickListener = { onBeyondDateChanged(null) }
             onDateChangedListener = { onBeyondDateChanged(it) }
         }
 
-        DatePicker(parentFragmentManager, untilLayout, untilTitle).apply {
+        datePickerBeyond = DatePicker(parentFragmentManager, untilLayout, untilTitle).apply {
             onEndIconClickListener = { onUntilDateChanged(null) }
             onDateChangedListener = { onUntilDateChanged(it) }
         }
@@ -927,7 +929,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         super.onPause()
 
         // Use save state when quitting fragment as well as when configuration change happens
-        // But do not save wrong state if stub view has'nt been loaded yet
+        // But do not save wrong state if stub view hasn't been loaded yet
         if (_filtersBinding?.root?.isLaidOut == true) {
             val savedState = Bundle()
             this.onSaveInstanceState(savedState)
@@ -937,6 +939,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        datePickerUntil?.dispose()
+        datePickerBeyond?.dispose()
         bottlesAdapter = null
         bottomSheetBehavior = null
         _binding = null
