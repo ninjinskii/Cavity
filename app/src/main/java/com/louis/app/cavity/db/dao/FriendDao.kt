@@ -7,7 +7,7 @@ import com.louis.app.cavity.model.Friend
 @Dao
 interface FriendDao {
     @Insert
-    suspend fun insertFriend(friend: Friend)
+    suspend fun insertFriend(friend: Friend): Long
 
     @Insert
     suspend fun insertFriends(friends: List<Friend>)

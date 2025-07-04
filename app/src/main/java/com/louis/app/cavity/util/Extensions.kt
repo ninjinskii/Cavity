@@ -38,8 +38,10 @@ import com.louis.app.cavity.ui.ActivityMain
 import kotlin.math.max
 
 // Boolean and Int helpers for database compatibility
+@Suppress("KotlinConstantConditions")
 fun Int.toBoolean() = this == 1
 
+@Suppress("KotlinConstantConditions")
 fun Int.toggleBoolean() = if (this == 1) 0 else 1
 
 fun Boolean.toInt() = if (this) 1 else 0
@@ -98,6 +100,13 @@ fun NestedScrollView.isViewVisible(view: View): Boolean {
     getHitRect(scrollBounds)
 
     return view.getLocalVisibleRect(scrollBounds)
+}
+
+fun Fragment.clearInputMethodLeak() {
+    val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+    val rootView = view ?: return
+    imm?.hideSoftInputFromWindow(rootView.windowToken, 0)
+    imm?.restartInput(rootView)
 }
 
 fun Context.dpToPx(dp: Float): Float {

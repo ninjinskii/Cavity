@@ -14,4 +14,6 @@ data class Review(
 ) : Chipable {
     override fun getItemId() = id
     override fun getChipText() = contestName
+
+    fun hasValidName() = contestName.isNotBlank()
 }

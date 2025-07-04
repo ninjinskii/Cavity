@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui
 
 import android.text.InputType
+import androidx.core.view.doOnDetach
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -56,6 +57,23 @@ class DatePicker(
             associatedTextLayout.editText?.setText(formattedDate)
             onDateChangedListener?.invoke(it)
         }
+
+        associatedTextLayout.doOnDetach {
+            dispose()
+        }
+    }
+
+    fun dispose() {
+        associatedTextLayout.apply {
+            setEndIconOnClickListener(null)
+
+            editText?.onFocusChangeListener = null
+            editText?.setOnClickListener(null)
+        }
+
+        onDateChangedListener = null
+        onEndIconClickListener = null
+        picker = null
     }
 
     private fun createDatePicker(): MaterialDatePicker<Long> {
