@@ -24,7 +24,7 @@ class FriendPickerView @JvmOverloads constructor(
 
     private var friends: List<PickableFriend> = emptyList()
     private var selectedFriends: List<Friend> = emptyList()
-    //private var onFriendSelected: ((Friend) -> Unit)? = null
+    private var onFriendsSelected: ((List<Friend>) -> Unit)? = null
 
     init {
         loadSelectedFriendsChips()
@@ -44,9 +44,9 @@ class FriendPickerView @JvmOverloads constructor(
         loadSelectedFriendsChips()
     }
 
-    /*fun setOnFriendSelectedListener(listener: (Friend) -> Unit) {
-        onFriendSelected = listener
-    }*/
+    fun setOnFriendSelectedListener(listener: (List<Friend>) -> Unit) {
+        onFriendsSelected = listener
+    }
 
     fun showPickFriendDialog() {
         val layoutInflater = LayoutInflater.from(context)
@@ -67,6 +67,7 @@ class FriendPickerView @JvmOverloads constructor(
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.submit) { _, _ ->
                 selectedFriends = adapter.currentList.filter { it.checked }.map { it.friend }
+                onFriendsSelected?.invoke(selectedFriends)
                 L.v("${adapter.currentList}")
                 loadSelectedFriendsChips()
             }
@@ -94,6 +95,6 @@ class FriendPickerView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        //onFriendSelected = null
+        onFriendsSelected = null
     }
 }
