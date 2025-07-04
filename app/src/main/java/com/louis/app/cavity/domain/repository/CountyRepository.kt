@@ -1,14 +1,11 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import com.louis.app.cavity.db.CavityDatabase
-import com.louis.app.cavity.domain.error.ErrorReporter
-import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Companion.handleDatabaseError
 
-class CountyRepository private constructor(app: Application) {
+class CountyRepository private constructor(app: Application) : Repository(app) {
     companion object {
         @Volatile
         var instance: CountyRepository? = null
@@ -19,8 +16,6 @@ class CountyRepository private constructor(app: Application) {
             }
     }
 
-    private val errorReporter: ErrorReporter = SentryErrorReporter.getInstance(app)
-    private val database = CavityDatabase.getInstance(app)
     private val countyDao = database.countyDao()
 
     suspend fun insertCounty(county: County): RepositoryUpsertResult<Long> {

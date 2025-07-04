@@ -2,13 +2,12 @@ package com.louis.app.cavity.domain.repository
 
 import android.app.Application
 import androidx.room.withTransaction
-import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.domain.history.isReplenishment
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.HistoryXFriend
 
-class HistoryRepository private constructor(app: Application) {
+class HistoryRepository private constructor(app: Application) : Repository(app) {
     companion object {
         @Volatile
         var instance: HistoryRepository? = null
@@ -19,7 +18,6 @@ class HistoryRepository private constructor(app: Application) {
             }
     }
 
-    private val database = CavityDatabase.getInstance(app)
     private val historyDao = database.historyDao()
     private val historyXFriendDao = database.historyXFriendDao()
 
@@ -56,6 +54,12 @@ class HistoryRepository private constructor(app: Application) {
 
     suspend fun insertFriendHistoryXRefs(fxh: List<HistoryXFriend>) =
         historyXFriendDao.insertHistoryXFriends(fxh)
+
+    suspend fun clearReplenishmentsForBottle(bottleId: Long) =
+        historyDao.clearReplenishmentsForBottle(bottleId)
+
+    suspend fun insertHistoryXFriend(xref: HistoryXFriend) =
+        historyXFriendDao.insertHistoryXFriend(xref)
 
     suspend fun insertHistoryEntry(entry: HistoryEntry): Long {
         return database.withTransaction {

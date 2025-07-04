@@ -1,12 +1,10 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import androidx.room.withTransaction
-import com.louis.app.cavity.db.CavityDatabase
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.WineColor
 
-class WineRepository private constructor(app: Application) {
+class WineRepository private constructor(app: Application) : Repository(app) {
     companion object {
         @Volatile
         var instance: WineRepository? = null
@@ -17,20 +15,13 @@ class WineRepository private constructor(app: Application) {
             }
     }
 
-    private val database = CavityDatabase.getInstance(app)
-
     private val wineDao = database.wineDao()
-
-    suspend fun <T> transaction(databaseQueries: suspend () -> T) = database.withTransaction {
-        databaseQueries()
-    }
 
     suspend fun insertWine(wine: Wine) = wineDao.insertWine(wine)
 
     suspend fun insertWines(wines: List<Wine>) = wineDao.insertWines(wines)
 
     suspend fun updateWine(wine: Wine) = wineDao.updateWine(wine)
-
 
     suspend fun hideWineById(wineId: Long) = wineDao.hideWineById(wineId)
 

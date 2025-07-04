@@ -3,13 +3,21 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 import android.app.Application
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
+import com.louis.app.cavity.domain.error.ErrorReporter
+import com.louis.app.cavity.domain.error.SentryErrorReporter
+import com.louis.app.cavity.domain.history.HistoryEntryType
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.domain.repository.ReviewRepository
 import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.FReview
+import com.louis.app.cavity.model.HistoryEntry
+import com.louis.app.cavity.model.HistoryXFriend
+import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
@@ -26,6 +34,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val historyRepository = HistoryRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
+
+    private val errorReporter = SentryErrorReporter.getInstance(app)
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
@@ -76,7 +86,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun insertBottle() {
+    fun submitBottleForm() {
         val step1Bottle = dateManager.partialBottle
         val step4Bottle = otherInfoManager.partialBottle
         val bottle = mergeStep1And4Bottles(step1Bottle, step4Bottle)
@@ -86,23 +96,93 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             return
         }
 
-        viewModelScope.launch(IO) {
-            val isEdit = _editedBottle.value != null
-            val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
-            val uiFReviews = reviewManager.fReviews.value ?: emptyList()
-            val giftedBy = step4Bottle?.giftedBy ?: emptyList()
+        val isEdit = _editedBottle.value != null
+        val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
+        val uiFReviews = reviewManager.fReviews.value ?: emptyList()
+        val giftedBy = step4Bottle?.giftedBy ?: emptyList()
 
+        try {
             if (!isEdit) {
                 val count = step1Bottle.count.coerceAtLeast(1)
-                val message = if (count > 1) R.string.bottles_added else R.string.bottle_added
-
-                bottleRepository.insertBottles(bottle, uiQGrapes, uiFReviews, giftedBy, count)
-                _completedEvent.postOnce(message)
+                insertBottles(bottle, uiQGrapes, uiFReviews, giftedBy, count)
             } else {
-                val message = R.string.bottle_updated
+                updateBottle(bottle, uiQGrapes, uiFReviews, giftedBy)
+            }
+        } catch (e: Exception) {
+            errorReporter.captureException(e)
+            _userFeedback.postOnce(R.string.base_error)
+        }
+    }
 
-                bottleRepository.updateBottle(bottle, uiQGrapes, uiFReviews, giftedBy)
-                _completedEvent.postOnce(message)
+    private fun insertBottles(
+        bottle: Bottle,
+        uiQGrapes: List<QGrapeUiModel>,
+        uiFReviews: List<FReviewUiModel>,
+        givenBy: List<Long>,
+        count: Int,
+    ) {
+        val count = count.coerceAtLeast(1)
+        val message = if (count > 1) R.string.bottles_added else R.string.bottle_added
+
+        viewModelScope.launch(IO) {
+            bottleRepository.transaction {
+                repeat(count) {
+                    val bottleId = bottleRepository.insertBottle(bottle)
+                    insertBottleMetadata(bottleId, bottle.buyDate, uiQGrapes, uiFReviews, givenBy)
+                }
+            }
+
+            _completedEvent.postOnce(message)
+        }
+    }
+
+    private fun updateBottle(
+        bottle: Bottle,
+        uiQGrapes: List<QGrapeUiModel>,
+        uiFReviews: List<FReviewUiModel>,
+        givenBy: List<Long>
+    ) {
+        val message = R.string.bottle_updated
+
+        viewModelScope.launch(IO) {
+            bottleRepository.transaction {
+                bottleRepository.updateBottle(bottle)
+                insertBottleMetadata(bottle.id, bottle.buyDate, uiQGrapes, uiFReviews, givenBy)
+            }
+
+            _completedEvent.postOnce(message)
+        }
+    }
+
+    private suspend fun insertBottleMetadata(
+        bottleId: Long,
+        buyDate: Long,
+        uiQGrapes: List<QGrapeUiModel>,
+        uiFReviews: List<FReviewUiModel>,
+        givenBy: List<Long>
+    ) {
+        bottleRepository.transaction {
+            val fReviews = uiFReviews.map { FReview(bottleId, it.reviewId, it.value) }
+            val qGrapes = uiQGrapes
+                .filter { it.percentage > 0 }
+                .map { QGrape(bottleId, it.grapeId, it.percentage) }
+
+            bottleRepository.clearAllQGrapesForBottle(bottleId)
+            grapeRepository.insertQGrapes(qGrapes)
+            reviewRepository.clearAllFReviewsForBottle(bottleId)
+            reviewRepository.insertFReviews(fReviews)
+
+
+            val type = if (givenBy.isNotEmpty()) HistoryEntryType.GIVEN_BY else HistoryEntryType.ADD
+            L.v("entry type: $type")
+            val entry = HistoryEntry(0, buyDate, bottleId, null, "", type, 0)
+            historyRepository.clearReplenishmentsForBottle(bottleId)
+            val entryId = historyRepository.insertHistoryEntry(entry)
+
+            givenBy.forEach {
+                L.v("inserting ${givenBy.size} friends with this history entry")
+                val historyXFriend = HistoryXFriend(entryId, it)
+                historyRepository.insertHistoryXFriend(historyXFriend)
             }
         }
     }

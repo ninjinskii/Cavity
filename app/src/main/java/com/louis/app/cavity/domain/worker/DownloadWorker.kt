@@ -76,7 +76,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                 historyRepository.insertHistoryEntries(validateResponse(getHistoryEntries()))
                 tastingRepository.insertTastings(validateResponse(getTastings()))
                 tastingRepository.insertTastingActions(validateResponse(getTastingActions()))
-                reviewRepository.insertFilledReviews(validateResponse(getFReviews()))
+                reviewRepository.insertFReviews(validateResponse(getFReviews()))
                 grapeRepository.insertQGrapes(validateResponse(getQGrapes()))
                 historyRepository.insertFriendHistoryXRefs(validateResponse(getHistoryXFriend()))
                 tastingRepository.insertTastingFriendXRefs(validateResponse(getTastingXFriend()))

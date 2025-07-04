@@ -1,9 +1,8 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import com.louis.app.cavity.db.CavityDatabase
 
-class StatsRepository private constructor(app: Application) {
+class StatsRepository private constructor(app: Application) : Repository(app) {
     companion object {
         @Volatile
         var instance: StatsRepository? = null
@@ -14,7 +13,6 @@ class StatsRepository private constructor(app: Application) {
             }
     }
 
-    private val database = CavityDatabase.getInstance(app)
     private val statsDao = database.statsDao()
 
     fun getBottleCountForCounty(countyId: Long) = statsDao.getBottleCountForCounty(countyId)

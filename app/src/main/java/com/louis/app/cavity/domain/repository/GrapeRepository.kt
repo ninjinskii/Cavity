@@ -1,15 +1,12 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import com.louis.app.cavity.db.CavityDatabase
-import com.louis.app.cavity.domain.error.ErrorReporter
-import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Companion.handleDatabaseError
 
-class GrapeRepository private constructor(app: Application) {
+class GrapeRepository private constructor(app: Application) : Repository(app) {
     companion object {
         @Volatile
         var instance: GrapeRepository? = null
@@ -20,8 +17,6 @@ class GrapeRepository private constructor(app: Application) {
             }
     }
 
-    private val errorReporter: ErrorReporter = SentryErrorReporter.getInstance(app)
-    private val database = CavityDatabase.getInstance(app)
     private val grapeDao = database.grapeDao()
     private val qGrapeDao = database.qGrapeDao()
 
@@ -66,12 +61,10 @@ class GrapeRepository private constructor(app: Application) {
         qGrapeDao.getQGrapesAndGrapeForBottleNotLive(bottleId)
 
     suspend fun replaceQGrapesForBottle(bottleId: Long, qGrapes: List<QGrape>) {
-        if (!database.inTransaction()) {
-            throw IllegalStateException("This method should be called inside a transaction")
+        assertTransaction {
+            qGrapeDao.clearAllQGrapesForBottle(bottleId)
+            qGrapeDao.insertQGrapes(qGrapes)
         }
-
-        qGrapeDao.clearAllQGrapesForBottle(bottleId)
-        qGrapeDao.insertQGrapes(qGrapes)
     }
 
     suspend fun deleteAllGrapes() = grapeDao.deleteAll()

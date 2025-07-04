@@ -1,15 +1,12 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import com.louis.app.cavity.db.CavityDatabase
-import com.louis.app.cavity.domain.error.ErrorReporter
-import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Companion.handleDatabaseError
 
-class ReviewRepository private constructor(app: Application) {
+class ReviewRepository private constructor(app: Application) : Repository(app) {
     companion object {
         @Volatile
         var instance: ReviewRepository? = null
@@ -20,8 +17,6 @@ class ReviewRepository private constructor(app: Application) {
             }
     }
 
-    private val errorReporter: ErrorReporter = SentryErrorReporter.getInstance(app)
-    private val database = CavityDatabase.getInstance(app)
     private val reviewDao = database.reviewDao()
     private val fReviewDao = database.fReviewDao()
 
@@ -58,7 +53,7 @@ class ReviewRepository private constructor(app: Application) {
     suspend fun getAllReviewsNotLive() = reviewDao.getAllReviewsNotLive()
     fun getReviewWithFilledReviews() = reviewDao.getReviewWithFilledReviews()
     suspend fun getAllFReviewsNotLive() = fReviewDao.getAllFReviewsNotLive()
-    suspend fun insertFilledReviews(fReviews: List<FReview>) = fReviewDao.insertFReviews(fReviews)
+    suspend fun insertFReviews(fReviews: List<FReview>) = fReviewDao.insertFReviews(fReviews)
 
     fun getFReviewAndReviewForBottle(bottleId: Long) =
         fReviewDao.getFReviewAndReviewForBottle(bottleId)
@@ -66,13 +61,14 @@ class ReviewRepository private constructor(app: Application) {
     suspend fun getFReviewAndReviewForBottleNotLive(bottleId: Long) =
         fReviewDao.getFReviewAndReviewForBottleNotLive(bottleId)
 
-    suspend fun replaceFReviewsForBottle(bottleId: Long, fReviews: List<FReview>) {
-        if (!database.inTransaction()) {
-            throw IllegalStateException("This method should be called inside a transaction")
-        }
-
+    suspend fun clearAllFReviewsForBottle(bottleId: Long) =
         fReviewDao.clearAllFReviewsForBottle(bottleId)
-        fReviewDao.insertFReviews(fReviews)
+
+    suspend fun replaceFReviewsForBottle(bottleId: Long, fReviews: List<FReview>) {
+        assertTransaction {
+            fReviewDao.clearAllFReviewsForBottle(bottleId)
+            fReviewDao.insertFReviews(fReviews)
+        }
     }
 
     suspend fun deleteAllReviews() = reviewDao.deleteAll()
