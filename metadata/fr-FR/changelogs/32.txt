@@ -1,0 +1,2 @@
+- Correction de l'app apparaissant comme non compatible Android 15 dans les stores
+- Mise à jour des dépendences

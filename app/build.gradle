@@ -13,8 +13,8 @@ android {
         applicationId "com.louis.app.cavity"
         minSdkVersion 24
         targetSdkVersion 35
-        versionCode 31
-        versionName "1.8.0"
+        versionCode 32
+        versionName "1.8.1"
 
         javaCompileOptions {
             annotationProcessorOptions {
