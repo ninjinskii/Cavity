@@ -84,14 +84,14 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 // friend.root.setVisible(isChecked)
 
                 if (isChecked) {
-                    friendChipGroup.showPickFriendDialog()
+                    friendPickerView.showPickFriendDialog()
                 }
             }
 
             buttonAddFriend.setOnClickListener { showAddFriendDialog() }
         }
 
-        binding.friendChipGroup.setOnFriendSelectedListener {
+        binding.friendPickerView.setOnFriendSelectedListener {
             otherInfoManager.setSelectedFriends(it)
         }
     }
@@ -124,16 +124,16 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         }
 
         otherInfoManager.getAllFriends().observe(viewLifecycleOwner) {
-            binding.friendChipGroup.setFriends(it)
+            binding.friendPickerView.setFriends(it)
         }
 
         otherInfoManager.selectedFriends.observe(viewLifecycleOwner) {
-            binding.friendChipGroup.setSelectedFriends(it)
+            binding.friendPickerView.setSelectedFriends(it)
         }
     }
 
     private fun bindFriend(friend: Friend) {
-        with(binding.friendChipGroup) {
+        with(binding.friendPickerView) {
             AvatarLoader.requestAvatar(
                 requireContext(),
                 friend.imgPath

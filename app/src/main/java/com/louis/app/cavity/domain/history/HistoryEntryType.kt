@@ -1,7 +1,5 @@
 package com.louis.app.cavity.domain.history
 
-import android.system.Os.remove
-
 // Replenishment is everything that could be considered as an added bottle, either given by a friend,
 // or user buy. Consumptions are the opposite: gifted to a friend, drunk bottle, in tasting or not.
 enum class HistoryEntryType(val value: Int) {

@@ -68,7 +68,6 @@ class FriendPickerView @JvmOverloads constructor(
             .setPositiveButton(R.string.submit) { _, _ ->
                 selectedFriends = adapter.currentList.filter { it.checked }.map { it.friend }
                 onFriendsSelected?.invoke(selectedFriends)
-                L.v("${adapter.currentList}")
                 loadSelectedFriendsChips()
             }
             .show()
@@ -91,10 +90,5 @@ class FriendPickerView @JvmOverloads constructor(
                 .build()
                 .go()
         }
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        onFriendsSelected = null
     }
 }

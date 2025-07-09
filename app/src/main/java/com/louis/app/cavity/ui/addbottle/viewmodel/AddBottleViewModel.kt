@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 import android.app.Application
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
-import com.louis.app.cavity.domain.error.ErrorReporter
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.history.HistoryEntryType
 import com.louis.app.cavity.domain.repository.BottleRepository
@@ -121,12 +120,12 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         givenBy: List<Long>,
         count: Int,
     ) {
-        val count = count.coerceAtLeast(1)
-        val message = if (count > 1) R.string.bottles_added else R.string.bottle_added
+        val coercedCount = count.coerceIn(1..MAX_BOTTLE_BATCH_SIZE)
+        val message = if (coercedCount > 1) R.string.bottles_added else R.string.bottle_added
 
         viewModelScope.launch(IO) {
             bottleRepository.transaction {
-                repeat(count) {
+                repeat(coercedCount) {
                     val bottleId = bottleRepository.insertBottle(bottle)
                     insertBottleMetadata(bottleId, bottle.buyDate, uiQGrapes, uiFReviews, givenBy)
                 }
@@ -209,5 +208,9 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 consumed = editedBottle.value?.consumed ?: false.toInt()
             )
         } else null
+    }
+
+    companion object {
+        private const val MAX_BOTTLE_BATCH_SIZE = 50
     }
 }

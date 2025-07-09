@@ -152,7 +152,7 @@
                     app:tint="?attr/colorOnBackground" />
 
             <com.louis.app.cavity.ui.widget.FriendPickerView
-                    android:id="@+id/friendChipGroup"
+                    android:id="@+id/friend_picker_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_margin"
@@ -174,7 +174,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/friendChipGroup"
+                    app:layout_constraintTop_toBottomOf="@id/friend_picker_view"
                     app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

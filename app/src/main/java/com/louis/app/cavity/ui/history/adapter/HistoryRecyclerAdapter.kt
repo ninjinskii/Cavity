@@ -139,7 +139,7 @@ class HistoryRecyclerAdapter(
                             val data = if (historyEntry.type == HistoryEntryType.ADD) {
                                 entry.model.bottleAndWine.bottle.buyLocation
                             } else {
-                                entry.model.friends.firstOrNull()?.name ?: ""
+                                entry.model.friends.joinToString(", ") { it.name }
                             }
 
                             text = context.getString(label, data)

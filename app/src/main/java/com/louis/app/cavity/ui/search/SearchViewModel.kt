@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
-import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.CountyRepository
