@@ -13,5 +13,4 @@
     app:chipIconSize="@dimen/small_icon"
     app:chipIconTint="@color/chip_stroke"
     app:chipStartPadding="0dp"
-    app:closeIconEnabled="false"
-    app:closeIconSize="0dp" />
+    app:closeIconEnabled="false" />

@@ -81,7 +81,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             giftedBy.setOnCheckedChangeListener { _, isChecked ->
                 buttonAddFriend.setVisible(isChecked)
                 friendTitle.setVisible(isChecked)
-                // friend.root.setVisible(isChecked)
+                friendPickerView.setVisible(isChecked)
 
                 if (isChecked) {
                     friendPickerView.showPickFriendDialog()
@@ -208,7 +208,6 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 rbGroupSize.checkedButtonId,
                 addToFavorite.isChecked,
                 otherInfoManager.selectedFriends.value?.map { it.id } ?: throw Exception()
-                // friendChipGroup.getSelectedFriends().map { it.id }
             )
 
             addBottleViewModel.submitBottleForm()

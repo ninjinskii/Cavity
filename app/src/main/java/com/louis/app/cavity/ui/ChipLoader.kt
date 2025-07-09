@@ -33,6 +33,7 @@ class ChipLoader private constructor(
     private val selectable: Boolean,
     private val onEmpty: String?,
     private val showIconIf: (Chipable) -> Boolean,
+    private val closable: ((Chipable) -> Unit)?,
     private val onClickListener: ((View) -> Unit)?
 ) {
 
@@ -46,6 +47,7 @@ class ChipLoader private constructor(
                 chip.apply {
                     setTag(R.string.tag_chip_id, item)
                     text = item.getChipText()
+                    isCloseIconVisible = closable != null
 
                     if (showIconIf(item)) {
                         chipIcon = item.getIcon()?.let {
@@ -59,6 +61,9 @@ class ChipLoader private constructor(
                     }
 
                     onClickListener?.let { setOnClickListener(it) }
+                    setOnCloseIconClickListener {
+                        closable?.invoke(item)
+                    }
                 }
 
                 withContext(Main) {
@@ -151,6 +156,7 @@ class ChipLoader private constructor(
         private var minified: Boolean = false,
         private var onEmpty: String? = null,
         private var showIconIf: (Chipable) -> Boolean = { false },
+        private var closable: ((Chipable) -> Unit)? = null,
         private var onClickListener: ((View) -> Unit)? = null
     ) {
         fun with(scope: CoroutineScope) = apply { this.scope = scope }
@@ -163,6 +169,7 @@ class ChipLoader private constructor(
         fun preselect(preselect: Long) = apply { this.preselectedItems = listOf(preselect) }
         fun selectable(selectable: Boolean) = apply { this.selectable = selectable }
         fun emptyText(text: String?) = apply { this.onEmpty = text }
+        fun closable(doOnClose: (Chipable) -> Unit) = apply { this.closable = doOnClose }
 
         @Suppress("unused")
         fun showIconIf(block: (Chipable) -> Boolean) = apply { this.showIconIf = block }
@@ -199,6 +206,7 @@ class ChipLoader private constructor(
                 selectable,
                 onEmpty,
                 showIconIf,
+                closable,
                 onClickListener
             )
         }

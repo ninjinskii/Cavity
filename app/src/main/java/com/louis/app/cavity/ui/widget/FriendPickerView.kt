@@ -14,7 +14,6 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.addbottle.adapter.PickFriendRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.adapter.PickableFriend
-import com.louis.app.cavity.util.L
 
 class FriendPickerView @JvmOverloads constructor(
     context: Context,
@@ -35,12 +34,10 @@ class FriendPickerView @JvmOverloads constructor(
 
     fun setFriends(friends: List<Friend>) {
         this.friends = friends.map { PickableFriend(it, false) }
-        // invalidate()
     }
 
     fun setSelectedFriends(friends: List<Friend>) {
         this.selectedFriends = friends
-        // invalidate()
         loadSelectedFriendsChips()
     }
 
@@ -68,7 +65,6 @@ class FriendPickerView @JvmOverloads constructor(
             .setPositiveButton(R.string.submit) { _, _ ->
                 selectedFriends = adapter.currentList.filter { it.checked }.map { it.friend }
                 onFriendsSelected?.invoke(selectedFriends)
-                loadSelectedFriendsChips()
             }
             .show()
     }
@@ -82,10 +78,17 @@ class FriendPickerView @JvmOverloads constructor(
                 .with(lifecycle)
                 .useInflater(layoutInflater)
                 .toInflate(R.layout.chip_friend_entry)
-                .load(friends.filter { it.checked }.map { it.friend })
+                .load(selectedFriends)
                 .into(this)
                 .selectable(false)
                 .useAvatar(true)
+                .doOnClick { showPickFriendDialog() }
+                .closable { chipable ->
+                    setSelectedFriends(
+                        selectedFriends.filter { friend -> friend.id != chipable.getItemId() }
+                    )
+                    onFriendsSelected?.invoke(selectedFriends)
+                }
                 .emptyText(context.getString(R.string.placeholder_friend))
                 .build()
                 .go()
