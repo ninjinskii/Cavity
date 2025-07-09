@@ -30,10 +30,6 @@ class PickFriendRecyclerAdapter(
 
     override fun getItemCount() = currentList.size
 
-    fun getSelectedFriends(): List<Friend> {
-        return currentList.filter { it.checked }.map { it.friend }
-    }
-
     class PickFriendItemDiffCallback : DiffUtil.ItemCallback<PickableFriend>() {
         override fun areItemsTheSame(oldItem: PickableFriend, newItem: PickableFriend) =
             oldItem.friend.id == newItem.friend.id

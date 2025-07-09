@@ -5,14 +5,10 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.DialogChipablePickBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
-import com.louis.app.cavity.ui.addbottle.adapter.PickFriendRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.adapter.PickableFriend
 
 class FriendPickerView @JvmOverloads constructor(
@@ -24,20 +20,20 @@ class FriendPickerView @JvmOverloads constructor(
     private var friends: List<PickableFriend> = emptyList()
     private var selectedFriends: List<Friend> = emptyList()
     private var onFriendsSelected: ((List<Friend>) -> Unit)? = null
+    private var onChipFriendClicked: ((Friend) -> Unit)? = null
+    private var onRequestShowDialog: (() -> Unit)? = null
 
     init {
         loadSelectedFriendsChips()
-        setOnClickListener {
-            showPickFriendDialog()
-        }
     }
 
     fun setFriends(friends: List<Friend>) {
-        this.friends = friends.map { PickableFriend(it, false) }
+        this.friends = friends.map { PickableFriend(it, it in selectedFriends) }
     }
 
     fun setSelectedFriends(friends: List<Friend>) {
         this.selectedFriends = friends
+        this.friends.forEach { it.checked = it.friend in friends }
         loadSelectedFriendsChips()
     }
 
@@ -45,28 +41,8 @@ class FriendPickerView @JvmOverloads constructor(
         onFriendsSelected = listener
     }
 
-    fun showPickFriendDialog() {
-        val layoutInflater = LayoutInflater.from(context)
-        val dialogBinding = DialogChipablePickBinding.inflate(layoutInflater)
-        val adapter = PickFriendRecyclerAdapter(handleMultipleChoices = true) {
-            //onFriendSelected?.invoke(it)
-        }
-
-        with(dialogBinding.friendList) {
-            this.adapter = adapter
-            layoutManager = LinearLayoutManager(context)
-
-            adapter.submitList(friends)
-        }
-
-        MaterialAlertDialogBuilder(context)
-            .setTitle(R.string.gifted_by_friend)
-            .setView(dialogBinding.root)
-            .setPositiveButton(R.string.submit) { _, _ ->
-                selectedFriends = adapter.currentList.filter { it.checked }.map { it.friend }
-                onFriendsSelected?.invoke(selectedFriends)
-            }
-            .show()
+    fun setOnFriendClickListener(listener: ((Friend) -> Unit)) {
+        onChipFriendClicked = listener
     }
 
     private fun loadSelectedFriendsChips() {
@@ -82,7 +58,9 @@ class FriendPickerView @JvmOverloads constructor(
                 .into(this)
                 .selectable(false)
                 .useAvatar(true)
-                .doOnClick { showPickFriendDialog() }
+                .doOnClick {
+                    onChipFriendClicked?.invoke(it.getTag(R.string.tag_chip_id) as Friend)
+                }
                 .closable { chipable ->
                     setSelectedFriends(
                         selectedFriends.filter { friend -> friend.id != chipable.getItemId() }

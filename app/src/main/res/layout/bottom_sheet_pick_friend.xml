@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Bottom sheet -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:elevation="1dp"
+        android:focusable="true"
+        app:layout_behavior=".ui.search.widget.LockedBottomSheetBehavior"
+        app:layout_insetEdge="bottom">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchLayout"
+            style="@style/Widget.Cavity.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/small_margin"
+            android:layout_marginTop="@dimen/medium_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_search"
+                android:drawableTint="?attr/colorOnSurface"
+                android:hint="Recherchez un ami"
+                android:inputType="textCapSentences" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/sortText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="Tri par Fréquence"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:drawableStartCompat="@drawable/ic_star"
+            app:drawableTint="?attr/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchLayout" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/friendList"
+            android:layout_width="0dp"
+            android:layout_height="540dp"
+            android:layout_marginTop="@dimen/small_margin"
+            android:clipToPadding="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sortText"
+            tools:listitem="@layout/item_pick_friend" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

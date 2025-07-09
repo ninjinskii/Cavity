@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
@@ -23,6 +24,7 @@ import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
+import com.louis.app.cavity.ui.widget.FriendPickerBottomSheet
 import com.louis.app.cavity.util.*
 
 class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
@@ -84,16 +86,19 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 friendPickerView.setVisible(isChecked)
 
                 if (isChecked) {
-                    friendPickerView.showPickFriendDialog()
+                    showPickFriendBottomSheet()
                 }
             }
 
             buttonAddFriend.setOnClickListener { showAddFriendDialog() }
         }
 
-        binding.friendPickerView.setOnFriendSelectedListener {
-            otherInfoManager.setSelectedFriends(it)
+        with(binding.friendPickerView) {
+            setOnFriendSelectedListener { otherInfoManager.setSelectedFriends(it) }
+            setOnFriendClickListener { showPickFriendBottomSheet() }
+            setOnClickListener { showPickFriendBottomSheet() }
         }
+
     }
 
     private fun observe() {
@@ -186,6 +191,11 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         otherInfoManager.setPdfPath(pdfUri.toString())
         binding.buttonAddPdf.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)
         binding.buttonAddPdf.text = getString(R.string.remove_pdf)
+    }
+
+    private fun showPickFriendBottomSheet() {
+        FriendPickerBottomSheet()
+            .show(requireParentFragment().childFragmentManager, "friend-bottom-sheet")
     }
 
     private fun showAddFriendDialog() {

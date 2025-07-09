@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import androidx.annotation.IdRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.repository.FriendRepository
@@ -10,6 +11,7 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.addbottle.adapter.PickableFriend
+import com.louis.app.cavity.util.combine
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -32,6 +34,10 @@ class OtherInfoManager(
     private val _selectedFriends = MutableLiveData<List<Friend>>(emptyList())
     val selectedFriends: LiveData<List<Friend>>
         get() = _selectedFriends
+
+    val pickableFriends = getAllFriends().combine(selectedFriends) { friends, selectedFriends ->
+        friends.map { PickableFriend(it, it in selectedFriends) }
+    }
 
     init {
         editedBottle?.let {
