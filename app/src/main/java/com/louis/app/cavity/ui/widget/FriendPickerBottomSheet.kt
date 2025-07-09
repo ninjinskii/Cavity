@@ -6,14 +6,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetPickFriendBinding
 import com.louis.app.cavity.ui.addbottle.adapter.PickFriendRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.util.prepareWindowInsets
-import kotlin.math.max
 
 class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_pick_friend) {
     private var _binding: BottomSheetPickFriendBinding? = null
@@ -31,21 +29,6 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
             WindowInsetsCompat.CONSUMED
         }
 
-        /*BottomSheetBehavior.from(binding.bottomSheet).apply {
-            isDraggable = false
-            isFitToContents = true
-            isHideable = false
-            skipCollapsed = true
-            state = BottomSheetBehavior.STATE_EXPANDED
-            peekHeight = binding.root.height
-        }*/
-
-        BottomSheetBehavior.from(binding.bottomSheet).apply {
-            state = BottomSheetBehavior.STATE_EXPANDED
-            isHideable = false
-            saveFlags = BottomSheetBehavior.SAVE_NONE
-        }
-
         initRecyclerView()
     }
 
@@ -60,10 +43,6 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
         addBottleViewModel.otherInfoManager.pickableFriends.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
-    }
-
-    private fun setBottomSheetPeekHeight() {
-        val height = binding.root.height
     }
 
     override fun onDestroyView() {

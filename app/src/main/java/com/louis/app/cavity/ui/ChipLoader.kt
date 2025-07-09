@@ -89,7 +89,7 @@ class ChipLoader private constructor(
     }
 
     private suspend fun clearChipGroup(): List<Chipable> {
-        chipGroup.children.firstOrNull { it is AppCompatTextView }?.let {
+        chipGroup.children.firstOrNull { it !is Chip }?.let {
             withContext(Main) {
                 chipGroup.removeView(it)
             }

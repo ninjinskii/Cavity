@@ -125,6 +125,7 @@
     <string name="bottles_added">Les bouteilles ont été ajoutées.</string>
     <string name="bottle_updated">La bouteille a été modifiée.</string>
     <string name="placeholder_friend">Aucun ami.</string>
+    <string name="click_to_select_friend">Sélectionner des amis</string>
 
     <!-- Search -->
     <string name="search_wine_hint">Nom du vin, appellation…</string>
