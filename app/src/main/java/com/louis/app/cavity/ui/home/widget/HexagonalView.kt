@@ -70,7 +70,7 @@ class HexagonalView @JvmOverloads constructor(
                     ?: ColorStateList.valueOf(Color.TRANSPARENT)
             }
 
-        setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        setLayerType(LAYER_TYPE_HARDWARE, null)
         applyShape()
     }
 

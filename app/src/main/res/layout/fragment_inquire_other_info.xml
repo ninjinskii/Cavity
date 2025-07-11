@@ -109,6 +109,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rbGroupSize" />
 
+            <View
+                android:id="@+id/divider2"
+                style="@style/Widget.Cavity.Divider"
+                android:layout_marginTop="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/addToFavorite" />
+
+            <TextView
+                android:id="@+id/friendTitle"
+                style="?attr/textAppearanceSubtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/friends"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider2" />
+
             <CheckBox
                 android:id="@+id/giftedBy"
                 android:layout_width="0dp"
@@ -118,52 +136,49 @@
                 android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addToFavorite" />
+                app:layout_constraintTop_toBottomOf="@id/friendTitle" />
 
-            <HorizontalScrollView
-                android:id="@+id/friendScrollView"
+            <ImageButton
+                android:id="@+id/buttonAddFriend"
+                android:layout_width="@dimen/medium_icon"
+                android:layout_height="@dimen/medium_icon"
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/add_friend"
+                android:src="@drawable/ic_add"
+                app:layout_constraintBottom_toBottomOf="@+id/friendTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/friendTitle"
+                app:tint="?attr/colorOnBackground" />
+
+            <com.louis.app.cavity.ui.widget.FriendPickerView
+                android:id="@+id/friend_picker_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingHorizontal="@dimen/medium_margin"
-                android:scrollbars="none"
+                android:layout_marginHorizontal="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/small_margin"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/giftedBy">
+                app:layout_constraintTop_toBottomOf="@id/giftedBy" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/large_margin"
-                    android:orientation="horizontal">
+            <View
+                android:id="@+id/divider3"
+                style="@style/Widget.Cavity.Divider"
+                android:layout_marginTop="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/friend_picker_view" />
 
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/friendChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/medium_margin"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                        app:selectionRequired="true"
-                        app:singleLine="true"
-                        app:singleSelection="true" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonAddFriend"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+            <TextView
+                android:id="@+id/documentTitle"
+                style="?attr/textAppearanceSubtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/xsmall_margin"
-                android:text="@string/add_friend"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/friendScrollView" />
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/documents_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider3" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonAddPdf"
@@ -177,10 +192,102 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonAddFriend"
+                app:layout_constraintTop_toBottomOf="@id/documentTitle"
                 app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom sheet -->
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:clickable="true"
+        android:elevation="1dp"
+        android:focusable="true"
+        app:layout_behavior=".ui.search.widget.LockedBottomSheetBehavior"
+        app:layout_insetEdge="bottom">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/backdropHeader"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:backgroundTint="@color/surface_elevation_4dp"
+            app:cardElevation="@dimen/no_elevation"
+            app:cardPreventCornerOverlap="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearance="@style/ShapeAppearanceOverlay.Cavity.Backdrop">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/searchLayout"
+                    style="@style/Widget.Cavity.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/large_margin"
+                    app:layout_constraintEnd_toStartOf="@id/buttonSubmit"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_search"
+                        android:drawableTint="?attr/colorOnSurface"
+                        android:hint="Recherchez un ami"
+                        android:inputType="textCapSentences" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonSubmit"
+                    style="@style/Widget.Cavity.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/small_margin"
+                    android:text="@string/submit"
+                    app:layout_constraintBottom_toBottomOf="@id/searchLayout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/searchLayout"
+                    app:layout_constraintTop_toTopOf="@id/searchLayout" />
+
+                <TextView
+                    android:id="@+id/sortText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="Tri par Fréquence"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    app:drawableStartCompat="@drawable/ic_star"
+                    app:drawableTint="?attr/colorPrimary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/searchLayout" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/friendList"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:clipToPadding="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sortText"
+                    tools:listitem="@layout/item_pick_friend" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

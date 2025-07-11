@@ -25,6 +25,7 @@ import com.louis.app.cavity.util.prepareWindowInsets
 
 class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
     private lateinit var snackbarProvider: SnackbarProvider
+    private var datePicker: DatePicker? = null
     private var _binding: FragmentConsumeBottleBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
@@ -67,7 +68,7 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
     private fun initDatePicker() {
         val title = getString(R.string.consume_date)
 
-        DatePicker(
+        datePicker = DatePicker(
             childFragmentManager,
             binding.consumeDateLayout,
             title,
@@ -142,6 +143,7 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
 
     override fun onDestroy() {
         super.onDestroy()
+        datePicker?.dispose()
         _binding = null
     }
 }

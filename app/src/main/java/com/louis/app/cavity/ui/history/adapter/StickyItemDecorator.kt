@@ -7,7 +7,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.withTranslation
-import androidx.core.view.GestureDetectorCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.util.doOnEachNextLayout
 
@@ -18,7 +17,7 @@ class StickyItemDecorator(
 ) :
     RecyclerView.ItemDecoration(), GestureDetector.OnGestureListener {
 
-    private val detector = GestureDetectorCompat(parent.context, this)
+    private val detector = GestureDetector(parent.context, this)
     private var currentHeader: Pair<Int, RecyclerView.ViewHolder>? = null
 
     init {

@@ -1,14 +1,27 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import androidx.annotation.IdRes
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.domain.repository.FriendRepository
+import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
+import com.louis.app.cavity.model.Friend
+import com.louis.app.cavity.ui.addbottle.adapter.PickableFriend
+import com.louis.app.cavity.util.combine
 import com.louis.app.cavity.util.toInt
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+import kotlin.collections.map
 
 class OtherInfoManager(
-    private val repository: WineRepository,
+    viewModelScope: CoroutineScope,
+    private val friendRepository: FriendRepository,
+    private val historyRepository: HistoryRepository,
     editedBottle: Bottle?
 ) {
     private var pdfPath: String = ""
@@ -18,9 +31,27 @@ class OtherInfoManager(
 
     var partialBottle: Step4Bottle? = null
 
+    private val _selectedFriends = MutableLiveData<List<Friend>>(emptyList())
+    val selectedFriends: LiveData<List<Friend>>
+        get() = _selectedFriends
+
+    val pickableFriends = getAllFriends().combine(selectedFriends) { friends, selectedFriends ->
+        friends.map { PickableFriend(it, it in selectedFriends) }
+    }
+
     init {
         editedBottle?.let {
             setPdfPath(it.pdfPath)
+        }
+
+        if (editedBottle != null) {
+            viewModelScope.launch(IO) {
+                val replenishment =
+                    historyRepository.getReplenishmentForBottleNotPagedNotLive(editedBottle.id)
+
+                val givenBy = replenishment?.friends ?: mutableListOf()
+                _selectedFriends.postValue(givenBy.toMutableList())
+            }
         }
     }
 
@@ -28,11 +59,15 @@ class OtherInfoManager(
         pdfPath = path
     }
 
+    fun setSelectedFriends(friends: List<Friend>) {
+        _selectedFriends.value = friends
+    }
+
     fun submitOtherInfo(
         otherInfo: String,
         @IdRes checkedSize: Int,
         addToFavorite: Boolean,
-        friendId: Long?
+        friendIds: List<Long>
     ) {
         val size = when (checkedSize) {
             R.id.rbSlim -> BottleSize.SLIM
@@ -41,16 +76,16 @@ class OtherInfoManager(
             else /* R.id.rbMagnum */ -> BottleSize.MAGNUM
         }
 
-        partialBottle = Step4Bottle(otherInfo, size, addToFavorite.toInt(), pdfPath, friendId)
+        partialBottle = Step4Bottle(otherInfo, size, addToFavorite.toInt(), pdfPath, friendIds)
     }
 
-    fun getAllFriends() = repository.getAllFriends()
+    fun getAllFriends() = friendRepository.getAllFriends()
 
     data class Step4Bottle(
         val otherInfo: String,
         val size: BottleSize,
         val isFavorite: Int,
         val pdfPath: String,
-        val giftedBy: Long?
+        val giftedBy: List<Long>
     )
 }
