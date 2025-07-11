@@ -127,6 +127,7 @@
     <string name="bottle_updated">The bottle has been edited.</string>
     <string name="placeholder_friend">No friend.</string>
     <string name="click_to_select_friend">Pick friends</string>
+    <string name="documents_title">Documents</string>
 
     <!-- Search -->
     <string name="search_wine_hint">Wine name, appellation…</string>

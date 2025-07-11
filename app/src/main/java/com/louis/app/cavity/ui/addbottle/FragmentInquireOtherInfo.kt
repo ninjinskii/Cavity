@@ -80,7 +80,6 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         with(binding) {
             giftedBy.setOnCheckedChangeListener { _, isChecked ->
                 buttonAddFriend.setVisible(isChecked)
-                friendTitle.setVisible(isChecked)
                 friendPickerView.setVisible(isChecked)
 
                 if (isChecked) {
@@ -194,12 +193,17 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     }
 
     override fun requestNextPage(): Boolean {
+        val friends =
+            if (binding.giftedBy.isChecked)
+                otherInfoManager.selectedFriends.value?.map { it.id } ?: emptyList()
+            else emptyList()
+
         with(binding) {
             otherInfoManager.submitOtherInfo(
                 otherInfo.text.toString(),
                 rbGroupSize.checkedButtonId,
                 addToFavorite.isChecked,
-                otherInfoManager.selectedFriends.value?.map { it.id } ?: emptyList()
+                friends
             )
 
             addBottleViewModel.submitBottleForm()
