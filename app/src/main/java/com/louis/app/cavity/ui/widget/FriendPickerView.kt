@@ -35,16 +35,9 @@ class FriendPickerView @JvmOverloads constructor(
     private var onFilterQueryChanged: ((String) -> Unit)? = null
     private var onSortMethodChanged: (() -> Unit)? = null
 
-    private val adapter =
-        PickFriendRecyclerAdapter(handleMultipleChoices = true) {
-            onFriendSelectionChanged?.invoke(it)
-
-            /*if (it.checked) {
-                selectedFriends += it.friend
-            } else {
-                selectedFriends -= it.friend
-            }*/
-        }
+    private val adapter = PickFriendRecyclerAdapter(handleMultipleChoices = true) {
+        onFriendSelectionChanged?.invoke(it)
+    }
 
     init {
         layoutTransition = LayoutTransition()
@@ -53,13 +46,12 @@ class FriendPickerView @JvmOverloads constructor(
     }
 
     fun setFriends(friends: List<Friend>) {
-        this.friends = friends.map { PickableFriend(it, it in selectedFriends) }
-        adapter.submitList(this.friends)
+        computeSelectedFriends(friends)
     }
 
     fun setSelectedFriends(friends: List<Friend>) {
         this.selectedFriends = friends
-        /*this.friends.forEach { it.checked = it.friend in friends }*/
+        computeSelectedFriends(this.friends.map { it.friend })
         loadSelectedFriendsChips()
     }
 
@@ -92,7 +84,7 @@ class FriendPickerView @JvmOverloads constructor(
         }
 
         setFriends(friends.map { it.friend })
-        adapter.submitList(friends)
+//        adapter.submitList(friends)
 
         MaterialAlertDialogBuilder(context)
             .setTitle(R.string.gifted_by_friend)
@@ -103,6 +95,11 @@ class FriendPickerView @JvmOverloads constructor(
                 onFilterQueryChanged?.invoke("")
             }
             .show()
+    }
+
+    private fun computeSelectedFriends(friends: List<Friend>) {
+        this.friends = friends.map { PickableFriend(it, it in selectedFriends) }
+        adapter.submitList(this.friends)
     }
 
     private fun loadSelectedFriendsChips() {
