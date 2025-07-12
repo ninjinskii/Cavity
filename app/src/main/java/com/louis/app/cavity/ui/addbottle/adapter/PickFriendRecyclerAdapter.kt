@@ -13,7 +13,7 @@ import com.louis.app.cavity.util.setVisible
 
 class PickFriendRecyclerAdapter(
     private val handleMultipleChoices: Boolean,
-    private val onSingleItemSelected: ((item: Friend) -> Unit)?
+    private val onSingleItemSelected: ((item: PickableFriend) -> Unit)?
 ) :
     ListAdapter<PickableFriend, PickFriendViewHolder>(PickFriendItemDiffCallback()) {
 
@@ -42,7 +42,7 @@ class PickFriendRecyclerAdapter(
 class PickFriendViewHolder(
     private val binding: ItemPickFriendBinding,
     private val handleMultipleChoices: Boolean,
-    private val onSingleItemSelected: ((item: Friend) -> Unit)?
+    private val onSingleItemSelected: ((item: PickableFriend) -> Unit)?
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
@@ -58,9 +58,9 @@ class PickFriendViewHolder(
         text.text = pickableFriend.friend.name
 
         binding.root.setOnClickListener {
-            onSingleItemSelected?.invoke(pickableFriend.friend)
             checkbox.toggle()
             pickableFriend.checked = checkbox.isChecked
+            onSingleItemSelected?.invoke(pickableFriend)
         }
     }
 }

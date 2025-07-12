@@ -40,9 +40,9 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
             layoutManager = LinearLayoutManager(context)
         }
 
-        addBottleViewModel.otherInfoManager.pickableFriends.observe(viewLifecycleOwner) {
+        /*addBottleViewModel.otherInfoManager.pickableFriends.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-        }
+        }*/
     }
 
     override fun onDestroyView() {

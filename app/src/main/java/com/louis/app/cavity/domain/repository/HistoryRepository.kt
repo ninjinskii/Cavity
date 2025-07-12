@@ -45,6 +45,8 @@ class HistoryRepository private constructor(app: Application) : Repository(app) 
 
     fun getFavoriteEntries() = historyDao.getFavoriteEntries()
 
+    fun getFriendSortedByFrequence() = historyXFriendDao.getFriendSortedByFrequence()
+
     suspend fun getAllHistoryXFriendsNotLive() = historyXFriendDao.getAllHistoryXFriendsNotLive()
 
     suspend fun deleteAllFriendHistoryXRefs() = historyXFriendDao.deleteAll()

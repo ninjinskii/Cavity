@@ -83,7 +83,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 friendPickerView.setVisible(isChecked)
 
                 if (isChecked) {
-                    binding.friendPickerView.showPickFriendDialog()
+                    friendPickerView.showPickFriendDialog()
                 }
             }
         }
@@ -91,8 +91,10 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         binding.buttonAddFriend.setOnClickListener { showAddFriendDialog() }
 
         with(binding.friendPickerView) {
-            setOnFriendSelectedListener { otherInfoManager.setSelectedFriends(it) }
-            setOnFriendClickListener { binding.friendPickerView.showPickFriendDialog() }
+            setOnFriendSelectedListener { otherInfoManager.updateFriendStatus(it) }
+            setOnFriendClickListener { showPickFriendDialog() }
+            setOnFilterQueryChangedListener { otherInfoManager.setFriendFilterQuery(it) }
+            setOnSortMethodChangedListener { otherInfoManager.toggleSortFriendsByPreference() }
         }
     }
 

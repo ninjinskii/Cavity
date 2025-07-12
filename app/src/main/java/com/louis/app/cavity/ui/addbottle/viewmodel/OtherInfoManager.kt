@@ -2,8 +2,9 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import androidx.annotation.IdRes
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
@@ -31,13 +32,16 @@ class OtherInfoManager(
 
     var partialBottle: Step4Bottle? = null
 
+    private val friendFilterQuery = MutableLiveData("")
+    private val sortFriendsByPreference = MutableLiveData(true)
+
     private val _selectedFriends = MutableLiveData<List<Friend>>(emptyList())
     val selectedFriends: LiveData<List<Friend>>
         get() = _selectedFriends
 
-    val pickableFriends = getAllFriends().combine(selectedFriends) { friends, selectedFriends ->
+    /*val pickableFriends = getAllFriends().combine(selectedFriends) { friends, selectedFriends ->
         friends.map { PickableFriend(it, it in selectedFriends) }
-    }
+    }*/
 
     init {
         editedBottle?.let {
@@ -63,6 +67,22 @@ class OtherInfoManager(
         _selectedFriends.value = friends
     }
 
+    fun updateFriendStatus(friend: PickableFriend) {
+        if (friend.checked) {
+            _selectedFriends.value = _selectedFriends.value!! + friend.friend
+        } else {
+            _selectedFriends.value = _selectedFriends.value!! - friend.friend
+        }
+    }
+
+    fun toggleSortFriendsByPreference() {
+        sortFriendsByPreference.value = !(sortFriendsByPreference.value ?: false)
+    }
+
+    fun setFriendFilterQuery(query: String) {
+        friendFilterQuery.value = query
+    }
+
     fun submitOtherInfo(
         otherInfo: String,
         @IdRes checkedSize: Int,
@@ -79,7 +99,56 @@ class OtherInfoManager(
         partialBottle = Step4Bottle(otherInfo, size, addToFavorite.toInt(), pdfPath, friendIds)
     }
 
-    fun getAllFriends() = friendRepository.getAllFriends()
+    fun getAllFriends(): LiveData<List<Friend>> {
+        return sortFriendsByPreference.combine(friendFilterQuery) { sortByPref, query ->
+            Pair(sortByPref, query)
+        }.switchMap { (sortByPref, query) ->
+            val source: LiveData<List<Friend>> = if (sortByPref) {
+                historyRepository.getFriendSortedByFrequence()
+            } else {
+                friendRepository.getAllFriends()
+            }
+
+            source.map { list ->
+                if (query.isBlank()) list
+                else list.filter { it.name.contains(query, ignoreCase = true) }
+            }
+        }
+    }
+
+    // TODO: ONGOING -> faire le switchmap selon le tri voulu
+    /*fun getAllFriends(): LiveData<List<Friend>> {
+        val result = MediatorLiveData<List<Friend>>()
+
+        val currentSort = sortFriendsByPreference
+        val currentFilter = friendFilterQuery
+
+        val updateSource = {
+            val sortByPref = currentSort.value ?: false
+            val query = currentFilter.value.orEmpty()
+
+            val sourceLiveData: LiveData<List<Friend>> = if (sortByPref) {
+                historyRepository.getFriendSortedByFrequence()
+            } else {
+                friendRepository.getAllFriends()
+            }
+
+            result.removeSource(sourceLiveData)
+
+            result.addSource(sourceLiveData) { list ->
+                result.value = if (query.isBlank()) {
+                    list
+                } else {
+                    list.filter { it.name.contains(query, ignoreCase = true) }
+                }
+            }
+        }
+
+        result.addSource(currentSort) { updateSource() }
+        result.addSource(currentFilter) { updateSource() }
+
+        return result
+    }*/
 
     data class Step4Bottle(
         val otherInfo: String,

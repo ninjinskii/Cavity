@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,8 +30,21 @@ class FriendPickerView @JvmOverloads constructor(
 
     private var friends: List<PickableFriend> = emptyList()
     private var selectedFriends: List<Friend> = emptyList()
-    private var onFriendsSelected: ((List<Friend>) -> Unit)? = null
+    private var onFriendSelectionChanged: ((PickableFriend) -> Unit)? = null
     private var onChipFriendClicked: ((Friend) -> Unit)? = null
+    private var onFilterQueryChanged: ((String) -> Unit)? = null
+    private var onSortMethodChanged: (() -> Unit)? = null
+
+    private val adapter =
+        PickFriendRecyclerAdapter(handleMultipleChoices = true) {
+            onFriendSelectionChanged?.invoke(it)
+
+            /*if (it.checked) {
+                selectedFriends += it.friend
+            } else {
+                selectedFriends -= it.friend
+            }*/
+        }
 
     init {
         layoutTransition = LayoutTransition()
@@ -40,42 +54,53 @@ class FriendPickerView @JvmOverloads constructor(
 
     fun setFriends(friends: List<Friend>) {
         this.friends = friends.map { PickableFriend(it, it in selectedFriends) }
+        adapter.submitList(this.friends)
     }
 
     fun setSelectedFriends(friends: List<Friend>) {
         this.selectedFriends = friends
-        this.friends.forEach { it.checked = it.friend in friends }
+        /*this.friends.forEach { it.checked = it.friend in friends }*/
         loadSelectedFriendsChips()
     }
 
-    fun setOnFriendSelectedListener(listener: (List<Friend>) -> Unit) {
-        onFriendsSelected = listener
+    fun setOnFriendSelectedListener(listener: (PickableFriend) -> Unit) {
+        onFriendSelectionChanged = listener
     }
 
     fun setOnFriendClickListener(listener: ((Friend) -> Unit)) {
         onChipFriendClicked = listener
     }
 
+    fun setOnFilterQueryChangedListener(listener: ((String) -> Unit)) {
+        onFilterQueryChanged = listener
+    }
+
+    fun setOnSortMethodChangedListener(listener: (() -> Unit)) {
+        onSortMethodChanged = listener
+    }
+
     fun showPickFriendDialog() {
         val layoutInflater = LayoutInflater.from(context)
-        val dialogBinding = BottomSheetPickFriendBinding.inflate(layoutInflater)
-        val adapter = PickFriendRecyclerAdapter(handleMultipleChoices = true) {
-            //onFriendSelected?.invoke(it)
+        var dialogBinding: BottomSheetPickFriendBinding? =
+            BottomSheetPickFriendBinding.inflate(layoutInflater)
+
+        dialogBinding?.run {
+            friendList.adapter = adapter
+            friendList.layoutManager = LinearLayoutManager(context)
+            sortText.setOnClickListener { onSortMethodChanged?.invoke() }
+            search.doAfterTextChanged { onFilterQueryChanged?.invoke(it.toString()) }
         }
 
-        with(dialogBinding.friendList) {
-            this.adapter = adapter
-            layoutManager = LinearLayoutManager(context)
-
-            adapter.submitList(friends)
-        }
+        setFriends(friends.map { it.friend })
+        adapter.submitList(friends)
 
         MaterialAlertDialogBuilder(context)
             .setTitle(R.string.gifted_by_friend)
-            .setView(dialogBinding.root)
-            .setPositiveButton(R.string.submit) { _, _ ->
-                selectedFriends = adapter.currentList.filter { it.checked }.map { it.friend }
-                onFriendsSelected?.invoke(selectedFriends)
+            .setView(dialogBinding?.root)
+            .setPositiveButton(R.string.submit) { _, _ -> }
+            .setOnDismissListener {
+                dialogBinding = null
+                onFilterQueryChanged?.invoke("")
             }
             .show()
     }
@@ -103,10 +128,9 @@ class FriendPickerView @JvmOverloads constructor(
                     onChipFriendClicked?.invoke(it.getTag(R.string.tag_chip_id) as Friend)
                 }
                 .closable { chipable ->
-                    setSelectedFriends(
-                        selectedFriends.filter { friend -> friend.id != chipable.getItemId() }
-                    )
-                    onFriendsSelected?.invoke(selectedFriends)
+                    (chipable as? Friend)?.let {
+                        onFriendSelectionChanged?.invoke(PickableFriend(it, false))
+                    }
                 }
                 .build()
                 .go()
