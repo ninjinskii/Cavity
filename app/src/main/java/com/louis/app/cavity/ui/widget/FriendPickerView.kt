@@ -28,15 +28,15 @@ class FriendPickerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ChipGroup(context, attrs, defStyleAttr) {
 
-    private var friends: List<PickableFriend> = emptyList()
-    private var selectedFriends: List<Friend> = emptyList()
+    private var friends: List<Friend> = emptyList()
+    private var selectedFriends: Set<Friend> = emptySet()
     private var onFriendSelectionChanged: ((PickableFriend) -> Unit)? = null
     private var onChipFriendClicked: ((Friend) -> Unit)? = null
     private var onFilterQueryChanged: ((String) -> Unit)? = null
     private var onSortMethodChanged: (() -> Unit)? = null
 
-    private val adapter = PickFriendRecyclerAdapter(handleMultipleChoices = true) {
-        onFriendSelectionChanged?.invoke(it)
+    private val adapter = PickFriendRecyclerAdapter(handleMultipleChoices = true) { pickable ->
+        onFriendSelectionChanged?.invoke(pickable)
     }
 
     init {
@@ -46,12 +46,13 @@ class FriendPickerView @JvmOverloads constructor(
     }
 
     fun setFriends(friends: List<Friend>) {
-        computeSelectedFriends(friends)
+        this.friends = friends
+        refreshPickableFriends()
     }
 
     fun setSelectedFriends(friends: List<Friend>) {
-        this.selectedFriends = friends
-        computeSelectedFriends(this.friends.map { it.friend })
+        selectedFriends = friends.toSet()
+        refreshPickableFriends()
         loadSelectedFriendsChips()
     }
 
@@ -83,8 +84,7 @@ class FriendPickerView @JvmOverloads constructor(
             search.doAfterTextChanged { onFilterQueryChanged?.invoke(it.toString()) }
         }
 
-        setFriends(friends.map { it.friend })
-//        adapter.submitList(friends)
+        refreshPickableFriends()
 
         MaterialAlertDialogBuilder(context)
             .setTitle(R.string.gifted_by_friend)
@@ -97,9 +97,9 @@ class FriendPickerView @JvmOverloads constructor(
             .show()
     }
 
-    private fun computeSelectedFriends(friends: List<Friend>) {
-        this.friends = friends.map { PickableFriend(it, it in selectedFriends) }
-        adapter.submitList(this.friends)
+    private fun refreshPickableFriends() {
+        val pickable = friends.map { friend -> PickableFriend(friend, friend in selectedFriends) }
+        adapter.submitList(pickable)
     }
 
     private fun loadSelectedFriendsChips() {
@@ -117,7 +117,7 @@ class FriendPickerView @JvmOverloads constructor(
                 .with(lifecycle)
                 .useInflater(layoutInflater)
                 .toInflate(R.layout.chip_friend_entry)
-                .load(selectedFriends)
+                .load(selectedFriends.toList())
                 .into(this)
                 .selectable(false)
                 .useAvatar(true)
