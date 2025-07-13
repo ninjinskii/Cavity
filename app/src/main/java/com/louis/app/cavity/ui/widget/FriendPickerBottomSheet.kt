@@ -107,8 +107,12 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
     private fun executeScrollToRequest() {
         val scroller = LinearSmoothScroller(requireContext())
         scroller.targetPosition = scrollTo ?: 0
-        binding.friendList.layoutManager?.startSmoothScroll(scroller)
-        scrollTo = 0
+
+        try {
+            binding.friendList.layoutManager?.startSmoothScroll(scroller)
+        } finally {
+            scrollTo = 0
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) =
