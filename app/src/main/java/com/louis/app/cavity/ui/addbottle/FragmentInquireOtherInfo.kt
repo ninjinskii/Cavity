@@ -94,7 +94,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         binding.friendPickerView.setConfig(
             FriendPickerView.FriendPickerConfig(
                 onFriendSelectionChanged = { otherInfoManager.updateFriendStatus(it) },
-                onFriendChipClicked = { binding.friendPickerView.showPickFriendDialog() }, // TODO: scrol to friend position ?
+                onFriendChipClicked = { binding.friendPickerView.showPickFriendDialog() },
                 onFilterQueryChanged = { otherInfoManager.setFriendFilterQuery(it) },
                 onSortMethodChanged = { otherInfoManager.toggleSortFriendsByPreference() },
                 friends = emptyList(),
@@ -111,13 +111,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         addBottleViewModel.editedBottleHistoryEntry.observe(viewLifecycleOwner) { entry ->
             entry?.let {
                 val isAGift = entry.friends.isNotEmpty()
-
                 binding.giftedBy.isChecked = isAGift
-
-                if (isAGift) {
-                    val friend = entry.friends.first()
-                    bindFriend(friend)
-                }
             }
         }
 
@@ -127,21 +121,6 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         otherInfoManager.selectedFriends.observe(viewLifecycleOwner) {
             binding.friendPickerView.setSelectedFriends(it)
-        }
-    }
-
-    private fun bindFriend(friend: Friend) {
-        with(binding.friendPickerView) {
-            AvatarLoader.requestAvatar(
-                requireContext(),
-                friend.imgPath
-            ) { avatarBitmap ->
-                avatarBitmap?.let { drawable ->
-                    // avatar.setImageDrawable(drawable)
-                }
-            }
-
-            //friendName.text = friend.getChipText()
         }
     }
 

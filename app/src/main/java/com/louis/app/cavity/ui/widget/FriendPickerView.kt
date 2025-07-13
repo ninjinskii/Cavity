@@ -52,32 +52,9 @@ class FriendPickerView @JvmOverloads constructor(
     }
 
     fun showPickFriendDialog() {
-        /*val layoutInflater = LayoutInflater.from(context)
-        var dialogBinding: BottomSheetPickFriendBinding? =
-            BottomSheetPickFriendBinding.inflate(layoutInflater)
-
-        dialogBinding?.run {
-            friendList.adapter = adapter
-            friendList.layoutManager = LinearLayoutManager(context)
-            sortText.setOnClickListener { onSortMethodChanged?.invoke() }
-            search.doAfterTextChanged { onFilterQueryChanged?.invoke(it.toString()) }
-        }
-
-        refreshPickableFriends()
-
-        MaterialAlertDialogBuilder(context)
-            .setTitle(R.string.gifted_by_friend)
-            .setView(dialogBinding?.root)
-            .setPositiveButton(R.string.submit) { _, _ -> }
-            .setOnDismissListener {
-                dialogBinding = null
-                onFilterQueryChanged?.invoke("")
-            }
-            .show()*/
-
         val fragmentManager = findFragmentManager(this)
+        ensureBottomSheet()
 
-        bottomSheet = FriendPickerBottomSheet()
         fragmentManager.registerFragmentLifecycleCallbacks(object :
             FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentDestroyed(fragmentManager: FragmentManager, fragment: Fragment) {
@@ -89,17 +66,11 @@ class FriendPickerView @JvmOverloads constructor(
         }, false)
 
         ensureBottomSheet().show(fragmentManager, config)
+    }
 
-//            with(config) {
-//                it.show(
-//                    parentFragmentManager = fragmentManager,
-//                    friends = this?.friends ?: emptyList(),
-//                    selectedFriends = this?.selectedFriends?.toList() ?: emptyList(),
-//                    onFriendSelected = { pickable -> onFriendSelectionChanged?.invoke(pickable) },
-//                    onFilterQueryChanged = { query -> onFilterQueryChanged?.invoke(query) },
-//                    onSortMethodChanged = { onSortMethodChanged?.invoke() }
-//                )
-//            }
+    fun scrollToFriend(friend: Friend) {
+        val position = config?.friends?.indexOf(friend) ?: 0
+        ensureBottomSheet().requestScrollToPosition(position)
     }
 
     private fun ensureBottomSheet() =
