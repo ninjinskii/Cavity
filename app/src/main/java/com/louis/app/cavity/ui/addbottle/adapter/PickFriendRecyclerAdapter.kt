@@ -53,6 +53,8 @@ class PickFriendViewHolder(
             .placeholder(R.drawable.ic_person)
             .into(image)
 
+        checkbox.setOnCheckedChangeListener(null)
+
         text.text = pickableFriend.friend.name
         checkbox.setVisible(handleMultipleChoices)
         checkbox.isChecked = pickableFriend.checked

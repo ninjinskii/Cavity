@@ -70,25 +70,11 @@ class HistoryRepository private constructor(app: Application) : Repository(app) 
         }
     }
 
-    // TODO: service ?
     suspend fun insertHistoryEntry(entry: HistoryEntry, friends: List<Long>) {
         database.withTransaction {
             val entryId = insertHistoryEntry(entry)
             val historyXFriends = friends.map { HistoryXFriend(entryId, it) }
             historyXFriendDao.insertHistoryXFriends(historyXFriends)
-        }
-    }
-
-    // TODO: note to myself: this method will be removed, since in the future multiple friends can give a unique bottle
-    suspend fun insertGiftedReplenishment(entry: HistoryEntry, friendId: Long) {
-        database.withTransaction {
-            historyDao.clearReplenishmentsForBottle(entry.bottleId)
-
-            val entryId = historyDao.insertEntry(entry)
-
-            historyXFriendDao.insertHistoryXFriend(
-                HistoryXFriend(entryId, friendId)
-            )
         }
     }
 

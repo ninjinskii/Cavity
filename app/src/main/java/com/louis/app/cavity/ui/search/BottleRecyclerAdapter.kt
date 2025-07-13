@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.search
 
-import android.net.Uri
 import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View

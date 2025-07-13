@@ -8,36 +8,27 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentManager.findFragmentManager
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.BottomSheetPickFriendBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ChipLoader
-import com.louis.app.cavity.ui.addbottle.adapter.PickFriendRecyclerAdapter
 import com.louis.app.cavity.ui.addbottle.adapter.PickableFriend
 
 class FriendPickerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ChipGroup(context, attrs, defStyleAttr) {
+) :
+    ChipGroup(context, attrs, defStyleAttr) {
 
-    private var friends: List<Friend> = emptyList()
-    private var selectedFriends: Set<Friend> = emptySet()
-    private var onFriendSelectionChanged: ((PickableFriend) -> Unit)? = null
-    private var onChipFriendClicked: ((Friend) -> Unit)? = null
-    private var onFilterQueryChanged: ((String) -> Unit)? = null
-    private var onSortMethodChanged: (() -> Unit)? = null
-
-    private val adapter = PickFriendRecyclerAdapter(handleMultipleChoices = true) { pickable ->
-        onFriendSelectionChanged?.invoke(pickable)
-    }
+    private var config: FriendPickerConfig? = null
+    private var bottomSheet: FriendPickerBottomSheet? = null
 
     init {
         layoutTransition = LayoutTransition()
@@ -45,35 +36,23 @@ class FriendPickerView @JvmOverloads constructor(
         setOnClickListener { showPickFriendDialog() }
     }
 
+    fun setConfig(config: FriendPickerConfig) {
+        this.config = config
+    }
+
     fun setFriends(friends: List<Friend>) {
-        this.friends = friends
-        refreshPickableFriends()
+        config?.friends = friends
+        bottomSheet?.refreshPickableFriends(config)
     }
 
     fun setSelectedFriends(friends: List<Friend>) {
-        selectedFriends = friends.toSet()
-        refreshPickableFriends()
+        config?.selectedFriends = friends.toSet()
+        bottomSheet?.refreshPickableFriends(config)
         loadSelectedFriendsChips()
     }
 
-    fun setOnFriendSelectedListener(listener: (PickableFriend) -> Unit) {
-        onFriendSelectionChanged = listener
-    }
-
-    fun setOnFriendClickListener(listener: ((Friend) -> Unit)) {
-        onChipFriendClicked = listener
-    }
-
-    fun setOnFilterQueryChangedListener(listener: ((String) -> Unit)) {
-        onFilterQueryChanged = listener
-    }
-
-    fun setOnSortMethodChangedListener(listener: (() -> Unit)) {
-        onSortMethodChanged = listener
-    }
-
     fun showPickFriendDialog() {
-        val layoutInflater = LayoutInflater.from(context)
+        /*val layoutInflater = LayoutInflater.from(context)
         var dialogBinding: BottomSheetPickFriendBinding? =
             BottomSheetPickFriendBinding.inflate(layoutInflater)
 
@@ -94,19 +73,43 @@ class FriendPickerView @JvmOverloads constructor(
                 dialogBinding = null
                 onFilterQueryChanged?.invoke("")
             }
-            .show()
+            .show()*/
+
+        val fragmentManager = findFragmentManager(this)
+
+        bottomSheet = FriendPickerBottomSheet()
+        fragmentManager.registerFragmentLifecycleCallbacks(object :
+            FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentDestroyed(fragmentManager: FragmentManager, fragment: Fragment) {
+                if (fragment == bottomSheet) {
+                    bottomSheet = null
+                    fragmentManager.unregisterFragmentLifecycleCallbacks(this)
+                }
+            }
+        }, false)
+
+        ensureBottomSheet().show(fragmentManager, config)
+
+//            with(config) {
+//                it.show(
+//                    parentFragmentManager = fragmentManager,
+//                    friends = this?.friends ?: emptyList(),
+//                    selectedFriends = this?.selectedFriends?.toList() ?: emptyList(),
+//                    onFriendSelected = { pickable -> onFriendSelectionChanged?.invoke(pickable) },
+//                    onFilterQueryChanged = { query -> onFilterQueryChanged?.invoke(query) },
+//                    onSortMethodChanged = { onSortMethodChanged?.invoke() }
+//                )
+//            }
     }
 
-    private fun refreshPickableFriends() {
-        val pickable = friends.map { friend -> PickableFriend(friend, friend in selectedFriends) }
-        adapter.submitList(pickable)
-    }
+    private fun ensureBottomSheet() =
+        bottomSheet ?: FriendPickerBottomSheet().also { bottomSheet = it }
 
     private fun loadSelectedFriendsChips() {
         val lifecycle = findViewTreeLifecycleOwner()?.lifecycleScope
         val layoutInflater = LayoutInflater.from(context)
 
-        if (selectedFriends.isEmpty()) {
+        if (config?.selectedFriends?.isEmpty() == true) {
             removeAllViews()
             generateEmptyStateButton()
             return
@@ -117,16 +120,16 @@ class FriendPickerView @JvmOverloads constructor(
                 .with(lifecycle)
                 .useInflater(layoutInflater)
                 .toInflate(R.layout.chip_friend_entry)
-                .load(selectedFriends.toList())
+                .load(config?.selectedFriends?.toList() ?: emptyList())
                 .into(this)
                 .selectable(false)
                 .useAvatar(true)
                 .doOnClick {
-                    onChipFriendClicked?.invoke(it.getTag(R.string.tag_chip_id) as Friend)
+                    config?.onFriendChipClicked?.invoke(it.getTag(R.string.tag_chip_id) as Friend)
                 }
                 .closable { chipable ->
                     (chipable as? Friend)?.let {
-                        onFriendSelectionChanged?.invoke(PickableFriend(it, false))
+                        config?.onFriendSelectionChanged?.invoke(PickableFriend(it, false))
                     }
                 }
                 .build()
@@ -151,4 +154,13 @@ class FriendPickerView @JvmOverloads constructor(
             }
         )
     }
+
+    data class FriendPickerConfig(
+        var friends: List<Friend>,
+        var selectedFriends: Set<Friend>,
+        val onFriendSelectionChanged: (PickableFriend) -> Unit,
+        val onFriendChipClicked: (Friend) -> Unit,
+        val onFilterQueryChanged: (String) -> Unit,
+        val onSortMethodChanged: () -> Unit
+    )
 }

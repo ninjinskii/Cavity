@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="500dp"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/medium_margin">
 
@@ -12,10 +12,7 @@
         style="@style/Widget.Cavity.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/medium_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_marginTop="@dimen/medium_margin">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/search"
@@ -38,21 +35,13 @@
         android:text="Tri par Fréquence"
         android:textAppearance="?attr/textAppearanceCaption"
         app:drawableStartCompat="@drawable/ic_star"
-        app:drawableTint="?attr/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchLayout" />
+        app:drawableTint="?attr/colorPrimary" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/friendList"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/small_margin"
-        android:layout_weight="1"
-        android:overScrollMode="never"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sortText"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
         tools:listitem="@layout/item_pick_friend" />
 
 </LinearLayout>

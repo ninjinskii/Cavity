@@ -13,6 +13,8 @@ import com.louis.app.cavity.model.BottleSize
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.addbottle.adapter.PickableFriend
 import com.louis.app.cavity.util.combine
+import com.louis.app.cavity.util.plusAssign
+import com.louis.app.cavity.util.minusAssign
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -34,8 +36,8 @@ class OtherInfoManager(
     private val friendFilterQuery = MutableLiveData("")
     private val sortFriendsByPreference = MutableLiveData(true)
 
-    private val _selectedFriends = MutableLiveData<List<Friend>>(emptyList())
-    val selectedFriends: LiveData<List<Friend>>
+    private val _selectedFriends = MutableLiveData<MutableList<Friend>>(mutableListOf())
+    val selectedFriends: LiveData<MutableList<Friend>>
         get() = _selectedFriends
 
     init {
@@ -59,18 +61,9 @@ class OtherInfoManager(
     }
 
     fun updateFriendStatus(pickableFriend: PickableFriend) {
-        with(_selectedFriends) {
-            value = if (pickableFriend.checked) {
-                value?.plus(pickableFriend.friend)
-            } else {
-                value?.minus(pickableFriend.friend)
-            }
+        _selectedFriends.let {
+            if (pickableFriend.checked) it += pickableFriend.friend else it -= pickableFriend.friend
         }
-        /*if (pickableFriend.checked) {
-            _selectedFriends.value = _selectedFriends.value!! + pickableFriend.friend
-        } else {
-            _selectedFriends.value = _selectedFriends.value!! - pickableFriend.friend
-        }*/
     }
 
     fun toggleSortFriendsByPreference() {

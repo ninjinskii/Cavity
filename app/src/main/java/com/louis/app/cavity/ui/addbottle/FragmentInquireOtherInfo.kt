@@ -23,6 +23,7 @@ import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
+import com.louis.app.cavity.ui.widget.FriendPickerView
 import com.louis.app.cavity.util.*
 
 class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
@@ -90,12 +91,16 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         binding.buttonAddFriend.setOnClickListener { showAddFriendDialog() }
 
-        with(binding.friendPickerView) {
-            setOnFriendSelectedListener { otherInfoManager.updateFriendStatus(it) }
-            setOnFriendClickListener { showPickFriendDialog() }
-            setOnFilterQueryChangedListener { otherInfoManager.setFriendFilterQuery(it) }
-            setOnSortMethodChangedListener { otherInfoManager.toggleSortFriendsByPreference() }
-        }
+        binding.friendPickerView.setConfig(
+            FriendPickerView.FriendPickerConfig(
+                onFriendSelectionChanged = { otherInfoManager.updateFriendStatus(it) },
+                onFriendChipClicked = { binding.friendPickerView.showPickFriendDialog() }, // TODO: scrol to friend position ?
+                onFilterQueryChanged = { otherInfoManager.setFriendFilterQuery(it) },
+                onSortMethodChanged = { otherInfoManager.toggleSortFriendsByPreference() },
+                friends = emptyList(),
+                selectedFriends = emptySet()
+            )
+        )
     }
 
     private fun observe() {

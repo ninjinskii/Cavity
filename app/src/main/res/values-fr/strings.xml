@@ -117,7 +117,7 @@
     <string name="size_small">50 cL</string>
     <string name="size_normal">75 cL</string>
     <string name="size_magnum">1.5 L</string>
-    <string name="gifted_by_friend">Offerte par un ami</string>
+    <string name="gifted_by_friend">Offerte par des amis</string>
     <string name="add_friend">Ajouter un ami</string>
     <string name="add_friend_label">Nom prénom</string>
     <string name="remove_pdf">Retirer le PDF</string>
