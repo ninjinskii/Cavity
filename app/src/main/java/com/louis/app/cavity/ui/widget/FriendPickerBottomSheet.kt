@@ -111,7 +111,7 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
         try {
             binding.friendList.layoutManager?.startSmoothScroll(scroller)
         } finally {
-            scrollTo = 0
+            scrollTo = null
         }
     }
 

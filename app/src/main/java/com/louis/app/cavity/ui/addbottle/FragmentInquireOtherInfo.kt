@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Checkable
+import android.widget.CompoundButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -16,7 +17,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
-import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
@@ -35,6 +35,19 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
+
+    private var onGiftedByCheckedChange = { binding: FragmentInquireOtherInfoBinding ->
+        { _: CompoundButton, isChecked: Boolean ->
+            with(binding) {
+                buttonAddFriend.setVisible(isChecked)
+                friendPickerView.setVisible(isChecked)
+
+                if (isChecked) {
+                    friendPickerView.showPickFriendDialog()
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,24 +91,15 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             }
         }
 
-        with(binding) {
-            giftedBy.setOnCheckedChangeListener { _, isChecked ->
-                buttonAddFriend.setVisible(isChecked)
-                friendPickerView.setVisible(isChecked)
-
-                if (isChecked) {
-                    friendPickerView.showPickFriendDialog()
-                }
-            }
-        }
-
         binding.buttonAddFriend.setOnClickListener { showAddFriendDialog() }
+
+        binding.giftedBy.setOnCheckedChangeListener(onGiftedByCheckedChange(binding))
 
         binding.friendPickerView.setConfig(
             FriendPickerView.FriendPickerConfig(
                 onFriendSelectionChanged = { otherInfoManager.updateFriendStatus(it) },
                 onFriendChipClicked = { binding.friendPickerView.showPickFriendDialog() },
-                onFilterQueryChanged = { otherInfoManager.setFriendFilterQuery(it) },
+                onFilterQueryChanged = this::onFriendFilterQueryChanged,
                 onSortMethodChanged = { otherInfoManager.toggleSortFriendsByPreference() },
                 friends = emptyList(),
                 selectedFriends = emptySet()
@@ -109,9 +113,14 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         }
 
         addBottleViewModel.editedBottleHistoryEntry.observe(viewLifecycleOwner) { entry ->
-            entry?.let {
-                val isAGift = entry.friends.isNotEmpty()
-                binding.giftedBy.isChecked = isAGift
+            with(binding) {
+                entry?.let {
+                    val isAGift = entry.friends.isNotEmpty()
+
+                    silentGivenBySetChecked(isAGift)
+                    buttonAddFriend.setVisible(isAGift)
+                    friendPickerView.setVisible(isAGift)
+                }
             }
         }
 
@@ -121,6 +130,14 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         otherInfoManager.selectedFriends.observe(viewLifecycleOwner) {
             binding.friendPickerView.setSelectedFriends(it)
+        }
+    }
+
+    private fun silentGivenBySetChecked(checked: Boolean) {
+        with(binding) {
+            giftedBy.setOnCheckedChangeListener(null)
+            giftedBy.isChecked = checked
+            giftedBy.setOnCheckedChangeListener(onGiftedByCheckedChange(binding))
         }
     }
 
@@ -178,6 +195,10 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             .show(dialogResources)
     }
 
+    private fun onFriendFilterQueryChanged(query: String) {
+        otherInfoManager.setFriendFilterQuery(query)
+    }
+
     override fun requestNextPage(): Boolean {
         val friends =
             if (binding.giftedBy.isChecked)
@@ -200,6 +221,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.buttonAddFriend.setOnClickListener(null)
+        binding.giftedBy.setOnCheckedChangeListener(null)
         _binding = null
     }
 }

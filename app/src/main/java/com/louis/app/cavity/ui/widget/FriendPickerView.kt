@@ -65,6 +65,13 @@ class FriendPickerView @JvmOverloads constructor(
             }
         }, false)
 
+        // Check if bottom sheet is already dispalayed (happens mostly on configuration changed)
+        val fragment = fragmentManager.findFragmentByTag("friend-picker-bottom-sheet")
+        if (fragment != null) {
+            bottomSheet = fragment as? FriendPickerBottomSheet
+            return
+        }
+
         ensureBottomSheet().show(fragmentManager, config)
     }
 
