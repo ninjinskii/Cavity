@@ -31,7 +31,7 @@ class FriendPickerView @JvmOverloads constructor(
     private var bottomSheet: FriendPickerBottomSheet? = null
 
     init {
-        layoutTransition = LayoutTransition()
+        layoutTransition = LayoutTransition().also { it.setAnimateParentHierarchy(false) }
         loadSelectedFriendsChips()
         setOnClickListener { showPickFriendDialog() }
     }
