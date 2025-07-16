@@ -2,11 +2,14 @@ package com.louis.app.cavity.ui.widget.friendpicker
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
+import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
-import androidx.core.os.bundleOf
+import androidx.annotation.StringRes
 import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
@@ -15,8 +18,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetPickFriendBinding
 import com.louis.app.cavity.ui.addbottle.adapter.PickFriendRecyclerAdapter
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.dpToPx
 import com.louis.app.cavity.util.prepareWindowInsets
+import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -44,6 +49,7 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
         setListeners()
         observe()
         initRecyclerView()
+        initFriendTextSwitcher()
 
         lifecycleScope.launch {
             delay(300)
@@ -56,7 +62,7 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
     }
 
     private fun observe() {
-        friendPickerViewModel.a().observe(viewLifecycleOwner) {
+        friendPickerViewModel.getPickableFriends().observe(viewLifecycleOwner) {
             adapter.submitList(it) {
                 (dialog as BottomSheetDialog).behavior.peekHeight =
                     requireContext().dpToPx(500f).toInt()
@@ -77,6 +83,28 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
             this@with.adapter = this@FriendPickerBottomSheet.adapter
             val cols = context.resources.getInteger(R.integer.friend_grid_cols)
             layoutManager = GridLayoutManager(context, cols)
+        }
+    }
+
+    private fun initFriendTextSwitcher() {
+        var index = if (friendPickerViewModel.getSortByPreference()) 0 else 1
+        val friendSortMethodText: List<Int> =
+            listOf(R.string.sort_friend_frequence, R.string.sort_friend_alphabetical)
+
+        binding.sortText.apply {
+            setCurrentText(getString(friendSortMethodText[index]))
+
+            inAnimation =
+                AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_in_left)
+
+            outAnimation =
+                AnimationUtils.loadAnimation(requireContext(), android.R.anim.slide_out_right)
+
+            setOnClickListener {
+                index = (index + 1) % friendSortMethodText.size
+                setText(getString(friendSortMethodText[index]))
+                friendPickerViewModel.toggleSortFriendsByPreference()
+            }
         }
     }
 

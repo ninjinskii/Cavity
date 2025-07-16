@@ -127,6 +127,8 @@
     <string name="placeholder_friend">Aucun ami.</string>
     <string name="click_to_select_friend">Sélectionner des amis</string>
     <string name="documents_title">Documents</string>
+    <string name="sort_friend_frequence">Tri par fréquence</string>
+    <string name="sort_friend_alphabetical">Tri alphabétique</string>
 
     <!-- Search -->
     <string name="search_wine_hint">Nom du vin, appellation…</string>

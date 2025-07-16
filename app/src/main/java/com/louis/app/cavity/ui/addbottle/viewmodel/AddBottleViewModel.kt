@@ -16,7 +16,6 @@ import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.HistoryXFriend
 import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
@@ -173,13 +172,11 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
 
             val type = if (givenBy.isNotEmpty()) HistoryEntryType.GIVEN_BY else HistoryEntryType.ADD
-            L.v("entry type: $type")
             val entry = HistoryEntry(0, buyDate, bottleId, null, "", type, 0)
             historyRepository.clearReplenishmentsForBottle(bottleId)
             val entryId = historyRepository.insertHistoryEntry(entry)
 
             givenBy.forEach {
-                L.v("inserting ${givenBy.size} friends with this history entry")
                 val historyXFriend = HistoryXFriend(entryId, it)
                 historyRepository.insertHistoryXFriend(historyXFriend)
             }

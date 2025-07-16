@@ -65,9 +65,11 @@ class FriendPickerViewModel(app: Application) : AndroidViewModel(app) {
         _selectedFriends.value = selectedFiends.toMutableList()
     }
 
-    fun a() = getAllFriends().combine(_selectedFriends) { friends, selected ->
+    fun getPickableFriends() = getAllFriends().combine(_selectedFriends) { friends, selected ->
         friends.map { PickableFriend(it, it in selected) }
     }
+
+    fun getSortByPreference() = sortFriendsByPreference.value ?: true
 
     fun getAllFriends(): LiveData<List<Friend>> {
         return sortFriendsByPreference.combine(friendFilterQuery) { sortByPref, query ->

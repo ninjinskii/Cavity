@@ -25,17 +25,31 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
+    <TextSwitcher
         android:id="@+id/sortText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/small_margin"
         android:background="?attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="Tri par Fréquence"
-        android:textAppearance="?attr/textAppearanceCaption"
-        app:drawableStartCompat="@drawable/ic_star"
-        app:drawableTint="?attr/colorPrimary" />
+        android:textAppearance="?attr/textAppearanceCaption">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:drawableStartCompat="@drawable/ic_star"
+            app:drawableTint="?attr/colorPrimary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:drawableStartCompat="@drawable/ic_alphabet"
+            app:drawableTint="?attr/colorPrimary" />
+
+    </TextSwitcher>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/friendList"
