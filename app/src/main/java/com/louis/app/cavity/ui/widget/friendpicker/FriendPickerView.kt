@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.widget
+package com.louis.app.cavity.ui.widget.friendpicker
 
 import android.animation.LayoutTransition
 import android.content.Context
@@ -8,9 +8,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentManager.findFragmentManager
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
@@ -28,12 +25,13 @@ class FriendPickerView @JvmOverloads constructor(
     ChipGroup(context, attrs, defStyleAttr) {
 
     private var config: FriendPickerConfig? = null
-    private var bottomSheet: FriendPickerBottomSheet? = null
+    private var friends: List<Friend> = emptyList()
+    private var selectedFriends: Set<Friend> = emptySet()
 
     init {
         layoutTransition = LayoutTransition().also { it.setAnimateParentHierarchy(false) }
         loadSelectedFriendsChips()
-        setOnClickListener { showPickFriendDialog() }
+        setOnClickListener { config?.onRootViewClick?.invoke() }
     }
 
     fun setConfig(config: FriendPickerConfig) {
@@ -41,53 +39,19 @@ class FriendPickerView @JvmOverloads constructor(
     }
 
     fun setFriends(friends: List<Friend>) {
-        config?.friends = friends
-        bottomSheet?.refreshPickableFriends(config)
+        this.friends = friends
     }
 
     fun setSelectedFriends(friends: List<Friend>) {
-        config?.selectedFriends = friends.toSet()
-        bottomSheet?.refreshPickableFriends(config)
+        this.selectedFriends = friends.toSet()
         loadSelectedFriendsChips()
     }
-
-    fun showPickFriendDialog() {
-        val fragmentManager = findFragmentManager(this)
-        ensureBottomSheet()
-
-        fragmentManager.registerFragmentLifecycleCallbacks(object :
-            FragmentManager.FragmentLifecycleCallbacks() {
-            override fun onFragmentDestroyed(fragmentManager: FragmentManager, fragment: Fragment) {
-                if (fragment == bottomSheet) {
-                    bottomSheet = null
-                    fragmentManager.unregisterFragmentLifecycleCallbacks(this)
-                }
-            }
-        }, false)
-
-        // Check if bottom sheet is already dispalayed (happens mostly on configuration changed)
-        val fragment = fragmentManager.findFragmentByTag("friend-picker-bottom-sheet")
-        if (fragment != null) {
-            bottomSheet = fragment as? FriendPickerBottomSheet
-            return
-        }
-
-        ensureBottomSheet().show(fragmentManager, config)
-    }
-
-    fun scrollToFriend(friend: Friend) {
-        val position = config?.friends?.indexOf(friend) ?: 0
-        ensureBottomSheet().requestScrollToPosition(position)
-    }
-
-    private fun ensureBottomSheet() =
-        bottomSheet ?: FriendPickerBottomSheet().also { bottomSheet = it }
 
     private fun loadSelectedFriendsChips() {
         val lifecycle = findViewTreeLifecycleOwner()?.lifecycleScope
         val layoutInflater = LayoutInflater.from(context)
 
-        if (config?.selectedFriends?.isEmpty() == true) {
+        if (this.selectedFriends.isEmpty()) {
             removeAllViews()
             generateEmptyStateButton()
             return
@@ -98,7 +62,7 @@ class FriendPickerView @JvmOverloads constructor(
                 .with(lifecycle)
                 .useInflater(layoutInflater)
                 .toInflate(R.layout.chip_friend_entry)
-                .load(config?.selectedFriends?.toList() ?: emptyList())
+                .load(this.selectedFriends.toList())
                 .into(this)
                 .selectable(false)
                 .useAvatar(true)
@@ -107,7 +71,7 @@ class FriendPickerView @JvmOverloads constructor(
                 }
                 .closable { chipable ->
                     (chipable as? Friend)?.let {
-                        config?.onFriendSelectionChanged?.invoke(PickableFriend(it, false))
+                        config?.onFriendCloseIconClicked?.invoke(PickableFriend(it, false))
                     }
                 }
                 .build()
@@ -128,17 +92,14 @@ class FriendPickerView @JvmOverloads constructor(
                 foregroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
                 strokeColor = ColorStateList.valueOf(Color.TRANSPARENT)
                 setTextColor(ContextCompat.getColor(context, R.color.cavity_gold))
-                setOnClickListener { showPickFriendDialog() }
+                setOnClickListener { config?.onRootViewClick?.invoke() }
             }
         )
     }
 
     data class FriendPickerConfig(
-        var friends: List<Friend>,
-        var selectedFriends: Set<Friend>,
-        val onFriendSelectionChanged: (PickableFriend) -> Unit,
-        val onFriendChipClicked: (Friend) -> Unit,
-        val onFilterQueryChanged: (String) -> Unit,
-        val onSortMethodChanged: () -> Unit
+        val onRootViewClick: () -> Unit,
+        val onFriendCloseIconClicked: (PickableFriend) -> Unit,
+        val onFriendChipClicked: (Friend) -> Unit
     )
 }

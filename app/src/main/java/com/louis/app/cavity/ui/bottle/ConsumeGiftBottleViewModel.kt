@@ -24,16 +24,11 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
     fun consumeBottle(
         bottleId: Long,
         comment: String,
-        friends: List<Friend>,
+        friends: List<Long>,
         date: Long,
         isAGift: Boolean,
         isTasting: Boolean = false
     ) {
-        if (isAGift && friends.size != 1) {
-            throw IllegalArgumentException("Trying to gift a bottle without/with too many friends")
-        }
-
-        val friendIds = friends.map { it.id }
         val type = when {
             isTasting -> HistoryEntryType.TASTING
             isAGift -> HistoryEntryType.GIFTED_TO
@@ -45,7 +40,7 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
             bottleRepository.transaction {
                 bottleRepository.consumeBottle(bottleId)
                 bottleRepository.removeTastingForBottle(bottleId)
-                historyRepository.insertHistoryEntry(historyEntry, friendIds)
+                historyRepository.insertHistoryEntry(historyEntry, friends)
             }
         }
     }
@@ -61,7 +56,7 @@ class ConsumeGiftBottleViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         val consumptionEntry = consumption?.historyEntry ?: return
-        val consumptionFriend = consumption.friends
+        val consumptionFriend = consumption.friends.map { it.id }
         val isAGift = consumptionEntry.type == HistoryEntryType.GIFTED_TO
         val comment = consumptionEntry.comment
         val date = consumptionEntry.date

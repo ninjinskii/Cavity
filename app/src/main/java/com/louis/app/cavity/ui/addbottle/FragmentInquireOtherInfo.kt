@@ -23,7 +23,9 @@ import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
-import com.louis.app.cavity.ui.widget.FriendPickerView
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerBottomSheet
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
 import com.louis.app.cavity.util.*
 
 class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
@@ -35,15 +37,19 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
+    private val friendPickerViewModel: FriendPickerViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
 
+    private var lockBottomSheet = true
     private var onGiftedByCheckedChange = { binding: FragmentInquireOtherInfoBinding ->
         { _: CompoundButton, isChecked: Boolean ->
             with(binding) {
                 buttonAddFriend.setVisible(isChecked)
-                friendPickerView.setVisible(isChecked)
+                friendPicker.setVisible(isChecked)
 
                 if (isChecked) {
-                    friendPickerView.showPickFriendDialog()
+                    showPickFriendDialog()
                 }
             }
         }
@@ -95,14 +101,11 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         binding.giftedBy.setOnCheckedChangeListener(onGiftedByCheckedChange(binding))
 
-        binding.friendPickerView.setConfig(
+        binding.friendPicker.setConfig(
             FriendPickerView.FriendPickerConfig(
-                onFriendSelectionChanged = { otherInfoManager.updateFriendStatus(it) },
-                onFriendChipClicked = { binding.friendPickerView.showPickFriendDialog() },
-                onFilterQueryChanged = this::onFriendFilterQueryChanged,
-                onSortMethodChanged = { otherInfoManager.toggleSortFriendsByPreference() },
-                friends = emptyList(),
-                selectedFriends = emptySet()
+                onRootViewClick = { showPickFriendDialog() },
+                onFriendCloseIconClicked = { friendPickerViewModel.updateFriendStatus(it) },
+                onFriendChipClicked = { showPickFriendDialog() }
             )
         )
     }
@@ -116,20 +119,21 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             with(binding) {
                 entry?.let {
                     val isAGift = entry.friends.isNotEmpty()
-
                     silentGivenBySetChecked(isAGift)
                     buttonAddFriend.setVisible(isAGift)
-                    friendPickerView.setVisible(isAGift)
+                    friendPicker.setVisible(isAGift)
                 }
             }
+
+            lockBottomSheet = false
         }
 
-        otherInfoManager.getAllFriends().observe(viewLifecycleOwner) {
-            binding.friendPickerView.setFriends(it)
+        friendPickerViewModel.getAllFriends().observe(viewLifecycleOwner) {
+            binding.friendPicker.setFriends(it)
         }
 
-        otherInfoManager.selectedFriends.observe(viewLifecycleOwner) {
-            binding.friendPickerView.setSelectedFriends(it)
+        friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {
+            binding.friendPicker.setSelectedFriends(it)
         }
     }
 
@@ -195,14 +199,17 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             .show(dialogResources)
     }
 
-    private fun onFriendFilterQueryChanged(query: String) {
-        otherInfoManager.setFriendFilterQuery(query)
+    private fun showPickFriendDialog() {
+        if (lockBottomSheet) {
+            return
+        }
+
+        FriendPickerBottomSheet().show(parentFragmentManager, "friend-picker-bottom-sheet")
     }
 
     override fun requestNextPage(): Boolean {
         val friends =
-            if (binding.giftedBy.isChecked)
-                otherInfoManager.selectedFriends.value?.map { it.id } ?: emptyList()
+            if (binding.giftedBy.isChecked) friendPickerViewModel.getSelectedFriendsIds()
             else emptyList()
 
         with(binding) {

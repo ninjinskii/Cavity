@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.addbottle.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +13,6 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.util.setVisible
 
 class PickFriendRecyclerAdapter(
-    private val handleMultipleChoices: Boolean,
     private val onSingleItemSelected: ((item: PickableFriend) -> Unit)?
 ) :
     ListAdapter<PickableFriend, PickFriendViewHolder>(PickFriendItemDiffCallback()) {
@@ -21,7 +21,7 @@ class PickFriendRecyclerAdapter(
         val binding =
             ItemPickFriendBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return PickFriendViewHolder(binding, handleMultipleChoices, onSingleItemSelected)
+        return PickFriendViewHolder(binding, onSingleItemSelected)
     }
 
     override fun onBindViewHolder(holder: PickFriendViewHolder, position: Int) {
@@ -41,7 +41,6 @@ class PickFriendRecyclerAdapter(
 
 class PickFriendViewHolder(
     private val binding: ItemPickFriendBinding,
-    private val handleMultipleChoices: Boolean,
     private val onSingleItemSelected: ((item: PickableFriend) -> Unit)?
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -51,20 +50,15 @@ class PickFriendViewHolder(
             .with(itemView.context)
             .load(pickableFriend.friend.imgPath)
             .placeholder(R.drawable.ic_person)
+            .centerCrop()
             .into(image)
 
-        checkbox.setOnCheckedChangeListener(null)
-
         text.text = pickableFriend.friend.name
-        checkbox.setVisible(handleMultipleChoices)
-        checkbox.isChecked = pickableFriend.checked
+        checkbox.setVisible(pickableFriend.checked)
 
         root.setOnClickListener {
-            checkbox.toggle()
-        }
-
-        checkbox.setOnCheckedChangeListener { _, isChecked ->
-            pickableFriend.checked = isChecked
+            pickableFriend.checked = !pickableFriend.checked
+            checkbox.setVisible(pickableFriend.checked)
             onSingleItemSelected?.invoke(pickableFriend)
         }
     }

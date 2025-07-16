@@ -151,8 +151,8 @@
                 app:layout_constraintTop_toTopOf="@+id/friendTitle"
                 app:tint="?attr/colorOnBackground" />
 
-            <com.louis.app.cavity.ui.widget.FriendPickerView
-                android:id="@+id/friend_picker_view"
+            <com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
+                android:id="@+id/friendPicker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/medium_margin"
@@ -168,7 +168,7 @@
                 android:layout_marginTop="@dimen/small_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/friend_picker_view" />
+                app:layout_constraintTop_toBottomOf="@id/friendPicker" />
 
             <TextView
                 android:id="@+id/documentTitle"

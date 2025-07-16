@@ -74,14 +74,14 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 reviewManager =
                     ReviewManager(viewModelScope, reviewRepository, bottle, _userFeedback)
                 otherInfoManager =
-                    OtherInfoManager(viewModelScope, friendRepository, historyRepository, bottle)
+                    OtherInfoManager(bottle)
             }
         } else {
             dateManager = DateManager(null)
             grapeManager = GrapeManager(viewModelScope, grapeRepository, null, _userFeedback)
             reviewManager = ReviewManager(viewModelScope, reviewRepository, null, _userFeedback)
             otherInfoManager =
-                OtherInfoManager(viewModelScope, friendRepository, historyRepository, null)
+                OtherInfoManager(null)
         }
     }
 

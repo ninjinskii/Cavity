@@ -1,31 +1,33 @@
-package com.louis.app.cavity.ui.widget
+package com.louis.app.cavity.ui.widget.friendpicker
 
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.os.bundleOf
 import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetPickFriendBinding
 import com.louis.app.cavity.ui.addbottle.adapter.PickFriendRecyclerAdapter
-import com.louis.app.cavity.ui.addbottle.adapter.PickableFriend
 import com.louis.app.cavity.util.dpToPx
 import com.louis.app.cavity.util.prepareWindowInsets
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_pick_friend) {
-    private var config: FriendPickerView.FriendPickerConfig? = null
     private var _binding: BottomSheetPickFriendBinding? = null
     private val binding get() = _binding!!
-    private val adapter = PickFriendRecyclerAdapter(handleMultipleChoices = true) {
-        config?.onFriendSelectionChanged?.invoke(it)
+    private val friendPickerViewModel: FriendPickerViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+    private val adapter = PickFriendRecyclerAdapter {
+        friendPickerViewModel.updateFriendStatus(it)
     }
 
     private var scrollTo: Int? = null
@@ -40,6 +42,7 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
         }
 
         setListeners()
+        observe()
         initRecyclerView()
 
         lifecycleScope.launch {
@@ -48,32 +51,23 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
         }
     }
 
-    fun show(
-        parentFragmentManager: FragmentManager,
-        friendPickerConfig: FriendPickerView.FriendPickerConfig?
-    ) {
-        config = friendPickerConfig
-        refreshPickableFriends(config)
-        show(parentFragmentManager, "friend-picker-bottom-sheet")
-    }
-
-    fun refreshPickableFriends(config: FriendPickerView.FriendPickerConfig?) {
-        config?.let {
-            val pickable = it.friends.map { friend ->
-                PickableFriend(friend, friend in it.selectedFriends)
-            }
-            adapter.submitList(pickable)
-        }
-    }
-
     fun requestScrollToPosition(position: Int) {
         scrollTo = position
     }
 
+    private fun observe() {
+        friendPickerViewModel.a().observe(viewLifecycleOwner) {
+            adapter.submitList(it) {
+                (dialog as BottomSheetDialog).behavior.peekHeight =
+                    requireContext().dpToPx(500f).toInt()
+            }
+        }
+    }
+
     private fun setListeners() {
         with(binding) {
-            sortText.setOnClickListener { config?.onSortMethodChanged?.invoke() }
-            search.doAfterTextChanged { config?.onFilterQueryChanged?.invoke(it.toString()) }
+            sortText.setOnClickListener { friendPickerViewModel.toggleSortFriendsByPreference() }
+            search.doAfterTextChanged { friendPickerViewModel.setFriendFilterQuery(it.toString()) }
         }
     }
 
@@ -81,7 +75,8 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
     private fun initRecyclerView() {
         with(binding.friendList) {
             this@with.adapter = this@FriendPickerBottomSheet.adapter
-            layoutManager = LinearLayoutManager(context)
+            val cols = context.resources.getInteger(R.integer.friend_grid_cols)
+            layoutManager = GridLayoutManager(context, cols)
         }
     }
 
@@ -100,13 +95,13 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
             skipCollapsed = true
             isDraggable = true
             isHideable = true
-            peekHeight = requireContext().dpToPx(500f).toInt()
+            peekHeight = 0
         }
     }
 
     private fun executeScrollToRequest() {
         val scroller = LinearSmoothScroller(requireContext())
-        scroller.targetPosition = scrollTo ?: 0
+        scroller.targetPosition = scrollTo ?: return
 
         try {
             binding.friendList.layoutManager?.startSmoothScroll(scroller)

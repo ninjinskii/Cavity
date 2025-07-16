@@ -21,9 +21,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class OtherInfoManager(
-    viewModelScope: CoroutineScope,
-    private val friendRepository: FriendRepository,
-    private val historyRepository: HistoryRepository,
     editedBottle: Bottle?
 ) {
     private var pdfPath: String = ""
@@ -33,45 +30,14 @@ class OtherInfoManager(
 
     var partialBottle: Step4Bottle? = null
 
-    private val friendFilterQuery = MutableLiveData("")
-    private val sortFriendsByPreference = MutableLiveData(true)
-
-    private val _selectedFriends = MutableLiveData<MutableList<Friend>>(mutableListOf())
-    val selectedFriends: LiveData<MutableList<Friend>>
-        get() = _selectedFriends
-
     init {
         editedBottle?.let {
             setPdfPath(it.pdfPath)
-        }
-
-        if (editedBottle != null) {
-            viewModelScope.launch(IO) {
-                val replenishment =
-                    historyRepository.getReplenishmentForBottleNotPagedNotLive(editedBottle.id)
-
-                val givenBy = replenishment?.friends ?: mutableListOf()
-                _selectedFriends.postValue(givenBy.toMutableList())
-            }
         }
     }
 
     fun setPdfPath(path: String) {
         pdfPath = path
-    }
-
-    fun updateFriendStatus(pickableFriend: PickableFriend) {
-        _selectedFriends.let {
-            if (pickableFriend.checked) it += pickableFriend.friend else it -= pickableFriend.friend
-        }
-    }
-
-    fun toggleSortFriendsByPreference() {
-        sortFriendsByPreference.value = !(sortFriendsByPreference.value ?: false)
-    }
-
-    fun setFriendFilterQuery(query: String) {
-        friendFilterQuery.value = query
     }
 
     fun submitOtherInfo(
@@ -88,23 +54,6 @@ class OtherInfoManager(
         }
 
         partialBottle = Step4Bottle(otherInfo, size, addToFavorite.toInt(), pdfPath, friendIds)
-    }
-
-    fun getAllFriends(): LiveData<List<Friend>> {
-        return sortFriendsByPreference.combine(friendFilterQuery) { sortByPref, query ->
-            Pair(sortByPref, query)
-        }.switchMap { (sortByPref, query) ->
-            val source: LiveData<List<Friend>> = if (sortByPref) {
-                historyRepository.getFriendSortedByFrequence()
-            } else {
-                friendRepository.getAllFriends()
-            }
-
-            source.map { list ->
-                if (query.isBlank()) list
-                else list.filter { it.name.contains(query, ignoreCase = true) }
-            }
-        }
     }
 
     data class Step4Bottle(
