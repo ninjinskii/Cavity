@@ -10,12 +10,14 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.stepper.Stepper
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAddBottle : Stepper() {
     private lateinit var snackbarProvider: SnackbarProvider
     private val addBottleViewModel: AddBottleViewModel by viewModels()
+    private val friendPickerViewModel: FriendPickerViewModel by viewModels()
     private val args: FragmentAddBottleArgs by navArgs()
 
     override val showStepperProgress = true
@@ -44,6 +46,10 @@ class FragmentAddBottle : Stepper() {
 
         // editedBottleId is equal to 0 if user is not editing a bottle, but adding a new one
         addBottleViewModel.start(args.wineId, args.editedBottleId)
+
+        if (args.editedBottleId != 0L) {
+            friendPickerViewModel.fetchFriendsFromEditedBottleId(args.editedBottleId)
+        }
 
         observe()
     }

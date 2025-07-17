@@ -124,8 +124,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/friendTitle" />
 
-            <HorizontalScrollView
-                android:id="@+id/friendsScrollView"
+            <com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
+                android:id="@+id/friendPicker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
@@ -133,18 +133,7 @@
                 android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/friend">
-
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/friendsChipGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/chip_group_default_height"
-                    android:layout_marginTop="@dimen/small_margin"
-                    app:selectionRequired="true"
-                    app:singleLine="true"
-                    app:singleSelection="true" />
-
-            </HorizontalScrollView>
+                app:layout_constraintTop_toBottomOf="@id/friend" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonSubmit"
@@ -158,7 +147,7 @@
                 app:icon="@drawable/ic_check"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/friendsScrollView"
+                app:layout_constraintTop_toBottomOf="@id/friendPicker"
                 app:layout_constraintWidth_max="@dimen/large_screen_preffered_width" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

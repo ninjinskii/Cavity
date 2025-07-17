@@ -73,7 +73,7 @@
             android:layout_width="@dimen/xsmall_icon"
             android:layout_height="@dimen/xsmall_icon"
             android:layout_margin="@dimen/medium_margin"
-            android:contentDescription="@string/edit_bottle"
+            android:contentDescription="@string/edit_wine"
             android:src="@drawable/ic_edit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

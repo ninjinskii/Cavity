@@ -7,28 +7,29 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentGiftBottleBinding
-import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerBottomSheet
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
 import com.louis.app.cavity.util.TransitionHelper
-import com.louis.app.cavity.util.collectAsSingle
 import com.louis.app.cavity.util.prepareWindowInsets
 
 class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     private lateinit var snackbarProvider: SnackbarProvider
+    private var datePicker: DatePicker? = null
     private var _binding: FragmentGiftBottleBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
     private val consumeGiftBottleViewModel: ConsumeGiftBottleViewModel by viewModels()
+    private val friendPickerViewModel: FriendPickerViewModel by viewModels()
     private val args: FragmentGiftBottleArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +68,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     private fun initDatePicker() {
         val title = getString(R.string.consume_date)
 
-        DatePicker(
+        datePicker = DatePicker(
             childFragmentManager,
             binding.giftDateLayout,
             title,
@@ -81,42 +82,38 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     }
 
     private fun observe() {
-        consumeGiftBottleViewModel.getAllFriends().observe(viewLifecycleOwner) {
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .toInflate(R.layout.chip_friend_entry)
-                .load(it)
-                .into(binding.friendsChipGroup)
-                .useAvatar(true)
-                .emptyText(getString(R.string.placeholder_friend))
-                .build()
-                .go()
+        friendPickerViewModel.getAllFriends().observe(viewLifecycleOwner) {
+            binding.friendPicker.setFriends(it)
+        }
+
+        friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {
+            binding.friendPicker.setSelectedFriends(it)
         }
     }
 
     private fun setListeners() {
+        binding.friendPicker.setConfig(
+            FriendPickerView.FriendPickerConfig(
+                onFriendCloseIconClicked = { friendPickerViewModel.updateFriendStatus(it) },
+                onFriendChipClicked = { showPickFriendDialog() },
+                onRootViewClick = { showPickFriendDialog() }
+            )
+        )
+
         binding.buttonSubmit.setOnClickListener {
             if (!binding.giftDateLayout.validate()) {
                 return@setOnClickListener
             }
 
-            binding.friendsChipGroup.apply {
-                val friend = collectAsSingle<Friend>()
+            val friends = friendPickerViewModel.getSelectedFriendsIds()
 
-                if (friend == null) {
-                    snackbarProvider.onShowSnackbarRequested(R.string.no_friend)
-                    return@setOnClickListener
-                }
-
-                consumeGiftBottleViewModel.consumeBottle(
-                    args.bottleId,
-                    "",
-                    listOf(friend),
-                    consumeGiftBottleViewModel.date,
-                    isAGift = true
-                )
-            }
+            consumeGiftBottleViewModel.consumeBottle(
+                args.bottleId,
+                "",
+                friends,
+                consumeGiftBottleViewModel.date,
+                isAGift = true
+            )
 
             findNavController().navigateUp()
             snackbarProvider.onShowSnackbarRequested(R.string.bottle_gifted)
@@ -144,8 +141,13 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
             .show(dialogResources)
     }
 
+    private fun showPickFriendDialog() {
+        FriendPickerBottomSheet().show(parentFragmentManager, "friend-picker-bottom-sheet")
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        datePicker?.dispose()
         _binding = null
     }
 }

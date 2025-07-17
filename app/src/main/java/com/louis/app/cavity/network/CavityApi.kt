@@ -7,7 +7,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-interface CavityApiService {
+interface CavityApi {
     @POST("account")
     suspend fun register(@Body parameters: Map<String, String>)
 

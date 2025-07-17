@@ -117,7 +117,7 @@
     <string name="size_small">50 cL</string>
     <string name="size_normal">75 cL</string>
     <string name="size_magnum">1.5 L</string>
-    <string name="gifted_by_friend">Offerte par un ami</string>
+    <string name="gifted_by_friend">Offerte par des amis</string>
     <string name="add_friend">Ajouter un ami</string>
     <string name="add_friend_label">Nom prénom</string>
     <string name="remove_pdf">Retirer le PDF</string>
@@ -125,6 +125,11 @@
     <string name="bottles_added">Les bouteilles ont été ajoutées.</string>
     <string name="bottle_updated">La bouteille a été modifiée.</string>
     <string name="placeholder_friend">Aucun ami.</string>
+    <string name="click_to_select_friend">Sélectionner des amis</string>
+    <string name="documents_title">Documents</string>
+    <string name="sort_friend_frequence">Tri par fréquence</string>
+    <string name="sort_friend_alphabetical">Tri alphabétique</string>
+    <string name="search_friend">Recherchez un ami</string>
 
     <!-- Search -->
     <string name="search_wine_hint">Nom du vin, appellation…</string>
@@ -140,7 +145,7 @@
     <string name="drunk_with">Bue avec</string>
 
     <!-- Bottle details -->
-    <string name="edit_bottle">Éditer</string>
+    <string name="edit_bottle">Modifier la bouteille</string>
     <string name="taste">Déguster</string>
     <string name="price_and_currency">%1$s %2$s</string>
     <string name="show_pdf">Consulter le PDF</string>

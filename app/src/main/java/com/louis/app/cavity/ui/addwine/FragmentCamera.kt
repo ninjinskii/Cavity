@@ -3,7 +3,6 @@ package com.louis.app.cavity.ui.addwine
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -39,6 +38,7 @@ import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import androidx.core.graphics.drawable.toDrawable
 
 class FragmentCamera : Fragment(R.layout.fragment_camera) {
     private lateinit var cameraExecutor: ExecutorService
@@ -162,7 +162,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
                         with(binding.coordinator) {
                             postDelayed(50) {
                                 binding.toggleTorch.isChecked = false
-                                foreground = ColorDrawable(Color.WHITE)
+                                foreground = Color.WHITE.toDrawable()
 
                                 postDelayed(100) {
                                     foreground = null

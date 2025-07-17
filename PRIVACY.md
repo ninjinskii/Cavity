@@ -12,17 +12,20 @@ The terms used in this Privacy Policy have the same meanings as in our Terms and
 
 For a better experience, while using our Service, I may require you to provide us with certain personally identifiable information, including but not limited to Email address. The Email address will not be sold to another third party services.
 
-Link to the privacy policy of third-party service providers used by the app
-
-*   [Google Play Services](https://www.google.com/policies/privacy/)
-
 **Log Data**
 
-I want to inform you that whenever you use my Service, in a case of an error in the app I collect data and information (through third-party products) on your phone called Log Data. This Log Data may include information such as your device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app when utilizing my Service, the time and date of your use of the Service, and other statistics.
+I want to inform you that whenever you use my Service adn ebable error reporting, in a case of an error in the app I collect data and information (through third-party products) on your phone called Log Data. This Log Data may include information such as your device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app when utilizing my Service, the time and date of your use of the Service, and other statistics.
 
 **Security**
 
 I value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.
+
+**Android permissions**
+- Internet permission: Used for `error reporting` (disabled by default) and for cavity account (non mandatory)
+- Receive boot completed: Used for tastings, if you have set some tasting reminders (put bottle to fridge etc). The app has to start itself to reschedule alarms to send notification after a reboot.
+- Camera: Used only in the add / edit wine screen to take bottle picture
+- Notifications: Used to send you notifacations for automatic backups and tastings reminders
+- Read/Write external storage / media image: Used to store files after a backup (these are not backed up on the server) for you to be able to restore it manually. Also used bound PDF to a bottle, write image to disk after taking a photo. 
 
 **Links to Other Sites**
 

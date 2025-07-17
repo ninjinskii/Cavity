@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.AnimatedStateListDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.animation.BounceInterpolator
 import androidx.annotation.ColorInt
@@ -12,6 +11,7 @@ import androidx.annotation.Px
 import androidx.core.content.res.ResourcesCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
+import androidx.core.graphics.drawable.toDrawable
 
 class HistorySwipeActionDrawable(resources: Resources, theme: Resources.Theme?) : Drawable() {
     private val icon = ResourcesCompat.getDrawable(resources, R.drawable.asl_star, theme)
@@ -36,7 +36,7 @@ class HistorySwipeActionDrawable(resources: Resources, theme: Resources.Theme?) 
     private val colorUnderSurface =
         ResourcesCompat.getColor(resources, R.color.under_surface, theme)
 
-    private val bg = ColorDrawable(colorUnderSurface)
+    private val bg = colorUnderSurface.toDrawable()
     private val iconRect = Rect()
     private val bgRect = Rect()
     private val gradient = intArrayOf(

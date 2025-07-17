@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.home
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
@@ -19,6 +18,7 @@ import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.ui.home.widget.EffectImageView
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.toBoolean
+import androidx.core.net.toUri
 
 class WineViewHolder(
     private val binding: ItemWineBinding,
@@ -113,7 +113,7 @@ class WineViewHolder(
          * This must has smething to do with what glide does to resources
          */
         Glide.with(itemView.context)
-            .load(Uri.parse(imgPath))
+            .load(imgPath.toUri())
             .run {
                 val drawable =
                     if (isLightTheme)

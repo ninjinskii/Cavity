@@ -4,8 +4,12 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.db.dao.BoundedBottle
+import com.louis.app.cavity.domain.repository.BottleRepository
+import com.louis.app.cavity.domain.repository.GrapeRepository
+import com.louis.app.cavity.domain.repository.HistoryRepository
+import com.louis.app.cavity.domain.repository.ReviewRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -13,9 +17,14 @@ import com.louis.app.cavity.util.toBoolean
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import androidx.core.net.toUri
 
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
-    private val repository = WineRepository.getInstance(app)
+    private val wineRepository = WineRepository.getInstance(app)
+    private val bottleRepository = BottleRepository.getInstance(app)
+    private val grapeRepository = GrapeRepository.getInstance(app)
+    private val reviewRepository = ReviewRepository.getInstance(app)
+    private val historyRepository = HistoryRepository.getInstance(app)
 
     private val bottleId = MutableLiveData<Long>()
 
@@ -35,17 +44,18 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     val removeFromTastingEvent: LiveData<Event<Pair<Long, Long?>>>
         get() = _removeFromTastingEvent
 
-    val bottle = bottleId.switchMap { repository.getBottleById(it) }
+    val bottle = bottleId.switchMap { bottleRepository.getBottleById(it) }
 
-    val grapes = bottleId.switchMap { repository.getQGrapesAndGrapeForBottle(it) }
+    val grapes = bottleId.switchMap { grapeRepository.getQGrapesAndGrapeForBottle(it) }
 
-    val reviews = bottleId.switchMap { repository.getFReviewAndReviewForBottle(it) }
+    val reviews = bottleId.switchMap { reviewRepository.getFReviewAndReviewForBottle(it) }
 
-    val replenishmentEntry = bottleId.switchMap { repository.getReplenishmentForBottleNotPaged(it) }
+    val replenishmentEntry =
+        bottleId.switchMap { historyRepository.getReplenishmentForBottleNotPaged(it) }
 
-    fun getWineById(wineId: Long) = repository.getWineById(wineId)
+    fun getWineById(wineId: Long) = wineRepository.getWineById(wineId)
 
-    fun getBottlesForWine(wineId: Long) = repository.getBottlesForWine(wineId)
+    fun getBottlesForWine(wineId: Long) = bottleRepository.getBottlesForWine(wineId)
 
     fun setBottleId(bottleId: Long) {
         this.bottleId.value = bottleId
@@ -59,7 +69,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             maybeDeleteWine(bottleId, wineId)
-            repository.deleteBottleById(bottleId)
+            bottleRepository.deleteBottleById(bottleId)
         }
     }
 
@@ -67,7 +77,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
-            repository.run {
+            bottleRepository.run {
                 val bottle = getBottleByIdNotLive(bottleId)
                 if (bottle.isFavorite.toBoolean()) unfav(bottleId) else fav(bottleId)
             }
@@ -78,11 +88,11 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
-            val bottle = repository.getBottleByIdNotLive(bottleId)
+            val bottle = bottleRepository.getBottleByIdNotLive(bottleId)
             val path = bottle.pdfPath
 
             if (path.isNotBlank()) {
-                _pdfEvent.postOnce(Uri.parse(path))
+                _pdfEvent.postOnce(path.toUri())
             } else {
                 _userFeedback.postOnce(R.string.no_pdf)
             }
@@ -92,7 +102,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     fun clearPdfPath() {
         bottle.value?.let {
             viewModelScope.launch(IO) {
-                repository.updateBottle(it.copy(pdfPath = ""))
+                bottleRepository.updateBottle(it.copy(pdfPath = ""))
             }
         }
     }
@@ -101,12 +111,12 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
-            val boundedBottle = repository.getBoundedBottleByIdNotLive(bottleId)
+            val boundedBottle = bottleRepository.getBoundedBottleByIdNotLive(bottleId)
             val wine = boundedBottle.wine
 
-            repository.transaction {
-                repository.updateWine(wine.copy(hidden = false.toInt()))
-                repository.revertBottleConsumption(bottleId)
+            wineRepository.transaction {
+                wineRepository.updateWine(wine.copy(hidden = false.toInt()))
+                bottleRepository.revertBottleConsumption(bottleId)
             }
 
             _revertConsumptionEvent.postOnce(boundedBottle)
@@ -117,11 +127,11 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
-            val bottle = repository.getBottleByIdNotLive(bottleId)
+            val bottle = bottleRepository.getBottleByIdNotLive(bottleId)
             val tastingId = bottle.tastingId
 
             bottle.tastingId = null
-            repository.updateBottle(bottle)
+            bottleRepository.updateBottle(bottle)
 
             _removeFromTastingEvent.postOnce(bottleId to tastingId)
         }
@@ -129,15 +139,15 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun cancelRemoveBottleFromTasting(bottleId: Long, tastingId: Long?) {
         viewModelScope.launch(IO) {
-            val bottle = repository.getBottleByIdNotLive(bottleId)
+            val bottle = bottleRepository.getBottleByIdNotLive(bottleId)
             bottle.tastingId = tastingId
-            repository.updateBottle(bottle)
+            bottleRepository.updateBottle(bottle)
         }
     }
 
     private suspend fun maybeDeleteWine(deletedBottleId: Long, wineId: Long) {
-        val wine = repository.getWineByIdNotLive(wineId)
-        val wineBottles = repository.getBottlesForWineNotLive(wineId)
+        val wine = wineRepository.getWineByIdNotLive(wineId)
+        val wineBottles = bottleRepository.getBottlesForWineNotLive(wineId)
         val folder = mutableListOf<Bottle>() to mutableListOf<Bottle>()
         val (consumed, stock) = wineBottles.fold(folder) { pair, bottle ->
             pair.apply {
@@ -149,11 +159,11 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         val hasOtherConsumedBottle = consumed.size > 1
-        val hasStock = stock.size > 0
+        val hasStock = stock.isNotEmpty()
         val isSameBottle = consumed.firstOrNull()?.id == deletedBottleId
 
         if (wine.hidden.toBoolean() && !hasOtherConsumedBottle && !hasStock && isSameBottle) {
-            repository.deleteWineById(wineId)
+            wineRepository.deleteWineById(wineId)
         }
     }
 }
