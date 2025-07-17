@@ -306,7 +306,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             binding.givenBy.apply {
                 setVisible(isAGift)
                 val friend = it?.friends?.joinToString { friend -> friend.name } ?: return@apply
-                val first = it.friends.first()
+                val first = it.friends.firstOrNull() ?: return@apply
 
                 val imgPath = first.imgPath
                 AvatarLoader.requestAvatar(requireContext(), imgPath) { avatarBitmap ->
