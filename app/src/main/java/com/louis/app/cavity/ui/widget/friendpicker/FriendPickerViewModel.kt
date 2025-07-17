@@ -85,4 +85,6 @@ class FriendPickerViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun getSelectedFriendsIds() = _selectedFriends.value?.map { it.id } ?: emptyList()
+
+    fun getSelectedFriends() = _selectedFriends.value ?: emptyList()
 }

@@ -25,8 +25,6 @@ import kotlinx.coroutines.launch
  * This ViewModel is used to insert simple items, since we can do that from multiple screens across
  * the app.
  */
-
-// TODO: refactor wine repository by splitting it. Also, this logic (exception handlingd and unicity check should be on repository
 class AddItemViewModel(app: Application) : AndroidViewModel(app) {
     private val countyRepository = CountyRepository.getInstance(app)
     private val grapeRepository = GrapeRepository.getInstance(app)

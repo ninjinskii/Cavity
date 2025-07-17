@@ -172,7 +172,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
             with(binding) {
                 val opportunity = opportunity.text.toString().trim()
                 val isMidday = rbMidday.isChecked
-                val friends = friendPickerViewModel.selectedFriends.value ?: emptyList()
+                val friends = friendPickerViewModel.getSelectedFriends()
 
                 val ok = addTastingViewModel.submitTasting(opportunity, isMidday, friends)
                 if (ok) stepperFragment?.goToNextPage()

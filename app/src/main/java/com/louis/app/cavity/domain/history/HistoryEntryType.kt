@@ -25,7 +25,6 @@ fun fromInt(intType: Int): HistoryEntryType {
 fun HistoryEntryType.isReplenishment(): Boolean {
     return when (this.toInt()) {
         HistoryEntryType.ADD.value, HistoryEntryType.GIVEN_BY.value -> true
-
         HistoryEntryType.REMOVE.value,
         HistoryEntryType.GIFTED_TO.value,
         HistoryEntryType.TASTING.value -> false

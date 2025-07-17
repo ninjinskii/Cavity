@@ -43,7 +43,7 @@ interface BottleDao {
     suspend fun unfav(bottleId: Long)
 
     @Query("UPDATE bottle SET tasting_id = NULL WHERE id=:bottleId")
-    suspend fun removeTastingForBottle(bottleId: Long) // TAsting
+    suspend fun removeTastingForBottle(bottleId: Long)
 
     @Query("DELETE FROM bottle WHERE id=:bottleId")
     suspend fun deleteBottleById(bottleId: Long)
