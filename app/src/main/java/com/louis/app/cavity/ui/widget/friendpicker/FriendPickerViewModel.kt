@@ -61,10 +61,6 @@ class FriendPickerViewModel(app: Application) : AndroidViewModel(app) {
         friendFilterQuery.value = query
     }
 
-    fun setSelectedFriends(selectedFiends: List<Friend>) {
-        _selectedFriends.value = selectedFiends.toMutableList()
-    }
-
     fun getPickableFriends() = getAllFriends().combine(_selectedFriends) { friends, selected ->
         friends.map { PickableFriend(it, it in selected) }
     }

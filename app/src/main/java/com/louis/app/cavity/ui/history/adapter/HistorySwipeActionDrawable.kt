@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.AnimatedStateListDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.animation.BounceInterpolator
 import androidx.annotation.ColorInt

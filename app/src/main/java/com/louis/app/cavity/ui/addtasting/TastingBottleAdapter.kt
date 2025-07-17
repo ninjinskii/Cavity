@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.addtasting
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat

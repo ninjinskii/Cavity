@@ -11,12 +11,8 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.map
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireTastingInfoBinding
-import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
@@ -26,7 +22,6 @@ import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerBottomSheet
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
 import com.louis.app.cavity.util.PermissionChecker
-import com.louis.app.cavity.util.collectAs
 import com.louis.app.cavity.util.extractMargin
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setupNavigation

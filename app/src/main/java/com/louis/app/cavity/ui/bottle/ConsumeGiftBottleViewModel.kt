@@ -9,7 +9,6 @@ import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
-import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.HistoryEntry
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch

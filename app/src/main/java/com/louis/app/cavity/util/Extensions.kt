@@ -38,10 +38,8 @@ import com.louis.app.cavity.ui.ActivityMain
 import kotlin.math.max
 
 // Boolean and Int helpers for database compatibility
-@Suppress("KotlinConstantConditions")
 fun Int.toBoolean() = this == 1
 
-@Suppress("KotlinConstantConditions")
 fun Int.toggleBoolean() = if (this == 1) 0 else 1
 
 fun Boolean.toInt() = if (this) 1 else 0

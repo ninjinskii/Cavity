@@ -3,13 +3,10 @@ package com.louis.app.cavity.ui.widget.friendpicker
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
-import androidx.annotation.StringRes
 import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
@@ -18,10 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.BottomSheetPickFriendBinding
 import com.louis.app.cavity.ui.addbottle.adapter.PickFriendRecyclerAdapter
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.dpToPx
 import com.louis.app.cavity.util.prepareWindowInsets
-import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

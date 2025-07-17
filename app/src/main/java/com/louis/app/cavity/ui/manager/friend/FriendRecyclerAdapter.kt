@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.manager.friend
 
-import android.net.Uri
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View

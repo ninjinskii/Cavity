@@ -1,24 +1,10 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import androidx.annotation.IdRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
 import com.louis.app.cavity.R
-import com.louis.app.cavity.domain.repository.FriendRepository
-import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
-import com.louis.app.cavity.model.Friend
-import com.louis.app.cavity.ui.addbottle.adapter.PickableFriend
-import com.louis.app.cavity.util.combine
-import com.louis.app.cavity.util.plusAssign
-import com.louis.app.cavity.util.minusAssign
 import com.louis.app.cavity.util.toInt
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 
 class OtherInfoManager(
     editedBottle: Bottle?

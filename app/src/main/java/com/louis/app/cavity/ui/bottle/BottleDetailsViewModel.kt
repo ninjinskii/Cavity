@@ -18,15 +18,6 @@ import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
-import androidx.room.withTransaction
-import com.louis.app.cavity.domain.history.HistoryEntryType
-import com.louis.app.cavity.model.FReview
-import com.louis.app.cavity.model.HistoryEntry
-import com.louis.app.cavity.model.HistoryXFriend
-import com.louis.app.cavity.model.QGrape
-import com.louis.app.cavity.ui.addbottle.viewmodel.FReviewUiModel
-import com.louis.app.cavity.ui.addbottle.viewmodel.QGrapeUiModel
-import kotlin.collections.map
 
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val wineRepository = WineRepository.getInstance(app)

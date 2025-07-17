@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.home
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat

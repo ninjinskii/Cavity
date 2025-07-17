@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.tasting
 
-import android.net.Uri
 import android.text.TextWatcher
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT

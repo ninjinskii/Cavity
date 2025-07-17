@@ -12,7 +12,6 @@ import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
 import com.louis.app.cavity.domain.repository.ReviewRepository
-import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
@@ -23,7 +22,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class ManagerViewModel(app: Application) : AndroidViewModel(app) {
-    private val wineRepository = WineRepository.getInstance(app)
     private val countyRepository = CountyRepository.getInstance(app)
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)

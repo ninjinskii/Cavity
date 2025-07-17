@@ -6,7 +6,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.history.HistoryEntryType
 import com.louis.app.cavity.domain.repository.BottleRepository
-import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.domain.repository.ReviewRepository
@@ -31,7 +30,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val historyRepository = HistoryRepository.getInstance(app)
-    private val friendRepository = FriendRepository.getInstance(app)
 
     private val errorReporter = SentryErrorReporter.getInstance(app)
 

@@ -32,7 +32,6 @@ import com.louis.app.cavity.ui.account.LoginViewModel
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.tasting.TastingViewModel
-import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.themeColor

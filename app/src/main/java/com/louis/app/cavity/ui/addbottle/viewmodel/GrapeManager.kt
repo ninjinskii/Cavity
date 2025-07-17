@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
-import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.R

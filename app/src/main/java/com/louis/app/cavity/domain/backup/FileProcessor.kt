@@ -1,7 +1,6 @@
 package com.louis.app.cavity.domain.backup
 
 import android.content.Context
-import android.net.Uri
 import android.webkit.MimeTypeMap
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import java.io.File

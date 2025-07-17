@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.history
 
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcel
 import android.view.View
