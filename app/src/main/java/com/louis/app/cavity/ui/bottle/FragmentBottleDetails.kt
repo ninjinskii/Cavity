@@ -309,7 +309,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 setData(friend)
 
                 val firstPicture =
-                    it.friends.firstOrNull { friend -> friend.imgPath.isNotEmpty() } ?: return@apply
+                    it.friends.firstOrNull { f -> f.imgPath.isNotEmpty() } ?: return@apply
 
                 val imgPath = firstPicture.imgPath
                 AvatarLoader.requestAvatar(requireContext(), imgPath) { avatarBitmap ->
