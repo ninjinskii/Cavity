@@ -206,6 +206,7 @@
     <string name="empty_review">No rating or contest</string>
     <string name="empty_friend">Add friends to remember who you share your bottles with</string>
     <string name="add_image_to_friend">Add image</string>
+    <string name="search_friend">Find a friend</string>
 
     <!-- History -->
     <string name="buyed_at">Purchase from : %1$s</string>

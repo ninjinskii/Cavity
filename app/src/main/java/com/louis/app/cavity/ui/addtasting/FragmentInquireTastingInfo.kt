@@ -12,6 +12,7 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.map
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireTastingInfoBinding
 import com.louis.app.cavity.model.Friend
@@ -21,6 +22,9 @@ import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerBottomSheet
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.collectAs
 import com.louis.app.cavity.util.extractMargin
@@ -34,6 +38,9 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
     private val addTastingViewModel: AddTastingViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+    private val friendPickerViewModel: FriendPickerViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
 
@@ -65,7 +72,6 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         super.setPeekSiblingsSteps(false)
 
         applyInsets()
-        initFriendChips()
         initDatePicker()
         observe()
         setListeners()
@@ -92,22 +98,6 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         }
     }
 
-    private fun initFriendChips() {
-        addTastingViewModel.friends.observe(viewLifecycleOwner) {
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .toInflate(R.layout.chip_friend_entry)
-                .load(it)
-                .into(binding.friendsChipGroup)
-                .useAvatar(true)
-                .selectable(true)
-                .emptyText(getString(R.string.placeholder_friend))
-                .build()
-                .go()
-        }
-    }
-
     private fun initDatePicker() {
         datePicker = DatePicker(
             childFragmentManager,
@@ -126,6 +116,14 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
                 snackbarProvider.onShowSnackbarRequested(stringRes)
             }
         }
+
+        friendPickerViewModel.getAllFriends().observe(viewLifecycleOwner) {
+            binding.friendPicker.setFriends(it)
+        }
+
+        friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {
+            binding.friendPicker.setSelectedFriends(it)
+        }
     }
 
     private fun setListeners() {
@@ -140,6 +138,14 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
                 submit()
             }
         }
+
+        binding.friendPicker.setConfig(
+            FriendPickerView.FriendPickerConfig(
+                onRootViewClick = { showPickFriendDialog() },
+                onFriendCloseIconClicked = { friendPickerViewModel.updateFriendStatus(it) },
+                onFriendChipClicked = { showPickFriendDialog() }
+            )
+        )
     }
 
     @RequiresApi(33)
@@ -160,6 +166,10 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
             .show(dialogResources)
     }
 
+    private fun showPickFriendDialog() {
+        FriendPickerBottomSheet().show(parentFragmentManager, "friend-picker-bottom-sheet")
+    }
+
     private fun submit() {
         val valid = binding.dateLayout.validate() and binding.opportunityLayout.validate()
 
@@ -167,7 +177,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
             with(binding) {
                 val opportunity = opportunity.text.toString().trim()
                 val isMidday = rbMidday.isChecked
-                val friends = friendsChipGroup.collectAs<Friend>()
+                val friends = friendPickerViewModel.selectedFriends.value ?: emptyList()
 
                 val ok = addTastingViewModel.submitTasting(opportunity, isMidday, friends)
                 if (ok) stepperFragment?.goToNextPage()

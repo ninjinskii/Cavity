@@ -129,6 +129,7 @@
     <string name="documents_title">Documents</string>
     <string name="sort_friend_frequence">Tri par fréquence</string>
     <string name="sort_friend_alphabetical">Tri alphabétique</string>
+    <string name="search_friend">Recherchez un ami</string>
 
     <!-- Search -->
     <string name="search_wine_hint">Nom du vin, appellation…</string>

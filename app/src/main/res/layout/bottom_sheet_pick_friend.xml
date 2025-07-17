@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_search"
             android:drawableTint="?attr/colorOnSurface"
-            android:hint="Recherchez un ami"
+            android:hint="@string/search_friend"
             android:inputType="textCapSentences" />
 
     </com.google.android.material.textfield.TextInputLayout>

@@ -140,8 +140,8 @@
                     app:layout_constraintTop_toTopOf="@+id/friendTitle"
                     app:tint="?attr/colorOnBackground" />
 
-                <HorizontalScrollView
-                    android:id="@+id/friendScrollView"
+                <com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
+                    android:id="@+id/friendPicker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
@@ -149,20 +149,7 @@
                     android:scrollbars="none"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/friendTitle">
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/friendsChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/chip_group_default_height"
-                        android:layout_marginTop="@dimen/medium_margin"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                        app:selectionRequired="true"
-                        app:singleLine="true" />
-
-                </HorizontalScrollView>
+                    app:layout_constraintTop_toBottomOf="@+id/friendTitle" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/alert"
@@ -174,7 +161,7 @@
                     app:cardPreventCornerOverlap="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/friendScrollView"
+                    app:layout_constraintTop_toBottomOf="@id/friendPicker"
                     app:layout_constraintWidth_max="@dimen/large_screen_preffered_width"
                     app:shapeAppearance="@style/ShapeAppearance.Cavtiy.LargeComponent"
                     app:strokeColor="@color/cavity_indigo"
