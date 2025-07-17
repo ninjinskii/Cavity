@@ -112,7 +112,9 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
     private fun observe() {
         addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
-            if (it != null) updateFields(it)
+            if (it != null) {
+                updateFields(it)
+            }
         }
 
         addBottleViewModel.editedBottleHistoryEntry.observe(viewLifecycleOwner) { entry ->
@@ -130,6 +132,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         friendPickerViewModel.getAllFriends().observe(viewLifecycleOwner) {
             binding.friendPicker.setFriends(it)
+            lockBottomSheet = false
         }
 
         friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {

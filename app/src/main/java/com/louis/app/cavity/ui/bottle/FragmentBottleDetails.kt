@@ -306,16 +306,17 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             binding.givenBy.apply {
                 setVisible(isAGift)
                 val friend = it?.friends?.joinToString { friend -> friend.name } ?: return@apply
-                val first = it.friends.firstOrNull() ?: return@apply
+                setData(friend)
 
-                val imgPath = first.imgPath
+                val firstPicture =
+                    it.friends.firstOrNull { friend -> friend.imgPath.isNotEmpty() } ?: return@apply
+
+                val imgPath = firstPicture.imgPath
                 AvatarLoader.requestAvatar(requireContext(), imgPath) { avatarBitmap ->
                     avatarBitmap?.let { drawable ->
                         setIcon(drawable)
                     }
                 }
-
-                setData(friend)
             }
         }
 
