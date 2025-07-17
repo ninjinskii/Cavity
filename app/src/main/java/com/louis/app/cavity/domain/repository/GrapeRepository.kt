@@ -60,13 +60,6 @@ class GrapeRepository private constructor(app: Application) : Repository(app) {
     suspend fun getQGrapesAndGrapeForBottleNotLive(bottleId: Long) =
         qGrapeDao.getQGrapesAndGrapeForBottleNotLive(bottleId)
 
-    suspend fun replaceQGrapesForBottle(bottleId: Long, qGrapes: List<QGrape>) {
-        assertTransaction {
-            qGrapeDao.clearAllQGrapesForBottle(bottleId)
-            qGrapeDao.insertQGrapes(qGrapes)
-        }
-    }
-
     suspend fun deleteAllGrapes() = grapeDao.deleteAll()
     suspend fun deleteAllQGrapes() = qGrapeDao.deleteAll()
 }

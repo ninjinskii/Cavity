@@ -64,13 +64,6 @@ class ReviewRepository private constructor(app: Application) : Repository(app) {
     suspend fun clearAllFReviewsForBottle(bottleId: Long) =
         fReviewDao.clearAllFReviewsForBottle(bottleId)
 
-    suspend fun replaceFReviewsForBottle(bottleId: Long, fReviews: List<FReview>) {
-        assertTransaction {
-            fReviewDao.clearAllFReviewsForBottle(bottleId)
-            fReviewDao.insertFReviews(fReviews)
-        }
-    }
-
     suspend fun deleteAllReviews() = reviewDao.deleteAll()
     suspend fun deleteAllFReviews() = fReviewDao.deleteAll()
 }
