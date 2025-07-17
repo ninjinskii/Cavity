@@ -13,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistoryBinding
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
+import com.louis.app.cavity.domain.history.HistoryEntryType
 import com.louis.app.cavity.ui.history.HistoryUiModel
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.DateFormatter
@@ -92,15 +93,12 @@ class HistoryRecyclerAdapter(
         fun bind(entry: HistoryUiModel.EntryModel?) {
             super.bind(entry ?: return)
 
-            val typeConsume = 0
-            val typeTasting = 4
-            val typeReplenishment = 1
             val historyEntry = entry.model.historyEntry
             val (markerColor, icon, label, _, showFriends) = historyEntry.getResources()
             val (bottle, wine) = entry.model.bottleAndWine
             val wineColor = ContextCompat.getColor(context, wine.color.colorRes)
             val colorCategory =
-                if (historyEntry.type == 4)
+                if (historyEntry.type == HistoryEntryType.TASTING)
                     ColorUtil.ColorCategory.PRIMARY
                 else
                     ColorUtil.ColorCategory.OTHER
@@ -120,7 +118,7 @@ class HistoryRecyclerAdapter(
 
                 comment.apply {
                     when (historyEntry.type) {
-                        typeConsume, typeTasting -> {
+                        HistoryEntryType.REMOVE, HistoryEntryType.TASTING -> {
                             val comment = historyEntry.comment
 
                             text = if (comment.isBlank()) {
@@ -133,14 +131,15 @@ class HistoryRecyclerAdapter(
                                 comment
                             }
                         }
+
                         else -> {
                             alpha = 1f
                             setTextAppearance(R.style.TextAppearance_Cavity_Body2)
 
-                            val data = if (historyEntry.type == typeReplenishment) {
+                            val data = if (historyEntry.type == HistoryEntryType.ADD) {
                                 entry.model.bottleAndWine.bottle.buyLocation
                             } else {
-                                entry.model.friends.firstOrNull()?.name ?: ""
+                                entry.model.friends.joinToString(", ") { it.name }
                             }
 
                             text = context.getString(label, data)
@@ -158,7 +157,8 @@ class HistoryRecyclerAdapter(
                     val type = historyEntry.type
                     val emptyComment = historyEntry.comment.isBlank()
                     val isLongPressable =
-                        (type == typeConsume || type == typeTasting) && !emptyComment
+                        (type == HistoryEntryType.REMOVE || type == HistoryEntryType.TASTING)
+                                && !emptyComment
 
                     if (isLongPressable) {
                         MaterialAlertDialogBuilder(context)

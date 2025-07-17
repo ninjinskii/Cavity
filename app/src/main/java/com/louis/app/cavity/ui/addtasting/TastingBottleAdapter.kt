@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.addtasting
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
@@ -15,6 +14,7 @@ import com.louis.app.cavity.model.TastingBottle
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 import com.louis.app.cavity.util.toInt
+import androidx.core.net.toUri
 
 class TastingBottleAdapter :
     ListAdapter<TastingBottle, TastingBottleAdapter.TastingBottleViewHolder>
@@ -54,7 +54,7 @@ class TastingBottleAdapter :
             with(binding) {
                 Glide
                     .with(itemView.context)
-                    .load(Uri.parse(wine.imgPath))
+                    .load(wine.imgPath.toUri())
                     .centerCrop()
                     .into(wineImage)
 

@@ -8,7 +8,7 @@ import com.louis.app.cavity.model.Wine
 @Dao
 interface CountyDao {
     @Insert
-    suspend fun insertCounties(county: County)
+    suspend fun insertCounty(county: County): Long
 
     @Insert
     suspend fun insertCounties(counties: List<County>)

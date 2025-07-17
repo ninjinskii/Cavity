@@ -29,6 +29,7 @@ import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.util.*
+import androidx.core.net.toUri
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -249,7 +250,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private fun loadImage(uri: String?) {
         if (!uri.isNullOrEmpty()) {
             Glide.with(requireContext())
-                .load(Uri.parse(uri))
+                .load(uri.toUri())
                 .centerCrop()
                 .into(binding.wineMiniImage)
 

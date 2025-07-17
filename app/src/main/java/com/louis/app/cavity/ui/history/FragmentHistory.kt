@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.history
 
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcel
 import android.view.View
@@ -38,6 +37,7 @@ import com.louis.app.cavity.ui.history.adapter.StickyItemDecorator
 import com.louis.app.cavity.util.*
 import kotlin.math.max
 import kotlin.math.min
+import androidx.core.net.toUri
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var colorUtil: ColorUtil
@@ -297,7 +297,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 participants.text = label
 
                 Glide.with(requireContext())
-                    .load(Uri.parse(wine.imgPath))
+                    .load(wine.imgPath.toUri())
                     .centerCrop()
                     .into(wineImage)
             }

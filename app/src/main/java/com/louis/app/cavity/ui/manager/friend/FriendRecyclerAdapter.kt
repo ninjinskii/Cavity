@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.manager.friend
 
-import android.net.Uri
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemFriendBinding
 import com.louis.app.cavity.model.Friend
+import androidx.core.net.toUri
 
 class FriendRecyclerAdapter(
     private val onRename: (Friend) -> Unit,
@@ -20,7 +20,7 @@ class FriendRecyclerAdapter(
     private val onDelete: (Friend) -> Unit
 ) :
     ListAdapter<Friend, FriendRecyclerAdapter.FriendViewHolder>(
-        GrapeItemDiffCallback()
+        FriendItemDiffCallback()
     ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {
@@ -33,7 +33,7 @@ class FriendRecyclerAdapter(
     override fun onBindViewHolder(holder: FriendViewHolder, position: Int) =
         holder.bind(getItem(position))
 
-    class GrapeItemDiffCallback : DiffUtil.ItemCallback<Friend>() {
+    class FriendItemDiffCallback : DiffUtil.ItemCallback<Friend>() {
         override fun areItemsTheSame(oldItem: Friend, newItem: Friend) = oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: Friend, newItem: Friend) = oldItem == newItem
@@ -57,7 +57,7 @@ class FriendRecyclerAdapter(
                 if (friend.imgPath.isNotEmpty()) {
                     avatar.imageTintList = null
                     Glide.with(context)
-                        .load(Uri.parse(friend.imgPath))
+                        .load(friend.imgPath.toUri())
                         .centerCrop()
                         .into(avatar)
                 }

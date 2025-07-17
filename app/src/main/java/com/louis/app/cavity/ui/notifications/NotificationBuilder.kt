@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import androidx.annotation.StringRes
 import androidx.annotation.WorkerThread
@@ -27,6 +26,7 @@ import com.louis.app.cavity.model.TastingAction
 import com.louis.app.cavity.model.Wine
 import java.util.concurrent.ExecutionException
 import kotlin.random.Random
+import androidx.core.net.toUri
 
 object NotificationBuilder {
     private const val TASTING_CHANNEL_ID = "com.louis.app.cavity.TASTING_CHANNEL"
@@ -96,7 +96,7 @@ object NotificationBuilder {
             futureBitmap = Glide.with(context)
                 .asBitmap()
                 .circleCrop()
-                .load(Uri.parse(wine.imgPath))
+                .load(wine.imgPath.toUri())
                 .submit()
 
             try {

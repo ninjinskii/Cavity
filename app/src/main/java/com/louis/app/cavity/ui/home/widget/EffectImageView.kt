@@ -18,22 +18,22 @@ class EffectImageView @JvmOverloads constructor(
 ) :
     AppCompatImageView(context, attrs, defStyleAttr) {
 
-    @RequiresApi(Build.VERSION_CODES.R)
+    @RequiresApi(Build.VERSION_CODES.S)
     private val underlyingContentNode = RenderNode("underlying-content")
 
-    @RequiresApi(Build.VERSION_CODES.R)
+    @RequiresApi(Build.VERSION_CODES.S)
     private val blur = RenderEffect.createBlurEffect(30f, 30f, Shader.TileMode.CLAMP)
 
     private val targets = mutableListOf<Pair<View, RenderNode>>()
 
-    @RequiresApi(Build.VERSION_CODES.R)
+    @RequiresApi(Build.VERSION_CODES.S)
     fun setTargets(views: List<View>) {
         this.targets.clear()
         this.targets.addAll(views.map { it to RenderNode("blur-${it.id}") })
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S) {
             return super.onDraw(canvas)
         }
 

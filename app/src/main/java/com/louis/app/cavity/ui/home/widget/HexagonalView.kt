@@ -6,7 +6,6 @@ import android.content.res.ColorStateList
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
 import android.view.View.MeasureSpec.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.use
@@ -70,7 +69,7 @@ class HexagonalView @JvmOverloads constructor(
                     ?: ColorStateList.valueOf(Color.TRANSPARENT)
             }
 
-        setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        setLayerType(LAYER_TYPE_HARDWARE, null)
         applyShape()
     }
 

@@ -2,13 +2,11 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import androidx.annotation.IdRes
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
 import com.louis.app.cavity.util.toInt
 
 class OtherInfoManager(
-    private val repository: WineRepository,
     editedBottle: Bottle?
 ) {
     private var pdfPath: String = ""
@@ -32,7 +30,7 @@ class OtherInfoManager(
         otherInfo: String,
         @IdRes checkedSize: Int,
         addToFavorite: Boolean,
-        friendId: Long?
+        friendIds: List<Long>
     ) {
         val size = when (checkedSize) {
             R.id.rbSlim -> BottleSize.SLIM
@@ -41,16 +39,14 @@ class OtherInfoManager(
             else /* R.id.rbMagnum */ -> BottleSize.MAGNUM
         }
 
-        partialBottle = Step4Bottle(otherInfo, size, addToFavorite.toInt(), pdfPath, friendId)
+        partialBottle = Step4Bottle(otherInfo, size, addToFavorite.toInt(), pdfPath, friendIds)
     }
-
-    fun getAllFriends() = repository.getAllFriends()
 
     data class Step4Bottle(
         val otherInfo: String,
         val size: BottleSize,
         val isFavorite: Int,
         val pdfPath: String,
-        val giftedBy: Long?
+        val giftedBy: List<Long>
     )
 }

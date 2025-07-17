@@ -7,7 +7,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.louis.app.cavity.R
+import com.louis.app.cavity.db.HistoryEntryTypeConverter
+import com.louis.app.cavity.domain.history.HistoryEntryType
+import com.louis.app.cavity.domain.history.toInt
 
 @Entity(
     tableName = "history_entry",
@@ -25,10 +29,11 @@ data class HistoryEntry(
     @ColumnInfo(name = "bottle_id", index = true) val bottleId: Long,
     @ColumnInfo(name = "tasting_id") var tastingId: Long? = null,
     val comment: String,
-    val type: Int,
+    @field:TypeConverters(HistoryEntryTypeConverter::class)
+    val type: HistoryEntryType,
     val favorite: Int,
 ) {
-    fun getResources() = when (type) {
+    fun getResources() = when (type.toInt()) {
         0 -> HistoryEntryResources(
             R.color.cavity_red,
             R.drawable.ic_glass,
@@ -37,6 +42,7 @@ data class HistoryEntry(
             showFriends = true,
             rawType = 0
         )
+
         1 -> HistoryEntryResources(
             R.color.cavity_green,
             R.drawable.ic_bottle,
@@ -45,6 +51,7 @@ data class HistoryEntry(
             showFriends = false,
             rawType = 1
         )
+
         2 -> HistoryEntryResources(
             R.color.cavity_red,
             R.drawable.ic_gift,
@@ -53,6 +60,7 @@ data class HistoryEntry(
             showFriends = false,
             rawType = 2
         )
+
         3 -> HistoryEntryResources(
             R.color.cavity_green,
             R.drawable.ic_gift,
@@ -61,6 +69,7 @@ data class HistoryEntry(
             showFriends = false,
             rawType = 3
         )
+
         4 -> HistoryEntryResources(
             R.color.cavity_gold,
             R.drawable.ic_toast_wine,
@@ -69,6 +78,7 @@ data class HistoryEntry(
             showFriends = true,
             rawType = 4
         )
+
         else -> throw IllegalStateException("Unknown history entry type $type")
     }
 
@@ -92,7 +102,7 @@ data class HistoryEntry(
         result = 31 * result + bottleId.hashCode()
         result = 31 * result + (tastingId?.hashCode() ?: 0)
         result = 31 * result + comment.hashCode()
-        result = 31 * result + type
+        result = 31 * result + type.toInt()
         return result
     }
 }

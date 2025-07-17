@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.search
 
-import android.net.Uri
 import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +17,7 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
+import androidx.core.net.toUri
 
 class BottleRecyclerAdapter(
     private val onItemClicked: (View, BoundedBottle) -> Unit,
@@ -92,7 +92,7 @@ class BottleRecyclerAdapter(
             with(binding) {
                 wineImage?.let {
                     Glide.with(context)
-                        .load(Uri.parse(wine.imgPath))
+                        .load(wine.imgPath.toUri())
                         .centerCrop()
                         .into(it)
                 }

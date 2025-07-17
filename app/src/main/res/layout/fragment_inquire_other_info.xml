@@ -109,6 +109,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rbGroupSize" />
 
+            <View
+                android:id="@+id/divider2"
+                style="@style/Widget.Cavity.Divider"
+                android:layout_marginTop="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/addToFavorite" />
+
+            <TextView
+                android:id="@+id/friendTitle"
+                style="?attr/textAppearanceSubtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/friends"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider2" />
+
             <CheckBox
                 android:id="@+id/giftedBy"
                 android:layout_width="0dp"
@@ -118,52 +136,49 @@
                 android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addToFavorite" />
+                app:layout_constraintTop_toBottomOf="@id/friendTitle" />
 
-            <HorizontalScrollView
-                android:id="@+id/friendScrollView"
+            <ImageButton
+                android:id="@+id/buttonAddFriend"
+                android:layout_width="@dimen/medium_icon"
+                android:layout_height="@dimen/medium_icon"
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/add_friend"
+                android:src="@drawable/ic_add"
+                app:layout_constraintBottom_toBottomOf="@+id/friendTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/friendTitle"
+                app:tint="?attr/colorOnBackground" />
+
+            <com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
+                android:id="@+id/friendPicker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingHorizontal="@dimen/medium_margin"
-                android:scrollbars="none"
+                android:layout_marginHorizontal="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/small_margin"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/giftedBy">
+                app:layout_constraintTop_toBottomOf="@id/giftedBy" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/large_margin"
-                    android:orientation="horizontal">
+            <View
+                android:id="@+id/divider3"
+                style="@style/Widget.Cavity.Divider"
+                android:layout_marginTop="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/friendPicker" />
 
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/friendChipGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/medium_margin"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-                        app:selectionRequired="true"
-                        app:singleLine="true"
-                        app:singleSelection="true" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonAddFriend"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+            <TextView
+                android:id="@+id/documentTitle"
+                style="?attr/textAppearanceSubtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/xsmall_margin"
-                android:text="@string/add_friend"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/friendScrollView" />
+                android:layout_margin="@dimen/medium_margin"
+                android:text="@string/documents_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider3" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonAddPdf"
@@ -177,7 +192,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonAddFriend"
+                app:layout_constraintTop_toBottomOf="@id/documentTitle"
                 app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,31 +4,28 @@ import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Checkable
+import android.widget.CompoundButton
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.forEach
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.google.android.material.chip.Chip
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
-import com.louis.app.cavity.model.Chipable
-import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.ui.ActivityMain
-import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.stepper.Step
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerBottomSheet
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
+import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
 import com.louis.app.cavity.util.*
 
 class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
@@ -40,6 +37,23 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
+    private val friendPickerViewModel: FriendPickerViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+
+    private var lockBottomSheet = true
+    private var onGiftedByCheckedChange = { binding: FragmentInquireOtherInfoBinding ->
+        { _: CompoundButton, isChecked: Boolean ->
+            with(binding) {
+                buttonAddFriend.setVisible(isChecked)
+                friendPicker.setVisible(isChecked)
+
+                if (isChecked) {
+                    showPickFriendDialog()
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +75,6 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         applyInsets()
         setListeners()
         observe()
-        initFriendsChips()
     }
 
     private fun applyInsets() {
@@ -76,7 +89,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             if (!otherInfoManager.hasPdf) {
                 try {
                     pickPdf.launch(arrayOf("application/pdf"))
-                } catch (e: ActivityNotFoundException) {
+                } catch (_: ActivityNotFoundException) {
                     binding.coordinator.showSnackbar(R.string.no_file_explorer)
                 }
             } else {
@@ -84,55 +97,54 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             }
         }
 
-        with(binding) {
-            giftedBy.setOnCheckedChangeListener { _, isChecked ->
-                friendScrollView.setVisible(isChecked)
-                buttonAddFriend.setVisible(isChecked)
-            }
+        binding.buttonAddFriend.setOnClickListener { showAddFriendDialog() }
 
-            buttonAddFriend.setOnClickListener { showAddFriendDialog() }
-        }
+        binding.giftedBy.setOnCheckedChangeListener(onGiftedByCheckedChange(binding))
 
+        binding.friendPicker.setConfig(
+            FriendPickerView.FriendPickerConfig(
+                onRootViewClick = { showPickFriendDialog() },
+                onFriendCloseIconClicked = { friendPickerViewModel.updateFriendStatus(it) },
+                onFriendChipClicked = { showPickFriendDialog() }
+            )
+        )
     }
 
     private fun observe() {
         addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
-            if (it != null) updateFields(it)
+            if (it != null) {
+                updateFields(it)
+            }
         }
 
         addBottleViewModel.editedBottleHistoryEntry.observe(viewLifecycleOwner) { entry ->
-            entry?.let {
-                val isAGift = entry.friends.isNotEmpty()
-
-                binding.giftedBy.isChecked = isAGift
-
-                if (isAGift) {
-                    val friendId = entry.friends.first().id
-
-                    binding.friendChipGroup.doOnEachNextLayout {
-                        it as ViewGroup
-                        it.forEach { chip ->
-                            val id = (chip.getTag(R.string.tag_chip_id) as Chipable).getItemId()
-                            (chip as Chip).isChecked = friendId == id
-                        }
-                    }
+            with(binding) {
+                entry?.let {
+                    val isAGift = entry.friends.isNotEmpty()
+                    silentGivenBySetChecked(isAGift)
+                    buttonAddFriend.setVisible(isAGift)
+                    friendPicker.setVisible(isAGift)
                 }
             }
+
+            lockBottomSheet = false
+        }
+
+        friendPickerViewModel.getAllFriends().observe(viewLifecycleOwner) {
+            binding.friendPicker.setFriends(it)
+            lockBottomSheet = false
+        }
+
+        friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {
+            binding.friendPicker.setSelectedFriends(it)
         }
     }
 
-    private fun initFriendsChips() {
-        otherInfoManager.getAllFriends().observe(viewLifecycleOwner) {
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .toInflate(R.layout.chip_friend_entry)
-                .load(it)
-                .into(binding.friendChipGroup)
-                .useAvatar(true)
-                .emptyText(getString(R.string.placeholder_friend))
-                .build()
-                .go()
+    private fun silentGivenBySetChecked(checked: Boolean) {
+        with(binding) {
+            giftedBy.setOnCheckedChangeListener(null)
+            giftedBy.isChecked = checked
+            giftedBy.setOnCheckedChangeListener(onGiftedByCheckedChange(binding))
         }
     }
 
@@ -190,20 +202,28 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             .show(dialogResources)
     }
 
+    private fun showPickFriendDialog() {
+        if (lockBottomSheet) {
+            return
+        }
+
+        FriendPickerBottomSheet().show(parentFragmentManager, "friend-picker-bottom-sheet")
+    }
+
     override fun requestNextPage(): Boolean {
+        val friends =
+            if (binding.giftedBy.isChecked) friendPickerViewModel.getSelectedFriendsIds()
+            else emptyList()
+
         with(binding) {
-            friendChipGroup.apply {
-                val friend = if (giftedBy.isChecked) collectAsSingle<Friend>()?.id else null
+            otherInfoManager.submitOtherInfo(
+                otherInfo.text.toString(),
+                rbGroupSize.checkedButtonId,
+                addToFavorite.isChecked,
+                friends
+            )
 
-                otherInfoManager.submitOtherInfo(
-                    otherInfo.text.toString(),
-                    rbGroupSize.checkedButtonId,
-                    addToFavorite.isChecked,
-                    friend
-                )
-
-                addBottleViewModel.insertBottle()
-            }
+            addBottleViewModel.submitBottleForm()
         }
 
         return true
@@ -211,6 +231,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.buttonAddFriend.setOnClickListener(null)
+        binding.giftedBy.setOnCheckedChangeListener(null)
         _binding = null
     }
 }

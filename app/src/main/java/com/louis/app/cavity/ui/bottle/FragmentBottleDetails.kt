@@ -44,6 +44,7 @@ import com.louis.app.cavity.ui.bottle.adapter.JumpSmoothScroller
 import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.tasting.SpaceItemDecoration
 import com.louis.app.cavity.util.*
+import androidx.core.net.toUri
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private lateinit var transitionHelper: TransitionHelper
@@ -304,16 +305,18 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
             binding.givenBy.apply {
                 setVisible(isAGift)
-                val friend = it?.friends?.firstOrNull() ?: return@apply
-                val friendName = friend.name
-                val imgPath = friend.imgPath
+                val friend = it?.friends?.joinToString { friend -> friend.name } ?: return@apply
+                setData(friend)
+
+                val firstPicture =
+                    it.friends.firstOrNull { f -> f.imgPath.isNotEmpty() } ?: return@apply
+
+                val imgPath = firstPicture.imgPath
                 AvatarLoader.requestAvatar(requireContext(), imgPath) { avatarBitmap ->
                     avatarBitmap?.let { drawable ->
                         setIcon(drawable)
                     }
                 }
-
-                setData(friendName)
             }
         }
 
@@ -324,7 +327,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 cuvee.setData(it.cuvee)
             }
 
-            showImage(Uri.parse(it.imgPath))
+            showImage(it.imgPath.toUri())
         }
 
         bottleDetailsViewModel.pdfEvent.observe(viewLifecycleOwner) {

@@ -17,12 +17,14 @@ import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.DateFormatter
+import com.louis.app.cavity.util.clearInputMethodLeak
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import java.util.*
 
 class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
     private lateinit var dateManager: DateManager
+    private var datePicker: DatePicker? = null
     private var _binding: FragmentInquireDatesBinding? = null
     private val binding get() = _binding!!
     private val settingsViewModel: SettingsViewModel by activityViewModels()
@@ -97,7 +99,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
     private fun setListeners() {
         val title = getString(R.string.buying_date)
-        DatePicker(
+        datePicker = DatePicker(
             childFragmentManager,
             binding.buyDateLayout,
             title,
@@ -174,6 +176,8 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        clearInputMethodLeak()
+        datePicker?.dispose()
         _binding = null
     }
 

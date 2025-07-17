@@ -1,10 +1,12 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
-import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.WineRepository
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.AlreadyExists
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.InvalidName
+import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Success
+import com.louis.app.cavity.domain.repository.ReviewRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.util.Event
@@ -19,7 +21,7 @@ import kotlinx.coroutines.withContext
 
 class ReviewManager(
     private val viewModelScope: CoroutineScope,
-    private val repository: WineRepository,
+    private val repository: ReviewRepository,
     private val editedBottle: Bottle?,
     private val _userFeedback: MutableLiveData<Event<Int>>
 ) {
@@ -43,18 +45,23 @@ class ReviewManager(
 
     fun addReviewAndFReview(contestName: String, type: Int) {
         viewModelScope.launch(IO) {
-            try {
-                val review = Review(0, contestName, type)
-                val reviewId = repository.insertReview(review)
-                val defaultValue = getDefaultValue(type)
+            val review = Review(0, contestName, type)
+            val result = repository.insertReview(review)
+            val defaultValue = getDefaultValue(type)
 
-                withContext(Main) {
-                    _fReviews += FReviewUiModel(reviewId, contestName, type, defaultValue)
+            withContext(Main) {
+                when (result) {
+                    is Success -> _fReviews += FReviewUiModel(
+                        result.value,
+                        contestName,
+                        type,
+                        defaultValue
+                    )
+
+                    is AlreadyExists -> _userFeedback.postOnce(R.string.contest_name_already_exists)
+                    is InvalidName -> _userFeedback.postOnce(R.string.empty_contest_name)
+                    else -> _userFeedback.postOnce(R.string.base_error)
                 }
-            } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_contest_name)
-            } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.contest_name_already_exists)
             }
         }
     }
@@ -90,8 +97,7 @@ class ReviewManager(
                 _reviewDialogEvent.value?.peekContent()?.find { it.id == id }
 
             when {
-                isChecked && oldOne?.isChecked != true ->
-                    addFilledReview(id, name, type)
+                isChecked && oldOne?.isChecked != true -> addFilledReview(id, name, type)
                 !isChecked && oldOne?.isChecked != false -> removeFilledReview(name)
             }
 
