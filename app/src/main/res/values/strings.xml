@@ -146,7 +146,7 @@
     <!--    <string name="search_wine">Research</string>-->
 
     <!-- Bottle details -->
-    <string name="edit_bottle">Edit</string>
+    <string name="edit_bottle">Edit bottle</string>
     <string name="taste">Taste</string>
     <string name="price_and_currency">%1$s %2$s</string>
     <string name="show_pdf">Open PDF</string>

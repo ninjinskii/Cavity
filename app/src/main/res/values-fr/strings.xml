@@ -145,7 +145,7 @@
     <string name="drunk_with">Bue avec</string>
 
     <!-- Bottle details -->
-    <string name="edit_bottle">Éditer</string>
+    <string name="edit_bottle">Modifier la bouteille</string>
     <string name="taste">Déguster</string>
     <string name="price_and_currency">%1$s %2$s</string>
     <string name="show_pdf">Consulter le PDF</string>
