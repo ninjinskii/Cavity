@@ -280,6 +280,8 @@
     <string name="prevent_screenshots">Mesure de prévention de la vie privée empêchant la prise de capture d\'écran et l\'affichage du contenu de l\'application dans le menu des applications récentes.</string>
     <string name="bottle_storage_title">Stockage par bouteille</string>
     <string name="bottle_storage">Ajoute un champ "lieu de stockage" lors de l\'ajout d\'une bouteille. Permet ensuite de filtrer l\'écran d\'accueil par lieu de stockage en cliquant sur le titre de l\'application.</string>
+    <string name="experimental_features_title">Fonctionnalités expérimentales</string>
+    <string name="experimental_features">Les fonctionnalités ci-dessous sont utilisables, mais sont à un stade de maturité précoce. Elles sont sujettes à suppression/changement dans le futur. Vous pouvez les activer/désactiver à tout moment.</string>
 
     <!-- Account -->
     <string name="email">Email</string>

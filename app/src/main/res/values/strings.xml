@@ -271,19 +271,19 @@
 
     <!-- Settings -->
     <string name="skew_bottle_title">Rotate the template</string>
-    <string name="skew_bottle">Rotate the bottle template when taking a photo.</string>
+    <string name="skew_bottle">Rotate the bottle template while taking a photo.</string>
     <string name="template_size_title">Template size</string>
-    <string name="template_size">Shrink or grow the template when taking a photo.</string>
+    <string name="template_size">Resize the bottle template while taking a photo.</string>
     <string name="default_currency_title">Default currency</string>
-    <string name="default_currency">Select the default currency used when adding a bottle.</string>
+    <string name="default_currency">Choose the default currency used when adding a bottle.</string>
     <string name="error_reporting_title">Error reporting</string>
-    <string name="error_reporting">Enable error reporting to send context data whenever a crash happens. This let the developer know an unexpected error occurs on your device and helps fixing it.</string>
+    <string name="error_reporting">Enable crash reporting to send diagnostic data when the app encounters an error. This helps the developer understand and fix issues more effectively.</string>
     <string name="prevent_screenshots_title">Prevent screenshots</string>
-    <string name="prevent_screenshots">Privacy prevention measure forbidding screenshots and hiding app content in recent apps menu.</string>
+    <string name="prevent_screenshots">A privacy feature that disables screenshots and hides app content in the recent apps view.</string>
     <string name="bottle_storage_title">Bottle Storage</string>
     <string name="bottle_storage">Add a "storage location" field when adding a bottle. You can then filter the home screen by storage location by tapping the app title.</string>
-    <string name="experimental_features_title">Fonctionnalités expérimentales</string>
-    <string name="experimental_features">Les fonctionnalités ci-dessous sont utilisables, mais sont à un stade de maturité précoce. Elles sont sujettes à suppression/changement dans le futur. Vous pouvez les activer/désactiver à tout moment.</string>
+    <string name="experimental_features_title">Experimental Features</string>
+    <string name="experimental_features">The features below are available for use but are still in an early stage of development. They may be changed or removed in the future. You can enable or disable them at any time.</string>
 
     <!-- Account -->
     <string name="email">Email</string>
