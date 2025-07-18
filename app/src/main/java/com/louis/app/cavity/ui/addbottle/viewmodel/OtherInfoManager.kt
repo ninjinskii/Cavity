@@ -27,6 +27,8 @@ class OtherInfoManager(
     }
 
     fun submitOtherInfo(
+        storageLocation: String,
+        alcohol: Double?,
         otherInfo: String,
         @IdRes checkedSize: Int,
         addToFavorite: Boolean,
@@ -39,10 +41,20 @@ class OtherInfoManager(
             else /* R.id.rbMagnum */ -> BottleSize.MAGNUM
         }
 
-        partialBottle = Step4Bottle(otherInfo, size, addToFavorite.toInt(), pdfPath, friendIds)
+        partialBottle = Step4Bottle(
+            storageLocation,
+            alcohol,
+            otherInfo,
+            size,
+            addToFavorite.toInt(),
+            pdfPath,
+            friendIds
+        )
     }
 
     data class Step4Bottle(
+        val storageLocation: String,
+        val alcohol: Double?,
         val otherInfo: String,
         val size: BottleSize,
         val isFavorite: Int,

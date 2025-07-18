@@ -200,6 +200,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 "",
                 step4.size,
                 step4.pdfPath,
+                step4.storageLocation,
+                step4.alcohol,
                 consumed = editedBottle.value?.consumed ?: false.toInt()
             )
         } else null

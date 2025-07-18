@@ -150,6 +150,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
     private fun updateFields(editedBottle: Bottle) {
         with(binding) {
+            storageLocation.setText(editedBottle.storageLocation)
+            alcohol.setText(editedBottle.alcohol?.toString() ?: "")
             otherInfo.setText(editedBottle.otherInfo)
             addToFavorite.isChecked = editedBottle.isFavorite.toBoolean()
             otherInfoManager.setPdfPath(editedBottle.pdfPath)
@@ -217,6 +219,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         with(binding) {
             otherInfoManager.submitOtherInfo(
+                storageLocation.text.toString(),
+                alcohol.text.toString().toDoubleOrNull(),
                 otherInfo.text.toString(),
                 rbGroupSize.checkedButtonId,
                 addToFavorite.isChecked,
