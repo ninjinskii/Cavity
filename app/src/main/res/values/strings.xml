@@ -280,6 +280,8 @@
     <string name="error_reporting">Enable error reporting to send context data whenever a crash happens. This let the developer know an unexpected error occurs on your device and helps fixing it.</string>
     <string name="prevent_screenshots_title">Prevent screenshots</string>
     <string name="prevent_screenshots">Privacy prevention measure forbidding screenshots and hiding app content in recent apps menu.</string>
+    <string name="bottle_storage_title">Bottle Storage</string>
+    <string name="bottle_storage">Add a "storage location" field when adding a bottle. You can then filter the home screen by storage location by tapping the app title.</string>
 
     <!-- Account -->
     <string name="email">Email</string>

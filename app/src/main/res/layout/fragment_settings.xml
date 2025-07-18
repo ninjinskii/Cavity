@@ -133,6 +133,57 @@
                 android:layout_marginVertical="0dp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/bottleStorageLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:id="@+id/enableBottleStorageTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/small_margin"
+                    android:layout_marginStart="@dimen/medium_margin"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/bottle_storage_title"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    app:layout_constraintEnd_toStartOf="@id/toggleEnableBottleStorage"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/enbalBottleStorageText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/small_margin"
+                    android:layout_marginStart="@dimen/medium_margin"
+                    android:text="@string/bottle_storage"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/toggleEnableBottleStorage"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/enableBottleStorageTitle" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/toggleEnableBottleStorage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                style="@style/Widget.Cavity.Divider"
+                android:layout_marginVertical="0dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/defaultCurrency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

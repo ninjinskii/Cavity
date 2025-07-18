@@ -47,6 +47,10 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
         prefsRepository.setPreventScreenshots(preventScreenshots)
     }
 
+    fun setEnableBottleStorageLocation(enableStorageLocation: Boolean) {
+        prefsRepository.setEnableBottleStorageLocation(enableStorageLocation)
+    }
+
     fun getSkewBottle() = prefsRepository.getSkewBottle()
 
     fun getDefaultCurrency() = prefsRepository.getDefaultCurrency()
@@ -58,6 +62,8 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     fun getErrorReportingConsent() = prefsRepository.getErrorReportingConsent()
 
     fun getPreventScreenshots() = prefsRepository.getPreventScreenshots()
+
+    fun getEnableBottleStorageLocation() = prefsRepository.getEnableBottleStorageLocation()
 
     fun notifyWindowFocusChanged(hasFocus: Boolean) {
         _windowFocusChangedEvent.postOnce(hasFocus)
