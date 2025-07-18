@@ -306,7 +306,6 @@
             android:stepSize="10.0"
             android:valueFrom="0.0"
             android:valueTo="200.0"
-            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/priceTitle"
@@ -498,6 +497,7 @@
         <View
             android:id="@+id/divider7"
             style="@style/Widget.Cavity.Divider"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/friendScrollView" />
 
@@ -508,6 +508,7 @@
             android:layout_margin="@dimen/medium_margin"
             android:text="@string/storage_location"
             android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider7" />
 
@@ -517,6 +518,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/storageLocationTitle"
