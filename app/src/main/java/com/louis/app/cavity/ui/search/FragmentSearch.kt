@@ -25,6 +25,7 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
@@ -46,6 +47,7 @@ import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.ui.search.widget.InsettableInfo
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
+import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.*
 import com.robinhood.ticker.TickerUtils
@@ -87,6 +89,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private var _filtersBinding: SearchFiltersBinding? = null
     private val filtersBinding get() = _filtersBinding!!
 
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val searchViewModel: SearchViewModel by viewModels()
     private val addTastingViewModel: AddTastingViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
@@ -792,6 +795,18 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun initStorageLocationDropdown(savedInstanceState: Bundle?) {
+        val storageLocationEnabled = settingsViewModel.getEnableBottleStorageLocation()
+
+        if (!storageLocationEnabled) {
+            return
+        }
+
+        filtersBinding.apply {
+            divider7.setVisible(true)
+            storageLocationTitle.setVisible(true)
+            storageLocationLayout.setVisible(true)
+        }
+
         val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_naming)
         val clearText = getString(R.string.all)
         val text = savedInstanceState?.getString(STORAGE_LOCATION) ?: clearText

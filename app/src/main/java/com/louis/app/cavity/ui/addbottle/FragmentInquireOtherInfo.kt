@@ -22,6 +22,7 @@ import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerBottomSheet
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
@@ -34,6 +35,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     private var _binding: FragmentInquireOtherInfoBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
@@ -69,8 +71,12 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         otherInfoManager = addBottleViewModel.otherInfoManager
 
-        binding.autoAnimate.layoutTransition.setAnimateParentHierarchy(false)
-        binding.rbNormal.isChecked = true
+        binding.apply {
+            val storageLocationEnabled = settingsViewModel.getEnableBottleStorageLocation()
+            storageLocationLayout.setVisible(storageLocationEnabled)
+            autoAnimate.layoutTransition.setAnimateParentHierarchy(false)
+            rbNormal.isChecked = true
+        }
 
         applyInsets()
         setListeners()
