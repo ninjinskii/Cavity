@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Checkable
 import android.widget.CompoundButton
 import androidx.activity.result.ActivityResultLauncher
@@ -80,6 +81,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         applyInsets()
         setListeners()
+        initStorageLocationDropdown()
         observe()
     }
 
@@ -114,6 +116,16 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 onFriendChipClicked = { showPickFriendDialog() }
             )
         )
+    }
+
+    private fun initStorageLocationDropdown() {
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_naming)
+        binding.storageLocation.setAdapter(adapter)
+
+        addBottleViewModel.getAllStorageLocations().observe(viewLifecycleOwner) {
+            adapter.clear()
+            adapter.addAll(it)
+        }
     }
 
     private fun observe() {
