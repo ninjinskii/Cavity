@@ -14,6 +14,7 @@
     <string name="warning">Warning !</string>
     <string name="locale">en</string>
     <string name="unknown">Unknown</string>
+    <string name="all">All</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Please enter a region name.</string>
@@ -109,6 +110,9 @@
     <string name="gold">Gold</string>
     <string name="item_rate">%1$d / %2$d</string>
     <string name="other_info">Other informations</string>
+    <string name="storage_location">Storage location</string>
+    <string name="alcohol">Alcohol</string>
+    <string name="optionnal">Optionnal</string>
     <string name="inquire_add_to_favorites">Add to preferred</string>
     <string name="favorite">Preferred</string>
     <string name="add_pdf">Add PDF file</string>
@@ -267,15 +271,19 @@
 
     <!-- Settings -->
     <string name="skew_bottle_title">Rotate the template</string>
-    <string name="skew_bottle">Rotate the bottle template when taking a photo.</string>
+    <string name="skew_bottle">Rotate the bottle template while taking a photo.</string>
     <string name="template_size_title">Template size</string>
-    <string name="template_size">Shrink or grow the template when taking a photo.</string>
+    <string name="template_size">Resize the bottle template while taking a photo.</string>
     <string name="default_currency_title">Default currency</string>
-    <string name="default_currency">Select the default currency used when adding a bottle.</string>
+    <string name="default_currency">Choose the default currency used when adding a bottle.</string>
     <string name="error_reporting_title">Error reporting</string>
-    <string name="error_reporting">Enable error reporting to send context data whenever a crash happens. This let the developer know an unexpected error occurs on your device and helps fixing it.</string>
+    <string name="error_reporting">Enable crash reporting to send diagnostic data when the app encounters an error. This helps the developer understand and fix issues more effectively.</string>
     <string name="prevent_screenshots_title">Prevent screenshots</string>
-    <string name="prevent_screenshots">Privacy prevention measure forbidding screenshots and hiding app content in recent apps menu.</string>
+    <string name="prevent_screenshots">A privacy feature that disables screenshots and hides app content in the recent apps view.</string>
+    <string name="bottle_storage_title">Bottle Storage</string>
+    <string name="bottle_storage">Add a "storage location" field when adding a bottle. You can then filter the home screen by storage location by tapping the app title.</string>
+    <string name="experimental_features_title">Experimental Features</string>
+    <string name="experimental_features">The features below are available for use but are still in an early stage of development. They may be changed or removed in the future. You can enable or disable them at any time.</string>
 
     <!-- Account -->
     <string name="email">Email</string>
@@ -334,6 +342,7 @@
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>
     <string name="tag_modal_sheet_id" translatable="false">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
+    <string name="tag_friend_picker_modal_sheet" translatable="false">com.louis.app.cavity.TAG_FRIEND_PICKER_BOTTOM_SHEET</string>
     <string name="tag_date_picker" translatable="false">com.louis.app.cavity.TAG_DATE_PICKER</string>
     <string name="tag_shared_prefs" translatable="false">com.louis.app.cavity.SHARED_PREFS</string>
     <string name="tag_view_wine_filter" translatable="false">com.louis.app.cavity.TAG_VIEW_WINE_FILTER</string>

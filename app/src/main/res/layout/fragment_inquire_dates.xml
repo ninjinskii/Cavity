@@ -187,6 +187,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
+            android:focusable="true"
             app:endIconMode="clear_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -199,6 +200,7 @@
                 android:id="@+id/buyDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:hint="@string/buying_date"
                 android:inputType="none" />
 

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.RotateAnimation
 import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
 import android.widget.Checkable
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
@@ -24,6 +25,7 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
@@ -45,6 +47,7 @@ import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.ui.search.widget.InsettableInfo
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
+import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.*
 import com.robinhood.ticker.TickerUtils
@@ -65,11 +68,14 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         private const val SWITCH_PRICE_ENABLED = "com.louis.app.cavity.SWITCH_PRICE_ENABLED"
         private const val SLIDER_PRICE_START = "com.louis.app.cavity.SLIDER_PRICE_START"
         private const val SLIDER_PRICE_END = "com.louis.app.cavity.SLIDER_PRICE_END"
+        private const val SLIDER_ALCOHOL_START = "com.louis.app.cavity.SLIDER_ALCOHOL_START"
+        private const val SLIDER_ALCOHOL_END = "com.louis.app.cavity.SLIDER_ALCOHOL_END"
         private const val DATE_BEYOND = "com.louis.app.cavity.DATE_BEYOND"
         private const val DATE_UNTIL = "com.louis.app.cavity.DATE_UNTIL"
         private const val CHIP_COLOR = "com.louis.app.cavity.CHIP_COLOR"
         private const val CHIP_MISC = "com.louis.app.cavity.CHIP_MISC"
         private const val SWITCH_SELECTED_ENABLED = "com.louis.app.cavity.SWITCH_SELECTED_ENABLED"
+        private const val STORAGE_LOCATION = "com.louis.app.cavity.STORAGE_LOCATION"
         private const val RADIO_CAPACITY = "com.louis.app.cavity.RADIO_CAPACITY"
 
         const val PICK_MODE = "com.louis.app.cavity.ui.search.FragmentSearch.PICK_MODE"
@@ -83,6 +89,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private var _filtersBinding: SearchFiltersBinding? = null
     private val filtersBinding get() = _filtersBinding!!
 
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val searchViewModel: SearchViewModel by viewModels()
     private val addTastingViewModel: AddTastingViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
@@ -183,7 +190,9 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     R.id.divider2, R.id.dateTitle, R.id.divider3, R.id.priceTitle, R.id.priceSlider,
                     R.id.warning, R.id.divider4, R.id.grapeTitle, R.id.grapeScrollView,
                     R.id.divider5, R.id.reviewTitle, R.id.reviewScrollView, R.id.divider6,
-                    R.id.divider7, R.id.friendTitle, R.id.friendScrollView, R.id.bottleSizeTitle
+                    R.id.divider7, R.id.friendTitle, R.id.friendScrollView, R.id.bottleSizeTitle,
+                    R.id.divider8, R.id.divider9, R.id.alcoholTitle, R.id.alcoholSlider,
+                    R.id.storageLocationTitle, R.id.storageLocationLayout
                 ).map { InsettableInfo(inflatedView.findViewById(it)) }
 
                 val leftInsettable = intArrayOf(R.id.beyondLayout)
@@ -265,6 +274,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         initSliders(savedInstanceState)
         initFriendTextSwitcher()
         initRadioButtons(savedInstanceState)
+        initStorageLocationDropdown(savedInstanceState)
     }
 
     private fun setBottomSheetPeekHeight() {
@@ -279,7 +289,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         val filtersBottom = lastChild.bottom
         val fill = height - filtersBottom - backdropHeaderHeight
 
-        val peekHeight = max(backdropHeaderHeight + insetBottom, fill + initialPadding - insetBottom)
+        val peekHeight =
+            max(backdropHeaderHeight + insetBottom, fill + initialPadding - insetBottom)
         bottomSheetBehavior?.setPeekHeight(peekHeight, true)
     }
 
@@ -513,6 +524,24 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
                 override fun onStopTrackingTouch(slider: RangeSlider) {
                     searchViewModel.submitFilter(id, getPriceFilter())
+                }
+
+                override fun onStartTrackingTouch(slider: RangeSlider) = Unit
+            })
+        }
+
+        filtersBinding.alcoholSlider.apply {
+            val start = savedInstanceState?.getFloat(SLIDER_ALCOHOL_START)
+            val end = savedInstanceState?.getFloat(SLIDER_ALCOHOL_END)
+
+            values = listOf(
+                max(valueFrom, start?.coerceAtMost(valueTo) ?: valueFrom),
+                min(valueTo, end?.coerceAtLeast(valueFrom) ?: valueTo)
+            )
+
+            addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
+                override fun onStopTrackingTouch(slider: RangeSlider) {
+                    searchViewModel.submitFilter(id, getAlcoholFilter())
                 }
 
                 override fun onStartTrackingTouch(slider: RangeSlider) = Unit
@@ -765,6 +794,39 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
     }
 
+    private fun initStorageLocationDropdown(savedInstanceState: Bundle?) {
+        val storageLocationEnabled = settingsViewModel.getEnableBottleStorageLocation()
+
+        if (!storageLocationEnabled) {
+            return
+        }
+
+        filtersBinding.apply {
+            divider7.setVisible(true)
+            storageLocationTitle.setVisible(true)
+            storageLocationLayout.setVisible(true)
+        }
+
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_naming)
+        val clearText = getString(R.string.all)
+        val text = savedInstanceState?.getString(STORAGE_LOCATION) ?: clearText
+
+        filtersBinding.storageLocation.apply {
+            setText(text)
+            setAdapter(adapter)
+            doAfterTextChanged { newText ->
+                val hasReset = newText.toString() == clearText
+                val filter = if (hasReset) NoFilter else FilterStorageLocation(newText.toString())
+                searchViewModel.submitFilter(id, filter)
+            }
+        }
+
+        searchViewModel.getAllStorageLocations(clearText).observe(viewLifecycleOwner) {
+            adapter.clear()
+            adapter.addAll(it)
+        }
+    }
+
     private fun getCountyFilter(): WineFilter {
         return filtersBinding.countyChipGroup
             .collectAs<County>()
@@ -858,6 +920,25 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
     }
 
+    private fun getAlcoholFilter(): WineFilter {
+        with(filtersBinding.alcoholSlider) {
+            if (!isLaidOut) {
+                return NoFilter
+            }
+
+            val min = valueFrom.toDouble()
+            val max = valueTo.toDouble()
+            val lowerBound = values[0].toDouble()
+            val higherBound = values[1].toDouble()
+            val isFullRange = lowerBound == min && higherBound == max
+
+            return when {
+                isFullRange -> NoFilter
+                else -> FilterAlcohol(lowerBound, higherBound)
+            }
+        }
+    }
+
     private fun getSelectedBottlesFilter(): WineFilter {
         return if (filtersBinding.chipSelected.isChecked) FilterSelected() else NoFilter
     }
@@ -916,11 +997,14 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             putBoolean(SWITCH_PRICE_ENABLED, filtersBinding.togglePrice.isChecked)
             putFloat(SLIDER_PRICE_START, filtersBinding.priceSlider.values[0])
             putFloat(SLIDER_PRICE_END, filtersBinding.priceSlider.values[1])
+            putFloat(SLIDER_ALCOHOL_START, filtersBinding.alcoholSlider.values[0])
+            putFloat(SLIDER_ALCOHOL_END, filtersBinding.alcoholSlider.values[1])
             putString(DATE_BEYOND, filtersBinding.beyond.text.toString())
             putString(DATE_UNTIL, filtersBinding.until.text.toString())
             putIntArray(CHIP_COLOR, filtersBinding.colorChipGroup.checkedChipIds.toIntArray())
             putIntArray(CHIP_MISC, filtersBinding.otherChipGroup.checkedChipIds.toIntArray())
             putBoolean(SWITCH_SELECTED_ENABLED, filtersBinding.chipSelected.isChecked)
+            putString(STORAGE_LOCATION, filtersBinding.storageLocation.text.toString())
             putInt(RADIO_CAPACITY, pos)
         }
     }

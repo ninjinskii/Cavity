@@ -1,4 +1,6 @@
+import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
+import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteTransactionListener
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -58,8 +60,60 @@ class DatabaseMigrationTest {
                     }
                 })
             }
+        }
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun migration_2_3() {
+        // Create earliest version of the database.
+        val db = helper.createDatabase(TEST_DB, 2).apply {
+            popualateDbWithMinimalData(this)
+
+            Assert.assertThrows(SQLiteException::class.java) {
+                // Should not be able to insert bottle bottle with new fields storage_location & alcohol before migration
+                execSQL("INSERT INTO bottle VALUES (4, 1, 2020, null, 0, 0, '€', '', '', 0, '', 'NORMAL', '', 'cellar', 12.5, 0, null);")
+            }
+
+//            close()
+        }
+
+        helper.runMigrationsAndValidate(TEST_DB, 3, true).apply {
+            val countBeforeInserts = query("SELECT * FROM bottle;").count
+            beginTransactionWithListener(object : SQLiteTransactionListener {
+                override fun onBegin() {
+                    // Should be able to insert bottle with new fields storage_location & alcohol
+                    execSQL("INSERT INTO bottle VALUES (4, 1, 2020, null, 0, 0, '€', '', '', 0, '', 'NORMAL', '', 'cellar', 12.5, 0, null);")
+                }
+
+                override fun onCommit() {
+                    val countAfterInserts = query("SELECT * FROM bottle;").count
+                    setTransactionSuccessful()
+
+                    Assert.assertEquals(countBeforeInserts, countAfterInserts)
+
+                    // Pre existing bottles should have null as alcohol value & empty string as storage_location
+                    val result =
+                        db.query("SELECT alcohol, storage_location FROM bottle WHERE id = 1")
+                    if (result.moveToFirst()) {
+                        val alcohol = result.getDouble(0)
+                        val storageLocation = result.getString(1)
+
+                        Assert.assertEquals(alcohol, 12.5, 0.0)
+                        Assert.assertEquals(storageLocation, "cellar")
+                    } else {
+                        throw Exception("result.moveToFirst() should be truthy")
+                    }
+                }
+
+                override fun onRollback() {
+                    throw Exception("Transaction failed")
+                }
+            })
 
         }
+
+        db.close()
     }
 
     companion object {

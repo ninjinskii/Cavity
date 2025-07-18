@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.BoundedBottle
@@ -40,9 +41,11 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         R.id.beyondLayout to NoFilter,
         R.id.untilLayout to NoFilter,
         R.id.priceSlider to NoFilter,
+        R.id.alcoholSlider to NoFilter,
         R.id.grapeChipGroup to NoFilter,
         R.id.reviewChipGroup to NoFilter,
         R.id.friendChipGroup to NoFilter,
+        R.id.storageLocation to NoFilter,
         R.id.rbGroupSize to NoFilter
     )
 
@@ -72,6 +75,10 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     fun getAllReviews() = reviewRepository.getAllReviews()
 
     fun getAllFriends() = friendRepository.getAllFriends()
+
+    fun getAllStorageLocations(clearText: String) = bottleRepository.getAllStorageLocations().map {
+        listOf(clearText) + it
+    }
 
     fun cycleFriendFilterMode(): Int {
         return ++friendFilterMode

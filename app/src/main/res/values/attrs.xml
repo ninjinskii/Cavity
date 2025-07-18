@@ -16,7 +16,8 @@
             <flag name="required" value="1" />
             <flag name="integer" value="2" />
             <flag name="floating" value="4" />
-            <flag name="positive" value="8" />
+            <flag name="doubling" value="8" />
+            <flag name="positive" value="16" />
         </attr>
     </declare-styleable>
 

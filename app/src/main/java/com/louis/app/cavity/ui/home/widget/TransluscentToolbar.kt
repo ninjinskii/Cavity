@@ -1,8 +1,16 @@
 package com.louis.app.cavity.ui.home.widget
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.RippleDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.core.content.ContextCompat
@@ -11,6 +19,7 @@ import androidx.core.view.children
 import androidx.core.view.updatePadding
 import com.google.android.material.appbar.MaterialToolbar
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.dpToPx
 
 class TransluscentToolbar @JvmOverloads constructor(
     context: Context,
@@ -50,56 +59,18 @@ class TransluscentToolbar @JvmOverloads constructor(
         }
     }
 
+    fun setOnTitleClickListener(listener: (View) -> Unit) {
+        this.children.firstOrNull { it is TextView }?.apply {
+            isClickable = true
+            isFocusable = true
+            this as TextView
+            setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_flat_arrow_down, 0)
+            compoundDrawablePadding = context.resources.getDimension(R.dimen.small_margin).toInt()
+            setOnClickListener(listener)
+        }
+    }
+
     override fun onTouchEvent(ev: MotionEvent?) = false.also { performClick() }
 
     override fun performClick() = false.also { super.performClick() }
 }
-
-
-/*class UnderlayMergeDrawable(
-    private val drawable: Drawable,
-    private val cornerRadius: Float,
-    @ColorInt private val color: Int
-) :
-    Drawable() {
-
-    private val backgroundPath = Path()
-
-    private val backgroundPaint by lazy {
-        Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            this@apply.color = this@UnderlayMergeDrawable.color
-        }
-    }
-
-    override fun setAlpha(p0: Int) {
-    }
-
-    override fun setColorFilter(p0: ColorFilter?) {
-    }
-
-    @Deprecated(
-        "Superclass method is deprecated",
-        ReplaceWith("PixelFormat.UNKNOWN", "android.graphics.PixelFormat")
-    )
-    override fun getOpacity(): Int {
-        return PixelFormat.UNKNOWN
-    }
-
-    override fun draw(canvas: Canvas) {
-        val centerX = drawable.bounds.exactCenterX()
-        val centerY = drawable.bounds.exactCenterY()
-        val length = min(drawable.bounds.width(), drawable.bounds.height())
-        val left = centerX - (length / 2)
-        val top = centerY - (length / 2)
-        val right = centerX + (length / 2)
-        val bottom = centerY + (length / 2)
-        val ratioRect = RectF(left, top, right, bottom)
-
-        backgroundPath.reset()
-        backgroundPath.addRoundRect(ratioRect, cornerRadius, cornerRadius, Path.Direction.CW)
-
-        canvas.drawPath(backgroundPath, backgroundPaint)
-        this.copyBounds(drawable.bounds)
-        drawable.draw(canvas)
-    }
-}*/

@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Checkable
 import android.widget.CompoundButton
 import androidx.activity.result.ActivityResultLauncher
@@ -22,6 +23,7 @@ import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerBottomSheet
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
@@ -34,6 +36,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     private var _binding: FragmentInquireOtherInfoBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val addBottleViewModel: AddBottleViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
@@ -69,11 +72,16 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         otherInfoManager = addBottleViewModel.otherInfoManager
 
-        binding.autoAnimate.layoutTransition.setAnimateParentHierarchy(false)
-        binding.rbNormal.isChecked = true
+        binding.apply {
+            val storageLocationEnabled = settingsViewModel.getEnableBottleStorageLocation()
+            storageLocationLayout.setVisible(storageLocationEnabled)
+            autoAnimate.layoutTransition.setAnimateParentHierarchy(false)
+            rbNormal.isChecked = true
+        }
 
         applyInsets()
         setListeners()
+        initStorageLocationDropdown()
         observe()
     }
 
@@ -108,6 +116,16 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 onFriendChipClicked = { showPickFriendDialog() }
             )
         )
+    }
+
+    private fun initStorageLocationDropdown() {
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_naming)
+        binding.storageLocation.setAdapter(adapter)
+
+        addBottleViewModel.getAllStorageLocations().observe(viewLifecycleOwner) {
+            adapter.clear()
+            adapter.addAll(it)
+        }
     }
 
     private fun observe() {
@@ -150,6 +168,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
     private fun updateFields(editedBottle: Bottle) {
         with(binding) {
+            storageLocation.setText(editedBottle.storageLocation)
+            alcohol.setText(editedBottle.alcohol?.toString() ?: "")
             otherInfo.setText(editedBottle.otherInfo)
             addToFavorite.isChecked = editedBottle.isFavorite.toBoolean()
             otherInfoManager.setPdfPath(editedBottle.pdfPath)
@@ -207,7 +227,10 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             return
         }
 
-        FriendPickerBottomSheet().show(parentFragmentManager, "friend-picker-bottom-sheet")
+        FriendPickerBottomSheet().show(
+            parentFragmentManager,
+            getString(R.string.tag_friend_picker_modal_sheet)
+        )
     }
 
     override fun requestNextPage(): Boolean {
@@ -217,6 +240,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         with(binding) {
             otherInfoManager.submitOtherInfo(
+                storageLocation.text.toString().trim(),
+                alcohol.text.toString().toDoubleOrNull(),
                 otherInfo.text.toString(),
                 rbGroupSize.checkedButtonId,
                 addToFavorite.isChecked,

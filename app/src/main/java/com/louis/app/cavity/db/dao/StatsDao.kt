@@ -12,39 +12,42 @@ import com.louis.app.cavity.util.ColorUtil
 
 @Dao
 interface StatsDao {
-    @Query("SELECT COUNT(*) FROM bottle INNER JOIN wine ON wine_id = wine.id WHERE county_id=:countyId AND consumed != 1")
-    fun getBottleCountForCounty(countyId: Long): LiveData<Int>
+    @Query("SELECT COUNT(*) FROM bottle INNER JOIN wine ON wine_id = wine.id WHERE county_id=:countyId AND consumed != 1 AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL)")
+    fun getBottleCountForCounty(countyId: Long, storageLocation: String?): LiveData<Int>
 
-    @Query("""SELECT SUM(price) as sum, currency FROM bottle INNER JOIN wine ON wine_id = wine.id WHERE price != -1 AND county_id=:countyId AND consumed != 1 GROUP BY currency""")
-    fun getPriceByCurrencyForCounty(countyId: Long): LiveData<List<PriceByCurrency>>
+    @Query("""SELECT SUM(price) as sum, currency FROM bottle INNER JOIN wine ON wine_id = wine.id WHERE price != -1 AND county_id=:countyId AND consumed != 1 AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL) GROUP BY currency""")
+    fun getPriceByCurrencyForCounty(
+        countyId: Long,
+        storageLocation: String?
+    ): LiveData<List<PriceByCurrency>>
 
     @Query(
         """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                     (SELECT COUNT(*) 
                     FROM bottle INNER JOIN wine ON wine_id = wine.id 
-                    WHERE wine.county_id=:countyId AND bottle.consumed = 0) * 100
+                    WHERE wine.county_id=:countyId AND bottle.consumed = 0 AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL)) * 100
                     AS percentage,
                     GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                 FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
-                WHERE bottle.consumed = 0 AND wine.county_id=:countyId
+                WHERE bottle.consumed = 0 AND wine.county_id=:countyId AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL)
                 GROUP BY naming ORDER BY percentage"""
     )
-    fun getNamingsForCounty(countyId: Long): LiveData<List<BaseStat>>
+    fun getNamingsForCounty(countyId: Long, storageLocation: String?): LiveData<List<BaseStat>>
 
     @Query(
         """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                     (SELECT COUNT(*) 
                     FROM bottle INNER JOIN wine ON wine_id = wine.id 
-                    WHERE wine.county_id=:countyId AND bottle.consumed = 0) * 100
+                    WHERE wine.county_id=:countyId AND bottle.consumed = 0 AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL)) * 100
                     AS percentage,
                     GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
                 FROM bottle
                 INNER JOIN wine ON wine_id = wine.id
-                WHERE bottle.consumed = 0 AND wine.county_id=:countyId
+                WHERE bottle.consumed = 0 AND wine.county_id=:countyId AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL)
                 GROUP BY vintage ORDER BY percentage, label"""
     )
-    fun getVintagesForCounty(countyId: Long): LiveData<List<BaseStat>>
+    fun getVintagesForCounty(countyId: Long, storageLocation: String?): LiveData<List<BaseStat>>
 
     @Query(
         """SELECT county.name AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 

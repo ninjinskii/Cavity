@@ -1,6 +1,7 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
+import com.louis.app.cavity.model.County
 
 class StatsRepository private constructor(app: Application) : Repository(app) {
     companion object {
@@ -15,10 +16,10 @@ class StatsRepository private constructor(app: Application) : Repository(app) {
 
     private val statsDao = database.statsDao()
 
-    fun getBottleCountForCounty(countyId: Long) = statsDao.getBottleCountForCounty(countyId)
-    fun getPriceByCurrencyForCounty(countyId: Long) = statsDao.getPriceByCurrencyForCounty(countyId)
-    fun getNamingsStatsForCounty(countyId: Long) = statsDao.getNamingsForCounty(countyId)
-    fun getVintagesStatsForCounty(countyId: Long) = statsDao.getVintagesForCounty(countyId)
+    fun getBottleCountForCounty(countyId: Long, storageLocation: String?) = statsDao.getBottleCountForCounty(countyId, storageLocation)
+    fun getPriceByCurrencyForCounty(countyId: Long, storageLocation: String?) = statsDao.getPriceByCurrencyForCounty(countyId, storageLocation)
+    fun getNamingsStatsForCounty(countyId: Long, storageLocation: String?) = statsDao.getNamingsForCounty(countyId, storageLocation)
+    fun getVintagesStatsForCounty(countyId: Long, storageLocation: String?) = statsDao.getVintagesForCounty(countyId, storageLocation)
     fun getStockByCounty() = statsDao.getStockByCounty()
     fun getReplenishmentsByCounty(start: Long, end: Long) =
         statsDao.getReplenishmentsByCounty(start, end)
