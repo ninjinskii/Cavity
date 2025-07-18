@@ -282,6 +282,8 @@
     <string name="prevent_screenshots">Privacy prevention measure forbidding screenshots and hiding app content in recent apps menu.</string>
     <string name="bottle_storage_title">Bottle Storage</string>
     <string name="bottle_storage">Add a "storage location" field when adding a bottle. You can then filter the home screen by storage location by tapping the app title.</string>
+    <string name="experimental_features_title">Fonctionnalités expérimentales</string>
+    <string name="experimental_features">Les fonctionnalités ci-dessous sont utilisables, mais sont à un stade de maturité précoce. Elles sont sujettes à suppression/changement dans le futur. Vous pouvez les activer/désactiver à tout moment.</string>
 
     <!-- Account -->
     <string name="email">Email</string>
