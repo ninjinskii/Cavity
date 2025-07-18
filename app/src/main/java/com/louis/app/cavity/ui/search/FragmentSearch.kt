@@ -801,15 +801,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             setAdapter(adapter)
             doAfterTextChanged { newText ->
                 val hasReset = newText.toString() == clearText
-
-                if (hasReset) {
-                    searchViewModel.submitFilter(R.id.storageLocation, NoFilter)
-                } else {
-                    searchViewModel.submitFilter(
-                        R.id.storageLocation,
-                        FilterStorageLocation(newText.toString())
-                    )
-                }
+                val filter = if (hasReset) NoFilter else FilterStorageLocation(newText.toString())
+                searchViewModel.submitFilter(id, filter)
             }
         }
 
