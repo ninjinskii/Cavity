@@ -29,6 +29,8 @@ data class Bottle(
     @ColumnInfo(name = "tasting_taste_comment") val tastingTasteComment: String,
     @ColumnInfo(name = "bottle_size") val bottleSize: BottleSize,
     @ColumnInfo(name = "pdf_path") var pdfPath: String,
+    @ColumnInfo(name = "storage_location", defaultValue = "") val storageLocation: String,
+    val alcohol: Double?,
     var consumed: Int,
     @ColumnInfo(name = "tasting_id", index = true) var tastingId: Long? = null
 ) : Chipable, FileAssoc {

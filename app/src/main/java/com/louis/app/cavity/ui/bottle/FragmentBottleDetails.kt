@@ -551,6 +551,14 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             buyLocation.setData(bottle.buyLocation)
             buyDate.setData(DateFormatter.formatDate(bottle.buyDate))
             capacity.setData(getString(bottle.bottleSize.stringRes))
+            storageLocation.apply {
+                setVisible(bottle.storageLocation.isNotEmpty())
+                setData(bottle.storageLocation)
+            }
+            alcohol.apply {
+                setVisible(bottle.alcohol != null)
+                setData(bottle.alcohol.toString())
+            }
             otherInfo.setData(bottle.otherInfo)
             buttonPdfIcon.isEnabled = bottle.hasPdf()
             favorite.isChecked = bottle.isFavorite.toBoolean()

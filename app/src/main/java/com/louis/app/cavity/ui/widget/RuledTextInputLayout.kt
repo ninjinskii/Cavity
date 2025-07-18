@@ -20,7 +20,8 @@ class RuledTextInputLayout @JvmOverloads constructor(
         const val RULE_REQUIRED = 0x1
         const val RULE_INTEGER = 0x2
         const val RULE_FLOATING = 0x4
-        const val RULE_POSITIVE = 0x8
+        const val RULE_DOUBLING = 0x8
+        const val RULE_POSITIVE = 0x16
     }
 
     private val rules = mutableSetOf<Rule>()
@@ -88,12 +89,16 @@ class RuledTextInputLayout @JvmOverloads constructor(
         if (containsFlag(RULE_FLOATING))
             addRules(Rule(R.string.require_float) { it.toFloatOrNull() != null })
 
+        if (containsFlag(RULE_DOUBLING))
+            addRules(Rule(R.string.require_float) { it.toDoubleOrNull() != null })
+
         if (containsFlag(RULE_POSITIVE))
             addRules(Rule(R.string.no_negative) {
                 when {
                     containsFlag(RULE_INTEGER) -> it.toInt() > 0
+                    containsFlag(RULE_DOUBLING) -> it.toDouble() > 0
                     containsFlag(RULE_FLOATING) -> it.toFloat() > 0
-                    else -> throw IllegalArgumentException("When Positive rule is set, you must also provide either Integer or Floating rule.")
+                    else -> throw IllegalArgumentException("When Positive rule is set, you must also provide either RULE_INTEGER, RULE_DOUBLE or RULE_FLOATING rule.")
                 }
             })
     }
