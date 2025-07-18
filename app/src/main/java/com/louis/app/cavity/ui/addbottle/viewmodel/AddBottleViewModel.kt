@@ -82,6 +82,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun getAllStorageLocations() = bottleRepository.getAllStorageLocations()
+
     fun submitBottleForm() {
         val step1Bottle = dateManager.partialBottle
         val step4Bottle = otherInfoManager.partialBottle

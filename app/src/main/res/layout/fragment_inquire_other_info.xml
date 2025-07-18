@@ -34,8 +34,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider" />
 
-            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/storageLocationLayout"
+                style="@style/Widget.Cavity.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
@@ -45,10 +46,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/otherInfoTitle"
-                app:rule="absent"
                 app:startIconDrawable="@drawable/ic_manager">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <AutoCompleteTextView
                     android:id="@+id/storageLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@string/alcohol" />
 
-            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/alcoholLayout"
