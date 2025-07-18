@@ -34,14 +34,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/storageLocationLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
+                app:helperText="@string/optionnal"
+                app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/otherInfoTitle"
+                app:rule="absent"
                 app:startIconDrawable="@drawable/ic_manager">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -53,7 +56,7 @@
                     android:inputType="textCapSentences"
                     android:nextFocusDown="@string/alcohol" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </com.louis.app.cavity.ui.widget.RuledTextInputLayout>
 
             <com.louis.app.cavity.ui.widget.RuledTextInputLayout
                 android:id="@+id/alcoholLayout"
@@ -61,6 +64,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
                 android:nextFocusDown="@string/other_info"
+                app:helperText="@string/optionnal"
+                app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/storageLocationLayout"
@@ -83,6 +88,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/medium_margin"
+                app:helperText="@string/optionnal"
+                app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/alcoholLayout">

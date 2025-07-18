@@ -143,7 +143,10 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
     }
 
     private fun showPickFriendDialog() {
-        FriendPickerBottomSheet().show(childFragmentManager, "friend-picker-bottom-sheet")
+        FriendPickerBottomSheet().show(
+            parentFragmentManager,
+            getString(R.string.tag_friend_picker_modal_sheet)
+        )
     }
 
     override fun onDestroy() {

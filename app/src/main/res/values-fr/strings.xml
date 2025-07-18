@@ -13,6 +13,7 @@
     <string name="warning">Attention !</string>
     <string name="locale">fr</string>
     <string name="unknown">Inconnu</string>
+    <string name="all">Tout</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
@@ -110,6 +111,7 @@
     <string name="other_info">Autres informations</string>
     <string name="storage_location">Lieu de stockage</string>
     <string name="alcohol">Alcohol</string>
+    <string name="optionnal">Facultatif</string>
     <string name="inquire_add_to_favorites">Ajouter aux coup de cœurs</string>
     <string name="favorite">Coup de cœurs</string>
     <string name="add_pdf">Associer un fichier PDF</string>

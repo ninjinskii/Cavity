@@ -209,7 +209,10 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             return
         }
 
-        FriendPickerBottomSheet().show(parentFragmentManager, "friend-picker-bottom-sheet")
+        FriendPickerBottomSheet().show(
+            parentFragmentManager,
+            getString(R.string.tag_friend_picker_modal_sheet)
+        )
     }
 
     override fun requestNextPage(): Boolean {
@@ -219,7 +222,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
 
         with(binding) {
             otherInfoManager.submitOtherInfo(
-                storageLocation.text.toString(),
+                storageLocation.text.toString().trim(),
                 alcohol.text.toString().toDoubleOrNull(),
                 otherInfo.text.toString(),
                 rbGroupSize.checkedButtonId,
