@@ -15,6 +15,8 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
@@ -163,20 +165,6 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 //                viewPager.offscreenPageLimit = 1
             }
         }
-    }
-
-    private fun setAdapterPageToCurrentCounty(counties: List<County>) {
-        homeViewModel.checkRememberedCountyBeforeStorageChange(counties)
-        /*counties.indexOfFirst { county ->
-            county.id ==
-                    homeViewModel.countyIdBeforeStorageLocationChange
-        }
-            .let { index ->
-                if (index >= 0) {
-                    homeViewModel.countyIdBeforeStorageLocationChange = null
-                    binding.viewPager.currentItem = index
-                }
-            }*/
     }
 
     private fun setViewPagerOrientation() {

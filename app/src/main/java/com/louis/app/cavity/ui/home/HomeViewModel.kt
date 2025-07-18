@@ -42,19 +42,19 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     private var countyIdBeforeStorageLocationChange: Long? = null
 
     val bottleCount = observedCounty.switchMap {
-        statsRepository.getBottleCountForCounty(it)
+        statsRepository.getBottleCountForCounty(it, _storageLocation.value)
     }
 
     val bottlePrice = observedCounty.switchMap {
-        statsRepository.getPriceByCurrencyForCounty(it)
+        statsRepository.getPriceByCurrencyForCounty(it, _storageLocation.value)
     }
 
     val namingCount = observedCounty.switchMap {
-        statsRepository.getNamingsStatsForCounty(it)
+        statsRepository.getNamingsStatsForCounty(it, _storageLocation.value)
     }
 
     val vintagesCount = observedCounty.switchMap {
-        statsRepository.getVintagesStatsForCounty(it)
+        statsRepository.getVintagesStatsForCounty(it, _storageLocation.value)
     }
 
     fun setObservedCounty(countyId: Long) {
@@ -64,6 +64,13 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     fun setStorageLocation(bottleStorage: String?, currentCountyId: Long?) {
         _storageLocation.value = bottleStorage
         countyIdBeforeStorageLocationChange = currentCountyId
+    }
+
+    fun notifyStorageLocation() {
+        _storageLocation.value.let {
+            _storageLocation.value = null
+            _storageLocation.value = it
+        }
     }
 
     fun checkRememberedCountyBeforeStorageChange(counties: List<County>) {
