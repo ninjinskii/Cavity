@@ -95,6 +95,24 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
             binding.toggleSkew.toggle()
         }
 
+        binding.toggleEnableBottleStorage.apply {
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
+
+            isChecked = settingsViewModel.getEnableBottleStorageLocation()
+
+            setOnCheckedChangeListener { _, isChecked ->
+                settingsViewModel.setEnableBottleStorageLocation(isChecked)
+            }
+        }
+
+        binding.bottleStorageLocation.setOnClickListener {
+            binding.toggleEnableBottleStorage.toggle()
+        }
+
         binding.toggleErrorReportConsent.apply {
             thumbDrawable = ResourcesCompat.getDrawable(
                 resources,

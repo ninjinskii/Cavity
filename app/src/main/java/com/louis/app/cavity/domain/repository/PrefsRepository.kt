@@ -17,6 +17,8 @@ class PrefsRepository private constructor(app: Application) {
         private const val PREF_ERROR_REPORTING_CONSENT =
             "com.louis.app.cavity.PREF_ERROR_REPORTING_CONSENT"
         private const val PREF_PREVENT_SCREENSHOT = "com.louis.app.cavity.PREF_PREVENT_SCREENSHOT"
+        private const val PREF_ENABLE_STORAGE_LOCATION =
+            "com.louis.app.cavity.PREF_ENABLE_STORAGE_LOCATION"
         private const val DEFAULT_CURRENCY = "€"
         private const val MAX_TEMPLATE_SCALE = 1.4f
 
@@ -65,6 +67,10 @@ class PrefsRepository private constructor(app: Application) {
         PREF_PREVENT_SCREENSHOT put preventScreenshots
     }
 
+    fun setEnableBottleStorageLocation(enableStorageLocation: Boolean) {
+        PREF_ENABLE_STORAGE_LOCATION put enableStorageLocation
+    }
+
     fun getSkewBottle() = PREF_SKEW_BOTTLE.getBoolean()
 
     fun getDefaultCurrency() = PREF_DEFAULT_CURRENCY.getString() ?: DEFAULT_CURRENCY
@@ -81,6 +87,8 @@ class PrefsRepository private constructor(app: Application) {
     fun getErrorReportingConsent() = PREF_ERROR_REPORTING_CONSENT.getBoolean()
 
     fun getPreventScreenshots() = PREF_PREVENT_SCREENSHOT.getBoolean()
+
+    fun getEnableBottleStorageLocation() = PREF_ENABLE_STORAGE_LOCATION.getBoolean()
 
     private infix fun String.put(string: String) {
         editor.putString(this, string)
