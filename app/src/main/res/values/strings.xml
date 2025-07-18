@@ -14,6 +14,7 @@
     <string name="warning">Warning !</string>
     <string name="locale">en</string>
     <string name="unknown">Unknown</string>
+    <string name="all">All</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Please enter a region name.</string>
@@ -111,6 +112,7 @@
     <string name="other_info">Other informations</string>
     <string name="storage_location">Storage location</string>
     <string name="alcohol">Alcohol</string>
+    <string name="optionnal">Optionnal</string>
     <string name="inquire_add_to_favorites">Add to preferred</string>
     <string name="favorite">Preferred</string>
     <string name="add_pdf">Add PDF file</string>
@@ -336,6 +338,7 @@
     <!-- Tags -->
     <string name="tag_chip_id" translatable="false">com.louis.app.cavity.TAG_CHIP_ID</string>
     <string name="tag_modal_sheet_id" translatable="false">com.louis.app.cavity.TAG_MODAL_SHEET_ID</string>
+    <string name="tag_friend_picker_modal_sheet" translatable="false">com.louis.app.cavity.TAG_FRIEND_PICKER_BOTTOM_SHEET</string>
     <string name="tag_date_picker" translatable="false">com.louis.app.cavity.TAG_DATE_PICKER</string>
     <string name="tag_shared_prefs" translatable="false">com.louis.app.cavity.SHARED_PREFS</string>
     <string name="tag_view_wine_filter" translatable="false">com.louis.app.cavity.TAG_VIEW_WINE_FILTER</string>

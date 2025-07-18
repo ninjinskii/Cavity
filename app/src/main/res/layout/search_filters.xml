@@ -306,6 +306,7 @@
             android:stepSize="10.0"
             android:valueFrom="0.0"
             android:valueTo="200.0"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/priceTitle"
@@ -323,10 +324,41 @@
             app:layout_constraintTop_toBottomOf="@id/priceSlider" />
 
         <View
-            android:id="@+id/divider4"
+            android:id="@+id/divider8"
             style="@style/Widget.Cavity.Divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/warning" />
+
+        <TextView
+            android:id="@+id/alcoholTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/alcohol"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider8" />
+
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/alcoholSlider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:stepSize="1.0"
+            android:valueFrom="0.0"
+            android:valueTo="25.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/alcoholTitle"
+            app:values="@array/initial_slider_values_alcohol" />
+
+        <View
+            android:id="@+id/divider4"
+            style="@style/Widget.Cavity.Divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/alcoholSlider" />
 
         <TextView
             android:id="@+id/grapeTitle"
@@ -470,6 +502,42 @@
             app:layout_constraintTop_toBottomOf="@id/friendScrollView" />
 
         <TextView
+            android:id="@+id/storageLocationTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/storage_location"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider7" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/storageLocationLayout"
+            style="@style/Widget.Cavity.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/storageLocationTitle"
+            app:startIconDrawable="@drawable/ic_manager">
+
+            <AutoCompleteTextView
+                android:id="@+id/storageLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/storage_location"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:id="@+id/divider9"
+            style="@style/Widget.Cavity.Divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/storageLocationLayout" />
+
+        <TextView
             android:id="@+id/bottleSizeTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -477,7 +545,7 @@
             android:text="@string/capacity"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider7" />
+            app:layout_constraintTop_toBottomOf="@id/divider9" />
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/rbGroupSize"

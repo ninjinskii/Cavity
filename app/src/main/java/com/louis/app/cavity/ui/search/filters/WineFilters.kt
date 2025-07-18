@@ -56,6 +56,7 @@ class FilterPrice(private val minPrice: Int, private val maxPrice: Int) : WineFi
         return when {
             minPrice == maxPrice && maxPrice != 0 ->
                 boundedBottle.filter { it.bottle.price > maxPrice }
+
             else -> boundedBottle.filter { it.bottle.price.toInt() in minPrice..maxPrice }
         }
     }
@@ -117,6 +118,18 @@ class FilterFriend(private val friendId: Long, private val historyEntryType: Int
                         (friendId in entryWithFriends.friends.map { f -> f.id })
             } != null
         }
+    }
+}
+
+class FilterStorageLocation(private val storageLocation: String) : WineFilter {
+    override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
+        return boundedBottle.filter { it.bottle.storageLocation == storageLocation }
+    }
+}
+
+class FilterAlcohol(private val minAlcohol: Double, private val maxAlcohol: Double) : WineFilter {
+    override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
+        return boundedBottle.filter { (it.bottle.alcohol ?: 0.0) in (minAlcohol..maxAlcohol) }
     }
 }
 
