@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialSharedAxis
@@ -49,9 +50,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this
-        ) {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
             if (binding.countyDetailsScrim.isVisible) {
                 hideCountyDetails()
             } else {
@@ -126,7 +125,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
 
         val fabMargin = binding.fab.marginRight
-        binding.fab.prepareWindowInsets (true) { view, windowInsets, _, _, right, _ ->
+        binding.fab.prepareWindowInsets(true) { view, windowInsets, _, _, right, _ ->
             val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
             layoutParams.updateMargins(right = fabMargin + right)
             windowInsets
@@ -156,13 +155,28 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 tabAdapter?.submitList(it)
                 tab.setUpWithViewPager(viewPager)
 
-                (view?.parent as? ViewGroup)?.doOnPreDraw {
+                (view?.parent as? ViewGroup)?.doOnPreDraw { _ ->
+                    homeViewModel.checkRememberedCountyBeforeStorageChange(it)
                     startPostponedEnterTransition()
                 }
 
 //                viewPager.offscreenPageLimit = 1
             }
         }
+    }
+
+    private fun setAdapterPageToCurrentCounty(counties: List<County>) {
+        homeViewModel.checkRememberedCountyBeforeStorageChange(counties)
+        /*counties.indexOfFirst { county ->
+            county.id ==
+                    homeViewModel.countyIdBeforeStorageLocationChange
+        }
+            .let { index ->
+                if (index >= 0) {
+                    homeViewModel.countyIdBeforeStorageLocationChange = null
+                    binding.viewPager.currentItem = index
+                }
+            }*/
     }
 
     private fun setViewPagerOrientation() {
@@ -190,6 +204,30 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         homeViewModel.vintagesCount.observe(viewLifecycleOwner) {
             binding.countyDetails.vintages.setSlices(it, anim = true)
         }
+
+        homeViewModel.storageLocation.observe(viewLifecycleOwner) { location ->
+            if (location == getString(R.string.all)) {
+                homeViewModel.setStorageLocation(null, null)
+            } else if (location != null) {
+                val toolbar = binding.appBar.toolbar
+                toolbar.post { toolbar.title = location }
+            }
+        }
+
+        val clearText = getString(R.string.all)
+        homeViewModel.getAllStorageLocations(clearText).observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                binding.appBar.toolbar.setOnTitleClickListener { _ ->
+                    showStorageLocationDialog(it)
+                }
+            }
+        }
+
+        homeViewModel.scrollToCountyEvent.observe(viewLifecycleOwner) {
+            it?.getContentIfNotHandled()?.let { index ->
+                binding.viewPager.currentItem = index
+            }
+        }
     }
 
     private fun setListeners() {
@@ -210,6 +248,20 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         binding.countyDetailsScrim.setOnClickListener {
             hideCountyDetails()
         }
+    }
+
+    private fun showStorageLocationDialog(items: List<String>) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.storage_location)
+            .setItems(items.toTypedArray()) { _, selectedPosition ->
+                val countyId = binding.viewPager.adapter?.getItemId(binding.viewPager.currentItem)
+                homeViewModel.setStorageLocation(items[selectedPosition], countyId)
+                findNavController().run {
+                    popBackStack()
+                    navigate(R.id.home_dest)
+                }
+            }
+            .show()
     }
 
     private fun showCountyDetails(itemPosition: Int, county: County) {
