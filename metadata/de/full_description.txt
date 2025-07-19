@@ -1,0 +1,11 @@
+Mit <i>Cavity</i> können Sie Ihren Vorrat an Weinflaschen verwalten und sich daran erinnern, mit wem Sie sie getrunken haben.
+
+<b>Features:</b>
+
+* Bestandsverwaltung
+* Hebt trinkfertige Flaschen hervor
+* Geschichte der getrunkenen Flaschen
+* Verwalten von Freunden (bieten Sie jemandem eine Flasche an ...)
+* Einkaufs-/Verbrauchsstatistiken
+* Forschung
+* Verkostungsmodus: Dekantierungsbenachrichtigungen, Flaschenkühlung
