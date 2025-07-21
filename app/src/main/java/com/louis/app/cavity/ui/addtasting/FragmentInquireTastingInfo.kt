@@ -162,7 +162,10 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
     }
 
     private fun showPickFriendDialog() {
-        FriendPickerBottomSheet().show(parentFragmentManager, "friend-picker-bottom-sheet")
+        FriendPickerBottomSheet().show(
+            parentFragmentManager,
+            getString(R.string.tag_friend_picker_modal_sheet)
+        )
     }
 
     private fun submit() {

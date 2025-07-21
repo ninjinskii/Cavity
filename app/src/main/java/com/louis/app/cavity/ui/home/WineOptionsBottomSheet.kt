@@ -77,6 +77,12 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        // Avoid navigation controller setting up app title in toolbar when qutting fragment (storage_location in mind)
+        homeViewModel.notifyStorageLocation()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

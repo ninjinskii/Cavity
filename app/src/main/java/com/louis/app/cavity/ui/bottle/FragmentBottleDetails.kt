@@ -45,12 +45,15 @@ import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.tasting.SpaceItemDecoration
 import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
+import androidx.fragment.app.activityViewModels
+import com.louis.app.cavity.ui.settings.SettingsViewModel
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private lateinit var transitionHelper: TransitionHelper
     private lateinit var errorReporter: ErrorReporter
     private var _binding: FragmentBottleDetailsBinding? = null
     private val binding get() = _binding!!
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val bottleDetailsViewModel: BottleDetailsViewModel by viewModels()
     private val consumeGiftBottleViewModel: ConsumeGiftBottleViewModel by viewModels()
     private val args: FragmentBottleDetailsArgs by navArgs()
@@ -476,15 +479,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                     override fun onLoadFailed(
                         e: GlideException?,
                         model: Any?,
-                        target: Target<Drawable>?,
+                        target: Target<Drawable>,
                         isFirstResource: Boolean
                     ) = false.also { startPostponedEnterTransition() }
 
                     override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
+                        resource: Drawable,
+                        model: Any,
                         target: Target<Drawable>?,
-                        dataSource: DataSource?,
+                        dataSource: DataSource,
                         isFirstResource: Boolean
                     ) = false.also { startPostponedEnterTransition() }
                 })
@@ -551,6 +554,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             buyLocation.setData(bottle.buyLocation)
             buyDate.setData(DateFormatter.formatDate(bottle.buyDate))
             capacity.setData(getString(bottle.bottleSize.stringRes))
+            storageLocation.apply {
+                val storageLocationEnabled = settingsViewModel.getEnableBottleStorageLocation()
+                setVisible(bottle.storageLocation.isNotEmpty() && storageLocationEnabled)
+                setData(bottle.storageLocation)
+            }
+            alcohol.apply {
+                setVisible(bottle.alcohol != null)
+                setData(bottle.alcohol.toString())
+            }
             otherInfo.setData(bottle.otherInfo)
             buttonPdfIcon.isEnabled = bottle.hasPdf()
             favorite.isChecked = bottle.isFavorite.toBoolean()

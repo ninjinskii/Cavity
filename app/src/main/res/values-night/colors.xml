@@ -18,5 +18,7 @@
 
     <color name="splash_background">#121212</color>
 
+    <color name="experimental">#20ffff00</color>
+
     <bool name="light_statusbar">false</bool>
 </resources>

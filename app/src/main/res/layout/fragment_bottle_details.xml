@@ -269,6 +269,30 @@
                     app:layout_constraintTop_toBottomOf="@id/capacity" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                    android:id="@+id/storageLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_manager"
+                    app:label="@string/storage_location"
+                    app:layout_constraintEnd_toEndOf="@id/buyLocation"
+                    app:layout_constraintStart_toStartOf="@id/buyLocation"
+                    app:layout_constraintTop_toBottomOf="@id/buyLocation" />
+
+                <com.louis.app.cavity.ui.bottle.widget.LabeledData
+                    android:id="@+id/alcohol"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_percent"
+                    app:label="@string/alcohol"
+                    app:layout_constraintEnd_toEndOf="@id/buyLocation"
+                    app:layout_constraintStart_toStartOf="@id/buyLocation"
+                    app:layout_constraintTop_toBottomOf="@id/storageLocation" />
+
+                <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/givenBy"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -276,8 +300,8 @@
                     app:icon="@drawable/ic_gift"
                     app:label="@string/gifted_by"
                     app:layout_constraintEnd_toEndOf="@id/buyDate"
-                    app:layout_constraintStart_toStartOf="@id/buyLocation"
-                    app:layout_constraintTop_toBottomOf="@id/buyLocation" />
+                    app:layout_constraintStart_toStartOf="@id/apogee"
+                    app:layout_constraintTop_toBottomOf="@id/alcohol" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/otherInfo"

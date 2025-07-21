@@ -1,8 +1,9 @@
-apply plugin: "com.android.application"
-apply plugin: "kotlin-android"
-apply plugin: "kotlin-kapt"
-apply plugin: "androidx.navigation.safeargs.kotlin"
-apply plugin: 'org.jetbrains.kotlin.android'
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "com.google.devtools.ksp"
+    id "androidx.navigation.safeargs.kotlin"
+}
 
 android {
     compileSdk 35
@@ -16,19 +17,15 @@ android {
         versionCode 32
         versionName "1.8.1"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                compilerArgumentProviders(
-                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
-                )
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
 
         sourceSets {
-            // Adds exported schema location as test app assets.
-            getByName("androidTest").assets.srcDir("$projectDir/schemas")
+            named("androidTest") {
+                assets.srcDir("$projectDir/schemas")
+            }
         }
-
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -56,7 +53,7 @@ android {
 
 dependencies {
     def nav_version = "2.8.9"
-    def room_version = "2.6.1"
+    def room_version = "2.7.2"
     def camerax_version = "1.4.2"
     def paging_version = "3.3.6"
     def lifecycle_version = "2.8.4"
@@ -86,7 +83,7 @@ dependencies {
     implementation "com.google.android.material:material:1.12.0"
 
     // Fragments
-    implementation "androidx.fragment:fragment-ktx:1.8.6"
+    implementation "androidx.fragment:fragment-ktx:1.8.8"
 
     // Navigation component
     // Navigation component 2.9.0 is causing a crash on navigation with arguments, 100% of the times on statistics bottle picking. Wait & see
@@ -94,18 +91,18 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     // Room
-    // Room 2.7.1 is causing a memory leak on HistoryViewModel when leaving HistoryFragment. Wait & see
+    // Starting 2.7.0, Room is causing a memory leak on HistoryViewModel when leaving HistoryFragment. Wait & see
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-paging:$room_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
-    testImplementation("androidx.room:room-testing:2.6.1")
+    testImplementation "androidx.room:room-testing:$room_version"
 
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
     // Glide
-    implementation "com.github.bumptech.glide:glide:4.11.0"
-    annotationProcessor "com.github.bumptech.glide:compiler:4.11.0"
+    implementation "com.github.bumptech.glide:glide:4.16.0"
+    annotationProcessor "com.github.bumptech.glide:compiler:4.16.0"
 
     // CameraX
     implementation "androidx.camera:camera-camera2:$camerax_version"
@@ -116,10 +113,10 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     // Leak Canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.13"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.14"
 
     // Moshi
-    implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.15.2"
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
@@ -131,36 +128,18 @@ dependencies {
     implementation "androidx.core:core-splashscreen:1.0.1"
 
     // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:3.0.0"
+    implementation "com.squareup.retrofit2:converter-moshi:3.0.0"
 
     // Work Manager
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
     // Sentry
-    implementation "io.sentry:sentry-android:7.6.0"
+    implementation "io.sentry:sentry-android:8.17.0"
 }
 
 tasks.register('printVersionCode') {
     doLast {
         println android.defaultConfig.versionCode
-    }
-}
-
-class RoomSchemaArgProvider implements CommandLineArgumentProvider {
-
-    @InputDirectory
-    @PathSensitive(PathSensitivity.RELATIVE)
-    File schemaDir
-
-    RoomSchemaArgProvider(File schemaDir) {
-        this.schemaDir = schemaDir
-    }
-
-    @Override
-    Iterable<String> asArguments() {
-        // Note: If you're using KAPT and javac, change the line below to
-        // return ["-Aroom.schemaLocation=${schemaDir.path}".toString()].
-        return ["room.schemaLocation=${schemaDir.path}".toString()]
     }
 }

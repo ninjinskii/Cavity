@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
+import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible

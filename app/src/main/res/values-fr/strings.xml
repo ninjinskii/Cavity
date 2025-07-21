@@ -13,6 +13,7 @@
     <string name="warning">Attention !</string>
     <string name="locale">fr</string>
     <string name="unknown">Inconnu</string>
+    <string name="all">Tout</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Veuillez saisir un nom de région.</string>
@@ -108,6 +109,9 @@
     <string name="gold">Or</string>
     <string name="item_rate">%1$d / %2$d</string>
     <string name="other_info">Autres informations</string>
+    <string name="storage_location">Lieu de stockage</string>
+    <string name="alcohol">Alcohol</string>
+    <string name="optionnal">Facultatif</string>
     <string name="inquire_add_to_favorites">Ajouter aux coup de cœurs</string>
     <string name="favorite">Coup de cœurs</string>
     <string name="add_pdf">Associer un fichier PDF</string>
@@ -274,6 +278,10 @@
     <string name="error_reporting">Active le rapport d\'erreur pour envoyer des informations de contexte quand un crash survient. Cela permet au développeur de savoir dès qu\'une erreur survient sur votre appareil et aide à la résoudre.</string>
     <string name="prevent_screenshots_title">Empêcher les captures d\'écran</string>
     <string name="prevent_screenshots">Mesure de prévention de la vie privée empêchant la prise de capture d\'écran et l\'affichage du contenu de l\'application dans le menu des applications récentes.</string>
+    <string name="bottle_storage_title">Stockage par bouteille</string>
+    <string name="bottle_storage">Ajoute un champ "lieu de stockage" lors de l\'ajout d\'une bouteille. Permet ensuite de filtrer l\'écran d\'accueil par lieu de stockage en cliquant sur le titre de l\'application.</string>
+    <string name="experimental_features_title">Fonctionnalités expérimentales</string>
+    <string name="experimental_features">Les fonctionnalités ci-dessous sont utilisables, mais sont à un stade de maturité précoce. Elles sont sujettes à suppression/changement dans le futur. Vous pouvez les activer/désactiver à tout moment.</string>
 
     <!-- Account -->
     <string name="email">Email</string>

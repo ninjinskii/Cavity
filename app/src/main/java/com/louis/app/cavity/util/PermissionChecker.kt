@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
 abstract class PermissionChecker(private val fragment: Fragment, private val perms: Array<String>) {
-    private val isTiramisuOrHigher = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+    private val isAndroid13OrHigher = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
     private val launcher =
         fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             this.handlePermissionResult(it)
@@ -16,7 +16,7 @@ abstract class PermissionChecker(private val fragment: Fragment, private val per
 
     // Permission that are not needed in Android 13 or later
     private val ignoredPerms: Array<String> =
-        if (isTiramisuOrHigher) {
+        if (isAndroid13OrHigher) {
             arrayOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE

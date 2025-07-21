@@ -31,6 +31,24 @@ interface CountyDao {
     @Query("SELECT * FROM county WHERE EXISTS(SELECT * FROM wine WHERE wine.county_id = county.id AND wine.hidden = 0) ORDER BY pref_order")
     fun getNonEmptyCounties(): LiveData<List<County>>
 
+    @Query(
+        """
+            SELECT * FROM county 
+            WHERE EXISTS (
+                SELECT 1 FROM wine 
+                WHERE wine.county_id = county.id 
+                  AND wine.hidden = 0
+                  AND EXISTS (
+                      SELECT 1 FROM bottle 
+                      WHERE bottle.wine_id = wine.id 
+                        AND bottle.storage_location = :storageLocation
+                  )
+            )
+            ORDER BY pref_order
+        """
+    )
+    fun getNonEmptyCountiesForStorageLocation(storageLocation: String): LiveData<List<County>>
+
     @Query("SELECT * FROM county ORDER BY pref_order")
     suspend fun getAllCountiesNotLive(): List<County>
 
