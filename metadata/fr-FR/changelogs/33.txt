@@ -1,0 +1,5 @@
+- Amélioration de l'interface de sélections des amis
+- Une bouteille peut être offerte / reçue à / par plusieurs amis
+- Ajout d'un champ degré d'alcool et lieu de stockage pour le bouteilles
+- Mise à jour de dépendances
+- Correction mineures d'interface

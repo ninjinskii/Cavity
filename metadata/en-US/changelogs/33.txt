@@ -1,0 +1,5 @@
+- Improved friend selection interface
+- A bottle can now be sent to / received from multiple friends
+- Added alcohol percentage and storage location fields for bottles
+- Updated dependencies
+- Minor UI fixes
