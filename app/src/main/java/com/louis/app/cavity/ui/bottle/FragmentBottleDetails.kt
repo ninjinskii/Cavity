@@ -479,15 +479,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                     override fun onLoadFailed(
                         e: GlideException?,
                         model: Any?,
-                        target: Target<Drawable>?,
+                        target: Target<Drawable>,
                         isFirstResource: Boolean
                     ) = false.also { startPostponedEnterTransition() }
 
                     override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
+                        resource: Drawable,
+                        model: Any,
                         target: Target<Drawable>?,
-                        dataSource: DataSource?,
+                        dataSource: DataSource,
                         isFirstResource: Boolean
                     ) = false.also { startPostponedEnterTransition() }
                 })
