@@ -40,14 +40,14 @@ jobs:
 
       - name: Read version code
         id: get_version_code
+        run: echo "code=$(./gradlew -q printVersionCode)" >> $GITHUB_OUTPUT
+
+      - name: Read changelog file
+        id: get_changelog
         run: |
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           cat ./metadata/en-US/changelogs/${{ steps.get_version_code.outputs.code }}.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Read changelog file
-        id: get_changelog
-        run: echo "::set-output name=changelog::$(cat ./metadata/en-US/changelogs/${{ steps.get_version_code.outputs.code }}.txt)"
 
       - name: Create github release
         id: create_release
