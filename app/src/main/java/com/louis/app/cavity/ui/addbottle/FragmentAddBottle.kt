@@ -47,7 +47,7 @@ class FragmentAddBottle : Stepper() {
         // editedBottleId is equal to 0 if user is not editing a bottle, but adding a new one
         addBottleViewModel.start(args.wineId, args.editedBottleId)
 
-        if (args.editedBottleId != 0L) {
+        if (args.editedBottleId > 0L) {
             friendPickerViewModel.fetchFriendsFromEditedBottleId(args.editedBottleId)
         }
 
