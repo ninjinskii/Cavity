@@ -15,7 +15,6 @@ import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.HistoryXFriend
 import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
@@ -75,7 +74,6 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                     OtherInfoManager(bottle)
             }
         } else {
-            L.v("else")
             dateManager = DateManager(null)
             grapeManager = GrapeManager(viewModelScope, grapeRepository, null, _userFeedback)
             reviewManager = ReviewManager(viewModelScope, reviewRepository, null, _userFeedback)
