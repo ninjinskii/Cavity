@@ -1,0 +1,2 @@
+- Correction d'un crash lors d'un clique sur une vin avec 0 bouteille.
+- Correction d'un bug empêchant la sélection d'amis dans l'écran de don/consommation de bouteilles

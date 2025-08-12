@@ -1,0 +1,2 @@
+- Fix a bug crashing the app when tapping on a wine that has 0 bottles
+- Fix a bug preventing user form picking friends on the friend picker in give/consume bottle
