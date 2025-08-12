@@ -20,6 +20,14 @@ import com.louis.app.cavity.util.prepareWindowInsets
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * Tips for instantiating this view model. If you want to scope the friend picker to the fragment
+ * where is it called from, pass `childFragmentManager` as the first `show()` arguments.
+ * When instantiating friend picker viewModel, scope it to the same fragment where the view model
+ * lives.
+ * When scoping to a parent fragment, you can use `parentFragmentManager` & scope the view model to
+ * `{requireParentFragment()}`
+ */
 class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_pick_friend) {
     private var _binding: BottomSheetPickFriendBinding? = null
     private val binding get() = _binding!!
