@@ -57,10 +57,6 @@ class DatePicker(
             associatedTextLayout.editText?.setText(formattedDate)
             onDateChangedListener?.invoke(it)
         }
-
-        associatedTextLayout.doOnDetach {
-            dispose()
-        }
     }
 
     fun dispose() {
@@ -109,6 +105,10 @@ class DatePicker(
                     childFragmentManager,
                     "random-tag"
                 )
+
+                associatedTextLayout.doOnDetach {
+                    dispose()
+                }
             } catch (e: IllegalStateException) {
                 errorReporter.captureException(e)
             }
