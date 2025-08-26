@@ -58,15 +58,15 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
         val year = Calendar.getInstance().get(Calendar.YEAR)
 
         binding.vintage.apply {
-            minValue = year - 30
+            minValue = year + OLDEST_BOTTLE_VINTAGE
             maxValue = year
-            value = year - 5
+            value = year + DEFAULT_BOTTLE_VINTAGE_OFFSET
         }
 
         binding.apogee.apply {
-            minValue = year - 20
-            maxValue = year + 30
-            value = year + 5
+            minValue = year + OLDEST_BOTTLE_APOGEE
+            maxValue = year + MAX_BOTTLE_APOGEE
+            value = year + DEFAULT_BOTTLE_APOGEE_OFFSET
         }
     }
 
@@ -183,5 +183,10 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
     companion object {
         private const val MAX_BOTTLE_COUNT = 20
+        private const val OLDEST_BOTTLE_VINTAGE = -40
+        private const val OLDEST_BOTTLE_APOGEE = -40
+        private const val MAX_BOTTLE_APOGEE = 30
+        private const val DEFAULT_BOTTLE_VINTAGE_OFFSET = -5
+        private const val DEFAULT_BOTTLE_APOGEE_OFFSET = 5
     }
 }

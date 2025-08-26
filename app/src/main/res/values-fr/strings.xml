@@ -38,7 +38,7 @@
     <!-- App -->
     <string name="app_name">Cavity</string>
     <string name="consumed">Cette bouteille à été consommée.</string>
-    <string name="home">Acceuil</string>
+    <string name="home">Accueil</string>
     <string name="add_wine">Ajouter un vin</string>
     <string name="add_bottle">Ajouter une bouteille</string>
     <string name="delete_wine">Supprimer le vin et ses bouteilles</string>
@@ -77,6 +77,7 @@
     <string name="default_bottle_quantity">1</string>
     <string name="vintage">Millésime</string>
     <string name="date">Dates</string>
+    <string name="purchase_date">Date d\'achat</string>
     <string name="apogee">Apogée</string>
     <string name="count">Quantité</string>
     <string name="count_limit">Maximum: 20</string>

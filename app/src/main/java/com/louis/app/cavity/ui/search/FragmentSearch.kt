@@ -53,7 +53,6 @@ import com.louis.app.cavity.util.*
 import com.robinhood.ticker.TickerUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
@@ -63,8 +62,8 @@ import kotlin.math.min
 class FragmentSearch : Step(R.layout.fragment_search) {
     companion object {
         /* Saved state */
-        private const val SLIDER_VINTAGE_START = "com.louis.app.cavity.SLIDER_VINTAGE_START"
-        private const val SLIDER_VINTAGE_END = "com.louis.app.cavity.SLIDER_VINTAGE_END"
+        private const val PICKER_VINTAGE_START = "com.louis.app.cavity.SLIDER_VINTAGE_START"
+        private const val PICKER_VINTAGE_END = "com.louis.app.cavity.SLIDER_VINTAGE_END"
         private const val SWITCH_PRICE_ENABLED = "com.louis.app.cavity.SWITCH_PRICE_ENABLED"
         private const val SLIDER_PRICE_START = "com.louis.app.cavity.SLIDER_PRICE_START"
         private const val SLIDER_PRICE_END = "com.louis.app.cavity.SLIDER_PRICE_END"
@@ -186,7 +185,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             inflatedView.doOnAttach {
                 val leftRightInsettable = intArrayOf(
                     R.id.countyScrollView, R.id.colorScrollView,
-                    R.id.otherScrollView, R.id.divider1, R.id.vintageTitle, R.id.vintageSlider,
+                    R.id.otherScrollView, R.id.divider1, R.id.vintageTitle, R.id.vintage,
                     R.id.divider2, R.id.dateTitle, R.id.divider3, R.id.priceTitle, R.id.priceSlider,
                     R.id.warning, R.id.divider4, R.id.grapeTitle, R.id.grapeScrollView,
                     R.id.divider5, R.id.reviewTitle, R.id.reviewScrollView, R.id.divider6,
@@ -270,6 +269,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         observe()
         initColorChips(savedInstanceState)
         initOtherChips(savedInstanceState)
+        initYearRange(savedInstanceState)
         initDatePickers(savedInstanceState)
         initSliders(savedInstanceState)
         initFriendTextSwitcher()
@@ -430,6 +430,18 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
     }
 
+    private fun initYearRange(savedInstanceState: Bundle?) {
+        val start = savedInstanceState?.getInt(PICKER_VINTAGE_START)
+        val end = savedInstanceState?.getInt(PICKER_VINTAGE_END)
+
+        filtersBinding.vintage.apply {
+            setYearRange(start, end)
+            setOnValueChangeListener {
+                searchViewModel.submitFilter(id, getVintageFilter())
+            }
+        }
+    }
+
     private fun initDatePickers(savedInstanceState: Bundle?) {
         val beyondTitle = getString(R.string.buying_date_beyond)
         val untilTitle = getString(R.string.buying_date_until)
@@ -469,7 +481,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun initSliders(savedInstanceState: Bundle?) {
-        filtersBinding.vintageSlider.apply {
+
+        /*filtersBinding.vintageSlider.apply {
             val year = Calendar.getInstance().get(Calendar.YEAR).toFloat()
             val start = savedInstanceState?.getFloat(SLIDER_VINTAGE_START)
             val end = savedInstanceState?.getFloat(SLIDER_VINTAGE_END)
@@ -488,7 +501,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
                 override fun onStartTrackingTouch(slider: RangeSlider) = Unit
             })
-        }
+        }*/
 
         filtersBinding.togglePrice.apply {
             val savedState = savedInstanceState?.getBoolean(SWITCH_PRICE_ENABLED)
@@ -902,20 +915,10 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun getVintageFilter(): WineFilter {
-        with(filtersBinding.vintageSlider) {
-            if (!isLaidOut) {
-                return NoFilter
-            }
-
-            val min = valueFrom.toInt()
-            val max = valueTo.toInt()
-            val lowerBound = values[0].toInt()
-            val higherBound = values[1].toInt()
-            val isFullRange = lowerBound == min && higherBound == max
-
+        with(filtersBinding.vintage) {
             return when {
-                isFullRange -> NoFilter
-                else -> FilterVintage(lowerBound, higherBound)
+                isLaidOut -> FilterVintage(yearRange.first, yearRange.second)
+                else -> NoFilter
             }
         }
     }
@@ -992,8 +995,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
 
         with(outState) {
-            putFloat(SLIDER_VINTAGE_START, filtersBinding.vintageSlider.values[0])
-            putFloat(SLIDER_VINTAGE_END, filtersBinding.vintageSlider.values[1])
+            filtersBinding.vintage.yearRange.first?.let { putInt(PICKER_VINTAGE_START, it) }
+            filtersBinding.vintage.yearRange.second?.let { putInt(PICKER_VINTAGE_END, it) }
             putBoolean(SWITCH_PRICE_ENABLED, filtersBinding.togglePrice.isChecked)
             putFloat(SLIDER_PRICE_START, filtersBinding.priceSlider.values[0])
             putFloat(SLIDER_PRICE_END, filtersBinding.priceSlider.values[1])

@@ -37,7 +37,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         R.id.countyChipGroup to NoFilter,
         R.id.colorChipGroup to NoFilter,
         R.id.otherChipGroup to FilterConsumed(false),
-        R.id.vintageSlider to NoFilter,
+        R.id.vintage to NoFilter,
         R.id.beyondLayout to NoFilter,
         R.id.untilLayout to NoFilter,
         R.id.priceSlider to NoFilter,

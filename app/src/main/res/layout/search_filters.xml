@@ -196,13 +196,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider1" />
 
-        <com.google.android.material.slider.RangeSlider
-            android:id="@+id/vintageSlider"
+        <com.louis.app.cavity.ui.search.widget.YearRangeView
+            android:id="@+id/vintage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/medium_margin"
-            android:layout_marginTop="@dimen/small_margin"
-            android:stepSize="1.0"
+            android:layout_margin="@dimen/medium_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/vintageTitle" />
@@ -211,14 +209,14 @@
             android:id="@+id/divider2"
             style="@style/Widget.Cavity.Divider"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vintageSlider" />
+            app:layout_constraintTop_toBottomOf="@id/vintage" />
 
         <TextView
             android:id="@+id/dateTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
-            android:text="@string/date"
+            android:text="@string/purchase_date"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider2" />

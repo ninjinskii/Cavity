@@ -74,9 +74,12 @@ class FilterPdf : WineFilter {
     }
 }
 
-class FilterVintage(private val minYear: Int, private val maxYear: Int) : WineFilter {
+class FilterVintage(private val minYear: Int?, private val maxYear: Int?) : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
-        return boundedBottle.filter { it.bottle.vintage in minYear..maxYear }
+        val max = maxYear ?: Int.MAX_VALUE
+        val min = minYear ?: Int.MIN_VALUE
+
+        return boundedBottle.filter { it.bottle.vintage in min..max }
     }
 }
 
