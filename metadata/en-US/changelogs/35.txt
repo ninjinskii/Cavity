@@ -1,0 +1,1 @@
+- Fix a bug preventing user from selecting date
