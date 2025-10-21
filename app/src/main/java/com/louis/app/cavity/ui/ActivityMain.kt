@@ -224,7 +224,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
             binding.navigationRail!!.getOrCreateBadge(R.id.tasting_dest).apply {
                 backgroundColor =
                     binding.navigationRail!!.context
-                        .themeColor(com.google.android.material.R.attr.colorPrimary)
+                        .themeColor(com.google.android.material.R.attr.colorPrimaryFixed)
                 isVisible = show
             }
         } else {

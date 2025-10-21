@@ -19,6 +19,10 @@ import com.louis.app.cavity.ui.home.widget.EffectImageView
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.toBoolean
 import androidx.core.net.toUri
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 
 class WineViewHolder(
     private val binding: ItemWineBinding,
@@ -52,11 +56,11 @@ class WineViewHolder(
             hexagone.setMarkerColor(wineColor)
 
             val hasImage = wine.imgPath.isNotEmpty()
-            updateColorables(hasImage)
 
             if (hasImage) {
                 loadImage(wine.imgPath)
             } else {
+                updateColorables(hasImage = false)
                 (binding.wineImage as AppCompatImageView).setImageDrawable(null)
             }
         }
@@ -110,26 +114,40 @@ class WineViewHolder(
          * Note to my future self: do not try to merge ic_image_search with ic_image_not_found
          * even though they are the same, it will cause alpha issue in add wine fragemnt.
          * Cannot override alpha in there, will work once but not twice.
-         * This must has smething to do with what glide does to resources
+         * This must has something to do with what glide does to resources
          */
         Glide.with(itemView.context)
             .load(imgPath.toUri())
             .run {
                 val drawable =
-                    if (isLightTheme)
                         ResourcesCompat.getDrawable(
                             itemView.resources,
                             R.drawable.ic_image_not_found,
                             itemView.context.theme
                         )?.apply {
-                            setTint(Color.BLACK)
+                            setTint(if (isLightTheme) Color.BLACK else Color.WHITE)
                             alpha = 10
                         }
-                    else null
 
                 error(drawable)
             }
             .centerCrop()
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>,
+                    isFirstResource: Boolean
+                ) = false.also { updateColorables(hasImage = false) }
+
+                override fun onResourceReady(
+                    resource: Drawable,
+                    model: Any,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource,
+                    isFirstResource: Boolean
+                ) = false.also { updateColorables(hasImage = true) }
+            })
             .into(binding.wineImage as AppCompatImageView)
     }
 
