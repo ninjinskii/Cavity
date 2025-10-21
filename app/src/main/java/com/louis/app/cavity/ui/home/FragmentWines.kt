@@ -1,10 +1,10 @@
 package com.louis.app.cavity.ui.home
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.use
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -46,9 +46,13 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                     it.setTint(Color.WHITE)
                 }
 
-        val isLightTheme = requireContext().theme
-            .obtainStyledAttributes(intArrayOf(com.google.android.material.R.attr.isLightTheme))
-            .use { it.getBoolean(0, false) }
+        val isLightTheme = when (
+            requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        ) {
+            Configuration.UI_MODE_NIGHT_YES -> false
+            Configuration.UI_MODE_NIGHT_NO -> true
+            else -> true
+        }
 
         val wineAdapter = WineRecyclerAdapter(
             icons,

@@ -23,10 +23,9 @@ import com.louis.app.cavity.util.dpToPx
 
 class TransluscentToolbar @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = com.google.android.material.R.attr.toolbarStyle,
+    attrs: AttributeSet? = null
 ) :
-    MaterialToolbar(context, attrs, defStyleAttr) {
+    MaterialToolbar(context, attrs) {
 
     init {
         this.post {
