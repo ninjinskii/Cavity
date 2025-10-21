@@ -1,0 +1,3 @@
+- Add support for android 16
+- Fix blank on blank text in home screen
+- Update dependencies

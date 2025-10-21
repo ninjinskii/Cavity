@@ -1,0 +1,3 @@
+- Support pour Android 16
+- Correction d'un texte blanc sur fond blanc dans l'écran d'accueil
+- Mise à jour des dépendences
