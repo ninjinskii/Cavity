@@ -39,9 +39,15 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val showDatePicker: LiveData<Event<Long>>
         get() = _showDatePicker
 
+    private var currentPagingSource: PagingSource<*, *>? = null
+
     val entries: LiveData<PagingData<HistoryUiModel>> = filter.switchMap {
+        currentPagingSource?.invalidate()
+        val newPagingSource = getDataSource(it)
+        currentPagingSource = newPagingSource
+
         Pager(PagingConfig(pageSize = 50, prefetchDistance = 20, enablePlaceholders = true)) {
-            getDataSource(it)
+            newPagingSource
         }.liveData.map { pagingData ->
             pagingData
                 .map { HistoryUiModel.EntryModel(it) }
@@ -188,7 +194,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 }
 
 sealed class HistoryFilter {
-    class TypeFilter(@IdRes val chipId: Int) : HistoryFilter()
+    class TypeFilter(@param:IdRes val chipId: Int) : HistoryFilter()
     class WineFilter(val wineId: Long) : HistoryFilter()
     class BottleFilter(val bottleId: Long) : HistoryFilter()
     data object NoFilter : HistoryFilter()

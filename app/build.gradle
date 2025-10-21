@@ -91,7 +91,6 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     // Room
-    // Starting 2.7.0, Room is causing a memory leak on HistoryViewModel when leaving HistoryFragment. Wait & see
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-paging:$room_version"
