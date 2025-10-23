@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui
 
+import android.animation.ObjectAnimator
 import android.app.ActivityManager.TaskDescription
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -7,12 +8,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
@@ -39,6 +40,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.core.view.get
+import kotlinx.coroutines.withContext
+import kotlin.math.abs
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private lateinit var binding: ActivityMainBinding
@@ -95,28 +98,28 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     }
 
     private fun initSplashScreen() {
-        var isSplashScreenFinished = false
+        val splashScreen = installSplashScreen()
 
-        installSplashScreen()
+        splashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
+            val splashScreenView = splashScreenViewProvider.view
+            val animationDuration = splashScreenViewProvider.iconAnimationDurationMillis
+            val animationStart = splashScreenViewProvider.iconAnimationStartMillis
+            val remainingDuration =
+                (animationDuration - abs(animationStart - System.currentTimeMillis()))
+                .coerceAtLeast(0L)
 
-        lifecycleScope.launch(Dispatchers.Default) {
-            delay(300)
-            isSplashScreenFinished = true
-        }
+            lifecycleScope.launch(Dispatchers.Default) {
+                delay(remainingDuration - 300)
 
-        val content: View = findViewById(android.R.id.content)
-        content.viewTreeObserver.addOnPreDrawListener(
-            object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    return if (isSplashScreenFinished) {
-                        content.viewTreeObserver.removeOnPreDrawListener(this)
-                        true
-                    } else {
-                        false
+                withContext(Dispatchers.Main) {
+                    ObjectAnimator.ofFloat(splashScreenView, View.ALPHA, 1f, 0f).apply {
+                        duration = 300
+                        doOnEnd { splashScreenViewProvider.remove() }
+                        start()
                     }
                 }
             }
-        )
+        }
     }
 
     private fun applyInsets() {
