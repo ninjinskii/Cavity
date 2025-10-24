@@ -17,6 +17,9 @@ import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -31,33 +34,17 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val selectedEntry: LiveData<BoundedHistoryEntry?>
         get() = _selectedEntry
 
-    private val _filter = MutableLiveData<HistoryFilter>(HistoryFilter.NoFilter)
-    val filter: LiveData<HistoryFilter>
-        get() = _filter
+    private val filter = MutableStateFlow<HistoryFilter>(HistoryFilter.NoFilter)
 
     private val _showDatePicker = MutableLiveData<Event<Long>>(null)
     val showDatePicker: LiveData<Event<Long>>
         get() = _showDatePicker
 
-    private var currentPagingSource: PagingSource<*, *>? = null
-
-    val entries: LiveData<PagingData<HistoryUiModel>> = filter.switchMap {
-        currentPagingSource?.invalidate()
-        val newPagingSource = getDataSource(it)
-        currentPagingSource = newPagingSource
-
-        Pager(PagingConfig(pageSize = 50, prefetchDistance = 20, enablePlaceholders = true)) {
-            newPagingSource
-        }.liveData.map { pagingData ->
-            pagingData
-                .map { HistoryUiModel.EntryModel(it) }
-                .insertSeparators { before, after ->
-                    if (shouldSeparate(before, after))
-                        HistoryUiModel.HeaderModel(after?.model?.historyEntry?.date ?: 0L)
-                    else null
-                }
-        }.cachedIn(viewModelScope)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val entries = filter.flatMapLatest {
+        historyRepository.getPagedEntriesFilteredBy(it)
     }
+        .cachedIn(viewModelScope)
 
     fun applyExternalFilters(wineId: Long, bottleId: Long) {
         if (wineId != -1L) {
@@ -71,7 +58,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 
     fun requestScrollToDate(timestamp: Long) {
         viewModelScope.launch(IO) {
-            val filter = _filter.value ?: HistoryFilter.NoFilter
+            val filter = filter.value
             val entries = historyRepository.getAllEntriesNotPagedNotLive()
             val filtered = rawFilter(entries, filter)
             val offset = 1
@@ -106,7 +93,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 
     fun requestDatePicker() {
         viewModelScope.launch(IO) {
-            val filter = _filter.value ?: HistoryFilter.NoFilter
+            val filter = filter.value
             val entries = historyRepository.getAllEntriesNotPagedNotLive()
             val filtered = rawFilter(entries, filter)
 
@@ -121,7 +108,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setFilter(filter: HistoryFilter) {
         _selectedEntry.postValue(null)
-        _filter.postValue(filter)
+        this.filter.value = filter
     }
 
     fun setSelectedHistoryEntry(entry: BoundedHistoryEntry?) {
@@ -131,42 +118,6 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     fun updateHistoryEntry(entry: HistoryEntry) {
         viewModelScope.launch(IO) {
             historyRepository.updateEntry(entry)
-        }
-    }
-
-    private fun shouldSeparate(
-        before: HistoryUiModel.EntryModel?,
-        after: HistoryUiModel?
-    ): Boolean {
-        if (before == null && after == null) {
-            return false
-        }
-
-        return if (after is HistoryUiModel.EntryModel?) {
-            val beforeTimestamp =
-                DateFormatter.roundToDay(before?.model?.historyEntry?.date ?: return true)
-            val afterTimestamp =
-                DateFormatter.roundToDay(after?.model?.historyEntry?.date ?: return false)
-
-            beforeTimestamp != afterTimestamp
-        } else false
-    }
-
-    private fun getDataSource(filter: HistoryFilter): PagingSource<Int, BoundedHistoryEntry> {
-        return when (filter) {
-            is HistoryFilter.TypeFilter -> when (filter.chipId) {
-                R.id.chipReplenishments -> historyRepository.getEntriesByType(1, 3)
-                R.id.chipComsumptions -> historyRepository.getEntriesByType(0, 2)
-                R.id.chipTastings -> historyRepository.getEntriesByType(4, 4)
-                R.id.chipGiftedTo -> historyRepository.getEntriesByType(2, 2)
-                R.id.chipGiftedBy -> historyRepository.getEntriesByType(3, 3)
-                R.id.chipFavorites -> historyRepository.getFavoriteEntries()
-                else -> historyRepository.getAllEntries()
-            }
-
-            is HistoryFilter.WineFilter -> historyRepository.getEntriesForWine(filter.wineId)
-            is HistoryFilter.BottleFilter -> historyRepository.getEntriesForBottle(filter.bottleId)
-            is HistoryFilter.NoFilter -> historyRepository.getAllEntries()
         }
     }
 
@@ -190,7 +141,6 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
             is HistoryFilter.NoFilter -> source
         }
     }
-
 }
 
 sealed class HistoryFilter {

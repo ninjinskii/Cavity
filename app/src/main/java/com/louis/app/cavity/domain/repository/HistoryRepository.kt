@@ -1,11 +1,24 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.insertSeparators
+import androidx.paging.map
 import androidx.room.withTransaction
+import com.louis.app.cavity.R
+import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.domain.history.isReplenishment
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.HistoryXFriend
+import com.louis.app.cavity.ui.history.HistoryFilter
+import com.louis.app.cavity.ui.history.HistoryUiModel
+import com.louis.app.cavity.util.DateFormatter
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class HistoryRepository private constructor(app: Application) : Repository(app) {
     companion object {
@@ -23,7 +36,22 @@ class HistoryRepository private constructor(app: Application) : Repository(app) 
 
     suspend fun updateEntry(entry: HistoryEntry) = historyDao.updateEntry(entry)
 
-    fun getAllEntries() = historyDao.getAllEntries()
+    fun getPagedEntriesFilteredBy(filter: HistoryFilter): Flow<PagingData<HistoryUiModel>> {
+        return Pager(
+            PagingConfig(pageSize = 50, prefetchDistance = 20, enablePlaceholders = true)
+        ) {
+            getDataSource(filter)
+        }.flow
+            .map { pagingData ->
+                pagingData
+                    .map { model -> HistoryUiModel.EntryModel(model) }
+                    .insertSeparators { before, after ->
+                        if (shouldSeparate(before, after))
+                            HistoryUiModel.HeaderModel(after?.model?.historyEntry?.date ?: 0L)
+                        else null
+                    }
+            }
+    }
 
     suspend fun getAllEntriesNotPagedNotLive() = historyDao.getAllEntriesNotPagedNotLive()
 
@@ -79,6 +107,44 @@ class HistoryRepository private constructor(app: Application) : Repository(app) 
     }
 
     suspend fun deleteAllHistoryEntries() = historyDao.deleteAll()
+
+    private fun getAllEntries() = historyDao.getAllEntries()
+
+    private fun getDataSource(filter: HistoryFilter): PagingSource<Int, BoundedHistoryEntry> {
+        return when (filter) {
+            is HistoryFilter.TypeFilter -> when (filter.chipId) {
+                R.id.chipReplenishments -> getEntriesByType(1, 3)
+                R.id.chipComsumptions -> getEntriesByType(0, 2)
+                R.id.chipTastings -> getEntriesByType(4, 4)
+                R.id.chipGiftedTo -> getEntriesByType(2, 2)
+                R.id.chipGiftedBy -> getEntriesByType(3, 3)
+                R.id.chipFavorites -> getFavoriteEntries()
+                else -> getAllEntries()
+            }
+
+            is HistoryFilter.WineFilter -> getEntriesForWine(filter.wineId)
+            is HistoryFilter.BottleFilter -> getEntriesForBottle(filter.bottleId)
+            is HistoryFilter.NoFilter -> getAllEntries()
+        }
+    }
+
+    private fun shouldSeparate(
+        before: HistoryUiModel.EntryModel?,
+        after: HistoryUiModel?
+    ): Boolean {
+        if (before == null && after == null) {
+            return false
+        }
+
+        return if (after is HistoryUiModel.EntryModel?) {
+            val beforeTimestamp =
+                DateFormatter.roundToDay(before?.model?.historyEntry?.date ?: return true)
+            val afterTimestamp =
+                DateFormatter.roundToDay(after?.model?.historyEntry?.date ?: return false)
+
+            beforeTimestamp != afterTimestamp
+        } else false
+    }
 
     private suspend fun ensureEntryTypeUnicityForBottle(entry: HistoryEntry) {
         when {

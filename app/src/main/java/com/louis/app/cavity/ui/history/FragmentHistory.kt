@@ -38,6 +38,10 @@ import com.louis.app.cavity.util.*
 import kotlin.math.max
 import kotlin.math.min
 import androidx.core.net.toUri
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var colorUtil: ColorUtil
@@ -47,6 +51,8 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     private val binding get() = _binding!!
     private val historyViewModel: HistoryViewModel by viewModels()
     private val args: FragmentHistoryArgs by navArgs()
+
+    private var silentChipGroupClear = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,6 +118,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             colorUtil,
             onHeaderClick = { historyViewModel.requestDatePicker() },
             onItemClick = {
+                silentChipGroupClear = true
                 binding.filterChipGroup.clearCheck()
                 historyViewModel.setFilter(HistoryFilter.BottleFilter(it.model.bottleAndWine.bottle.id))
                 historyViewModel.setSelectedHistoryEntry(it.model)
@@ -137,8 +144,12 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             itemTouchHelper.attachToRecyclerView(this)
         }
 
-        historyViewModel.entries.observe(viewLifecycleOwner) {
-            historyAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                historyViewModel.entries.collectLatest {
+                    historyAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+                }
+            }
         }
 
         historyAdapter.addLoadStateListener { loadState ->
@@ -184,6 +195,11 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         val filterChipGroup = binding.filterChipGroup
 
         filterChipGroup.setOnCheckedStateChangeListener { _, _ ->
+            if (silentChipGroupClear) {
+                silentChipGroupClear = false
+                return@setOnCheckedStateChangeListener
+            }
+
             val checkedId = filterChipGroup.checkedChipId
             historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
         }
@@ -324,6 +340,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun resetFilters() {
+        silentChipGroupClear = true
         binding.filterChipGroup.clearCheck()
         historyViewModel.setFilter(HistoryFilter.NoFilter)
     }
