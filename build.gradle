@@ -11,8 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:8.11.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        // Navigation component 2.9.0 is causing a crash on navigation with arguments, 100% of the times on statistics bottle picking. Wait & see
-        classpath 'androidx.navigation:navigation-safe-args-gradle-plugin:2.8.9'
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.9.5"
         classpath "com.google.devtools.ksp:symbol-processing-gradle-plugin:2.2.0-2.0.2"
     }
 }
