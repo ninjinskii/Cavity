@@ -1,0 +1,4 @@
+- Ajout du support pour les icones monochromes du lanceur
+- Intégration des polices de l'appli pour ne plus dépendre des services google du téléphone cible
+- Correction d'un crash lors du clique d'un item sur l'historique
+- Correction d'une fuite de mémoire dans l'historique

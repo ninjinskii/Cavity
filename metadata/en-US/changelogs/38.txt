@@ -1,0 +1,4 @@
+- Add monochrome icon support
+- Embed fonts into apk to work on de-googled phones
+- Fix a crash when clicking on a history item
+- Fix a memory leak in history
