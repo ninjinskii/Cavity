@@ -455,7 +455,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             return
         }
 
-        val scroller = JumpSmoothScroller(requireContext(), 10).apply {
+        val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 10).apply {
             targetPosition = position
         }
 

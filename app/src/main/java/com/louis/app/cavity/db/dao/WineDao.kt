@@ -9,7 +9,7 @@ import com.louis.app.cavity.model.WineColor
 @Dao
 interface WineDao {
     @Insert
-    suspend fun insertWine(wine: Wine)
+    suspend fun insertWine(wine: Wine): Long
 
     @Insert
     suspend fun insertWines(wine: List<Wine>)

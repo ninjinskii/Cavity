@@ -46,6 +46,8 @@ class CountyRepository private constructor(app: Application) : Repository(app) {
         }
     }
 
+    suspend fun getCountyByIdNotLive(countyId: Long) = countyDao.getCountyByIdNotLive(countyId)
+
     fun getAllCounties() = countyDao.getAllCounties()
 
     fun getNonEmptyCounties() = countyDao.getNonEmptyCounties()

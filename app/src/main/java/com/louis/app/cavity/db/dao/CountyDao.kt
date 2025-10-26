@@ -25,6 +25,9 @@ interface CountyDao {
     @Query("DELETE FROM county WHERE id=:countyId")
     suspend fun deleteCounty(countyId: Long)
 
+    @Query("SELECT * FROM county WHERE id=:countyId LIMIT 1")
+    suspend fun getCountyByIdNotLive(countyId: Long): County?
+
     @Query("SELECT * FROM county ORDER BY pref_order")
     fun getAllCounties(): LiveData<List<County>>
 

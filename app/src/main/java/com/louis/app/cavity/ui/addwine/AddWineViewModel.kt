@@ -22,8 +22,8 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    private val _wineUpdatedEvent = MutableLiveData<Event<Int>>()
-    val wineUpdatedEvent: LiveData<Event<Int>>
+    private val _wineUpdatedEvent = MutableLiveData<Event<Pair<Int, Wine>>>()
+    val wineUpdatedEvent: LiveData<Event<Pair<Int, Wine>>>
         get() = _wineUpdatedEvent
 
     private val _updatedWine = MutableLiveData<Wine>()
@@ -97,7 +97,7 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
                 when {
                     duplicate.hidden.toBoolean() && !isEditMode -> {
                         wineRepository.updateWine(duplicate.copy(hidden = false.toInt()))
-                        _wineUpdatedEvent.postOnce(R.string.wine_already_exists_emergence)
+                        _wineUpdatedEvent.postOnce(R.string.wine_already_exists_emergence to wine)
                     }
 
                     else -> _userFeedback.postOnce(R.string.wine_already_exists)
@@ -109,13 +109,14 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
             when {
                 isEditMode -> {
                     wineRepository.updateWine(wine)
-                    _wineUpdatedEvent.postOnce(R.string.wine_updated)
+                    _wineUpdatedEvent.postOnce(R.string.wine_updated to wine)
                     reset()
                 }
 
                 else -> {
-                    wineRepository.insertWine(wine)
-                    _wineUpdatedEvent.postOnce(R.string.wine_added)
+                    val wineId = wineRepository.insertWine(wine)
+                    val copy = wine.copy(id = wineId)
+                    _wineUpdatedEvent.postOnce(R.string.wine_added to copy)
                     reset()
                 }
             }

@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.home
 
+import android.graphics.PointF
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
@@ -7,9 +8,11 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.OrientationHelper.createHorizontalHelper
 import androidx.recyclerview.widget.OrientationHelper.createVerticalHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.louis.app.cavity.ui.bottle.adapter.JumpSmoothScroller
 import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.HORIZONTAL
 import com.louis.app.cavity.ui.home.HoneycombLayoutManager.Orientation.VERTICAL
 import kotlin.math.abs
@@ -28,7 +31,7 @@ import kotlin.math.roundToInt
  * orientation otherwise false
  */
 class HoneycombLayoutManager(private val colCount: Int, private val orientation: Orientation) :
-    RecyclerView.LayoutManager() {
+    RecyclerView.LayoutManager(), RecyclerView.SmoothScroller.ScrollVectorProvider {
 
     companion object {
         // 3/4 is the pointy part ratio (compared to its bounds length) of the hexagon
@@ -73,7 +76,13 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
          * If this parameter is set to true, the view won't be recycled right away, leaving room for
          * fragment transiton to occur with all recycler view items. Then they'll be recycled
          */
-        var skipNextRecycleOnDetach: Boolean
+        var skipNextRecycleOnDetach: Boolean,
+
+        /**
+         * If requiring a smooth scroll, jump to item - jumpScrollThreshold position before smooth
+         * scrolling to prevent long scroll it item is far. If <= 0, it will not jump scroll
+         */
+        var jumpScrollThreshold: Int
     )
 
     private val layoutState = LayoutState(0, 0, 0, 0..0)
@@ -82,7 +91,11 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
         if (orientation == VERTICAL) createVerticalHelper(this)
         else createHorizontalHelper(this)
 
-    val config = Configuration(recycleOnDetach = true, skipNextRecycleOnDetach = false)
+    val config = Configuration(
+        recycleOnDetach = true,
+        skipNextRecycleOnDetach = false,
+        jumpScrollThreshold = 0
+    )
 
     init {
         if (colCount < 2) {
@@ -427,6 +440,38 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
     private infix fun Int.apply(value: Double) = (this * value).roundToInt()
 
     private fun getLastChild() = getChildAt(childCount - 1)
+
+    override fun smoothScrollToPosition(
+        recyclerView: RecyclerView,
+        state: RecyclerView.State,
+        position: Int
+    ) {
+        if (config.jumpScrollThreshold > 0) {
+            JumpSmoothScroller(recyclerView.context, config.jumpScrollThreshold)
+        } else {
+            LinearSmoothScroller(recyclerView.context)
+        }
+            .run {
+                targetPosition = position
+                startSmoothScroll(this)
+            }
+
+    }
+
+    override fun computeScrollVectorForPosition(targetPosition: Int): PointF? {
+        if (childCount == 0) {
+            return null
+        }
+
+        val firstChildPosition = getPosition(getChildAt(0)!!)
+        val direction = if (targetPosition < firstChildPosition) -1 else 1
+
+        return if (orientation == HORIZONTAL) {
+            PointF(direction.toFloat(), 0f)
+        } else {
+            PointF(0f, direction.toFloat())
+        }
+    }
 
     override fun onDetachedFromWindow(view: RecyclerView?, recycler: RecyclerView.Recycler) {
         super.onDetachedFromWindow(view, recycler)
