@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.BoundedBottle
@@ -30,6 +31,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
 
+    private val sort = MutableLiveData(Sort(SortCriteria.NONE))
     private val globalFilter = MutableLiveData<WineFilter>(FilterConsumed(false))
     private val searchControllerMap = mutableMapOf(
         R.id.searchView to NoFilter,
@@ -49,11 +51,13 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         R.id.rbGroupSize to NoFilter
     )
 
-    val results: LiveData<List<BoundedBottle>> = bottleRepository
-        .getBoundedBottles()
-        .combineAsync(globalFilter) { receiver, bottles, filter ->
-            filter(receiver, bottles, filter)
-        }
+    val results: LiveData<List<BoundedBottle>> = sort.switchMap {
+        bottleRepository
+            .getBoundedBottles()
+            .combineAsync(globalFilter) { receiver, bottles, filter ->
+                filterAndSort(receiver, bottles, filter, it)
+            }
+    }
 
     var selectedCounties = emptyList<County>()
     var selectedGrapes = emptyList<Grape>()
@@ -103,13 +107,34 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             searchControllerMap.values.reduce { acc, wFilter -> acc.andCombine(wFilter) }
     }
 
-    private fun filter(
+    fun submitSortOrder(sort: Sort) {
+        this.sort.value = sort
+    }
+
+    private fun filterAndSort(
         receiver: MutableLiveData<List<BoundedBottle>>,
         bottles: List<BoundedBottle>,
-        filter: WineFilter
+        filter: WineFilter,
+        sort: Sort
     ) {
         viewModelScope.launch(Default) {
-            val filtered = filter.meetFilters(bottles)
+            var filtered = filter.meetFilters(bottles)
+
+            if (sort.criteria != SortCriteria.NONE) {
+                filtered = when (sort.criteria) {
+                    SortCriteria.NAME -> filtered.sortedBy { it.wine.name }
+                    SortCriteria.NAMING -> filtered.sortedBy { it.wine.naming }
+                    SortCriteria.VINTAGE -> filtered.sortedBy { it.bottle.vintage }
+                    SortCriteria.BUY_DATE -> filtered.sortedBy { it.bottle.buyDate }
+                    SortCriteria.PRICE -> filtered.sortedBy { it.bottle.price }
+                    else -> filtered
+                }
+
+                if (sort.reversed) {
+                    filtered = filtered.reversed()
+                }
+            }
+
             receiver.postValue(filtered)
         }
     }
