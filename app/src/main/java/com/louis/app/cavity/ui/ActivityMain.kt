@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
@@ -21,7 +22,6 @@ import androidx.core.view.forEach
 import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -36,11 +36,7 @@ import com.louis.app.cavity.ui.tasting.TastingViewModel
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.themeColor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import androidx.core.view.get
-import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider {
@@ -98,7 +94,24 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     }
 
     private fun initSplashScreen() {
+        // Avoids flashing content when it is ready to drawn but splash screen icon anim
+        // isn't finished yet. Content will be redrawn when splash screen finishes
+        var preventedInitialDraw = false
         val splashScreen = installSplashScreen()
+
+        val content: View? = findViewById(android.R.id.content)
+        content?.viewTreeObserver?.addOnPreDrawListener(object :
+            ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                return if (preventedInitialDraw) {
+                    content.viewTreeObserver.removeOnPreDrawListener(this)
+                    true
+                } else {
+                    preventedInitialDraw = true
+                    false
+                }
+            }
+        })
 
         splashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
             val splashScreenView = splashScreenViewProvider.view
@@ -106,18 +119,13 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
             val animationStart = splashScreenViewProvider.iconAnimationStartMillis
             val remainingDuration =
                 (animationDuration - abs(animationStart - System.currentTimeMillis()))
-                .coerceAtLeast(0L)
+                    .coerceAtLeast(0L)
 
-            lifecycleScope.launch(Dispatchers.Default) {
-                delay(remainingDuration - 300)
-
-                withContext(Dispatchers.Main) {
-                    ObjectAnimator.ofFloat(splashScreenView, View.ALPHA, 1f, 0f).apply {
-                        duration = 300
-                        doOnEnd { splashScreenViewProvider.remove() }
-                        start()
-                    }
-                }
+            ObjectAnimator.ofFloat(splashScreenView, View.ALPHA, 1f, 0f).apply {
+                duration = 300
+                startDelay = remainingDuration - 400
+                doOnEnd { splashScreenViewProvider.remove() }
+                start()
             }
         }
     }
@@ -264,11 +272,11 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         try {
             contentResolver?.takePersistableUriPermission(mediaUri, flags)
                 ?: throw NullPointerException()
-        } catch (e: SecurityException) {
+        } catch (_: SecurityException) {
             if (!silent) {
                 onShowSnackbarRequested(R.string.persistent_permission_error)
             }
-        } catch (e: NullPointerException) {
+        } catch (_: NullPointerException) {
             if (!silent) {
                 onShowSnackbarRequested(R.string.base_error)
             }
