@@ -62,6 +62,26 @@
             app:layout_constraintTop_toBottomOf="@id/backButton"
             app:shapeAppearanceOverlay="@style/RoundedImage" />
 
+        <com.louis.app.cavity.ui.home.widget.HexagonalView
+            android:id="@+id/fab"
+            style="@style/Widget.Cavity.FloatingActionButton"
+            android:layout_width="@dimen/hexagonal_fab_width"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add"
+            app:layout_constraintStart_toEndOf="@id/bottlePicture"
+            app:layout_constraintEnd_toStartOf="@id/scrollView"
+            app:layout_constraintBottom_toBottomOf="@id/bottlePicture">
+
+            <ImageView
+                android:layout_width="@dimen/xsmall_icon"
+                android:layout_height="@dimen/xsmall_icon"
+                android:layout_gravity="center"
+                android:contentDescription="@string/add_wine"
+                android:src="@drawable/ic_add"
+                app:tint="?attr/colorPrimary" />
+
+        </com.louis.app.cavity.ui.home.widget.HexagonalView>
+
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrierTop"
             android:layout_width="wrap_content"

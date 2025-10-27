@@ -78,6 +78,26 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Domaine F. Engel" />
 
+            <com.louis.app.cavity.ui.home.widget.HexagonalView
+                android:id="@+id/fab"
+                style="@style/Widget.Cavity.FloatingActionButton"
+                android:layout_width="@dimen/hexagonal_fab_width"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/xlarge_margin"
+                android:src="@drawable/ic_add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/xsmall_icon"
+                    android:layout_height="@dimen/xsmall_icon"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/add_wine"
+                    android:src="@drawable/ic_add"
+                    app:tint="?attr/colorPrimary" />
+
+            </com.louis.app.cavity.ui.home.widget.HexagonalView>
+
             <View
                 android:id="@+id/shaper"
                 android:layout_width="match_parent"
