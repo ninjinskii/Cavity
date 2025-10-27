@@ -26,6 +26,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.louis.app.cavity.util.setVisible
 
 class WineViewHolder(
     private val binding: ItemWineBinding,
@@ -35,8 +36,10 @@ class WineViewHolder(
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
+    // List of views that need some sort of background
+    // (either blur or shadow depending on api version) to be applied for text visibility
     private val colorables = binding.run {
-        listOf(wineName, wineNaming, bottlesCount, icons)
+        listOf(wineName, wineNaming, cuvee, bottlesCount, icons)
     }
 
     fun bind(wineWithBottles: WineWithBottles, highlight: Boolean) {
@@ -50,6 +53,8 @@ class WineViewHolder(
         with(binding) {
             wineName.text = wine.name
             wineNaming.text = wine.naming
+            cuvee.text = wine.cuvee
+            cuvee.setVisible(cuvee.text.isNotBlank())
             bottlesCount.text = bottles.size.toString()
 
             val rightIcon = if (wine.isOrganic.toBoolean()) drawables.first else null
