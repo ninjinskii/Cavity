@@ -12,7 +12,7 @@ class QuantifiedGrapeHelper {
     private var total = 0
 
     private val defaultPercentage: Int
-        get() = if (total == 0) 25 else 0
+        get() = if (total == 0) MAX_PERCENTAGE else 0
 
     private val fillValue: Int
         get() = MAX_PERCENTAGE - total

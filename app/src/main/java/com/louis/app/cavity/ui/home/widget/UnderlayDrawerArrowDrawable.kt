@@ -11,9 +11,9 @@ import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 
 class UnderlayDrawerArrowDrawable(
     context: Context,
-    @Px private val cornerRadius: Float,
-    @Px private val padding: Float,
-    @ColorInt private val color: Int
+    @param:Px private val cornerRadius: Float,
+    @param:Px private val padding: Float,
+    @param:ColorInt private val color: Int
 ) :
     DrawerArrowDrawable(context) {
 

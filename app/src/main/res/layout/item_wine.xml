@@ -45,11 +45,24 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/small_margin"
             android:layout_marginTop="@dimen/xsmall_margin"
+            android:layout_marginBottom="@dimen/xsmall_margin"
             android:ellipsize="end"
             android:maxLines="2"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textSize="16sp"
             tools:text="Château la Cour" />
+
+        <TextView
+            android:id="@+id/cuvee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/small_margin"
+            android:layout_marginTop="@dimen/xsmall_margin"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textSize="12sp"
+            tools:text="Voegltins" />
 
     </LinearLayout>
 

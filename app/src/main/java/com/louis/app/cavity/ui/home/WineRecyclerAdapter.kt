@@ -17,13 +17,20 @@ class WineRecyclerAdapter(
 ) :
     ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()) {
 
+    var highlightPosition: Int? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return WineViewHolder(binding, drawables, transitionHelper, isLightTheme)
     }
 
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val highlight = highlightPosition == position
+        holder.bind(getItem(position), highlight)
+
+        if (highlight) {
+            highlightPosition = null
+        }
     }
 
     override fun getItemId(position: Int) = getItem(position).wine.id

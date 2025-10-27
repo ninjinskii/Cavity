@@ -19,10 +19,14 @@ import com.louis.app.cavity.ui.home.widget.EffectImageView
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.toBoolean
 import androidx.core.net.toUri
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.dynamicanimation.animation.SpringForce
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.louis.app.cavity.util.setVisible
 
 class WineViewHolder(
     private val binding: ItemWineBinding,
@@ -32,28 +36,32 @@ class WineViewHolder(
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
+    // List of views that need some sort of background
+    // (either blur or shadow depending on api version) to be applied for text visibility
     private val colorables = binding.run {
-        listOf(wineName, wineNaming, bottlesCount, icons)
+        listOf(wineName, wineNaming, cuvee, bottlesCount, icons)
     }
 
-    fun bind(wineWithBottles: WineWithBottles) {
-        val hexagone = binding.root
+    fun bind(wineWithBottles: WineWithBottles, highlight: Boolean) {
+        val hexagon = binding.root
         val (wine, bottles) = wineWithBottles
         val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
-        ViewCompat.setTransitionName(hexagone, wine.id.toString())
+        ViewCompat.setTransitionName(hexagon, wine.id.toString())
         tryBlurEffect()
 
         with(binding) {
             wineName.text = wine.name
             wineNaming.text = wine.naming
+            cuvee.text = wine.cuvee
+            cuvee.setVisible(cuvee.text.isNotBlank())
             bottlesCount.text = bottles.size.toString()
 
             val rightIcon = if (wine.isOrganic.toBoolean()) drawables.first else null
             val leftIcon = if (bottles.any { it.isReadyToDrink() }) drawables.second else null
             icons.setCompoundDrawablesWithIntrinsicBounds(leftIcon, null, rightIcon, null)
 
-            hexagone.setMarkerColor(wineColor)
+            hexagon.setMarkerColor(wineColor)
 
             val hasImage = wine.imgPath.isNotEmpty()
 
@@ -65,13 +73,17 @@ class WineViewHolder(
             }
         }
 
+        if (highlight) {
+            highlight()
+        }
+
         itemView.setOnClickListener {
             if (bottles.isNotEmpty()) {
                 transitionHelper.setElevationScale()
 
                 val transition =
                     itemView.context.getString(R.string.transition_bottle_details, wine.id)
-                val extra = FragmentNavigatorExtras(hexagone to transition)
+                val extra = FragmentNavigatorExtras(hexagon to transition)
                 val action = FragmentHomeDirections.homeToBottleDetails(wine.id, -1)
                 itemView.findNavController().navigate(action, extra)
             } else {
@@ -99,6 +111,28 @@ class WineViewHolder(
         }
     }
 
+    private fun highlight() {
+        with(binding.root) {
+            post {
+                val springX = SpringAnimation(this, DynamicAnimation.SCALE_X, 1f)
+                val springY = SpringAnimation(this, DynamicAnimation.SCALE_Y, 1f)
+
+                springX.spring = SpringForce(1f).apply {
+                    stiffness = SpringForce.STIFFNESS_VERY_LOW
+                    dampingRatio = SpringForce.DAMPING_RATIO_HIGH_BOUNCY
+                }
+
+                springY.spring = springX.spring
+
+                scaleX = 1.3f
+                scaleY = 1.3f
+
+                springX.start()
+                springY.start()
+            }
+        }
+    }
+
     private fun tryBlurEffect() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             return
@@ -120,14 +154,14 @@ class WineViewHolder(
             .load(imgPath.toUri())
             .run {
                 val drawable =
-                        ResourcesCompat.getDrawable(
-                            itemView.resources,
-                            R.drawable.ic_image_not_found,
-                            itemView.context.theme
-                        )?.apply {
-                            setTint(if (isLightTheme) Color.BLACK else Color.WHITE)
-                            alpha = 10
-                        }
+                    ResourcesCompat.getDrawable(
+                        itemView.resources,
+                        R.drawable.ic_image_not_found,
+                        itemView.context.theme
+                    )?.apply {
+                        setTint(if (isLightTheme) Color.BLACK else Color.WHITE)
+                        alpha = 10
+                    }
 
                 error(drawable)
             }

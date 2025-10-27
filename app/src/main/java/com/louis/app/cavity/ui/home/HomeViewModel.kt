@@ -11,6 +11,7 @@ import com.louis.app.cavity.domain.repository.StatsRepository
 import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
@@ -32,6 +33,10 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     private val _storageLocation = MutableLiveData<String?>()
     val storageLocation: LiveData<String?>
         get() = _storageLocation
+
+    private val _lastAddedWine = MutableLiveData<Event<Pair<Wine, County>>>()
+    val lastAddedWine: LiveData<Event<Pair<Wine, County>>>
+        get() = _lastAddedWine
 
     private val _scrollToCountyEvent = MutableLiveData<Event<Int>>()
     val scrollToCountyEvent: LiveData<Event<Int>>
@@ -55,6 +60,14 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     val vintagesCount = observedCounty.switchMap {
         statsRepository.getVintagesStatsForCounty(it, _storageLocation.value)
+    }
+
+    fun setLastAddedWine(wine: Wine) {
+        viewModelScope.launch(IO) {
+            countyRepository.getCountyByIdNotLive(wine.countyId)?.let { county ->
+                _lastAddedWine.postOnce(wine to county)
+            }
+        }
     }
 
     fun setObservedCounty(countyId: Long) {

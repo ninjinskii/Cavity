@@ -71,7 +71,9 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 HoneycombLayoutManager.Orientation.VERTICAL
             }
 
-        honeycombLayoutManager = HoneycombLayoutManager(colCount, orientation)
+        honeycombLayoutManager = HoneycombLayoutManager(colCount, orientation).apply {
+            config.jumpScrollThreshold = 10
+        }
 
         binding.wineList.apply {
             layoutManager = honeycombLayoutManager
@@ -86,7 +88,31 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
-            wineAdapter.submitList(it)
+            wineAdapter.submitList(it) {
+                if (homeViewModel.lastAddedWine.value != null) {
+                    scrollToWine(wineAdapter)
+                }
+            }
+        }
+    }
+
+    private fun scrollToWine(adapter: WineRecyclerAdapter) {
+        val countyId = arguments?.getLong(COUNTY_ID)
+        val (wine, county) = homeViewModel.lastAddedWine.value!!.peekContent()
+
+        if (county.id != countyId) {
+            return
+        }
+
+        homeViewModel.lastAddedWine.value?.getContentIfNotHandled()?.let {
+            for (i in 0 until adapter.itemCount) {
+                val wineId = adapter.getItemId(i)
+
+                if (wineId == wine.id) {
+                    adapter.highlightPosition = i
+                    binding.wineList.smoothScrollToPosition(i)
+                }
+            }
         }
     }
 

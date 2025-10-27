@@ -211,6 +211,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {
                 shaper.interpolation = 1 - progress
+                binding.fab.progress = 1 - progress
 
                 if (!hasRevealGrapeBar && checkViewIsOnScreen(binding.grapeBar)) {
                     hasRevealGrapeBar = true
@@ -369,19 +370,13 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun setListeners() {
+        binding.fab.setOnClickListener {
+            navigateToAddBottle(-1)
+        }
+
         binding.buttonEdit.setOnClickListener {
-            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
-
             val id = bottleDetailsViewModel.getBottleId()
-
-            id?.let { bottleId ->
-                val action = FragmentBottleDetailsDirections.bottleDetailsToEditBottle(
-                    args.wineId,
-                    bottleId
-                )
-
-                findNavController().navigate(action)
-            }
+            id?.let { navigateToAddBottle(it) }
         }
 
         binding.backButton.setOnClickListener {
@@ -455,7 +450,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             return
         }
 
-        val scroller = JumpSmoothScroller(requireContext(), 10).apply {
+        val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 10).apply {
             targetPosition = position
         }
 
@@ -511,17 +506,25 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         try {
             startActivity(intent)
-        } catch (a: ActivityNotFoundException) {
+        } catch (_: ActivityNotFoundException) {
             errorReporter.captureMessage("Cannot open pdf: no pdf reader")
             binding.coordinator.showSnackbar(R.string.no_pdf_app)
-        } catch (e: SecurityException) {
+        } catch (_: SecurityException) {
             errorReporter.captureMessage("Cannot open pdf: security exception")
             binding.coordinator.showSnackbar(R.string.base_error)
-        } catch (e: FileUriExposedException) {
+        } catch (_: FileUriExposedException) {
             errorReporter.captureMessage("Cannot open pdf: pdf uri seems wrong")
             bottleDetailsViewModel.clearPdfPath()
             binding.coordinator.showSnackbar(R.string.base_error)
         }
+    }
+
+    private fun navigateToAddBottle(bottleId: Long) {
+        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
+        val action =
+            FragmentBottleDetailsDirections.bottleDetailsToEditBottle(args.wineId, bottleId)
+
+        findNavController().navigate(action)
     }
 
     private fun updateUI(bottle: Bottle, lastBottleId: Long) {

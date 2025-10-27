@@ -30,6 +30,7 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
+import com.louis.app.cavity.ui.home.HomeViewModel
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -38,6 +39,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
     private val addWineViewModel: AddWineViewModel by viewModels()
     private val args: FragmentAddWineArgs by navArgs()
 
@@ -98,7 +100,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
 
         binding.nestedScrollView.prepareWindowInsets { view, _, left, _, right, bottom ->
-            view.updatePadding(left =  left, right = right, bottom = bottom)
+            view.updatePadding(left = left, right = right, bottom = bottom)
             WindowInsetsCompat.CONSUMED
         }
     }
@@ -216,7 +218,8 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
 
         addWineViewModel.wineUpdatedEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
+            it.getContentIfNotHandled()?.let { (stringRes, wine) ->
+                homeViewModel.setLastAddedWine(wine)
                 findNavController().navigateUp()
                 snackbarProvider.onShowSnackbarRequested(stringRes)
             }
