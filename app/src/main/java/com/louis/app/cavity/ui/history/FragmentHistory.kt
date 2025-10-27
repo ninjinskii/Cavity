@@ -52,8 +52,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     private val historyViewModel: HistoryViewModel by viewModels()
     private val args: FragmentHistoryArgs by navArgs()
 
-    private var silentChipGroupClear = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -118,7 +116,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
             colorUtil,
             onHeaderClick = { historyViewModel.requestDatePicker() },
             onItemClick = {
-                silentChipGroupClear = true
                 binding.filterChipGroup.clearCheck()
                 historyViewModel.setFilter(HistoryFilter.BottleFilter(it.model.bottleAndWine.bottle.id))
                 historyViewModel.setSelectedHistoryEntry(it.model)
@@ -195,11 +192,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         val filterChipGroup = binding.filterChipGroup
 
         filterChipGroup.setOnCheckedStateChangeListener { _, _ ->
-            if (silentChipGroupClear) {
-                silentChipGroupClear = false
-                return@setOnCheckedStateChangeListener
-            }
-
             val checkedId = filterChipGroup.checkedChipId
             historyViewModel.setFilter(HistoryFilter.TypeFilter(checkedId))
         }
@@ -340,7 +332,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun resetFilters() {
-        silentChipGroupClear = true
         binding.filterChipGroup.clearCheck()
         historyViewModel.setFilter(HistoryFilter.NoFilter)
     }
