@@ -13,7 +13,6 @@ import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.Default

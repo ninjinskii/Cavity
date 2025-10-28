@@ -1,0 +1,4 @@
+- Add search sort
+- Highlight newly created/modified wines
+- Fix history wine/bottle filters not working
+- Prevent splash screen from flashing underlying content

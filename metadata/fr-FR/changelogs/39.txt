@@ -1,0 +1,4 @@
+- Ajout d'un tri dans la recherche
+- Mise en avant des vins créés/modifiés
+- Correction du filtrage par vin/bouteille dans l'historique
+- Éviter que le splash screen ne laisse entrevoir le contenu sous jacent
