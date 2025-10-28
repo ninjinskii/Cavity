@@ -228,8 +228,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
         })
     }
 
