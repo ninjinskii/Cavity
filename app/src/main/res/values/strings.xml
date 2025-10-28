@@ -147,7 +147,9 @@
     <string name="empty_search">No result</string>
     <string name="filter_consumed">Drunk</string>
     <string name="drunk_with">Drunk with</string>
-    <!--    <string name="search_wine">Research</string>-->
+    <string name="sorted_by">Sorted by</string>
+    <string name="reverse_sort">Reverse sort</string>
+    <string name="no_sort">Unsorted</string>
 
     <!-- Bottle details -->
     <string name="edit_bottle">Edit bottle</string>
