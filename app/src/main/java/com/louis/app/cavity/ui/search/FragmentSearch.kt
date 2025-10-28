@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.RotateAnimation
 import android.view.inputmethod.EditorInfo
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Checkable
 import android.widget.HorizontalScrollView
@@ -37,12 +38,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.google.android.material.slider.RangeSlider
 import com.louis.app.cavity.R
+import com.louis.app.cavity.databinding.DialogSortBinding
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.databinding.SearchFiltersBinding
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
+import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.ui.search.widget.InsettableInfo
@@ -647,7 +650,9 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             binding.emptyState.setVisible(it.isEmpty())
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
-            bottlesAdapter?.submitList(it.toMutableList())
+            bottlesAdapter?.submitList(it.toMutableList()) {
+                binding.bottleList.scrollToPosition(0)
+            }
         }
     }
 
@@ -725,6 +730,10 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             setOnClickListener {
                 stepperFragment?.goToNextPage()
             }
+        }
+
+        binding.buttonSort.also { it.rotation = 90f }.setOnClickListener {
+            showSortDialog()
         }
     }
 
@@ -963,6 +972,28 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 remove()
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
+        }
+    }
+
+    private fun showSortDialog() {
+        val criterias = SortCriteria.entries.map { getString(it.value) }
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_sort, criterias)
+        val dialogBinding = DialogSortBinding.inflate(layoutInflater)
+
+        val dialog = LifecycleMaterialDialogBuilder(requireContext(), viewLifecycleOwner)
+            .setTitle(R.string.sorted_by)
+            .setView(dialogBinding.root)
+            .show()
+
+        with(dialogBinding.choices) {
+            divider = null
+            this.adapter = adapter
+            onItemClickListener =
+                AdapterView.OnItemClickListener { parent, view, position, id ->
+                    val reversed = dialogBinding.reverseSort.isChecked
+                    searchViewModel.submitSortOrder(Sort(SortCriteria.entries[position], reversed))
+                    dialog.dismiss()
+                }
         }
     }
 

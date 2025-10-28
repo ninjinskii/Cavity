@@ -147,6 +147,9 @@
     <string name="empty_search">Aucun résultat</string>
     <string name="filter_consumed">Consommées</string>
     <string name="drunk_with">Bue avec</string>
+    <string name="sorted_by">Trier par</string>
+    <string name="reverse_sort">Tri descendant</string>
+    <string name="no_sort">Pas de tri</string>
 
     <!-- Bottle details -->
     <string name="edit_bottle">Modifier la bouteille</string>
