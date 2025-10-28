@@ -71,9 +71,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 HoneycombLayoutManager.Orientation.VERTICAL
             }
 
-        honeycombLayoutManager = HoneycombLayoutManager(colCount, orientation).apply {
-            config.jumpScrollThreshold = 10
-        }
+        honeycombLayoutManager = HoneycombLayoutManager(colCount, orientation)
 
         binding.wineList.apply {
             layoutManager = honeycombLayoutManager
