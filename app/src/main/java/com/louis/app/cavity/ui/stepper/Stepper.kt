@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStepperBinding
 import com.louis.app.cavity.databinding.StepperBinding
+import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 
@@ -157,6 +158,7 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
     }
 
     fun goToPreviousPage(): Int {
+        binding.root.hideKeyboard()
         val previousPage = --binding.viewPager.currentItem
         updateIcons(previousPage)
 

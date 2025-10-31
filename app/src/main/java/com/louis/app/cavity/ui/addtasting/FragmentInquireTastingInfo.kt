@@ -23,6 +23,7 @@ import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.extractMargin
+import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setupNavigation
 
@@ -73,9 +74,9 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
     }
 
     private fun applyInsets() {
-        binding.constraint.prepareWindowInsets { view, windowInsets, left, _, right, _ ->
-            view.updatePadding(left = left, right = right)
-            windowInsets
+        binding.constraint.prepareWindowInsets { view, windowInsets, left, _, right, bottom ->
+            view.updatePadding(left = left, right = right, bottom = bottom)
+            WindowInsetsCompat.CONSUMED
         }
 
         binding.appBar.toolbarLayout.prepareWindowInsets { view, _, left, _, right, _ ->
@@ -172,6 +173,8 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         val valid = binding.dateLayout.validate() and binding.opportunityLayout.validate()
 
         if (valid) {
+            binding.root.hideKeyboard()
+
             with(binding) {
                 val opportunity = opportunity.text.toString().trim()
                 val isMidday = rbMidday.isChecked

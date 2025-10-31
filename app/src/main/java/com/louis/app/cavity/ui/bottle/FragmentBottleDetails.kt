@@ -226,11 +226,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {
                 if (currentId == R.id.start) {
                     shaper.interpolation = 1f
+                    binding.fab.progress = 1f
                 }
             }
 
-            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
-            }
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) =
+                Unit
         })
     }
 
@@ -489,7 +490,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.bottlePicture)
-        } catch (e: SecurityException) {
+        } catch (_: SecurityException) {
             // Do nothing
         }
     }

@@ -13,7 +13,7 @@ abstract class Step(@LayoutRes layout: Int) : Fragment(layout) {
 
         try {
             stepperFragment = parentFragment as Stepper
-        } catch (e: ClassCastException) {
+        } catch (_: ClassCastException) {
             if (parentFragment == null) {
                 throw IllegalStateException("Parent fragment is null")
             }

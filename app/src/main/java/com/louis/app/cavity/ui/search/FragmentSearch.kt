@@ -160,6 +160,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private fun applyInsets() {
         binding.main.prepareWindowInsets { view, windowInsets, _, top, _, bottom ->
             insetBottom = bottom
+            setBottomSheetPeekHeight() // Update peek height when keyboard opens
             view.updatePadding(top = top)
             windowInsets
         }
@@ -646,12 +647,23 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             })
         }
 
+        var sortChanged = false
+
         searchViewModel.results.observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
             bottlesAdapter?.submitList(it.toMutableList()) {
-                binding.bottleList.scrollToPosition(0)
+                if (sortChanged) {
+                    binding.bottleList.scrollToPosition(0)
+                    sortChanged = false
+                }
+            }
+        }
+
+        searchViewModel.sort.observe(viewLifecycleOwner) {
+            it?.getContentIfNotHandled()?.let {
+                sortChanged = true
             }
         }
     }

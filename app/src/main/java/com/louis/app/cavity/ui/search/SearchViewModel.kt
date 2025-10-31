@@ -20,7 +20,9 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.ui.search.filters.*
+import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.combineAsync
+import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
@@ -31,7 +33,10 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
 
-    private val sort = MutableLiveData(Sort(SortCriteria.NONE))
+    private val _sort = MutableLiveData(Event(Sort(SortCriteria.NONE)))
+    val sort: LiveData<Event<Sort>>
+        get() = _sort
+
     private val globalFilter = MutableLiveData<WineFilter>(FilterConsumed(false))
     private val searchControllerMap = mutableMapOf(
         R.id.searchView to NoFilter,
@@ -51,11 +56,11 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         R.id.rbGroupSize to NoFilter
     )
 
-    val results: LiveData<List<BoundedBottle>> = sort.switchMap {
+    val results: LiveData<List<BoundedBottle>> = _sort.switchMap {
         bottleRepository
             .getBoundedBottles()
             .combineAsync(globalFilter) { receiver, bottles, filter ->
-                filterAndSort(receiver, bottles, filter, it)
+                filterAndSort(receiver, bottles, filter, it.peekContent())
             }
     }
 
@@ -108,7 +113,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun submitSortOrder(sort: Sort) {
-        this.sort.value = sort
+        this._sort.postOnce(sort)
     }
 
     private fun filterAndSort(
