@@ -160,6 +160,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private fun applyInsets() {
         binding.main.prepareWindowInsets { view, windowInsets, _, top, _, bottom ->
             insetBottom = bottom
+            setBottomSheetPeekHeight() // Update peek height when keyboard opens
             view.updatePadding(top = top)
             windowInsets
         }

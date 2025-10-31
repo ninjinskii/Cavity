@@ -18,6 +18,7 @@ import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.clearInputMethodLeak
+import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import java.util.*
@@ -167,6 +168,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
                 binding.buyDateLayout.validate()
 
         if (isFormValid) {
+            binding.root.hideKeyboard()
             savePartialBottle()
             return true
         }

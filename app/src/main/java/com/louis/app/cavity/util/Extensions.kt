@@ -10,12 +10,14 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.use
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
@@ -55,6 +57,18 @@ fun View.hideKeyboard() {
 }
 
 fun View.showKeyboard() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val window = ((context as? ContextThemeWrapper)?.baseContext as? ActivityMain)?.window
+            ?: (context as? ActivityMain)?.window
+
+        window?.let {
+            WindowInsetsControllerCompat(
+                it,
+                this
+            ).show(WindowInsetsCompat.Type.ime() or WindowInsetsCompat.Type.systemGestures() or WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+        }
+    }
+
     requestFocus()
 
     (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
@@ -254,7 +268,9 @@ fun View.prepareWindowInsets(
 ) {
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
         val insets = windowInsets.getInsets(
-            WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            WindowInsetsCompat.Type.systemBars() or
+                    WindowInsetsCompat.Type.displayCutout() or
+                    WindowInsetsCompat.Type.ime()
         )
 
         val forceCenteredContent =
