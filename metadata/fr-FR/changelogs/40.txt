@@ -1,0 +1,3 @@
+- Correction d'un soucis qui remonte la liste des résultats de la recherche au début automtiquement
+- Correction du clavier logiciel qui ne s'affiche pas automatiquement sur Android sdk 35+
+- Correction des bordures d'écran mal appliquées quand le clavier logiciel est ouvert

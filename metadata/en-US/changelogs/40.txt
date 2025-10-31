@@ -1,0 +1,3 @@
+- Fixed an issue where bottle search results scroll to top automatically
+- Fixed keyboards not showing up automatically in Android sdk 35+
+- Fixed wrong insets when keyboard is pulled up
