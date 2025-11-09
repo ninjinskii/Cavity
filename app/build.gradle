@@ -14,8 +14,8 @@ android {
         applicationId "com.louis.app.cavity"
         minSdkVersion 24
         targetSdkVersion 36
-        versionCode 40
-        versionName "1.10.1"
+        versionCode 41
+        versionName "1.10.2"
 
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
@@ -125,7 +125,7 @@ dependencies {
     implementation "com.robinhood.ticker:ticker:2.0.4"
 
     // Splash Screen
-    implementation "androidx.core:core-splashscreen:1.0.1"
+    implementation "androidx.core:core-splashscreen:1.2.0"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:3.0.0"

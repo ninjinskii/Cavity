@@ -1,0 +1,4 @@
+- L'appli est désormais reconnue comme compatible Android 16
+- Correction d'un bug affichant du flou aux mauvais endroits dans les hexagones
+- Correction d'un soucis de saut de région quand l'acceuil est filtré par lieu de stockage
+- Tentative de correction d'un bug affichant le titre de l'application au lieu du lieu de stockage actuellement choisi après une longue mise en pause de l'app

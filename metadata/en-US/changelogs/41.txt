@@ -1,0 +1,4 @@
+- App is now acknowledge as Android 16 compatible
+- Fix blur effect being displayed on wrong areas inside hexagons
+- Fix erroneous county swap when home screen is filtered by storage location
+- Attempt to fix app bar displaying app name instead of current storage location when opening app after a long pause
