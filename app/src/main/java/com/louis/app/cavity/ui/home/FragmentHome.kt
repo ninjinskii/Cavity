@@ -103,7 +103,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         (binding.viewPager.getChildAt(0) as? RecyclerView)?.let {
             it.clipToPadding = false
 
-            // Force symetrical horizontal insets
+            // Force symmetrical horizontal insets
             it.prepareWindowInsets(true) { view, windowInsets, left, top, right, _ ->
                 val isTabletLayout = resources.getBoolean(R.bool.flat_hexagones)
 
@@ -194,7 +194,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         homeViewModel.storageLocation.observe(viewLifecycleOwner) { location ->
             if (location == getString(R.string.all)) {
                 homeViewModel.setStorageLocation(null, null)
+                activity?.setTitle(R.string.app_name)
             } else if (location != null) {
+                activity?.setTitle(location)
                 val toolbar = binding.appBar.toolbar
                 toolbar.post { toolbar.title = location }
             }
