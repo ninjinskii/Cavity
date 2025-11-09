@@ -19,6 +19,7 @@ import com.louis.app.cavity.ui.home.widget.EffectImageView
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.toBoolean
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
@@ -48,7 +49,6 @@ class WineViewHolder(
         val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
 
         ViewCompat.setTransitionName(hexagon, wine.id.toString())
-        tryBlurEffect()
 
         with(binding) {
             wineName.text = wine.name
@@ -72,6 +72,8 @@ class WineViewHolder(
                 (binding.wineImage as AppCompatImageView).setImageDrawable(null)
             }
         }
+
+        tryBlurEffect()
 
         if (highlight) {
             highlight()
@@ -139,7 +141,7 @@ class WineViewHolder(
         }
 
         if (binding.wineImage is EffectImageView) {
-            binding.wineImage.setTargets(colorables)
+            binding.wineImage.setTargets(colorables.filter { it.isVisible })
         }
     }
 

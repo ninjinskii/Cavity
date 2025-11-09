@@ -37,7 +37,7 @@ class EffectImageView @JvmOverloads constructor(
             return super.onDraw(canvas)
         }
 
-        // consider setUseCompositingLayers is this method is called really frequently
+        // Consider setUseCompositingLayers ifs this method is called really frequently
         underlyingContentNode.setPosition(0, 0, width, height)
         val contentCanvas = underlyingContentNode.beginRecording()
         super.onDraw(contentCanvas)
@@ -45,7 +45,6 @@ class EffectImageView @JvmOverloads constructor(
         canvas.drawRenderNode(underlyingContentNode)
 
         // Image is now drawn as usual, now draw blur behind targeted views
-
         targets.forEach { pair ->
             val (view, renderNode) = pair
 
