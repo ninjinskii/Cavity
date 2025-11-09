@@ -194,7 +194,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         homeViewModel.storageLocation.observe(viewLifecycleOwner) { location ->
             if (location == getString(R.string.all)) {
                 homeViewModel.setStorageLocation(null, null)
+                activity?.setTitle(R.string.app_name)
             } else if (location != null) {
+                activity?.setTitle(location)
                 val toolbar = binding.appBar.toolbar
                 toolbar.post { toolbar.title = location }
             }
