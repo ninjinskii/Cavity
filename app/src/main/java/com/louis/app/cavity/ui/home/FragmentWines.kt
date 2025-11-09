@@ -96,19 +96,25 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     private fun scrollToWine(adapter: WineRecyclerAdapter) {
         val countyId = arguments?.getLong(COUNTY_ID)
-        val (wine, county) = homeViewModel.lastAddedWine.value!!.peekContent()
+        val lastAddedWine = homeViewModel.lastAddedWine.value?.peekContent()
 
-        if (county.id != countyId) {
-            return
-        }
+        if (lastAddedWine != null) {
+            val (wine, county) = lastAddedWine
 
-        homeViewModel.lastAddedWine.value?.getContentIfNotHandled()?.let {
-            for (i in 0 until adapter.itemCount) {
-                val wineId = adapter.getItemId(i)
+            if (county.id != countyId) {
+                return
+            }
 
-                if (wineId == wine.id) {
-                    adapter.highlightPosition = i
-                    binding.wineList.smoothScrollToPosition(i)
+            homeViewModel.lastAddedWine.value?.getContentIfNotHandled()?.let {
+                homeViewModel.clearLastAddedWine()
+
+                for (i in 0 until adapter.itemCount) {
+                    val wineId = adapter.getItemId(i)
+
+                    if (wineId == wine.id) {
+                        adapter.highlightPosition = i
+                        binding.wineList.smoothScrollToPosition(i)
+                    }
                 }
             }
         }

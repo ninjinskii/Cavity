@@ -34,8 +34,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     val storageLocation: LiveData<String?>
         get() = _storageLocation
 
-    private val _lastAddedWine = MutableLiveData<Event<Pair<Wine, County>>>()
-    val lastAddedWine: LiveData<Event<Pair<Wine, County>>>
+    private val _lastAddedWine = MutableLiveData<Event<Pair<Wine, County>?>>()
+    val lastAddedWine: LiveData<Event<Pair<Wine, County>?>>
         get() = _lastAddedWine
 
     private val _scrollToCountyEvent = MutableLiveData<Event<Int>>()
@@ -148,6 +148,10 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
                     }
             }
         )
+    }
+
+    fun clearLastAddedWine() {
+        _lastAddedWine.postOnce(null)
     }
 
     private fun checkStorageLocation(bottle: Bottle): Boolean {
