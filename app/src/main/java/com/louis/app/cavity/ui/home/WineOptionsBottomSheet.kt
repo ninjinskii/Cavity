@@ -61,17 +61,23 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
                 findNavController().navigate(action)
             }
 
-            deleteWine.setOnClickListener {
-                context?.let { context ->
-                    LifecycleMaterialDialogBuilder(context, viewLifecycleOwner)
-                        .setMessage(R.string.confirm_wine_delete)
-                        .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
-                        }
-                        .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
-                            homeViewModel.deleteOrHideWine(args.wineId)
-                            dismiss()
-                        }
-                        .show()
+            val filterByStorageLocationEnabled = homeViewModel.storageLocation.value != null
+
+            if (filterByStorageLocationEnabled) {
+                deleteWine.setVisible(false)
+            } else {
+                deleteWine.setOnClickListener {
+                    context?.let { context ->
+                        LifecycleMaterialDialogBuilder(context, viewLifecycleOwner)
+                            .setMessage(R.string.confirm_wine_delete)
+                            .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
+                            }
+                            .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
+                                homeViewModel.deleteOrHideWine(args.wineId)
+                                dismiss()
+                            }
+                            .show()
+                    }
                 }
             }
         }
@@ -79,7 +85,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
 
     override fun onPause() {
         super.onPause()
-        // Avoid navigation controller setting up app title in toolbar when qutting fragment (storage_location in mind)
+        // Avoid navigation controller setting up app title in toolbar when quitting fragment (storage_location in mind)
         homeViewModel.notifyStorageLocation()
     }
 
