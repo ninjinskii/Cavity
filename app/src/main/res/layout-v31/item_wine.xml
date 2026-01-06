@@ -47,7 +47,7 @@
             android:layout_marginTop="@dimen/xsmall_margin"
             android:layout_marginBottom="@dimen/xsmall_margin"
             android:ellipsize="end"
-            android:maxLines="3"
+            android:maxLines="2"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textSize="16sp"
             tools:text="Château la Cour" />
