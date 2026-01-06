@@ -2,8 +2,6 @@ package com.louis.app.cavity.ui.home.widget
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.RenderEffect
 import android.graphics.RenderNode
 import android.graphics.Shader
@@ -28,7 +26,7 @@ class EffectImageView @JvmOverloads constructor(
 
     private val targets = mutableListOf<Pair<TextView, RenderNode>>()
 
-    // Pre allocated render nodes to use with lines if targeting textviews.
+    // Pre allocated render nodes to use with lines if targeting mutli-line text views.
     @RequiresApi(Build.VERSION_CODES.Q)
     private val additionalRenderNodes = listOf(
         RenderNode("blur-textviewline-1"),
@@ -36,39 +34,10 @@ class EffectImageView @JvmOverloads constructor(
         RenderNode("blur-textviewline-3")
     )
 
-    private val testPaint by lazy {
-        Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.RED
-            style = Paint.Style.FILL
-        }
-    }
-
     @RequiresApi(Build.VERSION_CODES.S)
     fun setTargets(views: List<TextView>) {
         this.targets.clear()
         this.targets.addAll(views.map { it to RenderNode("blur-${it.id}") })
-    }
-
-    @RequiresApi(Build.VERSION_CODES.S)
-    private fun drawBlur(
-        canvas: Canvas,
-        renderNode: RenderNode,
-        left: Int,
-        top: Int,
-        width: Int,
-        height: Int
-    ) {
-        with(renderNode) {
-            setRenderEffect(blur)
-            setPosition(0, 0, width, height)
-            translationX = left.toFloat()
-            translationY = top.toFloat()
-            val blurCanvas = beginRecording()
-            blurCanvas.translate(-left.toFloat(), -top.toFloat())
-            blurCanvas.drawRenderNode(underlyingContentNode)
-            endRecording()
-            canvas.drawRenderNode(this)
-        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -98,43 +67,12 @@ class EffectImageView @JvmOverloads constructor(
                     val lineEnd = view.left + layout.getLineRight(line)
                     val lineBottom = view.top + layout.getLineBottom(line)
                     val lineTop = view.top + layout.getLineTop(line)
-
-                    // Debug
-                    canvas.drawCircle(
-                        lineStart,
-                        lineTop.toFloat(),
-                        10f,
-                        testPaint.apply { color = Color.RED })
-                    canvas.drawCircle(
-                        lineEnd,
-                        lineTop.toFloat(),
-                        10f,
-                        testPaint.apply { color = Color.CYAN })
-                    canvas.drawCircle(
-                        lineStart,
-                        lineBottom.toFloat(),
-                        10f,
-                        testPaint.apply { color = Color.BLUE })
-                    canvas.drawCircle(
-                        lineEnd,
-                        lineBottom.toFloat(),
-                        10f,
-                        testPaint.apply { color = Color.MAGENTA })
-
-                    /*drawBlur(
-                        canvas,
-                        renderNode,
-                        0,
-                        0,
-                        (lineEnd - lineStart).toInt(),
-                        lineBottom - lineTop
-                    )*/
-
+                    val right = lineEnd - lineStart
+                    val bottom = lineBottom - lineTop
 
                     with(renderNode) {
                         setRenderEffect(blur)
-                        setPosition(0, 0, (lineEnd - lineStart).toInt(), lineBottom - lineTop)
-                        canvas.drawLine(0f, 0f, lineEnd - lineStart, (lineBottom - lineTop).toFloat(), testPaint.apply { color = Color.GREEN })
+                        setPosition(0, 0, right.toInt(), bottom)
                         translationX = lineStart
                         translationY = lineTop.toFloat()
                         val blurCanvas = beginRecording()
