@@ -36,6 +36,7 @@
             android:layout_marginBottom="@dimen/xsmall_margin"
             android:ellipsize="end"
             android:maxLines="1"
+            android:visibility="gone"
             android:textAppearance="?attr/textAppearanceCaption"
             tools:text="Saint-Émilion" />
 
