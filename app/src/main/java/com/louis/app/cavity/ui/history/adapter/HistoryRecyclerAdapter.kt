@@ -5,8 +5,12 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.findFragment
 import androidx.paging.PagingDataAdapter
+import androidx.paging.log
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -14,6 +18,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemHistoryBinding
 import com.louis.app.cavity.databinding.ItemHistorySeparatorBinding
 import com.louis.app.cavity.domain.history.HistoryEntryType
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.history.HistoryUiModel
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.DateFormatter
@@ -25,6 +30,7 @@ class HistoryRecyclerAdapter(
     private val onHeaderClick: () -> Unit,
     private val onItemClick: (HistoryUiModel.EntryModel) -> Unit,
     private val onSwiped: (HistoryUiModel.EntryModel) -> Unit,
+    private val onEditBottleComment: (HistoryUiModel.EntryModel, String) -> Unit,
 ) :
     PagingDataAdapter<HistoryUiModel, RecyclerView.ViewHolder>(HistoryEntryDiffItemCallback()) {
 
@@ -158,17 +164,41 @@ class HistoryRecyclerAdapter(
                     val emptyComment = historyEntry.comment.isBlank()
                     val isLongPressable =
                         (type == HistoryEntryType.REMOVE || type == HistoryEntryType.TASTING)
-                                && !emptyComment
 
-                    if (isLongPressable) {
-                        MaterialAlertDialogBuilder(context)
-                            .setMessage(entry.model.historyEntry.comment)
-                            .show()
+                    val fragment = binding.root.findFragment<Fragment>()
+                    val editCommentDialog = SimpleInputDialog(
+                        context,
+                        fragment.layoutInflater,
+                        fragment.viewLifecycleOwner
+                    )
+                    val dialogResource = SimpleInputDialog.DialogContent(
+                        title = R.string.edit,
+                        hint = R.string.tasting_comment,
+                        icon = R.drawable.ic_edit
+                    ) {
+                        onEditBottleComment(entry, it)
+                    }
 
+                    if (!isLongPressable) {
+                        return@setOnLongClickListener false
+                    }
+
+                    if (emptyComment) {
+                        editCommentDialog.show(dialogResource)
                         return@setOnLongClickListener true
                     }
 
-                    false
+                    MaterialAlertDialogBuilder(context)
+                        .setMessage(entry.model.historyEntry.comment)
+                        .setPositiveButton(R.string.edit) { _, _ ->
+                            editCommentDialog.showForEdit(
+                                dialogResource,
+                                entry.model.historyEntry.comment
+                            )
+                        }
+                        .show()
+
+                    return@setOnLongClickListener true
                 }
             }
         }
