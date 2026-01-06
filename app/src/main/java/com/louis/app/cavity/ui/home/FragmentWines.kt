@@ -122,15 +122,15 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     private fun prePopulateRecyclerViewPool() {
         val viewPool = binding.wineList.recycledViewPool
-        val recylerView = binding.wineList
+        val recyclerView = binding.wineList
         val isPoolEmpty = viewPool.getRecycledViewCount(R.layout.item_wine) == 0
 
         if (isPoolEmpty) {
             repeat(FragmentHome.VIEW_POOL_SIZE) {
                 val viewHolder =
-                    recylerView.adapter?.createViewHolder(recylerView, R.layout.item_wine)
+                    recyclerView.adapter?.createViewHolder(recyclerView, R.layout.item_wine)
 
-                recylerView.recycledViewPool.putRecycledView(viewHolder)
+                recyclerView.recycledViewPool.putRecycledView(viewHolder)
             }
         }
     }
