@@ -9,7 +9,6 @@ import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.domain.history.HistoryEntryType
 import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.domain.history.isReplenishment
-import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.util.DateFormatter
