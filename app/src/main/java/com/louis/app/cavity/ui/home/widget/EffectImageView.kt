@@ -56,9 +56,9 @@ class EffectImageView @JvmOverloads constructor(
         targets.forEach { pair ->
             val (view, renderNode) = pair
             val layout = view.layout
-            val hasMultipleLines = view.layout != null && view.layout.lineCount > 1
+            val textViewReady = view.layout != null && view.layout.lineCount > 0
 
-            if (hasMultipleLines) {
+            if (textViewReady) {
                 var i = 0
 
                 for (line in 0..< layout.lineCount) {
@@ -81,18 +81,6 @@ class EffectImageView @JvmOverloads constructor(
                         endRecording()
                         canvas.drawRenderNode(this)
                     }
-                }
-            } else {
-                with(renderNode) {
-                    setRenderEffect(blur)
-                    setPosition(0, 0, view.width, view.height)
-                    translationX = view.left.toFloat()
-                    translationY = view.top.toFloat()
-                    val blurCanvas = beginRecording()
-                    blurCanvas.translate(-view.left.toFloat(), -view.top.toFloat())
-                    blurCanvas.drawRenderNode(underlyingContentNode)
-                    endRecording()
-                    canvas.drawRenderNode(this)
                 }
             }
         }
