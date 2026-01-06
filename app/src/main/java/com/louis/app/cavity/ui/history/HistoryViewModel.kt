@@ -11,7 +11,6 @@ import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.domain.history.isReplenishment
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
-import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.Event
@@ -27,7 +26,6 @@ import kotlinx.coroutines.withContext
 
 class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     private val historyRepository = HistoryRepository.getInstance(app)
-    private val bottleRepository = BottleRepository.getInstance(app)
 
     private val _scrollTo = MutableLiveData<Event<Int>>()
     val scrollTo: LiveData<Event<Int>>
