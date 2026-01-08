@@ -1066,8 +1066,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        datePickerUntil?.dispose()
-        datePickerBeyond?.dispose()
+        datePickerBeyond = null
+        datePickerUntil = null
         bottlesAdapter = null
         bottomSheetBehavior = null
         _binding = null

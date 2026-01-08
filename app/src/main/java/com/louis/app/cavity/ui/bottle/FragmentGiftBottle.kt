@@ -150,7 +150,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
 
     override fun onDestroy() {
         super.onDestroy()
-        datePicker?.dispose()
+        datePicker = null
         _binding = null
     }
 }
