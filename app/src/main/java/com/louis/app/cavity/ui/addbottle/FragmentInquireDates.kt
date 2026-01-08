@@ -179,7 +179,7 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
     override fun onDestroyView() {
         super.onDestroyView()
         clearInputMethodLeak()
-        datePicker?.dispose()
+        datePicker = null
         _binding = null
     }
 

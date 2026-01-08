@@ -151,7 +151,7 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
 
     override fun onDestroy() {
         super.onDestroy()
-        datePicker?.dispose()
+        datePicker = null
         _binding = null
     }
 }

@@ -15,6 +15,7 @@
     <string name="locale">en</string>
     <string name="unknown">Unknown</string>
     <string name="all">All</string>
+    <string name="edit">Edit</string>
 
     <!-- Errors -->
     <string name="empty_county_name">Please enter a region name.</string>

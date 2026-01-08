@@ -124,6 +124,11 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 val entry = it.model.historyEntry
                 val newEntry = entry.copy(favorite = entry.favorite.toggleBoolean())
                 historyViewModel.updateHistoryEntry(newEntry)
+            },
+            onEditBottleComment = { entry, tasteComment ->
+                val entry = entry.model.historyEntry
+                val newEntry = entry.copy(comment = tasteComment)
+                historyViewModel.updateHistoryEntry(newEntry)
             }
         )
 
