@@ -3,6 +3,7 @@ package com.louis.app.cavity.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BottleDao {
@@ -30,8 +31,9 @@ interface BottleDao {
     @Query("SELECT * FROM bottle")
     suspend fun getAllBottlesNotLive(): List<Bottle>
 
-    @Query("SELECT * FROM bottle WHERE wine_id=:wineId ORDER BY consumed ASC,vintage")
-    fun getBottlesForWine(wineId: Long): LiveData<List<Bottle>>
+    @Transaction
+    @Query("SELECT * FROM bottle WHERE wine_id=:wineId ORDER BY consumed ASC, vintage")
+    fun getBottlesForWine(wineId: Long): Flow<List<BottleWithHistoryEntries>>
 
     @Query("SELECT * FROM bottle WHERE wine_id=:wineId")
     suspend fun getBottlesForWineNotLive(wineId: Long): List<Bottle>
@@ -102,6 +104,16 @@ data class BottleWithTastingActions(
         entityColumn = "bottle_id"
     )
     val tastingActions: List<TastingAction>,
+)
+
+data class BottleWithHistoryEntries(
+    @Embedded val bottle: Bottle,
+    @Relation(
+        entity = HistoryEntry::class,
+        parentColumn = "id",
+        entityColumn = "bottle_id"
+    )
+    val historyEntries: List<HistoryEntry>
 )
 
 data class BoundedBottle(

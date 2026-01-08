@@ -45,7 +45,14 @@ import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.tasting.SpaceItemDecoration
 import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.asLiveData
+import androidx.recyclerview.widget.LinearSnapHelper
+import com.louis.app.cavity.db.dao.BottleWithHistoryEntries
+import com.louis.app.cavity.db.dao.BoundedBottle
+import com.louis.app.cavity.domain.history.isConsumption
+import com.louis.app.cavity.ui.bottle.adapter.TastingLogRecyclerAdapter
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
@@ -250,19 +257,47 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             addItemDecoration(SpaceItemDecoration(space))
         }
 
+        val tastingLogAdapter = TastingLogRecyclerAdapter()
+
+        binding.logList.apply {
+            adapter = tastingLogAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(false)
+            LinearSnapHelper().attachToRecyclerView(this)
+        }
+
         var firstTime = true
 
         bottleDetailsViewModel.getBottlesForWine(args.wineId).observe(viewLifecycleOwner) {
-            val checkedBottleId = bottleDetailsViewModel.getBottleId()
-            val id = bottleAdapter.submitListWithPreselection(it, checkedBottleId ?: -1L)
-            bottleDetailsViewModel.setBottleId(id)
+                val checkedBottleId = bottleDetailsViewModel.getBottleId()
+                val id = bottleAdapter.submitListWithPreselection(it, checkedBottleId ?: -1L)
+                bottleDetailsViewModel.setBottleId(id)
 
-            // Avoid weird DiffUtil animations conflict
-            if (firstTime) {
-                smoothScrollToCheckedChip(id, it)
-                firstTime = false
+                /*val hasAtLeast2Comments =
+                    it.count { (_, historyEntries) ->
+                        historyEntries.any { entry ->
+                            entry.type.isConsumption() && entry.comment.isNotBlank()
+                        }
+                    } > 1
+
+                binding.tastingLog.setVisible(hasAtLeast2Comments)
+
+                if (hasAtLeast2Comments) {
+                    tastingLogAdapter.submitList(it)
+                }*/
+
+                // Avoid weird DiffUtil animations conflict
+                if (firstTime) {
+                    smoothScrollToCheckedChip(id, it)
+                    firstTime = false
+                }
             }
-        }
+
+        bottleDetailsViewModel.getConsumedBottlesWithHistoryForWine(args.wineId)
+            .observe(viewLifecycleOwner) {
+                binding.tastingLog.setVisible(it.isNotEmpty())
+                tastingLogAdapter.submitList(it)
+            }
 
         val colorUtil = ColorUtil(requireContext())
         val reviewAdapter = ShowFilledReviewsRecyclerAdapter(colorUtil)
@@ -322,6 +357,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                         setIcon(drawable)
                     }
                 }
+            }
+        }
+
+        bottleDetailsViewModel.consumptionEntry.observe(viewLifecycleOwner) { entry ->
+            entry?.let {
+                val comment = it.historyEntry.comment
             }
         }
 
@@ -408,6 +449,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             }
         }
 
+        binding.tastingLog.setOnClickListener {
+            binding.logList.setVisible(!binding.logList.isVisible)
+        }
+
         binding.buttonPdf.setOnClickListener {
             bottleDetailsViewModel.preparePdf()
         }
@@ -440,12 +485,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
     }
 
-    private fun smoothScrollToCheckedChip(checkedChipBottleId: Long, bottles: List<Bottle>?) {
+    private fun smoothScrollToCheckedChip(
+        checkedChipBottleId: Long,
+        bottles: List<BottleWithHistoryEntries>?
+    ) {
         if (bottles == null || checkedChipBottleId == -1L) {
             return
         }
 
-        val position = bottles.indexOfFirst { it.id == checkedChipBottleId }
+        val position = bottles.indexOfFirst { it.bottle.id == checkedChipBottleId }
 
         if (position == -1) {
             return

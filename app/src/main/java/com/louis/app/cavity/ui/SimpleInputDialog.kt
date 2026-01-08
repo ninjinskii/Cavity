@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui
 
 import android.content.Context
 import android.text.InputType
+import android.view.Gravity
 import android.view.LayoutInflater
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -17,7 +18,8 @@ class SimpleInputDialog(
     private val context: Context,
     private val layoutInflater: LayoutInflater,
     private val lifecycleOwner: LifecycleOwner,
-    private val passwordInput: Boolean = false
+    private val passwordInput: Boolean = false,
+    private val textArea: Boolean = false
 ) :
     DefaultLifecycleObserver {
 
@@ -42,6 +44,16 @@ class SimpleInputDialog(
         if (this.passwordInput) {
             dialogBinding.input.inputType =
                 InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+
+        if (this.textArea) {
+            dialogBinding.inputLayout.gravity = Gravity.TOP
+            with(dialogBinding.input) {
+                minLines = 7
+                gravity = Gravity.TOP
+                inputType =
+                    InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            }
         }
 
         dialogBinding.inputLayout.hint = context.getString(hint)

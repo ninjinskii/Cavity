@@ -66,6 +66,9 @@ class HistoryRepository private constructor(app: Application) : Repository(app) 
     fun getReplenishmentForBottleNotPaged(bottleId: Long) =
         historyDao.getReplenishmentForBottleNotPaged(bottleId)
 
+    fun getConsumptionForBottleNotPaged(bottleId: Long) =
+        historyDao.getConsumptionForBottleNotPaged(bottleId)
+
     fun getReplenishmentForBottleNotPagedNotLive(bottleId: Long) =
         historyDao.getReplenishmentForBottleNotPagedNotLive(bottleId)
 

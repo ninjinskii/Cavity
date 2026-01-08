@@ -167,7 +167,8 @@ class HistoryRecyclerAdapter(
                     val editCommentDialog = SimpleInputDialog(
                         context,
                         fragment.layoutInflater,
-                        fragment.viewLifecycleOwner
+                        fragment.viewLifecycleOwner,
+                        textArea = true
                     )
                     val dialogResource = SimpleInputDialog.DialogContent(
                         title = R.string.edit,

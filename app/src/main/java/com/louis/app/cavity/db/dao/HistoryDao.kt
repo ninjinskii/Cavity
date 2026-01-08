@@ -67,6 +67,10 @@ interface HistoryDao {
     fun getReplenishmentForBottleNotPaged(bottleId: Long): LiveData<HistoryEntryWithFriends?>
 
     @Transaction
+    @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId AND (type = 0 OR type = 2 OR type = 4) LIMIT 1")
+    fun getConsumptionForBottleNotPaged(bottleId: Long): LiveData<HistoryEntryWithFriends?>
+
+    @Transaction
     @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId AND (type = 1 OR type = 3) LIMIT 1")
     fun getReplenishmentForBottleNotPagedNotLive(bottleId: Long): HistoryEntryWithFriends?
 

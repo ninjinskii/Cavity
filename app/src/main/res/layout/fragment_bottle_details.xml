@@ -215,6 +215,64 @@
                     tools:listitem="@layout/chip_action"
                     tools:orientation="horizontal" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/tastingLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:background="?attr/selectableItemBackground"
+                    app:layout_constraintTop_toBottomOf="@id/bottlesList">
+
+                    <ImageView
+                        android:id="@+id/tasteLogIcon"
+                        android:layout_margin="@dimen/small_margin"
+                        android:layout_width="@dimen/small_icon"
+                        android:layout_height="@dimen/small_icon"
+                        app:tint="?attr/colorOnSurface"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/tasteLogTitle"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:src="@drawable/ic_log" />
+
+                    <TextView
+                        android:id="@+id/tasteLogTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:text="Journal de dégustation"
+                        app:layout_constraintStart_toEndOf="@id/tasteLogIcon"
+                        app:layout_constraintEnd_toStartOf="@id/tasteLogShowMoreIcon"
+                        app:layout_constraintBottom_toBottomOf="@id/tasteLogIcon"
+                        app:layout_constraintTop_toTopOf="@id/tasteLogIcon" />
+
+                    <ImageView
+                        android:id="@+id/tasteLogShowMoreIcon"
+                        android:layout_margin="@dimen/small_margin"
+                        android:layout_width="@dimen/small_icon"
+                        android:layout_height="@dimen/small_icon"
+                        app:tint="?attr/colorOnSurface"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tasteLogIcon"
+                        app:layout_constraintBottom_toBottomOf="@id/tasteLogIcon"
+                        app:layout_constraintStart_toEndOf="@id/tasteLogTitle"
+                        android:src="@drawable/ic_flat_arrow_down" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/logList"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/tastingLog"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_tasting_log" />
+
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/cuvee"
                     android:layout_width="0dp"
@@ -225,7 +283,7 @@
                     app:label="@string/cuvee"
                     app:layout_constraintEnd_toEndOf="@id/otherInfo"
                     app:layout_constraintStart_toStartOf="@id/otherInfo"
-                    app:layout_constraintTop_toBottomOf="@id/bottlesList" />
+                    app:layout_constraintTop_toBottomOf="@id/logList" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/apogee"

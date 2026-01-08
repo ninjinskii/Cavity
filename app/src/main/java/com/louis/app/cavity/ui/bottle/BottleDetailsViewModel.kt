@@ -18,6 +18,11 @@ import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
+import com.louis.app.cavity.domain.history.isConsumption
+import com.louis.app.cavity.util.L
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val wineRepository = WineRepository.getInstance(app)
@@ -53,9 +58,22 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     val replenishmentEntry =
         bottleId.switchMap { historyRepository.getReplenishmentForBottleNotPaged(it) }
 
+    val consumptionEntry =
+        bottleId.switchMap { historyRepository.getConsumptionForBottleNotPaged(it) }
+
     fun getWineById(wineId: Long) = wineRepository.getWineById(wineId)
 
-    fun getBottlesForWine(wineId: Long) = bottleRepository.getBottlesForWine(wineId)
+    fun getConsumedBottlesWithHistoryForWine(wineId: Long) =
+        bottleRepository.getBottlesForWine(wineId).map { bottlesWithHistoryEntries ->
+            bottlesWithHistoryEntries.filter { (bottle, historyEntries) ->
+                bottle.consumed.toBoolean() &&
+                        historyEntries.any { it.type.isConsumption() && it.comment.isNotBlank() }
+            }
+        }
+            .flowOn(Dispatchers.Default)
+            .asLiveData()
+
+    fun getBottlesForWine(wineId: Long) = bottleRepository.getBottlesForWine(wineId).asLiveData()
 
     fun setBottleId(bottleId: Long) {
         this.bottleId.value = bottleId
