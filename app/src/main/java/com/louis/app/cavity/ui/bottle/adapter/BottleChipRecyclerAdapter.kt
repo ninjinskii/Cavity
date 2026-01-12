@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ChipActionBinding
 import com.louis.app.cavity.db.dao.BottleWithHistoryEntries
-import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.util.toBoolean
 
 class BottleChipRecyclerAdapter(context: Context, private val onBottleClick: (Long) -> Unit) :
@@ -113,9 +112,8 @@ class BottleChipRecyclerAdapter(context: Context, private val onBottleClick: (Lo
         }
 
         private fun getChipStartIcon(bottleWithHistoryEntries: BottleWithHistoryEntries): Drawable? {
-            val (bottle, historyEntries) = bottleWithHistoryEntries
-            val consumeEntry =
-                historyEntries.firstOrNull { it.type.isConsumption() }
+            val (bottle) = bottleWithHistoryEntries
+            val consumeEntry = bottleWithHistoryEntries.getConsumptionEntry()
 
             return when {
                 bottle.consumed.toBoolean() &&

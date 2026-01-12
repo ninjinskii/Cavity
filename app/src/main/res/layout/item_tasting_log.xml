@@ -16,6 +16,19 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="2020" />
 
+    <ImageView
+        android:id="@+id/buttonNext"
+        android:layout_width="@dimen/small_icon"
+        android:layout_height="@dimen/small_icon"
+        android:layout_margin="@dimen/small_margin"
+        android:src="@drawable/ic_next"
+        android:alpha="0.4"
+        android:contentDescription="@string/next"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:tint="?attr/colorOnSurface"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <TextView
         android:id="@+id/drunkAt"
         android:layout_width="wrap_content"
@@ -30,7 +43,7 @@
     <TextView
         android:id="@+id/comment"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/small_margin"
         android:textAppearance="?attr/textAppearanceBody2"
         app:layout_constraintTop_toBottomOf="@id/vintage"

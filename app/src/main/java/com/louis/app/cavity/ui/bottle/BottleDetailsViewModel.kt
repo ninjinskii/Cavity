@@ -19,7 +19,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
 import com.louis.app.cavity.domain.history.isConsumption
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -57,9 +56,6 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     val replenishmentEntry =
         bottleId.switchMap { historyRepository.getReplenishmentForBottleNotPaged(it) }
-
-    val consumptionEntry =
-        bottleId.switchMap { historyRepository.getConsumptionForBottleNotPaged(it) }
 
     fun getWineById(wineId: Long) = wineRepository.getWineById(wineId)
 

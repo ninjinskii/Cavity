@@ -179,6 +179,7 @@
     <string name="bottle_used_in_tasting">This bottle is used in a tasting.</string>
     <string name="retire">Withdraw</string>
     <string name="back_in_stock">Bottle back in stock.</string>
+    <string name="tasting_log">Journal de dégustation</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>

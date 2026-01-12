@@ -2,6 +2,7 @@ package com.louis.app.cavity.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.model.*
 import kotlinx.coroutines.flow.Flow
 
@@ -114,7 +115,9 @@ data class BottleWithHistoryEntries(
         entityColumn = "bottle_id"
     )
     val historyEntries: List<HistoryEntry>
-)
+) {
+    fun getConsumptionEntry() = historyEntries.firstOrNull { it.type.isConsumption() }
+}
 
 data class BoundedBottle(
     @Embedded val bottle: Bottle,

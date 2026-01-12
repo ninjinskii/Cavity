@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.bottle
 
+import android.animation.ValueAnimator
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
@@ -10,8 +11,10 @@ import android.os.FileUriExposedException
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Checkable
+import android.widget.TextView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.marginEnd
@@ -45,13 +48,11 @@ import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.tasting.SpaceItemDecoration
 import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import com.louis.app.cavity.db.dao.BottleWithHistoryEntries
-import com.louis.app.cavity.db.dao.BoundedBottle
-import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.ui.bottle.adapter.TastingLogRecyclerAdapter
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 
@@ -257,7 +258,13 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             addItemDecoration(SpaceItemDecoration(space))
         }
 
-        val tastingLogAdapter = TastingLogRecyclerAdapter()
+        val tastingLogAdapter = TastingLogRecyclerAdapter(
+            onNextClick = {
+                val snapHelper = binding.logList.onFlingListener as? SnapHelper ?: return@TastingLogRecyclerAdapter
+                val position = binding.logList.getChildAdapterPosition(snapHelper.findSnapView(binding.logList.layoutManager)!!)
+                binding.logList.smoothScrollToPosition(position + 1)
+            }
+        )
 
         binding.logList.apply {
             adapter = tastingLogAdapter
@@ -269,35 +276,39 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         var firstTime = true
 
         bottleDetailsViewModel.getBottlesForWine(args.wineId).observe(viewLifecycleOwner) {
-                val checkedBottleId = bottleDetailsViewModel.getBottleId()
-                val id = bottleAdapter.submitListWithPreselection(it, checkedBottleId ?: -1L)
-                bottleDetailsViewModel.setBottleId(id)
+            val checkedBottleId = bottleDetailsViewModel.getBottleId()
+            val id = bottleAdapter.submitListWithPreselection(it, checkedBottleId ?: -1L)
+            bottleDetailsViewModel.setBottleId(id)
 
-                /*val hasAtLeast2Comments =
-                    it.count { (_, historyEntries) ->
-                        historyEntries.any { entry ->
-                            entry.type.isConsumption() && entry.comment.isNotBlank()
-                        }
-                    } > 1
-
-                binding.tastingLog.setVisible(hasAtLeast2Comments)
-
-                if (hasAtLeast2Comments) {
-                    tastingLogAdapter.submitList(it)
-                }*/
-
-                // Avoid weird DiffUtil animations conflict
-                if (firstTime) {
-                    smoothScrollToCheckedChip(id, it)
-                    firstTime = false
-                }
+            // Avoid weird DiffUtil animations conflict
+            if (firstTime) {
+                smoothScrollToCheckedChip(id, it)
+                firstTime = false
             }
+        }
 
         bottleDetailsViewModel.getConsumedBottlesWithHistoryForWine(args.wineId)
             .observe(viewLifecycleOwner) {
-                binding.tastingLog.setVisible(it.isNotEmpty())
+                binding.apply {
+                    tastingLog.setVisible(it.isNotEmpty())
+                    logList.setVisible(it.isNotEmpty())
+                    dividerLog.setVisible(it.isNotEmpty())
+                }
+
                 tastingLogAdapter.submitList(it)
             }
+
+        binding.logList.doOnLayout {
+            updateHeightToSnappedView(binding.logList)
+        }
+
+        binding.logList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    updateHeightToSnappedView(recyclerView)
+                }
+            }
+        })
 
         val colorUtil = ColorUtil(requireContext())
         val reviewAdapter = ShowFilledReviewsRecyclerAdapter(colorUtil)
@@ -357,12 +368,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                         setIcon(drawable)
                     }
                 }
-            }
-        }
-
-        bottleDetailsViewModel.consumptionEntry.observe(viewLifecycleOwner) { entry ->
-            entry?.let {
-                val comment = it.historyEntry.comment
             }
         }
 
@@ -447,10 +452,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 val action = FragmentBottleDetailsDirections.bottleDetailsToGiftBottle(bottleId)
                 findNavController().navigate(action)
             }
-        }
-
-        binding.tastingLog.setOnClickListener {
-            binding.logList.setVisible(!binding.logList.isVisible)
         }
 
         binding.buttonPdf.setOnClickListener {
@@ -574,6 +575,48 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             FragmentBottleDetailsDirections.bottleDetailsToEditBottle(args.wineId, bottleId)
 
         findNavController().navigate(action)
+    }
+
+    fun updateHeightToSnappedView(recyclerView: RecyclerView) {
+        val snapHelper = recyclerView.onFlingListener as? SnapHelper ?: return
+        val layoutManager = recyclerView.layoutManager ?: return
+        val snappedView = snapHelper.findSnapView(layoutManager) ?: return
+
+        snappedView.post {
+            val widthSpec = View.MeasureSpec.makeMeasureSpec(
+                snappedView.measuredWidth,
+                View.MeasureSpec.EXACTLY
+            )
+            val heightSpec = View.MeasureSpec.makeMeasureSpec(
+                0,
+                View.MeasureSpec.UNSPECIFIED
+            )
+
+            snappedView.measure(widthSpec, heightSpec)
+            val realHeight = snappedView.measuredHeight
+
+            animateRecyclerHeight(recyclerView, realHeight) {
+                val snappedView =
+                    snapHelper.findSnapView(layoutManager) ?: return@animateRecyclerHeight
+                val commentTextView = snappedView.findViewById<TextView>(R.id.comment)
+                commentTextView?.requestLayout()
+            }
+        }
+    }
+
+    fun animateRecyclerHeight(rv: RecyclerView, targetHeight: Int, doOnEnd: () -> Unit) {
+        val startHeight = rv.height
+        if (startHeight == targetHeight) return
+
+        ValueAnimator.ofInt(startHeight, targetHeight).apply {
+            duration = resources.getInteger(R.integer.cavity_motion_short).toLong()
+            addUpdateListener {
+                rv.layoutParams.height = it.animatedValue as Int
+                rv.requestLayout()
+            }
+            this.doOnEnd { doOnEnd() }
+            start()
+        }
     }
 
     private fun updateUI(bottle: Bottle, lastBottleId: Long) {

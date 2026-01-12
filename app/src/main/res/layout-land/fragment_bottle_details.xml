@@ -213,19 +213,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackground"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="@+id/apogee"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
                         android:id="@+id/tasteLogIcon"
-                        android:layout_margin="@dimen/small_margin"
                         android:layout_width="@dimen/small_icon"
                         android:layout_height="@dimen/small_icon"
+                        android:layout_margin="@dimen/small_margin"
+                        android:src="@drawable/ic_log"
+                        android:contentDescription="@string/tasting_log"
                         app:tint="?attr/colorOnSurface"
-                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/tasteLogTitle"
-                        android:src="@drawable/ic_log" />
+                        app:layout_constraintBottom_toBottomOf="parent" />
 
                     <TextView
                         android:id="@+id/tasteLogTitle"
@@ -233,23 +236,10 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/small_margin"
                         android:textAppearance="?attr/textAppearanceBody1"
-                        android:text="Voir le journal de dégustation"
+                        android:text="@string/tasting_log"
                         app:layout_constraintStart_toEndOf="@id/tasteLogIcon"
-                        app:layout_constraintEnd_toStartOf="@id/tasteLogShowMoreIcon"
                         app:layout_constraintBottom_toBottomOf="@id/tasteLogIcon"
                         app:layout_constraintTop_toTopOf="@id/tasteLogIcon" />
-
-                    <ImageView
-                        android:id="@+id/tasteLogShowMoreIcon"
-                        android:layout_margin="@dimen/small_margin"
-                        android:layout_width="@dimen/small_icon"
-                        android:layout_height="@dimen/small_icon"
-                        app:tint="?attr/colorOnSurface"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tasteLogIcon"
-                        app:layout_constraintBottom_toBottomOf="@id/tasteLogIcon"
-                        app:layout_constraintStart_toEndOf="@id/tasteLogTitle"
-                        android:src="@drawable/ic_flat_arrow_down" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -257,9 +247,19 @@
                     android:id="@+id/logList"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/tastingLog"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_tasting_log" />
+
+                <View
+                    android:id="@+id/dividerLog"
+                    style="@style/Widget.Cavity.Divider"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/logList" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/cuvee"
@@ -271,7 +271,7 @@
                     app:label="@string/cuvee"
                     app:layout_constraintEnd_toEndOf="@id/otherInfo"
                     app:layout_constraintStart_toStartOf="@id/otherInfo"
-                    app:layout_constraintTop_toBottomOf="@id/logList" />
+                    app:layout_constraintTop_toBottomOf="@id/dividerLog" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/apogee"
