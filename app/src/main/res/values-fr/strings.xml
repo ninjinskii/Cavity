@@ -28,9 +28,11 @@
     <string name="require_float">Valeurs numériques uniquement.</string>
     <string name="empty_contest_name">Indiquez un nom de concours.</string>
     <string name="empty_grape_name">Indiquez un nom de cépage.</string>
+    <string name="empty_tag_name">Le nom du tag ne peut pas être vide.</string>
     <string name="grape_already_exists">Ce cépage existe déjà.</string>
     <string name="contest_name_already_exists">Ce concours est existe déjà.</string>
     <string name="friend_already_exists">Cet ami existe déjà.</string>
+    <string name="tag_already_exists">Ce tag existe déjà.</string>
     <string name="no_negative">Entrez un nombre supérieur à 0.</string>
     <string name="camera_error">Échec de l\'initialisation de la caméra.</string>
     <string name="invalid_email">Email non valide.</string>
@@ -180,6 +182,10 @@
     <string name="retire">Retirer</string>
     <string name="back_in_stock">Bouteille remise en stock.</string>
     <string name="tasting_log">Journal de dégustation</string>
+    <string name="tag">Tag</string>
+    <string name="tags">Tags</string>
+    <string name="add_tag">Ajouter un tag</string>
+    <string name="empty_tag">Aucun tag</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>

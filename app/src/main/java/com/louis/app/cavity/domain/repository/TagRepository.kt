@@ -6,6 +6,7 @@ import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.InvalidName
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Success
 import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.model.TagXBottle
+import com.louis.app.cavity.util.L
 
 class TagRepository private constructor(app: Application) : Repository(app) {
     companion object {
@@ -47,11 +48,18 @@ class TagRepository private constructor(app: Application) : Repository(app) {
         }
     }
 
+    fun getAllTags() = tagDao.getAllTags()
+    suspend fun getAllTagsNotLive() = tagDao.getAllTagsNotLive()
     fun getAllTagBottleXRefs() = tagXBottleDao.getAllTagXBottles()
-    fun getTagsForBottle(bottleId: Long) = tagXBottleDao.getTagsForBottle(bottleId)
-    fun getBottlesForTag(tagId: Long) = tagXBottleDao.getTagsForBottle(tagId)
-    suspend fun deleteTag(tag: Tag) = tagDao.deleteTag(tag)
+    fun getTagsForBottle(bottleId: Long) = tagDao.getTagsForBottle(bottleId)
+    fun getTagsForBottleNotLive(bottleId: Long) = tagDao.getTagsForBottleNotLive(bottleId)
+    fun getBottlesForTag(tagId: Long) = tagXBottleDao.getBottlesForTag(tagId)
+    fun getTagIdsForBottle(bottleId: Long) = tagXBottleDao.getTagIdsForBottle(bottleId)
+
     suspend fun getAllTagBottleXRefsNotLive() = tagXBottleDao.getAllTagXBottlesNotLive()
+    suspend fun clearTagsForBottle(bottleId: Long) = tagXBottleDao.clearTagsForBottleId(bottleId)
     suspend fun insertTagBottleXRefs(tagXBottles: List<TagXBottle>) =
         tagXBottleDao.insertTagXBottles(tagXBottles)
+    suspend fun deleteTagBottleXref(tagXBottle: TagXBottle) =
+        tagXBottleDao.deleteTagXBottle(tagXBottle)
 }

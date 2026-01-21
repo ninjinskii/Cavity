@@ -61,7 +61,7 @@ class EffectImageView @JvmOverloads constructor(
             if (textViewReady) {
                 var i = 0
 
-                for (line in 0..< layout.lineCount) {
+                for (line in 0 until layout.lineCount) {
                     val renderNode = if (i++ == 0) renderNode else additionalRenderNodes[i]
                     val lineStart = view.left + layout.getLineLeft(line)
                     val lineEnd = view.left + layout.getLineRight(line)

@@ -9,11 +9,14 @@ import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.domain.repository.ReviewRepository
+import com.louis.app.cavity.domain.repository.TagRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.HistoryXFriend
 import com.louis.app.cavity.model.QGrape
+import com.louis.app.cavity.model.Tag
+import com.louis.app.cavity.model.TagXBottle
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toInt
@@ -30,6 +33,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val historyRepository = HistoryRepository.getInstance(app)
+    private val tagRepository = TagRepository.getInstance(app)
 
     private val errorReporter = SentryErrorReporter.getInstance(app)
 
@@ -70,15 +74,13 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 grapeManager = GrapeManager(viewModelScope, grapeRepository, bottle, _userFeedback)
                 reviewManager =
                     ReviewManager(viewModelScope, reviewRepository, bottle, _userFeedback)
-                otherInfoManager =
-                    OtherInfoManager(bottle)
+                otherInfoManager = OtherInfoManager(bottle, viewModelScope, tagRepository)
             }
         } else {
             dateManager = DateManager(null)
             grapeManager = GrapeManager(viewModelScope, grapeRepository, null, _userFeedback)
             reviewManager = ReviewManager(viewModelScope, reviewRepository, null, _userFeedback)
-            otherInfoManager =
-                OtherInfoManager(null)
+            otherInfoManager = OtherInfoManager(null, viewModelScope, tagRepository)
         }
     }
 
@@ -98,13 +100,14 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
         val uiFReviews = reviewManager.fReviews.value ?: emptyList()
         val giftedBy = step4Bottle?.giftedBy ?: emptyList()
+        val tags = step4Bottle?.tags ?: emptyList()
 
         try {
             if (!isEdit) {
                 val count = step1Bottle.count.coerceAtLeast(1)
-                insertBottles(bottle, uiQGrapes, uiFReviews, giftedBy, count)
+                insertBottles(bottle, uiQGrapes, uiFReviews, giftedBy, tags, count)
             } else {
-                updateBottle(bottle, uiQGrapes, uiFReviews, giftedBy)
+                updateBottle(bottle, uiQGrapes, uiFReviews, giftedBy, tags)
             }
         } catch (e: Exception) {
             errorReporter.captureException(e)
@@ -117,7 +120,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         uiQGrapes: List<QGrapeUiModel>,
         uiFReviews: List<FReviewUiModel>,
         givenBy: List<Long>,
-        count: Int,
+        tags: List<Tag>,
+        count: Int
     ) {
         val coercedCount = count.coerceIn(1..MAX_BOTTLE_BATCH_SIZE)
         val message = if (coercedCount > 1) R.string.bottles_added else R.string.bottle_added
@@ -126,7 +130,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             bottleRepository.transaction {
                 repeat(coercedCount) {
                     val bottleId = bottleRepository.insertBottle(bottle)
-                    insertBottleMetadata(bottleId, bottle.buyDate, uiQGrapes, uiFReviews, givenBy)
+                    insertBottleMetadata(bottleId, bottle.buyDate, uiQGrapes, uiFReviews, givenBy, tags)
                 }
             }
 
@@ -138,14 +142,15 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         bottle: Bottle,
         uiQGrapes: List<QGrapeUiModel>,
         uiFReviews: List<FReviewUiModel>,
-        givenBy: List<Long>
+        givenBy: List<Long>,
+        tags: List<Tag>
     ) {
         val message = R.string.bottle_updated
 
         viewModelScope.launch(IO) {
             bottleRepository.transaction {
                 bottleRepository.updateBottle(bottle)
-                insertBottleMetadata(bottle.id, bottle.buyDate, uiQGrapes, uiFReviews, givenBy)
+                insertBottleMetadata(bottle.id, bottle.buyDate, uiQGrapes, uiFReviews, givenBy, tags)
             }
 
             _completedEvent.postOnce(message)
@@ -157,7 +162,8 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         buyDate: Long,
         uiQGrapes: List<QGrapeUiModel>,
         uiFReviews: List<FReviewUiModel>,
-        givenBy: List<Long>
+        givenBy: List<Long>,
+        tags: List<Tag>
     ) {
         bottleRepository.transaction {
             val fReviews = uiFReviews.map { FReview(bottleId, it.reviewId, it.value) }
@@ -170,16 +176,14 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             reviewRepository.clearAllFReviewsForBottle(bottleId)
             reviewRepository.insertFReviews(fReviews)
 
-
             val type = if (givenBy.isNotEmpty()) HistoryEntryType.GIVEN_BY else HistoryEntryType.ADD
             val entry = HistoryEntry(0, buyDate, bottleId, null, "", type, 0)
             historyRepository.clearReplenishmentsForBottle(bottleId)
             val entryId = historyRepository.insertHistoryEntry(entry)
+            historyRepository.insertFriendHistoryXRefs(givenBy.map { HistoryXFriend(entryId, it) })
 
-            givenBy.forEach {
-                val historyXFriend = HistoryXFriend(entryId, it)
-                historyRepository.insertHistoryXFriend(historyXFriend)
-            }
+            tagRepository.clearTagsForBottle(bottleId)
+            tagRepository.insertTagBottleXRefs(tags.map { TagXBottle(it.id, bottleId) })
         }
     }
 

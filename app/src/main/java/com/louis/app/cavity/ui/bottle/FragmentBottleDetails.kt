@@ -48,11 +48,15 @@ import com.louis.app.cavity.ui.bottle.adapter.ShowFilledReviewsRecyclerAdapter
 import com.louis.app.cavity.ui.tasting.SpaceItemDecoration
 import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
+import androidx.core.view.children
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.louis.app.cavity.db.dao.BottleWithHistoryEntries
+import com.louis.app.cavity.model.Tag
+import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.bottle.adapter.TastingLogRecyclerAdapter
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 
@@ -260,8 +264,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         val tastingLogAdapter = TastingLogRecyclerAdapter(
             onNextClick = {
-                val snapHelper = binding.logList.onFlingListener as? SnapHelper ?: return@TastingLogRecyclerAdapter
-                val position = binding.logList.getChildAdapterPosition(snapHelper.findSnapView(binding.logList.layoutManager)!!)
+                val snapHelper = binding.logList.onFlingListener as? SnapHelper
+                    ?: return@TastingLogRecyclerAdapter
+                val position =
+                    binding.logList.getChildAdapterPosition(snapHelper.findSnapView(binding.logList.layoutManager)!!)
                 binding.logList.smoothScrollToPosition(position + 1)
             }
         )
@@ -413,6 +419,47 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                     )
                 }
             }
+        }
+
+        bottleDetailsViewModel.removeTagEvent.observe(viewLifecycleOwner) {
+            it?.getContentIfNotHandled()?.let { tagToBottle ->
+                binding.coordinator.showSnackbar(
+                    R.string.consumed, // TODO: real string
+                    R.string.cancel
+                ) {
+                    bottleDetailsViewModel.cancelRemoveTag(
+                        tagId = tagToBottle.first,
+                        bottleId = tagToBottle.second
+                    )
+                }
+            }
+        }
+
+        val builder =
+
+        bottleDetailsViewModel.tags.observe(viewLifecycleOwner) {
+            binding.tagsChipGroup.removeAllViews()
+
+            if (it == null) {
+                return@observe
+            }
+
+            L.v("${it.tags}")
+
+
+            // TODO: quand on modifie les tags dans la bouteille pour en ajouter, et qu'on revient sur cette pages, des tags en sont retrouvés en double
+            // En fait on reçoit l'appel deux l'observeur deux fois très vite, ce qui fait bugger le chip loader
+            val chipLoader = ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .toInflate(R.layout.chip_tag)
+                .load(it.tags)
+                .into(binding.tagsChipGroup)
+                .closable { tag -> bottleDetailsViewModel.removeTag(tag as Tag) }
+                .selectable(false)
+                .emptyText(getString(R.string.empty_tag))
+                .build()
+                .go()
         }
     }
 
@@ -604,15 +651,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
     }
 
-    fun animateRecyclerHeight(rv: RecyclerView, targetHeight: Int, doOnEnd: () -> Unit) {
-        val startHeight = rv.height
+    fun animateRecyclerHeight(recyclerView: RecyclerView, targetHeight: Int, doOnEnd: () -> Unit) {
+        val startHeight = recyclerView.height
         if (startHeight == targetHeight) return
 
         ValueAnimator.ofInt(startHeight, targetHeight).apply {
             duration = resources.getInteger(R.integer.cavity_motion_short).toLong()
             addUpdateListener {
-                rv.layoutParams.height = it.animatedValue as Int
-                rv.requestLayout()
+                recyclerView.layoutParams.height = it.animatedValue as Int
+                recyclerView.requestLayout()
             }
             this.doOnEnd { doOnEnd() }
             start()

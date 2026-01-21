@@ -25,7 +25,7 @@ import kotlinx.coroutines.withContext
 class ChipLoader private constructor(
     private val scope: CoroutineScope,
     private val layoutInflater: LayoutInflater,
-    @LayoutRes private val layout: Int,
+    @param:LayoutRes private val layout: Int,
     private val items: List<Chipable>,
     private val avatar: Boolean,
     private val chipGroup: ChipGroup,
@@ -76,7 +76,7 @@ class ChipLoader private constructor(
                             chip.isChecked = preselectedItems.isEmpty()
                         }
 
-                        chip.isChecked = item.getItemId() in preselectedItems
+                        chip.isChecked = item.isSelected() || item.getItemId() in preselectedItems
                     } else {
                         chip.isCheckable = false
                     }
@@ -147,7 +147,7 @@ class ChipLoader private constructor(
     data class Builder(
         private var scope: CoroutineScope? = null,
         private var layoutInflater: LayoutInflater? = null,
-        @LayoutRes private var layout: Int = R.layout.chip_choice,
+        @param:LayoutRes private var layout: Int = R.layout.chip_choice,
         private var items: List<Chipable> = emptyList(),
         private var avatar: Boolean = false,
         private var chipGroup: ChipGroup? = null,

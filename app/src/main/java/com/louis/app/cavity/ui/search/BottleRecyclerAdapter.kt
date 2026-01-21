@@ -57,7 +57,7 @@ class BottleRecyclerAdapter(
 
             with(binding) {
                 marker.setVisible(bottle.consumed.toBoolean())
-                checkedIcon.setVisible(bottle.isSelected)
+                checkedIcon.setVisible(bottle.selected)
                 vintage.text = bottle.vintage.toString()
             }
 
@@ -70,10 +70,10 @@ class BottleRecyclerAdapter(
 
             binding.root.setOnClickListener {
                 if (pickMode) {
-                    bottle.isSelected = !bottle.isSelected
+                    bottle.selected = !bottle.selected
                     TransitionManager.beginDelayedTransition(it as ViewGroup)
-                    binding.checkedIcon.setVisible(bottle.isSelected)
-                    onPicked(boundedBottle, bottle.isSelected)
+                    binding.checkedIcon.setVisible(bottle.selected)
+                    onPicked(boundedBottle, bottle.selected)
                 } else {
                     onItemClicked(itemView, boundedBottle)
                 }

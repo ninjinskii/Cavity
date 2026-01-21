@@ -94,7 +94,7 @@ class FilterReview(private val review: Review) : WineFilter {
 
 class FilterSelected : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
-        return boundedBottle.filter { it.bottle.isSelected }
+        return boundedBottle.filter { it.bottle.selected }
     }
 }
 

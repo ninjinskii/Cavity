@@ -14,11 +14,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.BottleSize
+import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.ui.ActivityMain
+import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.addbottle.viewmodel.OtherInfoManager
@@ -116,6 +119,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 onFriendChipClicked = { showPickFriendDialog() }
             )
         )
+
+        binding.buttonAddTag.setOnClickListener { showAddTagDialog() }
     }
 
     private fun initStorageLocationDropdown() {
@@ -146,6 +151,19 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             }
 
             lockBottomSheet = false
+        }
+
+        addBottleViewModel.otherInfoManager.getAllTagsWithSelection().observe(viewLifecycleOwner) {
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .toInflate(R.layout.chip_tag)
+                .load(it)
+                .into(binding.tagChipGroup)
+                .selectable(true)
+                .emptyText(getString(R.string.empty_tag))
+                .build()
+                .go()
         }
 
         friendPickerViewModel.getAllFriends().observe(viewLifecycleOwner) {
@@ -209,6 +227,19 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         binding.buttonAddPdf.text = getString(R.string.remove_pdf)
     }
 
+    private fun showAddTagDialog() {
+        val dialogResources = SimpleInputDialog.DialogContent(
+            title = R.string.add_tag,
+            hint = R.string.tag,
+            icon = R.drawable.ic_tag,
+        ) {
+            addItemViewModel.insertTag(it)
+        }
+
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .show(dialogResources)
+    }
+
     private fun showAddFriendDialog() {
         val dialogResources = SimpleInputDialog.DialogContent(
             title = R.string.add_friend,
@@ -234,6 +265,7 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
     }
 
     override fun requestNextPage(): Boolean {
+        val tags = binding.tagChipGroup.collectAs<Tag>()
         val friends =
             if (binding.giftedBy.isChecked) friendPickerViewModel.getSelectedFriendsIds()
             else emptyList()
@@ -245,7 +277,8 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 otherInfo.text.toString(),
                 rbGroupSize.checkedButtonId,
                 addToFavorite.isChecked,
-                friends
+                friends,
+                tags
             )
 
             addBottleViewModel.submitBottleForm()

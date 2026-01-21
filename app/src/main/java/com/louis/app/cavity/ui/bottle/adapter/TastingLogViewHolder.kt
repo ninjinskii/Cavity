@@ -19,8 +19,8 @@ class TastingLogViewHolder(
         val consumption = bottleWithHistoryEntries.getConsumptionEntry()
         vintage.text = bottle.vintage.toString()
         drunkAt.text = consumption?.let { DateFormatter.formatDate(it.date) } ?: ""
-        comment.text = consumption?.comment?.replace("\n", " - ")
-            ?: binding.root.context.getString(R.string.base_error)
+        comment.text = consumption?.comment ?: // ?.replace("\n", " - ")
+            binding.root.context.getString(R.string.base_error)
 
         with(binding.buttonNext) {
             setVisible(bindingAdapterPosition == 0 && itemCount > 1)

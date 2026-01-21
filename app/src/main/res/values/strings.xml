@@ -29,9 +29,11 @@
     <string name="require_float">Numerical value only.</string>
     <string name="empty_contest_name">Please enter a contest name.</string>
     <string name="empty_grape_name">Please enter a grape variety.</string>
+    <string name="empty_tag_name">Please enter a tag name.</string>
     <string name="grape_already_exists">This grape variety already exists.</string>
-    <string name="contest_name_already_exists">This contest already exist.</string>
-    <string name="friend_already_exists">This friend already exist.</string>
+    <string name="contest_name_already_exists">This contest already exists.</string>
+    <string name="friend_already_exists">This friend already exists.</string>
+    <string name="tag_already_exists">This tag already exists.</string>
     <string name="no_negative">Enter a positive number.</string>
     <string name="camera_error">Camera initialization failed.</string>
     <string name="invalid_email">Invalid email.</string>
@@ -180,6 +182,10 @@
     <string name="retire">Withdraw</string>
     <string name="back_in_stock">Bottle back in stock.</string>
     <string name="tasting_log">Journal de dégustation</string>
+    <string name="tag">Tag</string>
+    <string name="tags">Tags</string>
+    <string name="add_tag">Add a tag</string>
+    <string name="empty_tag">No tags</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>

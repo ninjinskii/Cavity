@@ -12,10 +12,12 @@ import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.ReviewRepository
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
+import com.louis.app.cavity.domain.repository.TagRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +32,7 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
+    private val tagRepository = TagRepository.getInstance(app)
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
@@ -76,9 +79,9 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 reviewRepository.insertReview(Review(0, contestName, type))
                 _userFeedback.postOnce(R.string.review_added)
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.empty_contest_name)
-            } catch (e: SQLiteConstraintException) {
+            } catch (_: SQLiteConstraintException) {
                 _userFeedback.postOnce(R.string.contest_name_already_exists)
             }
         }
@@ -89,10 +92,22 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 friendRepository.insertFriend(Friend(0, nameLastName, ""))
                 _userFeedback.postOnce(R.string.friend_added)
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.input_error)
-            } catch (e: SQLiteConstraintException) {
+            } catch (_: SQLiteConstraintException) {
                 _userFeedback.postOnce(R.string.friend_already_exists)
+            }
+        }
+    }
+
+    fun insertTag(tagName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                tagRepository.insertTag(Tag(0, tagName))
+            } catch (_: IllegalArgumentException) {
+                _userFeedback.postOnce(R.string.empty_tag_name)
+            } catch (_: SQLiteConstraintException) {
+                _userFeedback.postOnce(R.string.tag_already_exists)
             }
         }
     }

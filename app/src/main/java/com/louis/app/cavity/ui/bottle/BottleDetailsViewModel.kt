@@ -19,6 +19,9 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
 import com.louis.app.cavity.domain.history.isConsumption
+import com.louis.app.cavity.domain.repository.TagRepository
+import com.louis.app.cavity.model.Tag
+import com.louis.app.cavity.model.TagXBottle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -29,6 +32,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val historyRepository = HistoryRepository.getInstance(app)
+    private val tagRepository = TagRepository.getInstance(app)
 
     private val bottleId = MutableLiveData<Long>()
 
@@ -48,11 +52,17 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     val removeFromTastingEvent: LiveData<Event<Pair<Long, Long?>>>
         get() = _removeFromTastingEvent
 
+    private val _removeTagEvent = MutableLiveData<Event<Pair<Long, Long?>>>()
+    val removeTagEvent: LiveData<Event<Pair<Long, Long?>>>
+        get() = _removeTagEvent
+
     val bottle = bottleId.switchMap { bottleRepository.getBottleById(it) }
 
     val grapes = bottleId.switchMap { grapeRepository.getQGrapesAndGrapeForBottle(it) }
 
     val reviews = bottleId.switchMap { reviewRepository.getFReviewAndReviewForBottle(it) }
+
+    val tags = bottleId.switchMap { tagRepository.getTagsForBottle(it) }
 
     val replenishmentEntry =
         bottleId.switchMap { historyRepository.getReplenishmentForBottleNotPaged(it) }
@@ -95,6 +105,18 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
                 val bottle = getBottleByIdNotLive(bottleId)
                 if (bottle.isFavorite.toBoolean()) unfav(bottleId) else fav(bottleId)
             }
+        }
+    }
+
+    fun removeTag(tag: Tag) {
+        if (bottleId.value == null) {
+            _userFeedback.postOnce(R.string.base_error)
+            return
+        }
+
+        viewModelScope.launch(IO) {
+            tagRepository.deleteTagBottleXref(TagXBottle(tag.id, bottleId.value ?: -1))
+            _removeTagEvent.postOnce(tag.id to (bottleId.value ?: -1))
         }
     }
 
@@ -156,6 +178,14 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
             val bottle = bottleRepository.getBottleByIdNotLive(bottleId)
             bottle.tastingId = tastingId
             bottleRepository.updateBottle(bottle)
+        }
+    }
+
+    fun cancelRemoveTag(tagId: Long, bottleId: Long?) {
+        viewModelScope.launch(IO) {
+            bottleId?.let {
+                tagRepository.insertTagBottleXRefs(listOf(TagXBottle(tagId, it)))
+            }
         }
     }
 
