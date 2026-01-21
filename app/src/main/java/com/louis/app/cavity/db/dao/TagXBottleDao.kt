@@ -6,7 +6,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.model.TagXBottle
 import kotlinx.coroutines.flow.Flow
 

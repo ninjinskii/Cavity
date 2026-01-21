@@ -6,7 +6,6 @@ import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.InvalidName
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Success
 import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.model.TagXBottle
-import com.louis.app.cavity.util.L
 
 class TagRepository private constructor(app: Application) : Repository(app) {
     companion object {

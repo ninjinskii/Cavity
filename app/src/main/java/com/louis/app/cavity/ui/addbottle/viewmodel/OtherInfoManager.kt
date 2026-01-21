@@ -12,9 +12,7 @@ import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 
 class OtherInfoManager(
     private val editedBottle: Bottle?,
