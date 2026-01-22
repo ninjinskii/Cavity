@@ -8,6 +8,8 @@
     android:gravity="center"
     android:textAppearance="?attr/textAppearanceBody2"
     tools:text="Essai"
+    app:chipIconSize="@dimen/medium_margin"
+    app:iconStartPadding="@dimen/xsmall_margin"
     app:chipIconEnabled="true"
     app:chipIcon="@drawable/ic_tag"
     app:closeIcon="@drawable/ic_close"

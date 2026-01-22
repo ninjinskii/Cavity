@@ -439,6 +439,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 return@observe
             }
 
+            binding.tagsScrollView.setVisible(!it.tags.isEmpty())
+
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
@@ -447,7 +449,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 .into(binding.tagsChipGroup)
                 .closable { tag -> bottleDetailsViewModel.removeTag(tag as Tag) }
                 .selectable(false)
-                .emptyText(getString(R.string.empty_tag))
                 .build()
                 .go()
         }

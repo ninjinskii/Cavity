@@ -387,43 +387,18 @@
                     app:layout_constraintStart_toStartOf="@id/buyLocation"
                     app:layout_constraintTop_toBottomOf="@id/givenBy" />
 
-                <View
-                    android:id="@+id/dividerTags"
-                    style="@style/Widget.Cavity.Divider"
-                    app:layout_constraintTop_toBottomOf="@id/otherInfo" />
-
-                <TextView
-                    android:id="@+id/tagsTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/medium_margin"
-                    android:text="@string/tags"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dividerTags" />
-
-                <ImageButton
-                    android:layout_width="@dimen/medium_icon"
-                    android:layout_height="@dimen/medium_icon"
-                    android:layout_marginEnd="@dimen/medium_margin"
-                    android:contentDescription="@string/add_tag"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_edit"
-                    app:tint="?attr/colorOnBackground"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tagsTitle"
-                    app:layout_constraintBottom_toBottomOf="@id/tagsTitle" />
-
                 <HorizontalScrollView
                     android:id="@+id/tagsScrollView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/medium_margin"
                     android:clipToPadding="false"
                     android:paddingHorizontal="@dimen/medium_margin"
                     android:scrollbars="none"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tagsTitle">
+                    app:layout_constraintTop_toBottomOf="@id/otherInfo">
 
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/tagsChipGroup"
