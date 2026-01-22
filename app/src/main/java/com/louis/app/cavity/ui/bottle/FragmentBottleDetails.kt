@@ -434,21 +434,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             }
         }
 
-        val builder =
-
         bottleDetailsViewModel.tags.observe(viewLifecycleOwner) {
-            binding.tagsChipGroup.removeAllViews()
-
             if (it == null) {
                 return@observe
             }
 
-            L.v("${it.tags}")
-
-
-            // TODO: quand on modifie les tags dans la bouteille pour en ajouter, et qu'on revient sur cette pages, des tags en sont retrouvés en double
-            // En fait on reçoit l'appel deux l'observeur deux fois très vite, ce qui fait bugger le chip loader
-            val chipLoader = ChipLoader.Builder()
+            ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
                 .toInflate(R.layout.chip_tag)

@@ -67,6 +67,16 @@ class ChipLoader private constructor(
                 }
 
                 withContext(Main) {
+                    // Double checking that no existing item is duplicated. It could happen even if
+                    // clearChipGroup is called when calling go at least 2 times quickly.
+                    // It has to be done on main thread
+                    val currentViewIds = chipGroup.children.map { it.getTag(R.string.tag_chip_id) }
+                    val chipTagId = chip.getTag(R.string.tag_chip_id)
+
+                    if (chipTagId in currentViewIds) {
+                        return@withContext
+                    }
+
                     chipGroup.addView(chip)
 
                     if (selectable) {
