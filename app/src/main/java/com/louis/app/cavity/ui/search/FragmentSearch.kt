@@ -196,7 +196,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     R.id.divider5, R.id.reviewTitle, R.id.reviewScrollView, R.id.divider6,
                     R.id.divider7, R.id.friendTitle, R.id.friendScrollView, R.id.bottleSizeTitle,
                     R.id.divider8, R.id.divider9, R.id.alcoholTitle, R.id.alcoholSlider,
-                    R.id.storageLocationTitle, R.id.storageLocationLayout
+                    R.id.storageLocationTitle, R.id.storageLocationLayout,
+                    R.id.tagScrollView, R.id.tagTitle
                 ).map { InsettableInfo(inflatedView.findViewById(it)) }
 
                 val leftInsettable = intArrayOf(R.id.beyondLayout)
@@ -346,7 +347,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
 
         searchViewModel.getAllFriends().observe(viewLifecycleOwner) { friends ->
-            val preselectedReviews = searchViewModel.selectedFriends.map { it.id }
+            val preselectedFriends = searchViewModel.selectedFriends.map { it.id }
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
@@ -355,9 +356,25 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .into(filtersBinding.friendChipGroup)
                 .useAvatar(true)
                 .selectable(true) // friend chips are not selectablea by default
-                .preselect(preselectedReviews)
+                .preselect(preselectedFriends)
                 .doOnClick { submitFriendFilter() }
                 .emptyText(getString(R.string.empty_friend))
+                .build()
+                .go()
+        }
+
+        searchViewModel.getAllTags().observe(viewLifecycleOwner) { tags ->
+            val chipGroupId = filtersBinding.tagChipGroup.id
+            val preselectedTags = searchViewModel.selectedTags.map { it.id }
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .toInflate(R.layout.chip_tag)
+                .load(tags)
+                .into(filtersBinding.tagChipGroup)
+                .preselect(preselectedTags)
+                .doOnClick { searchViewModel.submitFilter(chipGroupId, getTagFilter()) }
+                .emptyText(getString(R.string.empty_tag))
                 .build()
                 .go()
         }
@@ -908,6 +925,13 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             .also { searchViewModel.selectedFriends = it }
             .map { FilterFriend(it.id, filterMode) }
             .fold(NoFilter as WineFilter) { acc, filterFriend -> acc.orCombine(filterFriend) }
+    }
+
+    private fun getTagFilter(): WineFilter {
+        return filtersBinding.tagChipGroup.collectAs<Tag>()
+            .also { searchViewModel.selectedTags = it }
+            .map { FilterTag(it) }
+            .fold(NoFilter as WineFilter) { acc, filterTag -> acc.orCombine(filterTag) }
     }
 
     private fun getPriceFilter(): WineFilter {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
@@ -15,10 +16,12 @@ import com.louis.app.cavity.domain.repository.CountyRepository
 import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.ReviewRepository
+import com.louis.app.cavity.domain.repository.TagRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.combineAsync
@@ -32,6 +35,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
+    private val tagRepository = TagRepository.getInstance(app)
 
     private val _sort = MutableLiveData(Event(Sort(SortCriteria.NONE)))
     val sort: LiveData<Event<Sort>>
@@ -52,6 +56,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         R.id.grapeChipGroup to NoFilter,
         R.id.reviewChipGroup to NoFilter,
         R.id.friendChipGroup to NoFilter,
+        R.id.tagChipGroup to NoFilter,
         R.id.storageLocation to NoFilter,
         R.id.rbGroupSize to NoFilter
     )
@@ -68,6 +73,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     var selectedGrapes = emptyList<Grape>()
     var selectedReviews = emptyList<Review>()
     var selectedFriends = emptyList<Friend>()
+    var selectedTags = emptyList<Tag>()
     var currentBeyondDate: Long? = null
     var currentUntilDate: Long? = null
     var onFragmentLeaveSavedState: Bundle? = null
@@ -84,6 +90,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     fun getAllReviews() = reviewRepository.getAllReviews()
 
     fun getAllFriends() = friendRepository.getAllFriends()
+
+    fun getAllTags() = tagRepository.getAllTags().asLiveData()
 
     fun getAllStorageLocations(clearText: String) = bottleRepository.getAllStorageLocations().map {
         listOf(clearText) + it

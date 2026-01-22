@@ -133,6 +133,12 @@ class FilterAlcohol(private val minAlcohol: Double, private val maxAlcohol: Doub
     }
 }
 
+class FilterTag(private val tag: Tag) : WineFilter {
+    override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
+        return boundedBottle.filter { it.tags.contains(tag) }
+    }
+}
+
 object NoFilter : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
         return boundedBottle

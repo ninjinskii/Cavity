@@ -153,4 +153,15 @@ data class BoundedBottle(
         entityColumn = "bottle_id",
     )
     val historyEntriesWithFriends: List<HistoryEntryWithFriends>,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(
+            value = TagXBottle::class,
+            parentColumn = "bottle_id",
+            entityColumn = "tag_id"
+        )
+    )
+    val tags: List<Tag>
 )
