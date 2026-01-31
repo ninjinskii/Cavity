@@ -13,5 +13,5 @@
     app:chipIconEnabled="true"
     app:chipIcon="@drawable/ic_tag"
     app:closeIcon="@drawable/ic_close"
-    app:closeIconTint="?attr/colorOnSurface"
-    app:chipIconTint="?attr/colorOnSurface" />
+    app:closeIconTint="@color/chip_stroke"
+    app:chipIconTint="@color/chip_stroke" />

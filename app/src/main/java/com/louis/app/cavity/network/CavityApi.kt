@@ -65,6 +65,9 @@ interface CavityApi {
     @POST("history-x-friend")
     suspend fun postHistoryFriendsXRef(@Body historyXFriends: List<HistoryXFriend>)
 
+    @POST("bottle-x-tag")
+    suspend fun postBottleTagsXRef(@Body tagXBottle: List<TagXBottle>)
+
     @GET("account")
     suspend fun getAccount(): LoginResponse
 
@@ -107,6 +110,9 @@ interface CavityApi {
     @GET("history-x-friend")
     suspend fun getHistoryFriendsXRef(): List<HistoryXFriend>
 
+    @GET("bottle-x-tag")
+    suspend fun getBottleTagsXRef(): List<TagXBottle>
+
     @DELETE("county")
     suspend fun deleteCounties()
 
@@ -145,4 +151,7 @@ interface CavityApi {
 
     @DELETE("history-x-friend")
     suspend fun deleteHistoryFriendsXRef()
+
+    @DELETE("bottle-x-tag")
+    suspend fun deleteBottleTagsXRef()
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.Cavity.Chip.Entry"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -15,4 +16,5 @@
     app:chipStartPadding="0dp"
     app:closeIcon="@drawable/ic_close"
     app:closeIconEnabled="false"
-    app:closeIconTint="@color/chip_stroke" />
+    app:closeIconTint="@color/chip_stroke"
+    tools:text="Francis"/>

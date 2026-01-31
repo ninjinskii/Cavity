@@ -59,6 +59,9 @@ class TagRepository private constructor(app: Application) : Repository(app) {
     suspend fun clearTagsForBottle(bottleId: Long) = tagXBottleDao.clearTagsForBottleId(bottleId)
     suspend fun insertTagBottleXRefs(tagXBottles: List<TagXBottle>) =
         tagXBottleDao.insertTagXBottles(tagXBottles)
-    suspend fun deleteTagBottleXref(tagXBottle: TagXBottle) =
+
+    suspend fun deleteTagBottleXRef(tagXBottle: TagXBottle) =
         tagXBottleDao.deleteTagXBottle(tagXBottle)
+
+    suspend fun deleteAllTagBottleXRefs() = tagXBottleDao.deleteAll()
 }

@@ -115,7 +115,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         }
 
         viewModelScope.launch(IO) {
-            tagRepository.deleteTagBottleXref(TagXBottle(tag.id, bottleId.value ?: -1))
+            tagRepository.deleteTagBottleXRef(TagXBottle(tag.id, bottleId.value ?: -1))
             _removeTagEvent.postOnce(tag.id to (bottleId.value ?: -1))
         }
     }

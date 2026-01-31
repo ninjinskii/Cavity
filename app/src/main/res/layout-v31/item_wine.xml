@@ -73,6 +73,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="@dimen/margin_hexagone_icon"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:background="@drawable/shape_text_background"
         android:contentDescription="@string/bio_wine" />
 
@@ -85,6 +87,8 @@
         android:paddingHorizontal="@dimen/xsmall_margin"
         android:textAppearance="?attr/textAppearanceBody1"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
+        android:ellipsize="end"
+        android:maxLines="1"
         tools:text="2" />
 
 </com.louis.app.cavity.ui.home.widget.HexagonalView>

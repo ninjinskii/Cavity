@@ -13,6 +13,7 @@ import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.domain.repository.ReviewRepository
+import com.louis.app.cavity.domain.repository.TagRepository
 import com.louis.app.cavity.domain.repository.TastingRepository
 import com.louis.app.cavity.network.response.ApiResponse
 import kotlinx.coroutines.Dispatchers.IO
@@ -31,6 +32,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
     private val friendRepository = FriendRepository.getInstance(app)
     private val tastingRepository = TastingRepository.getInstance(app)
     private val accountRepository = AccountRepository.getInstance(app)
+    private val tagRepository = TagRepository.getInstance(app)
     private val errorReporter = SentryErrorReporter.getInstance(context)
 
     override suspend fun doWork(): Result {
@@ -66,6 +68,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                 grapeRepository.deleteAllQGrapes()
                 historyRepository.deleteAllFriendHistoryXRefs()
                 tastingRepository.deleteAllTastingFriendXRefs()
+                tagRepository.deleteAllTagBottleXRefs()
 
                 countyRepository.insertCounties(validateResponse(getCounties()))
                 wineRepository.insertWines(validateResponse(getWines()))
@@ -80,6 +83,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                 grapeRepository.insertQGrapes(validateResponse(getQGrapes()))
                 historyRepository.insertFriendHistoryXRefs(validateResponse(getHistoryXFriend()))
                 tastingRepository.insertTastingFriendXRefs(validateResponse(getTastingXFriend()))
+                tagRepository.insertTagBottleXRefs(validateResponse(getTagXBottle()))
             }
         }
     }
