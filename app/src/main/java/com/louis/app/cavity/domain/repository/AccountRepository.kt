@@ -120,6 +120,10 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.postQGrapes(qGrapes) }
     }
 
+    suspend fun postTags(tags: List<Tag>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postTags(tags) }
+    }
+
     suspend fun postTastingFriendsXRefs(tastingFriendXRefs: List<TastingXFriend>):
             ApiResponse<Unit> {
         return doApiCall { cavityApi.postTastingFriendsXRef(tastingFriendXRefs) }
@@ -182,6 +186,10 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.getQGrapes() }
     }
 
+    suspend fun getTags(): ApiResponse<List<Tag>> {
+        return doApiCall { cavityApi.getTags() }
+    }
+
     suspend fun getTastingXFriend(): ApiResponse<List<TastingXFriend>> {
         return doApiCall { cavityApi.getTastingFriendsXRef() }
     }
@@ -238,16 +246,20 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.deleteQGrapes() }
     }
 
+    suspend fun deleteTags(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteTags() }
+    }
+
+    suspend fun deleteTagXBottle(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteBottleTagsXRef() }
+    }
+
     suspend fun deleteTastingXFriend(): ApiResponse<Unit> {
         return doApiCall { cavityApi.deleteTastingFriendsXRef() }
     }
 
     suspend fun deleteHistoryXFriend(): ApiResponse<Unit> {
         return doApiCall { cavityApi.deleteHistoryFriendsXRef() }
-    }
-
-    suspend fun deleteBottleXTag(): ApiResponse<Unit> {
-        return doApiCall { cavityApi.deleteBottleTagsXRef() }
     }
 
     private suspend fun <T> doApiCall(apiCall: suspend () -> T): ApiResponse<T> {

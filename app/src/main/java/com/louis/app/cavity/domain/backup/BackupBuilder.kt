@@ -74,6 +74,7 @@ class BackupBuilder(private val context: Context) {
                         postWines(wines),
                         postBottles(bottles),
                         postFriends(friends),
+                        postTags(tagRepository.getAllTagsNotLive()),
                         postGrapes(grapeRepository.getAllGrapesNotLive()),
                         postReviews(reviewRepository.getAllReviewsNotLive()),
                         postHistoryEntries(historyRepository.getAllEntriesNotPagedNotLive()),

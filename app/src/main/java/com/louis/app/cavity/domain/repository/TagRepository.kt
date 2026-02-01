@@ -48,6 +48,7 @@ class TagRepository private constructor(app: Application) : Repository(app) {
     }
 
     fun getAllTags() = tagDao.getAllTags()
+    suspend fun insertTags(tags: List<Tag>) = tagDao.insertTags(tags)
     suspend fun getAllTagsNotLive() = tagDao.getAllTagsNotLive()
     fun getAllTagBottleXRefs() = tagXBottleDao.getAllTagXBottles()
     fun getTagsForBottle(bottleId: Long) = tagDao.getTagsForBottle(bottleId)
@@ -64,4 +65,5 @@ class TagRepository private constructor(app: Application) : Repository(app) {
         tagXBottleDao.deleteTagXBottle(tagXBottle)
 
     suspend fun deleteAllTagBottleXRefs() = tagXBottleDao.deleteAll()
+    suspend fun deleteAllTags() = tagDao.deleteAll()
 }

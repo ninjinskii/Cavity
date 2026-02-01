@@ -14,7 +14,7 @@ object CavityApiClient {
 
     // hostname -I | awk '{print $1}'  -> to get backend ip.
     // Update .../debug/res/xml/network_security_config.xml accordingly
-    private const val DEV_API_URL = "http://192.168.1.25:5000"
+    private const val DEV_API_URL = "http://192.168.1.16:5000"
 
     private val moshiConverter: MoshiConverterFactory by lazy {
         val moshi = Moshi.Builder()

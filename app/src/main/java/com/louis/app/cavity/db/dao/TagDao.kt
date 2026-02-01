@@ -42,6 +42,9 @@ interface TagDao {
     @Transaction
     @Query("SELECT * FROM bottle WHERE id=:bottleId")
     fun getTagsForBottleNotLive(bottleId: Long): BottleWithTags
+
+    @Query("DELETE FROM tag")
+    suspend fun deleteAll()
 }
 
 data class BottleWithTags(
