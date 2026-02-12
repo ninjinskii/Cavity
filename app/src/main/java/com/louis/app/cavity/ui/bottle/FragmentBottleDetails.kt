@@ -1,6 +1,5 @@
 package com.louis.app.cavity.ui.bottle
 
-import android.animation.ValueAnimator
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
@@ -11,10 +10,8 @@ import android.os.FileUriExposedException
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Checkable
-import android.widget.TextView
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.marginEnd
@@ -260,16 +257,16 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         var firstTime = true
 
         bottleDetailsViewModel.getBottlesForWine(args.wineId).observe(viewLifecycleOwner) {
+            val (bottles, showTasingLog) = it
             val checkedBottleId = bottleDetailsViewModel.getBottleId()
-            val id = bottleAdapter.submitListWithPreselection(it, checkedBottleId ?: -1L)
+            val id = bottleAdapter.submitListWithPreselection(bottles, checkedBottleId ?: -1L)
             bottleDetailsViewModel.setBottleId(id)
 
-            val hasAtLeastOneBottleConsumed = it.any { a -> a.bottle.consumed.toBoolean() }
-            binding.buttonTastingLog.setVisible(hasAtLeastOneBottleConsumed)
+            binding.buttonTastingLog.setVisible(showTasingLog)
 
             // Avoid weird DiffUtil animations conflict
             if (firstTime) {
-                smoothScrollToCheckedChip(id, it)
+                smoothScrollToCheckedChip(id, bottles)
                 firstTime = false
             }
         }
@@ -621,7 +618,10 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 setVisible(bottle.alcohol != null)
                 setData(bottle.alcohol.toString())
             }
-            otherInfo.setData(bottle.otherInfo)
+            otherInfo.apply {
+                setVisible(bottle.otherInfo.isNotEmpty())
+                setData(bottle.otherInfo)
+            }
             buttonPdfIcon.isEnabled = bottle.hasPdf()
             favorite.isChecked = bottle.isFavorite.toBoolean()
             price.setData(priceAndCurrency)

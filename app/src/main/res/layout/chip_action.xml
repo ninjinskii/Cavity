@@ -6,5 +6,7 @@
     android:focusable="true"
     android:gravity="center"
     android:textAppearance="?attr/textAppearanceOverline"
+    app:chipIconTint="?attr/colorControlNormal"
+    app:closeIconTint="?attr/colorControlNormal"
     app:closeIcon="@drawable/ic_heart"
     app:closeIconVisible="true" />

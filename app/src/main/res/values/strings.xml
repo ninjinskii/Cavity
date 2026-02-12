@@ -186,7 +186,8 @@
     <string name="tags">Tags</string>
     <string name="add_tag">Add a tag</string>
     <string name="empty_tag">No tags</string>
-    <string name="tag_removed_from_bottle">Tag removed from bottle</string>
+    <string name="tag_removed_from_bottle">Tag removed from bottle.</string>
+    <string name="tag_explanation">You can create and assign tags to bottles in order to group them according to your own criteria. Example: GCC (Grand Cru Classé), fish (pairs well with fish).</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>

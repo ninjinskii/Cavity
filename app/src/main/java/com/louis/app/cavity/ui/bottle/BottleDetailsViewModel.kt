@@ -21,6 +21,8 @@ import androidx.core.net.toUri
 import com.louis.app.cavity.domain.repository.TagRepository
 import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.model.TagXBottle
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val wineRepository = WineRepository.getInstance(app)
@@ -65,7 +67,13 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getWineById(wineId: Long) = wineRepository.getWineById(wineId)
 
-    fun getBottlesForWine(wineId: Long) = bottleRepository.getBottlesForWine(wineId).asLiveData()
+    fun getBottlesForWine(wineId: Long) =
+        bottleRepository.getBottlesForWine(wineId).map { bottles ->
+            val showTastingLogIsRelevant = bottles.any { it.bottle.consumed.toBoolean() }
+            bottles to showTastingLogIsRelevant
+        }
+            .flowOn(IO)
+            .asLiveData()
 
     fun setBottleId(bottleId: Long) {
         this.bottleId.value = bottleId

@@ -223,8 +223,8 @@
                     android:visibility="gone"
                     app:icon="@drawable/ic_flower"
                     app:label="@string/cuvee"
-                    app:layout_constraintEnd_toEndOf="@id/otherInfo"
-                    app:layout_constraintStart_toStartOf="@id/otherInfo"
+                    app:layout_constraintEnd_toEndOf="@id/price"
+                    app:layout_constraintStart_toStartOf="@id/apogee"
                     app:layout_constraintTop_toBottomOf="@id/bottlesList" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
@@ -468,7 +468,7 @@
                     android:id="@+id/buttonTastingLog"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/large_margin"
+                    android:layout_marginTop="@dimen/medium_margin"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="@id/buttonHistory"

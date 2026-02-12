@@ -46,7 +46,7 @@ class BottleChipRecyclerAdapter(context: Context, private val onBottleClick: (Lo
 
     fun submitListWithPreselection(list: List<BottleWithHistoryEntries>?, checkedBottleId: Long): Long {
         // Check a chip if no one is checked
-        checkedId = if (checkedBottleId == -1L && list != null) {
+        checkedId = if (checkedBottleId == -1L && list != null && !list.isEmpty()) {
             list.first().bottle.id
         } else {
             checkedBottleId
