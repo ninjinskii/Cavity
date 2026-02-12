@@ -38,7 +38,7 @@ class WineRepository private constructor(app: Application) : Repository(app) {
 
     fun getNamingsForCounty(countyId: Long) = wineDao.getNamingsForCounty(countyId)
 
-    fun getWineWithBottlesByCounty(countyId: Long) = wineDao.getWineWithBottlesByCounty(countyId)
+    fun getWinesWithBottlesByCounty(countyId: Long) = wineDao.getWinesWithBottlesByCounty(countyId)
 
     suspend fun deleteAllWines() = wineDao.deleteAll()
 }

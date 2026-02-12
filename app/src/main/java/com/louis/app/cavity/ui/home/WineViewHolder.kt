@@ -55,7 +55,7 @@ class WineViewHolder(
             wineNaming.text = wine.naming
             cuvee.text = wine.cuvee
             cuvee.setVisible(cuvee.text.isNotBlank())
-            bottlesCount.text = bottles.size.toString()
+            bottlesCount.text = wineWithBottles.remainingBottles.toString()
 
             val rightIcon = if (wine.isOrganic.toBoolean()) drawables.first else null
             val leftIcon = if (bottles.any { it.isReadyToDrink() }) drawables.second else null
@@ -80,8 +80,7 @@ class WineViewHolder(
         }
 
         itemView.setOnClickListener {
-            // TODO: do not navigate to add bottle f bottle count is 0. Also, handle empty state in FragmentBoittleDetails
-            if (bottles.isNotEmpty()) {
+            if (wineWithBottles.remainingBottles != bottles.size || bottles.isNotEmpty()) {
                 transitionHelper.setElevationScale()
 
                 val transition =

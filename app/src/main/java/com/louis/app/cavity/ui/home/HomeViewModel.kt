@@ -15,7 +15,6 @@ import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
-import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -132,23 +131,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
             bottleRepository.getAllStorageLocations().map { listOf(clearText) + it }
         else MutableLiveData(emptyList())
 
-    // This become unnecessary if we figure out how to implement Room's multimaps with standard SQL Join request
-    fun getWinesWithBottlesByCounty(countyId: Long) = liveData(Default) {
-        emitSource(
-            wineRepository.getWineWithBottlesByCounty(countyId).map { winesWithBottles ->
-                winesWithBottles
-                    .filter { checkStorageLocation(it) }
-                    .sortedBy { it.wine.color.order }
-                    .map { wineWithBottles ->
-                        wineWithBottles.copy(
-                            bottles = wineWithBottles.bottles
-                                .filter { !it.consumed.toBoolean() && checkStorageLocation(it) }
-                                .sortedBy { it.vintage }
-                        )
-                    }
-            }
-        )
-    }
+    fun getWinesWithBottlesByCounty(countyId: Long) =
+        wineRepository.getWinesWithBottlesByCounty(countyId)
 
     fun clearLastAddedWine() {
         _lastAddedWine.postOnce(null)
