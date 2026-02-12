@@ -670,7 +670,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             binding.emptyState.setVisible(it.isEmpty())
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
-            bottlesAdapter?.submitList(it.toMutableList()) {
+            bottlesAdapter?.submitList(it) {
                 if (sortChanged) {
                     binding.bottleList.scrollToPosition(0)
                     sortChanged = false

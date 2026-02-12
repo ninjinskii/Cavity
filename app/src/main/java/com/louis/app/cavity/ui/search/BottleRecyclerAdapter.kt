@@ -36,8 +36,6 @@ class BottleRecyclerAdapter(
         holder.bind(getItem(position))
     }
 
-    override fun getItemId(position: Int) = currentList[position].bottle.id
-
     class BottleItemDiffCallback : DiffUtil.ItemCallback<BoundedBottle>() {
         override fun areItemsTheSame(oldItem: BoundedBottle, newItem: BoundedBottle) =
             oldItem.bottle.id == newItem.bottle.id
@@ -98,15 +96,12 @@ class BottleRecyclerAdapter(
                 }
 
                 capacity?.text = context.getString(bottle.bottleSize.stringRes)
-
-                if (formattedPrice.isNotEmpty()) {
-                    separatorPrice?.setVisible(true)
-                    price?.setVisible(true)
-                    price?.text = context.getString(
-                        R.string.price_and_currency,
-                        formattedPrice,
-                        bottle.currency
-                    )
+                separatorPrice?.setVisible(formattedPrice.isNotEmpty())
+                price?.setVisible(formattedPrice.isNotEmpty())
+                price?.text = if (formattedPrice.isNotEmpty()) {
+                    context.getString(R.string.price_and_currency, formattedPrice, bottle.currency)
+                } else {
+                    ""
                 }
 
                 apogeeIcon?.setVisible(bottle.isReadyToDrink())
