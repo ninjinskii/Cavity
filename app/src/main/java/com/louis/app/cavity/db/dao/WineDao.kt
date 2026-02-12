@@ -5,7 +5,6 @@ import androidx.room.*
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.WineColor
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WineDao {

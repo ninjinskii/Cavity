@@ -15,6 +15,7 @@ import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
@@ -131,8 +132,12 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
             bottleRepository.getAllStorageLocations().map { listOf(clearText) + it }
         else MutableLiveData(emptyList())
 
-    fun getWinesWithBottlesByCounty(countyId: Long) =
-        wineRepository.getWinesWithBottlesByCounty(countyId)
+    fun getWinesWithBottlesByCounty(countyId: Long) = liveData(Default) {
+        val wines = wineRepository.getWinesWithBottlesByCounty(countyId).map { winesWithBottles ->
+            winesWithBottles.filter { checkStorageLocation(it) }
+        }
+        emitSource(wines)
+    }
 
     fun clearLastAddedWine() {
         _lastAddedWine.postOnce(null)
