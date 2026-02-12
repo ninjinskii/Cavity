@@ -239,6 +239,9 @@
     <string name="nothing"> </string>
     <string name="empty_history">La liste des bouteilles ajoutées ou consommées sera affichée ici</string>
     <string name="empty_history_favorite">Pour mettre un favori, glissez une entrée de l\'historique vers la gauche</string>
+    <string name="history_filter_wine">Filtre par vin</string>
+    <string name="history_filter_bottle">Filtre par bouteille</string>
+    <string name="history_filter_tasting_log">Journal de dégustation</string>
 
     <!-- Stats -->
     <string name="stats">Statistiques</string>

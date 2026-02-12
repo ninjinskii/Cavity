@@ -381,7 +381,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/medium_margin"
-                    app:icon="@drawable/ic_comment"
+                    app:icon="@drawable/ic_info"
                     app:label="@string/other_info"
                     app:layout_constraintEnd_toEndOf="@id/buyDate"
                     app:layout_constraintStart_toStartOf="@id/buyLocation"

@@ -13,17 +13,17 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
-import com.louis.app.cavity.databinding.FragmentStatsDetailsBinding
+import com.louis.app.cavity.databinding.FragmentSheetListBinding
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.ui.search.BottleRecyclerAdapter
 import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.prepareWindowInsets
 
-class FragmentStatsDetails : Fragment(R.layout.fragment_stats_details) {
+class FragmentStatsDetails : Fragment(R.layout.fragment_sheet_list) {
 
     private val statsDetailsViewModel: StatsDetailsViewModel by viewModels()
-    private var _binding: FragmentStatsDetailsBinding? = null
+    private var _binding: FragmentSheetListBinding? = null
     private val binding get() = _binding!!
     private val args: FragmentStatsDetailsArgs by navArgs()
 
@@ -41,7 +41,7 @@ class FragmentStatsDetails : Fragment(R.layout.fragment_stats_details) {
 
         statsDetailsViewModel.setBottlesIds(args.bottleIds.toList())
 
-        _binding = FragmentStatsDetailsBinding.bind(view)
+        _binding = FragmentSheetListBinding.bind(view)
 
         binding.title.text = args.title
 

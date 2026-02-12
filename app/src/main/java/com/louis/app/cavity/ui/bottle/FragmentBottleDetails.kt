@@ -261,23 +261,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             addItemDecoration(SpaceItemDecoration(space))
         }
 
-        val tastingLogAdapter = TastingLogRecyclerAdapter(
-            onNextClick = {
-                val snapHelper = binding.logList.onFlingListener as? SnapHelper
-                    ?: return@TastingLogRecyclerAdapter
-                val position =
-                    binding.logList.getChildAdapterPosition(snapHelper.findSnapView(binding.logList.layoutManager)!!)
-                binding.logList.smoothScrollToPosition(position + 1)
-            }
-        )
-
-        binding.logList.apply {
-            adapter = tastingLogAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(false)
-            LinearSnapHelper().attachToRecyclerView(this)
-        }
-
         var firstTime = true
 
         bottleDetailsViewModel.getBottlesForWine(args.wineId).observe(viewLifecycleOwner) {
@@ -291,17 +274,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 firstTime = false
             }
         }
-
-        bottleDetailsViewModel.getConsumedBottlesWithHistoryForWine(args.wineId)
-            .observe(viewLifecycleOwner) {
-                binding.apply {
-                    tastingLog.setVisible(it.isNotEmpty())
-                    logList.setVisible(it.isNotEmpty())
-                    dividerLog.setVisible(it.isNotEmpty())
-                }
-
-                tastingLogAdapter.submitList(it)
-            }
 
         binding.logList.doOnLayout {
             updateHeightToSnappedView(binding.logList)

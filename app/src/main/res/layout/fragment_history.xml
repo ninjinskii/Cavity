@@ -26,7 +26,7 @@
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:titleCentered="true" />
 
-        <HorizontalScrollView
+        <com.louis.app.cavity.ui.history.widget.LockableHorizontalScrollView
             android:id="@+id/filterScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,58 +36,93 @@
             app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/filterChipGroup"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/small_margin"
-                app:singleLine="true"
-                app:singleSelection="true">
+                android:orientation="horizontal"
+                android:animateLayoutChanges="true">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipReplenishments"
+                <TextView
+                    android:id="@+id/externalFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/replenishments"
-                    android:textAppearance="?attr/textAppearanceOverline" />
+                    android:layout_marginVertical="@dimen/small_margin"
+                    android:layout_marginHorizontal="@dimen/medium_margin"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:textSize="18sp"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:alpha="0.6" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipComsumptions"
+                <ImageView
+                    android:id="@+id/externalFilterIcon"
+                    android:layout_width="@dimen/xsmall_icon"
+                    android:layout_height="@dimen/xsmall_icon"
+                    android:contentDescription="@string/cancel"
+                    android:visibility="gone"
+                    android:layout_gravity="center_vertical"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:focusable="true"
+                    android:clickable="true"
+                    app:tint="@color/chip_stroke"
+                    android:alpha="0.6"
+                    android:src="@drawable/ic_close" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/filterChipGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/consumptions"
-                    android:textAppearance="?attr/textAppearanceOverline" />
+                    android:paddingHorizontal="@dimen/small_margin"
+                    app:singleLine="true"
+                    app:singleSelection="true">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipTastings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tastings"
-                    android:textAppearance="?attr/textAppearanceOverline" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipReplenishments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/replenishments"
+                        android:textAppearance="?attr/textAppearanceOverline" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipGiftedTo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/gifted_to"
-                    android:textAppearance="?attr/textAppearanceOverline" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipComsumptions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/consumptions"
+                        android:textAppearance="?attr/textAppearanceOverline" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipGiftedBy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/gifted_by"
-                    android:textAppearance="?attr/textAppearanceOverline" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipTastings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tastings"
+                        android:textAppearance="?attr/textAppearanceOverline" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFavorites"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/favorites"
-                    android:textAppearance="?attr/textAppearanceOverline" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipGiftedTo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/gifted_to"
+                        android:textAppearance="?attr/textAppearanceOverline" />
 
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipGiftedBy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/gifted_by"
+                        android:textAppearance="?attr/textAppearanceOverline" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFavorites"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/favorites"
+                        android:textAppearance="?attr/textAppearanceOverline" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </LinearLayout>
+
+        </com.louis.app.cavity.ui.history.widget.LockableHorizontalScrollView>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -206,6 +206,18 @@
                 android:name="bottleId"
                 app:argType="long" />
         </action>
+        <action
+            android:id="@+id/wineOptionsToHistoryTastingLog"
+            app:destination="@id/history_dest">
+            <argument
+                android:name="wineId"
+                android:defaultValue="-1L"
+                app:argType="long" />
+            <argument
+                android:name="tastingLog"
+                android:defaultValue="false"
+                app:argType="boolean" />
+        </action>
     </fragment>
 
     <fragment
@@ -227,6 +239,10 @@
             android:name="bottleId"
             android:defaultValue="-1L"
             app:argType="long" />
+        <argument
+            android:name="tastingLog"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/historyToBottle"
             app:destination="@id/fragmentBottleDetails"

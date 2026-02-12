@@ -240,6 +240,9 @@
     <string name="nothing"> </string>
     <string name="empty_history">The list of added or drunk bottles will be displayed here</string>
     <string name="empty_history_favorite">To add a favorite, drag a history entry to the left</string>
+    <string name="history_filter_wine">Wine filter</string>
+    <string name="history_filter_bottle">Bottle filter</string>
+    <string name="history_filter_tasting_log">Tasting log</string>
 
     <!-- Stats -->
     <string name="stats">Statistics</string>
