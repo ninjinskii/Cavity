@@ -18,13 +18,9 @@ import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
-import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.domain.repository.TagRepository
 import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.model.TagXBottle
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val wineRepository = WineRepository.getInstance(app)
@@ -68,16 +64,6 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         bottleId.switchMap { historyRepository.getReplenishmentForBottleNotPaged(it) }
 
     fun getWineById(wineId: Long) = wineRepository.getWineById(wineId)
-
-    fun getConsumedBottlesWithHistoryForWine(wineId: Long) =
-        bottleRepository.getBottlesForWine(wineId).map { bottlesWithHistoryEntries ->
-            bottlesWithHistoryEntries.filter { (bottle, historyEntries) ->
-                bottle.consumed.toBoolean() &&
-                        historyEntries.any { it.type.isConsumption() && it.comment.isNotBlank() }
-            }
-        }
-            .flowOn(Dispatchers.Default)
-            .asLiveData()
 
     fun getBottlesForWine(wineId: Long) = bottleRepository.getBottlesForWine(wineId).asLiveData()
 

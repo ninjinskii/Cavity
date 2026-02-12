@@ -80,6 +80,7 @@ class WineViewHolder(
         }
 
         itemView.setOnClickListener {
+            // TODO: do not navigate to add bottle f bottle count is 0. Also, handle empty state in FragmentBoittleDetails
             if (bottles.isNotEmpty()) {
                 transitionHelper.setElevationScale()
 

@@ -186,6 +186,7 @@
     <string name="tags">Tags</string>
     <string name="add_tag">Add a tag</string>
     <string name="empty_tag">No tags</string>
+    <string name="tag_removed_from_bottle">Tag removed from bottle</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>

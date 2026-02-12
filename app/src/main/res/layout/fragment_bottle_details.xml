@@ -210,63 +210,10 @@
                     android:paddingHorizontal="@dimen/small_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/barrier"
+                    app:layout_constraintTop_toBottomOf="@id/barrier"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/chip_action"
                     tools:orientation="horizontal" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/tastingLog"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="@id/apogee"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/bottlesList">
-
-                    <ImageView
-                        android:id="@+id/tasteLogIcon"
-                        android:layout_margin="@dimen/small_margin"
-                        android:layout_width="@dimen/small_icon"
-                        android:layout_height="@dimen/small_icon"
-                        android:contentDescription="@string/tasting_log"
-                        app:tint="?attr/colorOnSurface"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/tasteLogTitle"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:src="@drawable/ic_log" />
-
-                    <TextView
-                        android:id="@+id/tasteLogTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/small_margin"
-                        android:textAppearance="?attr/textAppearanceBody1"
-                        android:text="@string/tasting_log"
-                        app:layout_constraintStart_toEndOf="@id/tasteLogIcon"
-                        app:layout_constraintBottom_toBottomOf="@id/tasteLogIcon"
-                        app:layout_constraintTop_toTopOf="@id/tasteLogIcon" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/logList"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/tastingLog"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:itemCount="2"
-                    tools:listitem="@layout/item_tasting_log" />
-
-                <View
-                    android:id="@+id/dividerLog"
-                    style="@style/Widget.Cavity.Divider"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/logList" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/cuvee"
@@ -278,7 +225,7 @@
                     app:label="@string/cuvee"
                     app:layout_constraintEnd_toEndOf="@id/otherInfo"
                     app:layout_constraintStart_toStartOf="@id/otherInfo"
-                    app:layout_constraintTop_toBottomOf="@id/dividerLog" />
+                    app:layout_constraintTop_toBottomOf="@id/bottlesList" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
                     android:id="@+id/apogee"
@@ -517,11 +464,45 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/buttonTastingLog"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="@id/buttonHistory"
+                    app:layout_constraintStart_toStartOf="@id/buttonEdit"
+                    app:layout_constraintTop_toBottomOf="@id/buttonEdit"
+                    app:layout_constraintWidth_max="100dp">
+
+                    <ImageView
+                        android:layout_width="@dimen/medium_icon"
+                        android:layout_height="@dimen/medium_icon"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/shape_icon_button"
+                        android:contentDescription="@string/edit_bottle"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_log"
+                        app:tint="?attr/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/buttonTastingLogText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/xsmall_margin"
+                        android:gravity="center_horizontal"
+                        android:text="@string/tasting_log"
+                        android:textAppearance="?attr/textAppearanceCaption" />
+
+                </LinearLayout>
+
                 <View
                     android:id="@+id/divider2"
                     style="@style/Widget.Cavity.Divider"
                     android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/buttonPdf" />
+                    app:layout_constraintTop_toBottomOf="@id/buttonTastingLog" />
 
                 <com.louis.app.cavity.ui.widget.SliceBarView
                     android:id="@+id/grapeBar"

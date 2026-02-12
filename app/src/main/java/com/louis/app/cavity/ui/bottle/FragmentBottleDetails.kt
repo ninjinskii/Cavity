@@ -50,13 +50,9 @@ import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SnapHelper
 import com.louis.app.cavity.db.dao.BottleWithHistoryEntries
 import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.ui.ChipLoader
-import com.louis.app.cavity.ui.bottle.adapter.TastingLogRecyclerAdapter
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
@@ -268,24 +264,15 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             val id = bottleAdapter.submitListWithPreselection(it, checkedBottleId ?: -1L)
             bottleDetailsViewModel.setBottleId(id)
 
+            val hasAtLeastOneBottleConsumed = it.any { a -> a.bottle.consumed.toBoolean() }
+            binding.buttonTastingLog.setVisible(hasAtLeastOneBottleConsumed)
+
             // Avoid weird DiffUtil animations conflict
             if (firstTime) {
                 smoothScrollToCheckedChip(id, it)
                 firstTime = false
             }
         }
-
-        binding.logList.doOnLayout {
-            updateHeightToSnappedView(binding.logList)
-        }
-
-        binding.logList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    updateHeightToSnappedView(recyclerView)
-                }
-            }
-        })
 
         val colorUtil = ColorUtil(requireContext())
         val reviewAdapter = ShowFilledReviewsRecyclerAdapter(colorUtil)
@@ -395,7 +382,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         bottleDetailsViewModel.removeTagEvent.observe(viewLifecycleOwner) {
             it?.getContentIfNotHandled()?.let { tagToBottle ->
                 binding.coordinator.showSnackbar(
-                    R.string.consumed, // TODO: real string
+                    R.string.tag_removed_from_bottle,
                     R.string.cancel
                 ) {
                     bottleDetailsViewModel.cancelRemoveTag(
@@ -477,6 +464,14 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 val action = FragmentBottleDetailsDirections.bottleDetailsToHistory(bottleId)
                 findNavController().navigate(action)
             }
+        }
+
+        binding.buttonTastingLog.setOnClickListener {
+            transitionHelper.setFadeThrough(navigatingForward = true)
+
+            val action =
+                FragmentBottleDetailsDirections.bottleDetailsToHistory(-1, args.wineId, true)
+            findNavController().navigate(action)
         }
 
         binding.favorite.setOnClickListener {
@@ -585,48 +580,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             FragmentBottleDetailsDirections.bottleDetailsToEditBottle(args.wineId, bottleId)
 
         findNavController().navigate(action)
-    }
-
-    fun updateHeightToSnappedView(recyclerView: RecyclerView) {
-        val snapHelper = recyclerView.onFlingListener as? SnapHelper ?: return
-        val layoutManager = recyclerView.layoutManager ?: return
-        val snappedView = snapHelper.findSnapView(layoutManager) ?: return
-
-        snappedView.post {
-            val widthSpec = View.MeasureSpec.makeMeasureSpec(
-                snappedView.measuredWidth,
-                View.MeasureSpec.EXACTLY
-            )
-            val heightSpec = View.MeasureSpec.makeMeasureSpec(
-                0,
-                View.MeasureSpec.UNSPECIFIED
-            )
-
-            snappedView.measure(widthSpec, heightSpec)
-            val realHeight = snappedView.measuredHeight
-
-            animateRecyclerHeight(recyclerView, realHeight) {
-                val snappedView =
-                    snapHelper.findSnapView(layoutManager) ?: return@animateRecyclerHeight
-                val commentTextView = snappedView.findViewById<TextView>(R.id.comment)
-                commentTextView?.requestLayout()
-            }
-        }
-    }
-
-    fun animateRecyclerHeight(recyclerView: RecyclerView, targetHeight: Int, doOnEnd: () -> Unit) {
-        val startHeight = recyclerView.height
-        if (startHeight == targetHeight) return
-
-        ValueAnimator.ofInt(startHeight, targetHeight).apply {
-            duration = resources.getInteger(R.integer.cavity_motion_short).toLong()
-            addUpdateListener {
-                recyclerView.layoutParams.height = it.animatedValue as Int
-                recyclerView.requestLayout()
-            }
-            this.doOnEnd { doOnEnd() }
-            start()
-        }
     }
 
     private fun updateUI(bottle: Bottle, lastBottleId: Long) {
