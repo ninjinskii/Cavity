@@ -94,6 +94,14 @@
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierAllowsGoneWidgets="false"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="buttonGroupSwitchStat,comparisonText" />
+
     <TextView
         android:id="@+id/total"
         android:layout_width="wrap_content"
@@ -102,7 +110,7 @@
         android:textAppearance="?attr/textAppearanceCaption"
         app:layout_constraintEnd_toEndOf="@id/buttonGroupSwitchStat"
         app:layout_constraintStart_toStartOf="@id/buttonGroupSwitchStat"
-        app:layout_constraintTop_toBottomOf="@id/buttonGroupSwitchStat"
+        app:layout_constraintTop_toBottomOf="@id/barrierBottom"
         tools:text="Total: 55" />
 
     <TextView

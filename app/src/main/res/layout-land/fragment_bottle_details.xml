@@ -55,7 +55,7 @@
             android:layout_height="0dp"
             android:layout_marginHorizontal="@dimen/small_margin"
             android:layout_marginTop="@dimen/small_margin"
-            app:layout_constraintBottom_toTopOf="@id/barrierTop"
+            app:layout_constraintBottom_toTopOf="@id/barrierBottom"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +83,7 @@
         </com.louis.app.cavity.ui.home.widget.HexagonalView>
 
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrierTop"
+            android:id="@+id/barrierBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierAllowsGoneWidgets="false"

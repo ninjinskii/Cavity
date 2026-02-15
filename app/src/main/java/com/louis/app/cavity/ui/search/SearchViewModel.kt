@@ -150,7 +150,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         reversed: Boolean,
         selector: (BoundedBottle) -> Comparable<*>?
     ): List<BoundedBottle> {
-
         return list.sortedWith { a, b ->
             val va = selector(a)
             val vb = selector(b)
@@ -167,6 +166,5 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             }
         }
     }
-
 }
 
