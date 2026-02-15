@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.stats
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -54,6 +55,18 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
             }
 
             statsViewModel.setStatType(viewPagerPosition, stockType)
+        }
+
+        binding.toggleGivenBottle.apply {
+            thumbDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.switch_thumb,
+                requireContext().theme
+            )
+
+            setOnCheckedChangeListener { _, isChecked ->
+
+            }
         }
     }
 

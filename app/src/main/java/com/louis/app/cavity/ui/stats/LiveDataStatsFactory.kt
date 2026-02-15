@@ -7,7 +7,11 @@ import androidx.lifecycle.switchMap
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.Stat
 import com.louis.app.cavity.db.dao.Year
+import com.louis.app.cavity.domain.history.HistoryEntryType
+import com.louis.app.cavity.domain.history.fromInt
+import com.louis.app.cavity.domain.history.toInt
 import com.louis.app.cavity.domain.repository.StatsRepository
+import com.louis.app.cavity.model.HistoryEntry
 
 class LiveDataStatsFactory(
     private val repository: StatsRepository,
@@ -41,7 +45,6 @@ class LiveDataStatsFactory(
         }
     }
 
-
     fun applyStatType(position: Int, statType: StatType) {
         statTypes[position].value = statType
     }
@@ -58,36 +61,45 @@ class LiveDataStatsFactory(
         }
     }
 
-    // It can't be anything else.
-    @Suppress("UNCHECKED_CAST")
-    private fun getStat(position: Int, year: Year, statType: StatType): LiveData<List<Stat>> {
+    private fun getStat(
+        position: Int,
+        year: Year,
+        statType: StatType,
+        includeGifts: Boolean = false
+    ): LiveData<List<Stat>> {
         val start = year.yearStart
         val end = year.yearEnd
+        val types = when (statType) {
+            StatType.STOCK -> emptyList()
+            StatType.REPLENISHMENTS -> mutableListOf(HistoryEntryType.ADD.toInt()).also {
+                if (includeGifts) it.add(HistoryEntryType.GIVEN_BY.toInt())
+            }
 
-        return when (position) {
-            0 -> when (statType) {
-                StatType.STOCK -> repository.getStockByCounty()
-                StatType.REPLENISHMENTS -> repository.getReplenishmentsByCounty(start, end)
-                StatType.CONSUMPTIONS -> repository.getConsumptionsByCounty(start, end)
-            } as LiveData<List<Stat>>
-
-            1 -> when (statType) {
-                StatType.STOCK -> repository.getStockByColor()
-                StatType.REPLENISHMENTS -> repository.getReplenishmentsByColor(start, end)
-                StatType.CONSUMPTIONS -> repository.getConsumptionsByColor(start, end)
-            } as LiveData<List<Stat>>
-
-            2 -> when (statType) {
-                StatType.STOCK -> repository.getStockByVintage()
-                StatType.REPLENISHMENTS -> repository.getReplenishmentsByVintage(start, end)
-                StatType.CONSUMPTIONS -> repository.getConsumptionsByVintage(start, end)
-            } as LiveData<List<Stat>>
-
-            else -> when (statType) {
-                StatType.STOCK -> repository.getStockByNaming()
-                StatType.REPLENISHMENTS -> repository.getReplenishmentsByNaming(start, end)
-                StatType.CONSUMPTIONS -> repository.getConsumptionsByNaming(start, end)
-            } as LiveData<List<Stat>>
+            StatType.CONSUMPTIONS -> mutableListOf(
+                HistoryEntryType.REMOVE.toInt(),
+                HistoryEntryType.TASTING.toInt()
+            ).also {
+                if (includeGifts) it.add(HistoryEntryType.GIFTED_TO.toInt())
+            }
         }
+
+        val groupBy = when (position) {
+            0 -> "county.name"
+            1 -> "wine.color"
+            2 -> "bottle.vintage"
+            else -> "bottle.naming"
+        }
+        val stockFunctions = listOf(
+            { repository.getStockByCounty() },
+            { repository.getStockByColor() },
+            { repository.getStockByVintage() },
+            { repository.getStockByNaming() }
+        )
+
+        return when (statType) {
+            StatType.STOCK -> stockFunctions.getOrElse(position) { stockFunctions.last() }.invoke()
+            StatType.REPLENISHMENTS -> repository.getStatsByHistoryEntry(start, end, types, groupBy)
+            StatType.CONSUMPTIONS -> repository.getStatsByHistoryEntry(start, end, types, groupBy)
+        } as LiveData<List<Stat>>
     }
 }
