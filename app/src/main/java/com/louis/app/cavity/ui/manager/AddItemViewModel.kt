@@ -21,6 +21,7 @@ import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 /**
@@ -88,7 +89,7 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun insertFriend(nameLastName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             try {
                 friendRepository.insertFriend(Friend(0, nameLastName, ""))
                 _userFeedback.postOnce(R.string.friend_added)
@@ -101,7 +102,7 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun insertTag(tagName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             try {
                 tagRepository.insertTag(Tag(0, tagName))
             } catch (_: IllegalArgumentException) {
@@ -109,6 +110,13 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
             } catch (_: SQLiteConstraintException) {
                 _userFeedback.postOnce(R.string.tag_already_exists)
             }
+        }
+    }
+
+    fun updateTag(tag: Tag) {
+        viewModelScope.launch(IO) {
+            tagRepository.updateTag(tag)
+            _userFeedback.postOnce(R.string.tag_updated)
         }
     }
 

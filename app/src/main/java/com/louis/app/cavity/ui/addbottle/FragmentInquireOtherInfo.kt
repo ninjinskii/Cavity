@@ -161,6 +161,9 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
                 .load(it)
                 .into(binding.tagChipGroup)
                 .selectable(true)
+                .doOnLongClick { view ->
+                    true.also { showUpdateTagDialog(view.getTag(R.string.tag_chip_id) as Tag) }
+                }
                 .emptyText(getString(R.string.empty_tag))
                 .build()
                 .go()
@@ -262,6 +265,19 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
             parentFragmentManager,
             getString(R.string.tag_friend_picker_modal_sheet)
         )
+    }
+
+    private fun showUpdateTagDialog(tag: Tag) {
+        val dialogResource = SimpleInputDialog.DialogContent(
+            title = R.string.rename_tag,
+            hint = R.string.tag,
+            icon = R.drawable.ic_tag
+        ) {
+            addItemViewModel.updateTag(tag.copy(name = it))
+        }
+
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .showForEdit(dialogResource, tag.name)
     }
 
     override fun requestNextPage(): Boolean {

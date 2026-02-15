@@ -188,6 +188,8 @@
     <string name="empty_tag">Aucun tag</string>
     <string name="tag_removed_from_bottle">Tag retiré.</string>
     <string name="tag_explanation">Vous pouvez créer et assigner des tags à des bouteilles afin de les grouper selon vos propres critères. Exemple: GCC (grand cru classé), poisson (se marie bien avec du poisson)</string>
+    <string name="rename_tag">Renommer un tag</string>
+    <string name="tag_updated">Tag mis à jour.</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>

@@ -50,6 +50,8 @@ import androidx.lifecycle.lifecycleScope
 import com.louis.app.cavity.db.dao.BottleWithHistoryEntries
 import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.ui.ChipLoader
+import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
@@ -59,6 +61,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     private val binding get() = _binding!!
     private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val bottleDetailsViewModel: BottleDetailsViewModel by viewModels()
+    private val addItemViewModel: AddItemViewModel by activityViewModels()
     private val consumeGiftBottleViewModel: ConsumeGiftBottleViewModel by viewModels()
     private val args: FragmentBottleDetailsArgs by navArgs()
 
@@ -354,6 +357,12 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             }
         }
 
+        addItemViewModel.userFeedback.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { stringRes ->
+                binding.coordinator.showSnackbar(stringRes)
+            }
+        }
+
         bottleDetailsViewModel.revertConsumptionEvent.observe(viewLifecycleOwner) {
             it?.getContentIfNotHandled()?.let { boundedBottle ->
                 binding.coordinator.showSnackbar(R.string.back_in_stock, R.string.cancel) {
@@ -403,6 +412,9 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 .toInflate(R.layout.chip_tag)
                 .load(it.tags)
                 .into(binding.tagsChipGroup)
+                .doOnLongClick { view ->
+                    true.also { showUpdateTagDialog(view.getTag(R.string.tag_chip_id) as Tag) }
+                }
                 .closable { tag -> bottleDetailsViewModel.removeTag(tag as Tag) }
                 .selectable(false)
                 .build()
@@ -571,6 +583,19 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
     }
 
+    private fun showUpdateTagDialog(tag: Tag) {
+        val dialogResource = SimpleInputDialog.DialogContent(
+            title = R.string.rename_tag,
+            hint = R.string.tag,
+            icon = R.drawable.ic_tag
+        ) {
+            addItemViewModel.updateTag(tag.copy(name = it))
+        }
+
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .showForEdit(dialogResource, tag.name)
+    }
+
     private fun navigateToAddBottle(bottleId: Long) {
         transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
         val action =
@@ -598,11 +623,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             buttonRevertConsumption.text = getString(buttonStringRes)
 
             buttonRevertConsumption.setOnClickListener {
-                if (consumed) {
-                    bottleDetailsViewModel.revertBottleConsumption()
-                } else {
-                    bottleDetailsViewModel.removeBottleFromTasting()
-                }
+                bottleDetailsViewModel.revertBottleConsumption()
             }
 
             apogee.setData(bottle.apogee?.toString() ?: getString(R.string.unknown))

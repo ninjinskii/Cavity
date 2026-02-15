@@ -138,6 +138,20 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun revertBottleConsumption() {
+        val bottle = bottle.value
+        if (bottle == null) {
+            _userFeedback.postOnce(R.string.base_error)
+            return
+        }
+
+        if (bottle.consumed.toBoolean()) {
+            revertBottleConsumptionInternal()
+        } else {
+            removeBottleFromTasting()
+        }
+    }
+
+    private fun revertBottleConsumptionInternal() {
         val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
@@ -153,7 +167,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun removeBottleFromTasting() {
+    private fun removeBottleFromTasting() {
         val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {

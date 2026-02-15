@@ -34,7 +34,8 @@ class ChipLoader private constructor(
     private val onEmpty: String?,
     private val showIconIf: (Chipable) -> Boolean,
     private val closable: ((Chipable) -> Unit)?,
-    private val onClickListener: ((View) -> Unit)?
+    private val onClickListener: ((View) -> Unit)?,
+    private val onLongClickListener: ((View) -> Boolean)?
 ) {
 
     fun go() {
@@ -61,6 +62,7 @@ class ChipLoader private constructor(
                     }
 
                     onClickListener?.let { setOnClickListener(it) }
+                    onLongClickListener?.let { setOnLongClickListener(it) }
                     setOnCloseIconClickListener {
                         closable?.invoke(item)
                     }
@@ -167,7 +169,8 @@ class ChipLoader private constructor(
         private var onEmpty: String? = null,
         private var showIconIf: (Chipable) -> Boolean = { false },
         private var closable: ((Chipable) -> Unit)? = null,
-        private var onClickListener: ((View) -> Unit)? = null
+        private var onClickListener: ((View) -> Unit)? = null,
+        private var onLongClickListener: ((View) -> Boolean)? = null
     ) {
         fun with(scope: CoroutineScope) = apply { this.scope = scope }
         fun useInflater(inflater: LayoutInflater) = apply { this.layoutInflater = inflater }
@@ -185,6 +188,10 @@ class ChipLoader private constructor(
         fun showIconIf(block: (Chipable) -> Boolean) = apply { this.showIconIf = block }
         fun doOnClick(block: (View) -> Unit) = apply {
             this.onClickListener = block
+        }
+
+        fun doOnLongClick(block: (View) -> Boolean) = apply {
+            this.onLongClickListener = block
         }
 
         fun build(): ChipLoader {
@@ -217,7 +224,8 @@ class ChipLoader private constructor(
                 onEmpty,
                 showIconIf,
                 closable,
-                onClickListener
+                onClickListener,
+                onLongClickListener
             )
         }
     }
