@@ -20,7 +20,6 @@ import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
