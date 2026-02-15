@@ -134,29 +134,39 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             var filtered = filter.meetFilters(bottles)
 
             if (sort.criteria != SortCriteria.NONE) {
-                filtered = when (sort.criteria) {
-                    SortCriteria.NAME -> filtered.sortedBy { it.wine.name }
-                    SortCriteria.NAMING -> filtered.sortedBy { it.wine.naming }
-                    SortCriteria.VINTAGE -> filtered.sortedBy { it.bottle.vintage }
-                    SortCriteria.APOGEE -> filtered.sortedBy { it.bottle.apogee }
-                    SortCriteria.BUY_DATE -> filtered.sortedBy { it.bottle.buyDate }
-                    SortCriteria.PRICE -> run {
-                        val withPrice = filtered.filter { it.bottle.price != -1f }
-                        val noPrice = filtered.filter { it.bottle.price == -1f }
-                        val sorted = withPrice.sortedBy { it.bottle.price }
-                        if (sort.reversed) noPrice + sorted else sorted + noPrice
-                    }
-
-                    else -> filtered
-                }
-
-                if (sort.reversed) {
-                    filtered = filtered.reversed()
-                }
+                filtered = sortWithNullLast(
+                    filtered,
+                    sort.reversed,
+                    sort.criteria.selector
+                )
             }
 
             receiver.postValue(filtered)
         }
     }
+
+    private fun sortWithNullLast(
+        list: List<BoundedBottle>,
+        reversed: Boolean,
+        selector: (BoundedBottle) -> Comparable<*>?
+    ): List<BoundedBottle> {
+
+        return list.sortedWith { a, b ->
+            val va = selector(a)
+            val vb = selector(b)
+
+            when {
+                va == null && vb == null -> 0
+                va == null -> 1
+                vb == null -> -1
+                else -> {
+                    @Suppress("UNCHECKED_CAST")
+                    val cmp = (va as Comparable<Any>).compareTo(vb as Comparable<Any>)
+                    if (reversed) -cmp else cmp
+                }
+            }
+        }
+    }
+
 }
 
