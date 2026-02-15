@@ -4,6 +4,7 @@ import com.louis.app.cavity.R
 
 enum class SortCriteria(val value: Int) {
     VINTAGE(R.string.vintage),
+    APOGEE(R.string.apogee),
     NAMING(R.string.naming),
     NAME(R.string.name),
     BUY_DATE(R.string.buying_date),

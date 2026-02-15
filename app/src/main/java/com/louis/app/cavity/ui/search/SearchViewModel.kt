@@ -138,6 +138,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
                     SortCriteria.NAME -> filtered.sortedBy { it.wine.name }
                     SortCriteria.NAMING -> filtered.sortedBy { it.wine.naming }
                     SortCriteria.VINTAGE -> filtered.sortedBy { it.bottle.vintage }
+                    SortCriteria.APOGEE -> filtered.sortedBy { it.bottle.apogee }
                     SortCriteria.BUY_DATE -> filtered.sortedBy { it.bottle.buyDate }
                     SortCriteria.PRICE -> run {
                         val withPrice = filtered.filter { it.bottle.price != -1f }

@@ -40,7 +40,7 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
         get() = _userFeedback
 
     fun insertCounty(countyName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             val counties = countyRepository.getAllCountiesNotLive()
 
             if (checkCountyAlredyExists(counties, countyName)) {
@@ -62,7 +62,7 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun insertGrape(grapeName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             val result = grapeRepository.insertGrape(Grape(0, grapeName))
             val message = when (result) {
                 is Success -> R.string.grape_added
@@ -76,7 +76,7 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun insertReview(contestName: String, type: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             try {
                 reviewRepository.insertReview(Review(0, contestName, type))
                 _userFeedback.postOnce(R.string.review_added)
