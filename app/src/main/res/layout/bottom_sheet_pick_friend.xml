@@ -56,6 +56,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:spanCount="2"
         tools:listitem="@layout/item_pick_friend" />
 
 </LinearLayout>
