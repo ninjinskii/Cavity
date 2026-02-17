@@ -68,6 +68,10 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
                 statsViewModel.setIncludeGifts(viewPagerPosition, isChecked)
             }
         }
+
+        binding.givenBottle.setOnClickListener {
+            binding.toggleGivenBottle.toggle()
+        }
     }
 
     private fun observe() {
