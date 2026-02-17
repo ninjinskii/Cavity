@@ -65,7 +65,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
             )
 
             setOnCheckedChangeListener { _, isChecked ->
-
+                statsViewModel.setIncludeGifts(viewPagerPosition, isChecked)
             }
         }
     }
@@ -105,6 +105,11 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
                     binding.total.text = resources.getString(R.string.total, total)
                 }
             }
+        }
+
+        statsViewModel.showYearSpanOptions.observe(viewLifecycleOwner) {
+            binding.toggleGivenBottle.setVisible(it)
+            binding.givenBottle.setVisible(it)
         }
     }
 

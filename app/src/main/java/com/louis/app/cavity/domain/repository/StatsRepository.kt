@@ -52,14 +52,14 @@ class StatsRepository private constructor(app: Application) : Repository(app) {
                COUNT(*) AS count,
                (CAST(COUNT(*) AS REAL)) / 
                (SELECT COUNT(*) FROM history_entry 
-                WHERE type IN ($typesList) AND date BETWEEN ? AND ?) * 100 AS percentage,
+               WHERE type IN ($typesList) AND date BETWEEN ? AND ?) * 100 AS percentage,
                GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
         FROM history_entry
         INNER JOIN bottle ON bottle_id = bottle.id
         INNER JOIN wine ON wine_id = wine.id
         INNER JOIN county ON county_id = county.id
         WHERE date BETWEEN ? AND ?
-          AND type IN ($typesList)
+        AND type IN ($typesList)
         GROUP BY $groupByColumn
         ORDER BY percentage DESC, label
     """.trimIndent()
