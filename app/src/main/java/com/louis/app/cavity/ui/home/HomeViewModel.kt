@@ -132,22 +132,11 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
             bottleRepository.getAllStorageLocations().map { listOf(clearText) + it }
         else MutableLiveData(emptyList())
 
-    // This become unnecessary if we figure out how to implement Room's multimaps with standard SQL Join request
     fun getWinesWithBottlesByCounty(countyId: Long) = liveData(Default) {
-        emitSource(
-            wineRepository.getWineWithBottlesByCounty(countyId).map { winesWithBottles ->
-                winesWithBottles
-                    .filter { checkStorageLocation(it) }
-                    .sortedBy { it.wine.color.order }
-                    .map { wineWithBottles ->
-                        wineWithBottles.copy(
-                            bottles = wineWithBottles.bottles
-                                .filter { !it.consumed.toBoolean() && checkStorageLocation(it) }
-                                .sortedBy { it.vintage }
-                        )
-                    }
-            }
-        )
+        val wines = wineRepository.getWinesWithBottlesByCounty(countyId).map { winesWithBottles ->
+            winesWithBottles.filter { checkStorageLocation(it) }
+        }
+        emitSource(wines)
     }
 
     fun clearLastAddedWine() {

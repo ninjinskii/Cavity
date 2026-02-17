@@ -18,6 +18,11 @@ import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
+import com.louis.app.cavity.domain.repository.TagRepository
+import com.louis.app.cavity.model.Tag
+import com.louis.app.cavity.model.TagXBottle
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
 class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val wineRepository = WineRepository.getInstance(app)
@@ -25,6 +30,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val historyRepository = HistoryRepository.getInstance(app)
+    private val tagRepository = TagRepository.getInstance(app)
 
     private val bottleId = MutableLiveData<Long>()
 
@@ -44,18 +50,30 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     val removeFromTastingEvent: LiveData<Event<Pair<Long, Long?>>>
         get() = _removeFromTastingEvent
 
+    private val _removeTagEvent = MutableLiveData<Event<Pair<Long, Long?>>>()
+    val removeTagEvent: LiveData<Event<Pair<Long, Long?>>>
+        get() = _removeTagEvent
+
     val bottle = bottleId.switchMap { bottleRepository.getBottleById(it) }
 
     val grapes = bottleId.switchMap { grapeRepository.getQGrapesAndGrapeForBottle(it) }
 
     val reviews = bottleId.switchMap { reviewRepository.getFReviewAndReviewForBottle(it) }
 
+    val tags = bottleId.switchMap { tagRepository.getTagsForBottle(it) }
+
     val replenishmentEntry =
         bottleId.switchMap { historyRepository.getReplenishmentForBottleNotPaged(it) }
 
     fun getWineById(wineId: Long) = wineRepository.getWineById(wineId)
 
-    fun getBottlesForWine(wineId: Long) = bottleRepository.getBottlesForWine(wineId)
+    fun getBottlesForWine(wineId: Long) =
+        bottleRepository.getBottlesForWine(wineId).map { bottles ->
+            val showTastingLogIsRelevant = bottles.any { it.bottle.consumed.toBoolean() }
+            bottles to showTastingLogIsRelevant
+        }
+            .flowOn(IO)
+            .asLiveData()
 
     fun setBottleId(bottleId: Long) {
         this.bottleId.value = bottleId
@@ -84,6 +102,18 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun removeTag(tag: Tag) {
+        if (bottleId.value == null) {
+            _userFeedback.postOnce(R.string.base_error)
+            return
+        }
+
+        viewModelScope.launch(IO) {
+            tagRepository.deleteTagBottleXRef(TagXBottle(tag.id, bottleId.value ?: -1))
+            _removeTagEvent.postOnce(tag.id to (bottleId.value ?: -1))
+        }
+    }
+
     fun preparePdf() {
         val bottleId = bottleId.value ?: return
 
@@ -108,6 +138,20 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun revertBottleConsumption() {
+        val bottle = bottle.value
+        if (bottle == null) {
+            _userFeedback.postOnce(R.string.base_error)
+            return
+        }
+
+        if (bottle.consumed.toBoolean()) {
+            revertBottleConsumptionInternal()
+        } else {
+            removeBottleFromTasting()
+        }
+    }
+
+    private fun revertBottleConsumptionInternal() {
         val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
@@ -123,7 +167,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun removeBottleFromTasting() {
+    private fun removeBottleFromTasting() {
         val bottleId = bottleId.value ?: return
 
         viewModelScope.launch(IO) {
@@ -142,6 +186,14 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
             val bottle = bottleRepository.getBottleByIdNotLive(bottleId)
             bottle.tastingId = tastingId
             bottleRepository.updateBottle(bottle)
+        }
+    }
+
+    fun cancelRemoveTag(tagId: Long, bottleId: Long?) {
+        viewModelScope.launch(IO) {
+            bottleId?.let {
+                tagRepository.insertTagBottleXRefs(listOf(TagXBottle(tagId, it)))
+            }
         }
     }
 

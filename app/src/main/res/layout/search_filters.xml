@@ -502,6 +502,45 @@
             app:layout_constraintTop_toBottomOf="@id/friendScrollView" />
 
         <TextView
+            android:id="@+id/tagTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="@string/tags"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider7" />
+
+        <HorizontalScrollView
+            android:id="@+id/tagScrollView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/medium_margin"
+            android:scrollbars="none"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tagTitle">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/tagChipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/chip_group_default_height"
+                android:layout_marginTop="@dimen/small_margin"
+                app:selectionRequired="false"
+                app:singleLine="true"
+                app:singleSelection="false">
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
+        <View
+            android:id="@+id/dividerTags"
+            style="@style/Widget.Cavity.Divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tagScrollView" />
+
+        <TextView
             android:id="@+id/storageLocationTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -510,7 +549,7 @@
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider7" />
+            app:layout_constraintTop_toBottomOf="@id/dividerTags" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/storageLocationLayout"

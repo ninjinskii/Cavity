@@ -1,7 +1,10 @@
 package com.louis.app.cavity.ui.addbottle.adapter
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,17 +13,26 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemPickFriendBinding
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.util.setVisible
+import com.louis.app.cavity.util.themeColor
 
 class PickFriendRecyclerAdapter(
+    private val context: Context,
     private val onSingleItemSelected: ((item: PickableFriend) -> Unit)?
 ) :
     ListAdapter<PickableFriend, PickFriendViewHolder>(PickFriendItemDiffCallback()) {
+
+    val placeholder by lazy {
+        val tint = context.themeColor(androidx.appcompat.R.attr.colorControlNormal)
+        ResourcesCompat
+            .getDrawable(context.resources, R.drawable.ic_person, context.theme)
+            ?.apply { setTint(tint) }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PickFriendViewHolder {
         val binding =
             ItemPickFriendBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return PickFriendViewHolder(binding, onSingleItemSelected)
+        return PickFriendViewHolder(binding, placeholder, onSingleItemSelected)
     }
 
     override fun onBindViewHolder(holder: PickFriendViewHolder, position: Int) {
@@ -40,6 +52,7 @@ class PickFriendRecyclerAdapter(
 
 class PickFriendViewHolder(
     private val binding: ItemPickFriendBinding,
+    private val placeholder: Drawable?,
     private val onSingleItemSelected: ((item: PickableFriend) -> Unit)?
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -48,7 +61,8 @@ class PickFriendViewHolder(
         Glide
             .with(itemView.context)
             .load(pickableFriend.friend.imgPath)
-            .placeholder(R.drawable.ic_person)
+            .placeholder(placeholder)
+            .fallback(R.drawable.ic_person)
             .centerCrop()
             .into(image)
 

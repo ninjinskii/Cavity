@@ -4,9 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Ignore
 import androidx.room.Query
+import androidx.room.RawQuery
 import androidx.room.Transaction
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.louis.app.cavity.db.StatsBottleIdsTypeConverter
+import com.louis.app.cavity.model.Bottle
+import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.HistoryEntry
+import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.util.ColorUtil
 
@@ -63,36 +69,6 @@ interface StatsDao {
     fun getStockByCounty(): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT county.name AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
-                        (SELECT COUNT(*) FROM history_entry 
-                        WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
-                        AS percentage,
-                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
-                    FROM history_entry
-                    INNER JOIN bottle ON bottle_id = bottle.id
-                    INNER JOIN wine ON wine_id = wine.id
-                    INNER JOIN county ON county_id = county.id
-                    WHERE history_entry.date BETWEEN :start AND :end AND (type = 1 OR type = 3)
-                    GROUP BY county.name ORDER BY percentage DESC, county.name"""
-    )
-    fun getReplenishmentsByCounty(start: Long, end: Long): LiveData<List<BaseStat>>
-
-    @Query(
-        """SELECT county.name AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
-                        (SELECT COUNT(*) FROM history_entry 
-                        WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
-                        AS percentage,
-                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
-                    FROM history_entry
-                    INNER JOIN bottle ON bottle_id = bottle.id
-                    INNER JOIN wine ON wine_id = wine.id
-                    INNER JOIN county ON county_id = county.id
-                    WHERE history_entry.date BETWEEN :start AND :end AND (type = 0 OR type = 2 OR type = 4)
-                    GROUP BY county.name ORDER BY percentage DESC, county.name"""
-    )
-    fun getConsumptionsByCounty(start: Long, end: Long): LiveData<List<BaseStat>>
-
-    @Query(
         """SELECT wine.color AS wcolor, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM bottle WHERE bottle.consumed = 0) * 100
                         AS percentage,
@@ -103,34 +79,6 @@ interface StatsDao {
                 GROUP BY wine.color ORDER BY percentage DESC, wine.color"""
     )
     fun getStockByColor(): LiveData<List<WineColorStat>>
-
-    @Query(
-        """SELECT wine.color AS wcolor, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
-                        (SELECT COUNT(*) FROM history_entry 
-                        WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
-                        AS percentage,
-                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
-                    FROM history_entry
-                    INNER JOIN bottle ON bottle_id = bottle.id
-                    INNER JOIN wine ON wine_id = wine.id
-                    WHERE history_entry.date BETWEEN :start AND :end AND (type = 1 OR type = 3)
-                    GROUP BY wine.color ORDER BY percentage DESC, wine.color"""
-    )
-    fun getReplenishmentsByColor(start: Long, end: Long): LiveData<List<WineColorStat>>
-
-    @Query(
-        """SELECT wine.color AS wcolor, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
-                        (SELECT COUNT(*) FROM history_entry 
-                        WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
-                        AS percentage,
-                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
-                    FROM history_entry
-                    INNER JOIN bottle ON bottle_id = bottle.id
-                    INNER JOIN wine ON wine_id = wine.id
-                    WHERE history_entry.date BETWEEN :start AND :end AND (type = 0 OR type = 2 OR type = 4)
-                    GROUP BY wine.color ORDER BY percentage DESC, wine.color"""
-    )
-    fun getConsumptionsByColor(start: Long, end: Long): LiveData<List<WineColorStat>>
 
     @Query(
         """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
@@ -144,32 +92,6 @@ interface StatsDao {
     fun getStockByVintage(): LiveData<List<BaseStat>>
 
     @Query(
-        """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
-                        (SELECT COUNT(*) FROM history_entry 
-                        WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
-                        AS percentage,
-                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
-                    FROM history_entry
-                    INNER JOIN bottle ON bottle_id = bottle.id
-                    WHERE history_entry.date BETWEEN :start AND :end AND (type = 1 OR type = 3)
-                    GROUP BY bottle.vintage ORDER BY percentage DESC, bottle.vintage"""
-    )
-    fun getReplenishmentsByVintage(start: Long, end: Long): LiveData<List<BaseStat>>
-
-    @Query(
-        """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
-                        (SELECT COUNT(*) FROM history_entry 
-                        WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
-                        AS percentage,
-                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
-                    FROM history_entry
-                    INNER JOIN bottle ON bottle_id = bottle.id
-                    WHERE history_entry.date BETWEEN :start AND :end AND (type = 0 OR type = 2 OR type = 4)
-                    GROUP BY bottle.vintage ORDER BY percentage DESC, bottle.vintage"""
-    )
-    fun getConsumptionsByVintage(start: Long, end: Long): LiveData<List<BaseStat>>
-
-    @Query(
         """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
                         (SELECT COUNT(*) FROM bottle WHERE bottle.consumed = 0) * 100
                         AS percentage,
@@ -180,34 +102,6 @@ interface StatsDao {
                 GROUP BY wine.naming ORDER BY percentage DESC, wine.naming"""
     )
     fun getStockByNaming(): LiveData<List<BaseStat>>
-
-    @Query(
-        """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
-                        (SELECT COUNT(*) FROM history_entry 
-                        WHERE (type = 1 OR type = 3) AND date BETWEEN :start AND :end) * 100
-                        AS percentage,
-                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
-                    FROM history_entry
-                    INNER JOIN bottle ON bottle_id = bottle.id
-                    INNER JOIN wine ON wine_id = wine.id
-                    WHERE history_entry.date BETWEEN :start AND :end AND (type = 1 OR type = 3)
-                    GROUP BY wine.naming ORDER BY percentage DESC, wine.naming"""
-    )
-    fun getReplenishmentsByNaming(start: Long, end: Long): LiveData<List<BaseStat>>
-
-    @Query(
-        """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
-                        (SELECT COUNT(*) FROM history_entry 
-                        WHERE (type = 0 OR type = 2 OR type = 4) AND date BETWEEN :start AND :end) * 100
-                        AS percentage,
-                        GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
-                    FROM history_entry
-                    INNER JOIN bottle ON bottle_id = bottle.id
-                    INNER JOIN wine ON wine_id = wine.id
-                    WHERE history_entry.date BETWEEN :start AND :end AND (type = 0 OR type = 2 OR type = 4)
-                    GROUP BY wine.naming ORDER BY percentage DESC, wine.naming"""
-    )
-    fun getConsumptionsByNaming(start: Long, end: Long): LiveData<List<BaseStat>>
 
     @Query("""SELECT SUM(price) as sum, currency FROM bottle WHERE price != -1  GROUP BY currency""")
     fun getTotalPriceByCurrency(): LiveData<List<PriceByCurrency>>
@@ -221,6 +115,10 @@ interface StatsDao {
     @Transaction
     @Query("""SELECT * FROM bottle WHERE id IN (:ids)""")
     fun getBottlesByIds(ids: List<Long>): LiveData<List<BoundedBottle>>
+
+    @Transaction
+    @RawQuery(observedEntities = [HistoryEntry::class, Bottle::class, Wine::class, County::class])
+    fun getStatsRaw(query: SupportSQLiteQuery): LiveData<List<BaseStat>>
 }
 
 interface Stat {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
@@ -15,10 +16,12 @@ import com.louis.app.cavity.domain.repository.CountyRepository
 import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.ReviewRepository
+import com.louis.app.cavity.domain.repository.TagRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.combineAsync
@@ -32,6 +35,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
+    private val tagRepository = TagRepository.getInstance(app)
 
     private val _sort = MutableLiveData(Event(Sort(SortCriteria.NONE)))
     val sort: LiveData<Event<Sort>>
@@ -52,6 +56,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         R.id.grapeChipGroup to NoFilter,
         R.id.reviewChipGroup to NoFilter,
         R.id.friendChipGroup to NoFilter,
+        R.id.tagChipGroup to NoFilter,
         R.id.storageLocation to NoFilter,
         R.id.rbGroupSize to NoFilter
     )
@@ -68,6 +73,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     var selectedGrapes = emptyList<Grape>()
     var selectedReviews = emptyList<Review>()
     var selectedFriends = emptyList<Friend>()
+    var selectedTags = emptyList<Tag>()
     var currentBeyondDate: Long? = null
     var currentUntilDate: Long? = null
     var onFragmentLeaveSavedState: Bundle? = null
@@ -84,6 +90,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     fun getAllReviews() = reviewRepository.getAllReviews()
 
     fun getAllFriends() = friendRepository.getAllFriends()
+
+    fun getAllTags() = tagRepository.getAllTags().asLiveData()
 
     fun getAllStorageLocations(clearText: String) = bottleRepository.getAllStorageLocations().map {
         listOf(clearText) + it
@@ -126,21 +134,36 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             var filtered = filter.meetFilters(bottles)
 
             if (sort.criteria != SortCriteria.NONE) {
-                filtered = when (sort.criteria) {
-                    SortCriteria.NAME -> filtered.sortedBy { it.wine.name }
-                    SortCriteria.NAMING -> filtered.sortedBy { it.wine.naming }
-                    SortCriteria.VINTAGE -> filtered.sortedBy { it.bottle.vintage }
-                    SortCriteria.BUY_DATE -> filtered.sortedBy { it.bottle.buyDate }
-                    SortCriteria.PRICE -> filtered.sortedBy { it.bottle.price }
-                    else -> filtered
-                }
-
-                if (sort.reversed) {
-                    filtered = filtered.reversed()
-                }
+                filtered = sortWithNullLast(
+                    filtered,
+                    sort.reversed,
+                    sort.criteria.selector
+                )
             }
 
             receiver.postValue(filtered)
+        }
+    }
+
+    private fun sortWithNullLast(
+        list: List<BoundedBottle>,
+        reversed: Boolean,
+        selector: (BoundedBottle) -> Comparable<*>?
+    ): List<BoundedBottle> {
+        return list.sortedWith { a, b ->
+            val va = selector(a)
+            val vb = selector(b)
+
+            when {
+                va == null && vb == null -> 0
+                va == null -> 1
+                vb == null -> -1
+                else -> {
+                    @Suppress("UNCHECKED_CAST")
+                    val cmp = (va as Comparable<Any>).compareTo(vb as Comparable<Any>)
+                    if (reversed) -cmp else cmp
+                }
+            }
         }
     }
 }

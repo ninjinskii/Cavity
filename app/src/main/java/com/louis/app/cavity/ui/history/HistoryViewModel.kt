@@ -2,6 +2,7 @@ package com.louis.app.cavity.ui.history
 
 import android.app.Application
 import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.louis.app.cavity.R
@@ -34,31 +35,34 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
     val selectedEntry: LiveData<BoundedHistoryEntry?>
         get() = _selectedEntry
 
-    private val filter = MutableStateFlow<HistoryFilter>(HistoryFilter.NoFilter)
+    private val _filter = MutableStateFlow<HistoryFilter>(HistoryFilter.NoFilter)
+    val filter: LiveData<HistoryFilter>
+        get() = _filter.asLiveData()
 
     private val _showDatePicker = MutableLiveData<Event<Long>>(null)
     val showDatePicker: LiveData<Event<Long>>
         get() = _showDatePicker
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val entries = filter.flatMapLatest {
+    val entries = _filter.flatMapLatest {
         historyRepository.getPagedEntriesFilteredBy(it)
     }
         .cachedIn(viewModelScope)
 
-    fun applyExternalFilters(wineId: Long, bottleId: Long) {
-        if (wineId != -1L) {
-            setFilter(HistoryFilter.WineFilter(wineId))
+    fun applyExternalFilters(wineId: Long, bottleId: Long, tastingLog: Boolean) {
+        val filter = when {
+            tastingLog && wineId > 0 -> HistoryFilter.TastingLog(wineId)
+            wineId > 0 -> HistoryFilter.WineFilter(wineId)
+            bottleId > 0 -> HistoryFilter.BottleFilter(bottleId)
+            else -> HistoryFilter.NoFilter
         }
 
-        if (bottleId != -1L) {
-            setFilter(HistoryFilter.BottleFilter(bottleId))
-        }
+        setFilter(filter)
     }
 
     fun requestScrollToDate(timestamp: Long) {
         viewModelScope.launch(IO) {
-            val filter = filter.value
+            val filter = _filter.value
             val entries = historyRepository.getAllEntriesNotPagedNotLive()
             val filtered = rawFilter(entries, filter)
             val offset = 1
@@ -93,7 +97,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 
     fun requestDatePicker() {
         viewModelScope.launch(IO) {
-            val filter = filter.value
+            val filter = _filter.value
             val entries = historyRepository.getAllEntriesNotPagedNotLive()
             val filtered = rawFilter(entries, filter)
 
@@ -111,7 +115,7 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
             _selectedEntry.postValue(null)
         }
 
-        this.filter.value = filter
+        this._filter.value = filter
     }
 
     fun setSelectedHistoryEntry(entry: BoundedHistoryEntry?) {
@@ -141,14 +145,32 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 
             is HistoryFilter.BottleFilter -> source.filter { it.bottleId == filter.bottleId }
             is HistoryFilter.WineFilter -> source // No support for wines
+            is HistoryFilter.TastingLog -> source // No support for wines
             is HistoryFilter.NoFilter -> source
         }
     }
 }
 
 sealed class HistoryFilter {
-    class TypeFilter(@param:IdRes val chipId: Int) : HistoryFilter()
-    class WineFilter(val wineId: Long) : HistoryFilter()
-    class BottleFilter(val bottleId: Long) : HistoryFilter()
-    data object NoFilter : HistoryFilter()
+    @StringRes
+    abstract fun getDisplayTextResId(): Int
+
+    class TypeFilter(@param:IdRes val chipId: Int) : HistoryFilter() {
+        override fun getDisplayTextResId() = R.string.nothing
+    }
+
+    class WineFilter(val wineId: Long) : HistoryFilter() {
+        override fun getDisplayTextResId() = R.string.history_filter_wine
+    }
+
+    class TastingLog(val wineId: Long) : HistoryFilter() {
+        override fun getDisplayTextResId() = R.string.history_filter_tasting_log
+    }
+    class BottleFilter(val bottleId: Long) : HistoryFilter() {
+        override fun getDisplayTextResId() = R.string.history_filter_bottle
+    }
+
+    data object NoFilter : HistoryFilter() {
+        override fun getDisplayTextResId() = R.string.nothing
+    }
 }

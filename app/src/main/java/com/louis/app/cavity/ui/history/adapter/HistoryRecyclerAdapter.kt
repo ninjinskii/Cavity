@@ -167,12 +167,13 @@ class HistoryRecyclerAdapter(
                     val editCommentDialog = SimpleInputDialog(
                         context,
                         fragment.layoutInflater,
-                        fragment.viewLifecycleOwner
+                        fragment.viewLifecycleOwner,
+                        textArea = true
                     )
                     val dialogResource = SimpleInputDialog.DialogContent(
                         title = R.string.edit,
                         hint = R.string.tasting_comment,
-                        icon = R.drawable.ic_edit
+                        icon = R.drawable.ic_glass
                     ) {
                         onEditBottleComment(entry, it)
                     }

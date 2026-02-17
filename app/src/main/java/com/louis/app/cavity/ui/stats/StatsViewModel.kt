@@ -42,9 +42,9 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         currentItemPosition.switchMap { statFactory.comparisons[it] }
     }
 
-    private val _showYearPicker = MutableLiveData(false)
-    val showYearPicker: LiveData<Boolean>
-        get() = _showYearPicker
+    private val _showYearSpanOptions = MutableLiveData(false)
+    val showYearSpanOptions: LiveData<Boolean>
+        get() = _showYearSpanOptions
 
     private val _comparison = MutableLiveData(false)
     val comparison: LiveData<Boolean>
@@ -58,6 +58,10 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setStatType(viewPagerPos: Int, statType: StatType) {
         statFactory.applyStatType(viewPagerPos, statType)
+    }
+
+    fun setIncludeGifts(viewPagePos: Int, includeGifts: Boolean) {
+        statFactory.applyIncludeGifts(viewPagePos, includeGifts)
     }
 
     fun notifyPageChanged(position: Int) {
@@ -78,10 +82,10 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setShouldShowYearPicker(show: Boolean) {
-        val currentValue = _showYearPicker.value!!
+        val currentValue = _showYearSpanOptions.value!!
 
         if (show != currentValue) {
-            _showYearPicker.value = show
+            _showYearSpanOptions.value = show
 
             if (!show) {
                 stopComparison()

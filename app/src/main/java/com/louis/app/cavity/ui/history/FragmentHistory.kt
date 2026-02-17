@@ -80,7 +80,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
         // Don't reapply external filters on configuration change
         if (savedInstanceState == null) {
-            historyViewModel.applyExternalFilters(args.wineId, args.bottleId)
+            historyViewModel.applyExternalFilters(args.wineId, args.bottleId, args.tastingLog)
         }
 
         applyInsets()
@@ -191,6 +191,19 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
                 showDatePicker(oldestEntryDate)
             }
         }
+
+        historyViewModel.filter.observe(viewLifecycleOwner) {
+            val externalFilterEnabled =
+                it !is HistoryFilter.NoFilter && it !is HistoryFilter.TypeFilter
+
+            with(binding) {
+                externalFilter.text = getText(it.getDisplayTextResId())
+                filterScrollView.isScrollEnabled = !externalFilterEnabled
+                filterChipGroup.setVisible(!externalFilterEnabled, invisible = true)
+                externalFilter.setVisible(externalFilterEnabled)
+                externalFilterIcon.setVisible(externalFilterEnabled)
+            }
+        }
     }
 
     private fun setListeners() {
@@ -216,6 +229,10 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
 
                 findNavController().navigate(action)
             }
+        }
+
+        binding.externalFilterIcon.setOnClickListener {
+            historyViewModel.setFilter(HistoryFilter.NoFilter)
         }
 
         bottomSheetBehavior?.addBottomSheetCallback(object :

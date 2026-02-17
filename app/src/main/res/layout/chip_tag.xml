@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Cavity.Chip.Choice"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:textAppearance="?attr/textAppearanceBody2"
+    tools:text="Essai"
+    app:chipIconSize="@dimen/medium_margin"
+    app:iconStartPadding="@dimen/xsmall_margin"
+    app:chipIconEnabled="true"
+    app:chipIcon="@drawable/ic_tag"
+    app:closeIcon="@drawable/ic_close"
+    app:closeIconTint="@color/chip_stroke"
+    app:chipIconTint="@color/chip_stroke" />

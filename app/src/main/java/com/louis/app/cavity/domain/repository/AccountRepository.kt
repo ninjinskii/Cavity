@@ -120,6 +120,10 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.postQGrapes(qGrapes) }
     }
 
+    suspend fun postTags(tags: List<Tag>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postTags(tags) }
+    }
+
     suspend fun postTastingFriendsXRefs(tastingFriendXRefs: List<TastingXFriend>):
             ApiResponse<Unit> {
         return doApiCall { cavityApi.postTastingFriendsXRef(tastingFriendXRefs) }
@@ -128,6 +132,10 @@ class AccountRepository private constructor(private val app: Application) {
     suspend fun postHistoryFriendsXRefs(historyFriendXRefs: List<HistoryXFriend>):
             ApiResponse<Unit> {
         return doApiCall { cavityApi.postHistoryFriendsXRef(historyFriendXRefs) }
+    }
+
+    suspend fun postBottleTagsXRefs(bottleTagXRefs: List<TagXBottle>): ApiResponse<Unit> {
+        return doApiCall { cavityApi.postBottleTagsXRef(bottleTagXRefs) }
     }
 
     suspend fun getAccount(): ApiResponse<LoginResponse> {
@@ -178,12 +186,20 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.getQGrapes() }
     }
 
+    suspend fun getTags(): ApiResponse<List<Tag>> {
+        return doApiCall { cavityApi.getTags() }
+    }
+
     suspend fun getTastingXFriend(): ApiResponse<List<TastingXFriend>> {
         return doApiCall { cavityApi.getTastingFriendsXRef() }
     }
 
     suspend fun getHistoryXFriend(): ApiResponse<List<HistoryXFriend>> {
         return doApiCall { cavityApi.getHistoryFriendsXRef() }
+    }
+
+    suspend fun getTagXBottle(): ApiResponse<List<TagXBottle>> {
+        return doApiCall { cavityApi.getBottleTagsXRef() }
     }
 
     suspend fun deleteCounties(): ApiResponse<Unit> {
@@ -228,6 +244,14 @@ class AccountRepository private constructor(private val app: Application) {
 
     suspend fun deleteQGrapes(): ApiResponse<Unit> {
         return doApiCall { cavityApi.deleteQGrapes() }
+    }
+
+    suspend fun deleteTags(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteTags() }
+    }
+
+    suspend fun deleteTagXBottle(): ApiResponse<Unit> {
+        return doApiCall { cavityApi.deleteBottleTagsXRef() }
     }
 
     suspend fun deleteTastingXFriend(): ApiResponse<Unit> {

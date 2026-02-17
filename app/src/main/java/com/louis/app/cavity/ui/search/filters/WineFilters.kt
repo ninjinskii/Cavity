@@ -94,7 +94,7 @@ class FilterReview(private val review: Review) : WineFilter {
 
 class FilterSelected : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
-        return boundedBottle.filter { it.bottle.isSelected }
+        return boundedBottle.filter { it.bottle.selected }
     }
 }
 
@@ -130,6 +130,12 @@ class FilterStorageLocation(private val storageLocation: String) : WineFilter {
 class FilterAlcohol(private val minAlcohol: Double, private val maxAlcohol: Double) : WineFilter {
     override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
         return boundedBottle.filter { (it.bottle.alcohol ?: 0.0) in (minAlcohol..maxAlcohol) }
+    }
+}
+
+class FilterTag(private val tag: Tag) : WineFilter {
+    override fun meetFilters(boundedBottle: List<BoundedBottle>): List<BoundedBottle> {
+        return boundedBottle.filter { it.tags.contains(tag) }
     }
 }
 

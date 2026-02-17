@@ -53,7 +53,7 @@ interface HistoryDao {
     @Query("SELECT * FROM history_entry WHERE favorite = 1 ORDER BY date DESC")
     fun getFavoriteEntries(): PagingSource<Int, BoundedHistoryEntry>
 
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
     @Transaction
     @Query("SELECT * FROM history_entry INNER JOIN bottle ON bottle.id = bottle_id WHERE wine_id=:wineId ORDER BY date DESC")
     fun getEntriesForWine(wineId: Long): PagingSource<Int, BoundedHistoryEntry>
@@ -63,8 +63,16 @@ interface HistoryDao {
     fun getEntriesForBottle(bottleId: Long): PagingSource<Int, BoundedHistoryEntry>
 
     @Transaction
+    @Query("SELECT * FROM history_entry INNER JOIN bottle ON bottle.id = bottle_id WHERE wine_id=:wineId AND (type = 0 OR type = 4) ORDER BY date DESC")
+    fun getConsumptionsForWineWithoutGifts(wineId: Long): PagingSource<Int, BoundedHistoryEntry>
+
+    @Transaction
     @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId AND (type = 1 OR type = 3) LIMIT 1")
     fun getReplenishmentForBottleNotPaged(bottleId: Long): LiveData<HistoryEntryWithFriends?>
+
+    @Transaction
+    @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId AND (type = 0 OR type = 2 OR type = 4) LIMIT 1")
+    fun getConsumptionForBottleNotPaged(bottleId: Long): LiveData<HistoryEntryWithFriends?>
 
     @Transaction
     @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId AND (type = 1 OR type = 3) LIMIT 1")

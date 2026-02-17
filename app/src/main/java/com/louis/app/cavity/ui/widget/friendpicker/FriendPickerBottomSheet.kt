@@ -34,11 +34,17 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
     private val friendPickerViewModel: FriendPickerViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
     )
-    private val adapter = PickFriendRecyclerAdapter {
-        friendPickerViewModel.updateFriendStatus(it)
-    }
+    private lateinit var adapter: PickFriendRecyclerAdapter
 
     private var scrollTo: Int? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = PickFriendRecyclerAdapter (requireContext()) {
+            friendPickerViewModel.updateFriendStatus(it)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

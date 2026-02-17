@@ -3,20 +3,25 @@ package com.louis.app.cavity.ui.stats
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import com.louis.app.cavity.R
+import com.louis.app.cavity.db.dao.BaseStat
 import com.louis.app.cavity.db.dao.Stat
+import com.louis.app.cavity.db.dao.WineColorStat
 import com.louis.app.cavity.db.dao.Year
+import com.louis.app.cavity.domain.history.HistoryEntryType
+import com.louis.app.cavity.domain.history.toInt
 import com.louis.app.cavity.domain.repository.StatsRepository
+import com.louis.app.cavity.model.WineColor
 
 class LiveDataStatsFactory(
     private val repository: StatsRepository,
     private val year: MutableLiveData<Year>,
     private val comparisonYear: MutableLiveData<Year>
 ) {
-
-    private val statTypes = MutableList(4) {
-        MutableLiveData(StatType.STOCK)
+    private val statRequests = MutableList(4) {
+        MutableLiveData(StatRequest(StatType.STOCK, false))
     }
 
     private val _comparisons: MutableList<LiveData<List<Stat>>> = MutableList(4) {
@@ -33,7 +38,7 @@ class LiveDataStatsFactory(
 
     @StringRes
     fun getStatTypeLabel(position: Int): Int {
-        return when (statTypes[position].value) {
+        return when (statRequests[position].value?.statType) {
             StatType.STOCK -> R.string.stock
             StatType.REPLENISHMENTS -> R.string.replenishments
             StatType.CONSUMPTIONS -> R.string.consumptions
@@ -41,53 +46,79 @@ class LiveDataStatsFactory(
         }
     }
 
-
     fun applyStatType(position: Int, statType: StatType) {
-        statTypes[position].value = statType
+        statRequests[position].value = statRequests[position].value?.copy(statType = statType)
+    }
+
+    fun applyIncludeGifts(position: Int, includeGifts: Boolean) {
+        statRequests[position].value =
+            statRequests[position].value?.copy(includeGifts = includeGifts)
     }
 
     private fun createLiveStat(position: Int) = year.switchMap { year ->
-        statTypes[position].switchMap { statType ->
-            getStat(position, year, statType)
+        statRequests[position].switchMap { statRequest ->
+            getStat(position, year, statRequest.statType, statRequest.includeGifts)
         }
     }
 
     private fun createComparisonLiveStat(position: Int) = comparisonYear.switchMap { comparisonY ->
-        statTypes[position].switchMap { statType ->
-            getStat(position, comparisonY, statType)
+        statRequests[position].switchMap { statRequest ->
+            getStat(position, comparisonY, statRequest.statType, statRequest.includeGifts)
         }
     }
 
-    // It can't be anything else.
-    @Suppress("UNCHECKED_CAST")
-    private fun getStat(position: Int, year: Year, statType: StatType): LiveData<List<Stat>> {
+    private fun getStat(
+        position: Int,
+        year: Year,
+        statType: StatType,
+        includeGifts: Boolean
+    ): LiveData<List<Stat>> {
         val start = year.yearStart
         val end = year.yearEnd
+        val types = when (statType) {
+            StatType.STOCK -> emptyList()
+            StatType.REPLENISHMENTS -> mutableListOf(HistoryEntryType.ADD.toInt()).also {
+                if (includeGifts) it.add(HistoryEntryType.GIVEN_BY.toInt())
+            }
 
-        return when (position) {
-            0 -> when (statType) {
-                StatType.STOCK -> repository.getStockByCounty()
-                StatType.REPLENISHMENTS -> repository.getReplenishmentsByCounty(start, end)
-                StatType.CONSUMPTIONS -> repository.getConsumptionsByCounty(start, end)
-            } as LiveData<List<Stat>>
+            StatType.CONSUMPTIONS -> mutableListOf(
+                HistoryEntryType.REMOVE.toInt(),
+                HistoryEntryType.TASTING.toInt()
+            ).also {
+                if (includeGifts) it.add(HistoryEntryType.GIFTED_TO.toInt())
+            }
+        }
 
-            1 -> when (statType) {
-                StatType.STOCK -> repository.getStockByColor()
-                StatType.REPLENISHMENTS -> repository.getReplenishmentsByColor(start, end)
-                StatType.CONSUMPTIONS -> repository.getConsumptionsByColor(start, end)
-            } as LiveData<List<Stat>>
+        val groupBy = when (position) {
+            0 -> "county.name"
+            1 -> "wine.color"
+            2 -> "bottle.vintage"
+            else -> "wine.naming"
+        }
 
-            2 -> when (statType) {
-                StatType.STOCK -> repository.getStockByVintage()
-                StatType.REPLENISHMENTS -> repository.getReplenishmentsByVintage(start, end)
-                StatType.CONSUMPTIONS -> repository.getConsumptionsByVintage(start, end)
-            } as LiveData<List<Stat>>
+        val mapToWineColor = position == 1
+        val stockFunctions = listOf(
+            { repository.getStockByCounty() },
+            { repository.getStockByColor() },
+            { repository.getStockByVintage() },
+            { repository.getStockByNaming() }
+        )
 
-            else -> when (statType) {
-                StatType.STOCK -> repository.getStockByNaming()
-                StatType.REPLENISHMENTS -> repository.getReplenishmentsByNaming(start, end)
-                StatType.CONSUMPTIONS -> repository.getConsumptionsByNaming(start, end)
-            } as LiveData<List<Stat>>
+        return when (statType) {
+            StatType.STOCK -> stockFunctions.getOrElse(position) { stockFunctions.last() }.invoke()
+            StatType.REPLENISHMENTS -> repository.getStatsByHistoryEntry(start, end, types, groupBy)
+                .map { if (mapToWineColor) mapToWineColor(it) else it }
+
+            StatType.CONSUMPTIONS -> repository.getStatsByHistoryEntry(start, end, types, groupBy)
+                .map { if (mapToWineColor) mapToWineColor(it) else it }
+        } as LiveData<List<Stat>>
+    }
+
+    private fun mapToWineColor(stats: List<BaseStat>): List<Stat> {
+        return stats.map {
+            WineColorStat(WineColor.valueOf(it.label), it.count, it.percentage, it.bottleIds)
         }
     }
+
+    data class StatRequest(val statType: StatType, val includeGifts: Boolean)
 }

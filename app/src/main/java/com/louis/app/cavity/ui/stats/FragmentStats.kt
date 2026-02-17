@@ -149,8 +149,12 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     }
 
     private fun observe() {
-        statsViewModel.showYearPicker.observe(viewLifecycleOwner) {
-            binding.years.setVisible(it)
+        statsViewModel.showYearSpanOptions.observe(viewLifecycleOwner) {
+            binding.years.apply {
+                setVisible(it, invisible = true)
+                post { binding.years.requestLayout() }
+            }
+
             updateStatDetailsListInset()
         }
     }

@@ -55,7 +55,7 @@
             android:layout_height="0dp"
             android:layout_marginHorizontal="@dimen/small_margin"
             android:layout_marginTop="@dimen/small_margin"
-            app:layout_constraintBottom_toTopOf="@id/barrierTop"
+            app:layout_constraintBottom_toTopOf="@id/barrierBottom"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +83,7 @@
         </com.louis.app.cavity.ui.home.widget.HexagonalView>
 
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/barrierTop"
+            android:id="@+id/barrierBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierAllowsGoneWidgets="false"
@@ -216,8 +216,8 @@
                     android:visibility="gone"
                     app:icon="@drawable/ic_flower"
                     app:label="@string/cuvee"
-                    app:layout_constraintEnd_toEndOf="@id/otherInfo"
-                    app:layout_constraintStart_toStartOf="@id/otherInfo"
+                    app:layout_constraintEnd_toEndOf="@id/price"
+                    app:layout_constraintStart_toStartOf="@id/apogee"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.louis.app.cavity.ui.bottle.widget.LabeledData
@@ -327,12 +327,35 @@
                     app:layout_constraintStart_toStartOf="@id/buyLocation"
                     app:layout_constraintTop_toBottomOf="@id/givenBy" />
 
+                <HorizontalScrollView
+                    android:id="@+id/tagsScrollView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="@dimen/medium_margin"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/otherInfo">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/tagsChipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/chip_group_default_height"
+                        android:layout_marginTop="@dimen/small_margin"
+                        android:animateLayoutChanges="true"
+                        app:singleLine="true">
+
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+
                 <View
                     android:id="@+id/divider1"
                     style="@style/Widget.Cavity.Divider"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/otherInfo" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tagsScrollView" />
 
                 <LinearLayout
                     android:id="@+id/buttonEdit"
@@ -435,13 +458,47 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/buttonTastingLog"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="@id/buttonHistory"
+                    app:layout_constraintStart_toStartOf="@id/buttonEdit"
+                    app:layout_constraintTop_toBottomOf="@id/buttonEdit"
+                    app:layout_constraintWidth_max="100dp">
+
+                <ImageView
+                    android:layout_width="@dimen/medium_icon"
+                    android:layout_height="@dimen/medium_icon"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/shape_icon_button"
+                    android:contentDescription="@string/edit_bottle"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_log"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/buttonTastingLogText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/xsmall_margin"
+                    android:gravity="center_horizontal"
+                    android:text="@string/tasting_log"
+                    android:textAppearance="?attr/textAppearanceCaption" />
+
+                </LinearLayout>
+
                 <View
                     android:id="@+id/divider2"
                     style="@style/Widget.Cavity.Divider"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/buttonPdf" />
+                    app:layout_constraintTop_toBottomOf="@id/buttonTastingLog" />
 
                 <com.louis.app.cavity.ui.widget.SliceBarView
                     android:id="@+id/grapeBar"

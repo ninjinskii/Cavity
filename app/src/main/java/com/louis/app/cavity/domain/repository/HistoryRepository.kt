@@ -61,10 +61,16 @@ class HistoryRepository private constructor(app: Application) : Repository(app) 
 
     fun getEntriesForWine(wineId: Long) = historyDao.getEntriesForWine(wineId)
 
+    fun getConsumptionsForWineWithoutGifts(wineId: Long) =
+        historyDao.getConsumptionsForWineWithoutGifts(wineId)
+
     fun getEntriesForBottle(bottleId: Long) = historyDao.getEntriesForBottle(bottleId)
 
     fun getReplenishmentForBottleNotPaged(bottleId: Long) =
         historyDao.getReplenishmentForBottleNotPaged(bottleId)
+
+    fun getConsumptionForBottleNotPaged(bottleId: Long) =
+        historyDao.getConsumptionForBottleNotPaged(bottleId)
 
     fun getReplenishmentForBottleNotPagedNotLive(bottleId: Long) =
         historyDao.getReplenishmentForBottleNotPagedNotLive(bottleId)
@@ -124,6 +130,7 @@ class HistoryRepository private constructor(app: Application) : Repository(app) 
 
             is HistoryFilter.WineFilter -> getEntriesForWine(filter.wineId)
             is HistoryFilter.BottleFilter -> getEntriesForBottle(filter.bottleId)
+            is HistoryFilter.TastingLog -> getConsumptionsForWineWithoutGifts(filter.wineId)
             is HistoryFilter.NoFilter -> getAllEntries()
         }
     }

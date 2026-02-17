@@ -33,11 +33,11 @@ data class Bottle(
     val alcohol: Double?,
     var consumed: Int,
     @ColumnInfo(name = "tasting_id", index = true) var tastingId: Long? = null
-) : Chipable, FileAssoc {
+) :
+    Chipable, FileAssoc {
 
     @Ignore
-    var isSelected: Boolean = false
-
+    var selected: Boolean = false
 
     fun isReadyToDrink(): Boolean {
         val year = Calendar.getInstance().get(Calendar.YEAR)

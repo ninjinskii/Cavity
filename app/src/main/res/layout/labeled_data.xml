@@ -11,6 +11,7 @@
         android:layout_width="@dimen/labeled_data_icon"
         android:layout_height="@dimen/labeled_data_icon"
         android:contentDescription="@string/labeled_data"
+        app:tint="?attr/colorControlNormal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_glass" />

@@ -2,7 +2,9 @@ package com.louis.app.cavity.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.model.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BottleDao {
@@ -30,8 +32,9 @@ interface BottleDao {
     @Query("SELECT * FROM bottle")
     suspend fun getAllBottlesNotLive(): List<Bottle>
 
-    @Query("SELECT * FROM bottle WHERE wine_id=:wineId ORDER BY consumed ASC,vintage")
-    fun getBottlesForWine(wineId: Long): LiveData<List<Bottle>>
+    @Transaction
+    @Query("SELECT * FROM bottle WHERE wine_id=:wineId ORDER BY consumed ASC, vintage")
+    fun getBottlesForWine(wineId: Long): Flow<List<BottleWithHistoryEntries>>
 
     @Query("SELECT * FROM bottle WHERE wine_id=:wineId")
     suspend fun getBottlesForWineNotLive(wineId: Long): List<Bottle>
@@ -104,6 +107,18 @@ data class BottleWithTastingActions(
     val tastingActions: List<TastingAction>,
 )
 
+data class BottleWithHistoryEntries(
+    @Embedded val bottle: Bottle,
+    @Relation(
+        entity = HistoryEntry::class,
+        parentColumn = "id",
+        entityColumn = "bottle_id"
+    )
+    val historyEntries: List<HistoryEntry>
+) {
+    fun getConsumptionEntry() = historyEntries.firstOrNull { it.type.isConsumption() }
+}
+
 data class BoundedBottle(
     @Embedded val bottle: Bottle,
     @Relation(
@@ -138,4 +153,15 @@ data class BoundedBottle(
         entityColumn = "bottle_id",
     )
     val historyEntriesWithFriends: List<HistoryEntryWithFriends>,
+
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "id",
+        associateBy = Junction(
+            value = TagXBottle::class,
+            parentColumn = "bottle_id",
+            entityColumn = "tag_id"
+        )
+    )
+    val tags: List<Tag>
 )

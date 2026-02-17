@@ -46,7 +46,9 @@ import com.louis.app.cavity.model.*
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
+import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
+import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.ui.search.widget.InsettableInfo
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
@@ -93,6 +95,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     private val filtersBinding get() = _filtersBinding!!
 
     private val settingsViewModel: SettingsViewModel by activityViewModels()
+    private val addItemViewModel: AddItemViewModel by activityViewModels()
     private val searchViewModel: SearchViewModel by viewModels()
     private val addTastingViewModel: AddTastingViewModel by viewModels(
         ownerProducer = { requireParentFragment() }
@@ -196,7 +199,8 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     R.id.divider5, R.id.reviewTitle, R.id.reviewScrollView, R.id.divider6,
                     R.id.divider7, R.id.friendTitle, R.id.friendScrollView, R.id.bottleSizeTitle,
                     R.id.divider8, R.id.divider9, R.id.alcoholTitle, R.id.alcoholSlider,
-                    R.id.storageLocationTitle, R.id.storageLocationLayout
+                    R.id.storageLocationTitle, R.id.storageLocationLayout,
+                    R.id.tagScrollView, R.id.tagTitle
                 ).map { InsettableInfo(inflatedView.findViewById(it)) }
 
                 val leftInsettable = intArrayOf(R.id.beyondLayout)
@@ -346,7 +350,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         }
 
         searchViewModel.getAllFriends().observe(viewLifecycleOwner) { friends ->
-            val preselectedReviews = searchViewModel.selectedFriends.map { it.id }
+            val preselectedFriends = searchViewModel.selectedFriends.map { it.id }
             ChipLoader.Builder()
                 .with(lifecycleScope)
                 .useInflater(layoutInflater)
@@ -355,9 +359,28 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                 .into(filtersBinding.friendChipGroup)
                 .useAvatar(true)
                 .selectable(true) // friend chips are not selectablea by default
-                .preselect(preselectedReviews)
+                .preselect(preselectedFriends)
                 .doOnClick { submitFriendFilter() }
                 .emptyText(getString(R.string.empty_friend))
+                .build()
+                .go()
+        }
+
+        searchViewModel.getAllTags().observe(viewLifecycleOwner) { tags ->
+            val chipGroupId = filtersBinding.tagChipGroup.id
+            val preselectedTags = searchViewModel.selectedTags.map { it.id }
+            ChipLoader.Builder()
+                .with(lifecycleScope)
+                .useInflater(layoutInflater)
+                .toInflate(R.layout.chip_tag)
+                .load(tags)
+                .into(filtersBinding.tagChipGroup)
+                .preselect(preselectedTags)
+                .doOnClick { searchViewModel.submitFilter(chipGroupId, getTagFilter()) }
+                .doOnLongClick { view ->
+                    true.also { showUpdateTagDialog(view.getTag(R.string.tag_chip_id) as Tag) }
+                }
+                .emptyText(getString(R.string.empty_tag))
                 .build()
                 .go()
         }
@@ -653,7 +676,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             binding.emptyState.setVisible(it.isEmpty())
             binding.matchingWines.text =
                 resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
-            bottlesAdapter?.submitList(it.toMutableList()) {
+            bottlesAdapter?.submitList(it) {
                 if (sortChanged) {
                     binding.bottleList.scrollToPosition(0)
                     sortChanged = false
@@ -910,6 +933,13 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             .fold(NoFilter as WineFilter) { acc, filterFriend -> acc.orCombine(filterFriend) }
     }
 
+    private fun getTagFilter(): WineFilter {
+        return filtersBinding.tagChipGroup.collectAs<Tag>()
+            .also { searchViewModel.selectedTags = it }
+            .map { FilterTag(it) }
+            .fold(NoFilter as WineFilter) { acc, filterTag -> acc.orCombine(filterTag) }
+    }
+
     private fun getPriceFilter(): WineFilter {
         if (!filtersBinding.togglePrice.isChecked || !filtersBinding.priceSlider.isLaidOut) {
             return NoFilter
@@ -1007,6 +1037,19 @@ class FragmentSearch : Step(R.layout.fragment_search) {
                     dialog.dismiss()
                 }
         }
+    }
+
+    private fun showUpdateTagDialog(tag: Tag) {
+        val dialogResource = SimpleInputDialog.DialogContent(
+            title = R.string.rename_tag,
+            hint = R.string.tag,
+            icon = R.drawable.ic_tag
+        ) {
+            addItemViewModel.updateTag(tag.copy(name = it))
+        }
+
+        SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
+            .showForEdit(dialogResource, tag.name)
     }
 
     private fun isSearchMode() = binding.motionToolbar.progress == 1F

@@ -25,7 +25,7 @@ import kotlinx.coroutines.withContext
 class ChipLoader private constructor(
     private val scope: CoroutineScope,
     private val layoutInflater: LayoutInflater,
-    @LayoutRes private val layout: Int,
+    @param:LayoutRes private val layout: Int,
     private val items: List<Chipable>,
     private val avatar: Boolean,
     private val chipGroup: ChipGroup,
@@ -34,7 +34,8 @@ class ChipLoader private constructor(
     private val onEmpty: String?,
     private val showIconIf: (Chipable) -> Boolean,
     private val closable: ((Chipable) -> Unit)?,
-    private val onClickListener: ((View) -> Unit)?
+    private val onClickListener: ((View) -> Unit)?,
+    private val onLongClickListener: ((View) -> Boolean)?
 ) {
 
     fun go() {
@@ -61,12 +62,23 @@ class ChipLoader private constructor(
                     }
 
                     onClickListener?.let { setOnClickListener(it) }
+                    onLongClickListener?.let { setOnLongClickListener(it) }
                     setOnCloseIconClickListener {
                         closable?.invoke(item)
                     }
                 }
 
                 withContext(Main) {
+                    // Double checking that no existing item is duplicated. It could happen even if
+                    // clearChipGroup is called when calling go at least 2 times quickly.
+                    // It has to be done on main thread
+                    val currentViewIds = chipGroup.children.map { it.getTag(R.string.tag_chip_id) }
+                    val chipTagId = chip.getTag(R.string.tag_chip_id)
+
+                    if (chipTagId in currentViewIds) {
+                        return@withContext
+                    }
+
                     chipGroup.addView(chip)
 
                     if (selectable) {
@@ -76,7 +88,7 @@ class ChipLoader private constructor(
                             chip.isChecked = preselectedItems.isEmpty()
                         }
 
-                        chip.isChecked = item.getItemId() in preselectedItems
+                        chip.isChecked = item.isSelected() || item.getItemId() in preselectedItems
                     } else {
                         chip.isCheckable = false
                     }
@@ -147,7 +159,7 @@ class ChipLoader private constructor(
     data class Builder(
         private var scope: CoroutineScope? = null,
         private var layoutInflater: LayoutInflater? = null,
-        @LayoutRes private var layout: Int = R.layout.chip_choice,
+        @param:LayoutRes private var layout: Int = R.layout.chip_choice,
         private var items: List<Chipable> = emptyList(),
         private var avatar: Boolean = false,
         private var chipGroup: ChipGroup? = null,
@@ -157,7 +169,8 @@ class ChipLoader private constructor(
         private var onEmpty: String? = null,
         private var showIconIf: (Chipable) -> Boolean = { false },
         private var closable: ((Chipable) -> Unit)? = null,
-        private var onClickListener: ((View) -> Unit)? = null
+        private var onClickListener: ((View) -> Unit)? = null,
+        private var onLongClickListener: ((View) -> Boolean)? = null
     ) {
         fun with(scope: CoroutineScope) = apply { this.scope = scope }
         fun useInflater(inflater: LayoutInflater) = apply { this.layoutInflater = inflater }
@@ -175,6 +188,10 @@ class ChipLoader private constructor(
         fun showIconIf(block: (Chipable) -> Boolean) = apply { this.showIconIf = block }
         fun doOnClick(block: (View) -> Unit) = apply {
             this.onClickListener = block
+        }
+
+        fun doOnLongClick(block: (View) -> Boolean) = apply {
+            this.onLongClickListener = block
         }
 
         fun build(): ChipLoader {
@@ -207,7 +224,8 @@ class ChipLoader private constructor(
                 onEmpty,
                 showIconIf,
                 closable,
-                onClickListener
+                onClickListener,
+                onLongClickListener
             )
         }
     }

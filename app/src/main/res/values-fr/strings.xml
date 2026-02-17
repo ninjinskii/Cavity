@@ -28,9 +28,11 @@
     <string name="require_float">Valeurs numériques uniquement.</string>
     <string name="empty_contest_name">Indiquez un nom de concours.</string>
     <string name="empty_grape_name">Indiquez un nom de cépage.</string>
+    <string name="empty_tag_name">Le nom du tag ne peut pas être vide.</string>
     <string name="grape_already_exists">Ce cépage existe déjà.</string>
     <string name="contest_name_already_exists">Ce concours est existe déjà.</string>
     <string name="friend_already_exists">Cet ami existe déjà.</string>
+    <string name="tag_already_exists">Ce tag existe déjà.</string>
     <string name="no_negative">Entrez un nombre supérieur à 0.</string>
     <string name="camera_error">Échec de l\'initialisation de la caméra.</string>
     <string name="invalid_email">Email non valide.</string>
@@ -179,6 +181,15 @@
     <string name="bottle_used_in_tasting">Cette bouteille est utilisée dans une dégustation.</string>
     <string name="retire">Retirer</string>
     <string name="back_in_stock">Bouteille remise en stock.</string>
+    <string name="tasting_log">Journal de dégustation</string>
+    <string name="tag">Tag</string>
+    <string name="tags">Tags</string>
+    <string name="add_tag">Ajouter un tag</string>
+    <string name="empty_tag">Aucun tag</string>
+    <string name="tag_removed_from_bottle">Tag retiré.</string>
+    <string name="tag_explanation">Vous pouvez créer et assigner des tags à des bouteilles afin de les grouper selon vos propres critères. Exemple: GCC (grand cru classé), poisson (se marie bien avec du poisson)</string>
+    <string name="rename_tag">Renommer un tag</string>
+    <string name="tag_updated">Tag mis à jour.</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>
@@ -232,6 +243,9 @@
     <string name="nothing"> </string>
     <string name="empty_history">La liste des bouteilles ajoutées ou consommées sera affichée ici</string>
     <string name="empty_history_favorite">Pour mettre un favori, glissez une entrée de l\'historique vers la gauche</string>
+    <string name="history_filter_wine">Filtre par vin</string>
+    <string name="history_filter_bottle">Filtre par bouteille</string>
+    <string name="history_filter_tasting_log">Journal de dégustation</string>
 
     <!-- Stats -->
     <string name="stats">Statistiques</string>
@@ -244,6 +258,7 @@
     <string name="misc_total_stock">Bouteilles en stock</string>
     <string name="total">Total: %1$d</string>
     <string name="stock">Stock</string>
+    <string name="include_gifts">Inclure les bouteilles offertes</string>
 
     <!-- Tasting -->
     <string name="add_tasting">Créer une dégustation</string>

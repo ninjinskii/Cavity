@@ -59,11 +59,17 @@ interface CavityApi {
     @POST("qgrape")
     suspend fun postQGrapes(@Body qGrapes: List<QGrape>)
 
+    @POST("tag")
+    suspend fun postTags(@Body tags: List<Tag>)
+
     @POST("tasting-x-friend")
     suspend fun postTastingFriendsXRef(@Body tastingXFriends: List<TastingXFriend>)
 
     @POST("history-x-friend")
     suspend fun postHistoryFriendsXRef(@Body historyXFriends: List<HistoryXFriend>)
+
+    @POST("tag-x-bottle")
+    suspend fun postBottleTagsXRef(@Body tagXBottle: List<TagXBottle>)
 
     @GET("account")
     suspend fun getAccount(): LoginResponse
@@ -101,11 +107,17 @@ interface CavityApi {
     @GET("qgrape")
     suspend fun getQGrapes(): List<QGrape>
 
+    @GET("tag")
+    suspend fun getTags(): List<Tag>
+
     @GET("tasting-x-friend")
     suspend fun getTastingFriendsXRef(): List<TastingXFriend>
 
     @GET("history-x-friend")
     suspend fun getHistoryFriendsXRef(): List<HistoryXFriend>
+
+    @GET("tag-x-bottle")
+    suspend fun getBottleTagsXRef(): List<TagXBottle>
 
     @DELETE("county")
     suspend fun deleteCounties()
@@ -140,9 +152,15 @@ interface CavityApi {
     @DELETE("qgrape")
     suspend fun deleteQGrapes()
 
+    @DELETE("tag")
+    suspend fun deleteTags()
+
     @DELETE("tasting-x-friend")
     suspend fun deleteTastingFriendsXRef()
 
     @DELETE("history-x-friend")
     suspend fun deleteHistoryFriendsXRef()
+
+    @DELETE("tag-x-bottle")
+    suspend fun deleteBottleTagsXRef()
 }

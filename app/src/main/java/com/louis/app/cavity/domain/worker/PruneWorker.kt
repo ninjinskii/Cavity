@@ -40,6 +40,7 @@ class PruneWorker(context: Context, params: WorkerParameters) : CoroutineWorker(
                     deleteWines(),
                     deleteBottles(),
                     deleteFriends(),
+                    deleteTags(),
                     deleteGrapes(),
                     deleteReviews(),
                     deleteHistoryEntries(),
@@ -47,8 +48,9 @@ class PruneWorker(context: Context, params: WorkerParameters) : CoroutineWorker(
                     deleteTastingActions(),
                     deleteFReviews(),
                     deleteQGrapes(),
+                    deleteTagXBottle(),
                     deleteTastingXFriend(),
-                    deleteHistoryXFriend()
+                    deleteHistoryXFriend(),
                 ).forEach {
                     if (it !is ApiResponse.Success) {
                         throw UncompletePruneException()

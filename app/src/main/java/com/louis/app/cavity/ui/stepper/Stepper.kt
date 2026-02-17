@@ -60,7 +60,7 @@ abstract class Stepper : Fragment(R.layout.fragment_stepper) {
             (topBinding.next.layoutParams as ViewGroup.MarginLayoutParams)
                 .updateMargins(right = initialNextMargin + right)
 
-            // We took care of top inset, so we dont propagate it to children
+            // We took care of top inset, so we don't propagate it to children
             WindowInsetsCompat.Builder().setInsets(
                 WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout(),
                 Insets.of(left, 0, right, bottom)

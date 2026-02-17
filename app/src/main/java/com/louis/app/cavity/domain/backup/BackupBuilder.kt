@@ -16,6 +16,7 @@ import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.domain.Environment
+import com.louis.app.cavity.domain.repository.TagRepository
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -58,6 +59,7 @@ class BackupBuilder(private val context: Context) {
                 val historyRepository = HistoryRepository.getInstance(app)
                 val friendRepository = FriendRepository.getInstance(app)
                 val tastingRepository = TastingRepository.getInstance(app)
+                val tagRepository = TagRepository.getInstance(app)
 
                 launch {
                     val wines = wineRepository.getAllWinesNotLive()
@@ -72,6 +74,7 @@ class BackupBuilder(private val context: Context) {
                         postWines(wines),
                         postBottles(bottles),
                         postFriends(friends),
+                        postTags(tagRepository.getAllTagsNotLive()),
                         postGrapes(grapeRepository.getAllGrapesNotLive()),
                         postReviews(reviewRepository.getAllReviewsNotLive()),
                         postHistoryEntries(historyRepository.getAllEntriesNotPagedNotLive()),
@@ -80,7 +83,8 @@ class BackupBuilder(private val context: Context) {
                         postFReviews(reviewRepository.getAllFReviewsNotLive()),
                         postQGrapes(grapeRepository.getAllQGrapesNotLive()),
                         postTastingFriendsXRefs(tastingRepository.getAllTastingXFriendsNotLive()),
-                        postHistoryFriendsXRefs(historyRepository.getAllHistoryXFriendsNotLive())
+                        postHistoryFriendsXRefs(historyRepository.getAllHistoryXFriendsNotLive()),
+                        postBottleTagsXRefs(tagRepository.getAllTagBottleXRefsNotLive())
                     ).forEach {
                         if (it !is ApiResponse.Success) {
                             throw UncompleteExportException()

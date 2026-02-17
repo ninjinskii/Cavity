@@ -12,13 +12,15 @@ import com.louis.app.cavity.domain.repository.FriendRepository
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.ReviewRepository
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
+import com.louis.app.cavity.domain.repository.TagRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
+import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 /**
@@ -30,13 +32,14 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
+    private val tagRepository = TagRepository.getInstance(app)
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
     fun insertCounty(countyName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             val counties = countyRepository.getAllCountiesNotLive()
 
             if (checkCountyAlredyExists(counties, countyName)) {
@@ -58,7 +61,7 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun insertGrape(grapeName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             val result = grapeRepository.insertGrape(Grape(0, grapeName))
             val message = when (result) {
                 is Success -> R.string.grape_added
@@ -72,28 +75,47 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun insertReview(contestName: String, type: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             try {
                 reviewRepository.insertReview(Review(0, contestName, type))
                 _userFeedback.postOnce(R.string.review_added)
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.empty_contest_name)
-            } catch (e: SQLiteConstraintException) {
+            } catch (_: SQLiteConstraintException) {
                 _userFeedback.postOnce(R.string.contest_name_already_exists)
             }
         }
     }
 
     fun insertFriend(nameLastName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IO) {
             try {
                 friendRepository.insertFriend(Friend(0, nameLastName, ""))
                 _userFeedback.postOnce(R.string.friend_added)
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 _userFeedback.postOnce(R.string.input_error)
-            } catch (e: SQLiteConstraintException) {
+            } catch (_: SQLiteConstraintException) {
                 _userFeedback.postOnce(R.string.friend_already_exists)
             }
+        }
+    }
+
+    fun insertTag(tagName: String) {
+        viewModelScope.launch(IO) {
+            try {
+                tagRepository.insertTag(Tag(0, tagName))
+            } catch (_: IllegalArgumentException) {
+                _userFeedback.postOnce(R.string.empty_tag_name)
+            } catch (_: SQLiteConstraintException) {
+                _userFeedback.postOnce(R.string.tag_already_exists)
+            }
+        }
+    }
+
+    fun updateTag(tag: Tag) {
+        viewModelScope.launch(IO) {
+            tagRepository.updateTag(tag)
+            _userFeedback.postOnce(R.string.tag_updated)
         }
     }
 

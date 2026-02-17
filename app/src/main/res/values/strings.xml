@@ -29,9 +29,11 @@
     <string name="require_float">Numerical value only.</string>
     <string name="empty_contest_name">Please enter a contest name.</string>
     <string name="empty_grape_name">Please enter a grape variety.</string>
+    <string name="empty_tag_name">Please enter a tag name.</string>
     <string name="grape_already_exists">This grape variety already exists.</string>
-    <string name="contest_name_already_exists">This contest already exist.</string>
-    <string name="friend_already_exists">This friend already exist.</string>
+    <string name="contest_name_already_exists">This contest already exists.</string>
+    <string name="friend_already_exists">This friend already exists.</string>
+    <string name="tag_already_exists">This tag already exists.</string>
     <string name="no_negative">Enter a positive number.</string>
     <string name="camera_error">Camera initialization failed.</string>
     <string name="invalid_email">Invalid email.</string>
@@ -39,7 +41,7 @@
 
     <!-- App -->
     <string name="app_name">Cavity</string>
-    <string name="consumed">this bottle has been drunk.</string>
+    <string name="consumed">This bottle has been drunk.</string>
     <string name="home">Home</string>
     <string name="add_wine">Add wine</string>
     <string name="add_bottle">Add bottle</string>
@@ -179,6 +181,15 @@
     <string name="bottle_used_in_tasting">This bottle is used in a tasting.</string>
     <string name="retire">Withdraw</string>
     <string name="back_in_stock">Bottle back in stock.</string>
+    <string name="tasting_log">Journal de dégustation</string>
+    <string name="tag">Tag</string>
+    <string name="tags">Tags</string>
+    <string name="add_tag">Add a tag</string>
+    <string name="empty_tag">No tags</string>
+    <string name="tag_removed_from_bottle">Tag removed from bottle.</string>
+    <string name="tag_explanation">You can create and assign tags to bottles in order to group them according to your own criteria. Example: GCC (Grand Cru Classé), fish (pairs well with fish).</string>
+    <string name="rename_tag">Rename tag</string>
+    <string name="tag_updated">Tag updated.</string>
 
     <!-- Manager -->
     <string name="manager">Gestionnaire</string>
@@ -233,6 +244,9 @@
     <string name="nothing"> </string>
     <string name="empty_history">The list of added or drunk bottles will be displayed here</string>
     <string name="empty_history_favorite">To add a favorite, drag a history entry to the left</string>
+    <string name="history_filter_wine">Wine filter</string>
+    <string name="history_filter_bottle">Bottle filter</string>
+    <string name="history_filter_tasting_log">Tasting log</string>
 
     <!-- Stats -->
     <string name="stats">Statistics</string>
@@ -245,6 +259,7 @@
     <string name="misc_total_stock">Bottles in stock</string>
     <string name="total">Total: %1$d</string>
     <string name="stock">Stock</string>
+    <string name="include_gifts">Include given bottles</string>
 
     <!-- Tasting -->
     <string name="add_tasting">Add tasting</string>
