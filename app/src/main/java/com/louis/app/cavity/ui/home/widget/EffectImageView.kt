@@ -62,10 +62,18 @@ class EffectImageView @JvmOverloads constructor(
 
             for (line in 0 until layout.lineCount) {
                 val renderNode = renderNodes[line]
-                val lineStart = view.left + layout.getLineLeft(line)
-                val lineEnd = view.left + layout.getLineRight(line)
-                val lineBottom = view.top + layout.getLineBottom(line).toFloat()
-                val lineTop = view.top + layout.getLineTop(line).toFloat()
+                val location = IntArray(2)
+                val imageLocation = IntArray(2)
+
+                view.getLocationInWindow(location)
+                getLocationInWindow(imageLocation)
+
+                val relativeX = location[0] - imageLocation[0]
+                val relativeY = location[1] - imageLocation[1]
+                val lineStart = relativeX + layout.getLineLeft(line)
+                val lineTop = relativeY + layout.getLineTop(line).toFloat()
+                val lineEnd = relativeX + layout.getLineRight(line)
+                val lineBottom = relativeY + layout.getLineBottom(line).toFloat()
                 val right = lineEnd - lineStart
                 val bottom = lineBottom - lineTop
 
