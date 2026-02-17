@@ -14,8 +14,8 @@ android {
         applicationId "com.louis.app.cavity"
         minSdkVersion 24
         targetSdkVersion 36
-        versionCode 41
-        versionName "1.10.2"
+        versionCode 42
+        versionName "1.11.0"
 
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")

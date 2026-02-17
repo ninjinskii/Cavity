@@ -1,0 +1,6 @@
+- Tasting log added
+- Ability to add custom tags to bottles
+- Improved design and blur effect on hexagons
+- Added sorting by apogee, and fixed price sorting
+- Enhanced stats with separation of gifted bottles
+- Various fixes: storage, comments, UI, performance, themes

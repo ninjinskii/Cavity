@@ -1,0 +1,6 @@
+- Journal de dégustation ajouté
+- Possibilité d'ajouter des tags personnalisés aux bouteilles
+- Amélioration du design et effet de flou sur les hexagones
+- Ajout du tri par apogée, et correction du tri par prix
+- Statistiques enrichies avec séparations des bouteilles offertes
+- Corrections diverses : stockage, commentaires, UI, performance, thèmes
