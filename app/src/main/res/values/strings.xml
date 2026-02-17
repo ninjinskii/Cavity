@@ -41,7 +41,7 @@
 
     <!-- App -->
     <string name="app_name">Cavity</string>
-    <string name="consumed">this bottle has been drunk.</string>
+    <string name="consumed">This bottle has been drunk.</string>
     <string name="home">Home</string>
     <string name="add_wine">Add wine</string>
     <string name="add_bottle">Add bottle</string>
