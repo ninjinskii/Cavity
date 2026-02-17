@@ -117,7 +117,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceCaption"
-        android:text="Inclure les bouteilles offertes"
+        android:text="@string/include_gifts"
         android:layout_marginStart="@dimen/small_margin"
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/toggleGivenBottle"

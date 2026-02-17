@@ -259,6 +259,7 @@
     <string name="misc_total_stock">Bottles in stock</string>
     <string name="total">Total: %1$d</string>
     <string name="stock">Stock</string>
+    <string name="include_gifts">Include given bottles</string>
 
     <!-- Tasting -->
     <string name="add_tasting">Add tasting</string>

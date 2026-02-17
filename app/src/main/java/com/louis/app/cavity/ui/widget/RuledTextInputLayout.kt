@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View.OnFocusChangeListener
 import androidx.annotation.StringRes
 import androidx.core.content.res.use
 import com.google.android.material.textfield.TextInputLayout
@@ -121,4 +120,4 @@ class RuledTextInputLayout @JvmOverloads constructor(
     }
 }
 
-data class Rule(@StringRes val onTestFailed: Int, val test: (String) -> Boolean)
+data class Rule(@param:StringRes val onTestFailed: Int, val test: (String) -> Boolean)

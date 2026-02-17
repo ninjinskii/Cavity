@@ -371,7 +371,7 @@
     <fragment
         android:id="@+id/fragmentStatsDetails"
         android:name="com.louis.app.cavity.ui.stats.FragmentStatsDetails"
-        tools:layout="@layout/fragment_stats_details">
+        tools:layout="@layout/bottom_sheet_stats">
         <argument
             android:name="title"
             app:argType="string" />

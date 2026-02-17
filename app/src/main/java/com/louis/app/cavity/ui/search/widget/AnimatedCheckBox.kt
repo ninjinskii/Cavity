@@ -62,6 +62,7 @@ class AnimatedCheckBox @JvmOverloads constructor(
 
     override fun toggle() {
         if (delay <= 0 || shouldToggle()) {
+            // WATCH OUT! Do not use property syntax here, it does not work
             setChecked(!isChecked)
         }
     }
