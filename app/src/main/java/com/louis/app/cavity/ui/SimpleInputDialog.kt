@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.InputType
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.inputmethod.EditorInfo
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -34,10 +35,9 @@ class SimpleInputDialog(
         dialogBinding = DialogSimpleInputBinding.inflate(layoutInflater)
         dialogBinding.input.apply {
             setText(editedString)
-            setSelection(editedString.length)
         }
 
-        buildAndShow(resources)
+        buildAndShow(resources, editedString.length)
     }
 
     private fun customizeEditText(@StringRes hint: Int, @DrawableRes icon: Int?) {
@@ -49,10 +49,14 @@ class SimpleInputDialog(
         if (this.textArea) {
             dialogBinding.inputLayout.gravity = Gravity.TOP
             with(dialogBinding.input) {
-                minLines = 7
+                setSingleLine(false)
+                setLines(7)
                 gravity = Gravity.TOP
+                imeOptions = EditorInfo.IME_ACTION_NONE
                 inputType =
-                    InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                    InputType.TYPE_CLASS_TEXT or
+                            InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or
+                            InputType.TYPE_TEXT_FLAG_MULTI_LINE
             }
         }
 
@@ -62,7 +66,7 @@ class SimpleInputDialog(
         }
     }
 
-    private fun buildAndShow(resources: DialogContent) {
+    private fun buildAndShow(resources: DialogContent, selectionPosition: Int = 0) {
         customizeEditText(resources.hint, resources.icon)
 
         val dialog = LifecycleMaterialDialogBuilder(context, lifecycleOwner)
@@ -79,7 +83,12 @@ class SimpleInputDialog(
         resources.message?.let { dialog.setMessage(context.getString(it)) }
         dialog.show()
 
-        dialogBinding.input.post { dialogBinding.input.showKeyboard() }
+        dialogBinding.input.apply {
+            post {
+                showKeyboard()
+                setSelection(selectionPosition)
+            }
+        }
     }
 
     data class DialogContent(
