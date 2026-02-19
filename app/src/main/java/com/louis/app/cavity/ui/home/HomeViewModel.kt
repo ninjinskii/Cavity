@@ -156,6 +156,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
             return true
         }
 
-        return wineWithBottles.bottles.any { checkStorageLocation(it) }
+        return wineWithBottles.bottles.any {
+            checkStorageLocation(it) && wineWithBottles.remainingBottles > 0
+        }
     }
 }
