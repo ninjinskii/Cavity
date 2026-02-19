@@ -17,7 +17,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSettingsBinding
 import com.louis.app.cavity.domain.repository.PrefsRepository.Companion.MIN_TEMPLATE_SCALE
 import com.louis.app.cavity.ui.addwine.FragmentCamera.Companion.TEMPLATE_ROTATION
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation

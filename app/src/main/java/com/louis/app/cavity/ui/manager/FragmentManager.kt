@@ -17,6 +17,7 @@ import com.louis.app.cavity.databinding.DialogAddReviewBinding
 import com.louis.app.cavity.databinding.FragmentManagerBinding
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.*
 
 class FragmentManager : Fragment(R.layout.fragment_manager) {

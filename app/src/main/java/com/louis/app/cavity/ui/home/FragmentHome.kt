@@ -28,6 +28,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.*
 
 class FragmentHome : Fragment(R.layout.fragment_home) {

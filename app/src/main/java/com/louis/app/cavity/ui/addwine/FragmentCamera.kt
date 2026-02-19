@@ -29,7 +29,7 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.TAKEN_PHOTO_URI
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.PermissionChecker
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.showSnackbar
 import java.io.File

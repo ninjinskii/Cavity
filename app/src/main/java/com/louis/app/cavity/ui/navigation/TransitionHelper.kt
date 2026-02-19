@@ -1,15 +1,17 @@
-package com.louis.app.cavity.util
+package com.louis.app.cavity.ui.navigation
 
 import android.graphics.Color
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
 import androidx.fragment.app.Fragment
+import androidx.transition.Transition
 import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.themeColor
 
 class TransitionHelper(private val fragment: Fragment) {
     private val period = fragment.resources.getInteger(R.integer.cavity_motion_long).toLong()
@@ -38,7 +40,8 @@ class TransitionHelper(private val fragment: Fragment) {
                 endContainerColor = it.endContainerColor
                 startElevation = it.startElevation
                 endElevation = it.endElevation
-            } ?: setAllContainerColors(resolveColor(com.google.android.material.R.attr.colorSurface))
+            }
+                ?: setAllContainerColors(resolveColor(com.google.android.material.R.attr.colorSurface))
         }
 
         if (enter) {
@@ -96,9 +99,9 @@ class TransitionHelper(private val fragment: Fragment) {
     private fun resolveColor(@AttrRes color: Int) = fragment.requireContext().themeColor(color)
 
     data class ContainerTransformOptions(
-        @ColorInt val startContainerColor: Int,
-        @ColorInt val endContainerColor: Int,
-        @Dimension val startElevation: Float = 0F,
-        @Dimension val endElevation: Float = 0F
+        @param:ColorInt val startContainerColor: Int,
+        @param:ColorInt val endContainerColor: Int,
+        @param:Dimension val startElevation: Float = 0F,
+        @param:Dimension val endElevation: Float = 0F
     )
 }

@@ -11,7 +11,7 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.stepper.Stepper
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAddBottle : Stepper() {

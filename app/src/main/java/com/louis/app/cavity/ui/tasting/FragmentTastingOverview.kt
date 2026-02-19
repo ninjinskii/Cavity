@@ -20,7 +20,7 @@ import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addtasting.SpaceGridItemDecoration
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation

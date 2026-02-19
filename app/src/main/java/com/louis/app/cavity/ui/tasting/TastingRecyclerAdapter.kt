@@ -13,7 +13,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemTastingBinding
 import com.louis.app.cavity.db.dao.BoundedTasting
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 
 class TastingRecyclerAdapter(
     private val childViewPool: RecyclerView.RecycledViewPool,

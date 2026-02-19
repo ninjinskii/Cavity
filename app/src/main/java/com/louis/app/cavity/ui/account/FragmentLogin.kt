@@ -17,7 +17,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.widget.Rule
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation

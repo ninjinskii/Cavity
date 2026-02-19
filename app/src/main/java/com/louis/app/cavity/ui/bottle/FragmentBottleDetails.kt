@@ -52,6 +52,7 @@ import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {

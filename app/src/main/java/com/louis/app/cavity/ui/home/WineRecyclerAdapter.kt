@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 
 class WineRecyclerAdapter(
     private val drawables: Pair<Drawable, Drawable>,

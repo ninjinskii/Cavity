@@ -16,7 +16,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSheetListBinding
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.ui.search.BottleRecyclerAdapter
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.prepareWindowInsets
 

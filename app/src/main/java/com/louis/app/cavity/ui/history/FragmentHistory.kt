@@ -40,6 +40,7 @@ import kotlin.math.min
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 

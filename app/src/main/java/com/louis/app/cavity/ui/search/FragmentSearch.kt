@@ -49,6 +49,7 @@ import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.ui.search.widget.InsettableInfo
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler

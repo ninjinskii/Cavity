@@ -16,7 +16,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.ui.home.widget.EffectImageView
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.toBoolean
 import androidx.core.net.toUri
 import androidx.core.view.isVisible

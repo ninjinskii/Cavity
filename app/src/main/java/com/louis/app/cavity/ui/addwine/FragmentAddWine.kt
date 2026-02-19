@@ -31,6 +31,7 @@ import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
 import com.louis.app.cavity.ui.home.HomeViewModel
+import com.louis.app.cavity.ui.navigation.TransitionHelper
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var snackbarProvider: SnackbarProvider
