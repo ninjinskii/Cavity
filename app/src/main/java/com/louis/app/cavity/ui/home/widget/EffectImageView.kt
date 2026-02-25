@@ -7,6 +7,8 @@ import android.graphics.RenderNode
 import android.graphics.Shader
 import android.os.Build
 import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
@@ -32,6 +34,11 @@ class EffectImageView @JvmOverloads constructor(
 
     @RequiresApi(Build.VERSION_CODES.S)
     fun setTargets(views: List<TextView>) {
+        if (views.isEmpty()) {
+            this.targets.clear()
+            return
+        }
+
         val lowerBound = 1
         val upperBound = 10
         val hasUndefinedTextLineCount = views.any { it.maxLines !in lowerBound..upperBound }
@@ -43,16 +50,73 @@ class EffectImageView @JvmOverloads constructor(
         this.targets.clear()
         val targets = views.map {
             val renderNodes = List(it.maxLines) { index -> RenderNode("blur-${it.id}-line-$index") }
-            Target(it, renderNodes)
+            Target(it, getRelativePositionToParent(it), renderNodes)
         }
 
         this.targets.addAll(targets)
     }
 
+    private fun getRelativePositionToParent(view: View): IntArray {
+        val location = IntArray(2)
+        var currentView: View? = view
+        var currentParent: View? = currentView?.parent as? View
+
+        if (currentView === this.parent) {
+            location[0] = 0
+            location[1] = 0
+            return location
+        }
+
+        while (currentParent != null && currentParent !== this.parent) {
+            val tempLocation = IntArray(2)
+            currentView?.getLocationInParent(tempLocation)
+
+            val layoutParams = currentView?.layoutParams
+            if (layoutParams is ViewGroup.MarginLayoutParams) {
+                location[0] += tempLocation[0] + layoutParams.leftMargin
+                location[1] += tempLocation[1] + layoutParams.topMargin
+            } else {
+                location[0] += tempLocation[0]
+                location[1] += tempLocation[1]
+            }
+
+            location[0] += currentView?.paddingLeft ?: 0
+            location[1] += currentView?.paddingTop ?: 0
+
+            currentView = currentParent
+            currentParent = currentView.parent as? View
+        }
+
+
+        if (currentParent === this.parent) {
+            currentView?.getLocationInParent(location)
+
+            val layoutParams = currentView?.layoutParams
+            if (layoutParams is ViewGroup.MarginLayoutParams) {
+                location[0] += layoutParams.leftMargin
+                location[1] += layoutParams.topMargin
+            }
+
+
+            location[0] += (currentView?.paddingLeft ?: 0)
+            location[1] += (currentView?.paddingTop ?: 0)
+        }
+
+        return location
+    }
+
+    fun View.getLocationInParent(location: IntArray) {
+        val locationInParent = IntArray(2)
+        this.getLocationInWindow(locationInParent)
+        location[0] = locationInParent[0]
+        location[1] = locationInParent[1]
+    }
+
+
     @RequiresApi(Build.VERSION_CODES.S)
     private fun drawBlurBehindTargets(canvas: Canvas) {
         for (target in targets) {
-            val (view, renderNodes) = target
+            val (view, spacings, renderNodes) = target
             val layout = view.layout
             val textViewReady = view.layout != null && view.layout.lineCount > 0
 
@@ -62,18 +126,10 @@ class EffectImageView @JvmOverloads constructor(
 
             for (line in 0 until layout.lineCount) {
                 val renderNode = renderNodes[line]
-                val location = IntArray(2)
-                val imageLocation = IntArray(2)
-
-                view.getLocationInWindow(location)
-                getLocationInWindow(imageLocation)
-
-                val relativeX = location[0] - imageLocation[0]
-                val relativeY = location[1] - imageLocation[1]
-                val lineStart = relativeX + layout.getLineLeft(line)
-                val lineTop = relativeY + layout.getLineTop(line).toFloat()
-                val lineEnd = relativeX + layout.getLineRight(line)
-                val lineBottom = relativeY + layout.getLineBottom(line).toFloat()
+                val lineStart = view.left + layout.getLineLeft(line) + spacings[0]
+                val lineEnd = view.left + layout.getLineRight(line) + spacings[0]
+                val lineBottom = view.top + layout.getLineBottom(line).toFloat() + spacings[1]
+                val lineTop = view.top + layout.getLineTop(line).toFloat() + spacings[1]
                 val right = lineEnd - lineStart
                 val bottom = lineBottom - lineTop
 
@@ -88,12 +144,18 @@ class EffectImageView @JvmOverloads constructor(
                     endRecording()
                     canvas.drawRenderNode(this)
                 }
+
+                /*canvas.drawRect(lineStart, lineTop, lineEnd, lineBottom, Paint().apply {
+                    color = Color.BLUE
+                })*/
             }
         }
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S) {
+        val hasImage = this.drawable != null
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S || !hasImage) {
             return super.onDraw(canvas)
         }
 
@@ -108,5 +170,29 @@ class EffectImageView @JvmOverloads constructor(
         drawBlurBehindTargets(canvas)
     }
 
-    data class Target(val view: TextView, val renderNodes: List<RenderNode>)
+    data class Target(
+        val view: TextView,
+        val spacing: IntArray,
+        val renderNodes: List<RenderNode>
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Target
+
+            if (view != other.view) return false
+            if (!spacing.contentEquals(other.spacing)) return false
+            if (renderNodes != other.renderNodes) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = view.hashCode()
+            result = 31 * result + spacing.contentHashCode()
+            result = 31 * result + renderNodes.hashCode()
+            return result
+        }
+    }
 }

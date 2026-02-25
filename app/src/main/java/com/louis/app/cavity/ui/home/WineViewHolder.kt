@@ -43,6 +43,10 @@ class WineViewHolder(
         listOf(wineName, wineNaming, cuvee, bottlesCount, icons)
     }
 
+    init {
+        tryBlurEffect()
+    }
+
     fun bind(wineWithBottles: WineWithBottles, highlight: Boolean) {
         val hexagon = binding.root
         val (wine, bottles) = wineWithBottles
@@ -72,8 +76,6 @@ class WineViewHolder(
                 (binding.wineImage as AppCompatImageView).setImageDrawable(null)
             }
         }
-
-        tryBlurEffect()
 
         if (highlight) {
             highlight()
