@@ -15,6 +15,9 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
@@ -23,13 +26,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.MaterialContainerTransform
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
+import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.*
+import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home) {
 
@@ -84,6 +88,12 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         setViewPagerOrientation()
         observe()
         setListeners()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.navigationEvent.collect { navigate(it) }
+            }
+        }
     }
 
     private fun applyInsets() {
@@ -233,11 +243,11 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
 
         binding.emptyState.setOnActionClickListener {
-            navigateToAddWine(currentCounty)
+            navigate(HomeRoute.AddWine(currentCounty))
         }
 
         binding.fab.setOnClickListener {
-            navigateToAddWine(currentCounty)
+            navigate(HomeRoute.AddWine(currentCounty))
         }
 
         binding.countyDetailsScrim.setOnClickListener {
@@ -321,13 +331,6 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             countyDetails.root.setVisible(false, invisible = true)
             countyDetailsScrim.setVisible(false)
         }
-    }
-
-    fun navigateToAddWine(countyId: Long) {
-        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
-
-        val action = FragmentHomeDirections.homeToAddWine(countyId = countyId)
-        findNavController().navigate(action)
     }
 
     fun getRecycledViewPool() = recyclePool

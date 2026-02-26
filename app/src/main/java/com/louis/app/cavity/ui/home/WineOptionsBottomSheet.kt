@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.louis.app.cavity.R
@@ -41,24 +40,15 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
             currentWine.organicImage.setVisible(args.isOrganic)
 
             addBottle.setOnClickListener {
-                val action = WineOptionsBottomSheetDirections.wineOptionsToAddBottle(args.wineId)
-                findNavController().navigate(action)
+                homeViewModel.requestAddBottle(args.wineId)
             }
 
             editWine.setOnClickListener {
-                val action = WineOptionsBottomSheetDirections.wineOptionsToEditWine(
-                    args.wineId,
-                    args.countyId
-                )
-
-                findNavController().navigate(action)
+                homeViewModel.requestEditWine(args.countyId, args.wineId)
             }
 
             showHistory.setOnClickListener {
-                val action =
-                    WineOptionsBottomSheetDirections.wineOptionsToHistory(wineId = args.wineId)
-
-                findNavController().navigate(action)
+                homeViewModel.requestShowWineHistory(args.wineId)
             }
 
             val filterByStorageLocationEnabled = homeViewModel.storageLocation.value != null

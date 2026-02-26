@@ -555,7 +555,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.bottlePicture)
         } catch (_: SecurityException) {
-            // Do nothing
+            startPostponedEnterTransition()
         }
     }
 

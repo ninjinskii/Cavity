@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.WineWithBottles
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.CountyRepository
 import com.louis.app.cavity.domain.repository.PrefsRepository
@@ -12,11 +13,15 @@ import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.ui.navigation.AppRoute
+import com.louis.app.cavity.ui.navigation.WineOptionsRoute
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
@@ -25,6 +30,10 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     private val bottleRepository = BottleRepository.getInstance(app)
     private val statsRepository = StatsRepository.getInstance(app)
     private val prefsRepository = PrefsRepository.getInstance(app)
+    private val errorReporter = SentryErrorReporter.getInstance(app)
+
+    private val _navigationEvent = MutableSharedFlow<AppRoute>(replay = 0, extraBufferCapacity = 1)
+    val navigationEvent: SharedFlow<AppRoute> = _navigationEvent
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
@@ -133,6 +142,10 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         else MutableLiveData(emptyList())
 
     fun getWinesWithBottlesByCounty(countyId: Long) = liveData(Default) {
+        if (countyId < 1) {
+            errorReporter.captureMessage("Illegal county id: $countyId")
+        }
+
         val wines = wineRepository.getWinesWithBottlesByCounty(countyId).map { winesWithBottles ->
             winesWithBottles.filter { checkStorageLocation(it) }
         }
@@ -141,6 +154,24 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun clearLastAddedWine() {
         _lastAddedWine.postOnce(null)
+    }
+
+    fun requestEditWine(countyId: Long, wineId: Long) {
+        _navigationEvent.tryEmit(WineOptionsRoute.EditWine(wineId, countyId))
+    }
+
+    fun requestAddBottle(wineId: Long) {
+        _navigationEvent.tryEmit(WineOptionsRoute.AddBottle(wineId))
+    }
+
+    fun requestShowWineHistory(wineId: Long) {
+        _navigationEvent.tryEmit(WineOptionsRoute.ShowWineHistory(wineId))
+    }
+
+    fun handleWineClick(wineWithBottles: WineWithBottles): Boolean {
+        val (_, bottles, remainingBottles) = wineWithBottles
+        val hasBottle = remainingBottles != bottles.size || bottles.isNotEmpty()
+        return hasBottle
     }
 
     private fun checkStorageLocation(bottle: Bottle): Boolean {

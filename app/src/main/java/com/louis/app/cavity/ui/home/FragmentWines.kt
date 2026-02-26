@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.db.dao.WineWithBottles
+import com.louis.app.cavity.ui.navigation.HomeRoute
+import com.louis.app.cavity.util.navigate
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 
@@ -20,6 +22,9 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val countyId by lazy {
+        requireArguments().getLong(COUNTY_ID)
+    }
 
     private var honeycombLayoutManager: HoneycombLayoutManager? = null
 
@@ -56,8 +61,13 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         val wineAdapter = WineRecyclerAdapter(
             icons,
-            TransitionHelper(requireParentFragment()),
-            isLightTheme
+            isLightTheme,
+            onItemClick = { wineWithBottles, sharedElement ->
+                onWineItemClick(wineWithBottles, sharedElement)
+            },
+            onItemLongClick = {
+                getNavigatorFragment().navigate(HomeRoute.WineOptions(it.wine))
+            }
         ).apply {
             setHasStableIds(true)
         }
@@ -82,9 +92,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         prePopulateRecyclerViewPool()
 
-        val countyId = arguments?.getLong(COUNTY_ID)
-
-        homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
+        homeViewModel.getWinesWithBottlesByCounty(countyId).observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
             wineAdapter.submitList(it) {
                 if (homeViewModel.lastAddedWine.value != null) {
@@ -95,7 +103,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     }
 
     private fun scrollToWine(adapter: WineRecyclerAdapter) {
-        val countyId = arguments?.getLong(COUNTY_ID)
         val lastAddedWine = homeViewModel.lastAddedWine.value?.peekContent()
 
         if (lastAddedWine != null) {
@@ -137,10 +144,32 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     private fun setListeners() {
         binding.emptyState.setOnActionClickListener {
-            (parentFragment as? FragmentHome)?.navigateToAddWine(
-                arguments?.getLong(COUNTY_ID) ?: return@setOnActionClickListener
-            )
+            getNavigatorFragment().navigate(HomeRoute.AddWine(countyId))
         }
+    }
+
+    private fun onWineItemClick(wineWithBottles: WineWithBottles, sharedElement: View) {
+        // Sanity check: should never happen, unless bad code is introduced in WineRecyclerAdapter/WineViewHolder
+        if (wineWithBottles.wine.countyId != countyId) {
+            throw IllegalStateException("Wine view holder listener has wrong FragmentWines context")
+        }
+
+        val wineId = wineWithBottles.wine.id
+        val transitionName = getString(R.string.transition_bottle_details, wineId)
+        val hasBottles = homeViewModel.handleWineClick(wineWithBottles)
+        val route = when {
+            hasBottles -> HomeRoute.BottleDetails(wineId, sharedElement to transitionName)
+            else -> HomeRoute.AddBottle(wineId)
+        }
+
+        getNavigatorFragment().navigate(route)
+    }
+
+    private fun getNavigatorFragment(): Fragment {
+        return (parentFragment as? FragmentHome)
+            ?: throw IllegalStateException(
+                "Parent fragment should be FragmentHome. It is $parentFragment"
+            )
     }
 
     override fun onPause() {
@@ -156,6 +185,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     override fun onDestroyView() {
         super.onDestroyView()
         honeycombLayoutManager = null
+        binding.wineList.adapter = null
         _binding = null
     }
 

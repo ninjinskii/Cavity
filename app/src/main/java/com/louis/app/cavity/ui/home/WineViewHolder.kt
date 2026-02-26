@@ -7,16 +7,12 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.ui.home.widget.EffectImageView
-import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.toBoolean
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
@@ -32,7 +28,6 @@ import com.louis.app.cavity.util.setVisible
 class WineViewHolder(
     private val binding: ItemWineBinding,
     private val drawables: Pair<Drawable, Drawable>,
-    private val transitionHelper: TransitionHelper,
     private val isLightTheme: Boolean
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -77,39 +72,6 @@ class WineViewHolder(
 
         if (highlight) {
             highlight()
-        }
-
-        itemView.setOnClickListener {
-            if (wineWithBottles.remainingBottles != bottles.size || bottles.isNotEmpty()) {
-                transitionHelper.setElevationScale()
-
-                val transition =
-                    itemView.context.getString(R.string.transition_bottle_details, wine.id)
-                val extra = FragmentNavigatorExtras(hexagon to transition)
-                val action = FragmentHomeDirections.homeToBottleDetails(wine.id, -1)
-                itemView.findNavController().navigate(action, extra)
-            } else {
-                transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
-
-                val action = FragmentHomeDirections.homeToAddBottle(wine.id, -1L)
-                itemView.findNavController().navigate(action)
-            }
-        }
-
-        itemView.setOnLongClickListener {
-            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
-
-            val action = FragmentHomeDirections.homeToWineOptions(
-                wine.id,
-                wine.countyId,
-                wine.name,
-                wine.naming,
-                wine.isOrganic.toBoolean(),
-                wine.color
-            )
-            itemView.findNavController().navigate(action)
-
-            true
         }
     }
 
