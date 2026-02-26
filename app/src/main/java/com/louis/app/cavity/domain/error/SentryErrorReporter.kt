@@ -20,7 +20,7 @@ class SentryErrorReporter private constructor(context: Context) : ErrorReporter 
                 PrefsRepository.getInstance(context.applicationContext as Application)
 
             if (!prefsRepository.getErrorReportingConsent()) {
-                return FakeErrorReporter()
+                return LoggerErrorReporter()
             }
 
             return instance ?: synchronized(this) {
