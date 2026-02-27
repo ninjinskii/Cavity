@@ -144,10 +144,6 @@ class EffectImageView @JvmOverloads constructor(
                     endRecording()
                     canvas.drawRenderNode(this)
                 }
-
-                /*canvas.drawRect(lineStart, lineTop, lineEnd, lineBottom, Paint().apply {
-                    color = Color.BLUE
-                })*/
             }
         }
     }
