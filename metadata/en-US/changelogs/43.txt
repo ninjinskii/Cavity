@@ -1,0 +1,2 @@
+- Remove sketchy support for predictive back animations
+- Fix blurred text not being drawn where it should be

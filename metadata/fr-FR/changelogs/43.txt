@@ -1,0 +1,2 @@
+- Retrait du support pour les animations prédictives
+- Correction du flou de texte qui ne s'affiche pas au bon endroit
