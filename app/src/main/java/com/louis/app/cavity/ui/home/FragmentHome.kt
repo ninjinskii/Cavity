@@ -32,6 +32,7 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.launch
 

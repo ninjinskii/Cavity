@@ -1,10 +1,12 @@
 package com.louis.app.cavity.ui.navigation
 
+import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 
 abstract class AppNavigator(private val resolvers: List<RouteResolver>) {
-    fun navigate(route: AppRoute, fragment: Fragment) {
+    @CallSuper
+    open fun navigate(route: AppRoute, fragment: Fragment) {
         val resolver = resolvers.firstOrNull { it.canHandle(route) }
             ?: throw IllegalArgumentException("No resolver for $route")
 
@@ -15,7 +17,9 @@ abstract class AppNavigator(private val resolvers: List<RouteResolver>) {
     abstract fun popBackStack(fragment: Fragment)
 }
 
-class NavComponentNavigator(resolvers: List<RouteResolver>): AppNavigator(resolvers) {
+class NavComponentNavigator(resolvers: List<RouteResolver>) :
+    AppNavigator(resolvers) {
+
     override fun navigateUp(fragment: Fragment) {
         fragment.findNavController().navigateUp()
     }
@@ -23,4 +27,6 @@ class NavComponentNavigator(resolvers: List<RouteResolver>): AppNavigator(resolv
     override fun popBackStack(fragment: Fragment) {
         fragment.findNavController().popBackStack()
     }
+
+
 }

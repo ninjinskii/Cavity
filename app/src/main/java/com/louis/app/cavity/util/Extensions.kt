@@ -37,8 +37,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.PriceByCurrency
 import com.louis.app.cavity.ui.ActivityMain
-import com.louis.app.cavity.ui.navigation.AppRoute
-import com.louis.app.cavity.ui.navigation.NavigationProvider
 import kotlin.math.max
 
 // Boolean and Int helpers for database compatibility
@@ -301,17 +299,4 @@ fun List<PriceByCurrency>.join(): String {
     }
 
     return builder.toString()
-}
-
-// Navigation
-fun Fragment.navigate(route: AppRoute) {
-    NavigationProvider.appNavigator.navigate(route, this)
-}
-
-fun Fragment.popBackStack() {
-    NavigationProvider.appNavigator.popBackStack(this)
-}
-
-fun Fragment.navigateUp() {
-    NavigationProvider.appNavigator.navigateUp(this)
 }

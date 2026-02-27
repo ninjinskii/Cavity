@@ -14,7 +14,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.ui.navigation.HomeRoute
-import com.louis.app.cavity.util.navigate
+import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 

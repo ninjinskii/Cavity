@@ -94,8 +94,8 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
                     null
                 }
 
-            setContainerTransformTransition(enterOptions, enter = true)
-            setFadeThrough(navigatingForward = false)
+            /*setContainerTransformTransition(enterOptions, enter = true)
+            setFadeThrough(navigatingForward = false)*/
         }
 
         errorReporter = SentryErrorReporter.getInstance(requireContext())

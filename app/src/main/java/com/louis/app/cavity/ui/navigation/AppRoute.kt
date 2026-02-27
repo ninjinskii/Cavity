@@ -1,15 +1,18 @@
 package com.louis.app.cavity.ui.navigation
 
+import android.graphics.Color
 import android.view.View
-import androidx.fragment.app.Fragment
 import com.google.android.material.transition.MaterialSharedAxis
+import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Wine
-import kotlin.reflect.KClass
-import kotlin.reflect.safeCast
+import com.louis.app.cavity.util.themeColor
 
 sealed interface AppRoute {
     val transition: TransitionSpec
         get() = TransitionSpec.FadeThrough
+
+    val destinationTransition: TransitionSpec
+        get() = transition
 }
 
 sealed interface HomeRoute : AppRoute {
@@ -25,6 +28,7 @@ sealed interface HomeRoute : AppRoute {
 
     data class BottleDetails(val wineId: Long, val sharedElement: Pair<View?, String>) : HomeRoute {
         override val transition = TransitionSpec.ElevationScale
+        override val destinationTransition = TransitionSpec.ContainerTransform(null)
     }
 
     data class AddBottle(val wineId: Long) : HomeRoute {
@@ -45,21 +49,38 @@ sealed interface WineOptionsRoute : AppRoute {
     data class ShowWineHistory(val wineId: Long) : WineOptionsRoute
 }
 
+sealed interface BottleDetailsRoute : AppRoute {
+}
+
+// J'ai plusieurs choix pour destinationTransition: mettre cette logique dans le fragment bottle details
+// et override destinationTransition en var au lieu de val, déplacer dans le transition selector, ou laisser ici
+// ATTENTION j epense qu'il y a un trou dans la raquette par rapoort aux options du returnSharedELemenTransition, voir BottleDetailsFramgent L:79
+// il est possible que la solution soit de passer deux options dans la destinationtransiton, une pour l'aller une pour le retour
+sealed interface SearchRoute : AppRoute {
+    data class BottleDetails(
+        val wineId: Long,
+        val bottleId: Long,
+        val sharedElement: Pair<View?, String>
+    ) :
+        SearchRoute {
+        override val transition = TransitionSpec.ElevationScale
+        override var destinationTransition = run {
+            val context = sharedElement.first?.context
+            val options = context?.let {
+                TransitionHelper.ContainerTransformOptions(
+                    startContainerColor = Color.TRANSPARENT,
+                    endContainerColor = it.themeColor(com.google.android.material.R.attr.colorSurface),
+                    startElevation = it.resources.getDimension(R.dimen.container_drop_elevation),
+                    endElevation = it.resources.getDimension(R.dimen.app_bar_elevation)
+                )
+            }
+
+            TransitionSpec.ContainerTransform(options)
+        }
+    }
+}
+
 sealed interface AccountRoute : AppRoute {
     data object Login : AccountRoute
     data object Account : AccountRoute
-}
-
-abstract class TypedRouteResolver<T : AppRoute>(
-    private val type: KClass<T>
-) : RouteResolver {
-
-    override fun canHandle(route: AppRoute) = type.isInstance(route)
-
-    override fun resolve(route: AppRoute, fragment: Fragment) {
-        val casted = type.safeCast(route) ?: error("Bad type")
-        resolveTyped(casted, fragment)
-    }
-
-    protected abstract fun resolveTyped(route: T, fragment: Fragment)
 }

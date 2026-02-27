@@ -37,15 +37,19 @@ import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.themeColor
 import androidx.core.view.get
+import com.louis.app.cavity.ui.navigation.NavigationProvider
+import com.louis.app.cavity.ui.navigation.Navigator
 import kotlin.math.abs
 
-class ActivityMain : AppCompatActivity(), SnackbarProvider {
+class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navHostFragment: Fragment
     private val addItemViewModel: AddItemViewModel by viewModels()
     private val tastingViewModel: TastingViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+    override val navigator = Navigator()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val isAndroid31 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
@@ -75,6 +79,8 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         if (hasNavigationRail()) {
             lockDrawer()
         }
+
+        navigator.setup(this)
     }
 
     private fun checkPreventScreenshot() {

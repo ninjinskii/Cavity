@@ -11,16 +11,32 @@ import com.louis.app.cavity.ui.home.FragmentHomeDirections
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheetDirections
 import com.louis.app.cavity.util.toBoolean
 import kotlin.reflect.KClass
+import kotlin.reflect.safeCast
 
 interface RouteResolver {
     fun canHandle(route: AppRoute): Boolean
     fun resolve(route: AppRoute, fragment: Fragment)
 }
 
-abstract class NavComponentRouteResolver<T : AppRoute>(type: KClass<T>) :
-    TypedRouteResolver<T>(type) {
+abstract class TypedRouteResolver<T : AppRoute>(
+    private val type: KClass<T>
+) :
+    RouteResolver {
 
-    protected val transitionEngine = MaterialTransitionEngine()
+    override fun canHandle(route: AppRoute) = type.isInstance(route)
+
+    override fun resolve(route: AppRoute, fragment: Fragment) {
+        val casted = type.safeCast(route) ?: error("Bad type")
+        resolveTyped(casted, fragment)
+    }
+
+    protected abstract fun resolveTyped(route: T, fragment: Fragment)
+}
+
+abstract class NavComponentRouteResolver<T : AppRoute>(
+    type: KClass<T>
+) :
+    TypedRouteResolver<T>(type) {
 
     protected fun Fragment.navigate(navDirections: NavDirections) {
         findNavController().navigate(navDirections)
@@ -40,10 +56,10 @@ abstract class NavComponentRouteResolver<T : AppRoute>(type: KClass<T>) :
     }
 }
 
-class NavComponentHomeRouteResolver : NavComponentRouteResolver<HomeRoute>(HomeRoute::class) {
-    override fun resolveTyped(route: HomeRoute, fragment: Fragment) {
-        transitionEngine.apply(fragment, route)
+class NavComponentHomeRouteResolver() :
+    NavComponentRouteResolver<HomeRoute>(HomeRoute::class) {
 
+    override fun resolveTyped(route: HomeRoute, fragment: Fragment) {
         when (route) {
             HomeRoute.Settings -> fragment.navigate(R.id.settings_dest)
             HomeRoute.Search -> fragment.navigate(FragmentHomeDirections.homeToSearch())
@@ -85,12 +101,10 @@ class NavComponentHomeRouteResolver : NavComponentRouteResolver<HomeRoute>(HomeR
     }
 }
 
-class NavComponentWineOptionsRouteResolver :
+class NavComponentWineOptionsRouteResolver() :
     NavComponentRouteResolver<WineOptionsRoute>(WineOptionsRoute::class) {
 
     override fun resolveTyped(route: WineOptionsRoute, fragment: Fragment) {
-        transitionEngine.apply(fragment, route)
-
         when (route) {
             is WineOptionsRoute.AddBottle -> fragment.navigate(
                 WineOptionsBottomSheetDirections.wineOptionsToAddBottle(
@@ -114,12 +128,17 @@ class NavComponentWineOptionsRouteResolver :
     }
 }
 
-class NavComponentAccountRouteResolver :
+class NavComponentBottleDetailsRouteResolver() :
+    NavComponentRouteResolver<BottleDetailsRoute>(BottleDetailsRoute::class) {
+
+    override fun resolveTyped(route: BottleDetailsRoute, fragment: Fragment) {
+    }
+}
+
+class NavComponentAccountRouteResolver() :
     NavComponentRouteResolver<AccountRoute>(AccountRoute::class) {
 
     override fun resolveTyped(route: AccountRoute, fragment: Fragment) {
-        transitionEngine.apply(fragment, route)
-
         when (route) {
             AccountRoute.Account -> fragment.navigate(R.id.settings_dest)
             AccountRoute.Login -> fragment.navigate(R.id.settings_dest)
