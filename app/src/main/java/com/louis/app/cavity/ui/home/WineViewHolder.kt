@@ -42,8 +42,8 @@ class WineViewHolder(
         val hexagon = binding.root
         val (wine, bottles) = wineWithBottles
         val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
-
-        ViewCompat.setTransitionName(hexagon, wine.id.toString())
+        val transitionName = itemView.context.getString(R.string.transition_bottle_details, wine.id)
+        ViewCompat.setTransitionName(hexagon, transitionName)
 
         with(binding) {
             wineName.text = wine.name

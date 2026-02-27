@@ -14,6 +14,7 @@ import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.navigation.AppRoute
+import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.WineOptionsRoute
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
@@ -168,10 +169,33 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         _navigationEvent.tryEmit(WineOptionsRoute.ShowWineHistory(wineId))
     }
 
-    fun handleWineClick(wineWithBottles: WineWithBottles): Boolean {
+    fun handleWineClick(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
+        checkCounty(wineWithBottles, fragmentCountyId)
+
+        val wineId = wineWithBottles.wine.id
+        val route = when {
+            isEmptyWine(wineWithBottles) -> HomeRoute.AddBottle(wineId)
+            else -> HomeRoute.BottleDetails(wineId)
+        }
+
+        _navigationEvent.tryEmit(route)
+    }
+
+    fun handleWineLongClick(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
+        checkCounty(wineWithBottles, fragmentCountyId)
+        _navigationEvent.tryEmit(HomeRoute.WineOptions(wineWithBottles.wine))
+    }
+
+    private fun checkCounty(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
+        if (wineWithBottles.wine.countyId != fragmentCountyId) {
+            throw IllegalStateException("Wine view holder listener has wrong FragmentWines context")
+        }
+    }
+
+    private fun isEmptyWine(wineWithBottles: WineWithBottles): Boolean {
         val (_, bottles, remainingBottles) = wineWithBottles
-        val hasBottle = remainingBottles != bottles.size || bottles.isNotEmpty()
-        return hasBottle
+        val nonEmpty = remainingBottles != bottles.size || bottles.isNotEmpty()
+        return !nonEmpty
     }
 
     private fun checkStorageLocation(bottle: Bottle): Boolean {

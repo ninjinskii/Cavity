@@ -26,7 +26,7 @@ sealed interface HomeRoute : AppRoute {
         override val transition = TransitionSpec.SharedAxis(MaterialSharedAxis.Z)
     }
 
-    data class BottleDetails(val wineId: Long, val sharedElement: Pair<View?, String>) : HomeRoute {
+    data class BottleDetails(val wineId: Long) : HomeRoute {
         override val transition = TransitionSpec.ElevationScale
         override val destinationTransition = TransitionSpec.ContainerTransform(null)
     }

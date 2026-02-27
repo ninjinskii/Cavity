@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.navigation
 
 import android.content.Context
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -17,9 +18,9 @@ class Navigator {
         )
     }
 
-    fun navigate(route: AppRoute, fragment: Fragment) {
+    fun navigate(route: AppRoute, fragment: Fragment, sharedElement: View? = null) {
         transitionSelector.configureFragment(fragment, route)
-        appNavigator.navigate(route, fragment)
+        appNavigator.navigate(route, fragment, sharedElement)
     }
 
     fun navigateUp(fragment: Fragment) {

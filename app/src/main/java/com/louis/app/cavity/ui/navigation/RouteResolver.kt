@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.navigation
 
+import android.view.View
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
@@ -15,7 +16,7 @@ import kotlin.reflect.safeCast
 
 interface RouteResolver {
     fun canHandle(route: AppRoute): Boolean
-    fun resolve(route: AppRoute, fragment: Fragment)
+    fun resolve(route: AppRoute, fragment: Fragment, sharedElement: View?)
 }
 
 abstract class TypedRouteResolver<T : AppRoute>(
@@ -25,12 +26,12 @@ abstract class TypedRouteResolver<T : AppRoute>(
 
     override fun canHandle(route: AppRoute) = type.isInstance(route)
 
-    override fun resolve(route: AppRoute, fragment: Fragment) {
+    override fun resolve(route: AppRoute, fragment: Fragment, sharedElement: View?) {
         val casted = type.safeCast(route) ?: error("Bad type")
-        resolveTyped(casted, fragment)
+        resolveTyped(casted, fragment, sharedElement)
     }
 
-    protected abstract fun resolveTyped(route: T, fragment: Fragment)
+    protected abstract fun resolveTyped(route: T, fragment: Fragment, sharedElement: View?)
 }
 
 abstract class NavComponentRouteResolver<T : AppRoute>(
@@ -59,86 +60,69 @@ abstract class NavComponentRouteResolver<T : AppRoute>(
 class NavComponentHomeRouteResolver() :
     NavComponentRouteResolver<HomeRoute>(HomeRoute::class) {
 
-    override fun resolveTyped(route: HomeRoute, fragment: Fragment) {
-        when (route) {
-            HomeRoute.Settings -> fragment.navigate(R.id.settings_dest)
-            HomeRoute.Search -> fragment.navigate(FragmentHomeDirections.homeToSearch())
-            HomeRoute.History -> fragment.navigate(FragmentHomeDirections.homeToHistory())
-            HomeRoute.Manager -> fragment.navigate(FragmentHomeDirections.homeToManager())
-            HomeRoute.Stats -> fragment.navigate(FragmentHomeDirections.homeToStats())
-            HomeRoute.Tasting -> fragment.navigate(FragmentHomeDirections.homeToTasting())
+    override fun resolveTyped(route: HomeRoute, fragment: Fragment, sharedElement: View?) {
+        val direction: NavDirections = when (route) {
+            HomeRoute.Settings -> FragmentHomeDirections.homeToSettings()
+            HomeRoute.Search -> FragmentHomeDirections.homeToSearch()
+            HomeRoute.History -> FragmentHomeDirections.homeToHistory()
+            HomeRoute.Manager -> FragmentHomeDirections.homeToManager()
+            HomeRoute.Stats -> FragmentHomeDirections.homeToStats()
+            HomeRoute.Tasting -> FragmentHomeDirections.homeToTasting()
             is HomeRoute.WineOptions -> with(route.wine) {
-                fragment.navigate(
-                    FragmentHomeDirections.homeToWineOptions(
-                        id,
-                        countyId,
-                        name,
-                        naming,
-                        isOrganic.toBoolean(),
-                        color
-                    )
+                FragmentHomeDirections.homeToWineOptions(
+                    id,
+                    countyId,
+                    name,
+                    naming,
+                    isOrganic.toBoolean(),
+                    color
                 )
             }
 
-            is HomeRoute.AddWine -> fragment.navigate(
-                FragmentHomeDirections.homeToAddWine(countyId = route.countyId)
-            )
-
-            is HomeRoute.BottleDetails -> {
-                val (sharedElement, transition) = route.sharedElement
-                val direction = FragmentHomeDirections.homeToBottleDetails(route.wineId, -1L)
-                val extra = sharedElement?.let { FragmentNavigatorExtras(it to transition) }
-                fragment.navigate(direction, extra)
-            }
-
-            is HomeRoute.AddBottle -> fragment.navigate(
-                FragmentHomeDirections.homeToAddBottle(
-                    route.wineId,
-                    -1L
-                )
+            is HomeRoute.AddWine -> FragmentHomeDirections.homeToAddWine(countyId = route.countyId)
+            is HomeRoute.AddBottle -> FragmentHomeDirections.homeToAddBottle(route.wineId, -1L)
+            is HomeRoute.BottleDetails -> FragmentHomeDirections.homeToBottleDetails(
+                route.wineId,
+                -1L
             )
         }
+
+        val extra = sharedElement?.let { FragmentNavigatorExtras(it to it.transitionName) }
+        fragment.navigate(direction, extra)
     }
 }
+
 
 class NavComponentWineOptionsRouteResolver() :
     NavComponentRouteResolver<WineOptionsRoute>(WineOptionsRoute::class) {
 
-    override fun resolveTyped(route: WineOptionsRoute, fragment: Fragment) {
-        when (route) {
-            is WineOptionsRoute.AddBottle -> fragment.navigate(
-                WineOptionsBottomSheetDirections.wineOptionsToAddBottle(
-                    route.wineId
-                )
-            )
+    override fun resolveTyped(route: WineOptionsRoute, fragment: Fragment, sharedElement: View?) {
+        val direction = when (route) {
+            is WineOptionsRoute.AddBottle ->
+                WineOptionsBottomSheetDirections.wineOptionsToAddBottle(route.wineId)
 
-            is WineOptionsRoute.EditWine -> fragment.navigate(
-                WineOptionsBottomSheetDirections.wineOptionsToEditWine(
-                    route.wineId,
-                    route.countyId
-                )
-            )
+            is WineOptionsRoute.EditWine ->
+                WineOptionsBottomSheetDirections.wineOptionsToEditWine(route.wineId, route.countyId)
 
-            is WineOptionsRoute.ShowWineHistory -> fragment.navigate(
-                WineOptionsBottomSheetDirections.wineOptionsToHistory(
-                    route.wineId
-                )
-            )
+            is WineOptionsRoute.ShowWineHistory ->
+                WineOptionsBottomSheetDirections.wineOptionsToHistory(route.wineId)
         }
+
+        fragment.navigate(direction)
     }
 }
 
 class NavComponentBottleDetailsRouteResolver() :
     NavComponentRouteResolver<BottleDetailsRoute>(BottleDetailsRoute::class) {
 
-    override fun resolveTyped(route: BottleDetailsRoute, fragment: Fragment) {
+    override fun resolveTyped(route: BottleDetailsRoute, fragment: Fragment, sharedElement: View?) {
     }
 }
 
 class NavComponentAccountRouteResolver() :
     NavComponentRouteResolver<AccountRoute>(AccountRoute::class) {
 
-    override fun resolveTyped(route: AccountRoute, fragment: Fragment) {
+    override fun resolveTyped(route: AccountRoute, fragment: Fragment, sharedElement: View?) {
         when (route) {
             AccountRoute.Account -> fragment.navigate(R.id.settings_dest)
             AccountRoute.Login -> fragment.navigate(R.id.settings_dest)

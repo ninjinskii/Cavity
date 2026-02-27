@@ -13,7 +13,7 @@ import com.louis.app.cavity.db.dao.WineWithBottles
 class WineRecyclerAdapter(
     private val drawables: Pair<Drawable, Drawable>,
     private val isLightTheme: Boolean,
-    private val onItemClick: (wineWithBottles: WineWithBottles, sharedElement: View) -> Unit,
+    private val onItemClick: (wineWithBottles: WineWithBottles, itemView: View) -> Unit,
     private val onItemLongClick: (wineWithBottles: WineWithBottles) -> Unit
 ) :
     ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()) {
@@ -33,9 +33,11 @@ class WineRecyclerAdapter(
 
         with(holder) {
             bind(item, highlight)
+
             itemView.setOnClickListener {
-                onItemClick(item, holder.itemView)
+                onItemClick(item, itemView)
             }
+
             itemView.setOnLongClickListener {
                 onItemLongClick(item)
                 true
@@ -56,8 +58,11 @@ class WineRecyclerAdapter(
 
         // We need to null out listeners, because they capture FragmentWines and view holders are
         // shared between multiple FragmentWines, which can lead to crash when navigating or else
-        holder.itemView.setOnClickListener(null)
-        holder.itemView.setOnLongClickListener(null)
+        with(holder.itemView) {
+//            transitionName = null
+            setOnClickListener(null)
+            setOnLongClickListener(null)
+        }
     }
 
     class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {

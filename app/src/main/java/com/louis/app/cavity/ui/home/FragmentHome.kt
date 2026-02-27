@@ -36,8 +36,7 @@ import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.launch
 
-class FragmentHome : Fragment(R.layout.fragment_home) {
-
+class FragmentHome : Fragment(R.layout.fragment_home), SharedElementStore {
     companion object {
         const val VIEW_POOL_SIZE = 25
     }
@@ -52,6 +51,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             setMaxRecycledViews(R.layout.item_wine, VIEW_POOL_SIZE)
         }
     }
+
+    private var pendingSharedElement: View? = null
+        get() = field.also { pendingSharedElement = null }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +94,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.navigationEvent.collect { navigate(it) }
+                homeViewModel.navigationEvent.collect {
+                    navigate(it, pendingSharedElement)
+                }
             }
         }
     }
@@ -335,6 +339,10 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     fun getRecycledViewPool() = recyclePool
+
+    override fun setPendingSharedElement(sharedElement: View) {
+        this.pendingSharedElement = sharedElement
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

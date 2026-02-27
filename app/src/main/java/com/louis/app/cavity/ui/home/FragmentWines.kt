@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
-import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.prepareWindowInsets
@@ -62,12 +61,11 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         val wineAdapter = WineRecyclerAdapter(
             icons,
             isLightTheme,
-            onItemClick = { wineWithBottles, sharedElement ->
-                onWineItemClick(wineWithBottles, sharedElement)
+            onItemClick = { wineWithBottles, itemView ->
+                getNavigatorFragment().setPendingSharedElement(itemView)
+                homeViewModel.handleWineClick(wineWithBottles, countyId)
             },
-            onItemLongClick = {
-                getNavigatorFragment().navigate(HomeRoute.WineOptions(it.wine))
-            }
+            onItemLongClick = { homeViewModel.handleWineLongClick(it, countyId) }
         ).apply {
             setHasStableIds(true)
         }
@@ -148,24 +146,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         }
     }
 
-    private fun onWineItemClick(wineWithBottles: WineWithBottles, sharedElement: View) {
-        // Sanity check: should never happen, unless bad code is introduced in WineRecyclerAdapter/WineViewHolder
-        if (wineWithBottles.wine.countyId != countyId) {
-            throw IllegalStateException("Wine view holder listener has wrong FragmentWines context")
-        }
-
-        val wineId = wineWithBottles.wine.id
-        val transitionName = getString(R.string.transition_bottle_details, wineId)
-        val hasBottles = homeViewModel.handleWineClick(wineWithBottles)
-        val route = when {
-            hasBottles -> HomeRoute.BottleDetails(wineId, sharedElement to transitionName)
-            else -> HomeRoute.AddBottle(wineId)
-        }
-
-        getNavigatorFragment().navigate(route)
-    }
-
-    private fun getNavigatorFragment(): Fragment {
+    private fun getNavigatorFragment(): FragmentHome {
         return (parentFragment as? FragmentHome)
             ?: throw IllegalStateException(
                 "Parent fragment should be FragmentHome. It is $parentFragment"
