@@ -10,6 +10,9 @@ sealed interface AppRoute {
 
     val destinationTransition: TransitionSpec
         get() = transition
+
+    val sharedElementTransition: SharedElementTransitionSpec
+        get() = SharedElementTransitionSpec.None
 }
 
 sealed interface GlobalRoute : AppRoute {
@@ -23,7 +26,8 @@ sealed interface HomeRoute : AppRoute {
 
     data class BottleDetails(val wineId: Long) : HomeRoute {
         override val transition = TransitionSpec.ElevationScale
-        override val destinationTransition = TransitionSpec.ContainerTransform(null)
+        override val destinationTransition = TransitionSpec.None // à tester quand nav global depuis bottle details
+        override val sharedElementTransition = SharedElementTransitionSpec.ContainerTransform()
     }
 
     data class AddBottle(val wineId: Long) : HomeRoute {
@@ -50,8 +54,8 @@ sealed interface BottleDetailsRoute : AppRoute {
 sealed interface SearchRoute : AppRoute {
     data class BottleDetails(val wineId: Long, val bottleId: Long) : SearchRoute {
         override val transition = TransitionSpec.ElevationScale
-
-        override var destinationTransition = TransitionSpec.ContainerTransform(
+        override val destinationTransition = TransitionSpec.None
+        override var sharedElementTransition = SharedElementTransitionSpec.ContainerTransform(
             startContainerColor = android.R.color.transparent,
             endContainerColor = com.google.android.material.R.attr.colorSurface,
             startElevation = R.dimen.container_drop_elevation,

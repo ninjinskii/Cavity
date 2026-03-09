@@ -17,13 +17,17 @@ sealed interface TransitionSpec {
     data object FadeThrough : TransitionSpec
     data object ElevationScale : TransitionSpec
     data class SharedAxis(val axis: Axis) : TransitionSpec
+}
+
+sealed interface SharedElementTransitionSpec {
+    data object None : SharedElementTransitionSpec
     data class ContainerTransform(
         @param:AttrRes @param:ColorRes val startContainerColor: Int? = null,
         @param:AttrRes @param:ColorRes val endContainerColor: Int? = null,
         @param:DimenRes val startElevation: Int? = null,
         @param:DimenRes val endElevation: Int? = null
     ) :
-        TransitionSpec
+        SharedElementTransitionSpec
 }
 
 enum class Axis {
@@ -32,15 +36,19 @@ enum class Axis {
 
 interface TransitionExecutor {
     var pendingDestinationTransition: TransitionSpec
+    var pendingSharedElementDestinationTransition: SharedElementTransitionSpec
     fun configureFragment(source: Fragment, toRoute: AppRoute)
     fun configureDestinationFragment(destination: Fragment)
 }
 
 class MaterialTransitionExecutor : TransitionExecutor {
     override var pendingDestinationTransition: TransitionSpec = TransitionSpec.None
+    override var pendingSharedElementDestinationTransition: SharedElementTransitionSpec =
+        SharedElementTransitionSpec.None
 
     override fun configureFragment(source: Fragment, toRoute: AppRoute) {
         pendingDestinationTransition = toRoute.destinationTransition
+        pendingSharedElementDestinationTransition = toRoute.sharedElementTransition
         val transitionHelper = TransitionHelper(source)
         val sourceTransition = toRoute.transition
 
@@ -48,13 +56,6 @@ class MaterialTransitionExecutor : TransitionExecutor {
             TransitionSpec.None -> Unit
             TransitionSpec.FadeThrough -> transitionHelper.setFadeThroughOnEnterAndExit()
             TransitionSpec.ElevationScale -> transitionHelper.setElevationScale()
-            is TransitionSpec.ContainerTransform -> handleContainerTransform(
-                fragment = source,
-                spec = toRoute.transition,
-                transitionHelper,
-                navigatingForward = true
-            )
-
             is TransitionSpec.SharedAxis -> {
                 val axis = toMaterialSharedAxis(sourceTransition.axis)
                 transitionHelper.setSharedAxisTransition(axis, true)
@@ -65,22 +66,27 @@ class MaterialTransitionExecutor : TransitionExecutor {
     override fun configureDestinationFragment(destination: Fragment) {
         val transitionHelper = TransitionHelper(destination)
         val destinationTransition = pendingDestinationTransition
+        val destinationSharedElementTransition = pendingSharedElementDestinationTransition
 
         when (destinationTransition) {
             TransitionSpec.None -> Unit
             TransitionSpec.FadeThrough -> transitionHelper.setFadeThrough(false)
             TransitionSpec.ElevationScale -> Unit
-            is TransitionSpec.ContainerTransform -> handleContainerTransform(
-                fragment = destination,
-                spec = destinationTransition,
-                transitionHelper,
-                navigatingForward = false
-            )
-
             is TransitionSpec.SharedAxis -> {
                 val axis = toMaterialSharedAxis(destinationTransition.axis)
                 transitionHelper.setSharedAxisTransition(axis, false)
             }
+        }
+
+        when (destinationSharedElementTransition) {
+            is SharedElementTransitionSpec.ContainerTransform -> handleContainerTransform(
+                fragment = destination,
+                spec = destinationSharedElementTransition,
+                transitionHelper,
+                navigatingForward = false
+            )
+
+            else -> Unit
         }
     }
 
@@ -94,13 +100,13 @@ class MaterialTransitionExecutor : TransitionExecutor {
 
     private fun handleContainerTransform(
         fragment: Fragment,
-        spec: TransitionSpec,
+        spec: SharedElementTransitionSpec,
         transitionHelper: TransitionHelper,
         navigatingForward: Boolean
     ) {
         val context = fragment.context
 
-        if (spec !is TransitionSpec.ContainerTransform || context == null) {
+        if (spec !is SharedElementTransitionSpec.ContainerTransform || context == null) {
             return
         }
 
@@ -112,7 +118,7 @@ class MaterialTransitionExecutor : TransitionExecutor {
     // VOi aussi pour sépérarer dans un autre fichier les impélmentations concrètes, qui importent leur dep (material) dans le même fichier que l'interface pure
     private fun resolveAttrs(
         context: Context,
-        spec: TransitionSpec.ContainerTransform
+        spec: SharedElementTransitionSpec.ContainerTransform
     ): TransitionHelper.ContainerTransformOptions {
         val defaultColor = com.google.android.material.R.attr.colorSurface
         val defaultElevation = 0f

@@ -31,20 +31,16 @@ import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import com.louis.app.cavity.ui.SharedViewModel
 import com.louis.app.cavity.ui.UiEvent
 import com.louis.app.cavity.ui.UiEventManager
-import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.ui.navigation.navigateUp
 import kotlinx.coroutines.launch
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var pickImage: ActivityResultLauncher<Array<String>>
-    private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
-    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val addWineViewModel: AddWineViewModel by viewModels()
     private val args: FragmentAddWineArgs by navArgs()
 
@@ -54,17 +50,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        transitionHelper = TransitionHelper(this).apply {
-            val transformOptions = TransitionHelper.ContainerTransformOptions(
-                Color.TRANSPARENT,
-                Color.TRANSPARENT
-            )
-
-            setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-            setContainerTransformTransition(options = transformOptions, enter = true) // Appbar
-        }
 
         pickImage = registerForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri ->
             onImageSelected(imageUri)
@@ -285,6 +270,12 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private fun setCounty(view: View) {
         val county = view.getTag(R.string.tag_chip_id) as County?
         addWineViewModel.setCountyId(county?.id)
+    }
+
+    override fun onPause() {
+        val a = exitTransition
+        val b = returnTransition
+        super.onPause()
     }
 
     override fun onDestroyView() {

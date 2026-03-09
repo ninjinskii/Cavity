@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.navigation
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.fragment.findNavController
 
 abstract class AppNavigator(private val resolvers: List<RouteResolver>) {
@@ -16,6 +17,13 @@ abstract class AppNavigator(private val resolvers: List<RouteResolver>) {
 
     abstract fun navigateUp(fragment: Fragment)
     abstract fun popBackStack(fragment: Fragment)
+    abstract fun getPrimaryNavigationFragment(activity: FragmentActivity): Fragment?
+
+    // In a native environment, host fragment and primary navigation fragment should be the same
+    // but, it is not the case with navigation component
+    open fun getHostFragment(activity: FragmentActivity): Fragment? {
+        return getPrimaryNavigationFragment(activity)
+    }
 }
 
 class NavComponentNavigator(resolvers: List<RouteResolver>) :
@@ -27,5 +35,15 @@ class NavComponentNavigator(resolvers: List<RouteResolver>) :
 
     override fun popBackStack(fragment: Fragment) {
         fragment.findNavController().popBackStack()
+    }
+
+    override fun getPrimaryNavigationFragment(activity: FragmentActivity): Fragment? {
+        return activity.supportFragmentManager.primaryNavigationFragment
+            ?.childFragmentManager
+            ?.primaryNavigationFragment
+    }
+
+    override fun getHostFragment(activity: FragmentActivity): Fragment? {
+        return activity.supportFragmentManager.primaryNavigationFragment
     }
 }

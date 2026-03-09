@@ -22,8 +22,6 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
-import androidx.navigation.ui.NavigationUiSaveStateControl
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
 import com.louis.app.cavity.ui.account.LoginViewModel
@@ -47,14 +45,13 @@ import kotlin.math.abs
 
 class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var navHostFragment: Fragment
     private val addItemViewModel: AddItemViewModel by viewModels()
     private val tastingViewModel: TastingViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
 
-    override val navigator = Navigator()
+    override val navigator = Navigator(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val isAndroid31 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
@@ -105,8 +102,6 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
                 }
             }
         }
-
-        navigator.setup(this)
     }
 
     private fun checkPreventScreenshot() {
@@ -204,15 +199,12 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
         )
     }
 
-    @OptIn(NavigationUiSaveStateControl::class)
     private fun setupNavigation() {
-        navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment)!!
-
         binding.navView.apply {
             navigator.syncMenu(menu)
             setNavigationItemSelectedListener { item ->
                 item.isChecked = true
-                navigator.navigate(GlobalRoute.To(item.itemId), navHostFragment)
+                navigator.navigate(GlobalRoute.To(item.itemId))
                 binding.drawer.close()
                 true
             }
@@ -222,7 +214,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
             navigator.syncMenu(menu)
             setOnItemSelectedListener { item ->
                 item.isChecked = true
-                navigator.navigate(GlobalRoute.To(item.itemId), navHostFragment)
+                navigator.navigate(GlobalRoute.To(item.itemId))
                 true
             }
         }
@@ -317,6 +309,11 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        navigator.setup()
+    }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         settingsViewModel.notifyWindowFocusChanged(hasFocus)
@@ -324,7 +321,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
 
     override fun onShowSnackbarRequested(stringRes: Int) {
         binding.root.post {
-            val currentDestination = navHostFragment.childFragmentManager.fragments.lastOrNull()
+            val currentDestination = navigator.getCurrentFragment()
             val isHome = currentDestination is FragmentHome
             val anchor = if (isHome) binding.main.snackbarAnchor else null
             binding.main.coordinator.showSnackbar(stringRes, anchorView = anchor)

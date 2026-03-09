@@ -256,11 +256,11 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         }
 
         binding.emptyState.setOnActionClickListener {
-            navigate(HomeRoute.AddWine(currentCounty))
+            navigate(HomeRoute.AddWine(currentCounty), binding.appBar.toolbarLayout)
         }
 
         binding.fab.setOnClickListener {
-            navigate(HomeRoute.AddWine(currentCounty))
+            navigate(HomeRoute.AddWine(currentCounty), binding.appBar.toolbarLayout)
         }
 
         binding.countyDetailsScrim.setOnClickListener {
@@ -358,6 +358,12 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
 
     override fun setPendingSharedElement(sharedElement: View) {
         this.pendingSharedElement = sharedElement
+    }
+
+    override fun onPause() {
+        val a = exitTransition
+        val b = returnTransition
+        super.onPause()
     }
 
     override fun onDestroyView() {
