@@ -57,7 +57,7 @@ class MaterialTransitionExecutor : TransitionExecutor {
 
             is TransitionSpec.SharedAxis -> {
                 val axis = toMaterialSharedAxis(sourceTransition.axis)
-                transitionHelper.setSharedAxisTransition(axis, false)
+                transitionHelper.setSharedAxisTransition(axis, true)
             }
         }
     }

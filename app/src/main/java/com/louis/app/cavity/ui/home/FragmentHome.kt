@@ -268,14 +268,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         }
     }
 
-    private fun setCurrentCounty(countyId: Long) {
-        val position = (_binding?.viewPager?.adapter as? WinesPagerAdapter)?.getPosition(countyId)
-
-        if (position != -1) {
-            _binding?.viewPager?.currentItem = position ?: return
-        }
-    }
-
     private fun showStorageLocationDialog(items: List<String>) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.storage_location)
@@ -351,6 +343,14 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
             fab.setVisible(true)
             countyDetails.root.setVisible(false, invisible = true)
             countyDetailsScrim.setVisible(false)
+        }
+    }
+
+    private fun setCurrentCounty(countyId: Long) {
+        val position = (_binding?.viewPager?.adapter as? WinesPagerAdapter)?.getPosition(countyId)
+
+        if (position != -1) {
+            _binding?.viewPager?.currentItem = position ?: return
         }
     }
 
