@@ -12,7 +12,6 @@ import com.louis.app.cavity.domain.repository.StatsRepository
 import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.navigation.AppRoute
 import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.WineOptionsRoute
@@ -22,7 +21,7 @@ import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(app: Application) : AndroidViewModel(app) {
@@ -34,7 +33,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     private val errorReporter = SentryErrorReporter.getInstance(app)
 
     private val _navigationEvent = MutableSharedFlow<AppRoute>(replay = 0, extraBufferCapacity = 1)
-    val navigationEvent: SharedFlow<AppRoute> = _navigationEvent
+    val navigationEvent = _navigationEvent.asSharedFlow()
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
@@ -43,10 +42,6 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     private val _storageLocation = MutableLiveData<String?>()
     val storageLocation: LiveData<String?>
         get() = _storageLocation
-
-    private val _lastAddedWine = MutableLiveData<Event<Pair<Wine, County>?>>()
-    val lastAddedWine: LiveData<Event<Pair<Wine, County>?>>
-        get() = _lastAddedWine
 
     private val _scrollToCountyEvent = MutableLiveData<Event<Int>>()
     val scrollToCountyEvent: LiveData<Event<Int>>
@@ -70,14 +65,6 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     val vintagesCount = observedCounty.switchMap {
         statsRepository.getVintagesStatsForCounty(it, _storageLocation.value)
-    }
-
-    fun setLastAddedWine(wine: Wine) {
-        viewModelScope.launch(IO) {
-            countyRepository.getCountyByIdNotLive(wine.countyId)?.let { county ->
-                _lastAddedWine.postOnce(wine to county)
-            }
-        }
     }
 
     fun setObservedCounty(countyId: Long) {
@@ -151,10 +138,6 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
             winesWithBottles.filter { checkStorageLocation(it) }
         }
         emitSource(wines)
-    }
-
-    fun clearLastAddedWine() {
-        _lastAddedWine.postOnce(null)
     }
 
     fun requestEditWine(countyId: Long, wineId: Long) {

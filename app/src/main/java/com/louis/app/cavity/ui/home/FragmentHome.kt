@@ -29,14 +29,16 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.ui.SharedViewModel
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.ui.navigation.HomeRoute
+import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.launch
 
-class FragmentHome : Fragment(R.layout.fragment_home), SharedElementStore {
+class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, NavigationDestination {
     companion object {
         const val VIEW_POOL_SIZE = 25
     }
@@ -46,6 +48,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), SharedElementStore {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val recyclePool by lazy {
         RecyclerView.RecycledViewPool().apply {
             setMaxRecycledViews(R.layout.item_wine, VIEW_POOL_SIZE)
@@ -54,6 +57,8 @@ class FragmentHome : Fragment(R.layout.fragment_home), SharedElementStore {
 
     private var pendingSharedElement: View? = null
         get() = field.also { pendingSharedElement = null }
+
+    override val menuDestinationId = R.id.home_dest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,9 +98,18 @@ class FragmentHome : Fragment(R.layout.fragment_home), SharedElementStore {
         setListeners()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.navigationEvent.collect {
-                    navigate(it, pendingSharedElement)
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                launch {
+                    homeViewModel.navigationEvent.collect {
+                        navigate(it, pendingSharedElement)
+                    }
+                }
+
+                launch {
+                    sharedViewModel.state.collect {
+                        L.v("FragmentHome: receive event $it")
+                        setCurrentCounty(it.scrollToWineRequest.countyId)
+                    }
                 }
             }
         }
@@ -232,12 +246,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), SharedElementStore {
                 binding.viewPager.currentItem = index
             }
         }
-
-        homeViewModel.lastAddedWine.observe(viewLifecycleOwner) {
-            it?.peekContent()?.let { (_, county) ->
-                binding.viewPager.currentItem = county.prefOrder
-            }
-        }
     }
 
     private fun setListeners() {
@@ -257,6 +265,14 @@ class FragmentHome : Fragment(R.layout.fragment_home), SharedElementStore {
 
         binding.countyDetailsScrim.setOnClickListener {
             hideCountyDetails()
+        }
+    }
+
+    private fun setCurrentCounty(countyId: Long) {
+        val position = (_binding?.viewPager?.adapter as? WinesPagerAdapter)?.getPosition(countyId)
+
+        if (position != -1) {
+            _binding?.viewPager?.currentItem = position ?: return
         }
     }
 

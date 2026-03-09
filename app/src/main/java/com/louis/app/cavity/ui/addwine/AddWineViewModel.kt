@@ -8,6 +8,8 @@ import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.WineColor
+import com.louis.app.cavity.ui.UiEvent
+import com.louis.app.cavity.ui.UiEventManager
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
@@ -22,8 +24,9 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    private val _wineUpdatedEvent = MutableLiveData<Event<Pair<Int, Wine>>>()
-    val wineUpdatedEvent: LiveData<Event<Pair<Int, Wine>>>
+    // This cannot be merged into sharedviewmodel event flow, because we need an event source for navigating up and another one to handle scroll to wine
+    private val _wineUpdatedEvent = MutableLiveData<Event<Unit>>()
+    val wineUpdatedEvent: LiveData<Event<Unit>>
         get() = _wineUpdatedEvent
 
     private val _updatedWine = MutableLiveData<Wine>()
@@ -97,10 +100,17 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
                 when {
                     duplicate.hidden.toBoolean() && !isEditMode -> {
                         wineRepository.updateWine(duplicate.copy(hidden = false.toInt()))
-                        _wineUpdatedEvent.postOnce(R.string.wine_already_exists_emergence to wine)
+                        val event = UiEvent.WineUpdated(
+                            wine.id,
+                            wine.countyId,
+                            R.string.wine_already_exists_emergence
+                        )
+
+                        UiEventManager.send(event)
+                        _wineUpdatedEvent.postOnce(Unit)
                     }
 
-                    else -> _userFeedback.postOnce(R.string.wine_already_exists)
+                    else -> UiEventManager.send(UiEvent.Snackbar(R.string.wine_already_exists))
                 }
 
                 return@launch
@@ -109,14 +119,17 @@ class AddWineViewModel(app: Application) : AndroidViewModel(app) {
             when {
                 isEditMode -> {
                     wineRepository.updateWine(wine)
-                    _wineUpdatedEvent.postOnce(R.string.wine_updated to wine)
+                    val event = UiEvent.WineUpdated(wine.id, wine.countyId, R.string.wine_updated)
+                    UiEventManager.send(event)
+                    _wineUpdatedEvent.postOnce(Unit)
                     reset()
                 }
 
                 else -> {
                     val wineId = wineRepository.insertWine(wine)
-                    val copy = wine.copy(id = wineId)
-                    _wineUpdatedEvent.postOnce(R.string.wine_added to copy)
+                    val event = UiEvent.WineUpdated(wineId, wine.countyId, R.string.wine_added)
+                    UiEventManager.send(event)
+                    _wineUpdatedEvent.postOnce(Unit)
                     reset()
                 }
             }

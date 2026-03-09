@@ -50,8 +50,9 @@ class BottleRecyclerAdapter(
         fun bind(boundedBottle: BoundedBottle) {
             val (bottle, wine) = boundedBottle
             val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
+            val transition = itemView.context.getString(R.string.transition_bottle_details, wine.id)
 
-            ViewCompat.setTransitionName(binding.root, bottle.id.toString())
+            ViewCompat.setTransitionName(binding.root, transition)
 
             with(binding) {
                 marker.setVisible(bottle.consumed.toBoolean())

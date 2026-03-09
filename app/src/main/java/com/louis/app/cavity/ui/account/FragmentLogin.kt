@@ -16,13 +16,14 @@ import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
-class FragmentLogin : Fragment(R.layout.fragment_login) {
+class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
     companion object {
         const val LOGIN_SUCCESSFUL: String = "com.louis.app.cavity.LOGIN_SUCCESSFUL"
     }
@@ -32,6 +33,8 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
     private val loginViewModel: LoginViewModel by activityViewModels()
     private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var onBackPressedCallback: OnBackPressedCallback
+
+    override val menuDestinationId = R.id.account_dest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

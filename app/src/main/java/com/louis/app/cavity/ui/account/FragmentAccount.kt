@@ -23,6 +23,7 @@ import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.domain.worker.AutoUploadWorker
 import com.louis.app.cavity.domain.worker.PruneWorker
 import com.louis.app.cavity.domain.worker.UploadWorker
+import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.PermissionChecker
@@ -34,7 +35,7 @@ import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.spToPx
 import com.robinhood.ticker.TickerUtils
 
-class FragmentAccount : Fragment(R.layout.fragment_account) {
+class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestination {
     private lateinit var readPermissionChecker: PermissionChecker
     private lateinit var writePermissionChecker: PermissionChecker
     private var _binding: FragmentAccountBinding? = null
@@ -46,6 +47,8 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     private lateinit var transitionHelper: TransitionHelper
 
     private var wannaImport = false
+
+    override val menuDestinationId = R.id.account_dest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -384,9 +387,9 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     }
 
     data class BackupStatusUi(
-        @StringRes val title: Int,
-        @StringRes val text: Int?,
-        @ColorRes val color: Int
+        @param:StringRes val title: Int,
+        @param:StringRes val text: Int?,
+        @param:ColorRes val color: Int
     )
 
     companion object {

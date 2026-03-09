@@ -9,14 +9,17 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentConfirmAccountBinding
+import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
-class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
+class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account), NavigationDestination {
     private var _binding: FragmentConfirmAccountBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
+
+    override val menuDestinationId = R.id.account_dest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

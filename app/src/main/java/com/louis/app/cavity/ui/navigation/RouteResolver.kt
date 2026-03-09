@@ -4,12 +4,14 @@ import android.view.View
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.home.FragmentHomeDirections
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheetDirections
+import com.louis.app.cavity.ui.search.FragmentSearchDirections
 import com.louis.app.cavity.util.toBoolean
 import kotlin.reflect.KClass
 import kotlin.reflect.safeCast
@@ -55,6 +57,27 @@ abstract class NavComponentRouteResolver<T : AppRoute>(
     protected fun Fragment.navigate(@IdRes destId: Int) {
         findNavController().navigate(destId)
     }
+
+    protected fun Fragment.popUpTo(@IdRes destId: Int) {
+        findNavController().apply {
+            popBackStack(this.graph.findStartDestination().id, destId == R.id.home_dest)
+            navigate(destId)
+        }
+    }
+}
+
+class NavComponentGlobalRouteResolver() :
+    NavComponentRouteResolver<GlobalRoute>(GlobalRoute::class) {
+
+    override fun resolveTyped(route: GlobalRoute, fragment: Fragment, sharedElement: View?) {
+        val id = when (route) {
+            is GlobalRoute.To -> route.destinationId
+        }
+
+        fragment.popUpTo(id)
+
+//        fragment.navigate(id)
+    }
 }
 
 class NavComponentHomeRouteResolver() :
@@ -62,12 +85,6 @@ class NavComponentHomeRouteResolver() :
 
     override fun resolveTyped(route: HomeRoute, fragment: Fragment, sharedElement: View?) {
         val direction: NavDirections = when (route) {
-            HomeRoute.Settings -> FragmentHomeDirections.homeToSettings()
-            HomeRoute.Search -> FragmentHomeDirections.homeToSearch()
-            HomeRoute.History -> FragmentHomeDirections.homeToHistory()
-            HomeRoute.Manager -> FragmentHomeDirections.homeToManager()
-            HomeRoute.Stats -> FragmentHomeDirections.homeToStats()
-            HomeRoute.Tasting -> FragmentHomeDirections.homeToTasting()
             is HomeRoute.WineOptions -> with(route.wine) {
                 FragmentHomeDirections.homeToWineOptions(
                     id,
@@ -109,6 +126,22 @@ class NavComponentWineOptionsRouteResolver() :
         }
 
         fragment.navigate(direction)
+    }
+}
+
+class NavComponentSearchRouteResolver() :
+    NavComponentRouteResolver<SearchRoute>(SearchRoute::class) {
+
+    override fun resolveTyped(route: SearchRoute, fragment: Fragment, sharedElement: View?) {
+        val direction = when (route) {
+            is SearchRoute.BottleDetails -> FragmentSearchDirections.searchToBottleDetails(
+                route.wineId,
+                route.bottleId
+            )
+        }
+
+        val extra = sharedElement?.let { FragmentNavigatorExtras(it to it.transitionName) }
+        fragment.navigate(direction, extra)
     }
 }
 

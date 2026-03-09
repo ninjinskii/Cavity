@@ -17,6 +17,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportExportBinding
 import com.louis.app.cavity.domain.Environment
 import com.louis.app.cavity.domain.worker.UploadWorker
+import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
@@ -25,12 +26,14 @@ import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 import com.robinhood.ticker.TickerUtils
 
-class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
+class FragmentImportExport : Fragment(R.layout.fragment_import_export), NavigationDestination {
     private var _binding: FragmentImportExportBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
     private val importExportViewModel: ImportExportViewModel by activityViewModels()
     private val args: FragmentImportExportArgs by navArgs()
+
+    override val menuDestinationId = R.id.account_dest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

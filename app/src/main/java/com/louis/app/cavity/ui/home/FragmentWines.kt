@@ -12,8 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
+import com.louis.app.cavity.ui.SharedViewModel
 import com.louis.app.cavity.ui.navigation.HomeRoute
-import com.louis.app.cavity.ui.navigation.navigate
+import com.louis.app.cavity.ui.navigation.navigator
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 
@@ -21,6 +22,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val countyId by lazy {
         requireArguments().getLong(COUNTY_ID)
     }
@@ -62,7 +64,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             icons,
             isLightTheme,
             onItemClick = { wineWithBottles, itemView ->
-                getNavigatorFragment().setPendingSharedElement(itemView)
+                getParent().setPendingSharedElement(itemView)
                 homeViewModel.handleWineClick(wineWithBottles, countyId)
             },
             onItemLongClick = { homeViewModel.handleWineLongClick(it, countyId) }
@@ -93,34 +95,25 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         homeViewModel.getWinesWithBottlesByCounty(countyId).observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
             wineAdapter.submitList(it) {
-                if (homeViewModel.lastAddedWine.value != null) {
-                    scrollToWine(wineAdapter)
-                }
+                scrollToWine(wineAdapter)
             }
         }
     }
 
     private fun scrollToWine(adapter: WineRecyclerAdapter) {
-        val lastAddedWine = homeViewModel.lastAddedWine.value?.peekContent()
+        val (wineId, countyId) = sharedViewModel.viewState.scrollToWineRequest
 
-        if (lastAddedWine != null) {
-            val (wine, county) = lastAddedWine
+        if (countyId != this.countyId || wineId == -1L) {
+            return
+        }
 
-            if (county.id != countyId) {
-                return
-            }
+        for (i in 0 until adapter.itemCount) {
+            val adapterWineId = adapter.getItemId(i)
 
-            homeViewModel.lastAddedWine.value?.getContentIfNotHandled()?.let {
-                homeViewModel.clearLastAddedWine()
-
-                for (i in 0 until adapter.itemCount) {
-                    val wineId = adapter.getItemId(i)
-
-                    if (wineId == wine.id) {
-                        adapter.highlightPosition = i
-                        binding.wineList.smoothScrollToPosition(i)
-                    }
-                }
+            if (wineId == adapterWineId) {
+                sharedViewModel.consumeScrollToWineRequest()
+                adapter.highlightPosition = i
+                binding.wineList.smoothScrollToPosition(i)
             }
         }
     }
@@ -142,14 +135,14 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     private fun setListeners() {
         binding.emptyState.setOnActionClickListener {
-            getNavigatorFragment().navigate(HomeRoute.AddWine(countyId))
+            navigator.navigate(HomeRoute.AddWine(countyId), requireParentFragment())
         }
     }
 
-    private fun getNavigatorFragment(): FragmentHome {
-        return (parentFragment as? FragmentHome)
+    private fun getParent(): FragmentWinesParent {
+        return (parentFragment as? FragmentWinesParent)
             ?: throw IllegalStateException(
-                "Parent fragment should be FragmentHome. It is $parentFragment"
+                "Parent fragment should implement FragmentWinesParent. It is $parentFragment"
             )
     }
 

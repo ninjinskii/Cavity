@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
+import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
 import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.util.extractMargin
@@ -22,7 +23,7 @@ import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
-class FragmentTastings : Fragment(R.layout.fragment_tastings) {
+class FragmentTastings : Fragment(R.layout.fragment_tastings), NavigationDestination {
     private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentTastingsBinding? = null
     private val binding get() = _binding!!
@@ -30,6 +31,8 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
     private val friendViewPool = RecyclerView.RecycledViewPool().apply {
         setMaxRecycledViews(R.layout.chip_friend, 8)
     }
+
+    override val menuDestinationId = R.id.tasting_dest
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

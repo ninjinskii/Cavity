@@ -28,6 +28,4 @@ class NavComponentNavigator(resolvers: List<RouteResolver>) :
     override fun popBackStack(fragment: Fragment) {
         fragment.findNavController().popBackStack()
     }
-
-
 }

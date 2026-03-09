@@ -14,6 +14,7 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.use
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -160,6 +161,14 @@ fun Context.themeColor(
 ): Int {
     return obtainStyledAttributes(intArrayOf(themeAttrId))
         .use { it.getColor(0, Color.MAGENTA) }
+}
+
+@ColorInt
+fun Context.requireThemeColor(
+    @AttrRes themeAttrId: Int
+): Int {
+    return obtainStyledAttributes(intArrayOf(themeAttrId))
+        .use { it.getColorOrThrow(0) }
 }
 
 @Suppress("UNCHECKED_CAST")
