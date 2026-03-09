@@ -79,12 +79,11 @@ class MaterialTransitionExecutor : TransitionExecutor {
         }
 
         when (destinationSharedElementTransition) {
-            is SharedElementTransitionSpec.ContainerTransform -> handleContainerTransform(
-                fragment = destination,
-                spec = destinationSharedElementTransition,
-                transitionHelper,
-                navigatingForward = false
-            )
+            is SharedElementTransitionSpec.ContainerTransform ->
+                transitionHelper.setContainerTransformTransition(
+                    destinationSharedElementTransition,
+                    false
+                )
 
             else -> Unit
         }
@@ -95,63 +94,6 @@ class MaterialTransitionExecutor : TransitionExecutor {
             Axis.X -> MaterialSharedAxis.X
             Axis.Y -> MaterialSharedAxis.Y
             Axis.Z -> MaterialSharedAxis.Z
-        }
-    }
-
-    private fun handleContainerTransform(
-        fragment: Fragment,
-        spec: SharedElementTransitionSpec,
-        transitionHelper: TransitionHelper,
-        navigatingForward: Boolean
-    ) {
-        val context = fragment.context
-
-        if (spec !is SharedElementTransitionSpec.ContainerTransform || context == null) {
-            return
-        }
-
-        val options = resolveAttrs(context, spec)
-        transitionHelper.setContainerTransformTransition(options, !navigatingForward)
-    }
-
-    // Peut etre déplacer ça dans trnasition helper, peut etre aussi handleCOntainerTRansform
-    // VOi aussi pour sépérarer dans un autre fichier les impélmentations concrètes, qui importent leur dep (material) dans le même fichier que l'interface pure
-    private fun resolveAttrs(
-        context: Context,
-        spec: SharedElementTransitionSpec.ContainerTransform
-    ): TransitionHelper.ContainerTransformOptions {
-        val defaultColor = com.google.android.material.R.attr.colorSurface
-        val defaultElevation = 0f
-        val startColor = resolveColorOrAttr(context, spec.startContainerColor ?: defaultColor)
-        val endColor = resolveColorOrAttr(context, spec.endContainerColor ?: defaultColor)
-        val startElevation =
-            spec.startElevation?.let { context.resources.getDimension(it) } ?: defaultElevation
-        val endElevation =
-            spec.endElevation?.let { context.resources.getDimension(it) } ?: defaultElevation
-
-        return TransitionHelper.ContainerTransformOptions(
-            startColor, endColor, startElevation, endElevation
-        )
-    }
-
-    private fun resolveColorOrAttr(context: Context, @AttrRes @ColorRes resId: Int): Int {
-        return try {
-            // First, try to resolve as a color
-            context.getColor(resId)
-        } catch (_: Resources.NotFoundException) {
-            try {
-                // Then, try to resolve as a color attribute
-                context.requireThemeColor(resId)
-            } catch (e: IllegalArgumentException) {
-                val errorReporter = SentryErrorReporter.getInstance(context)
-                errorReporter.captureMessage(
-                    "Failed to resolve color or attr $resId for material container transform. Defaulting to Color.TRANSPARENT"
-                )
-                errorReporter.captureException(e)
-
-                // Last, default to transparent
-                return Color.TRANSPARENT
-            }
         }
     }
 }

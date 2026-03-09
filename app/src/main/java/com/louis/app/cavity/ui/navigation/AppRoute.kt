@@ -26,7 +26,7 @@ sealed interface HomeRoute : AppRoute {
 
     data class BottleDetails(val wineId: Long) : HomeRoute {
         override val transition = TransitionSpec.ElevationScale
-        override val destinationTransition = TransitionSpec.None // à tester quand nav global depuis bottle details
+        override val destinationTransition = TransitionSpec.None
         override val sharedElementTransition = SharedElementTransitionSpec.ContainerTransform()
     }
 
