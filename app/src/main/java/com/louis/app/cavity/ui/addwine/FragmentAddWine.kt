@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.content.ActivityNotFoundException
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -19,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
@@ -270,12 +268,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private fun setCounty(view: View) {
         val county = view.getTag(R.string.tag_chip_id) as County?
         addWineViewModel.setCountyId(county?.id)
-    }
-
-    override fun onPause() {
-        val a = exitTransition
-        val b = returnTransition
-        super.onPause()
     }
 
     override fun onDestroyView() {

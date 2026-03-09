@@ -360,12 +360,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         this.pendingSharedElement = sharedElement
     }
 
-    override fun onPause() {
-        val a = exitTransition
-        val b = returnTransition
-        super.onPause()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         tabAdapter = null

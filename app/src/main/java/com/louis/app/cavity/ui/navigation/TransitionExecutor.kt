@@ -1,16 +1,10 @@
 package com.louis.app.cavity.ui.navigation
 
-import android.content.Context
-import android.content.res.Resources
-import android.graphics.Color
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.transition.MaterialSharedAxis
-import com.louis.app.cavity.domain.error.SentryErrorReporter
-import com.louis.app.cavity.util.requireThemeColor
-import java.lang.IllegalArgumentException
 
 sealed interface TransitionSpec {
     data object None : TransitionSpec
