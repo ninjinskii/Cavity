@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.addwine
 import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
@@ -29,10 +30,11 @@ import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import com.louis.app.cavity.ui.UiEvent
-import com.louis.app.cavity.ui.UiEventManager
+import com.louis.app.cavity.ui.home.FragmentHome
 import com.louis.app.cavity.ui.navigation.navigateUp
+import com.louis.app.cavity.ui.widget.FragmentResultBridge
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private lateinit var pickImage: ActivityResultLauncher<Array<String>>
@@ -75,9 +77,18 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                UiEventManager.events.collect {
-                    if (it is UiEvent.WineUpdated) {
-                        navigateUp()
+                addWineViewModel.event.collect {
+                    when (it) {
+                        is AddWineEvent.WineChange -> {
+                            val result = Result(it.wine.id, it.wine.countyId)
+                            FragmentResultBridge<Result>(
+                                fragment = this@FragmentAddWine,
+                                requestKey = FragmentHome.ADD_WINE_RESULT_KEY
+                            )
+                                .put(result)
+
+                            navigateUp()
+                        }
                     }
                 }
             }
@@ -214,13 +225,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             loadImage(it)
         }
 
-        /*addWineViewModel.wineUpdatedEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                L.v("FragmentAddWine: wine updated. Navigating up")
-                navigateUp()
-            }
-        }*/
-
+        // TODO: remove hard nav component dep
         findNavController()
             .currentBackStackEntry
             ?.savedStateHandle
@@ -274,4 +279,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         super.onDestroyView()
         _binding = null
     }
+
+    @Parcelize
+    data class Result(val wineId: Long, val countyId: Long) : Parcelable
 }

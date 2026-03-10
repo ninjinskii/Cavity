@@ -39,7 +39,6 @@ import com.louis.app.cavity.ui.home.FragmentHome
 import com.louis.app.cavity.ui.navigation.GlobalRoute
 import com.louis.app.cavity.ui.navigation.NavigationProvider
 import com.louis.app.cavity.ui.navigation.Navigator
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -49,7 +48,6 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
     private val tastingViewModel: TastingViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
-    private val sharedViewModel: SharedViewModel by viewModels()
 
     override val navigator = Navigator(this)
 
@@ -86,11 +84,6 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 UiEventManager.events.collect {
                     when (it) {
-                        is UiEvent.WineUpdated -> {
-                            L.v("ActivityMain: receive wine updated wineId: ${it.wineId}, countyId: ${it.countyId}, message: ${it.message}")
-                            sharedViewModel.updateWineState(it)
-                            showSnackbar(it.message, R.id.snackbarAnchor)
-                        }
                         is UiEvent.Snackbar -> showSnackbar(it.message, it.anchorViewId)
                         is UiEvent.ActionSnackbar -> showSnackbar(
                             it.message,

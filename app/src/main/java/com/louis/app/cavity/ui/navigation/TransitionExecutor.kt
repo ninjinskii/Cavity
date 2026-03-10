@@ -76,7 +76,7 @@ class MaterialTransitionExecutor : TransitionExecutor {
             is SharedElementTransitionSpec.ContainerTransform ->
                 transitionHelper.setContainerTransformTransition(
                     destinationSharedElementTransition,
-                    false
+                    navigatingForward = true
                 )
 
             else -> Unit

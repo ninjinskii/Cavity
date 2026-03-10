@@ -19,7 +19,7 @@ class WinesPagerAdapter(
 
     override fun getItemId(position: Int) = counties[position].id
 
-    override fun containsItem(itemId: Long) = counties.map { it.id }.contains(itemId)
+    override fun containsItem(itemId: Long) = counties.any { it.id == itemId }
 
     fun getPosition(itemId: Long) = counties.indexOfFirst { it.id == itemId }
 }

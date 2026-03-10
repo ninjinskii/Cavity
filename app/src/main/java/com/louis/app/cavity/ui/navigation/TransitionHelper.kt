@@ -37,7 +37,7 @@ class TransitionHelper(private val fragment: Fragment) {
 
     fun setContainerTransformTransition(
         options: SharedElementTransitionSpec.ContainerTransform,
-        enter: Boolean
+        navigatingForward: Boolean
     ) {
         val options = resolveAttrs(fragment.requireContext(), options)
         val transition = getContainerTransform().apply {
@@ -52,7 +52,7 @@ class TransitionHelper(private val fragment: Fragment) {
             }
         }
 
-        if (enter) {
+        if (navigatingForward) {
             fragment.sharedElementEnterTransition = transition
         } else {
             fragment.sharedElementReturnTransition = transition

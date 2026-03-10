@@ -29,18 +29,21 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
-import com.louis.app.cavity.ui.SharedViewModel
+import com.louis.app.cavity.ui.addwine.FragmentAddWine
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.ui.navigation.navigate
+import com.louis.app.cavity.ui.widget.FragmentResultBridge
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, NavigationDestination {
     companion object {
         const val VIEW_POOL_SIZE = 25
+        const val ADD_WINE_RESULT_KEY =
+            "com.louis.app.cavity.ui.home.FragmentHome.ADD_WINE_RESULT_KEY"
     }
 
     private lateinit var transitionHelper: TransitionHelper
@@ -48,7 +51,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
-    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val recyclePool by lazy {
         RecyclerView.RecycledViewPool().apply {
             setMaxRecycledViews(R.layout.item_wine, VIEW_POOL_SIZE)
@@ -92,23 +94,19 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         }
 
         applyInsets()
+        listenToAddWineResult()
         setupScrollableTab()
         setViewPagerOrientation()
         observe()
         setListeners()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    homeViewModel.navigationEvent.collect {
-                        navigate(it, pendingSharedElement)
-                    }
-                }
-
-                launch {
-                    sharedViewModel.state.collect {
-                        L.v("FragmentHome: receive event $it")
-                        setCurrentCounty(it.scrollToWineRequest.countyId)
+                    homeViewModel.event.collect {
+                        when (it) {
+                            is HomeEvent.Navigation -> navigate(it.appRoute, pendingSharedElement)
+                        }
                     }
                 }
             }
@@ -162,6 +160,23 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         }
     }
 
+    private fun listenToAddWineResult() {
+        FragmentResultBridge<FragmentAddWine.Result>(
+            fragment = this,
+            requestKey = ADD_WINE_RESULT_KEY
+        )
+            .listen { result: FragmentAddWine.Result? ->
+                val (wineId, countyId) = result ?: return@listen
+                homeViewModel.notifyWineChange(wineId, countyId)
+            }
+    }
+
+    private fun checkScrollRequest() {
+        homeViewModel.viewState.lastWineChange?.let {
+            setCurrentCounty(it.countyId)
+        }
+    }
+
     private fun setupScrollableTab() {
         tabAdapter = ScrollableTabAdapter(
             onTabClick = { _, position ->
@@ -191,6 +206,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
                 }
 
 //                viewPager.offscreenPageLimit = 1
+//                viewPager.isUserInputEnabled = false
             }
         }
     }
@@ -358,6 +374,13 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
 
     override fun setPendingSharedElement(sharedElement: View) {
         this.pendingSharedElement = sharedElement
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.viewPager.post {
+            checkScrollRequest()
+        }
     }
 
     override fun onDestroyView() {

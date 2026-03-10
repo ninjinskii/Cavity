@@ -17,11 +17,4 @@ sealed interface UiEvent {
         val action: (() -> Unit)
     ) :
         UiEvent
-
-    data class WineUpdated(
-        val wineId: Long,
-        val countyId: Long,
-        @param:StringRes val message: Int
-    ) :
-        UiEvent
 }

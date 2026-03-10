@@ -12,6 +12,7 @@ import com.louis.app.cavity.domain.repository.StatsRepository
 import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.ui.BaseViewModel
 import com.louis.app.cavity.ui.navigation.AppRoute
 import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.WineOptionsRoute
@@ -20,20 +21,25 @@ import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel(app: Application) : AndroidViewModel(app) {
+sealed interface HomeEvent {
+    data class Navigation(val appRoute: AppRoute) : HomeEvent
+}
+
+data class LastWineChange(val wineId: Long, val countyId: Long)
+data class HomeState(val lastWineChange: LastWineChange?)
+
+val defaultState = HomeState(null)
+
+class HomeViewModel(app: Application) : BaseViewModel<HomeState, HomeEvent>(app, defaultState) {
     private val countyRepository = CountyRepository.getInstance(app)
     private val wineRepository = WineRepository.getInstance(app)
     private val bottleRepository = BottleRepository.getInstance(app)
     private val statsRepository = StatsRepository.getInstance(app)
     private val prefsRepository = PrefsRepository.getInstance(app)
     private val errorReporter = SentryErrorReporter.getInstance(app)
-
-    private val _navigationEvent = MutableSharedFlow<AppRoute>(replay = 0, extraBufferCapacity = 1)
-    val navigationEvent = _navigationEvent.asSharedFlow()
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
@@ -65,6 +71,18 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     val vintagesCount = observedCounty.switchMap {
         statsRepository.getVintagesStatsForCounty(it, _storageLocation.value)
+    }
+
+    fun notifyWineChange(wineId: Long, countyId: Long) {
+        stateFlow.update { state ->
+            state.copy(lastWineChange = LastWineChange(wineId, countyId))
+        }
+    }
+
+    fun resetWineChange() {
+        stateFlow.update { state ->
+            state.copy(lastWineChange = null)
+        }
     }
 
     fun setObservedCounty(countyId: Long) {
@@ -141,15 +159,18 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun requestEditWine(countyId: Long, wineId: Long) {
-        _navigationEvent.tryEmit(WineOptionsRoute.EditWine(wineId, countyId))
+        val route = WineOptionsRoute.EditWine(wineId, countyId)
+        emitEvent(HomeEvent.Navigation(route))
     }
 
     fun requestAddBottle(wineId: Long) {
-        _navigationEvent.tryEmit(WineOptionsRoute.AddBottle(wineId))
+        val route = WineOptionsRoute.AddBottle(wineId)
+        emitEvent(HomeEvent.Navigation(route))
     }
 
     fun requestShowWineHistory(wineId: Long) {
-        _navigationEvent.tryEmit(WineOptionsRoute.ShowWineHistory(wineId))
+        val route = WineOptionsRoute.ShowWineHistory(wineId)
+        emitEvent(HomeEvent.Navigation(route))
     }
 
     fun handleWineClick(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
@@ -161,12 +182,13 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
             else -> HomeRoute.BottleDetails(wineId)
         }
 
-        _navigationEvent.tryEmit(route)
+        emitEvent(HomeEvent.Navigation(route))
     }
 
     fun handleWineLongClick(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
         checkCounty(wineWithBottles, fragmentCountyId)
-        _navigationEvent.tryEmit(HomeRoute.WineOptions(wineWithBottles.wine))
+        val route = HomeRoute.WineOptions(wineWithBottles.wine)
+        emitEvent(HomeEvent.Navigation(route))
     }
 
     private fun checkCounty(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {

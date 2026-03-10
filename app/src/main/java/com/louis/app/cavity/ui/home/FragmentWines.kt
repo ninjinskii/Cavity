@@ -12,9 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
-import com.louis.app.cavity.ui.SharedViewModel
 import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.navigator
+import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 
@@ -22,7 +22,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
-    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val countyId by lazy {
         requireArguments().getLong(COUNTY_ID)
     }
@@ -36,6 +35,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         applyInsets()
         initRecyclerView()
         setListeners()
+        L.v("FragmentWines (B): view created")
     }
 
     private fun applyInsets() {
@@ -95,13 +95,15 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         homeViewModel.getWinesWithBottlesByCounty(countyId).observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
             wineAdapter.submitList(it) {
-                scrollToWine(wineAdapter)
+                binding.wineList.post {
+                    scrollToWine(wineAdapter)
+                }
             }
         }
     }
 
     private fun scrollToWine(adapter: WineRecyclerAdapter) {
-        val (wineId, countyId) = sharedViewModel.viewState.scrollToWineRequest
+        val (wineId, countyId) = homeViewModel.viewState.lastWineChange ?: return
 
         if (countyId != this.countyId || wineId == -1L) {
             return
@@ -111,7 +113,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             val adapterWineId = adapter.getItemId(i)
 
             if (wineId == adapterWineId) {
-                sharedViewModel.consumeScrollToWineRequest()
+                homeViewModel.resetWineChange()
                 adapter.highlightPosition = i
                 binding.wineList.smoothScrollToPosition(i)
             }
@@ -153,10 +155,18 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     override fun onResume() {
         honeycombLayoutManager?.config?.skipNextRecycleOnDetach = false
+        L.v("FragmentWines (B): resume")
         super.onResume()
     }
 
+    override fun onStart() {
+        super.onStart()
+        L.v("FragmentWines (B): start")
+    }
+
+
     override fun onDestroyView() {
+        L.v("FragmentWines (B): view destroyed")
         super.onDestroyView()
         honeycombLayoutManager = null
         binding.wineList.adapter = null
