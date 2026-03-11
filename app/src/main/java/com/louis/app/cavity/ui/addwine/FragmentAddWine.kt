@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
@@ -31,8 +30,10 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.louis.app.cavity.ui.home.FragmentHome.Companion.ADD_WINE_RESULT_KEY
+import com.louis.app.cavity.ui.navigation.AddWineRoute
 import com.louis.app.cavity.ui.navigation.navigateUp
 import com.louis.app.cavity.ui.navigation.fragmentResultListener
+import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.ui.navigation.putFragmentResult
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -193,8 +194,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
 
         binding.buttonTakePhoto.setOnClickListener {
-            val action = FragmentAddWineDirections.addWineToCamera()
-            findNavController().navigate(action)
+            navigate(AddWineRoute.Camera)
         }
 
         binding.buttonRemoveWineImage.setOnClickListener {

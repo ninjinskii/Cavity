@@ -221,7 +221,6 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
                     stopCamera()
                 }
             }
-
         }
     }
 
@@ -294,6 +293,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.bottleTemplate.clearAnimation()
         _binding = null
     }
 

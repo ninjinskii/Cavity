@@ -59,7 +59,6 @@ class WineRecyclerAdapter(
         // We need to null out listeners, because they capture FragmentWines and view holders are
         // shared between multiple FragmentWines, which can lead to crash when navigating or else
         with(holder.itemView) {
-//            transitionName = null
             setOnClickListener(null)
             setOnLongClickListener(null)
         }

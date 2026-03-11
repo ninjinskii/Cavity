@@ -48,6 +48,12 @@ sealed interface WineOptionsRoute : AppRoute {
     data class ShowWineHistory(val wineId: Long) : WineOptionsRoute
 }
 
+sealed interface AddWineRoute : AppRoute {
+    object Camera : AddWineRoute {
+        override val transition = TransitionSpec.SharedAxis(Axis.Z)
+    }
+}
+
 sealed interface BottleDetailsRoute : AppRoute {
 }
 

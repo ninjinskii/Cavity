@@ -9,6 +9,7 @@ import androidx.navigation.Navigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
+import com.louis.app.cavity.ui.addwine.FragmentAddWineDirections
 import com.louis.app.cavity.ui.home.FragmentHomeDirections
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheetDirections
 import com.louis.app.cavity.ui.search.FragmentSearchDirections
@@ -117,6 +118,18 @@ class NavComponentWineOptionsRouteResolver : NavComponentRouteResolver<WineOptio
 
             is WineOptionsRoute.ShowWineHistory ->
                 WineOptionsBottomSheetDirections.wineOptionsToHistory(route.wineId)
+        }
+
+        fragment.navigate(direction)
+    }
+}
+
+class NavComponentAddWineRouteResolver : NavComponentRouteResolver<AddWineRoute>() {
+    override val type = AddWineRoute::class
+
+    override fun resolveTyped(route: AddWineRoute, fragment: Fragment, sharedElement: View?) {
+        val direction = when (route) {
+            AddWineRoute.Camera -> FragmentAddWineDirections.addWineToCamera()
         }
 
         fragment.navigate(direction)

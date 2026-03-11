@@ -18,7 +18,8 @@ class Navigator(private val activity: AppCompatActivity) {
                 NavComponentGlobalRouteResolver(),
                 NavComponentHomeRouteResolver(),
                 NavComponentWineOptionsRouteResolver(),
-                NavComponentSearchRouteResolver()
+                NavComponentSearchRouteResolver(),
+                NavComponentAddWineRouteResolver()
             )
         )
     }
@@ -53,9 +54,9 @@ class Navigator(private val activity: AppCompatActivity) {
 
     fun setup() {
         val started = activity.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
-
-        if (!started) {
-            throw IllegalStateException("Navigator#setup is called before activity is STARTED. Current lifecycle state: ${activity.lifecycle.currentState.name}")
+        require(started) {
+            "Navigator#setup is called before activity is STARTED. " +
+                    "Current lifecycle state: ${activity.lifecycle.currentState.name}"
         }
 
         val hostFragment = appNavigator.getHostFragment(activity)

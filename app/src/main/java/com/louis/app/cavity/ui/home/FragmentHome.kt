@@ -201,8 +201,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
                     startPostponedEnterTransition()
                 }
 
-//                viewPager.offscreenPageLimit = 1
-//                viewPager.isUserInputEnabled = false
+//                viewPager.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
             }
         }
     }
