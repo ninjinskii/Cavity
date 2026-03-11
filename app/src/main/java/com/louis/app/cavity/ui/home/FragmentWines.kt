@@ -101,9 +101,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         homeViewModel.getWinesWithBottlesByCounty(countyId).observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
             wineAdapter.submitList(it) {
-                binding.wineList.post {
-                    scrollToWine(wineAdapter)
-                }
+                scrollToWine(wineAdapter)
             }
         }
     }
@@ -151,7 +149,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         super.onStart()
         L.v("FragmentWines (B): start")
     }
-
 
     override fun onDestroyView() {
         L.v("FragmentWines (B): view destroyed")
