@@ -21,10 +21,8 @@ interface RouteResolver {
     fun resolve(route: AppRoute, fragment: Fragment, sharedElement: View?)
 }
 
-abstract class TypedRouteResolver<T : AppRoute>(
-    private val type: KClass<T>
-) :
-    RouteResolver {
+abstract class TypedRouteResolver<T : AppRoute> : RouteResolver {
+    abstract val type: KClass<T>
 
     override fun canHandle(route: AppRoute) = type.isInstance(route)
 
@@ -36,11 +34,7 @@ abstract class TypedRouteResolver<T : AppRoute>(
     protected abstract fun resolveTyped(route: T, fragment: Fragment, sharedElement: View?)
 }
 
-abstract class NavComponentRouteResolver<T : AppRoute>(
-    type: KClass<T>
-) :
-    TypedRouteResolver<T>(type) {
-
+abstract class NavComponentRouteResolver<T : AppRoute> : TypedRouteResolver<T>() {
     protected fun Fragment.navigate(navDirections: NavDirections) {
         findNavController().navigate(navDirections)
     }
@@ -66,8 +60,8 @@ abstract class NavComponentRouteResolver<T : AppRoute>(
     }
 }
 
-class NavComponentGlobalRouteResolver() :
-    NavComponentRouteResolver<GlobalRoute>(GlobalRoute::class) {
+class NavComponentGlobalRouteResolver : NavComponentRouteResolver<GlobalRoute>() {
+    override val type = GlobalRoute::class
 
     override fun resolveTyped(route: GlobalRoute, fragment: Fragment, sharedElement: View?) {
         val id = when (route) {
@@ -80,8 +74,8 @@ class NavComponentGlobalRouteResolver() :
     }
 }
 
-class NavComponentHomeRouteResolver() :
-    NavComponentRouteResolver<HomeRoute>(HomeRoute::class) {
+class NavComponentHomeRouteResolver : NavComponentRouteResolver<HomeRoute>() {
+    override val type = HomeRoute::class
 
     override fun resolveTyped(route: HomeRoute, fragment: Fragment, sharedElement: View?) {
         val direction: NavDirections = when (route) {
@@ -110,8 +104,8 @@ class NavComponentHomeRouteResolver() :
 }
 
 
-class NavComponentWineOptionsRouteResolver() :
-    NavComponentRouteResolver<WineOptionsRoute>(WineOptionsRoute::class) {
+class NavComponentWineOptionsRouteResolver : NavComponentRouteResolver<WineOptionsRoute>() {
+    override val type = WineOptionsRoute::class
 
     override fun resolveTyped(route: WineOptionsRoute, fragment: Fragment, sharedElement: View?) {
         val direction = when (route) {
@@ -129,8 +123,8 @@ class NavComponentWineOptionsRouteResolver() :
     }
 }
 
-class NavComponentSearchRouteResolver() :
-    NavComponentRouteResolver<SearchRoute>(SearchRoute::class) {
+class NavComponentSearchRouteResolver : NavComponentRouteResolver<SearchRoute>() {
+    override val type = SearchRoute::class
 
     override fun resolveTyped(route: SearchRoute, fragment: Fragment, sharedElement: View?) {
         val direction = when (route) {
@@ -145,20 +139,9 @@ class NavComponentSearchRouteResolver() :
     }
 }
 
-class NavComponentBottleDetailsRouteResolver() :
-    NavComponentRouteResolver<BottleDetailsRoute>(BottleDetailsRoute::class) {
+class NavComponentBottleDetailsRouteResolver : NavComponentRouteResolver<BottleDetailsRoute>() {
+    override val type = BottleDetailsRoute::class
 
     override fun resolveTyped(route: BottleDetailsRoute, fragment: Fragment, sharedElement: View?) {
-    }
-}
-
-class NavComponentAccountRouteResolver() :
-    NavComponentRouteResolver<AccountRoute>(AccountRoute::class) {
-
-    override fun resolveTyped(route: AccountRoute, fragment: Fragment, sharedElement: View?) {
-        when (route) {
-            AccountRoute.Account -> fragment.navigate(R.id.settings_dest)
-            AccountRoute.Login -> fragment.navigate(R.id.settings_dest)
-        }
     }
 }

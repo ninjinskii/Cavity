@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,7 @@ import com.louis.app.cavity.databinding.FragmentCameraBinding
 import com.louis.app.cavity.domain.error.ErrorReporter
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.ui.SnackbarProvider
-import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.TAKEN_PHOTO_URI
+import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.CAMERA_RESULT_KEY
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.ui.navigation.TransitionHelper
@@ -39,6 +40,9 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import androidx.core.graphics.drawable.toDrawable
+import com.louis.app.cavity.ui.navigation.navigateUp
+import com.louis.app.cavity.ui.navigation.putFragmentResult
+import kotlinx.parcelize.Parcelize
 
 class FragmentCamera : Fragment(R.layout.fragment_camera) {
     private lateinit var cameraExecutor: ExecutorService
@@ -167,14 +171,9 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
                                 postDelayed(100) {
                                     foreground = null
 
-                                    findNavController().run {
-                                        previousBackStackEntry?.savedStateHandle?.set(
-                                            TAKEN_PHOTO_URI,
-                                            Uri.fromFile(file).toString()
-                                        )
-
-                                        navigateUp()
-                                    }
+                                    val result = Result(Uri.fromFile(file).toString())
+                                    putFragmentResult(CAMERA_RESULT_KEY, result)
+                                    navigateUp()
                                 }
                             }
                         }
@@ -303,4 +302,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
         camera = null
         cameraExecutor.shutdown()
     }
+
+    @Parcelize
+    data class Result(val imageUri: String) : Parcelable
 }

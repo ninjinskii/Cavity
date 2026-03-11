@@ -35,7 +35,7 @@ import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.ui.navigation.navigate
-import com.louis.app.cavity.ui.widget.FragmentResultBridge
+import com.louis.app.cavity.ui.navigation.fragmentResultListener
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.launch
 
@@ -161,14 +161,10 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
     }
 
     private fun listenToAddWineResult() {
-        FragmentResultBridge<FragmentAddWine.Result>(
-            fragment = this,
-            requestKey = ADD_WINE_RESULT_KEY
-        )
-            .listen { result: FragmentAddWine.Result? ->
-                val (wineId, countyId) = result ?: return@listen
-                homeViewModel.notifyWineChange(wineId, countyId)
-            }
+        fragmentResultListener<FragmentAddWine.Result>(ADD_WINE_RESULT_KEY) {
+            val (wineId, countyId) = it ?: return@fragmentResultListener
+            homeViewModel.notifyWineChange(wineId, countyId)
+        }
     }
 
     private fun checkScrollRequest() {
@@ -370,7 +366,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         }
     }
 
-    fun getRecycledViewPool() = recyclePool
+    override fun getRecycledViewPool() = recyclePool
 
     override fun setPendingSharedElement(sharedElement: View) {
         this.pendingSharedElement = sharedElement

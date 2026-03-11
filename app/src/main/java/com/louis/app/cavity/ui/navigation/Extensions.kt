@@ -1,5 +1,8 @@
 package com.louis.app.cavity.ui.navigation
 
+import android.os.Build
+import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.Fragment
 
@@ -20,4 +23,29 @@ fun Fragment.popBackStack() {
 
 fun Fragment.navigateUp() {
     navigator.navigateUp(this)
+}
+
+inline fun <reified T : Parcelable> Fragment.fragmentResultListener(
+    requestKey: String,
+    noinline onResult: (T?) -> Unit
+) {
+    parentFragmentManager.setFragmentResultListener(
+        requestKey,
+        viewLifecycleOwner
+    ) { _, bundle ->
+        val result: T? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            bundle.getParcelable("$requestKey-result", T::class.java)
+        } else {
+            // Prior android version support
+            @Suppress("DEPRECATION")
+            bundle.getParcelable("$requestKey-result")
+        }
+
+        onResult(result)
+    }
+}
+
+fun <T : Parcelable> Fragment.putFragmentResult(requestKey: String, result: T) {
+    val result = Bundle().apply { putParcelable("$requestKey-result", result) }
+    parentFragmentManager.setFragmentResult(requestKey, result)
 }

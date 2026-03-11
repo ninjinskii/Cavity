@@ -26,7 +26,11 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         requireArguments().getLong(COUNTY_ID)
     }
 
-    private var honeycombLayoutManager: HoneycombLayoutManager? = null
+    val fragmentWinesParent: FragmentWinesParent
+        get() = (parentFragment as? FragmentWinesParent)
+            ?: throw IllegalStateException(
+                "Parent fragment should implement FragmentWinesParent. It is $parentFragment"
+            )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,7 +68,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             icons,
             isLightTheme,
             onItemClick = { wineWithBottles, itemView ->
-                getParent().setPendingSharedElement(itemView)
+                fragmentWinesParent.setPendingSharedElement(itemView)
                 homeViewModel.handleWineClick(wineWithBottles, countyId)
             },
             onItemLongClick = { homeViewModel.handleWineLongClick(it, countyId) }
@@ -81,13 +85,15 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 HoneycombLayoutManager.Orientation.VERTICAL
             }
 
-        honeycombLayoutManager = HoneycombLayoutManager(colCount, orientation)
+        val honeycombLayoutManager = HoneycombLayoutManager(colCount, orientation).apply {
+            config.recycleOnDetach = false
+        }
 
         binding.wineList.apply {
             layoutManager = honeycombLayoutManager
-            setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
-            setHasFixedSize(true)
             adapter = wineAdapter
+            setRecycledViewPool(fragmentWinesParent.getRecycledViewPool())
+            setHasFixedSize(true)
         }
 
         prePopulateRecyclerViewPool()
@@ -141,24 +147,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         }
     }
 
-    private fun getParent(): FragmentWinesParent {
-        return (parentFragment as? FragmentWinesParent)
-            ?: throw IllegalStateException(
-                "Parent fragment should implement FragmentWinesParent. It is $parentFragment"
-            )
-    }
-
-    override fun onPause() {
-        honeycombLayoutManager?.config?.skipNextRecycleOnDetach = true
-        super.onPause()
-    }
-
-    override fun onResume() {
-        honeycombLayoutManager?.config?.skipNextRecycleOnDetach = false
-        L.v("FragmentWines (B): resume")
-        super.onResume()
-    }
-
     override fun onStart() {
         super.onStart()
         L.v("FragmentWines (B): start")
@@ -168,7 +156,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     override fun onDestroyView() {
         L.v("FragmentWines (B): view destroyed")
         super.onDestroyView()
-        honeycombLayoutManager = null
         binding.wineList.adapter = null
         _binding = null
     }

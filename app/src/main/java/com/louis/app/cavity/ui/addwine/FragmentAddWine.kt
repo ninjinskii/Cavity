@@ -30,9 +30,10 @@ import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import com.louis.app.cavity.ui.home.FragmentHome
+import com.louis.app.cavity.ui.home.FragmentHome.Companion.ADD_WINE_RESULT_KEY
 import com.louis.app.cavity.ui.navigation.navigateUp
-import com.louis.app.cavity.ui.widget.FragmentResultBridge
+import com.louis.app.cavity.ui.navigation.fragmentResultListener
+import com.louis.app.cavity.ui.navigation.putFragmentResult
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
@@ -45,7 +46,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     private val args: FragmentAddWineArgs by navArgs()
 
     companion object {
-        const val TAKEN_PHOTO_URI = "com.louis.app.cavity.ui.TAKEN_PHOTO_URI"
+        const val CAMERA_RESULT_KEY = "com.louis.app.cavity.ui.CAMERA_RESULT_KEY"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,12 +82,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
                     when (it) {
                         is AddWineEvent.WineChange -> {
                             val result = Result(it.wine.id, it.wine.countyId)
-                            FragmentResultBridge<Result>(
-                                fragment = this@FragmentAddWine,
-                                requestKey = FragmentHome.ADD_WINE_RESULT_KEY
-                            )
-                                .put(result)
-
+                            putFragmentResult(ADD_WINE_RESULT_KEY, result)
                             navigateUp()
                         }
                     }
@@ -95,6 +91,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         }
 
         applyInsets()
+        listenForCameraResult()
         inflateChips()
         initDropdown()
         setListeners()
@@ -110,6 +107,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         binding.nestedScrollView.prepareWindowInsets { view, _, left, _, right, bottom ->
             view.updatePadding(left = left, right = right, bottom = bottom)
             WindowInsetsCompat.CONSUMED
+        }
+    }
+
+    private fun listenForCameraResult() {
+        fragmentResultListener<FragmentCamera.Result>(CAMERA_RESULT_KEY) { result ->
+            result?.let {
+                addWineViewModel.setImage(it.imageUri)
+            }
         }
     }
 
@@ -224,13 +229,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         addWineViewModel.image.observe(viewLifecycleOwner) {
             loadImage(it)
         }
-
-        // TODO: remove hard nav component dep
-        findNavController()
-            .currentBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<String>(TAKEN_PHOTO_URI)
-            ?.observe(viewLifecycleOwner) { addWineViewModel.setImage(it) }
     }
 
     private fun onImageSelected(imageUri: Uri?) {
