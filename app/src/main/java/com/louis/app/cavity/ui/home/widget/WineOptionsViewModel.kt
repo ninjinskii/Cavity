@@ -8,81 +8,77 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.louis.app.cavity.R
-import com.louis.app.cavity.domain.delegates.BottlesFinder
-import com.louis.app.cavity.domain.delegates.WineFinder
+import com.louis.app.cavity.domain.delegates.ListWineUseCase
 import com.louis.app.cavity.domain.delegates.RemoveWineUseCase
 import com.louis.app.cavity.domain.delegates.WineRemover
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.WineRepository
-import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.BaseViewModel
 import com.louis.app.cavity.ui.UiEvent
 import com.louis.app.cavity.ui.UiEventManager
 import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class WineOptionsState(val currentWine: Wine? = null, val currentBottle: Bottle? = null)
+data class WineOptionsState(val wine: Wine? = null)
 
 class WineOptionsViewModel(
     app: Application,
-    private val wineId: Long,
-    private val wineRemover: WineRemover,
-    private val wineFinder: WineFinder,
-    private val bottlesFinder: BottlesFinder,
+    private val removeWineUseCase: WineRemover,
+    private val listWineUseCase: ListWineUseCase,
     private val savedStateHandle: SavedStateHandle
 ) :
     BaseViewModel<WineOptionsState, Nothing>(app, WineOptionsState()) {
 
-    companion object {
-        val Factory = { wineId: Long ->
-            viewModelFactory {
-                initializer {
-                    // We may be able to discard app usage if repositories are not singleton anymore
-                    val app = checkNotNull(this[APPLICATION_KEY])
-                    val bottleRepository = BottleRepository.getInstance(app)
-                    val wineRepository = WineRepository.getInstance(app)
-                    val wineRemover = RemoveWineUseCase(wineRepository, bottleRepository)
-                    val wineFinder = WineFinder(wineRepository)
-                    val bottleFinder = BottlesFinder(bottleRepository)
-                    val handle = createSavedStateHandle()
-                    handle[SAVED_STATE_KEY] = null // wineId
-                    WineOptionsViewModel(app, wineId, wineRemover, wineFinder, bottleFinder, handle)
-                }
-            }
-        }
-
-        private const val SAVED_STATE_KEY = "com.louis.app.cavity.ui.WineOptionsViewModel"
-    }
+    private val wineId: Long = checkNotNull(savedStateHandle["wineId"])
+    override val stateFlow = listWineUseCase.getWine(wineId)
+        .map { WineOptionsState(it) }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            WineOptionsState()
+        )
 
     init {
         viewModelScope.launch(IO) {
-            val wideId = savedStateHandle["wineId"] ?: wineId
-            L.v("WineOptionsViewModel: ${savedStateHandle.get<Boolean>("storageLocationActive")}")
-           /* wineFinder.getWine(id).collect { wine ->
-                stateFlow.update { it.copy(currentWine = wine) }
-            }
-
-            bottlesFinder.getBottle(1).collect { bottle ->
-                stateFlow.update { it.copy(currentBottle = bottle) }
+            L.v("${savedStateHandle.get<Boolean>("storageLocationActive")}")
+            /*listWineUseCase.getWine(wineId).collect { wine ->
+                stateFlow.update {
+                    it.copy(wine = wine)
+                }
             }*/
-
-            combine(wineFinder.getWine(wideId), bottlesFinder.getBottle(1)) {
-                wine, bottle ->
-                WineOptionsState(wine, bottle)
-            }.collect {
-                viewState = it
-            }
         }
     }
 
-    fun handleWineDeleteRequest(wineId: Long) {
+    fun handleWineDeleteRequest() {
         viewModelScope.launch(IO) {
-            val success = wineRemover.removeWine(wineId)
+            val success = removeWineUseCase.removeWine(wineId)
             val message = if (success) R.string.wine_deleted else R.string.base_error
             UiEventManager.send(UiEvent.Snackbar(message))
+        }
+    }
+
+    companion object {
+        // We can use a lambda right before "viewModelFactory" if we really need to provide an argument to the view model
+        // But fragment arguments can be retrieved in the saved state handle
+        val Factory = viewModelFactory {
+            initializer {
+                // We may be able to discard app usage if repositories are not singleton anymore
+                val app = checkNotNull(this[APPLICATION_KEY])
+                val bottleRepository = BottleRepository.getInstance(app)
+                val wineRepository = WineRepository.getInstance(app)
+                val wineRemover = RemoveWineUseCase(wineRepository, bottleRepository)
+                val listWineUseCase = ListWineUseCase(wineRepository)
+                val savedState = createSavedStateHandle()
+                WineOptionsViewModel(app, wineRemover, listWineUseCase, savedState)
+            }
         }
     }
 }

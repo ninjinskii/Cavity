@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.louis.app.cavity.R
@@ -20,7 +19,6 @@ import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.home.widget.WineOptionsViewModel
 import com.louis.app.cavity.ui.navigation.WineOptionsRoute
 import com.louis.app.cavity.ui.navigation.navigate
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.launch
@@ -33,7 +31,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
         factoryProducer = { WineOptionsViewModel.Factory }
     )*/
     private val wineOptionsViewModel: WineOptionsViewModel by viewModels {
-        WineOptionsViewModel.Factory(args.wineId)
+        WineOptionsViewModel.Factory
     }
     private val homeViewModel: HomeViewModel by activityViewModels() // TODO: remove after complete home viewmodel refactoring & scoping. See HomeViewModel todo for mor info
     private val args: WineOptionsBottomSheetArgs by navArgs()
@@ -51,50 +49,51 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 wineOptionsViewModel.state.collect { state ->
-                    state.currentWine?.let { updateUi(it) }
+                    state.wine?.let { binding.updateUi(it) }
                 }
+            }
+        }
+
+        binding.setListeners()
+    }
+
+    private fun BottomSheetWineOptionsBinding.setListeners() {
+        addBottle.setOnClickListener {
+            navigate(WineOptionsRoute.AddBottle(args.wineId))
+        }
+
+        editWine.setOnClickListener {
+            navigate(WineOptionsRoute.EditWine(args.wineId, args.countyId))
+        }
+
+        showHistory.setOnClickListener {
+            navigate(WineOptionsRoute.ShowWineHistory(args.wineId))
+        }
+
+        deleteWine.setOnClickListener {
+            context?.let { context ->
+                LifecycleMaterialDialogBuilder(context, viewLifecycleOwner)
+                    .setMessage(R.string.confirm_wine_delete)
+                    .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
+                    }
+                    .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
+                        wineOptionsViewModel.handleWineDeleteRequest()
+                        dismiss()
+                    }
+                    .show()
             }
         }
     }
 
-    private fun updateUi(wine: Wine) {
+    private fun BottomSheetWineOptionsBinding.updateUi(wine: Wine) {
         val wineColor = ContextCompat.getColor(requireContext(), wine.color.colorRes)
-
-        with(binding) {
-            currentWine.wineName.text = wine.name
-            currentWine.wineNaming.text = wine.naming
-            currentWine.wineColorIndicator.setColorFilter(wineColor)
-            currentWine.organicImage.setVisible(wine.isOrganic.toBoolean())
-
-            addBottle.setOnClickListener {
-                navigate(WineOptionsRoute.AddBottle(args.wineId))
-            }
-
-            editWine.setOnClickListener {
-                navigate(WineOptionsRoute.EditWine(args.wineId, args.countyId))
-            }
-
-            showHistory.setOnClickListener {
-                navigate(WineOptionsRoute.ShowWineHistory(args.wineId))
-            }
-
-            deleteWine.setVisible(!args.storageLocationEnabled)
-            deleteWine.setOnClickListener {
-                context?.let { context ->
-                    LifecycleMaterialDialogBuilder(context, viewLifecycleOwner)
-                        .setMessage(R.string.confirm_wine_delete)
-                        .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
-                        }
-                        .setPositiveButton(resources.getString(R.string.submit)) { _, _ ->
-                            wineOptionsViewModel.handleWineDeleteRequest(args.wineId)
-                            dismiss()
-                        }
-                        .show()
-                }
-            }
-        }
+        currentWine.wineName.text = wine.name
+        currentWine.wineNaming.text = wine.naming
+        currentWine.wineColorIndicator.setColorFilter(wineColor)
+        currentWine.organicImage.setVisible(wine.isOrganic.toBoolean())
+        deleteWine.setVisible(!args.storageLocationEnabled)
     }
 
     override fun onPause() {

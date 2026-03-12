@@ -5,8 +5,13 @@ import kotlin.system.measureTimeMillis
 
 class L {
     companion object {
+        private fun getCallingClassName(): String {
+            val stackTrace = Thread.currentThread().stackTrace
+            return stackTrace[4].className.substringAfterLast('.')
+        }
+
         fun v(message: String, clue: String = "Default") {
-            Log.v("________$clue _______", message)
+            Log.v("________$clue _______", "${getCallingClassName()}: $message")
         }
 
         fun e(throwable: Throwable) {

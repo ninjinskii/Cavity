@@ -15,7 +15,7 @@ open class BaseViewModel<State, Event>(app: Application, defaultState: State) :
     val state: StateFlow<State> get() = stateFlow
     val event: SharedFlow<Event> get() = eventFlow
 
-    protected val stateFlow: MutableStateFlow<State> by lazy { MutableStateFlow(defaultState) }
+    protected open val stateFlow: MutableStateFlow<State> by lazy { MutableStateFlow(defaultState) }
     protected val eventFlow: MutableSharedFlow<Event> = MutableSharedFlow(extraBufferCapacity = 1)
 
     var viewState: State
