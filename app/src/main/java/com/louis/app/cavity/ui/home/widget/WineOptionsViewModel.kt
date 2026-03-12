@@ -8,58 +8,57 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.louis.app.cavity.R
-import com.louis.app.cavity.domain.delegates.ListWineUseCase
+import com.louis.app.cavity.domain.delegates.RemoveWine
 import com.louis.app.cavity.domain.delegates.RemoveWineUseCase
-import com.louis.app.cavity.domain.delegates.WineRemover
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.BaseViewModel
 import com.louis.app.cavity.ui.UiEvent
 import com.louis.app.cavity.ui.UiEventManager
-import com.louis.app.cavity.util.L
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 data class WineOptionsState(val wine: Wine? = null)
 
 class WineOptionsViewModel(
     app: Application,
-    private val removeWineUseCase: WineRemover,
-    private val listWineUseCase: ListWineUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val removeWine: RemoveWineUseCase,
+    wineRepository: WineRepository,
+    savedStateHandle: SavedStateHandle
 ) :
     BaseViewModel<WineOptionsState, Nothing>(app, WineOptionsState()) {
 
     private val wineId: Long = checkNotNull(savedStateHandle["wineId"])
-    override val stateFlow = listWineUseCase.getWine(wineId)
+    /*val stateFlow = listWineUseCase.getWine(wineId)
         .map { WineOptionsState(it) }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             WineOptionsState()
-        )
+        )*/
 
     init {
-        viewModelScope.launch(IO) {
-            L.v("${savedStateHandle.get<Boolean>("storageLocationActive")}")
-            /*listWineUseCase.getWine(wineId).collect { wine ->
+        wineRepository.getWineByIdFlow(wineId)
+            .map { WineOptionsState(it) }
+            .onEach { viewState = it }
+            .launchIn(viewModelScope)
+
+        /*viewModelScope.launch(IO) {
+            listWineUseCase.getWine(wineId).collect { wine ->
                 stateFlow.update {
                     it.copy(wine = wine)
                 }
-            }*/
-        }
+
+        }*/
     }
 
     fun handleWineDeleteRequest() {
         viewModelScope.launch(IO) {
-            val success = removeWineUseCase.removeWine(wineId)
+            val success = removeWine(wineId)
             val message = if (success) R.string.wine_deleted else R.string.base_error
             UiEventManager.send(UiEvent.Snackbar(message))
         }
@@ -74,10 +73,9 @@ class WineOptionsViewModel(
                 val app = checkNotNull(this[APPLICATION_KEY])
                 val bottleRepository = BottleRepository.getInstance(app)
                 val wineRepository = WineRepository.getInstance(app)
-                val wineRemover = RemoveWineUseCase(wineRepository, bottleRepository)
-                val listWineUseCase = ListWineUseCase(wineRepository)
+                val wineRemover = RemoveWine(wineRepository, bottleRepository)
                 val savedState = createSavedStateHandle()
-                WineOptionsViewModel(app, wineRemover, listWineUseCase, savedState)
+                WineOptionsViewModel(app, wineRemover, wineRepository, savedState)
             }
         }
     }
