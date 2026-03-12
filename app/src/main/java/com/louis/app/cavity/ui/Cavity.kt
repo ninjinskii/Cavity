@@ -11,6 +11,7 @@ class Cavity : Application() {
         val isOreoOrHigher = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
         val mode = if (isOreoOrHigher) MODE_NIGHT_FOLLOW_SYSTEM else MODE_NIGHT_YES
 
+        UiEventManager.app = this
         setDefaultNightMode(mode)
 
         NotificationBuilder.createNotificationChannels(this)

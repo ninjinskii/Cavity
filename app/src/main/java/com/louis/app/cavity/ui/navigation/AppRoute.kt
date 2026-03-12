@@ -34,7 +34,7 @@ sealed interface HomeRoute : AppRoute {
         override val transition = TransitionSpec.SharedAxis(Axis.Z)
     }
 
-    data class WineOptions(val wine: Wine) : HomeRoute {
+    data class WineOptions(val wine: Wine, val storageLocationActive: Boolean) : HomeRoute {
         override val transition = TransitionSpec.None
     }
 }

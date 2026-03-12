@@ -5,6 +5,7 @@ import androidx.room.*
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.model.WineColor
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WineDao {
@@ -35,16 +36,14 @@ interface WineDao {
     @Query("SELECT * FROM wine WHERE color =:color AND is_organic =:isOrganic AND cuvee =:cuvee")
     suspend fun getWineByAttributes(color: WineColor, isOrganic: Int, cuvee: String): List<Wine>
 
-    @Transaction
     @Query("SELECT * FROM wine WHERE id =:wineId")
     suspend fun getWineByIdNotLive(wineId: Long): Wine
 
+    @Query("SELECT * FROM wine WHERE id =:wineId")
+    fun getWineByIdFlow(wineId: Long): Flow<Wine>
+
     @Query("SELECT * FROM wine")
     suspend fun getAllWinesNotLive(): List<Wine>
-
-    @Transaction
-    @Query("SELECT * FROM wine WHERE id =:wineId")
-    suspend fun getWineFullNamingByIdNotLive(wineId: Long): Wine
 
     @Transaction
     @Query("""

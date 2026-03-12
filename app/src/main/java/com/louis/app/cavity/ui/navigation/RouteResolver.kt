@@ -84,10 +84,7 @@ class NavComponentHomeRouteResolver : NavComponentRouteResolver<HomeRoute>() {
                 FragmentHomeDirections.homeToWineOptions(
                     id,
                     countyId,
-                    name,
-                    naming,
-                    isOrganic.toBoolean(),
-                    color
+                    route.storageLocationActive
                 )
             }
 

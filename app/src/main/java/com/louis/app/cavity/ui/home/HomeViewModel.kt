@@ -33,6 +33,10 @@ data class HomeState(val lastWineChange: LastWineChange?)
 
 val defaultState = HomeState(null)
 
+// TODO: change consumers lifecycle scope to fragment instead of activity. It will break
+// storage locaton filter feature, as it relies on navigating from home to home to update filter
+// If this viewmodel is scoped to home fragment, it will be recreated, thus loosign the storage location value
+// This should be refactored when using only flows, for now, keep as it is so that we can focus on navigation only
 class HomeViewModel(app: Application) : BaseViewModel<HomeState, HomeEvent>(app, defaultState) {
     private val countyRepository = CountyRepository.getInstance(app)
     private val wineRepository = WineRepository.getInstance(app)
@@ -158,7 +162,7 @@ class HomeViewModel(app: Application) : BaseViewModel<HomeState, HomeEvent>(app,
         emitSource(wines)
     }
 
-    fun requestEditWine(countyId: Long, wineId: Long) {
+/*    fun requestEditWine(countyId: Long, wineId: Long) {
         val route = WineOptionsRoute.EditWine(wineId, countyId)
         emitEvent(HomeEvent.Navigation(route))
     }
@@ -171,7 +175,7 @@ class HomeViewModel(app: Application) : BaseViewModel<HomeState, HomeEvent>(app,
     fun requestShowWineHistory(wineId: Long) {
         val route = WineOptionsRoute.ShowWineHistory(wineId)
         emitEvent(HomeEvent.Navigation(route))
-    }
+    }*/
 
     fun handleWineClick(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
         checkCounty(wineWithBottles, fragmentCountyId)
@@ -187,7 +191,8 @@ class HomeViewModel(app: Application) : BaseViewModel<HomeState, HomeEvent>(app,
 
     fun handleWineLongClick(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
         checkCounty(wineWithBottles, fragmentCountyId)
-        val route = HomeRoute.WineOptions(wineWithBottles.wine)
+        val storageLocationActive = _storageLocation.value != null
+        val route = HomeRoute.WineOptions(wineWithBottles.wine, storageLocationActive)
         emitEvent(HomeEvent.Navigation(route))
     }
 

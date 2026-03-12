@@ -31,6 +31,8 @@ class WineRepository private constructor(app: Application) : Repository(app) {
 
     suspend fun getWineByIdNotLive(wineId: Long) = wineDao.getWineByIdNotLive(wineId)
 
+    fun getWineByIdFlow(wineId: Long) = wineDao.getWineByIdFlow(wineId)
+
     suspend fun getAllWinesNotLive() = wineDao.getAllWinesNotLive()
 
     suspend fun getWineByAttributes(color: WineColor, isOrganic: Int, cuvee: String) =

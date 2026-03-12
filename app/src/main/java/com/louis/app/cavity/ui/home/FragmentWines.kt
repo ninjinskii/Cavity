@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.ui.navigation.HomeRoute
@@ -21,7 +22,10 @@ import com.louis.app.cavity.util.setVisible
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
     private val binding get() = _binding!!
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels(
+        // TODO: when home view model will be scoped to home fragment
+//        ownerProducer = { fragmentWinesParent.also { L.v("FragmentWines: $it") } }
+    )
     private val countyId by lazy {
         requireArguments().getLong(COUNTY_ID)
     }

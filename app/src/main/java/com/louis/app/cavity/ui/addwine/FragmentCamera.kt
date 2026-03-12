@@ -21,7 +21,6 @@ import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentCameraBinding
 import com.louis.app.cavity.domain.error.ErrorReporter
@@ -80,7 +79,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
             }
 
             override fun onPermissionsDenied() {
-                findNavController().navigateUp()
+                navigateUp()
                 snackbarProvider.onShowSnackbarRequested(R.string.permissions_denied)
             }
         }

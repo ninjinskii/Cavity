@@ -32,10 +32,6 @@ class Navigator(private val activity: AppCompatActivity) {
     }
 
     fun navigate(route: AppRoute, fragment: Fragment, sharedElement: View? = null) {
-        if (getCurrentFragment() != fragment) {
-            throw IllegalStateException("On pose ça là pour voir si un jour on trouve une diff entre les deux mais on pense que ça devrait pas arriver")
-        }
-
         val navFragment = getCurrentFragment() ?: fragment
         navigateInternal(route, navFragment, sharedElement)
     }
