@@ -51,7 +51,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
     private var tabAdapter: ScrollableTabAdapter<County>? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
     private val recyclePool by lazy {
         RecyclerView.RecycledViewPool().apply {
             setMaxRecycledViews(R.layout.item_wine, VIEW_POOL_SIZE)

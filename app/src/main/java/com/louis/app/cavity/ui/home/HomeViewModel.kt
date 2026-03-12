@@ -2,8 +2,12 @@ package com.louis.app.cavity.ui.home
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.WineWithBottles
+import com.louis.app.cavity.domain.delegates.RemoveWine
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.CountyRepository
@@ -13,6 +17,7 @@ import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.BaseViewModel
+import com.louis.app.cavity.ui.home.widget.WineOptionsViewModel
 import com.louis.app.cavity.ui.navigation.AppRoute
 import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.WineOptionsRoute
@@ -29,15 +34,18 @@ sealed interface HomeEvent {
 }
 
 data class LastWineChange(val wineId: Long, val countyId: Long)
-data class HomeState(val lastWineChange: LastWineChange?)
-
-val defaultState = HomeState(null)
+data class HomeState(val lastWineChange: LastWineChange? = null)
 
 // TODO: change consumers lifecycle scope to fragment instead of activity. It will break
 // storage locaton filter feature, as it relies on navigating from home to home to update filter
 // If this viewmodel is scoped to home fragment, it will be recreated, thus loosign the storage location value
 // This should be refactored when using only flows, for now, keep as it is so that we can focus on navigation only
-class HomeViewModel(app: Application) : BaseViewModel<HomeState, HomeEvent>(app, defaultState) {
+class HomeViewModel(
+    app: Application,
+    private val savedStateHandle: SavedStateHandle
+) :
+    BaseViewModel<HomeState, HomeEvent>(app, HomeState()) {
+
     private val countyRepository = CountyRepository.getInstance(app)
     private val wineRepository = WineRepository.getInstance(app)
     private val bottleRepository = BottleRepository.getInstance(app)
@@ -49,7 +57,7 @@ class HomeViewModel(app: Application) : BaseViewModel<HomeState, HomeEvent>(app,
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    private val _storageLocation = MutableLiveData<String?>()
+    private val _storageLocation = MutableLiveData<String?>(savedStateHandle["storageLocation"])
     val storageLocation: LiveData<String?>
         get() = _storageLocation
 
@@ -94,6 +102,7 @@ class HomeViewModel(app: Application) : BaseViewModel<HomeState, HomeEvent>(app,
     }
 
     fun setStorageLocation(bottleStorage: String?, currentCountyId: Long?) {
+        savedStateHandle["storageLocation"] = bottleStorage
         _storageLocation.value = bottleStorage
         countyIdBeforeStorageLocationChange = currentCountyId
     }
@@ -162,20 +171,20 @@ class HomeViewModel(app: Application) : BaseViewModel<HomeState, HomeEvent>(app,
         emitSource(wines)
     }
 
-/*    fun requestEditWine(countyId: Long, wineId: Long) {
-        val route = WineOptionsRoute.EditWine(wineId, countyId)
-        emitEvent(HomeEvent.Navigation(route))
-    }
+    /*    fun requestEditWine(countyId: Long, wineId: Long) {
+            val route = WineOptionsRoute.EditWine(wineId, countyId)
+            emitEvent(HomeEvent.Navigation(route))
+        }
 
-    fun requestAddBottle(wineId: Long) {
-        val route = WineOptionsRoute.AddBottle(wineId)
-        emitEvent(HomeEvent.Navigation(route))
-    }
+        fun requestAddBottle(wineId: Long) {
+            val route = WineOptionsRoute.AddBottle(wineId)
+            emitEvent(HomeEvent.Navigation(route))
+        }
 
-    fun requestShowWineHistory(wineId: Long) {
-        val route = WineOptionsRoute.ShowWineHistory(wineId)
-        emitEvent(HomeEvent.Navigation(route))
-    }*/
+        fun requestShowWineHistory(wineId: Long) {
+            val route = WineOptionsRoute.ShowWineHistory(wineId)
+            emitEvent(HomeEvent.Navigation(route))
+        }*/
 
     fun handleWineClick(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
         checkCounty(wineWithBottles, fragmentCountyId)
@@ -223,6 +232,16 @@ class HomeViewModel(app: Application) : BaseViewModel<HomeState, HomeEvent>(app,
 
         return wineWithBottles.bottles.any {
             checkStorageLocation(it) && wineWithBottles.remainingBottles > 0
+        }
+    }
+
+    companion object {
+        val Factory = viewModelFactory {
+            initializer {
+                val app = checkNotNull(this[APPLICATION_KEY])
+                val savedState = createSavedStateHandle()
+                HomeViewModel(app, savedState)
+            }
         }
     }
 }

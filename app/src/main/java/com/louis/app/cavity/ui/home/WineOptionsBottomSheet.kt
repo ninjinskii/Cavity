@@ -33,7 +33,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
     private val wineOptionsViewModel: WineOptionsViewModel by viewModels {
         WineOptionsViewModel.Factory
     }
-    private val homeViewModel: HomeViewModel by activityViewModels() // TODO: remove after complete home viewmodel refactoring & scoping. See HomeViewModel todo for mor info
+    private val homeViewModel: HomeViewModel by viewModels { HomeViewModel.Factory } // TODO: remove after complete home viewmodel refactoring & scoping. See HomeViewModel todo for mor info
     private val args: WineOptionsBottomSheetArgs by navArgs()
 
     override fun onCreateView(

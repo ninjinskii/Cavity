@@ -22,9 +22,9 @@ import com.louis.app.cavity.util.setVisible
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
     private val binding get() = _binding!!
-    private val homeViewModel: HomeViewModel by activityViewModels(
-        // TODO: when home view model will be scoped to home fragment
-//        ownerProducer = { fragmentWinesParent.also { L.v("FragmentWines: $it") } }
+    private val homeViewModel: HomeViewModel by viewModels(
+        ownerProducer = { fragmentWinesParent.also { L.v("FragmentWines: $it") } },
+        factoryProducer = { HomeViewModel.Factory }
     )
     private val countyId by lazy {
         requireArguments().getLong(COUNTY_ID)
