@@ -29,8 +29,10 @@ import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.louis.app.cavity.ui.TransitionFragment
 import com.louis.app.cavity.ui.home.FragmentHome.Companion.ADD_WINE_RESULT_KEY
 import com.louis.app.cavity.ui.navigation.AddWineRoute
+import com.louis.app.cavity.ui.navigation.TransitionSpec
 import com.louis.app.cavity.ui.navigation.navigateUp
 import com.louis.app.cavity.ui.navigation.fragmentResultListener
 import com.louis.app.cavity.ui.navigation.navigate
@@ -38,7 +40,7 @@ import com.louis.app.cavity.ui.navigation.putFragmentResult
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
-class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
+class FragmentAddWine : TransitionFragment(R.layout.fragment_add_wine) {
     private lateinit var pickImage: ActivityResultLauncher<Array<String>>
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
@@ -77,6 +79,9 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             binding.appBar.toolbar.title = getString(R.string.edit_wine_title)
         }
 
+        L.v("FragmentAddWInes: nav arguments: ${requireArguments().getParcelable<TransitionSpec>("transition-spec")}")
+        L.v("FragmentAddWInes: returnTransition: $returnTransition")
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 addWineViewModel.event.collect {
@@ -97,6 +102,11 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         initDropdown()
         setListeners()
         observe()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
     }
 
     private fun applyInsets() {

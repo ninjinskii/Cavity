@@ -40,7 +40,7 @@ interface WineDao {
     suspend fun getWineByIdNotLive(wineId: Long): Wine
 
     @Query("SELECT * FROM wine WHERE id =:wineId")
-    fun getWineByIdFlow(wineId: Long): Flow<Wine>
+    fun getWineByIdFlow(wineId: Long): Flow<Wine?>
 
     @Query("SELECT * FROM wine")
     suspend fun getAllWinesNotLive(): List<Wine>

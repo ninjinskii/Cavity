@@ -1,27 +1,41 @@
 package com.louis.app.cavity.ui.navigation
 
+import android.os.Parcelable
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.transition.MaterialSharedAxis
+import kotlinx.parcelize.Parcelize
 
-sealed interface TransitionSpec {
-    data object None : TransitionSpec
-    data object FadeThrough : TransitionSpec
-    data object ElevationScale : TransitionSpec
-    data class SharedAxis(val axis: Axis) : TransitionSpec
+@Parcelize
+sealed interface TransitionSpec : Parcelable {
+    @Parcelize
+    data object None : TransitionSpec, Parcelable
+
+    @Parcelize
+    data object FadeThrough : TransitionSpec, Parcelable
+
+    @Parcelize
+    data object ElevationScale : TransitionSpec, Parcelable
+
+    @Parcelize
+    data class SharedAxis(val axis: Axis) : TransitionSpec, Parcelable
 }
 
-sealed interface SharedElementTransitionSpec {
-    data object None : SharedElementTransitionSpec
+@Parcelize
+sealed interface SharedElementTransitionSpec : Parcelable {
+    @Parcelize
+    data object None : SharedElementTransitionSpec, Parcelable
+
+    @Parcelize
     data class ContainerTransform(
         @param:AttrRes @param:ColorRes val startContainerColor: Int? = null,
         @param:AttrRes @param:ColorRes val endContainerColor: Int? = null,
         @param:DimenRes val startElevation: Int? = null,
         @param:DimenRes val endElevation: Int? = null
     ) :
-        SharedElementTransitionSpec
+        SharedElementTransitionSpec, Parcelable
 }
 
 enum class Axis {
@@ -32,7 +46,18 @@ interface TransitionExecutor {
     var pendingDestinationTransition: TransitionSpec
     var pendingSharedElementDestinationTransition: SharedElementTransitionSpec
     fun configureFragment(source: Fragment, toRoute: AppRoute)
+    fun restoreFragment(
+        source: Fragment,
+        spec: TransitionSpec,
+        sharedSpec: SharedElementTransitionSpec? = null
+    )
+
     fun configureDestinationFragment(destination: Fragment)
+    fun restoreDestinationFragment(
+        destination: Fragment,
+        spec: TransitionSpec,
+        sharedSpec: SharedElementTransitionSpec? = null
+    )
 }
 
 class MaterialTransitionExecutor : TransitionExecutor {
@@ -46,6 +71,12 @@ class MaterialTransitionExecutor : TransitionExecutor {
         val transitionHelper = TransitionHelper(source)
         val sourceTransition = toRoute.transition
 
+        source.arguments?.putParcelable("transition-spec-out", toRoute.transition)
+        source.arguments?.putParcelable(
+            "transition-spec-shared-out",
+            toRoute.sharedElementTransition
+        )
+
         when (sourceTransition) {
             TransitionSpec.None -> Unit
             TransitionSpec.FadeThrough -> transitionHelper.setFadeThroughOnEnterAndExit()
@@ -57,10 +88,34 @@ class MaterialTransitionExecutor : TransitionExecutor {
         }
     }
 
+    override fun restoreFragment(
+        source: Fragment,
+        spec: TransitionSpec,
+        sharedSpec: SharedElementTransitionSpec?
+    ) {
+        val transitionHelper = TransitionHelper(source)
+
+        when (spec) {
+            TransitionSpec.None -> Unit
+            TransitionSpec.FadeThrough -> transitionHelper.setFadeThroughOnEnterAndExit()
+            TransitionSpec.ElevationScale -> transitionHelper.setElevationScale()
+            is TransitionSpec.SharedAxis -> {
+                val axis = toMaterialSharedAxis(spec.axis)
+                transitionHelper.setSharedAxisTransition(axis, true)
+            }
+        }
+    }
+
     override fun configureDestinationFragment(destination: Fragment) {
         val transitionHelper = TransitionHelper(destination)
         val destinationTransition = pendingDestinationTransition
         val destinationSharedElementTransition = pendingSharedElementDestinationTransition
+
+        destination.arguments?.putParcelable("transition-spec-in", destinationTransition)
+        destination.arguments?.putParcelable(
+            "transition-spec-shared-in",
+            destinationSharedElementTransition
+        )
 
         when (destinationTransition) {
             TransitionSpec.None -> Unit
@@ -80,6 +135,48 @@ class MaterialTransitionExecutor : TransitionExecutor {
                 )
 
             else -> Unit
+        }
+    }
+
+    override fun restoreDestinationFragment(
+        destination: Fragment,
+        spec: TransitionSpec,
+        sharedSpec: SharedElementTransitionSpec?
+    ) {
+        val transitionHelper = TransitionHelper(destination)
+
+        when (spec) {
+            TransitionSpec.None -> Unit
+            TransitionSpec.FadeThrough -> transitionHelper.setFadeThrough(false)
+            TransitionSpec.ElevationScale -> Unit
+            is TransitionSpec.SharedAxis -> {
+                val axis = toMaterialSharedAxis(spec.axis)
+                transitionHelper.setSharedAxisTransition(axis, false)
+            }
+        }
+
+        when (sharedSpec) {
+            is SharedElementTransitionSpec.ContainerTransform ->
+                transitionHelper.setContainerTransformTransition(
+                    sharedSpec,
+                    navigatingForward = true
+                )
+
+            else -> Unit
+        }
+    }
+
+    fun restoreState(fragment: Fragment) {
+        fragment.arguments?.run {
+            getParcelable<TransitionSpec>("transition-spec-in")?.let {
+                val shared = getParcelable<SharedElementTransitionSpec>("transition-spec-shared-in")
+                restoreDestinationFragment(fragment, it, shared)
+            }
+
+            getParcelable<TransitionSpec>("transition-spec-out")?.let {
+                val shared = getParcelable<SharedElementTransitionSpec>("transition-spec-shared-out")
+                restoreFragment(fragment, it, shared)
+            }
         }
     }
 

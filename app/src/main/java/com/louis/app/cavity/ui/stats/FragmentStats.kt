@@ -85,6 +85,9 @@ class FragmentStats : Fragment(R.layout.fragment_stats), NavigationDestination {
             },
             onLongTabClick = { year, _ ->
                 statsViewModel.setComparisonYear(year)
+            },
+            idToContent = { year ->
+                year.year to year
             }
         )
 
@@ -95,7 +98,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats), NavigationDestination {
         with(binding.years) {
             background = null // Remove background for elegant disappear animation
             adapter = tabAdapter
-            addOnTabChangeListener {
+            setOnTabChangeListener {
                 statsViewModel.setYear(tabAdapter.getItem(it))
             }
         }

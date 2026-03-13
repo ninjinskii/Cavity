@@ -29,6 +29,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -39,6 +40,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.PriceByCurrency
 import com.louis.app.cavity.ui.ActivityMain
 import kotlin.math.max
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 // Boolean and Int helpers for database compatibility
 fun Int.toBoolean() = this == 1
@@ -293,6 +296,31 @@ fun View.prepareWindowInsets(
 
         onApply(view, windowInsets, left, insets.top, right, insets.bottom)
     }
+}
+
+// ViewModels
+inline fun <reified T> SavedStateHandle.delegate(key: String) =
+    object : ReadWriteProperty<Any, T?> {
+        override fun getValue(thisRef: Any, property: KProperty<*>) = get<T>(key)
+        override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) = set(key, value)
+    }
+
+fun <T> savedState(
+    handle: SavedStateHandle,
+    key: String
+) = object : ReadWriteProperty<Any, T?> {
+    override fun getValue(thisRef: Any, property: KProperty<*>): T? {
+        return handle[key]
+    }
+
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
+        handle[key] = value
+    }
+}
+
+infix fun <T> SavedStateHandle.access(key: String) = object : ReadWriteProperty<Any, T?> {
+    override fun getValue(thisRef: Any, property: KProperty<*>): T? = get(key)
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) = set(key, value)
 }
 
 // Random

@@ -5,9 +5,7 @@ import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.WineWithBottles
-import com.louis.app.cavity.domain.delegates.RemoveWine
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.CountyRepository
@@ -17,20 +15,22 @@ import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.BaseViewModel
-import com.louis.app.cavity.ui.home.widget.WineOptionsViewModel
 import com.louis.app.cavity.ui.navigation.AppRoute
 import com.louis.app.cavity.ui.navigation.HomeRoute
-import com.louis.app.cavity.ui.navigation.WineOptionsRoute
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
-import com.louis.app.cavity.util.toBoolean
+import com.louis.app.cavity.util.access
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 sealed interface HomeEvent {
     data class Navigation(val appRoute: AppRoute) : HomeEvent
+    object WinesObservingStarted : HomeEvent
 }
 
 data class LastWineChange(val wineId: Long, val countyId: Long)
@@ -42,7 +42,7 @@ data class HomeState(val lastWineChange: LastWineChange? = null)
 // This should be refactored when using only flows, for now, keep as it is so that we can focus on navigation only
 class HomeViewModel(
     app: Application,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) :
     BaseViewModel<HomeState, HomeEvent>(app, HomeState()) {
 
@@ -53,13 +53,19 @@ class HomeViewModel(
     private val prefsRepository = PrefsRepository.getInstance(app)
     private val errorReporter = SentryErrorReporter.getInstance(app)
 
+    /**
+     * countyId from the arguments of the fragment that initiated a navigation shared element
+     * transition to FragmentBottleDetails. Used to remember what fragment of the ViewPager we
+     * should focus to resume postponed FragmentWinesParent transition
+     */
+    var savedSharedElementCountyId: Long? by savedStateHandle access "sourceCountyId"
+
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
 
-    private val _storageLocation = MutableLiveData<String?>(savedStateHandle["storageLocation"])
-    val storageLocation: LiveData<String?>
-        get() = _storageLocation
+    private val _storageLocation = MutableStateFlow<String?>(null)
+    val storageLocation: StateFlow<String?> = _storageLocation.asStateFlow()
 
     private val _scrollToCountyEvent = MutableLiveData<Event<Int>>()
     val scrollToCountyEvent: LiveData<Event<Int>>
@@ -85,13 +91,21 @@ class HomeViewModel(
         statsRepository.getVintagesStatsForCounty(it, _storageLocation.value)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val nonEmptyCounties: LiveData<List<County>> = _storageLocation.flatMapLatest { location ->
+        if (prefsRepository.getEnableBottleStorageLocation() && location != null)
+            countyRepository.getNonEmptyCountiesForStorageLocation(location).asFlow()
+        else
+            countyRepository.getNonEmptyCounties().asFlow()
+    }.asLiveData()
+
     fun notifyWineChange(wineId: Long, countyId: Long) {
         stateFlow.update { state ->
             state.copy(lastWineChange = LastWineChange(wineId, countyId))
         }
     }
 
-    fun resetWineChange() {
+    fun acknowledgeWineChange() {
         stateFlow.update { state ->
             state.copy(lastWineChange = null)
         }
@@ -102,16 +116,9 @@ class HomeViewModel(
     }
 
     fun setStorageLocation(bottleStorage: String?, currentCountyId: Long?) {
-        savedStateHandle["storageLocation"] = bottleStorage
+//        savedStorageLocation = bottleStorage
         _storageLocation.value = bottleStorage
         countyIdBeforeStorageLocationChange = currentCountyId
-    }
-
-    fun notifyStorageLocation() {
-        _storageLocation.value.let {
-            _storageLocation.value = null
-            _storageLocation.value = it
-        }
     }
 
     fun checkRememberedCountyBeforeStorageChange(counties: List<County>) {
@@ -127,34 +134,6 @@ class HomeViewModel(
             }
     }
 
-    fun deleteOrHideWine(wineId: Long) = viewModelScope.launch(IO) {
-        val wineBottles = bottleRepository.getBottlesForWineNotLive(wineId)
-        val folder = mutableListOf<Bottle>() to mutableListOf<Bottle>()
-        val (consumed, stock) = wineBottles.fold(folder) { pair, bottle ->
-            pair.apply {
-                when (bottle.consumed.toBoolean()) {
-                    true -> first += bottle
-                    else -> second += bottle
-                }
-            }
-        }
-
-        bottleRepository.deleteBottles(stock)
-
-        when {
-            consumed.isNotEmpty() -> wineRepository.hideWineById(wineId)
-            else -> wineRepository.deleteWineById(wineId)
-        }
-
-        // We dirty liers
-        _userFeedback.postOnce(R.string.wine_deleted)
-    }
-
-    fun getNonEmptyCounties() =
-        if (prefsRepository.getEnableBottleStorageLocation() && _storageLocation.value != null)
-            countyRepository.getNonEmptyCountiesForStorageLocation(_storageLocation.value ?: "")
-        else countyRepository.getNonEmptyCounties()
-
     fun getAllStorageLocations(clearText: String) =
         if (prefsRepository.getEnableBottleStorageLocation())
             bottleRepository.getAllStorageLocations().map { listOf(clearText) + it }
@@ -168,26 +147,22 @@ class HomeViewModel(
         val wines = wineRepository.getWinesWithBottlesByCounty(countyId).map { winesWithBottles ->
             winesWithBottles.filter { checkStorageLocation(it) }
         }
+
         emitSource(wines)
     }
 
-    /*    fun requestEditWine(countyId: Long, wineId: Long) {
-            val route = WineOptionsRoute.EditWine(wineId, countyId)
-            emitEvent(HomeEvent.Navigation(route))
+    fun notifyWineObservingStarted(countyId: Long) {
+        val noPendingSharedElement = savedSharedElementCountyId == null
+        val isAssociatedCounty = savedSharedElementCountyId == countyId
+
+        if (isAssociatedCounty || noPendingSharedElement) {
+            emitEvent(HomeEvent.WinesObservingStarted)
         }
+    }
 
-        fun requestAddBottle(wineId: Long) {
-            val route = WineOptionsRoute.AddBottle(wineId)
-            emitEvent(HomeEvent.Navigation(route))
-        }
-
-        fun requestShowWineHistory(wineId: Long) {
-            val route = WineOptionsRoute.ShowWineHistory(wineId)
-            emitEvent(HomeEvent.Navigation(route))
-        }*/
-
-    fun handleWineClick(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
-        checkCounty(wineWithBottles, fragmentCountyId)
+    fun handleWineClick(wineWithBottles: WineWithBottles, requesterFragmentCountyId: Long) {
+        checkCounty(wineWithBottles, requesterFragmentCountyId)
+        savedSharedElementCountyId = requesterFragmentCountyId
 
         val wineId = wineWithBottles.wine.id
         val route = when {

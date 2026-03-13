@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.home
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,15 +18,18 @@ import com.louis.app.cavity.databinding.BottomSheetWineOptionsBinding
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.home.widget.WineOptionsViewModel
+import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.WineOptionsRoute
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.launch
 
-class WineOptionsBottomSheet : BottomSheetDialogFragment() {
+class WineOptionsBottomSheet : BottomSheetDialogFragment(), NavigationDestination {
     private var _binding: BottomSheetWineOptionsBinding? = null
     private val binding get() = _binding!!
+
+    override val menuDestinationId = R.id.home_dest
 
     /*private val wineOptionsViewModel: WineOptionsViewModel by viewModels(
         factoryProducer = { WineOptionsViewModel.Factory }
@@ -33,7 +37,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
     private val wineOptionsViewModel: WineOptionsViewModel by viewModels {
         WineOptionsViewModel.Factory
     }
-    private val homeViewModel: HomeViewModel by viewModels { HomeViewModel.Factory } // TODO: remove after complete home viewmodel refactoring & scoping. See HomeViewModel todo for mor info
+
     private val args: WineOptionsBottomSheetArgs by navArgs()
 
     override fun onCreateView(
@@ -96,14 +100,9 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
         deleteWine.setVisible(!args.storageLocationEnabled)
     }
 
-    override fun onPause() {
-        super.onPause()
-        // Avoid navigation controller setting up app title in toolbar when quitting fragment (storage_location in mind)
-        homeViewModel.notifyStorageLocation()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
+        requireActivity().setTitle("aaaaaaaaaaaaaaaaa")
         _binding = null
     }
 }

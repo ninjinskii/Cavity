@@ -8,10 +8,15 @@ import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import com.louis.app.cavity.ui.SharedViewModel
+import com.louis.app.cavity.ui.TransitionFragment
+import kotlin.getValue
 
 class Navigator(private val activity: AppCompatActivity) {
     private val menus = mutableListOf<Menu>()
     private val transitionExecutor: TransitionExecutor = MaterialTransitionExecutor()
+    private val sharedViewModel by lazy { ViewModelProvider(activity, SharedViewModel.Factory)[SharedViewModel::class.java] }
     private val appNavigator: AppNavigator by lazy {
         NavComponentNavigator(
             resolvers = listOf(
@@ -84,7 +89,12 @@ class Navigator(private val activity: AppCompatActivity) {
         return appNavigator.getPrimaryNavigationFragment(activity)
     }
 
+    fun restoreTransitions(fragment: Fragment) {
+        (transitionExecutor as MaterialTransitionExecutor).restoreState(fragment)
+    }
+
     private fun navigateInternal(route: AppRoute, fragment: Fragment, sharedElement: View? = null) {
+        sharedViewModel.route = route
         transitionExecutor.configureFragment(fragment, route)
         appNavigator.navigate(route, fragment, sharedElement)
     }

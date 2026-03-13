@@ -14,12 +14,11 @@ import androidx.core.view.marginRight
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
@@ -34,10 +33,11 @@ import com.louis.app.cavity.ui.addwine.FragmentAddWine
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.NavigationDestination
-import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.ui.navigation.fragmentResultListener
+import com.louis.app.cavity.ui.navigation.navigator
 import com.louis.app.cavity.util.*
+import kotlinx.coroutines.flow.replay
 import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, NavigationDestination {
@@ -47,7 +47,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
             "com.louis.app.cavity.ui.home.FragmentHome.ADD_WINE_RESULT_KEY"
     }
 
-    private lateinit var transitionHelper: TransitionHelper
     private var tabAdapter: ScrollableTabAdapter<County>? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -78,11 +77,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // We need to do this in onViewCreated to ensure the right transition is selected when returning to this fragment
-        transitionHelper = TransitionHelper(this).apply {
-            setFadeThroughOnEnterAndExit()
-        }
+        navigator.restoreTransitions(this)
         postponeEnterTransition()
 
         _binding = FragmentHomeBinding.bind(view)
@@ -102,11 +97,17 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         setListeners()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
                     homeViewModel.event.collect {
                         when (it) {
                             is HomeEvent.Navigation -> navigate(it.appRoute, pendingSharedElement)
+                            HomeEvent.WinesObservingStarted -> {
+                                // Note that startPostponedEnterTransition() will wait for the next
+                                // layout pass to trigger animation. So, actually, calling this when
+                                // data is observed is the right moment
+                                startPostponedEnterTransition()
+                            }
                         }
                     }
                 }
@@ -181,10 +182,13 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
             },
             onLongTabClick = { county, position ->
                 showCountyDetails(position, county)
+            },
+            idToContent = { county ->
+                county.id to county
             }
         )
 
-        homeViewModel.getNonEmptyCounties().observe(viewLifecycleOwner) {
+        homeViewModel.nonEmptyCounties.observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
 
             with(binding) {
@@ -195,11 +199,10 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
                 }
 
                 tabAdapter?.submitList(it)
-                tab.setUpWithViewPager(viewPager)
+                tab.setupWithViewPager(viewPager)
 
                 (view?.parent as? ViewGroup)?.doOnPreDraw { _ ->
-                    homeViewModel.checkRememberedCountyBeforeStorageChange(it)
-                    startPostponedEnterTransition()
+                    homeViewModel.checkRememberedCountyBeforeStorageChange(it) // TODO: Not sure why this is on pre draw listener
                 }
 
 //                viewPager.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
@@ -233,15 +236,22 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
             binding.countyDetails.vintages.setSlices(it, anim = true)
         }
 
-        homeViewModel.storageLocation.observe(viewLifecycleOwner) { location ->
-            if (location == getString(R.string.all)) {
-                homeViewModel.setStorageLocation(null, null)
-                activity?.setTitle(R.string.app_name)
-            } else if (location != null) {
-                activity?.setTitle(location)
-                val toolbar = binding.appBar.toolbar
-                toolbar.post { toolbar.title = location }
+        // TODO: use BaseViewModelState and move logic to view model
+        homeViewModel.storageLocation.asLiveData().observe(viewLifecycleOwner) { location ->
+            if (location == null) {
+                return@observe
             }
+
+            val noLocationActive = location == getString(R.string.all)
+
+            if (noLocationActive) {
+                homeViewModel.setStorageLocation(null, null)
+            }
+
+            val title = if (noLocationActive) getString(R.string.app_name) else location
+            activity?.setTitle(title)
+            val toolbar = binding.appBar.toolbar
+            toolbar.post { toolbar.title = title }
         }
 
         val clearText = getString(R.string.all)
@@ -263,7 +273,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
     private fun setListeners() {
         var currentCounty = 0L
 
-        binding.tab.addOnPageChangeListener {
+        binding.tab.setOnPageChangeListener {
             currentCounty = tabAdapter?.getItem(it)?.getItemId() ?: 0
         }
 
@@ -286,10 +296,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
             .setItems(items.toTypedArray()) { _, selectedPosition ->
                 val countyId = binding.viewPager.adapter?.getItemId(binding.viewPager.currentItem)
                 homeViewModel.setStorageLocation(items[selectedPosition], countyId)
-                findNavController().run {
-                    popBackStack()
-                    navigate(R.id.home_dest)
-                }
             }
             .show()
     }

@@ -9,8 +9,8 @@ import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.ui.navigation.HomeRoute
@@ -23,7 +23,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels(
-        ownerProducer = { fragmentWinesParent.also { L.v("FragmentWines: $it") } },
+        ownerProducer = { fragmentWinesParent },
         factoryProducer = { HomeViewModel.Factory }
     )
     private val countyId by lazy {
@@ -98,13 +98,22 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             adapter = wineAdapter
             setRecycledViewPool(fragmentWinesParent.getRecycledViewPool())
             setHasFixedSize(true)
+            itemAnimator = null // Avoid double element artefact on shared element transition return
         }
 
         prePopulateRecyclerViewPool()
 
         homeViewModel.getWinesWithBottlesByCounty(countyId).observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
+//            homeViewModel.notifyWineObservingStarted(countyId) // working reasonably !
+            binding.wineList.post {
+                // Sets back the item animator after shared element transition occurred
+                // When scrolling really quickly, binding can be null when post happens
+                _binding?.wineList?.itemAnimator = DefaultItemAnimator()
+            }
+
             wineAdapter.submitList(it) {
+                homeViewModel.notifyWineObservingStarted(countyId) // trying !
                 scrollToWine(wineAdapter)
             }
         }
@@ -121,7 +130,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             val adapterWineId = adapter.getItemId(i)
 
             if (wineId == adapterWineId) {
-                homeViewModel.resetWineChange()
+                homeViewModel.acknowledgeWineChange()
                 adapter.highlightPosition = i
                 binding.wineList.smoothScrollToPosition(i)
             }

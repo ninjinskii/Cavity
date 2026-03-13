@@ -90,6 +90,20 @@ class ScrollableTab @JvmOverloads constructor(
         })
     }
 
+    override fun setAdapter(adapter: Adapter<*>?) {
+        super.setAdapter(adapter)
+
+        adapter?.registerAdapterDataObserver(object : AdapterDataObserver() {
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                forceViewColorUpdate()
+            }
+
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                forceViewColorUpdate()
+            }
+        })
+    }
+
     override fun setElevation(elevation: Float) {
         super.setElevation(elevation)
         val bg = background
@@ -103,6 +117,15 @@ class ScrollableTab @JvmOverloads constructor(
         setPadding(padding, 0, padding, 0)
     }
 
+    private fun forceViewColorUpdate() {
+        post {
+            if (childCount > 1) {
+                scrollBy(1, 1)
+                scrollBy(-1, -1)
+            }
+        }
+    }
+
     // We want to use touch listener as an indicator that the recyclerview might be scrolled
     @SuppressLint("ClickableViewAccessibility")
     private fun swallowTouchEvents() {
@@ -112,15 +135,15 @@ class ScrollableTab @JvmOverloads constructor(
         }
     }
 
-    fun addOnTabChangeListener(tabChangeListener: ((position: Int) -> Unit)) {
+    fun setOnTabChangeListener(tabChangeListener: ((position: Int) -> Unit)) {
         this.tabChangeListener = tabChangeListener
     }
 
-    fun addOnPageChangeListener(pageChangeListener: (position: Int) -> Unit) {
+    fun setOnPageChangeListener(pageChangeListener: (position: Int) -> Unit) {
         this.pageChangeListener = pageChangeListener
     }
 
-    fun setUpWithViewPager(viewPager: ViewPager2) {
+    fun setupWithViewPager(viewPager: ViewPager2) {
         if (viewPager.adapter == null) {
             return
         }

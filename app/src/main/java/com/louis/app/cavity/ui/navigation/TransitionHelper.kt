@@ -54,6 +54,7 @@ class TransitionHelper(private val fragment: Fragment) {
 
         if (navigatingForward) {
             fragment.sharedElementEnterTransition = transition
+//            fragment.sharedElementReturnTransition = transition
         } else {
             fragment.sharedElementReturnTransition = transition
         }
