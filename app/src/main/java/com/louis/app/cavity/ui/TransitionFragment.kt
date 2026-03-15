@@ -11,6 +11,6 @@ open class TransitionFragment(@LayoutRes contentLayoutId: Int) : Fragment(conten
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        navigator.restoreTransitions(this)
+//        navigator.restoreTransitions(this)
     }
 }

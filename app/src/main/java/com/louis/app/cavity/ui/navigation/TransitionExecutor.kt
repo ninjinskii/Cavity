@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.navigation
 
+import android.os.Bundle
 import android.os.Parcelable
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
@@ -58,6 +59,8 @@ interface TransitionExecutor {
         spec: TransitionSpec,
         sharedSpec: SharedElementTransitionSpec? = null
     )
+
+    fun restoreState(fragment: Fragment)
 }
 
 class MaterialTransitionExecutor : TransitionExecutor {
@@ -71,11 +74,9 @@ class MaterialTransitionExecutor : TransitionExecutor {
         val transitionHelper = TransitionHelper(source)
         val sourceTransition = toRoute.transition
 
-        source.arguments?.putParcelable("transition-spec-out", toRoute.transition)
-        source.arguments?.putParcelable(
-            "transition-spec-shared-out",
-            toRoute.sharedElementTransition
-        )
+        source.arguments = (source.arguments ?: Bundle()).apply {
+            putParcelable("transition-out", sourceTransition)
+        }
 
         when (sourceTransition) {
             TransitionSpec.None -> Unit
@@ -111,11 +112,10 @@ class MaterialTransitionExecutor : TransitionExecutor {
         val destinationTransition = pendingDestinationTransition
         val destinationSharedElementTransition = pendingSharedElementDestinationTransition
 
-        destination.arguments?.putParcelable("transition-spec-in", destinationTransition)
-        destination.arguments?.putParcelable(
-            "transition-spec-shared-in",
-            destinationSharedElementTransition
-        )
+        destination.arguments = (destination.arguments ?: Bundle()).apply {
+            putParcelable("transition-in", destinationTransition)
+            putParcelable("shared-transition-in", destinationSharedElementTransition)
+        }
 
         when (destinationTransition) {
             TransitionSpec.None -> Unit
@@ -166,15 +166,15 @@ class MaterialTransitionExecutor : TransitionExecutor {
         }
     }
 
-    fun restoreState(fragment: Fragment) {
+    override fun restoreState(fragment: Fragment) {
+        fragment.arguments
         fragment.arguments?.run {
-            getParcelable<TransitionSpec>("transition-spec-in")?.let {
-                val shared = getParcelable<SharedElementTransitionSpec>("transition-spec-shared-in")
-                restoreDestinationFragment(fragment, it, shared)
+            getParcelable<TransitionSpec>("transition-in")?.let {
+                restoreDestinationFragment(fragment, it)
             }
 
-            getParcelable<TransitionSpec>("transition-spec-out")?.let {
-                val shared = getParcelable<SharedElementTransitionSpec>("transition-spec-shared-out")
+            getParcelable<TransitionSpec>("transition-out")?.let {
+                val shared = getParcelable<SharedElementTransitionSpec>("shared-transition-out")
                 restoreFragment(fragment, it, shared)
             }
         }

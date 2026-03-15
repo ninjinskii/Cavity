@@ -77,7 +77,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navigator.restoreTransitions(this)
+//        navigator.restoreTransitions(this)
         postponeEnterTransition()
 
         _binding = FragmentHomeBinding.bind(view)
