@@ -24,7 +24,8 @@ class Navigator(private val activity: AppCompatActivity) {
                 NavComponentHomeRouteResolver(),
                 NavComponentWineOptionsRouteResolver(),
                 NavComponentSearchRouteResolver(),
-                NavComponentAddWineRouteResolver()
+                NavComponentAddWineRouteResolver(),
+                NavComponentBottleDetailsRouteResolver()
             )
         )
     }

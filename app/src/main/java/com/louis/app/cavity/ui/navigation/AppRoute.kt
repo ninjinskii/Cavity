@@ -58,6 +58,24 @@ sealed interface AddWineRoute : AppRoute {
 }
 
 sealed interface BottleDetailsRoute : AppRoute {
+    data class EditBottle(val wineId: Long, val bottleId: Long): BottleDetailsRoute {
+        override val transition = TransitionSpec.SharedAxis(Axis.Z)
+    }
+
+    data class AddBottle(val wineId: Long): BottleDetailsRoute {
+        override val transition = TransitionSpec.SharedAxis(Axis.Z)
+    }
+
+    data class ConsumeBottle(val bottleId: Long): BottleDetailsRoute {
+        override val transition = TransitionSpec.SharedAxis(Axis.Y)
+    }
+
+    data class GiveBottle(val bottleId: Long): BottleDetailsRoute {
+        override val transition = TransitionSpec.SharedAxis(Axis.Y)
+    }
+
+    data class BottleHistory(val bottleId: Long): BottleDetailsRoute
+    data class TastingLog(val wineId: Long): BottleDetailsRoute
 }
 
 sealed interface SearchRoute : AppRoute {

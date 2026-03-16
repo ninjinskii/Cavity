@@ -10,10 +10,10 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.addwine.FragmentAddWineDirections
+import com.louis.app.cavity.ui.bottle.FragmentBottleDetailsDirections
 import com.louis.app.cavity.ui.home.FragmentHomeDirections
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheetDirections
 import com.louis.app.cavity.ui.search.FragmentSearchDirections
-import com.louis.app.cavity.util.toBoolean
 import kotlin.reflect.KClass
 import kotlin.reflect.safeCast
 
@@ -133,6 +133,40 @@ class NavComponentAddWineRouteResolver : NavComponentRouteResolver<AddWineRoute>
     }
 }
 
+class NavComponentBottleDetailsRouteResolver : NavComponentRouteResolver<BottleDetailsRoute>() {
+    override val type = BottleDetailsRoute::class
+
+    override fun resolveTyped(route: BottleDetailsRoute, fragment: Fragment, sharedElement: View?) {
+        val direction = when (route) {
+            is BottleDetailsRoute.AddBottle ->
+                FragmentBottleDetailsDirections.bottleDetailsToEditBottle(route.wineId, -1)
+
+            is BottleDetailsRoute.EditBottle ->
+                FragmentBottleDetailsDirections.bottleDetailsToEditBottle(
+                    route.wineId,
+                    route.bottleId
+                )
+
+            is BottleDetailsRoute.ConsumeBottle ->
+                FragmentBottleDetailsDirections.bottleDetailsToConsumeBottle(route.bottleId)
+
+            is BottleDetailsRoute.GiveBottle ->
+                FragmentBottleDetailsDirections.bottleDetailsToGiftBottle(route.bottleId)
+
+            is BottleDetailsRoute.BottleHistory ->
+                FragmentBottleDetailsDirections.bottleDetailsToHistory(-1)
+
+            is BottleDetailsRoute.TastingLog -> FragmentBottleDetailsDirections.bottleDetailsToHistory(
+                -1,
+                route.wineId,
+                true
+            )
+        }
+
+        fragment.navigate(direction)
+    }
+}
+
 class NavComponentSearchRouteResolver : NavComponentRouteResolver<SearchRoute>() {
     override val type = SearchRoute::class
 
@@ -146,12 +180,5 @@ class NavComponentSearchRouteResolver : NavComponentRouteResolver<SearchRoute>()
 
         val extra = sharedElement?.let { FragmentNavigatorExtras(it to it.transitionName) }
         fragment.navigate(direction, extra)
-    }
-}
-
-class NavComponentBottleDetailsRouteResolver : NavComponentRouteResolver<BottleDetailsRoute>() {
-    override val type = BottleDetailsRoute::class
-
-    override fun resolveTyped(route: BottleDetailsRoute, fragment: Fragment, sharedElement: View?) {
     }
 }
