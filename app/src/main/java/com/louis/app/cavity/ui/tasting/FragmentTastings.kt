@@ -9,22 +9,20 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
 import com.louis.app.cavity.ui.navigation.NavigationDestination
+import com.louis.app.cavity.ui.navigation.TastingRoute
+import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
-import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.extractMargin
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentTastings : Fragment(R.layout.fragment_tastings), NavigationDestination {
-    private lateinit var transitionHelper: MaterialTransitionHelper
     private var _binding: FragmentTastingsBinding? = null
     private val binding get() = _binding!!
     private val tastingViewModel: TastingViewModel by activityViewModels()
@@ -36,10 +34,6 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings), NavigationDestina
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        transitionHelper = MaterialTransitionHelper(this).apply {
-            setFadeThroughOnEnterAndExit()
-        }
 
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
@@ -77,7 +71,11 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings), NavigationDestina
     }
 
     private fun initRecyclerView() {
-        val tastingAdapter = TastingRecyclerAdapter(friendViewPool, transitionHelper)
+        val tastingAdapter = TastingRecyclerAdapter(
+            friendViewPool,
+            onItemClickListener = { tasting, sharedView ->
+                navigate(TastingRoute.TastingDetails(tasting.id, tasting.opportunity), sharedView)
+            })
 
         binding.tastingList.apply {
             layoutManager = LinearLayoutManager(context)
@@ -97,19 +95,12 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings), NavigationDestina
 
     private fun setListener() {
         binding.buttonAddTasting.setOnClickListener {
-            navigateToAddTasting()
+            navigate(TastingRoute.AddTasting)
         }
 
         binding.emptyState.setOnActionClickListener {
-            navigateToAddTasting()
+            navigate(TastingRoute.AddTasting)
         }
-    }
-
-    private fun navigateToAddTasting() {
-        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
-
-        val action = FragmentTastingsDirections.tastingToAddTasting()
-        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

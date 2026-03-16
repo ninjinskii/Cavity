@@ -58,24 +58,24 @@ sealed interface AddWineRoute : AppRoute {
 }
 
 sealed interface BottleDetailsRoute : AppRoute {
-    data class EditBottle(val wineId: Long, val bottleId: Long): BottleDetailsRoute {
+    data class EditBottle(val wineId: Long, val bottleId: Long) : BottleDetailsRoute {
         override val transition = TransitionSpec.SharedAxis(Axis.Z)
     }
 
-    data class AddBottle(val wineId: Long): BottleDetailsRoute {
+    data class AddBottle(val wineId: Long) : BottleDetailsRoute {
         override val transition = TransitionSpec.SharedAxis(Axis.Z)
     }
 
-    data class ConsumeBottle(val bottleId: Long): BottleDetailsRoute {
+    data class ConsumeBottle(val bottleId: Long) : BottleDetailsRoute {
         override val transition = TransitionSpec.SharedAxis(Axis.Y)
     }
 
-    data class GiveBottle(val bottleId: Long): BottleDetailsRoute {
+    data class GiveBottle(val bottleId: Long) : BottleDetailsRoute {
         override val transition = TransitionSpec.SharedAxis(Axis.Y)
     }
 
-    data class BottleHistory(val bottleId: Long): BottleDetailsRoute
-    data class TastingLog(val wineId: Long): BottleDetailsRoute
+    data class BottleHistory(val bottleId: Long) : BottleDetailsRoute
+    data class TastingLog(val wineId: Long) : BottleDetailsRoute
 }
 
 sealed interface SearchRoute : AppRoute {
@@ -88,6 +88,18 @@ sealed interface SearchRoute : AppRoute {
             startElevation = R.dimen.container_drop_elevation,
             endElevation = R.dimen.app_bar_elevation
         )
+    }
+}
+
+sealed interface TastingRoute : AppRoute {
+    object AddTasting : TastingRoute {
+        override val transition = TransitionSpec.SharedAxis(Axis.Z)
+    }
+
+    data class TastingDetails(val tastingId: Long, val tastingOpportunity: String) : TastingRoute {
+        override val transition = TransitionSpec.ElevationScale
+        override val destinationTransition = TransitionSpec.None
+        override var sharedElementTransition = SharedElementTransitionSpec.ContainerTransform()
     }
 }
 

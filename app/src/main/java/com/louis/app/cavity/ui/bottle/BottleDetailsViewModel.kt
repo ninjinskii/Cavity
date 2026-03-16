@@ -87,6 +87,7 @@ class BottleDetailsViewModel(app: Application) : AndroidViewModel(app) {
 
         viewModelScope.launch(IO) {
             // TODO: if wine not deleted, put the first othen bottle as observed. othewise, send navigate back event
+            // also: why do we want to remove wine ?
             maybeDeleteWine(bottleId, wineId)
             bottleRepository.deleteBottleById(bottleId)
         }

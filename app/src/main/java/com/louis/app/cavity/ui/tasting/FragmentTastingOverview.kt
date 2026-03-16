@@ -10,7 +10,6 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
@@ -20,8 +19,8 @@ import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addtasting.SpaceGridItemDecoration
 import com.louis.app.cavity.ui.navigation.NavigationDestination
+import com.louis.app.cavity.ui.navigation.popBackStack
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
-import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -37,15 +36,6 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview),
     private val args: FragmentTastingOverviewArgs by navArgs()
 
     override val menuDestinationId = R.id.tasting_dest
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        MaterialTransitionHelper(this).apply {
-            setContainerTransformTransition(options = null, enter = true)
-            setFadeThrough(navigatingForward = true)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -136,12 +126,13 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview),
 
     private fun observe() {
         tastingOverviewViewModel.tastingConfirmed.observe(viewLifecycleOwner) {
+            // Item is deleted, avoid weird back animation
             returnTransition = MaterialFadeThrough()
             sharedElementReturnTransition = null
 
             snackbarProvider.onShowSnackbarRequested(R.string.tasting_confirmed)
 
-            findNavController().popBackStack()
+            popBackStack()
         }
     }
 

@@ -14,6 +14,7 @@ import com.louis.app.cavity.ui.bottle.FragmentBottleDetailsDirections
 import com.louis.app.cavity.ui.home.FragmentHomeDirections
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheetDirections
 import com.louis.app.cavity.ui.search.FragmentSearchDirections
+import com.louis.app.cavity.ui.tasting.FragmentTastingsDirections
 import kotlin.reflect.KClass
 import kotlin.reflect.safeCast
 
@@ -175,6 +176,23 @@ class NavComponentSearchRouteResolver : NavComponentRouteResolver<SearchRoute>()
             is SearchRoute.BottleDetails -> FragmentSearchDirections.searchToBottleDetails(
                 route.wineId,
                 route.bottleId
+            )
+        }
+
+        val extra = sharedElement?.let { FragmentNavigatorExtras(it to it.transitionName) }
+        fragment.navigate(direction, extra)
+    }
+}
+
+class NavComponentTastingRouteResolver : NavComponentRouteResolver<TastingRoute>() {
+    override val type = TastingRoute::class
+
+    override fun resolveTyped(route: TastingRoute, fragment: Fragment, sharedElement: View?) {
+        val direction = when (route) {
+            TastingRoute.AddTasting -> FragmentTastingsDirections.tastingToAddTasting()
+            is TastingRoute.TastingDetails -> FragmentTastingsDirections.tastingToTastingOverview(
+                route.tastingId,
+                route.tastingOpportunity
             )
         }
 
