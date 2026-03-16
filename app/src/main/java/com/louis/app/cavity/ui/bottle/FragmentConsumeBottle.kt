@@ -89,6 +89,10 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
         friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {
             binding.friendPicker.setSelectedFriends(it)
         }
+
+        consumeGiftBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+            snackbarProvider.onShowSnackbarRequested(R.string.no_friend)
+        }
     }
 
     private fun setListeners() {
