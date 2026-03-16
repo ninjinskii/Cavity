@@ -17,14 +17,14 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
 import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.extractMargin
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentTastings : Fragment(R.layout.fragment_tastings), NavigationDestination {
-    private lateinit var transitionHelper: TransitionHelper
+    private lateinit var transitionHelper: MaterialTransitionHelper
     private var _binding: FragmentTastingsBinding? = null
     private val binding get() = _binding!!
     private val tastingViewModel: TastingViewModel by activityViewModels()
@@ -37,7 +37,7 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings), NavigationDestina
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        transitionHelper = TransitionHelper(this).apply {
+        transitionHelper = MaterialTransitionHelper(this).apply {
             setFadeThroughOnEnterAndExit()
         }
 

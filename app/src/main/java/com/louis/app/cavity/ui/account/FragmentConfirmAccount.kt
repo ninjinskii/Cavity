@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentConfirmAccountBinding
 import com.louis.app.cavity.ui.navigation.NavigationDestination
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
@@ -23,7 +23,7 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account), Navi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        TransitionHelper(this).setFadeThroughOnEnterAndExit()
+        MaterialTransitionHelper(this).setFadeThroughOnEnterAndExit()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -13,11 +13,11 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemTastingBinding
 import com.louis.app.cavity.db.dao.BoundedTasting
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 
 class TastingRecyclerAdapter(
     private val childViewPool: RecyclerView.RecycledViewPool,
-    private val transitionHelper: TransitionHelper
+    private val transitionHelper: MaterialTransitionHelper
 ) :
     ListAdapter<BoundedTasting, TastingRecyclerAdapter.TastingViewHolder>
         (TastingItemDiffCallback()) {

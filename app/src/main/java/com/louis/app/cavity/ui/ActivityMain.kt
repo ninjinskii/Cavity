@@ -71,7 +71,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
         applyInsets()
-        polishAppSwitcherApparence()
+        polishAppSwitcherAppearance()
         setupNavigation()
         observe()
         setupOnBackPressed()
@@ -180,7 +180,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
 
     // We have to support old android 7.1 TaskDescription constructor
     @Suppress("deprecation")
-    private fun polishAppSwitcherApparence() {
+    private fun polishAppSwitcherAppearance() {
         val appName = getString(R.string.app_name)
         val bitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
         setTaskDescription(

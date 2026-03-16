@@ -19,7 +19,7 @@ import com.louis.app.cavity.domain.Environment
 import com.louis.app.cavity.domain.worker.UploadWorker
 import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -37,7 +37,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export), Navigati
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        TransitionHelper(this).setSharedAxisTransition(
+        MaterialTransitionHelper(this).setSharedAxisTransition(
             MaterialSharedAxis.Z,
             navigatingForward = false
         )

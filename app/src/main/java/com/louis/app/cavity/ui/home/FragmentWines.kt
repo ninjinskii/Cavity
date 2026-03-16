@@ -15,7 +15,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.navigator
-import com.louis.app.cavity.util.L
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 
@@ -43,7 +42,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         applyInsets()
         initRecyclerView()
         setListeners()
-        L.v("FragmentWines (B): view created")
     }
 
     private fun applyInsets() {
@@ -105,7 +103,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         homeViewModel.getWinesWithBottlesByCounty(countyId).observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
-//            homeViewModel.notifyWineObservingStarted(countyId) // working reasonably !
             binding.wineList.post {
                 // Sets back the item animator after shared element transition occurred
                 // When scrolling really quickly, binding can be null when post happens
@@ -113,7 +110,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             }
 
             wineAdapter.submitList(it) {
-                homeViewModel.notifyWineObservingStarted(countyId) // trying !
+                homeViewModel.notifyWineObservingStarted(countyId)
                 scrollToWine(wineAdapter)
             }
         }
@@ -158,13 +155,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        L.v("FragmentWines (B): start")
-    }
-
     override fun onDestroyView() {
-        L.v("FragmentWines (B): view destroyed")
         super.onDestroyView()
         binding.wineList.adapter = null
         _binding = null
@@ -173,7 +164,6 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     companion object {
         private const val COUNTY_ID = "com.louis.app.cavity.ui.home.FragmentWines.COUNTY_ID"
 
-        // Used by WinesPagerAdapter
         fun newInstance(countyId: Long): FragmentWines {
             return FragmentWines().apply {
                 arguments = bundleOf(COUNTY_ID to countyId)

@@ -31,7 +31,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.louis.app.cavity.ui.home.FragmentHome.Companion.ADD_WINE_RESULT_KEY
 import com.louis.app.cavity.ui.navigation.AddWineRoute
-import com.louis.app.cavity.ui.navigation.TransitionSpec
 import com.louis.app.cavity.ui.navigation.navigateUp
 import com.louis.app.cavity.ui.navigation.fragmentResultListener
 import com.louis.app.cavity.ui.navigation.navigate
@@ -77,9 +76,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         if (args.editedWineId != 0L) {
             binding.appBar.toolbar.title = getString(R.string.edit_wine_title)
         }
-
-        L.v("FragmentAddWInes: nav arguments: ${requireArguments().getParcelable<TransitionSpec>("transition-spec")}")
-        L.v("FragmentAddWInes: returnTransition: $returnTransition")
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

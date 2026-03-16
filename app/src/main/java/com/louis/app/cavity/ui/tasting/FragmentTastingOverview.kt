@@ -21,7 +21,7 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addtasting.SpaceGridItemDecoration
 import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -41,7 +41,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        TransitionHelper(this).apply {
+        MaterialTransitionHelper(this).apply {
             setContainerTransformTransition(options = null, enter = true)
             setFadeThrough(navigatingForward = true)
         }

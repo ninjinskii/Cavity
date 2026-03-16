@@ -1,10 +1,10 @@
 package com.louis.app.cavity.ui.navigation
 
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.louis.app.cavity.util.getParcelableCompat
 
 val Fragment.navigator: Navigator
     get() = (activity as? NavigationProvider)?.navigator
@@ -33,14 +33,7 @@ inline fun <reified T : Parcelable> Fragment.fragmentResultListener(
         requestKey,
         viewLifecycleOwner
     ) { _, bundle ->
-        val result: T? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            bundle.getParcelable("$requestKey-result", T::class.java)
-        } else {
-            // Prior android version support
-            @Suppress("DEPRECATION")
-            bundle.getParcelable("$requestKey-result")
-        }
-
+        val result = bundle.getParcelableCompat<T>("$requestKey-result")
         onResult(result)
     }
 }

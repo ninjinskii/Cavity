@@ -18,7 +18,7 @@ import com.louis.app.cavity.databinding.FragmentManagerBinding
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.navigation.NavigationDestination
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.*
 
 class FragmentManager : Fragment(R.layout.fragment_manager), NavigationDestination {
@@ -33,7 +33,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager), NavigationDestinati
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        TransitionHelper(this).apply {
+        MaterialTransitionHelper(this).apply {
             setFadeThrough(navigatingForward = false)
             setFadeThrough(navigatingForward = true)
         }

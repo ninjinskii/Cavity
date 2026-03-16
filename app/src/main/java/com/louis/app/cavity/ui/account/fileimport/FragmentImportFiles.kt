@@ -11,7 +11,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportFilesBinding
 import com.louis.app.cavity.ui.ActivityMain
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
@@ -23,7 +23,7 @@ class FragmentImportFiles : Fragment(R.layout.fragment_import_files) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        TransitionHelper(this).setSharedAxisTransition(
+        MaterialTransitionHelper(this).setSharedAxisTransition(
             MaterialSharedAxis.Z,
             navigatingForward = false
         )

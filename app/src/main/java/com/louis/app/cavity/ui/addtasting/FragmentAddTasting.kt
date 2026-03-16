@@ -8,7 +8,7 @@ import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.search.FragmentSearch
 import com.louis.app.cavity.ui.search.FragmentSearch.Companion.PICK_MODE
 import com.louis.app.cavity.ui.stepper.Stepper
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 
 class FragmentAddTasting : Stepper(), NavigationDestination {
     override val menuDestinationId = R.id.tasting_dest
@@ -22,7 +22,7 @@ class FragmentAddTasting : Stepper(), NavigationDestination {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        TransitionHelper(this).apply {
+        MaterialTransitionHelper(this).apply {
             setFadeThrough(navigatingForward = true)
             setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = false)
         }

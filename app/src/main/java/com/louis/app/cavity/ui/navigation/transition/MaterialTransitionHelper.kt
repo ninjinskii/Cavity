@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.navigation
+package com.louis.app.cavity.ui.navigation.transition
 
 import android.content.Context
 import android.content.res.Resources
@@ -16,9 +16,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.util.requireThemeColor
 import com.louis.app.cavity.util.themeColor
-import java.lang.IllegalArgumentException
 
-class TransitionHelper(private val fragment: Fragment) {
+class MaterialTransitionHelper(private val fragment: Fragment) {
     private val period = fragment.resources.getInteger(R.integer.cavity_motion_long).toLong()
 
     fun setSharedAxisTransition(axis: Int, navigatingForward: Boolean) {
@@ -39,12 +38,12 @@ class TransitionHelper(private val fragment: Fragment) {
         options: SharedElementTransitionSpec.ContainerTransform,
         navigatingForward: Boolean
     ) {
-        val options = resolveAttrs(fragment.requireContext(), options)
+        val resolvedOptions = resolveAttrs(fragment.requireContext(), options)
         val transition = getContainerTransform().apply {
             duration = period
             drawingViewId = R.id.navHostFragment
 
-            options.let {
+            resolvedOptions.let {
                 startContainerColor = it.startContainerColor
                 endContainerColor = it.endContainerColor
                 startElevation = it.startElevation
@@ -54,7 +53,7 @@ class TransitionHelper(private val fragment: Fragment) {
 
         if (navigatingForward) {
             fragment.sharedElementEnterTransition = transition
-//            fragment.sharedElementReturnTransition = transition
+            fragment.sharedElementReturnTransition = transition
         } else {
             fragment.sharedElementReturnTransition = transition
         }
@@ -121,9 +120,9 @@ class TransitionHelper(private val fragment: Fragment) {
         }
 
     private fun getContainerTransform() = MaterialContainerTransform().apply {
-        duration = period //500
+        duration = period
         scrimColor = Color.TRANSPARENT
-        drawingViewId = R.id.navHostFragment
+        drawingViewId = R.id.coordinator
     }
 
     private fun resolveColor(@AttrRes color: Int) = fragment.requireContext().themeColor(color)
@@ -153,11 +152,13 @@ class TransitionHelper(private val fragment: Fragment) {
                 // Then, try to resolve as a color attribute
                 context.requireThemeColor(resId)
             } catch (e: IllegalArgumentException) {
-                val errorReporter = SentryErrorReporter.getInstance(context)
-                errorReporter.captureMessage(
-                    "Failed to resolve color or attr $resId for material container transform. Defaulting to Color.TRANSPARENT"
-                )
-                errorReporter.captureException(e)
+                SentryErrorReporter.getInstance(context).run {
+                    captureMessage(
+                        "Failed to resolve color or attr $resId for material container" +
+                                " transform. Defaulting to Color.TRANSPARENT"
+                    )
+                    captureException(e)
+                }
 
                 // Last, default to transparent
                 return Color.TRANSPARENT

@@ -29,7 +29,7 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.CAMERA_RESULT_KEY
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.PermissionChecker
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.showSnackbar
 import java.io.File
@@ -65,7 +65,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        TransitionHelper(this).apply {
+        MaterialTransitionHelper(this).apply {
             setFadeThrough(navigatingForward = true)
             setFadeThrough(navigatingForward = false)
         }

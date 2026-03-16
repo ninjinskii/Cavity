@@ -35,9 +35,7 @@ import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.ui.navigation.fragmentResultListener
-import com.louis.app.cavity.ui.navigation.navigator
 import com.louis.app.cavity.util.*
-import kotlinx.coroutines.flow.replay
 import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, NavigationDestination {
@@ -77,7 +75,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        navigator.restoreTransitions(this)
         postponeEnterTransition()
 
         _binding = FragmentHomeBinding.bind(view)
@@ -204,8 +201,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
                 (view?.parent as? ViewGroup)?.doOnPreDraw { _ ->
                     homeViewModel.checkRememberedCountyBeforeStorageChange(it) // TODO: Not sure why this is on pre draw listener
                 }
-
-//                viewPager.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
             }
         }
     }

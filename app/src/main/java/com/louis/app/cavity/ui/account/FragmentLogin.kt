@@ -18,7 +18,7 @@ import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.widget.Rule
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -38,7 +38,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        TransitionHelper(this).setFadeThroughOnEnterAndExit()
+        MaterialTransitionHelper(this).setFadeThroughOnEnterAndExit()
     }
 
     override fun onAttach(context: Context) {

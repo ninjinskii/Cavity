@@ -2,7 +2,6 @@ package com.louis.app.cavity.ui.bottle
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -32,7 +31,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentBottleDetailsBinding
 import com.louis.app.cavity.domain.error.ErrorReporter
@@ -52,11 +50,9 @@ import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.AddItemViewModel
-import com.louis.app.cavity.ui.navigation.TransitionHelper
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
-    private lateinit var transitionHelper: TransitionHelper
     private lateinit var errorReporter: ErrorReporter
     private var _binding: FragmentBottleDetailsBinding? = null
     private val binding get() = _binding!!
@@ -70,34 +66,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        transitionHelper = TransitionHelper(this).apply {
-            val previousDestination = findNavController().previousBackStackEntry?.destination?.id
-            val enterOptions =
-                if (previousDestination == R.id.search_dest) {
-                    // Background is not colorSurface in search_dest, causing weird animations
-                    TransitionHelper.ContainerTransformOptions(
-                        Color.TRANSPARENT,
-                        requireContext().themeColor(com.google.android.material.R.attr.colorSurface),
-                        startElevation = resources.getDimension(R.dimen.container_drop_elevation),
-                        endElevation = resources.getDimension(R.dimen.app_bar_elevation)
-                    ).also {
-                        val returnOptions = TransitionHelper.ContainerTransformOptions(
-                            Color.TRANSPARENT,
-                            requireContext().getColor(R.color.surface_elevation_4dp),
-                            startElevation = resources.getDimension(R.dimen.app_bar_elevation),
-                            endElevation = resources.getDimension(R.dimen.container_drop_elevation)
-                        )
-                        setContainerTransformTransition(returnOptions, enter = false)
-                    }
-                } else {
-                    null
-                }
-
-            /*setContainerTransformTransition(enterOptions, enter = true)
-            setFadeThrough(navigatingForward = false)*/
-        }
-
         errorReporter = SentryErrorReporter.getInstance(requireContext())
     }
 
@@ -106,8 +74,6 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         val transition = getString(R.string.transition_bottle_details, args.wineId)
         ViewCompat.setTransitionName(view, transition)
-
-        transitionHelper.setFadeThroughOnEnterAndExit()
         postponeEnterTransition()
 
         _binding = FragmentBottleDetailsBinding.bind(view)
@@ -438,7 +404,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonConsume.setOnClickListener {
-            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = true)
+//            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = true)
 
             (it as Checkable).isChecked = false
             val id = bottleDetailsViewModel.getBottleId()
@@ -450,7 +416,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonGiftTo.setOnClickListener {
-            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = true)
+//            transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = true)
 
             (it as Checkable).isChecked = false
             val id = bottleDetailsViewModel.getBottleId()
@@ -466,7 +432,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonHistory.setOnClickListener {
-            transitionHelper.setFadeThrough(navigatingForward = true)
+//            transitionHelper.setFadeThrough(navigatingForward = true)
 
             val id = bottleDetailsViewModel.getBottleId()
 
@@ -477,7 +443,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         }
 
         binding.buttonTastingLog.setOnClickListener {
-            transitionHelper.setFadeThrough(navigatingForward = true)
+//            transitionHelper.setFadeThrough(navigatingForward = true)
 
             val action =
                 FragmentBottleDetailsDirections.bottleDetailsToHistory(-1, args.wineId, true)
@@ -598,7 +564,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
     }
 
     private fun navigateToAddBottle(bottleId: Long) {
-        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
+//        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
         val action =
             FragmentBottleDetailsDirections.bottleDetailsToEditBottle(args.wineId, bottleId)
 

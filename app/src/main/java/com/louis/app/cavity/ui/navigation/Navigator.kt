@@ -9,12 +9,14 @@ import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import com.louis.app.cavity.ui.navigation.transition.MaterialFragmentTransitionManager
 import kotlin.getValue
 
 class Navigator(private val activity: AppCompatActivity) {
     private val menus = mutableListOf<Menu>()
-    private val transitionExecutor: TransitionExecutor = MaterialTransitionExecutor()
-//    private val sharedViewModel by lazy { ViewModelProvider(activity, SharedViewModel.Factory)[SharedViewModel::class.java] }
+    private val fragmentTransitionManager = MaterialFragmentTransitionManager()
+
+    //    private val sharedViewModel by lazy { ViewModelProvider(activity, SharedViewModel.Factory)[SharedViewModel::class.java] }
     private val appNavigator: AppNavigator by lazy {
         NavComponentNavigator(
             resolvers = listOf(
@@ -67,7 +69,7 @@ class Navigator(private val activity: AppCompatActivity) {
                     view: View,
                     savedInstanceState: Bundle?
                 ) {
-                    transitionExecutor.restoreState(fragment)
+                    fragmentTransitionManager.restoreState(fragment)
                 }
 
                 override fun onFragmentPreAttached(
@@ -75,20 +77,15 @@ class Navigator(private val activity: AppCompatActivity) {
                     fragment: Fragment,
                     context: Context
                 ) {
-                    transitionExecutor.configureDestinationFragment(fragment)
+                    fragmentTransitionManager.configureDestinationFragment(fragment)
                 }
 
                 override fun onFragmentResumed(
                     fragmentManager: FragmentManager,
                     fragment: Fragment
                 ) {
-                    transitionExecutor.restoreState(fragment)
-
-                    if (fragment is NavigationDestination) {
-                        menus.forEach { it.findItem(fragment.menuDestinationId)?.isChecked = true }
-                    } else {
-                        menus.forEach { it.forEach { item -> item.isChecked = false } }
-                    }
+                    fragmentTransitionManager.restoreState(fragment)
+                    updateMenus(fragment)
                 }
             }, false
         )
@@ -98,8 +95,16 @@ class Navigator(private val activity: AppCompatActivity) {
         return appNavigator.getPrimaryNavigationFragment(activity)
     }
 
+    private fun updateMenus(fragment: Fragment) {
+        if (fragment is NavigationDestination) {
+            menus.forEach { it.findItem(fragment.menuDestinationId)?.isChecked = true }
+        } else {
+            menus.forEach { it.forEach { item -> item.isChecked = false } }
+        }
+    }
+
     private fun navigateInternal(route: AppRoute, fragment: Fragment, sharedElement: View? = null) {
-        transitionExecutor.configureFragment(fragment, route)
+        fragmentTransitionManager.configureFragment(fragment, route)
         appNavigator.navigate(route, fragment, sharedElement)
     }
 }

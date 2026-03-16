@@ -19,7 +19,7 @@ import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerBottomSheet
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 
 class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
@@ -35,7 +35,7 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        TransitionHelper(this).apply {
+        MaterialTransitionHelper(this).apply {
             setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = false)
             setFadeThrough(navigatingForward = true)
         }

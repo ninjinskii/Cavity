@@ -16,7 +16,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSheetListBinding
 import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.ui.search.BottleRecyclerAdapter
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.prepareWindowInsets
 
@@ -27,11 +27,11 @@ class FragmentStatsDetails : Fragment(R.layout.fragment_sheet_list) {
     private val binding get() = _binding!!
     private val args: FragmentStatsDetailsArgs by navArgs()
 
-    private lateinit var transitionHelper: TransitionHelper
+    private lateinit var transitionHelper: MaterialTransitionHelper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        transitionHelper = TransitionHelper(this).apply {
+        transitionHelper = MaterialTransitionHelper(this).apply {
             setSharedAxisTransition(MaterialSharedAxis.X, navigatingForward = false)
             setFadeThrough(navigatingForward = true)
         }

@@ -27,7 +27,7 @@ import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.PermissionChecker
-import com.louis.app.cavity.ui.navigation.TransitionHelper
+import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -44,7 +44,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestinati
     private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val importExportViewModel: ImportExportViewModel by activityViewModels()
 
-    private lateinit var transitionHelper: TransitionHelper
+    private lateinit var transitionHelper: MaterialTransitionHelper
 
     private var wannaImport = false
 
@@ -54,7 +54,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestinati
         super.onCreate(savedInstanceState)
 
         postponeEnterTransition()
-        transitionHelper = TransitionHelper(this).apply {
+        transitionHelper = MaterialTransitionHelper(this).apply {
             setFadeThroughOnEnterAndExit()
         }
 

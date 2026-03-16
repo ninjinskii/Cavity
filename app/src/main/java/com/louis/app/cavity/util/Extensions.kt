@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
+import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -299,25 +300,6 @@ fun View.prepareWindowInsets(
 }
 
 // ViewModels
-inline fun <reified T> SavedStateHandle.delegate(key: String) =
-    object : ReadWriteProperty<Any, T?> {
-        override fun getValue(thisRef: Any, property: KProperty<*>) = get<T>(key)
-        override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) = set(key, value)
-    }
-
-fun <T> savedState(
-    handle: SavedStateHandle,
-    key: String
-) = object : ReadWriteProperty<Any, T?> {
-    override fun getValue(thisRef: Any, property: KProperty<*>): T? {
-        return handle[key]
-    }
-
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) {
-        handle[key] = value
-    }
-}
-
 infix fun <T> SavedStateHandle.access(key: String) = object : ReadWriteProperty<Any, T?> {
     override fun getValue(thisRef: Any, property: KProperty<*>): T? = get(key)
     override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) = set(key, value)
@@ -336,4 +318,15 @@ fun List<PriceByCurrency>.join(): String {
     }
 
     return builder.toString()
+}
+
+inline fun <reified T> Bundle.getParcelableCompat(key: String): T? {
+    val isTiramisuOrHigher = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+    return if (isTiramisuOrHigher) {
+        getParcelable(key, T::class.java)
+    } else {
+        // Prior android version support
+        @Suppress("DEPRECATION")
+        getParcelable(key)
+    }
 }

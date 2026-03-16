@@ -3,6 +3,9 @@ package com.louis.app.cavity.ui.navigation
 import androidx.annotation.IdRes
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.Wine
+import com.louis.app.cavity.ui.navigation.transition.Axis
+import com.louis.app.cavity.ui.navigation.transition.SharedElementTransitionSpec
+import com.louis.app.cavity.ui.navigation.transition.TransitionSpec
 
 sealed interface AppRoute {
     val transition: TransitionSpec

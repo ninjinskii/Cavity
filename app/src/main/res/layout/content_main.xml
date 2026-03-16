@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <!-- Need to use fragment element for NavHostFragment -->
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/navHostFragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
