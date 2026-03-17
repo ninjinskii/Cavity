@@ -44,10 +44,11 @@ class MaterialTransitionHelper(private val fragment: Fragment) {
             drawingViewId = R.id.navHostFragment
 
             resolvedOptions.let {
-                startContainerColor = it.startContainerColor
-                endContainerColor = it.endContainerColor
-                startElevation = it.startElevation
-                endElevation = it.endElevation
+                // Reversing because it makes more sense from AppRoute config point of view
+                startContainerColor = it.endContainerColor
+                endContainerColor = it.startContainerColor
+                startElevation = it.endElevation
+                endElevation = it.startElevation
             }
         }
 
@@ -55,28 +56,7 @@ class MaterialTransitionHelper(private val fragment: Fragment) {
             fragment.sharedElementEnterTransition = transition
             fragment.sharedElementReturnTransition = transition
         } else {
-            fragment.sharedElementReturnTransition = transition
-        }
-    }
-
-    fun setContainerTransformTransition(options: ContainerTransformOptions?, enter: Boolean) {
-        val transition = getContainerTransform().apply {
-            duration = period
-            drawingViewId = R.id.navHostFragment
-
-            options?.let {
-                startContainerColor = it.startContainerColor
-                endContainerColor = it.endContainerColor
-                startElevation = it.startElevation
-                endElevation = it.endElevation
-            }
-                ?: setAllContainerColors(resolveColor(com.google.android.material.R.attr.colorSurface))
-        }
-
-        if (enter) {
-            fragment.sharedElementEnterTransition = transition
-        } else {
-            fragment.sharedElementReturnTransition = transition
+            throw IllegalArgumentException("No use case for back container transform until now")
         }
     }
 

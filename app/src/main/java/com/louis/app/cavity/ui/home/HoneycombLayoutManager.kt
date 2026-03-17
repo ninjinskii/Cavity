@@ -109,7 +109,8 @@ class HoneycombLayoutManager(private val colCount: Int, private val orientation:
 
         if (state.itemCount > 0) {
             if (state.isPreLayout) {
-                fillTowardsStart(recycler, state) // Allow off screen start items to compute their position
+                // Allow off screen start items to compute their position
+                fillTowardsStart(recycler, state)
             }
 
             fillTowardsEnd(recycler, state)

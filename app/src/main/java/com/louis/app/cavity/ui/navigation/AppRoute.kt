@@ -83,10 +83,10 @@ sealed interface SearchRoute : AppRoute {
         override val transition = TransitionSpec.ElevationScale
         override val destinationTransition = TransitionSpec.None
         override var sharedElementTransition = SharedElementTransitionSpec.ContainerTransform(
-            startContainerColor = android.R.color.transparent,
-            endContainerColor = com.google.android.material.R.attr.colorSurface,
-            startElevation = R.dimen.container_drop_elevation,
-            endElevation = R.dimen.app_bar_elevation
+            startContainerColor = R.color.surface_elevation_4dp,
+            endContainerColor = android.R.color.transparent,
+            startElevation = R.dimen.app_bar_elevation,
+            endElevation = R.dimen.container_drop_elevation
         )
     }
 }
@@ -100,6 +100,20 @@ sealed interface TastingRoute : AppRoute {
         override val transition = TransitionSpec.ElevationScale
         override val destinationTransition = TransitionSpec.None
         override var sharedElementTransition = SharedElementTransitionSpec.ContainerTransform()
+    }
+}
+
+sealed interface StatRoute : AppRoute {
+    data class StatDetails(val title: String, val bottleIds: List<Long>) : StatRoute {
+        override val transition = TransitionSpec.SharedAxis(Axis.X)
+    }
+}
+
+sealed interface StatDetailsRoute : AppRoute {
+    data class BottleDetails(val wineId: Long, val bottleId: Long) : StatDetailsRoute {
+        override val transition = TransitionSpec.ElevationScale
+        override val destinationTransition = TransitionSpec.None
+        override val sharedElementTransition = SharedElementTransitionSpec.ContainerTransform()
     }
 }
 

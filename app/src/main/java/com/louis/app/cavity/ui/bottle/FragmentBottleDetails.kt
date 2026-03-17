@@ -67,18 +67,17 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
     private var hasRevealGrapeBar = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        errorReporter = SentryErrorReporter.getInstance(requireContext())
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val transition = getString(R.string.transition_bottle_details, args.wineId)
+        // If bottleId is set, we come from a bottle display list (not wine),
+        // so set transition name accordingly
+        val transitionNameId = if (args.bottleId <= 0) args.bottleId else args.wineId
+        val transition = getString(R.string.transition_bottle_details, transitionNameId)
         ViewCompat.setTransitionName(view, transition)
         postponeEnterTransition()
 
+        errorReporter = SentryErrorReporter.getInstance(requireContext())
         _binding = FragmentBottleDetailsBinding.bind(view)
 
         applyInsets()

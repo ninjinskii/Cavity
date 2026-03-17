@@ -7,34 +7,24 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSheetListBinding
-import com.louis.app.cavity.db.dao.BoundedBottle
+import com.louis.app.cavity.ui.navigation.StatDetailsRoute
+import com.louis.app.cavity.ui.navigation.navigate
+import com.louis.app.cavity.ui.navigation.navigateUp
 import com.louis.app.cavity.ui.search.BottleRecyclerAdapter
-import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
-import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.prepareWindowInsets
 
 class FragmentStatsDetails : Fragment(R.layout.fragment_sheet_list) {
-
     private val statsDetailsViewModel: StatsDetailsViewModel by viewModels()
     private var _binding: FragmentSheetListBinding? = null
     private val binding get() = _binding!!
     private val args: FragmentStatsDetailsArgs by navArgs()
 
-    private lateinit var transitionHelper: MaterialTransitionHelper
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        transitionHelper = MaterialTransitionHelper(this).apply {
-            setSharedAxisTransition(MaterialSharedAxis.X, navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-        }
 
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
@@ -64,18 +54,9 @@ class FragmentStatsDetails : Fragment(R.layout.fragment_sheet_list) {
 
     private fun initRecyclerView() {
         val bottlesAdapter = BottleRecyclerAdapter(
-            onItemClicked = { itemView: View, bottle: BoundedBottle ->
-                val transition = getString(R.string.transition_bottle_details, bottle.wine.id)
-                val action =
-                    FragmentStatsDetailsDirections.statsDetailsToBottleDetails(
-                        bottle.wine.id,
-                        bottle.bottle.id
-                    )
-                val extra = FragmentNavigatorExtras(itemView to transition)
-
-                itemView.hideKeyboard()
-                transitionHelper.setElevationScale()
-                findNavController().navigate(action, extra)
+            onItemClicked = { itemView: View, boundedBottle ->
+                val (bottle, wine) = boundedBottle
+                navigate(StatDetailsRoute.BottleDetails(wine.id, bottle.id), itemView)
             },
             pickMode = false,
             onPicked = { _, _ -> }
@@ -94,7 +75,7 @@ class FragmentStatsDetails : Fragment(R.layout.fragment_sheet_list) {
 
     private fun setListeners() {
         binding.buttonClose.setOnClickListener {
-            findNavController().navigateUp()
+            navigateUp()
         }
     }
 

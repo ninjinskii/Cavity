@@ -18,7 +18,6 @@ import com.louis.app.cavity.databinding.FragmentManagerBinding
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.navigation.NavigationDestination
-import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.*
 
 class FragmentManager : Fragment(R.layout.fragment_manager), NavigationDestination {
@@ -29,15 +28,6 @@ class FragmentManager : Fragment(R.layout.fragment_manager), NavigationDestinati
     private val addItemViewModel: AddItemViewModel by activityViewModels()
 
     override val menuDestinationId = R.id.manager_dest
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        MaterialTransitionHelper(this).apply {
-            setFadeThrough(navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

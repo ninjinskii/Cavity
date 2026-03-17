@@ -18,7 +18,6 @@ import com.louis.app.cavity.databinding.FragmentSettingsBinding
 import com.louis.app.cavity.domain.repository.PrefsRepository.Companion.MIN_TEMPLATE_SCALE
 import com.louis.app.cavity.ui.addwine.FragmentCamera.Companion.TEMPLATE_ROTATION
 import com.louis.app.cavity.ui.navigation.NavigationDestination
-import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -32,14 +31,6 @@ class FragmentSettings : Fragment(R.layout.fragment_settings), NavigationDestina
     private val settingsViewModel: SettingsViewModel by activityViewModels()
 
     override val menuDestinationId = R.id.settings_dest
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        MaterialTransitionHelper(this).apply {
-            setFadeThrough(navigatingForward = false)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

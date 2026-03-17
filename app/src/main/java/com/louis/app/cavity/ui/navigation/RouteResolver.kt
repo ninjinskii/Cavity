@@ -14,6 +14,9 @@ import com.louis.app.cavity.ui.bottle.FragmentBottleDetailsDirections
 import com.louis.app.cavity.ui.home.FragmentHomeDirections
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheetDirections
 import com.louis.app.cavity.ui.search.FragmentSearchDirections
+import com.louis.app.cavity.ui.stats.FragmentStats
+import com.louis.app.cavity.ui.stats.FragmentStatsDetailsDirections
+import com.louis.app.cavity.ui.stats.FragmentStatsDirections
 import com.louis.app.cavity.ui.tasting.FragmentTastingsDirections
 import kotlin.reflect.KClass
 import kotlin.reflect.safeCast
@@ -194,6 +197,38 @@ class NavComponentTastingRouteResolver : NavComponentRouteResolver<TastingRoute>
                 route.tastingId,
                 route.tastingOpportunity
             )
+        }
+
+        val extra = sharedElement?.let { FragmentNavigatorExtras(it to it.transitionName) }
+        fragment.navigate(direction, extra)
+    }
+}
+
+class NavComponentStatRouteResolver : NavComponentRouteResolver<StatRoute>() {
+    override val type = StatRoute::class
+
+    override fun resolveTyped(route: StatRoute, fragment: Fragment, sharedElement: View?) {
+        val direction = when (route) {
+            is StatRoute.StatDetails -> FragmentStatsDirections.statsToStatsDetails(
+                route.title,
+                route.bottleIds.toLongArray()
+            )
+        }
+
+        fragment.navigate(direction)
+    }
+}
+
+class NavComponentStatDetailsRouteResolver : NavComponentRouteResolver<StatDetailsRoute>() {
+    override val type = StatDetailsRoute::class
+
+    override fun resolveTyped(route: StatDetailsRoute, fragment: Fragment, sharedElement: View?) {
+        val direction = when (route) {
+            is StatDetailsRoute.BottleDetails ->
+                FragmentStatsDetailsDirections.statsDetailsToBottleDetails(
+                    route.wineId,
+                    route.bottleId
+                )
         }
 
         val extra = sharedElement?.let { FragmentNavigatorExtras(it to it.transitionName) }
