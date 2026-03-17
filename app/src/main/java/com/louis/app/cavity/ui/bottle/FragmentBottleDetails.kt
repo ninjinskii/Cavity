@@ -72,7 +72,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         // If bottleId is set, we come from a bottle display list (not wine),
         // so set transition name accordingly
-        val transitionNameId = if (args.bottleId <= 0) args.bottleId else args.wineId
+        val transitionNameId = if (args.bottleId > 0) args.bottleId else args.wineId
         val transition = getString(R.string.transition_bottle_details, transitionNameId)
         ViewCompat.setTransitionName(view, transition)
         postponeEnterTransition()
