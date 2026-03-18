@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.account
 import android.content.Context
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Patterns
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -11,27 +12,30 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.navigation.NavigationDestination
+import com.louis.app.cavity.ui.navigation.popBackStack
+import com.louis.app.cavity.ui.navigation.popUpTo
+import com.louis.app.cavity.ui.navigation.putFragmentResult
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
+import kotlinx.parcelize.Parcelize
 
 class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
     companion object {
         const val LOGIN_SUCCESSFUL: String = "com.louis.app.cavity.LOGIN_SUCCESSFUL"
+        const val LOGIN_SUCCESSFUL_RESULT_KEY = "com.louis.app.cavity.LOGIN_SUCCESSFUL"
     }
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
-    private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var onBackPressedCallback: OnBackPressedCallback
 
     override val menuDestinationId = R.id.account_dest
@@ -45,7 +49,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
         super.onAttach(context)
         onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback {
             remove()
-            findNavController().navigateUp()
+            popUpTo(R.id.home_dest, inclusive = false)
         }
     }
 
@@ -53,9 +57,9 @@ class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentLoginBinding.bind(view)
-        savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
-        savedStateHandle[LOGIN_SUCCESSFUL] = false
-
+//        savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
+//        savedStateHandle[LOGIN_SUCCESSFUL] = false
+        putFragmentResult(LOGIN_SUCCESSFUL_RESULT_KEY, Result(loginSuccessful = false))
         setupNavigation(binding.appBar.toolbar)
 
         (binding.icon.drawable as AnimatedVectorDrawable).start()
@@ -94,8 +98,9 @@ class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
 
         loginViewModel.account.observe(viewLifecycleOwner) {
             if (it != null) {
-                savedStateHandle[LOGIN_SUCCESSFUL] = true
-                findNavController().popBackStack()
+//                savedStateHandle[LOGIN_SUCCESSFUL] = true
+                putFragmentResult(LOGIN_SUCCESSFUL_RESULT_KEY, Result(loginSuccessful = true))
+                popBackStack()
             }
         }
     }
@@ -163,4 +168,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
         super.onDestroyView()
         _binding = null
     }
+
+    @Parcelize
+    data class Result(val loginSuccessful: Boolean) : Parcelable
 }

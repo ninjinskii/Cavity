@@ -21,6 +21,10 @@ fun Fragment.popBackStack() {
     navigator.popBackStack(this)
 }
 
+fun Fragment.popUpTo(destinationId: Int, inclusive: Boolean) {
+    navigator.popUpTo(this, destinationId, inclusive)
+}
+
 fun Fragment.navigateUp() {
     navigator.navigateUp(this)
 }

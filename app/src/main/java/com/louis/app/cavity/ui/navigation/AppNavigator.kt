@@ -17,6 +17,7 @@ abstract class AppNavigator(private val resolvers: List<RouteResolver>) {
 
     abstract fun navigateUp(fragment: Fragment)
     abstract fun popBackStack(fragment: Fragment)
+    abstract fun popUpTo(fragment: Fragment, destinationId: Int, inclusive: Boolean)
     abstract fun getPrimaryNavigationFragment(activity: FragmentActivity): Fragment?
 
     // In a native environment, host fragment and primary navigation fragment should be the same
@@ -35,6 +36,14 @@ class NavComponentNavigator(resolvers: List<RouteResolver>) :
 
     override fun popBackStack(fragment: Fragment) {
         fragment.findNavController().popBackStack()
+    }
+
+    override fun popUpTo(
+        fragment: Fragment,
+        destinationId: Int,
+        inclusive: Boolean
+    ) {
+        fragment.findNavController().popBackStack(destinationId, inclusive)
     }
 
     override fun getPrimaryNavigationFragment(activity: FragmentActivity): Fragment? {

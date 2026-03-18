@@ -28,7 +28,9 @@ class Navigator(private val activity: AppCompatActivity) {
                 NavComponentBottleDetailsRouteResolver(),
                 NavComponentTastingRouteResolver(),
                 NavComponentStatRouteResolver(),
-                NavComponentStatDetailsRouteResolver()
+                NavComponentStatDetailsRouteResolver(),
+                NavComponentAccountRouteResolver(),
+                NavComponentImportExportRouteResolver()
             )
         )
     }
@@ -51,6 +53,10 @@ class Navigator(private val activity: AppCompatActivity) {
 
     fun popBackStack(fragment: Fragment) {
         appNavigator.popBackStack(fragment)
+    }
+
+    fun popUpTo(fragment: Fragment, destinationId: Int, inclusive: Boolean) {
+        appNavigator.popUpTo(fragment, destinationId, inclusive)
     }
 
     fun syncMenu(vararg menu: Menu) {

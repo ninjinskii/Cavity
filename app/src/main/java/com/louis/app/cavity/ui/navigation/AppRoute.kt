@@ -118,6 +118,21 @@ sealed interface StatDetailsRoute : AppRoute {
 }
 
 sealed interface AccountRoute : AppRoute {
-    data object Login : AccountRoute
-    data object Account : AccountRoute
+    object Import : AccountRoute {
+        override val transition = TransitionSpec.SharedAxis(Axis.Z)
+    }
+
+    object Export : AccountRoute {
+        override val transition = TransitionSpec.SharedAxis(Axis.Z)
+    }
+
+    object ImportFiles : AccountRoute {
+        override val transition = TransitionSpec.SharedAxis(Axis.Z)
+    }
+
+    object Login : AccountRoute
+}
+
+sealed interface ImportExportRoute : AppRoute {
+    object Login : ImportExportRoute
 }

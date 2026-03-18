@@ -9,12 +9,13 @@ import androidx.navigation.Navigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
+import com.louis.app.cavity.ui.account.FragmentAccountDirections
+import com.louis.app.cavity.ui.account.FragmentImportExportDirections
 import com.louis.app.cavity.ui.addwine.FragmentAddWineDirections
 import com.louis.app.cavity.ui.bottle.FragmentBottleDetailsDirections
 import com.louis.app.cavity.ui.home.FragmentHomeDirections
 import com.louis.app.cavity.ui.home.WineOptionsBottomSheetDirections
 import com.louis.app.cavity.ui.search.FragmentSearchDirections
-import com.louis.app.cavity.ui.stats.FragmentStats
 import com.louis.app.cavity.ui.stats.FragmentStatsDetailsDirections
 import com.louis.app.cavity.ui.stats.FragmentStatsDirections
 import com.louis.app.cavity.ui.tasting.FragmentTastingsDirections
@@ -158,7 +159,7 @@ class NavComponentBottleDetailsRouteResolver : NavComponentRouteResolver<BottleD
                 FragmentBottleDetailsDirections.bottleDetailsToGiftBottle(route.bottleId)
 
             is BottleDetailsRoute.BottleHistory ->
-                FragmentBottleDetailsDirections.bottleDetailsToHistory(-1)
+                FragmentBottleDetailsDirections.bottleDetailsToHistory(route.bottleId)
 
             is BottleDetailsRoute.TastingLog -> FragmentBottleDetailsDirections.bottleDetailsToHistory(
                 -1,
@@ -233,5 +234,40 @@ class NavComponentStatDetailsRouteResolver : NavComponentRouteResolver<StatDetai
 
         val extra = sharedElement?.let { FragmentNavigatorExtras(it to it.transitionName) }
         fragment.navigate(direction, extra)
+    }
+}
+
+class NavComponentAccountRouteResolver : NavComponentRouteResolver<AccountRoute>() {
+    override val type = AccountRoute::class
+
+    override fun resolveTyped(route: AccountRoute, fragment: Fragment, sharedElement: View?) {
+        val direction = when (route) {
+            AccountRoute.Export -> FragmentAccountDirections.accountToImportExport(
+                false,
+                fragment.getString(R.string.export)
+            )
+
+            AccountRoute.Import -> FragmentAccountDirections.accountToImportExport(
+                true,
+                fragment.getString(R.string.import_)
+            )
+
+            AccountRoute.ImportFiles -> FragmentAccountDirections.accountToImportFiles()
+            AccountRoute.Login -> FragmentAccountDirections.accountToLogin()
+        }
+
+        fragment.navigate(direction)
+    }
+}
+
+class NavComponentImportExportRouteResolver : NavComponentRouteResolver<ImportExportRoute>() {
+    override val type = ImportExportRoute::class
+
+    override fun resolveTyped(route: ImportExportRoute, fragment: Fragment, sharedElement: View?) {
+        val direction = when (route) {
+            is ImportExportRoute.Login -> FragmentImportExportDirections.importExportToLogin()
+        }
+
+        fragment.navigate(direction)
     }
 }
