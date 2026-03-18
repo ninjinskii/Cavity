@@ -22,7 +22,6 @@ import com.louis.app.cavity.domain.worker.PruneWorker
 import com.louis.app.cavity.domain.worker.UploadWorker
 import com.louis.app.cavity.ui.navigation.AccountRoute
 import com.louis.app.cavity.ui.navigation.NavigationDestination
-import com.louis.app.cavity.ui.navigation.fragmentResultListener
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.ui.navigation.popUpTo
 import com.louis.app.cavity.ui.settings.SettingsViewModel
