@@ -46,7 +46,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
     private lateinit var binding: ActivityMainBinding
     private val addItemViewModel: AddItemViewModel by viewModels()
     private val tastingViewModel: TastingViewModel by viewModels()
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
     override val navigator = Navigator(this)

@@ -40,7 +40,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestinati
     private lateinit var writePermissionChecker: PermissionChecker
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
-    private val loginViewModel: LoginViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels { LoginViewModel.Factory }
     private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val importExportViewModel: ImportExportViewModel by activityViewModels()
 
@@ -74,6 +74,8 @@ class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestinati
                 binding.coordinator.showSnackbar(R.string.permissions_denied_external)
             }
         }
+
+        loginViewModel.saveLoginResult(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,15 +96,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestinati
         setListeners()
         setupToolbar()
 
-        fragmentResultListener<FragmentLogin.Result>(
-            FragmentLogin.LOGIN_SUCCESSFUL_RESULT_KEY
-        ) { result ->
-            result?.let {
-                if (it.loginSuccessful) {
-                    startPostponedEnterTransition()
-                } else {
-                    popUpTo(R.id.home_dest, inclusive = false)
-                }
+        loginViewModel.loginResultLiveData().observe(viewLifecycleOwner) {
+            if (it ?: true) {
+                startPostponedEnterTransition()
+            } else {
+                popUpTo(R.id.home_dest, inclusive = false)
             }
         }
     }

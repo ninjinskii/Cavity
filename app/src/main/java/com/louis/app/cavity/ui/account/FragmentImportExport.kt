@@ -28,7 +28,7 @@ import com.robinhood.ticker.TickerUtils
 class FragmentImportExport : Fragment(R.layout.fragment_import_export), NavigationDestination {
     private var _binding: FragmentImportExportBinding? = null
     private val binding get() = _binding!!
-    private val loginViewModel: LoginViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels { LoginViewModel.Factory }
     private val importExportViewModel: ImportExportViewModel by activityViewModels()
     private val args: FragmentImportExportArgs by navArgs()
 

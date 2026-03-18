@@ -133,6 +133,10 @@ sealed interface AccountRoute : AppRoute {
     object Login : AccountRoute
 }
 
+sealed interface LoginRoute : AppRoute {
+    object ConfirmAccount : LoginRoute
+}
+
 sealed interface ImportExportRoute : AppRoute {
     object Login : ImportExportRoute
 }

@@ -53,13 +53,6 @@ class HomeViewModel(
     private val prefsRepository = PrefsRepository.getInstance(app)
     private val errorReporter = SentryErrorReporter.getInstance(app)
 
-    /**
-     * countyId from the arguments of the fragment that initiated a navigation shared element
-     * transition to FragmentBottleDetails. Used to remember what fragment of the ViewPager we
-     * should focus to resume postponed FragmentWinesParent transition
-     */
-    var savedSharedElementCountyId: Long? by savedStateHandle access "sourceCountyId"
-
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
         get() = _userFeedback
@@ -74,6 +67,13 @@ class HomeViewModel(
     private val observedCounty = MutableLiveData<Long>()
 
     private var countyIdBeforeStorageLocationChange: Long? = null
+
+    /**
+     * countyId from the arguments of the fragment that initiated a navigation shared element
+     * transition to FragmentBottleDetails. Used to remember what fragment of the ViewPager we
+     * should focus to resume postponed FragmentWinesParent transition
+     */
+    var savedSharedElementCountyId: Long? by savedStateHandle access "sourceCountyId"
 
     val bottleCount = observedCounty.switchMap {
         statsRepository.getBottleCountForCounty(it, _storageLocation.value)

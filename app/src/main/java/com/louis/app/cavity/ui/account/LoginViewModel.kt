@@ -4,7 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.Environment
 import com.louis.app.cavity.domain.repository.AccountRepository
@@ -14,11 +19,17 @@ import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.LoginResponse
 import com.louis.app.cavity.util.Event
+import com.louis.app.cavity.util.access
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class LoginViewModel(app: Application) : AndroidViewModel(app) {
+class LoginViewModel(
+    app: Application,
+    private val savedStateHandle: SavedStateHandle
+) :
+    AndroidViewModel(app) {
+
     private val prefsRepository = PrefsRepository.getInstance(app)
     private val accountRepository = AccountRepository.getInstance(app)
     private val errorReporter = SentryErrorReporter.getInstance(app)
@@ -51,6 +62,7 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
     val deletedEvent: LiveData<Event<Unit>>
         get() = _deletedEvent
 
+    private var savedLoginResult: Boolean? by savedStateHandle access "login-result"
     private var inConfirmationUser: String? = null
     private var sneakyTryCount = 0
 
@@ -162,6 +174,14 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun saveLoginResult(loginSuccessful: Boolean) {
+        savedLoginResult = loginSuccessful
+    }
+
+    fun loginResultLiveData(): LiveData<Boolean?> {
+        return savedStateHandle.getLiveData("login-result")
+    }
+
     private fun <T> doApiCall(
         call: suspend () -> ApiResponse<T>,
         onSuccess: (ApiResponse.Success<T>) -> Unit
@@ -183,6 +203,15 @@ class LoginViewModel(app: Application) : AndroidViewModel(app) {
                 }
             } finally {
                 _isLoading.postValue(false)
+            }
+        }
+    }
+
+    companion object {
+        val Factory = viewModelFactory {
+            initializer {
+                val app = checkNotNull(this[APPLICATION_KEY])
+                LoginViewModel(app, createSavedStateHandle())
             }
         }
     }

@@ -30,7 +30,8 @@ class Navigator(private val activity: AppCompatActivity) {
                 NavComponentStatRouteResolver(),
                 NavComponentStatDetailsRouteResolver(),
                 NavComponentAccountRouteResolver(),
-                NavComponentImportExportRouteResolver()
+                NavComponentImportExportRouteResolver(),
+                NavComponentLoginRouteResolver()
             )
         )
     }

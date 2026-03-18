@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.ui.account.FragmentAccountDirections
 import com.louis.app.cavity.ui.account.FragmentImportExportDirections
+import com.louis.app.cavity.ui.account.FragmentLoginDirections
 import com.louis.app.cavity.ui.addwine.FragmentAddWineDirections
 import com.louis.app.cavity.ui.bottle.FragmentBottleDetailsDirections
 import com.louis.app.cavity.ui.home.FragmentHomeDirections
@@ -266,6 +267,18 @@ class NavComponentImportExportRouteResolver : NavComponentRouteResolver<ImportEx
     override fun resolveTyped(route: ImportExportRoute, fragment: Fragment, sharedElement: View?) {
         val direction = when (route) {
             is ImportExportRoute.Login -> FragmentImportExportDirections.importExportToLogin()
+        }
+
+        fragment.navigate(direction)
+    }
+}
+
+class NavComponentLoginRouteResolver : NavComponentRouteResolver<LoginRoute>() {
+    override val type = LoginRoute::class
+
+    override fun resolveTyped(route: LoginRoute, fragment: Fragment, sharedElement: View?) {
+        val direction = when (route) {
+            LoginRoute.ConfirmAccount -> FragmentLoginDirections.loginToConfirm()
         }
 
         fragment.navigate(direction)
