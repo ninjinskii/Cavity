@@ -9,7 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentGiftBottleBinding
 import com.louis.app.cavity.ui.DatePicker
@@ -19,7 +18,6 @@ import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerBottomSheet
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
-import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 
 class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
@@ -31,15 +29,6 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     private val consumeGiftBottleViewModel: ConsumeGiftBottleViewModel by viewModels()
     private val friendPickerViewModel: FriendPickerViewModel by viewModels()
     private val args: FragmentGiftBottleArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        MaterialTransitionHelper(this).apply {
-            setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

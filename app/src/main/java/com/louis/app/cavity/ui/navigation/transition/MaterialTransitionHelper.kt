@@ -15,7 +15,6 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.util.requireThemeColor
-import com.louis.app.cavity.util.themeColor
 
 class MaterialTransitionHelper(private val fragment: Fragment) {
     private val period = fragment.resources.getInteger(R.integer.cavity_motion_long).toLong()
@@ -104,8 +103,6 @@ class MaterialTransitionHelper(private val fragment: Fragment) {
         scrimColor = Color.TRANSPARENT
         drawingViewId = R.id.coordinator
     }
-
-    private fun resolveColor(@AttrRes color: Int) = fragment.requireContext().themeColor(color)
 
     private fun resolveAttrs(
         context: Context,

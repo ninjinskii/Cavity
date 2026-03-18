@@ -41,13 +41,11 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.louis.app.cavity.ui.navigation.NavigationDestination
-import com.louis.app.cavity.ui.navigation.transition.MaterialTransitionHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class FragmentHistory : Fragment(R.layout.fragment_history), NavigationDestination {
     private lateinit var colorUtil: ColorUtil
-    private lateinit var transitionHelper: MaterialTransitionHelper
     private var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>? = null
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
@@ -55,15 +53,6 @@ class FragmentHistory : Fragment(R.layout.fragment_history), NavigationDestinati
     private val args: FragmentHistoryArgs by navArgs()
 
     override val menuDestinationId = R.id.history_dest
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        transitionHelper = MaterialTransitionHelper(this).apply {
-            setFadeThrough(navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
