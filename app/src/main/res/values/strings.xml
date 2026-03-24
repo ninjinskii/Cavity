@@ -286,6 +286,7 @@
     <string name="empty_tasting_bottle">No bottle in this tasting</string>
     <string name="todo">To do:</string>
     <string name="done">Done !</string>
+    <string name="selection">Sélection</string>
 
     <!-- Settings -->
     <string name="skew_bottle_title">Rotate the template</string>

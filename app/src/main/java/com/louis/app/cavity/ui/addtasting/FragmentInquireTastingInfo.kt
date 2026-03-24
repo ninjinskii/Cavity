@@ -25,7 +25,7 @@ import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.extractMargin
 import com.louis.app.cavity.util.hideKeyboard
 import com.louis.app.cavity.util.prepareWindowInsets
-import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.setupToolbar
 
 class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -62,7 +62,7 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireTastingInfoBinding.bind(view)
 
-        setupNavigation(binding.appBar.toolbar)
+        setupToolbar(binding.appBar.toolbar, R.string.add_tasting)
 
         snackbarProvider = activity as SnackbarProvider
         super.setPeekSiblingsSteps(false)

@@ -21,7 +21,7 @@ import com.louis.app.cavity.ui.navigation.StatRoute
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.setupToolbar
 
 class FragmentStats : Fragment(R.layout.fragment_stats), NavigationDestination {
     private var _binding: FragmentStatsBinding? = null
@@ -34,7 +34,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats), NavigationDestination {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentStatsBinding.bind(view)
 
-        setupNavigation(binding.toolbar)
+        setupToolbar(binding.toolbar, R.string.stats)
 
         applyInsets()
         setupScrollableTab()

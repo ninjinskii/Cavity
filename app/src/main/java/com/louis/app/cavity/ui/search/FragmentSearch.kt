@@ -126,9 +126,10 @@ class FragmentSearch : Step(R.layout.fragment_search), NavigationDestination {
             setHeaderShadow(binding.bottleList.canScrollVertically(-1))
         }
 
-        setupNavigation(binding.fakeToolbar)
-
         isPickMode = arguments?.getBoolean(PICK_MODE) == true
+
+        val title = if (isPickMode) R.string.selection else R.string.search
+        setupToolbar(binding.fakeToolbar, title)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_EXPANDED

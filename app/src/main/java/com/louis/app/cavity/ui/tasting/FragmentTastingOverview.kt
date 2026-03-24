@@ -23,7 +23,7 @@ import com.louis.app.cavity.ui.navigation.popBackStack
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.setupToolbar
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview),
@@ -48,7 +48,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview),
 
         snackbarProvider = activity as SnackbarProvider
 
-        setupNavigation(binding.appBar.toolbar)
+        setupToolbar(binding.appBar.toolbar, args.opportunity)
         tastingOverviewViewModel.start(args.tastingId)
 
         applyInsets()

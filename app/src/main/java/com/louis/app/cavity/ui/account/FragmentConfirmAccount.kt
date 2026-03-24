@@ -13,7 +13,7 @@ import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.popBackStack
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.setupToolbar
 
 class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account), NavigationDestination {
     private var _binding: FragmentConfirmAccountBinding? = null
@@ -26,7 +26,7 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account), Navi
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentConfirmAccountBinding.bind(view)
 
-        setupNavigation(binding.appBar.toolbar)
+        setupToolbar(binding.appBar.toolbar, R.string.confirm_account)
 
         applyInsets()
         observe()

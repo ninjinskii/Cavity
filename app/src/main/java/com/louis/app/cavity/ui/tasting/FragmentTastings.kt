@@ -20,7 +20,7 @@ import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
 import com.louis.app.cavity.util.extractMargin
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.setupToolbar
 
 class FragmentTastings : Fragment(R.layout.fragment_tastings), NavigationDestination {
     private var _binding: FragmentTastingsBinding? = null
@@ -40,7 +40,7 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings), NavigationDestina
 
         _binding = FragmentTastingsBinding.bind(view)
 
-        setupNavigation(binding.appBar.toolbar)
+        setupToolbar(binding.appBar.toolbar, R.string.tastings)
 
         applyInsets()
         initRecyclerView()

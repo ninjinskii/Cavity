@@ -69,7 +69,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
         _binding = FragmentAddWineBinding.bind(view)
 
-        setupNavigation(binding.appBar.toolbar)
+        setupToolbar(binding.appBar.toolbar, R.string.add_wine)
 
         addWineViewModel.setCountyId(args.countyId)
 

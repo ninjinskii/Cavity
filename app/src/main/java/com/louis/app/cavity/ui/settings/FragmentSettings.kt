@@ -20,7 +20,7 @@ import com.louis.app.cavity.ui.addwine.FragmentCamera.Companion.TEMPLATE_ROTATIO
 import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.setupToolbar
 import com.louis.app.cavity.util.showSnackbar
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -36,7 +36,7 @@ class FragmentSettings : Fragment(R.layout.fragment_settings), NavigationDestina
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSettingsBinding.bind(view)
 
-        setupNavigation(binding.appBar.toolbar)
+        setupToolbar(binding.appBar.toolbar, R.string.settings)
 
         applyInsets()
         observe()

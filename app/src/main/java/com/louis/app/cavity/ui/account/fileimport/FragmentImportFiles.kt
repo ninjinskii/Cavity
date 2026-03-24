@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportFilesBinding
 import com.louis.app.cavity.ui.ActivityMain
-import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.setupToolbar
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentImportFiles : Fragment(R.layout.fragment_import_files) {
@@ -32,7 +32,7 @@ class FragmentImportFiles : Fragment(R.layout.fragment_import_files) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentImportFilesBinding.bind(view)
 
-        setupNavigation(binding.appBar.toolbar)
+        setupToolbar(binding.appBar.toolbar, R.string.file_import)
 
         observe()
         setListeners()

@@ -11,12 +11,14 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.use
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -31,8 +33,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -40,6 +40,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.PriceByCurrency
 import com.louis.app.cavity.ui.ActivityMain
+import com.louis.app.cavity.ui.navigation.navigateUp
 import kotlin.math.max
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -257,7 +258,7 @@ fun BottomSheetBehavior<ConstraintLayout>.toggleState() {
 }
 
 // Navigation
-fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false) {
+/*fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false) {
     if (!hideDrawerToggle) {
         val drawer = (activity as ActivityMain).findViewById<DrawerLayout>(R.id.drawer)
         val navController = findNavController()
@@ -265,6 +266,36 @@ fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false
     } else {
         toolbar.title = getString(R.string.app_name)
         toolbar.setNavigationOnClickListener(null)
+    }
+}*/
+
+fun Fragment.setupToolbar(toolbar: Toolbar, @StringRes title: Int) {
+    val title = toolbar.context.getString(title)
+    setupToolbar(toolbar, title)
+}
+
+fun Fragment.setupToolbar(toolbar: Toolbar, title: String) {
+    val isTopLevel = parentFragment?.parentFragment == null &&
+            parentFragment?.childFragmentManager?.backStackEntryCount == 0
+
+    val drawable = DrawerArrowDrawable(toolbar.context).apply {
+        progress = if (isTopLevel) 0f else 1f
+    }
+
+    toolbar.title = title
+    toolbar.navigationIcon = drawable
+    toolbar.setNavigationOnClickListener {
+        if (isTopLevel) {
+            activity?.findViewById<DrawerLayout>(R.id.drawer)?.apply {
+                if (isDrawerOpen(GravityCompat.START)) {
+                    closeDrawer(GravityCompat.START)
+                } else {
+                    openDrawer(GravityCompat.START)
+                }
+            }
+        } else {
+            navigateUp()
+        }
     }
 }
 

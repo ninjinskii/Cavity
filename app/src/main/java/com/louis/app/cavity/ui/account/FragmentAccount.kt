@@ -29,7 +29,7 @@ import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.setupToolbar
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.spToPx
 import com.robinhood.ticker.TickerUtils
@@ -80,8 +80,6 @@ class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestinati
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAccountBinding.bind(view)
-
-        setupNavigation(binding.toolbar)
 
         if (!settingsViewModel.getAutoBackup()) {
             updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_USER_DISABLED)
@@ -266,6 +264,8 @@ class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestinati
     }
 
     private fun setupToolbar() {
+        setupToolbar(binding.toolbar, R.string.cavity_account)
+
         binding.toolbar.setOnMenuItemClickListener {
             if (it.itemId == R.id.logout) {
                 loginViewModel.logout()

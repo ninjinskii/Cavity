@@ -22,7 +22,7 @@ import com.louis.app.cavity.ui.navigation.popUpTo
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.setupToolbar
 
 class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
     private var _binding: FragmentLoginBinding? = null
@@ -45,7 +45,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
 
         _binding = FragmentLoginBinding.bind(view)
         loginViewModel.saveLoginResult(false)
-        setupNavigation(binding.appBar.toolbar)
+        setupToolbar(binding.appBar.toolbar, R.string.cavity_account)
 
         (binding.icon.drawable as AnimatedVectorDrawable).start()
 
@@ -77,8 +77,6 @@ class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
         loginViewModel.navigateToConfirm.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
                 navigate(LoginRoute.ConfirmAccount)
-//                val action = FragmentLoginDirections.loginToConfirm()
-//                findNavController().navigate(action)
             }
         }
 

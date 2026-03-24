@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.forEach
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -107,10 +109,13 @@ class Navigator(private val activity: AppCompatActivity) {
     }
 
     private fun updateMenus(fragment: Fragment) {
-        if (fragment is NavigationDestination) {
-            menus.forEach { it.findItem(fragment.menuDestinationId)?.isChecked = true }
-        } else {
-            menus.forEach { it.forEach { item -> item.isChecked = false } }
+        val isNavigationDestination = fragment is NavigationDestination
+        menus.forEach { menu ->
+            if (isNavigationDestination) {
+                menu.findItem(fragment.menuDestinationId)?.isChecked = true
+            } else {
+                menu.forEach { it.isChecked = false }
+            }
         }
     }
 

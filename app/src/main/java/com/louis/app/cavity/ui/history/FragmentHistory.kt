@@ -61,7 +61,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history), NavigationDestinati
 
         _binding = FragmentHistoryBinding.bind(view)
 
-        setupNavigation(binding.toolbar)
+        setupToolbar(binding.toolbar, R.string.history)
 
         colorUtil = ColorUtil(requireContext())
 

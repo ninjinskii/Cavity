@@ -14,7 +14,7 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
 import com.louis.app.cavity.util.prepareWindowInsets
-import com.louis.app.cavity.util.setupNavigation
+import com.louis.app.cavity.util.setupToolbar
 
 class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -27,12 +27,6 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireScheduleBinding.bind(view)
-
-        setupNavigation(binding.appBar.toolbar)
-
-        binding.appBar.toolbar.setNavigationOnClickListener {
-            stepperFragment?.goToPreviousPage()
-        }
 
         snackbarProvider = activity as SnackbarProvider
 
@@ -98,7 +92,10 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     }
 
     private fun setupToolbar() {
-        binding.appBar.toolbar.apply {
+        val toolbar = binding.appBar.toolbar
+
+        setupToolbar(toolbar, R.string.add_tasting)
+        toolbar.apply {
             inflateMenu(R.menu.confirm_menu)
             setOnMenuItemClickListener { menuItem ->
                 if (menuItem.itemId == R.id.buttonSubmit) {
@@ -108,6 +105,10 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
 
                 false
             }
+        }
+
+        toolbar.setNavigationOnClickListener {
+            stepperFragment?.goToPreviousPage()
         }
     }
 

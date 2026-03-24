@@ -13,12 +13,14 @@ import androidx.core.view.isVisible
 import androidx.core.view.marginRight
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
@@ -83,7 +85,10 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
             val hasNavigationRail =
                 activity?.findViewById<NavigationRailView>(R.id.navigationRail) != null
 
-            setupNavigation(binding.appBar.toolbar, hasNavigationRail)
+            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer)
+
+//            setupNavigation(binding.appBar.toolbar, hasNavigationRail)
+            setupToolbar(binding.appBar.toolbar, R.string.app_name)
         }
 
         applyInsets()
@@ -234,6 +239,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         // TODO: use BaseViewModelState and move logic to view model
         homeViewModel.storageLocation.asLiveData().observe(viewLifecycleOwner) { location ->
             if (location == null) {
+//                findNavController().currentDestination?.label = getString(R.string.app_name)
                 return@observe
             }
 
@@ -243,7 +249,9 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
                 homeViewModel.setStorageLocation(null, null)
             }
 
+
             val title = if (noLocationActive) getString(R.string.app_name) else location
+            findNavController().currentDestination?.label = title
             activity?.setTitle(title)
             val toolbar = binding.appBar.toolbar
             toolbar.post { toolbar.title = title }

@@ -38,7 +38,7 @@ class FragmentManager : Fragment(R.layout.fragment_manager), NavigationDestinati
 
         simpleInputDialog = SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner)
 
-        setupNavigation(binding.toolbar)
+        setupToolbar(binding.toolbar, R.string.manager)
 
         applyInsets()
         setupWithViewPager()
