@@ -240,9 +240,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
     private fun showTastingIndicator(show: Boolean) {
         if (hasNavigationRail()) {
             binding.navigationRail!!.getOrCreateBadge(R.id.tasting_dest).apply {
-                backgroundColor =
-                    binding.navigationRail!!.context
-                        .themeColor(com.google.android.material.R.attr.colorPrimaryFixed)
+                backgroundColor = binding.navigationRail!!.context.getColor(R.color.cavity_gold)
                 isVisible = show
             }
         } else {

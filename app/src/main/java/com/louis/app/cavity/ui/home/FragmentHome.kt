@@ -85,10 +85,11 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
             val hasNavigationRail =
                 activity?.findViewById<NavigationRailView>(R.id.navigationRail) != null
 
-            val drawerLayout = activity?.findViewById<DrawerLayout>(R.id.drawer)
-
-//            setupNavigation(binding.appBar.toolbar, hasNavigationRail)
-            setupToolbar(binding.appBar.toolbar, R.string.app_name)
+            if (!hasNavigationRail) {
+                setupToolbar(binding.appBar.toolbar, R.string.app_name)
+            } else {
+                binding.appBar.toolbar.navigationIcon = null
+            }
         }
 
         applyInsets()
