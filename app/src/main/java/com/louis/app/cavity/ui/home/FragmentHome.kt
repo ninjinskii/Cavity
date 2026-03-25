@@ -239,7 +239,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         // TODO: use BaseViewModelState and move logic to view model
         homeViewModel.storageLocation.asLiveData().observe(viewLifecycleOwner) { location ->
             if (location == null) {
-//                findNavController().currentDestination?.label = getString(R.string.app_name)
                 return@observe
             }
 

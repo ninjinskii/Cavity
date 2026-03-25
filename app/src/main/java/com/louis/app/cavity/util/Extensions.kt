@@ -331,7 +331,7 @@ fun View.prepareWindowInsets(
 }
 
 // ViewModels
-infix fun <T> SavedStateHandle.access(key: String) = object : ReadWriteProperty<Any, T?> {
+infix fun <T> SavedStateHandle.save(key: String) = object : ReadWriteProperty<Any, T?> {
     override fun getValue(thisRef: Any, property: KProperty<*>): T? = get(key)
     override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) = set(key, value)
 }

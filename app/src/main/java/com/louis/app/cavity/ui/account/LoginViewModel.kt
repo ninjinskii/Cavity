@@ -19,7 +19,7 @@ import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.LoginResponse
 import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.access
+import com.louis.app.cavity.util.save
 import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -62,7 +62,7 @@ class LoginViewModel(
     val deletedEvent: LiveData<Event<Unit>>
         get() = _deletedEvent
 
-    private var savedLoginResult: Boolean? by savedStateHandle access "login-result"
+    private var savedLoginResult: Boolean? by savedStateHandle save "login-result"
     private var inConfirmationUser: String? = null
     private var sneakyTryCount = 0
 

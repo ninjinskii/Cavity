@@ -19,7 +19,7 @@ import com.louis.app.cavity.ui.navigation.AppRoute
 import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
-import com.louis.app.cavity.util.access
+import com.louis.app.cavity.util.save
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,10 +36,6 @@ sealed interface HomeEvent {
 data class LastWineChange(val wineId: Long, val countyId: Long)
 data class HomeState(val lastWineChange: LastWineChange? = null)
 
-// TODO: change consumers lifecycle scope to fragment instead of activity. It will break
-// storage locaton filter feature, as it relies on navigating from home to home to update filter
-// If this viewmodel is scoped to home fragment, it will be recreated, thus loosign the storage location value
-// This should be refactored when using only flows, for now, keep as it is so that we can focus on navigation only
 class HomeViewModel(
     app: Application,
     savedStateHandle: SavedStateHandle
@@ -73,7 +69,7 @@ class HomeViewModel(
      * transition to FragmentBottleDetails. Used to remember what fragment of the ViewPager we
      * should focus to resume postponed FragmentWinesParent transition
      */
-    var savedSharedElementCountyId: Long? by savedStateHandle access "sourceCountyId"
+    var savedSharedElementCountyId: Long? by savedStateHandle save "sourceCountyId"
 
     val bottleCount = observedCounty.switchMap {
         statsRepository.getBottleCountForCounty(it, _storageLocation.value)
