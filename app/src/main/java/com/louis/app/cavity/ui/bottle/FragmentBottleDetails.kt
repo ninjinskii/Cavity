@@ -50,9 +50,9 @@ import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.navigation.BottleDetailsRoute
-import com.louis.app.cavity.ui.navigation.navigate
-import com.louis.app.cavity.ui.navigation.navigateUp
-import com.louis.app.cavity.ui.navigation.popBackStack
+import com.louis.app.cavity.ui.navigationnext.navigate
+import com.louis.app.cavity.ui.navigationnext.navigateUp
+import com.louis.app.cavity.ui.navigationnext.popBackStack
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 
 class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {

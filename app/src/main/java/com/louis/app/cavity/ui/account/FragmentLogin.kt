@@ -16,9 +16,9 @@ import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.navigation.LoginRoute
 import com.louis.app.cavity.ui.navigation.NavigationDestination
-import com.louis.app.cavity.ui.navigation.navigate
-import com.louis.app.cavity.ui.navigation.popBackStack
-import com.louis.app.cavity.ui.navigation.popUpTo
+import com.louis.app.cavity.ui.navigationnext.navigate
+import com.louis.app.cavity.ui.navigationnext.popBackStack
+import com.louis.app.cavity.ui.navigationnext.popUpTo
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible

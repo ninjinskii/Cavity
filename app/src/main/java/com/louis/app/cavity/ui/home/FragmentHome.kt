@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.doOnLayout
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.core.view.marginRight
@@ -25,17 +24,15 @@ import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.MaterialContainerTransform
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.addwine.FragmentAddWine
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
-import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.NavigationDestination
-import com.louis.app.cavity.ui.navigation.navigate
-import com.louis.app.cavity.ui.navigation.fragmentResultListener
+import com.louis.app.cavity.ui.navigationnext.fragmentResultListener
+import com.louis.app.cavity.ui.navigationnext.navigate2
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.launch
 
@@ -79,8 +76,9 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         postponeEnterTransition()
 
         _binding = FragmentHomeBinding.bind(view)
+        setupNavigation(binding.appBar.toolbar)
 
-        binding.appBar.toolbar.doOnLayout {
+        /*binding.appBar.toolbar.doOnLayout {
             val hasNavigationRail =
                 activity?.findViewById<NavigationRailView>(R.id.navigationRail) != null
 
@@ -89,7 +87,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
             } else {
                 binding.appBar.toolbar.navigationIcon = null
             }
-        }
+        }*/
 
         applyInsets()
         listenToAddWineResult()
@@ -103,7 +101,29 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
                 launch {
                     homeViewModel.event.collect {
                         when (it) {
-                            is HomeEvent.Navigation -> navigate(it.appRoute, pendingSharedElement)
+                            is HomeEvent.Navigation -> navigate2(it.direction, pendingSharedElement)
+                            /*is HomeEvent.NavigateToBottleDetails -> {
+                                val direction: NavDirections =
+                                    FragmentHomeDirections.homeToBottleDetails(it.wineId, -1)
+                                navigate2(direction, pendingSharedElement)
+//                                findNavController().navigate(action, extra!!)
+                            }
+
+                            is HomeEvent.NavigateToAddBottle -> {
+                                val direction =
+                                    FragmentHomeDirections.homeToAddBottle(it.wineId, -1)
+                                navigate2(direction)
+                            }
+
+                            is HomeEvent.NavigateToWineOptions -> {
+                                val direction = FragmentHomeDirections.homeToWineOptions(
+                                    it.wine.id,
+                                    it.wine.countyId,
+                                    it.storageLocationActive
+                                )
+                                navigate2(direction)
+                            }*/
+
                             HomeEvent.WinesObservingStarted -> {
                                 // Note that startPostponedEnterTransition() will wait for the next
                                 // layout pass to trigger animation. So, actually, calling this when
@@ -280,11 +300,17 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
         }
 
         binding.emptyState.setOnActionClickListener {
-            navigate(HomeRoute.AddWine(currentCounty), binding.appBar.toolbarLayout)
+            navigate2(
+                FragmentHomeDirections.homeToAddWine(countyId = currentCounty),
+                binding.appBar.toolbarLayout
+            )
         }
 
         binding.fab.setOnClickListener {
-            navigate(HomeRoute.AddWine(currentCounty), binding.appBar.toolbarLayout)
+            navigate2(
+                FragmentHomeDirections.homeToAddWine(countyId = currentCounty),
+                binding.appBar.toolbarLayout
+            )
         }
 
         binding.countyDetailsScrim.setOnClickListener {

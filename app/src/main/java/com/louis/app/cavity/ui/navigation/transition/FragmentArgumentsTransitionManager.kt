@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import com.louis.app.cavity.ui.navigation.AppRoute
+import com.louis.app.cavity.ui.navigationnext.NavTransitionAnimations
 import com.louis.app.cavity.util.getParcelableCompat
 
 abstract class FragmentArgumentsTransitionManager : FragmentTransitionManager {
@@ -17,6 +18,14 @@ abstract class FragmentArgumentsTransitionManager : FragmentTransitionManager {
 
         saveState(source, TRANSITION_OUT_KEY, toRoute.transition)
         applyTransition(source, toRoute.transition, navigatingForward = true)
+    }
+
+    final override fun configureFragment(source: Fragment, animations: NavTransitionAnimations) {
+        pendingDestinationTransition = animations.spec
+        pendingSharedElementDestinationTransition = animations.sharedSpec ?: SharedElementTransitionSpec.None
+
+        saveState(source, TRANSITION_OUT_KEY, pendingDestinationTransition)
+        applyTransition(source, pendingDestinationTransition, navigatingForward = true)
     }
 
     final override fun configureDestinationFragment(destination: Fragment) {

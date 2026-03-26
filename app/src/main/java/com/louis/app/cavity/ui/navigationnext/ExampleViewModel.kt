@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.navigation
+package com.louis.app.cavity.ui.navigationnext
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY

@@ -38,7 +38,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.louis.app.cavity.ui.home.FragmentHome
 import com.louis.app.cavity.ui.navigation.GlobalRoute
 import com.louis.app.cavity.ui.navigation.NavigationProvider
-import com.louis.app.cavity.ui.navigation.Navigator
+import com.louis.app.cavity.ui.navigationnext.Navigator
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 

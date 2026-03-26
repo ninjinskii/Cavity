@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSheetListBinding
 import com.louis.app.cavity.ui.navigation.StatDetailsRoute
-import com.louis.app.cavity.ui.navigation.navigate
-import com.louis.app.cavity.ui.navigation.navigateUp
+import com.louis.app.cavity.ui.navigationnext.navigate
+import com.louis.app.cavity.ui.navigationnext.navigateUp
 import com.louis.app.cavity.ui.search.BottleRecyclerAdapter
 import com.louis.app.cavity.util.prepareWindowInsets
 

@@ -48,8 +48,8 @@ import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.SearchRoute
-import com.louis.app.cavity.ui.navigation.navigate
-import com.louis.app.cavity.ui.navigation.navigateUp
+import com.louis.app.cavity.ui.navigationnext.navigate
+import com.louis.app.cavity.ui.navigationnext.navigateUp
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.ui.search.widget.InsettableInfo
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler

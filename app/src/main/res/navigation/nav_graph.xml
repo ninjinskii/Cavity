@@ -27,6 +27,7 @@
                 app:argType="long" />
             <argument
                 android:name="bottleId"
+                android:defaultValue="-1L"
                 app:argType="long" />
         </action>
         <action

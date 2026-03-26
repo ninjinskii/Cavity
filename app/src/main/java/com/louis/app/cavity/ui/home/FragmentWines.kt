@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
 import com.louis.app.cavity.ui.navigation.HomeRoute
-import com.louis.app.cavity.ui.navigation.navigator
+import com.louis.app.cavity.ui.navigationnext.navigator
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 

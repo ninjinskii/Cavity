@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.NavDirections
 import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.repository.BottleRepository
@@ -15,8 +16,6 @@ import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.BaseViewModel
-import com.louis.app.cavity.ui.navigation.AppRoute
-import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.save
@@ -29,7 +28,12 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 
 sealed interface HomeEvent {
-    data class Navigation(val appRoute: AppRoute) : HomeEvent
+    /*data class NavigateToBottleDetails(val wineId: Long) : HomeEvent
+    data class NavigateToWineOptions(val wine: Wine, val storageLocationActive: Boolean) :
+        HomeEvent
+
+    data class NavigateToAddBottle(val wineId: Long) : HomeEvent*/
+    data class Navigation(val direction: NavDirections) : HomeEvent
     object WinesObservingStarted : HomeEvent
 }
 
@@ -162,8 +166,8 @@ class HomeViewModel(
 
         val wineId = wineWithBottles.wine.id
         val route = when {
-            isEmptyWine(wineWithBottles) -> HomeRoute.AddBottle(wineId)
-            else -> HomeRoute.BottleDetails(wineId)
+            isEmptyWine(wineWithBottles) -> FragmentHomeDirections.homeToAddBottle(wineId)
+            else -> FragmentHomeDirections.homeToBottleDetails(wineId)
         }
 
         emitEvent(HomeEvent.Navigation(route))
@@ -172,7 +176,9 @@ class HomeViewModel(
     fun handleWineLongClick(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
         checkCounty(wineWithBottles, fragmentCountyId)
         val storageLocationActive = _storageLocation.value != null
-        val route = HomeRoute.WineOptions(wineWithBottles.wine, storageLocationActive)
+        val wine = wineWithBottles.wine
+        val route =
+            FragmentHomeDirections.homeToWineOptions(wine.id, wine.countyId, storageLocationActive)
         emitEvent(HomeEvent.Navigation(route))
     }
 

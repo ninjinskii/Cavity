@@ -33,6 +33,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -40,7 +42,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.PriceByCurrency
 import com.louis.app.cavity.ui.ActivityMain
-import com.louis.app.cavity.ui.navigation.navigateUp
+import com.louis.app.cavity.ui.navigationnext.navigateUp
 import kotlin.math.max
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -257,8 +259,8 @@ fun BottomSheetBehavior<ConstraintLayout>.toggleState() {
             BottomSheetBehavior.STATE_EXPANDED
 }
 
-// Navigation
-/*fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false) {
+// NavigateToBottleDetails
+fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false) {
     if (!hideDrawerToggle) {
         val drawer = (activity as ActivityMain).findViewById<DrawerLayout>(R.id.drawer)
         val navController = findNavController()
@@ -267,7 +269,7 @@ fun BottomSheetBehavior<ConstraintLayout>.toggleState() {
         toolbar.title = getString(R.string.app_name)
         toolbar.setNavigationOnClickListener(null)
     }
-}*/
+}
 
 fun Fragment.setupToolbar(toolbar: Toolbar, @StringRes title: Int) {
     val title = toolbar.context.getString(title)

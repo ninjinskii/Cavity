@@ -1,4 +1,4 @@
-package com.louis.app.cavity.ui.navigation
+package com.louis.app.cavity.ui.navigationnext
 
 import android.content.Context
 import android.os.Bundle
@@ -9,8 +9,27 @@ import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
+import com.louis.app.cavity.ui.navigation.AppNavigator
+import com.louis.app.cavity.ui.navigation.AppRoute
+import com.louis.app.cavity.ui.navigation.NavComponentAccountRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentAddWineRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentBottleDetailsRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentGlobalRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentHomeRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentImportExportRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentLoginRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentNavigator
+import com.louis.app.cavity.ui.navigation.NavComponentSearchRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentStatDetailsRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentStatRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentTastingRouteResolver
+import com.louis.app.cavity.ui.navigation.NavComponentWineOptionsRouteResolver
+import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.transition.MaterialFragmentTransitionManager
-import kotlin.getValue
+import com.louis.app.cavity.ui.navigation.transition.TransitionSpec
 
 class Navigator(private val activity: AppCompatActivity) {
     private val menus = mutableListOf<Menu>()
@@ -34,6 +53,35 @@ class Navigator(private val activity: AppCompatActivity) {
                 NavComponentLoginRouteResolver()
             )
         )
+    }
+
+    fun navigate2(direction: NavDirections, fragment: Fragment, sharedElement: View? = null) {
+        if (sharedElement != null) {
+            require(sharedElement.transitionName.isNotBlank()) {
+                "Unable to find a transition name for the given shared element: $sharedElement"
+            }
+        }
+        val id = direction.actionId
+        val spec =
+            TransitionRegistry.a[id] ?: NavTransitionAnimations(TransitionSpec.FadeThrough, null)
+
+        val extras = sharedElement?.let {
+            FragmentNavigatorExtras(sharedElement to sharedElement.transitionName)
+        }
+
+        fragmentTransitionManager.configureFragment(fragment, spec)
+
+//        fragmentTransitionManager.applyTransition(fragment, spec, navigatingForward = true)
+        /*sharedSpec?.let {
+            fragmentTransitionManager.applySharedTransition(fragment, it)
+        }*/
+//        fragmentTransitionManager.saveState(fragment, "transition-out", spec)
+
+        if (extras != null) {
+            fragment.findNavController().navigate(direction, extras)
+        } else {
+            fragment.findNavController().navigate(direction)
+        }
     }
 
     fun navigate(route: AppRoute, sharedElement: View? = null) {

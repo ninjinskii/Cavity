@@ -1,9 +1,12 @@
-package com.louis.app.cavity.ui.navigation
+package com.louis.app.cavity.ui.navigationnext
 
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import com.louis.app.cavity.ui.navigation.AppRoute
+import com.louis.app.cavity.ui.navigation.NavigationProvider
 import com.louis.app.cavity.util.getParcelableCompat
 
 val Fragment.navigator: Navigator
@@ -15,6 +18,10 @@ val Fragment.navigator: Navigator
 
 fun Fragment.navigate(route: AppRoute, sharedElement: View? = null) {
     navigator.navigate(route, this, sharedElement)
+}
+
+fun Fragment.navigate2(direction: NavDirections, sharedElement: View? = null) {
+    navigator.navigate2(direction, this, sharedElement)
 }
 
 fun Fragment.popBackStack() {

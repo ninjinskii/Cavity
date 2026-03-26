@@ -31,10 +31,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.louis.app.cavity.ui.home.FragmentHome.Companion.ADD_WINE_RESULT_KEY
 import com.louis.app.cavity.ui.navigation.AddWineRoute
-import com.louis.app.cavity.ui.navigation.navigateUp
-import com.louis.app.cavity.ui.navigation.fragmentResultListener
-import com.louis.app.cavity.ui.navigation.navigate
-import com.louis.app.cavity.ui.navigation.putFragmentResult
+import com.louis.app.cavity.ui.navigationnext.navigateUp
+import com.louis.app.cavity.ui.navigationnext.fragmentResultListener
+import com.louis.app.cavity.ui.navigationnext.navigate
+import com.louis.app.cavity.ui.navigationnext.putFragmentResult
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 

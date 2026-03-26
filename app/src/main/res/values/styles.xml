@@ -235,7 +235,7 @@
         <item name="android:textAppearance">@style/TextAppearance.Cavity.Body1</item>
     </style>
 
-    <!-- Navigation View -->
+    <!-- NavigateToBottleDetails View -->
     <style name="Widget.Cavity.NavigationView" parent="Widget.MaterialComponents.NavigationView">
         <item name="itemTextAppearance">?attr/textAppearanceBody1</item>
         <item name="itemShapeFillColor">@android:color/transparent</item>

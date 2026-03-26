@@ -38,8 +38,8 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import androidx.core.graphics.drawable.toDrawable
-import com.louis.app.cavity.ui.navigation.navigateUp
-import com.louis.app.cavity.ui.navigation.putFragmentResult
+import com.louis.app.cavity.ui.navigationnext.navigateUp
+import com.louis.app.cavity.ui.navigationnext.putFragmentResult
 import kotlinx.parcelize.Parcelize
 
 class FragmentCamera : Fragment(R.layout.fragment_camera) {

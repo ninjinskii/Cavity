@@ -17,7 +17,7 @@ import com.louis.app.cavity.domain.Environment
 import com.louis.app.cavity.domain.worker.UploadWorker
 import com.louis.app.cavity.ui.navigation.ImportExportRoute
 import com.louis.app.cavity.ui.navigation.NavigationDestination
-import com.louis.app.cavity.ui.navigation.navigate
+import com.louis.app.cavity.ui.navigationnext.navigate
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible

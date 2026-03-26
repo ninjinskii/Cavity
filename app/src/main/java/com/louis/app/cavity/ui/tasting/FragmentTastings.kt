@@ -15,7 +15,7 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
 import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.TastingRoute
-import com.louis.app.cavity.ui.navigation.navigate
+import com.louis.app.cavity.ui.navigationnext.navigate
 import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
 import com.louis.app.cavity.util.extractMargin
 import com.louis.app.cavity.util.prepareWindowInsets
