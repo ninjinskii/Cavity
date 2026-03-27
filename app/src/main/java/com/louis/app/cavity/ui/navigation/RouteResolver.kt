@@ -76,8 +76,6 @@ class NavComponentGlobalRouteResolver : NavComponentRouteResolver<GlobalRoute>()
         }
 
         fragment.popUpTo(id)
-
-//        fragment.navigate(id)
     }
 }
 

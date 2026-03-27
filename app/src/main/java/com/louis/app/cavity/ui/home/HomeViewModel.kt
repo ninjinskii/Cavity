@@ -112,7 +112,6 @@ class HomeViewModel(
     }
 
     fun setStorageLocation(bottleStorage: String?, currentCountyId: Long?) {
-//        savedStorageLocation = bottleStorage
         _storageLocation.value = bottleStorage
         countyIdBeforeStorageLocationChange = currentCountyId
     }

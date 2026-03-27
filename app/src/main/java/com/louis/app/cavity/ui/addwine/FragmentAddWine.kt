@@ -99,11 +99,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         observe()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-    }
-
     private fun applyInsets() {
         binding.appBar.toolbarLayout.prepareWindowInsets { view, _, left, top, right, _ ->
             view.updatePadding(left = left, top = top, right = right)
