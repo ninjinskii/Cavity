@@ -233,6 +233,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         // TODO: use BaseViewModelState and move logic to view model
         homeViewModel.storageLocation.asLiveData().observe(viewLifecycleOwner) { location ->
             if (location == null) {
+                updateToolbarTitle(getString(R.string.app_name))
                 return@observe
             }
 
@@ -244,10 +245,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
 
 
             val title = if (noLocationActive) getString(R.string.app_name) else location
-            findNavController().currentDestination?.label = title
-            activity?.setTitle(title)
-            val toolbar = binding.appBar.toolbar
-            toolbar.post { toolbar.title = title }
+            updateToolbarTitle(title)
         }
 
         val clearText = getString(R.string.all)
@@ -366,6 +364,13 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         if (position != -1) {
             _binding?.viewPager?.currentItem = position ?: return
         }
+    }
+
+    private fun updateToolbarTitle(title: String) {
+        findNavController().currentDestination?.label = title
+        activity?.setTitle(title)
+        val toolbar = binding.appBar.toolbar
+        toolbar.post { toolbar.title = title }
     }
 
     override fun getRecycledViewPool() = recyclePool
