@@ -27,6 +27,7 @@
                 app:argType="long" />
             <argument
                 android:name="bottleId"
+                android:defaultValue="-1L"
                 app:argType="long" />
         </action>
         <action
@@ -64,18 +65,8 @@
             android:name="countyId"
             app:argType="long" />
         <argument
-            android:name="wineName"
-            app:argType="string" />
-        <argument
-            android:name="wineNaming"
-            app:argType="string" />
-        <argument
-            android:name="isOrganic"
+            android:name="storageLocationEnabled"
             app:argType="boolean" />
-        <argument
-            android:name="color"
-            android:defaultValue="WHITE"
-            app:argType="com.louis.app.cavity.model.WineColor" />
         <action
             android:id="@+id/wineOptionsToEditWine"
             app:destination="@+id/add_wine_dest" />

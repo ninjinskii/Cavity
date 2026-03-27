@@ -44,7 +44,8 @@ interface CountyDao {
                   AND EXISTS (
                       SELECT 1 FROM bottle 
                       WHERE bottle.wine_id = wine.id 
-                        AND bottle.storage_location = :storageLocation
+                        AND bottle.storage_location =:storageLocation
+                        AND bottle.consumed = 0
                   )
             )
             ORDER BY pref_order

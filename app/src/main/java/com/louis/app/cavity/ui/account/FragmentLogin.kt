@@ -11,38 +11,29 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.navigation.LoginRoute
+import com.louis.app.cavity.ui.navigation.navigate
+import com.louis.app.cavity.ui.navigation.popBackStack
+import com.louis.app.cavity.ui.navigation.popUpTo
 import com.louis.app.cavity.ui.widget.Rule
-import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentLogin : Fragment(R.layout.fragment_login) {
-    companion object {
-        const val LOGIN_SUCCESSFUL: String = "com.louis.app.cavity.LOGIN_SUCCESSFUL"
-    }
-
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private val loginViewModel: LoginViewModel by activityViewModels()
-    private lateinit var savedStateHandle: SavedStateHandle
+    private val loginViewModel: LoginViewModel by activityViewModels { LoginViewModel.Factory }
     private lateinit var onBackPressedCallback: OnBackPressedCallback
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        TransitionHelper(this).setFadeThroughOnEnterAndExit()
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onBackPressedCallback = requireActivity().onBackPressedDispatcher.addCallback {
             remove()
-            findNavController().navigateUp()
+            popUpTo(R.id.home_dest, inclusive = false)
         }
     }
 
@@ -50,9 +41,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentLoginBinding.bind(view)
-        savedStateHandle = findNavController().previousBackStackEntry!!.savedStateHandle
-        savedStateHandle[LOGIN_SUCCESSFUL] = false
-
+        loginViewModel.saveLoginResult(false)
         setupNavigation(binding.appBar.toolbar)
 
         (binding.icon.drawable as AnimatedVectorDrawable).start()
@@ -84,15 +73,14 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
 
         loginViewModel.navigateToConfirm.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
-                val action = FragmentLoginDirections.loginToConfirm()
-                findNavController().navigate(action)
+                navigate(LoginRoute.ConfirmAccount)
             }
         }
 
         loginViewModel.account.observe(viewLifecycleOwner) {
             if (it != null) {
-                savedStateHandle[LOGIN_SUCCESSFUL] = true
-                findNavController().popBackStack()
+                loginViewModel.saveLoginResult(loginSuccessful = true)
+                popBackStack()
             }
         }
     }

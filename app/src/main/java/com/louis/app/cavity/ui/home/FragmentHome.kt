@@ -14,7 +14,11 @@ import androidx.core.view.marginRight
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
@@ -23,29 +27,36 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigationrail.NavigationRailView
 import com.google.android.material.transition.MaterialContainerTransform
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentHomeBinding
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.ui.addwine.FragmentAddWine
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
+import com.louis.app.cavity.ui.navigation.HomeRoute
+import com.louis.app.cavity.ui.navigation.navigate
+import com.louis.app.cavity.ui.navigation.fragmentResultListener
 import com.louis.app.cavity.util.*
+import kotlinx.coroutines.launch
 
-class FragmentHome : Fragment(R.layout.fragment_home) {
-
+class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
     companion object {
         const val VIEW_POOL_SIZE = 25
+        const val ADD_WINE_RESULT_KEY =
+            "com.louis.app.cavity.ui.home.FragmentHome.ADD_WINE_RESULT_KEY"
     }
 
-    private lateinit var transitionHelper: TransitionHelper
     private var tabAdapter: ScrollableTabAdapter<County>? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
     private val recyclePool by lazy {
         RecyclerView.RecycledViewPool().apply {
             setMaxRecycledViews(R.layout.item_wine, VIEW_POOL_SIZE)
         }
     }
+
+    private var pendingSharedElement: View? = null
+        get() = field.also { pendingSharedElement = null }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,27 +73,42 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // We need to do this in onViewCreated to ensure the right transition is selected when returning to this fragment
-        transitionHelper = TransitionHelper(this).apply {
-            setFadeThroughOnEnterAndExit()
-        }
         postponeEnterTransition()
 
         _binding = FragmentHomeBinding.bind(view)
 
-        binding.appBar.toolbar.doOnLayout {
+        val toolbar = binding.appBar.toolbar
+        toolbar.doOnLayout {
             val hasNavigationRail =
                 activity?.findViewById<NavigationRailView>(R.id.navigationRail) != null
 
-            setupNavigation(binding.appBar.toolbar, hasNavigationRail)
+            setupNavigation(toolbar, hasNavigationRail)
         }
 
         applyInsets()
+        listenToAddWineResult()
         setupScrollableTab()
         setViewPagerOrientation()
         observe()
         setListeners()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch {
+                    homeViewModel.event.collect {
+                        when (it) {
+                            is HomeEvent.Navigation -> navigate(it.appRoute, pendingSharedElement)
+                            HomeEvent.WinesObservingStarted -> {
+                                // Note that startPostponedEnterTransition() will wait for the next
+                                // layout pass to trigger animation. So, actually, calling this when
+                                // data is observed is the right moment
+                                startPostponedEnterTransition()
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun applyInsets() {
@@ -132,6 +158,19 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
     }
 
+    private fun listenToAddWineResult() {
+        fragmentResultListener<FragmentAddWine.Result>(ADD_WINE_RESULT_KEY) {
+            val (wineId, countyId) = it ?: return@fragmentResultListener
+            homeViewModel.notifyWineChange(wineId, countyId)
+        }
+    }
+
+    private fun checkScrollRequest() {
+        homeViewModel.viewState.lastWineChange?.let {
+            setCurrentCounty(it.countyId)
+        }
+    }
+
     private fun setupScrollableTab() {
         tabAdapter = ScrollableTabAdapter(
             onTabClick = { _, position ->
@@ -139,10 +178,13 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             },
             onLongTabClick = { county, position ->
                 showCountyDetails(position, county)
+            },
+            idToContent = { county ->
+                county.id to county
             }
         )
 
-        homeViewModel.getNonEmptyCounties().observe(viewLifecycleOwner) {
+        homeViewModel.nonEmptyCounties.observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
 
             with(binding) {
@@ -153,14 +195,11 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 }
 
                 tabAdapter?.submitList(it)
-                tab.setUpWithViewPager(viewPager)
+                tab.setupWithViewPager(viewPager)
 
                 (view?.parent as? ViewGroup)?.doOnPreDraw { _ ->
-                    homeViewModel.checkRememberedCountyBeforeStorageChange(it)
-                    startPostponedEnterTransition()
+                    homeViewModel.checkRememberedCountyBeforeStorageChange(it) // TODO: Not sure why this is on pre draw listener
                 }
-
-//                viewPager.offscreenPageLimit = 1
             }
         }
     }
@@ -191,15 +230,22 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             binding.countyDetails.vintages.setSlices(it, anim = true)
         }
 
-        homeViewModel.storageLocation.observe(viewLifecycleOwner) { location ->
-            if (location == getString(R.string.all)) {
-                homeViewModel.setStorageLocation(null, null)
-                activity?.setTitle(R.string.app_name)
-            } else if (location != null) {
-                activity?.setTitle(location)
-                val toolbar = binding.appBar.toolbar
-                toolbar.post { toolbar.title = location }
+        // TODO: use BaseViewModelState and move logic to view model
+        homeViewModel.storageLocation.asLiveData().observe(viewLifecycleOwner) { location ->
+            if (location == null) {
+                updateToolbarTitle(getString(R.string.app_name))
+                return@observe
             }
+
+            val noLocationActive = location == getString(R.string.all)
+
+            if (noLocationActive) {
+                homeViewModel.setStorageLocation(null, null)
+            }
+
+
+            val title = if (noLocationActive) getString(R.string.app_name) else location
+            updateToolbarTitle(title)
         }
 
         val clearText = getString(R.string.all)
@@ -216,27 +262,21 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 binding.viewPager.currentItem = index
             }
         }
-
-        homeViewModel.lastAddedWine.observe(viewLifecycleOwner) {
-            it?.peekContent()?.let { (_, county) ->
-                binding.viewPager.currentItem = county.prefOrder
-            }
-        }
     }
 
     private fun setListeners() {
         var currentCounty = 0L
 
-        binding.tab.addOnPageChangeListener {
+        binding.tab.setOnPageChangeListener {
             currentCounty = tabAdapter?.getItem(it)?.getItemId() ?: 0
         }
 
         binding.emptyState.setOnActionClickListener {
-            navigateToAddWine(currentCounty)
+            navigate(HomeRoute.AddWine(currentCounty), binding.appBar.toolbarLayout)
         }
 
         binding.fab.setOnClickListener {
-            navigateToAddWine(currentCounty)
+            navigate(HomeRoute.AddWine(currentCounty), binding.appBar.toolbarLayout)
         }
 
         binding.countyDetailsScrim.setOnClickListener {
@@ -250,10 +290,6 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
             .setItems(items.toTypedArray()) { _, selectedPosition ->
                 val countyId = binding.viewPager.adapter?.getItemId(binding.viewPager.currentItem)
                 homeViewModel.setStorageLocation(items[selectedPosition], countyId)
-                findNavController().run {
-                    popBackStack()
-                    navigate(R.id.home_dest)
-                }
             }
             .show()
     }
@@ -322,14 +358,33 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
     }
 
-    fun navigateToAddWine(countyId: Long) {
-        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = true)
+    private fun setCurrentCounty(countyId: Long) {
+        val position = (_binding?.viewPager?.adapter as? WinesPagerAdapter)?.getPosition(countyId)
 
-        val action = FragmentHomeDirections.homeToAddWine(countyId = countyId)
-        findNavController().navigate(action)
+        if (position != -1) {
+            _binding?.viewPager?.currentItem = position ?: return
+        }
     }
 
-    fun getRecycledViewPool() = recyclePool
+    private fun updateToolbarTitle(title: String) {
+        findNavController().currentDestination?.label = title
+        activity?.setTitle(title)
+        val toolbar = binding.appBar.toolbar
+        toolbar.post { toolbar.title = title }
+    }
+
+    override fun getRecycledViewPool() = recyclePool
+
+    override fun setPendingSharedElement(sharedElement: View) {
+        this.pendingSharedElement = sharedElement
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.viewPager.post {
+            checkScrollRequest()
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

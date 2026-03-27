@@ -9,19 +9,31 @@ import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.HomeRoute
+import com.louis.app.cavity.ui.navigation.navigator
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
     private val binding get() = _binding!!
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by viewModels(
+        ownerProducer = { fragmentWinesParent },
+        factoryProducer = { HomeViewModel.Factory }
+    )
+    private val countyId by lazy {
+        requireArguments().getLong(COUNTY_ID)
+    }
 
-    private var honeycombLayoutManager: HoneycombLayoutManager? = null
+    val fragmentWinesParent: FragmentWinesParent
+        get() = (parentFragment as? FragmentWinesParent)
+            ?: throw IllegalStateException(
+                "Parent fragment should implement FragmentWinesParent. It is $parentFragment"
+            )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,8 +68,12 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         val wineAdapter = WineRecyclerAdapter(
             icons,
-            TransitionHelper(requireParentFragment()),
-            isLightTheme
+            isLightTheme,
+            onItemClick = { wineWithBottles, itemView ->
+                fragmentWinesParent.setPendingSharedElement(itemView)
+                homeViewModel.handleWineClick(wineWithBottles, countyId)
+            },
+            onItemLongClick = { homeViewModel.handleWineLongClick(it, countyId) }
         ).apply {
             setHasStableIds(true)
         }
@@ -71,51 +87,49 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
                 HoneycombLayoutManager.Orientation.VERTICAL
             }
 
-        honeycombLayoutManager = HoneycombLayoutManager(colCount, orientation)
+        val honeycombLayoutManager = HoneycombLayoutManager(colCount, orientation).apply {
+            config.recycleOnDetach = false
+        }
 
         binding.wineList.apply {
             layoutManager = honeycombLayoutManager
-            setRecycledViewPool((parentFragment as FragmentHome).getRecycledViewPool())
-            setHasFixedSize(true)
             adapter = wineAdapter
+            setRecycledViewPool(fragmentWinesParent.getRecycledViewPool())
+            setHasFixedSize(true)
+            itemAnimator = null // Avoid double element artefact on shared element transition return
         }
 
         prePopulateRecyclerViewPool()
 
-        val countyId = arguments?.getLong(COUNTY_ID)
-
-        homeViewModel.getWinesWithBottlesByCounty(countyId ?: 0).observe(viewLifecycleOwner) {
+        homeViewModel.getWinesWithBottlesByCounty(countyId).observe(viewLifecycleOwner) {
             binding.emptyState.setVisible(it.isEmpty())
+            binding.wineList.post {
+                // Sets back the item animator after shared element transition occurred
+                // When scrolling really quickly, binding can be null when post happens
+                _binding?.wineList?.itemAnimator = DefaultItemAnimator()
+            }
+
             wineAdapter.submitList(it) {
-                if (homeViewModel.lastAddedWine.value != null) {
-                    scrollToWine(wineAdapter)
-                }
+                homeViewModel.notifyWineObservingStarted(countyId)
+                scrollToWine(wineAdapter)
             }
         }
     }
 
     private fun scrollToWine(adapter: WineRecyclerAdapter) {
-        val countyId = arguments?.getLong(COUNTY_ID)
-        val lastAddedWine = homeViewModel.lastAddedWine.value?.peekContent()
+        val (wineId, countyId) = homeViewModel.viewState.lastWineChange ?: return
 
-        if (lastAddedWine != null) {
-            val (wine, county) = lastAddedWine
+        if (countyId != this.countyId || wineId == -1L) {
+            return
+        }
 
-            if (county.id != countyId) {
-                return
-            }
+        for (i in 0 until adapter.itemCount) {
+            val adapterWineId = adapter.getItemId(i)
 
-            homeViewModel.lastAddedWine.value?.getContentIfNotHandled()?.let {
-                homeViewModel.clearLastAddedWine()
-
-                for (i in 0 until adapter.itemCount) {
-                    val wineId = adapter.getItemId(i)
-
-                    if (wineId == wine.id) {
-                        adapter.highlightPosition = i
-                        binding.wineList.smoothScrollToPosition(i)
-                    }
-                }
+            if (wineId == adapterWineId) {
+                homeViewModel.acknowledgeWineChange()
+                adapter.highlightPosition = i
+                binding.wineList.smoothScrollToPosition(i)
             }
         }
     }
@@ -137,32 +151,19 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
     private fun setListeners() {
         binding.emptyState.setOnActionClickListener {
-            (parentFragment as? FragmentHome)?.navigateToAddWine(
-                arguments?.getLong(COUNTY_ID) ?: return@setOnActionClickListener
-            )
+            navigator.navigate(HomeRoute.AddWine(countyId), requireParentFragment())
         }
-    }
-
-    override fun onPause() {
-        honeycombLayoutManager?.config?.skipNextRecycleOnDetach = true
-        super.onPause()
-    }
-
-    override fun onResume() {
-        honeycombLayoutManager?.config?.skipNextRecycleOnDetach = false
-        super.onResume()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        honeycombLayoutManager = null
+        binding.wineList.adapter = null
         _binding = null
     }
 
     companion object {
         private const val COUNTY_ID = "com.louis.app.cavity.ui.home.FragmentWines.COUNTY_ID"
 
-        // Used by WinesPagerAdapter
         fun newInstance(countyId: Long): FragmentWines {
             return FragmentWines().apply {
                 arguments = bundleOf(COUNTY_ID to countyId)

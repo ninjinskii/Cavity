@@ -125,7 +125,7 @@
                     app:layout_constraintStart_toStartOf="@id/backupStatus" />
 
                 <com.google.android.material.progressindicator.LinearProgressIndicator
-                    android:id="@+id/backupStatuProgressBar"
+                    android:id="@+id/backup_status_progress_bar"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:indeterminate="true"

@@ -13,20 +13,15 @@ import android.view.WindowManager
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.forEach
 import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.NavigationUiSaveStateControl
-import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
 import com.louis.app.cavity.ui.account.LoginViewModel
@@ -37,15 +32,26 @@ import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.themeColor
 import androidx.core.view.get
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.louis.app.cavity.ui.home.FragmentHome
+import com.louis.app.cavity.ui.navigation.GlobalRoute
+import com.louis.app.cavity.ui.navigation.NavigationProvider
+import com.louis.app.cavity.ui.navigation.Navigator
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-class ActivityMain : AppCompatActivity(), SnackbarProvider {
+class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var navHostFragment: Fragment
     private val addItemViewModel: AddItemViewModel by viewModels()
     private val tastingViewModel: TastingViewModel by viewModels()
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+    override val navigator = Navigator(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val isAndroid31 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
@@ -67,13 +73,29 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
         applyInsets()
-        polishAppSwitcherApparence()
+        polishAppSwitcherAppearance()
         setupNavigation()
         observe()
         setupOnBackPressed()
 
         if (hasNavigationRail()) {
             lockDrawer()
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                UiEventManager.events.collect {
+                    when (it) {
+                        is UiEvent.Snackbar -> showSnackbar(it.message, it.anchorViewId)
+                        is UiEvent.ActionSnackbar -> showSnackbar(
+                            it.message,
+                            it.anchorViewId,
+                            it.actionLabel,
+                            it.action
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -160,7 +182,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
 
     // We have to support old android 7.1 TaskDescription constructor
     @Suppress("deprecation")
-    private fun polishAppSwitcherApparence() {
+    private fun polishAppSwitcherAppearance() {
         val appName = getString(R.string.app_name)
         val bitmap = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
         setTaskDescription(
@@ -172,36 +194,24 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
         )
     }
 
-    @OptIn(NavigationUiSaveStateControl::class)
     private fun setupNavigation() {
-        navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment)!!
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment)!!
         val navController = navHostFragment.findNavController()
 
         binding.navView.apply {
             setupWithNavController(navController)
             setNavigationItemSelectedListener { item ->
-                NavigationUI.onNavDestinationSelected(item, navController, false)
+                navigator.navigate(GlobalRoute.To(item.itemId))
                 binding.drawer.close()
                 true
             }
         }
 
         binding.navigationRail?.apply {
-            setOnItemSelectedListener {
-                val fromHomeToHome =
-                    (navController.currentDestination?.id ?: 0) == R.id.home_dest &&
-                            it.itemId == R.id.home_dest
-
-                if (fromHomeToHome) {
-                    return@setOnItemSelectedListener false
-                }
-
-                NavigationUI.onNavDestinationSelected(it, navController, false)
+            setupWithNavController(navController)
+            setOnItemSelectedListener { item ->
+                navigator.navigate(GlobalRoute.To(item.itemId))
                 true
-            }
-
-            navController.addOnDestinationChangedListener { controller, _, _ ->
-                updateNavigationRailState(controller)
             }
         }
     }
@@ -233,9 +243,7 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     private fun showTastingIndicator(show: Boolean) {
         if (hasNavigationRail()) {
             binding.navigationRail!!.getOrCreateBadge(R.id.tasting_dest).apply {
-                backgroundColor =
-                    binding.navigationRail!!.context
-                        .themeColor(com.google.android.material.R.attr.colorPrimaryFixed)
+                backgroundColor = binding.navigationRail!!.context.getColor(R.color.cavity_gold)
                 isVisible = show
             }
         } else {
@@ -251,17 +259,6 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
 
     private fun lockDrawer() {
         binding.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-    }
-
-    private fun updateNavigationRailState(navController: NavController) {
-        val destination = navController.currentDestination ?: return
-
-        binding.navigationRail?.menu?.forEach { item ->
-            val destinations = generateSequence(destination) { it.parent }
-            if (destinations.any { it.id == item.itemId }) {
-                item.isChecked = true
-            }
-        }
     }
 
     private fun hasNavigationRail() = binding.navigationRail != null
@@ -290,13 +287,25 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
             } else {
                 isEnabled = false
                 onBackPressedDispatcher.onBackPressed()
-
-                if (hasNavigationRail()) {
-                    val navController = navHostFragment.findNavController()
-                    updateNavigationRailState(navController)
-                }
             }
         }
+    }
+
+    private fun showSnackbar(
+        @StringRes message: Int,
+        @IdRes anchorViewId: Int?,
+        @StringRes actionLabel: Int? = null,
+        action: (() -> Unit) = {}
+    ) {
+        val anchorView: View? = anchorViewId?.let { findViewById(it) }
+        binding.main.coordinator.showSnackbar(message, actionLabel, anchorView) { view ->
+            action.invoke()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        navigator.setup()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -305,10 +314,11 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider {
     }
 
     override fun onShowSnackbarRequested(stringRes: Int) {
-        val currentDestination = navHostFragment.findNavController().currentDestination
-        val isHome = currentDestination?.id == R.id.home_dest
-        val anchor = if (isHome) binding.main.snackbarAnchor else null
-
-        binding.main.coordinator.showSnackbar(stringRes, anchorView = anchor)
+        binding.root.post {
+            val currentDestination = navigator.getCurrentFragment()
+            val isHome = currentDestination is FragmentHome
+            val anchor = if (isHome) binding.main.snackbarAnchor else null
+            binding.main.coordinator.showSnackbar(stringRes, anchorView = anchor)
+        }
     }
 }

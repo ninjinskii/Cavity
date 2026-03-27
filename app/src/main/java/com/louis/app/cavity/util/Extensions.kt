@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
+import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -14,6 +15,7 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.use
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -28,6 +30,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -38,6 +41,8 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.PriceByCurrency
 import com.louis.app.cavity.ui.ActivityMain
 import kotlin.math.max
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 // Boolean and Int helpers for database compatibility
 fun Int.toBoolean() = this == 1
@@ -160,6 +165,14 @@ fun Context.themeColor(
 ): Int {
     return obtainStyledAttributes(intArrayOf(themeAttrId))
         .use { it.getColor(0, Color.MAGENTA) }
+}
+
+@ColorInt
+fun Context.requireThemeColor(
+    @AttrRes themeAttrId: Int
+): Int {
+    return obtainStyledAttributes(intArrayOf(themeAttrId))
+        .use { it.getColorOrThrow(0) }
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -286,6 +299,12 @@ fun View.prepareWindowInsets(
     }
 }
 
+// ViewModels
+infix fun <T> SavedStateHandle.save(key: String) = object : ReadWriteProperty<Any, T?> {
+    override fun getValue(thisRef: Any, property: KProperty<*>): T? = get(key)
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: T?) = set(key, value)
+}
+
 // Random
 fun List<PriceByCurrency>.join(): String {
     val builder = StringBuilder("")
@@ -299,4 +318,15 @@ fun List<PriceByCurrency>.join(): String {
     }
 
     return builder.toString()
+}
+
+inline fun <reified T> Bundle.getParcelableCompat(key: String): T? {
+    val isTiramisuOrHigher = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+    return if (isTiramisuOrHigher) {
+        getParcelable(key, T::class.java)
+    } else {
+        // Prior android version support
+        @Suppress("DEPRECATION")
+        getParcelable(key)
+    }
 }

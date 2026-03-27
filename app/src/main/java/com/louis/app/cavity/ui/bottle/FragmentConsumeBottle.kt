@@ -9,7 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentConsumeBottleBinding
 import com.louis.app.cavity.ui.DatePicker
@@ -19,7 +18,6 @@ import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerBottomSheet
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerView
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
-import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 
 class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
@@ -31,15 +29,6 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
     private val consumeGiftBottleViewModel: ConsumeGiftBottleViewModel by viewModels()
     private val friendPickerViewModel: FriendPickerViewModel by viewModels()
     private val args: FragmentConsumeBottleArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        TransitionHelper(this).apply {
-            setSharedAxisTransition(MaterialSharedAxis.Y, navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -88,6 +77,10 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
 
         friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {
             binding.friendPicker.setSelectedFriends(it)
+        }
+
+        consumeGiftBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
+            snackbarProvider.onShowSnackbarRequested(R.string.no_friend)
         }
     }
 

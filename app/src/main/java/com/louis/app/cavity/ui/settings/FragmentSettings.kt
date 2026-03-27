@@ -17,7 +17,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSettingsBinding
 import com.louis.app.cavity.domain.repository.PrefsRepository.Companion.MIN_TEMPLATE_SCALE
 import com.louis.app.cavity.ui.addwine.FragmentCamera.Companion.TEMPLATE_ROTATION
-import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -29,14 +28,6 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val settingsViewModel: SettingsViewModel by activityViewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        TransitionHelper(this).apply {
-            setFadeThrough(navigatingForward = false)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

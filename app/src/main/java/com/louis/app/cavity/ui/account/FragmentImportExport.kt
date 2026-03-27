@@ -9,16 +9,15 @@ import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.work.WorkInfo
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportExportBinding
 import com.louis.app.cavity.domain.Environment
 import com.louis.app.cavity.domain.worker.UploadWorker
+import com.louis.app.cavity.ui.navigation.ImportExportRoute
+import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -28,17 +27,9 @@ import com.robinhood.ticker.TickerUtils
 class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     private var _binding: FragmentImportExportBinding? = null
     private val binding get() = _binding!!
-    private val loginViewModel: LoginViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels { LoginViewModel.Factory }
     private val importExportViewModel: ImportExportViewModel by activityViewModels()
     private val args: FragmentImportExportArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        TransitionHelper(this).setSharedAxisTransition(
-            MaterialSharedAxis.Z,
-            navigatingForward = false
-        )
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -114,15 +105,20 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
 
     private fun observe() {
         loginViewModel.account.observe(viewLifecycleOwner) {
-            val fallback = getString(R.string.unknown)
-            binding.backup.text = getString(R.string.backup_device_name, it?.lastUser ?: fallback)
+            if (it == null) {
+                navigate(ImportExportRoute.Login)
+                return@observe
+            }
 
-            val date = DateFormatter.formatDate(it?.lastUpdateTime, "dd MMMM yyyy, HH:mm")
+            val fallback = getString(R.string.unknown)
+            binding.backup.text = getString(R.string.backup_device_name, it.lastUser ?: fallback)
+
+            val date = DateFormatter.formatDate(it.lastUpdateTime, "dd MMMM yyyy, HH:mm")
             binding.lastAction.text = getString(R.string.last_action, date)
         }
 
         importExportViewModel.health.observe(viewLifecycleOwner) { stringRes ->
-            changeWarningVisibilty(stringRes)
+            changeWarningVisibility(stringRes)
         }
 
         importExportViewModel.isLoading.observe(viewLifecycleOwner) {
@@ -131,8 +127,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
 
         importExportViewModel.navigateToLogin.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
-                val action = FragmentImportExportDirections.importExportToLogin()
-                findNavController().navigate(action)
+                navigate(ImportExportRoute.Login)
             }
         }
 
@@ -208,7 +203,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
 
     private fun setListeners() {
         binding.confirmDanger.setOnClickListener {
-            changeWarningVisibilty(null)
+            changeWarningVisibility(null)
         }
 
         binding.submit.setOnClickListener {
@@ -218,7 +213,7 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
         }
     }
 
-    private fun changeWarningVisibilty(@StringRes text: Int?) {
+    private fun changeWarningVisibility(@StringRes text: Int?) {
         val isWarn = text !== null
 
         with(binding) {

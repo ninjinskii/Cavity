@@ -10,15 +10,14 @@ import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
 import com.louis.app.cavity.db.dao.Year
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.StatRoute
+import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -27,15 +26,6 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
     private val statsViewModel: StatsViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        TransitionHelper(this).apply {
-            setFadeThrough(navigatingForward = false)
-            setSharedAxisTransition(MaterialSharedAxis.X, navigatingForward = true)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,6 +72,9 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             },
             onLongTabClick = { year, _ ->
                 statsViewModel.setComparisonYear(year)
+            },
+            idToContent = { year ->
+                year.year to year
             }
         )
 
@@ -92,7 +85,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         with(binding.years) {
             background = null // Remove background for elegant disappear animation
             adapter = tabAdapter
-            addOnTabChangeListener {
+            setOnTabChangeListener {
                 statsViewModel.setYear(tabAdapter.getItem(it))
             }
         }
@@ -129,12 +122,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         val statsAdapter = StatsRecyclerAdapter(
             onItemClicked = { itemBottlesIds, label ->
                 val statType = getString(statsViewModel.getStatTypeLabel())
-                val action = FragmentStatsDirections.statsToStatsDetails(
-                    "$statType - $label",
-                    itemBottlesIds.toLongArray()
-                )
-
-                findNavController().navigate(action)
+                val title = "$statType - $label"
+                navigate(StatRoute.StatDetails(title, itemBottlesIds))
             }
         )
 

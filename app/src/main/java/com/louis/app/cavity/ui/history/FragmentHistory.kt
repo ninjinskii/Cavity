@@ -45,21 +45,11 @@ import kotlinx.coroutines.launch
 
 class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var colorUtil: ColorUtil
-    private lateinit var transitionHelper: TransitionHelper
     private var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>? = null
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private val historyViewModel: HistoryViewModel by viewModels()
     private val args: FragmentHistoryArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        transitionHelper = TransitionHelper(this).apply {
-            setFadeThrough(navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

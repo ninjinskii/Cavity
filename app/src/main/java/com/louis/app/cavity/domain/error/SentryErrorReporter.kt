@@ -19,8 +19,8 @@ class SentryErrorReporter private constructor(context: Context) : ErrorReporter 
             val prefsRepository =
                 PrefsRepository.getInstance(context.applicationContext as Application)
 
-            if (!prefsRepository.getErrorReportingConsent()) {
-                return FakeErrorReporter()
+            if (!prefsRepository.getErrorReportingConsent() || BuildConfig.DEBUG) {
+                return LoggerErrorReporter()
             }
 
             return instance ?: synchronized(this) {

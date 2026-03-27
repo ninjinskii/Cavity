@@ -1,9 +1,9 @@
 package com.louis.app.cavity.ui.addwine
 
 import android.content.ActivityNotFoundException
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
@@ -15,51 +15,43 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAddWineBinding
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.ActivityMain
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
-import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
-import com.louis.app.cavity.ui.home.HomeViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import com.louis.app.cavity.ui.home.FragmentHome.Companion.ADD_WINE_RESULT_KEY
+import com.louis.app.cavity.ui.navigation.AddWineRoute
+import com.louis.app.cavity.ui.navigation.navigateUp
+import com.louis.app.cavity.ui.navigation.fragmentResultListener
+import com.louis.app.cavity.ui.navigation.navigate
+import com.louis.app.cavity.ui.navigation.putFragmentResult
+import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
-    private lateinit var snackbarProvider: SnackbarProvider
     private lateinit var pickImage: ActivityResultLauncher<Array<String>>
-    private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentAddWineBinding? = null
     private val binding get() = _binding!!
     private val addItemViewModel: AddItemViewModel by activityViewModels()
-    private val homeViewModel: HomeViewModel by activityViewModels()
     private val addWineViewModel: AddWineViewModel by viewModels()
     private val args: FragmentAddWineArgs by navArgs()
 
     companion object {
-        const val TAKEN_PHOTO_URI = "com.louis.app.cavity.ui.TAKEN_PHOTO_URI"
+        const val CAMERA_RESULT_KEY = "com.louis.app.cavity.ui.CAMERA_RESULT_KEY"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        transitionHelper = TransitionHelper(this).apply {
-            val transformOptions = TransitionHelper.ContainerTransformOptions(
-                Color.TRANSPARENT,
-                Color.TRANSPARENT
-            )
-
-            setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-            setContainerTransformTransition(options = transformOptions, enter = true) // Appbar
-        }
 
         pickImage = registerForActivityResult(ActivityResultContracts.OpenDocument()) { imageUri ->
             onImageSelected(imageUri)
@@ -78,7 +70,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         _binding = FragmentAddWineBinding.bind(view)
 
         setupNavigation(binding.appBar.toolbar)
-        snackbarProvider = activity as SnackbarProvider
 
         addWineViewModel.setCountyId(args.countyId)
 
@@ -86,7 +77,22 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
             binding.appBar.toolbar.title = getString(R.string.edit_wine_title)
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addWineViewModel.event.collect {
+                    when (it) {
+                        is AddWineEvent.WineChange -> {
+                            val result = Result(it.wine.id, it.wine.countyId)
+                            putFragmentResult(ADD_WINE_RESULT_KEY, result)
+                            navigateUp()
+                        }
+                    }
+                }
+            }
+        }
+
         applyInsets()
+        listenForCameraResult()
         inflateChips()
         initDropdown()
         setListeners()
@@ -102,6 +108,14 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         binding.nestedScrollView.prepareWindowInsets { view, _, left, _, right, bottom ->
             view.updatePadding(left = left, right = right, bottom = bottom)
             WindowInsetsCompat.CONSUMED
+        }
+    }
+
+    private fun listenForCameraResult() {
+        fragmentResultListener<FragmentCamera.Result>(CAMERA_RESULT_KEY) { result ->
+            result?.let {
+                addWineViewModel.setImage(it.imageUri)
+            }
         }
     }
 
@@ -174,14 +188,13 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         binding.buttonBrowsePhoto.setOnClickListener {
             try {
                 pickImage.launch(arrayOf("image/*"))
-            } catch (e: ActivityNotFoundException) {
+            } catch (_: ActivityNotFoundException) {
                 binding.coordinator.showSnackbar(R.string.no_file_explorer)
             }
         }
 
         binding.buttonTakePhoto.setOnClickListener {
-            val action = FragmentAddWineDirections.addWineToCamera()
-            findNavController().navigate(action)
+            navigate(AddWineRoute.Camera)
         }
 
         binding.buttonRemoveWineImage.setOnClickListener {
@@ -216,26 +229,6 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         addWineViewModel.image.observe(viewLifecycleOwner) {
             loadImage(it)
         }
-
-        addWineViewModel.wineUpdatedEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { (stringRes, wine) ->
-                homeViewModel.setLastAddedWine(wine)
-                findNavController().navigateUp()
-                snackbarProvider.onShowSnackbarRequested(stringRes)
-            }
-        }
-
-        addWineViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes)
-            }
-        }
-
-        findNavController()
-            .currentBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<String>(TAKEN_PHOTO_URI)
-            ?.observe(viewLifecycleOwner) { addWineViewModel.setImage(it) }
     }
 
     private fun onImageSelected(imageUri: Uri?) {
@@ -284,4 +277,7 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
         super.onDestroyView()
         _binding = null
     }
+
+    @Parcelize
+    data class Result(val wineId: Long, val countyId: Long) : Parcelable
 }

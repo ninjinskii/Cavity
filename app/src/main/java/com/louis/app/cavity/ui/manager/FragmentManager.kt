@@ -26,15 +26,6 @@ class FragmentManager : Fragment(R.layout.fragment_manager) {
     private val managerViewModel: ManagerViewModel by viewModels()
     private val addItemViewModel: AddItemViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        TransitionHelper(this).apply {
-            setFadeThrough(navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()

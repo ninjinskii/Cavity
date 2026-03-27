@@ -28,12 +28,6 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentInquireScheduleBinding.bind(view)
 
-        setupNavigation(binding.appBar.toolbar)
-
-        binding.appBar.toolbar.setNavigationOnClickListener {
-            stepperFragment?.goToPreviousPage()
-        }
-
         snackbarProvider = activity as SnackbarProvider
 
         applyInsets()
@@ -98,7 +92,10 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     }
 
     private fun setupToolbar() {
-        binding.appBar.toolbar.apply {
+        val toolbar = binding.appBar.toolbar
+        setupNavigation(toolbar)
+
+        toolbar.apply {
             inflateMenu(R.menu.confirm_menu)
             setOnMenuItemClickListener { menuItem ->
                 if (menuItem.itemId == R.id.buttonSubmit) {
@@ -108,6 +105,10 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
 
                 false
             }
+        }
+
+        toolbar.setNavigationOnClickListener {
+            stepperFragment?.goToPreviousPage()
         }
     }
 

@@ -13,20 +13,19 @@ import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.findNavController
 import androidx.work.WorkInfo
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAccountBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.domain.worker.AutoUploadWorker
 import com.louis.app.cavity.domain.worker.PruneWorker
 import com.louis.app.cavity.domain.worker.UploadWorker
+import com.louis.app.cavity.ui.navigation.AccountRoute
+import com.louis.app.cavity.ui.navigation.navigate
+import com.louis.app.cavity.ui.navigation.popUpTo
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.PermissionChecker
-import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
@@ -39,11 +38,9 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     private lateinit var writePermissionChecker: PermissionChecker
     private var _binding: FragmentAccountBinding? = null
     private val binding get() = _binding!!
-    private val loginViewModel: LoginViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels { LoginViewModel.Factory }
     private val settingsViewModel: SettingsViewModel by activityViewModels()
     private val importExportViewModel: ImportExportViewModel by activityViewModels()
-
-    private lateinit var transitionHelper: TransitionHelper
 
     private var wannaImport = false
 
@@ -51,14 +48,11 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         super.onCreate(savedInstanceState)
 
         postponeEnterTransition()
-        transitionHelper = TransitionHelper(this).apply {
-            setFadeThroughOnEnterAndExit()
-        }
 
         readPermissionChecker =
             object : PermissionChecker(this, arrayOf(READ_PERMISSION)) {
                 override fun onPermissionsAccepted() {
-                    navigateToImportFiles()
+                    navigate(AccountRoute.ImportFiles)
                 }
 
                 override fun onPermissionsDenied() {
@@ -68,7 +62,8 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
 
         writePermissionChecker = object : PermissionChecker(this, arrayOf(WRITE_PERMISSION)) {
             override fun onPermissionsAccepted() {
-                navigateToImportExport(wannaImport)
+                val route = if (wannaImport) AccountRoute.Import else AccountRoute.Export
+                navigate(route)
             }
 
             override fun onPermissionsDenied() {
@@ -76,30 +71,12 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
             }
         }
 
-        val currentBackStackEntry = findNavController().currentBackStackEntry!!
-        val savedStateHandle = currentBackStackEntry.savedStateHandle
-
-        savedStateHandle.getLiveData<Boolean>(FragmentLogin.LOGIN_SUCCESSFUL)
-            .observe(currentBackStackEntry) {
-                if (!it) {
-                    val startDestination = findNavController().graph.startDestinationId
-                    val action = FragmentAccountDirections.accountToHome()
-                    val navOptions = NavOptions.Builder()
-                        .setPopUpTo(startDestination, true)
-                        .build()
-
-                    findNavController().navigate(action, navOptions)
-                } else {
-                    startPostponedEnterTransition()
-                }
-            }
+        loginViewModel.saveLoginResult(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAccountBinding.bind(view)
-
-        setupNavigation(binding.toolbar)
 
         if (!settingsViewModel.getAutoBackup()) {
             updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_USER_DISABLED)
@@ -112,6 +89,14 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         initTickerView()
         setListeners()
         setupToolbar()
+
+        loginViewModel.loginResultLiveData().observe(viewLifecycleOwner) {
+            if (it ?: true) {
+                startPostponedEnterTransition()
+            } else {
+                popUpTo(R.id.home_dest, inclusive = false)
+            }
+        }
     }
 
     private fun applyInsets() {
@@ -135,8 +120,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
                 binding.lastBackupDate.text = date
                 startPostponedEnterTransition()
             } else {
-                val action = FragmentAccountDirections.accountToLogin()
-                findNavController().navigate(action)
+                navigate(AccountRoute.Login)
             }
         }
 
@@ -277,6 +261,8 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     }
 
     private fun setupToolbar() {
+        setupNavigation(binding.toolbar)
+
         binding.toolbar.setOnMenuItemClickListener {
             if (it.itemId == R.id.logout) {
                 loginViewModel.logout()
@@ -287,25 +273,6 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         }
     }
 
-    private fun navigateToImportExport(isImport: Boolean) {
-        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
-
-        val title = if (isImport) R.string.import_ else R.string.export
-        val action = FragmentAccountDirections.accountToImportExport(
-            isImport = isImport,
-            title = getString(title)
-        )
-
-        findNavController().navigate(action)
-    }
-
-    private fun navigateToImportFiles() {
-        transitionHelper.setSharedAxisTransition(MaterialSharedAxis.Z, true)
-
-        val action = FragmentAccountDirections.accountToImportFiles()
-        findNavController().navigate(action)
-    }
-
     private fun updateAutoBackupStatus(healthState: Int) {
         val success = healthState == AutoUploadWorker.HEALTH_STATE_SUCCESS
                 || healthState == AutoUploadWorker.HEALTH_STATE_USER_DISABLED
@@ -314,7 +281,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
             binding.backupStatusDetails.setVisible(!success)
         }
 
-        binding.backupStatuProgressBar.setVisible(false)
+        binding.backupStatusProgressBar.setVisible(false)
 
         val uiInfo: BackupStatusUi? = when (healthState) {
             AutoUploadWorker.HEALTH_STATE_SUCCESS ->
@@ -384,9 +351,9 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     }
 
     data class BackupStatusUi(
-        @StringRes val title: Int,
-        @StringRes val text: Int?,
-        @ColorRes val color: Int
+        @param:StringRes val title: Int,
+        @param:StringRes val text: Int?,
+        @param:ColorRes val color: Int
     )
 
     companion object {

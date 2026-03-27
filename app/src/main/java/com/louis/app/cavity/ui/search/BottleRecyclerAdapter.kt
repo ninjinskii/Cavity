@@ -28,7 +28,6 @@ class BottleRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottleViewHolder {
         val binding = ItemBottleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
         return BottleViewHolder(binding)
     }
 
@@ -50,8 +49,9 @@ class BottleRecyclerAdapter(
         fun bind(boundedBottle: BoundedBottle) {
             val (bottle, wine) = boundedBottle
             val wineColor = ContextCompat.getColor(itemView.context, wine.color.colorRes)
-
-            ViewCompat.setTransitionName(binding.root, bottle.id.toString())
+            val transition =
+                itemView.context.getString(R.string.transition_bottle_details, bottle.id)
+            ViewCompat.setTransitionName(binding.root, transition)
 
             with(binding) {
                 marker.setVisible(bottle.consumed.toBoolean())

@@ -6,12 +6,10 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.transition.MaterialSharedAxis
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.stepper.Stepper
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
-import com.louis.app.cavity.util.TransitionHelper
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentAddBottle : Stepper() {
@@ -27,15 +25,6 @@ class FragmentAddBottle : Stepper() {
         { FragmentInquireReviews() },
         { FragmentInquireOtherInfo() }
     )
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        TransitionHelper(this).apply {
-            setSharedAxisTransition(MaterialSharedAxis.Z, navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

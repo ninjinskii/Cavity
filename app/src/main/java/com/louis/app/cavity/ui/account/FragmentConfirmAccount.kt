@@ -2,26 +2,22 @@ package com.louis.app.cavity.ui.account
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.findNavController
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentConfirmAccountBinding
-import com.louis.app.cavity.util.TransitionHelper
+import com.louis.app.cavity.ui.navigation.popBackStack
+import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
 
 class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
     private var _binding: FragmentConfirmAccountBinding? = null
     private val binding get() = _binding!!
-    private val loginViewModel: LoginViewModel by activityViewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        TransitionHelper(this).setFadeThroughOnEnterAndExit()
-    }
+    private val loginViewModel: LoginViewModel by activityViewModels { LoginViewModel.Factory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,19 +25,22 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
 
         setupNavigation(binding.appBar.toolbar)
 
+        applyInsets()
         observe()
         setListeners()
+    }
+
+    private fun applyInsets() {
+        binding.appBar.toolbarLayout.prepareWindowInsets { view, _, left, top, right, _ ->
+            view.updatePadding(left = left, right = right, top = top)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun observe() {
         loginViewModel.confirmedEvent.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
-                val action = FragmentConfirmAccountDirections.confirmToAccount()
-                val navOptions = NavOptions.Builder()
-                    .setPopUpTo(R.id.fragmentLogin, true)
-                    .build()
-
-                findNavController().navigate(action, navOptions)
+                popBackStack()
             }
         }
 
@@ -64,16 +63,16 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
 
         binding.digit6.doAfterTextChanged {
             if (it.toString().isNotEmpty()) {
-                loginViewModel.confirmAccount(loadConfimrationCode())
+                loginViewModel.confirmAccount(loadConfirmationCode())
             }
         }
 
         binding.buttonSubmit.setOnClickListener {
-            loginViewModel.confirmAccount(loadConfimrationCode())
+            loginViewModel.confirmAccount(loadConfirmationCode())
         }
     }
 
-    private fun loadConfimrationCode(): String {
+    private fun loadConfirmationCode(): String {
         with(binding) {
             val inputs = listOf(digit1, digit2, digit3, digit4, digit5, digit6)
             var code = ""

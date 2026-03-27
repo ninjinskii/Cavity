@@ -2,18 +2,19 @@ package com.louis.app.cavity.ui.home
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ItemWineBinding
 import com.louis.app.cavity.db.dao.WineWithBottles
-import com.louis.app.cavity.util.TransitionHelper
 
 class WineRecyclerAdapter(
     private val drawables: Pair<Drawable, Drawable>,
-    private val transitionHelper: TransitionHelper,
-    private val isLightTheme: Boolean
+    private val isLightTheme: Boolean,
+    private val onItemClick: (wineWithBottles: WineWithBottles, itemView: View) -> Unit,
+    private val onItemLongClick: (wineWithBottles: WineWithBottles) -> Unit
 ) :
     ListAdapter<WineWithBottles, WineViewHolder>(WineItemDiffCallback()) {
 
@@ -21,12 +22,27 @@ class WineRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WineViewHolder {
         val binding = ItemWineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return WineViewHolder(binding, drawables, transitionHelper, isLightTheme)
+        return WineViewHolder(binding, drawables, isLightTheme)
     }
 
+    // Rebind click listeners every bind because listeners captures FragmentWines and view holders
+    // are shared between multiple FragmentWines, which can lead to crash when navigating or else
     override fun onBindViewHolder(holder: WineViewHolder, position: Int) {
+        val item = getItem(position)
         val highlight = highlightPosition == position
-        holder.bind(getItem(position), highlight)
+
+        with(holder) {
+            bind(item, highlight)
+
+            itemView.setOnClickListener {
+                onItemClick(item, itemView)
+            }
+
+            itemView.setOnLongClickListener {
+                onItemLongClick(item)
+                true
+            }
+        }
 
         if (highlight) {
             highlightPosition = null
@@ -36,6 +52,17 @@ class WineRecyclerAdapter(
     override fun getItemId(position: Int) = getItem(position).wine.id
 
     override fun getItemViewType(position: Int) = R.layout.item_wine
+
+    override fun onViewRecycled(holder: WineViewHolder) {
+        super.onViewRecycled(holder)
+
+        // We need to null out listeners, because they capture FragmentWines and view holders are
+        // shared between multiple FragmentWines, which can lead to crash when navigating or else
+        with(holder.itemView) {
+            setOnClickListener(null)
+            setOnLongClickListener(null)
+        }
+    }
 
     class WineItemDiffCallback : DiffUtil.ItemCallback<WineWithBottles>() {
         override fun areItemsTheSame(oldItem: WineWithBottles, newItem: WineWithBottles) =

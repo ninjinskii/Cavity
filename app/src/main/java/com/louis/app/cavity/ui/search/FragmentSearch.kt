@@ -30,8 +30,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -41,7 +39,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.DialogSortBinding
 import com.louis.app.cavity.databinding.FragmentSearchBinding
 import com.louis.app.cavity.databinding.SearchFiltersBinding
-import com.louis.app.cavity.db.dao.BoundedBottle
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.DatePicker
@@ -49,6 +46,9 @@ import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.manager.AddItemViewModel
+import com.louis.app.cavity.ui.navigation.SearchRoute
+import com.louis.app.cavity.ui.navigation.navigate
+import com.louis.app.cavity.ui.navigation.navigateUp
 import com.louis.app.cavity.ui.search.filters.*
 import com.louis.app.cavity.ui.search.widget.InsettableInfo
 import com.louis.app.cavity.ui.search.widget.RecyclerViewDisabler
@@ -86,7 +86,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
         const val PICK_MODE = "com.louis.app.cavity.ui.search.FragmentSearch.PICK_MODE"
     }
 
-    private lateinit var transitionHelper: TransitionHelper
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>? = null
@@ -113,10 +112,6 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        transitionHelper = TransitionHelper(this).apply {
-            setFadeThrough(navigatingForward = false)
-            setFadeThrough(navigatingForward = true)
-        }
 
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
@@ -128,9 +123,9 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             setHeaderShadow(binding.bottleList.canScrollVertically(-1))
         }
 
-        setupNavigation(binding.fakeToolbar)
-
         isPickMode = arguments?.getBoolean(PICK_MODE) == true
+
+        setupNavigation(binding.fakeToolbar)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_EXPANDED
@@ -142,7 +137,7 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             if (isPickMode) {
                 stepperFragment?.goToPreviousPage()
             } else {
-                findNavController().navigateUp()
+                navigateUp()
             }
         }
 
@@ -641,15 +636,10 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
     private fun initRecyclerView() {
         bottlesAdapter = BottleRecyclerAdapter(
-            onItemClicked = { itemView: View, bottle: BoundedBottle ->
-                val transition = getString(R.string.transition_bottle_details, bottle.wine.id)
-                val action =
-                    FragmentSearchDirections.searchToBottleDetails(bottle.wine.id, bottle.bottle.id)
-                val extra = FragmentNavigatorExtras(itemView to transition)
-
+            onItemClicked = { itemView: View, boundedBottle ->
+                val (bottle, wine) = boundedBottle
                 itemView.hideKeyboard()
-                transitionHelper.setElevationScale()
-                findNavController().navigate(action, extra)
+                navigate(SearchRoute.BottleDetails(wine.id, bottle.id), itemView)
             },
             isPickMode,
             onPicked = { bottle, isChecked ->
