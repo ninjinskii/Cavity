@@ -14,7 +14,7 @@ import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.ui.notifications.TastingAlarmScheduler
 import com.louis.app.cavity.util.prepareWindowInsets
-import com.louis.app.cavity.util.setupToolbar
+import com.louis.app.cavity.util.setupNavigation
 
 class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     private lateinit var snackbarProvider: SnackbarProvider
@@ -93,8 +93,8 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
 
     private fun setupToolbar() {
         val toolbar = binding.appBar.toolbar
+        setupNavigation(toolbar)
 
-        setupToolbar(toolbar, R.string.add_tasting)
         toolbar.apply {
             inflateMenu(R.menu.confirm_menu)
             setOnMenuItemClickListener { menuItem ->

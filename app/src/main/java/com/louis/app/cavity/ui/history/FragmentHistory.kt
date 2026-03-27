@@ -40,19 +40,16 @@ import kotlin.math.min
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import com.louis.app.cavity.ui.navigation.NavigationDestination
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class FragmentHistory : Fragment(R.layout.fragment_history), NavigationDestination {
+class FragmentHistory : Fragment(R.layout.fragment_history) {
     private lateinit var colorUtil: ColorUtil
     private var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>? = null
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
     private val historyViewModel: HistoryViewModel by viewModels()
     private val args: FragmentHistoryArgs by navArgs()
-
-    override val menuDestinationId = R.id.history_dest
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +58,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history), NavigationDestinati
 
         _binding = FragmentHistoryBinding.bind(view)
 
-        setupToolbar(binding.toolbar, R.string.history)
+        setupNavigation(binding.toolbar)
 
         colorUtil = ColorUtil(requireContext())
 

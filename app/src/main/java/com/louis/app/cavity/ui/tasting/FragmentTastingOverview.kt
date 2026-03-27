@@ -18,24 +18,19 @@ import com.louis.app.cavity.databinding.FragmentTastingOverviewBinding
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addtasting.SpaceGridItemDecoration
-import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.popBackStack
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupToolbar
+import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
-class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview),
-    NavigationDestination {
-
+class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
     private lateinit var snackbarProvider: SnackbarProvider
     private var _binding: FragmentTastingOverviewBinding? = null
     private val binding get() = _binding!!
     private val tastingOverviewViewModel: TastingOverviewViewModel by viewModels()
     private val args: FragmentTastingOverviewArgs by navArgs()
-
-    override val menuDestinationId = R.id.tasting_dest
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,7 +43,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview),
 
         snackbarProvider = activity as SnackbarProvider
 
-        setupToolbar(binding.appBar.toolbar, args.opportunity)
+        setupNavigation(binding.appBar.toolbar)
         tastingOverviewViewModel.start(args.tastingId)
 
         applyInsets()

@@ -16,25 +16,22 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
 import com.louis.app.cavity.db.dao.Year
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
-import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.StatRoute
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupToolbar
+import com.louis.app.cavity.util.setupNavigation
 
-class FragmentStats : Fragment(R.layout.fragment_stats), NavigationDestination {
+class FragmentStats : Fragment(R.layout.fragment_stats) {
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
     private val statsViewModel: StatsViewModel by viewModels()
-
-    override val menuDestinationId = R.id.stats_dest
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentStatsBinding.bind(view)
 
-        setupToolbar(binding.toolbar, R.string.stats)
+        setupNavigation(binding.toolbar)
 
         applyInsets()
         setupScrollableTab()

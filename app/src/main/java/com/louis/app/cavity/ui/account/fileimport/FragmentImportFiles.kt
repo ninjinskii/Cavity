@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportFilesBinding
 import com.louis.app.cavity.ui.ActivityMain
-import com.louis.app.cavity.util.setupToolbar
+import com.louis.app.cavity.util.prepareWindowInsets
+import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 
 class FragmentImportFiles : Fragment(R.layout.fragment_import_files) {
@@ -32,10 +35,18 @@ class FragmentImportFiles : Fragment(R.layout.fragment_import_files) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentImportFilesBinding.bind(view)
 
-        setupToolbar(binding.appBar.toolbar, R.string.file_import)
+        setupNavigation(binding.appBar.toolbar)
 
+        applyInsets()
         observe()
         setListeners()
+    }
+
+    private fun applyInsets() {
+        binding.appBar.toolbarLayout.prepareWindowInsets { view, _, left, top, right, _ ->
+            view.updatePadding(left = left, right = right, top = top)
+            WindowInsetsCompat.CONSUMED
+        }
     }
 
     private fun observe() {

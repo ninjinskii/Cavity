@@ -21,7 +21,6 @@ import com.louis.app.cavity.domain.worker.AutoUploadWorker
 import com.louis.app.cavity.domain.worker.PruneWorker
 import com.louis.app.cavity.domain.worker.UploadWorker
 import com.louis.app.cavity.ui.navigation.AccountRoute
-import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.ui.navigation.popUpTo
 import com.louis.app.cavity.ui.settings.SettingsViewModel
@@ -29,12 +28,12 @@ import com.louis.app.cavity.util.DateFormatter
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupToolbar
+import com.louis.app.cavity.util.setupNavigation
 import com.louis.app.cavity.util.showSnackbar
 import com.louis.app.cavity.util.spToPx
 import com.robinhood.ticker.TickerUtils
 
-class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestination {
+class FragmentAccount : Fragment(R.layout.fragment_account) {
     private lateinit var readPermissionChecker: PermissionChecker
     private lateinit var writePermissionChecker: PermissionChecker
     private var _binding: FragmentAccountBinding? = null
@@ -44,8 +43,6 @@ class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestinati
     private val importExportViewModel: ImportExportViewModel by activityViewModels()
 
     private var wannaImport = false
-
-    override val menuDestinationId = R.id.account_dest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -264,7 +261,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestinati
     }
 
     private fun setupToolbar() {
-        setupToolbar(binding.toolbar, R.string.cavity_account)
+        setupNavigation(binding.toolbar)
 
         binding.toolbar.setOnMenuItemClickListener {
             if (it.itemId == R.id.logout) {
@@ -284,7 +281,7 @@ class FragmentAccount : Fragment(R.layout.fragment_account), NavigationDestinati
             binding.backupStatusDetails.setVisible(!success)
         }
 
-        binding.backupStatuProgressBar.setVisible(false)
+        binding.backupStatusProgressBar.setVisible(false)
 
         val uiInfo: BackupStatusUi? = when (healthState) {
             AutoUploadWorker.HEALTH_STATE_SUCCESS ->

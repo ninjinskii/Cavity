@@ -1,12 +1,10 @@
 package com.louis.app.cavity.ui.home
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,22 +16,15 @@ import com.louis.app.cavity.databinding.BottomSheetWineOptionsBinding
 import com.louis.app.cavity.model.Wine
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.home.widget.WineOptionsViewModel
-import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.WineOptionsRoute
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.launch
 
-class WineOptionsBottomSheet : BottomSheetDialogFragment(), NavigationDestination {
+class WineOptionsBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetWineOptionsBinding? = null
     private val binding get() = _binding!!
-
-    override val menuDestinationId = R.id.home_dest
-
-    /*private val wineOptionsViewModel: WineOptionsViewModel by viewModels(
-        factoryProducer = { WineOptionsViewModel.Factory }
-    )*/
     private val wineOptionsViewModel: WineOptionsViewModel by viewModels {
         WineOptionsViewModel.Factory
     }
@@ -102,7 +93,6 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment(), NavigationDestinatio
 
     override fun onDestroyView() {
         super.onDestroyView()
-        requireActivity().setTitle("aaaaaaaaaaaaaaaaa")
         _binding = null
     }
 }

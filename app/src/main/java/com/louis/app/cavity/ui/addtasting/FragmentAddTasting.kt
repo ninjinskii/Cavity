@@ -1,14 +1,11 @@
 package com.louis.app.cavity.ui.addtasting
 
 import androidx.core.os.bundleOf
-import com.louis.app.cavity.R
-import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.search.FragmentSearch
 import com.louis.app.cavity.ui.search.FragmentSearch.Companion.PICK_MODE
 import com.louis.app.cavity.ui.stepper.Stepper
 
-class FragmentAddTasting : Stepper(), NavigationDestination {
-    override val menuDestinationId = R.id.tasting_dest
+class FragmentAddTasting : Stepper() {
     override val showStepperProgress = false
     override val steps = listOf(
         { FragmentInquireTastingInfo() },

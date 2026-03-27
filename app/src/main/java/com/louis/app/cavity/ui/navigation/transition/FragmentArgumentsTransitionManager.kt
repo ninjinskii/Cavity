@@ -6,6 +6,10 @@ import androidx.fragment.app.Fragment
 import com.louis.app.cavity.ui.navigation.AppRoute
 import com.louis.app.cavity.util.getParcelableCompat
 
+/**
+ * A Fragment transition manager that save its state into fragment arguments, so transitions can be
+ * reapplied after configuration change / process death even if fragment is not on screen
+ */
 abstract class FragmentArgumentsTransitionManager : FragmentTransitionManager {
     override var pendingDestinationTransition: TransitionSpec = TransitionSpec.None
     override var pendingSharedElementDestinationTransition: SharedElementTransitionSpec =

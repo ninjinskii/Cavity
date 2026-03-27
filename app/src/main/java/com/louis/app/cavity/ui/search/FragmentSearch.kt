@@ -46,7 +46,6 @@ import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.addtasting.AddTastingViewModel
 import com.louis.app.cavity.ui.manager.AddItemViewModel
-import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.SearchRoute
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.ui.navigation.navigateUp
@@ -66,7 +65,7 @@ import kotlin.math.min
 /**
  * This fragment is used as step when adding tasting
  */
-class FragmentSearch : Step(R.layout.fragment_search), NavigationDestination {
+class FragmentSearch : Step(R.layout.fragment_search) {
     companion object {
         /* Saved state */
         private const val SLIDER_VINTAGE_START = "com.louis.app.cavity.SLIDER_VINTAGE_START"
@@ -111,8 +110,6 @@ class FragmentSearch : Step(R.layout.fragment_search), NavigationDestination {
     private var datePickerBeyond: DatePicker? = null
     private var datePickerUntil: DatePicker? = null
 
-    override val menuDestinationId = R.id.search_dest
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -128,8 +125,7 @@ class FragmentSearch : Step(R.layout.fragment_search), NavigationDestination {
 
         isPickMode = arguments?.getBoolean(PICK_MODE) == true
 
-        val title = if (isPickMode) R.string.selection else R.string.search
-        setupToolbar(binding.fakeToolbar, title)
+        setupNavigation(binding.fakeToolbar)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet).apply {
             state = BottomSheetBehavior.STATE_EXPANDED

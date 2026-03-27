@@ -15,22 +15,19 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.navigation.LoginRoute
-import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.ui.navigation.popBackStack
 import com.louis.app.cavity.ui.navigation.popUpTo
 import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupToolbar
+import com.louis.app.cavity.util.setupNavigation
 
-class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
+class FragmentLogin : Fragment(R.layout.fragment_login) {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels { LoginViewModel.Factory }
     private lateinit var onBackPressedCallback: OnBackPressedCallback
-
-    override val menuDestinationId = R.id.account_dest
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -45,7 +42,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login), NavigationDestination {
 
         _binding = FragmentLoginBinding.bind(view)
         loginViewModel.saveLoginResult(false)
-        setupToolbar(binding.appBar.toolbar, R.string.cavity_account)
+        setupNavigation(binding.appBar.toolbar)
 
         (binding.icon.drawable as AnimatedVectorDrawable).start()
 

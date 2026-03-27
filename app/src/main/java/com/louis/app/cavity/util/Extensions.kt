@@ -33,6 +33,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -258,7 +260,7 @@ fun BottomSheetBehavior<ConstraintLayout>.toggleState() {
 }
 
 // Navigation
-/*fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false) {
+fun Fragment.setupNavigation(toolbar: Toolbar, hideDrawerToggle: Boolean = false) {
     if (!hideDrawerToggle) {
         val drawer = (activity as ActivityMain).findViewById<DrawerLayout>(R.id.drawer)
         val navController = findNavController()
@@ -266,36 +268,6 @@ fun BottomSheetBehavior<ConstraintLayout>.toggleState() {
     } else {
         toolbar.title = getString(R.string.app_name)
         toolbar.setNavigationOnClickListener(null)
-    }
-}*/
-
-fun Fragment.setupToolbar(toolbar: Toolbar, @StringRes title: Int) {
-    val title = toolbar.context.getString(title)
-    setupToolbar(toolbar, title)
-}
-
-fun Fragment.setupToolbar(toolbar: Toolbar, title: String) {
-    val isTopLevel = parentFragment?.parentFragment == null &&
-            parentFragment?.childFragmentManager?.backStackEntryCount == 0
-
-    val drawable = DrawerArrowDrawable(toolbar.context).apply {
-        progress = if (isTopLevel) 0f else 1f
-    }
-
-    toolbar.title = title
-    toolbar.navigationIcon = drawable
-    toolbar.setNavigationOnClickListener {
-        if (isTopLevel) {
-            activity?.findViewById<DrawerLayout>(R.id.drawer)?.apply {
-                if (isDrawerOpen(GravityCompat.START)) {
-                    closeDrawer(GravityCompat.START)
-                } else {
-                    openDrawer(GravityCompat.START)
-                }
-            }
-        } else {
-            navigateUp()
-        }
     }
 }
 

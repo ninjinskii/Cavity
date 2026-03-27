@@ -9,24 +9,21 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentConfirmAccountBinding
-import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.popBackStack
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
-import com.louis.app.cavity.util.setupToolbar
+import com.louis.app.cavity.util.setupNavigation
 
-class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account), NavigationDestination {
+class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
     private var _binding: FragmentConfirmAccountBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels { LoginViewModel.Factory }
-
-    override val menuDestinationId = R.id.account_dest
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentConfirmAccountBinding.bind(view)
 
-        setupToolbar(binding.appBar.toolbar, R.string.confirm_account)
+        setupNavigation(binding.appBar.toolbar)
 
         applyInsets()
         observe()

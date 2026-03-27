@@ -33,13 +33,12 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.ui.addwine.FragmentAddWine
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.ui.navigation.HomeRoute
-import com.louis.app.cavity.ui.navigation.NavigationDestination
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.ui.navigation.fragmentResultListener
 import com.louis.app.cavity.util.*
 import kotlinx.coroutines.launch
 
-class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, NavigationDestination {
+class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
     companion object {
         const val VIEW_POOL_SIZE = 25
         const val ADD_WINE_RESULT_KEY =
@@ -58,8 +57,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
 
     private var pendingSharedElement: View? = null
         get() = field.also { pendingSharedElement = null }
-
-    override val menuDestinationId = R.id.home_dest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,15 +77,12 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent, Navi
 
         _binding = FragmentHomeBinding.bind(view)
 
-        binding.appBar.toolbar.doOnLayout {
+        val toolbar = binding.appBar.toolbar
+        toolbar.doOnLayout {
             val hasNavigationRail =
                 activity?.findViewById<NavigationRailView>(R.id.navigationRail) != null
 
-            if (!hasNavigationRail) {
-                setupToolbar(binding.appBar.toolbar, R.string.app_name)
-            } else {
-                binding.appBar.toolbar.navigationIcon = null
-            }
+            setupNavigation(toolbar, hasNavigationRail)
         }
 
         applyInsets()

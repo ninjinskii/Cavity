@@ -35,6 +35,8 @@ import androidx.core.view.get
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.louis.app.cavity.ui.home.FragmentHome
 import com.louis.app.cavity.ui.navigation.GlobalRoute
 import com.louis.app.cavity.ui.navigation.NavigationProvider
@@ -193,10 +195,12 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
     }
 
     private fun setupNavigation() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment)!!
+        val navController = navHostFragment.findNavController()
+
         binding.navView.apply {
-            navigator.syncMenu(menu)
+            setupWithNavController(navController)
             setNavigationItemSelectedListener { item ->
-                item.isChecked = true
                 navigator.navigate(GlobalRoute.To(item.itemId))
                 binding.drawer.close()
                 true
@@ -204,9 +208,8 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
         }
 
         binding.navigationRail?.apply {
-            navigator.syncMenu(menu)
+            setupWithNavController(navController)
             setOnItemSelectedListener { item ->
-                item.isChecked = true
                 navigator.navigate(GlobalRoute.To(item.itemId))
                 true
             }

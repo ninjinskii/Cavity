@@ -2,10 +2,8 @@ package com.louis.app.cavity.ui.navigation
 
 import android.content.Context
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -13,7 +11,6 @@ import com.louis.app.cavity.ui.navigation.transition.MaterialFragmentTransitionM
 import kotlin.getValue
 
 class Navigator(private val activity: AppCompatActivity) {
-    private val menus = mutableListOf<Menu>()
     private val fragmentTransitionManager = MaterialFragmentTransitionManager()
 
     //    private val sharedViewModel by lazy { ViewModelProvider(activity, SharedViewModel.Factory)[SharedViewModel::class.java] }
@@ -60,10 +57,6 @@ class Navigator(private val activity: AppCompatActivity) {
         appNavigator.popUpTo(fragment, destinationId, inclusive)
     }
 
-    fun syncMenu(vararg menu: Menu) {
-        this.menus.addAll(menu)
-    }
-
     fun setup() {
         val started = activity.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
         require(started) {
@@ -96,7 +89,6 @@ class Navigator(private val activity: AppCompatActivity) {
                     fragment: Fragment
                 ) {
                     fragmentTransitionManager.restoreState(fragment)
-                    updateMenus(fragment)
                 }
             }, false
         )
@@ -104,17 +96,6 @@ class Navigator(private val activity: AppCompatActivity) {
 
     fun getCurrentFragment(): Fragment? {
         return appNavigator.getPrimaryNavigationFragment(activity)
-    }
-
-    private fun updateMenus(fragment: Fragment) {
-        val isNavigationDestination = fragment is NavigationDestination
-        menus.forEach { menu ->
-            if (isNavigationDestination) {
-                menu.findItem(fragment.menuDestinationId)?.isChecked = true
-            } else {
-                menu.forEach { it.isChecked = false }
-            }
-        }
     }
 
     private fun navigateInternal(route: AppRoute, fragment: Fragment, sharedElement: View? = null) {
