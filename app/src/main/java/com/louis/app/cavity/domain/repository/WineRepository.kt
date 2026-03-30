@@ -25,6 +25,8 @@ class WineRepository private constructor(app: Application) : Repository(app) {
 
     suspend fun hideWineById(wineId: Long) = wineDao.hideWineById(wineId)
 
+    suspend fun deleteWine(wine: Wine) = wineDao.deleteWine(wine)
+
     suspend fun deleteWineById(wineId: Long) = wineDao.deleteWineById(wineId)
 
     fun getWineById(wineId: Long) = wineDao.getWineById(wineId)

@@ -10,6 +10,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.delegates.RemoveWine
 import com.louis.app.cavity.domain.delegates.RemoveWineUseCase
+import com.louis.app.cavity.domain.delegates.UseCaseResult
+import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.model.Wine
@@ -58,9 +60,12 @@ class WineOptionsViewModel(
 
     fun handleWineDeleteRequest() {
         viewModelScope.launch(IO) {
-            val success = removeWine(wineId)
-            val message = if (success) R.string.wine_deleted else R.string.base_error
-            UiEventManager.send(UiEvent.Snackbar(message))
+            val result = removeWine(viewState.wine)
+
+            when (result) {
+                is UseCaseResult.Success -> UiEventManager.send(UiEvent.Snackbar(R.string.wine_deleted))
+                is UseCaseResult.Fail -> UiEventManager.send(UiEvent.Snackbar(R.string.base_error))
+            }
         }
     }
 
@@ -71,9 +76,10 @@ class WineOptionsViewModel(
             initializer {
                 // We may be able to discard app usage if repositories are not singleton anymore
                 val app = checkNotNull(this[APPLICATION_KEY])
+                val errorReporter = SentryErrorReporter.getInstance(app)
                 val bottleRepository = BottleRepository.getInstance(app)
                 val wineRepository = WineRepository.getInstance(app)
-                val wineRemover = RemoveWine(wineRepository, bottleRepository)
+                val wineRemover = RemoveWine(wineRepository, bottleRepository, errorReporter)
                 val savedState = createSavedStateHandle()
                 WineOptionsViewModel(app, wineRemover, wineRepository, savedState)
             }

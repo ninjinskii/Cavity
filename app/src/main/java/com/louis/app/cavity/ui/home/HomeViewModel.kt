@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.louis.app.cavity.db.dao.WineWithBottles
+import com.louis.app.cavity.domain.error.ErrorReporter
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.CountyRepository
@@ -38,16 +39,15 @@ data class HomeState(val lastWineChange: LastWineChange? = null)
 
 class HomeViewModel(
     app: Application,
+    private val countyRepository: CountyRepository,
+    private val wineRepository: WineRepository,
+    private val bottleRepository: BottleRepository,
+    private val statsRepository: StatsRepository,
+    private val prefsRepository: PrefsRepository,
+    private val errorReporter: ErrorReporter,
     savedStateHandle: SavedStateHandle
 ) :
     BaseViewModel<HomeState, HomeEvent>(app, HomeState()) {
-
-    private val countyRepository = CountyRepository.getInstance(app)
-    private val wineRepository = WineRepository.getInstance(app)
-    private val bottleRepository = BottleRepository.getInstance(app)
-    private val statsRepository = StatsRepository.getInstance(app)
-    private val prefsRepository = PrefsRepository.getInstance(app)
-    private val errorReporter = SentryErrorReporter.getInstance(app)
 
     private val _userFeedback = MutableLiveData<Event<Int>>()
     val userFeedback: LiveData<Event<Int>>
@@ -209,8 +209,24 @@ class HomeViewModel(
         val Factory = viewModelFactory {
             initializer {
                 val app = checkNotNull(this[APPLICATION_KEY])
+                val countyRepository = CountyRepository.getInstance(app)
+                val wineRepository = WineRepository.getInstance(app)
+                val bottleRepository = BottleRepository.getInstance(app)
+                val statsRepository = StatsRepository.getInstance(app)
+                val prefsRepository = PrefsRepository.getInstance(app)
+                val errorReporter = SentryErrorReporter.getInstance(app)
                 val savedState = createSavedStateHandle()
-                HomeViewModel(app, savedState)
+
+                HomeViewModel(
+                    app,
+                    countyRepository,
+                    wineRepository,
+                    bottleRepository,
+                    statsRepository,
+                    prefsRepository,
+                    errorReporter,
+                    savedState
+                )
             }
         }
     }
