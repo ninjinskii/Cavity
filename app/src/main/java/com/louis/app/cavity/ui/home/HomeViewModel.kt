@@ -5,6 +5,8 @@ import androidx.lifecycle.*
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.louis.app.cavity.db.dao.BaseStat
+import com.louis.app.cavity.db.dao.PriceByCurrency
 import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.domain.error.ErrorReporter
 import com.louis.app.cavity.domain.error.SentryErrorReporter
@@ -26,7 +28,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 sealed interface HomeEvent {
@@ -35,7 +43,19 @@ sealed interface HomeEvent {
 }
 
 data class LastWineChange(val wineId: Long, val countyId: Long)
-data class HomeState(val lastWineChange: LastWineChange? = null)
+data class ObservedCounty(
+    val bottleCount: Int,
+    val bottlePrice: List<PriceByCurrency>,
+    val namingCount: List<BaseStat>,
+    val vintagesCount: List<BaseStat>
+)
+
+data class HomeState(
+    val observedCountyId: Long? = null,
+    val storageLocation: String? = null,
+    val observedCounty: ObservedCounty? = null,
+    val lastWineChange: LastWineChange? = null
+)
 
 class HomeViewModel(
     app: Application,
@@ -60,8 +80,6 @@ class HomeViewModel(
     val scrollToCountyEvent: LiveData<Event<Int>>
         get() = _scrollToCountyEvent
 
-    private val observedCounty = MutableLiveData<Long>()
-
     private var countyIdBeforeStorageLocationChange: Long? = null
 
     /**
@@ -71,22 +89,6 @@ class HomeViewModel(
      */
     var savedSharedElementCountyId: Long? by savedStateHandle save "sourceCountyId"
 
-    val bottleCount = observedCounty.switchMap {
-        statsRepository.getBottleCountForCounty(it, _storageLocation.value)
-    }
-
-    val bottlePrice = observedCounty.switchMap {
-        statsRepository.getPriceByCurrencyForCounty(it, _storageLocation.value)
-    }
-
-    val namingCount = observedCounty.switchMap {
-        statsRepository.getNamingsStatsForCounty(it, _storageLocation.value)
-    }
-
-    val vintagesCount = observedCounty.switchMap {
-        statsRepository.getVintagesStatsForCounty(it, _storageLocation.value)
-    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
     val nonEmptyCounties: LiveData<List<County>> = _storageLocation.flatMapLatest { location ->
         if (prefsRepository.getEnableBottleStorageLocation() && location != null)
@@ -94,6 +96,41 @@ class HomeViewModel(
         else
             countyRepository.getNonEmptyCounties().asFlow()
     }.asLiveData()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val a = stateFlow
+        .map { it.observedCountyId to it.storageLocation }
+        .distinctUntilChanged()
+        .flatMapLatest { (countyId, location) ->
+            if (countyId == null) {
+                return@flatMapLatest flowOf(null)
+            }
+
+            combine(
+                statsRepository.getBottleCountForCounty(countyId, location),
+                statsRepository.getPriceByCurrencyForCounty(countyId, location),
+                statsRepository.getNamingsStatsForCounty(countyId, location),
+                statsRepository.getVintagesStatsForCounty(countyId, location)
+            ) { bottleCount, bottlePrice, namingCount, vintagesCount ->
+
+                ObservedCounty(
+                    bottleCount = bottleCount,
+                    bottlePrice = bottlePrice,
+                    namingCount = namingCount,
+                    vintagesCount = vintagesCount
+                )
+            }
+        }
+
+    init {
+        a
+            .onEach { observedCounty ->
+                stateFlow.update {
+                    it.copy(observedCounty = observedCounty)
+                }
+            }
+            .launchIn(viewModelScope)
+    }
 
     fun notifyWineChange(wineId: Long, countyId: Long) {
         stateFlow.update { state ->
@@ -108,7 +145,9 @@ class HomeViewModel(
     }
 
     fun setObservedCounty(countyId: Long) {
-        observedCounty.value = countyId
+        stateFlow.update {
+            it.copy(observedCountyId = countyId)
+        }
     }
 
     fun setStorageLocation(bottleStorage: String?, currentCountyId: Long?) {

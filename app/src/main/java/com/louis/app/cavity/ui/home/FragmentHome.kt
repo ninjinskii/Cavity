@@ -107,6 +107,12 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
                         }
                     }
                 }
+
+                launch {
+                    homeViewModel.state.collect {
+                        binding.update(it)
+                    }
+                }
             }
         }
     }
@@ -213,23 +219,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
     }
 
     private fun observe() {
-        homeViewModel.bottleCount.observe(viewLifecycleOwner) {
-            binding.countyDetails.bottles.text =
-                resources.getQuantityString(R.plurals.bottles, it, it)
-        }
-
-        homeViewModel.bottlePrice.observe(viewLifecycleOwner) {
-            binding.countyDetails.price.text = it.join()
-        }
-
-        homeViewModel.namingCount.observe(viewLifecycleOwner) {
-            binding.countyDetails.namings.setSlices(it, anim = true)
-        }
-
-        homeViewModel.vintagesCount.observe(viewLifecycleOwner) {
-            binding.countyDetails.vintages.setSlices(it, anim = true)
-        }
-
         // TODO: use BaseViewModelState and move logic to view model
         homeViewModel.storageLocation.asLiveData().observe(viewLifecycleOwner) { location ->
             if (location == null) {
@@ -281,6 +270,18 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
 
         binding.countyDetailsScrim.setOnClickListener {
             hideCountyDetails()
+        }
+    }
+
+    private fun FragmentHomeBinding.update(state: HomeState) {
+        state.observedCounty?.let {
+            with(countyDetails) {
+                price.text = it.bottlePrice.join()
+                namings.setSlices(it.namingCount, anim = true)
+                vintages.setSlices(it.vintagesCount, anim = true)
+                bottles.text =
+                    resources.getQuantityString(R.plurals.bottles, it.bottleCount, it.bottleCount)
+            }
         }
     }
 

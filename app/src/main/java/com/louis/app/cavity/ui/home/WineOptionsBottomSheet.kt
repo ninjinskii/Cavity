@@ -46,7 +46,7 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 wineOptionsViewModel.state.collect { state ->
-                    state.wine?.let { binding.updateUi(it) }
+                    state.wine?.let { binding.update(it) }
                 }
             }
         }
@@ -82,12 +82,15 @@ class WineOptionsBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun BottomSheetWineOptionsBinding.updateUi(wine: Wine) {
+    private fun BottomSheetWineOptionsBinding.update(wine: Wine) {
         val wineColor = ContextCompat.getColor(requireContext(), wine.color.colorRes)
-        currentWine.wineName.text = wine.name
-        currentWine.wineNaming.text = wine.naming
-        currentWine.wineColorIndicator.setColorFilter(wineColor)
-        currentWine.organicImage.setVisible(wine.isOrganic.toBoolean())
+        with(currentWine) {
+            wineName.text = wine.name
+            wineNaming.text = wine.naming
+            wineColorIndicator.setColorFilter(wineColor)
+            organicImage.setVisible(wine.isOrganic.toBoolean())
+        }
+
         deleteWine.setVisible(!args.storageLocationEnabled)
     }
 
