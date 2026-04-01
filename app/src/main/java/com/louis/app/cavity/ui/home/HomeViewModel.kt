@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.onEach
 sealed interface HomeEvent {
     data class Navigation(val appRoute: AppRoute) : HomeEvent
     object WinesObservingStarted : HomeEvent
-    data class ScrollToCounty(val index: Int) : HomeEvent
+    data class ScrollToCounty(val countyId: Long) : HomeEvent
 }
 
 data class LastWineChange(val wineId: Long, val countyId: Long)
@@ -158,14 +158,11 @@ class HomeViewModel(
     }
 
     private fun checkRememberedCountyBeforeStorageChange(counties: List<County>) {
-        counties
-            .indexOfFirst { county -> county.id == countyIdBeforeStorageLocationChange }
-            .let { index ->
-                if (index >= 0) {
-                    countyIdBeforeStorageLocationChange = null
-                    emitEvent(HomeEvent.ScrollToCounty(index))
-                }
-            }
+        val targetId = countyIdBeforeStorageLocationChange ?: return
+        if (counties.any { it.id == targetId }) {
+            countyIdBeforeStorageLocationChange = null
+            emitEvent(HomeEvent.ScrollToCounty(targetId))
+        }
     }
 
     fun getWinesWithBottlesByCounty(countyId: Long): Flow<List<WineWithBottles>> {

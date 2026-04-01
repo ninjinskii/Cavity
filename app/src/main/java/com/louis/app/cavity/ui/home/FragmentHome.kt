@@ -101,9 +101,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
                                 // data is observed is the right moment
                                 startPostponedEnterTransition()
                             }
-                            is HomeEvent.ScrollToCounty -> {
-                                binding.viewPager.currentItem = it.index
-                            }
+                            is HomeEvent.ScrollToCounty -> setCurrentCounty(it.countyId)
                         }
                     }
                 }
@@ -226,7 +224,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
 
         val counties = state.nonEmptyCounties
         emptyState.setVisible(counties.isEmpty())
-        if (tabAdapter?.itemCount != counties.size) {
+        if (viewPager.adapter == null || tabAdapter?.itemCount != counties.size) {
             tab.adapter = tabAdapter
             viewPager.adapter =
                 WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, counties)
@@ -337,6 +335,12 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
 
     override fun setPendingSharedElement(sharedElement: View) {
         this.pendingSharedElement = sharedElement
+    }
+
+    private fun checkScrollRequest() {
+        homeViewModel.viewState.lastWineChange?.let {
+            setCurrentCounty(it.countyId)
+        }
     }
 
     override fun onResume() {

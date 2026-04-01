@@ -119,19 +119,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
                         wineAdapter.submitList(wines) {
                             homeViewModel.notifyWineObservingStarted(countyId)
-                        }
-                    }
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.state.collect { state ->
-                    state.lastWineChange?.let { change ->
-                        if (change.countyId == countyId) {
-                            scrollToWine(wineAdapter, change)
-                            homeViewModel.acknowledgeWineChange()
+                            scrollToWine(wineAdapter, homeViewModel.viewState.lastWineChange)
                         }
                     }
                 }
@@ -150,9 +138,10 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             val adapterWineId = adapter.getItemId(i)
 
             if (wineId == adapterWineId) {
-                homeViewModel.acknowledgeWineChange()
                 adapter.highlightPosition = i
                 binding.wineList.smoothScrollToPosition(i)
+                homeViewModel.acknowledgeWineChange()
+                return
             }
         }
     }
