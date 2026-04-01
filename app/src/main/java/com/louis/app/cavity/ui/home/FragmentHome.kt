@@ -95,12 +95,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
                     homeViewModel.event.collect {
                         when (it) {
                             is HomeEvent.Navigation -> navigate(it.appRoute, pendingSharedElement)
-                            HomeEvent.WinesObservingStarted -> {
-                                // Note that startPostponedEnterTransition() will wait for the next
-                                // layout pass to trigger animation. So, actually, calling this when
-                                // data is observed is the right moment
-                                startPostponedEnterTransition()
-                            }
                             is HomeEvent.ScrollToCounty -> setCurrentCounty(it.countyId)
                         }
                     }
@@ -108,6 +102,15 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
 
                 launch {
                     homeViewModel.state.collect {
+                        if (it.transitionReady) {
+                            startPostponedEnterTransition()
+                            homeViewModel.acknowledgeTransition()
+                        }
+
+                        it.lastWineChange?.let { change ->
+                            binding.viewPager.post { setCurrentCounty(change.countyId) }
+                        }
+
                         binding.update(it)
                     }
                 }
@@ -335,19 +338,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
 
     override fun setPendingSharedElement(sharedElement: View) {
         this.pendingSharedElement = sharedElement
-    }
-
-    private fun checkScrollRequest() {
-        homeViewModel.viewState.lastWineChange?.let {
-            setCurrentCounty(it.countyId)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        binding.viewPager.post {
-            checkScrollRequest()
-        }
     }
 
     override fun onDestroyView() {

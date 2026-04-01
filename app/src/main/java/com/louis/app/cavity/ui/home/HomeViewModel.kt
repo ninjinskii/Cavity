@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.onEach
 
 sealed interface HomeEvent {
     data class Navigation(val appRoute: AppRoute) : HomeEvent
-    object WinesObservingStarted : HomeEvent
     data class ScrollToCounty(val countyId: Long) : HomeEvent
 }
 
@@ -53,7 +52,8 @@ data class HomeState(
     val storageLocations: List<String> = emptyList(),
     val storageLocation: String? = null,
     val toolbarTitle: String? = null,
-    val showStorageDialog: Boolean = false
+    val showStorageDialog: Boolean = false,
+    val transitionReady: Boolean = false
 )
 
 class HomeViewModel(
@@ -185,8 +185,12 @@ class HomeViewModel(
         val isAssociatedCounty = savedSharedElementCountyId == countyId
 
         if (isAssociatedCounty || noPendingSharedElement) {
-            emitEvent(HomeEvent.WinesObservingStarted)
+            viewState = viewState.copy(transitionReady = true)
         }
+    }
+
+    fun acknowledgeTransition() {
+        viewState = viewState.copy(transitionReady = false)
     }
 
     fun handleWineClick(wineWithBottles: WineWithBottles, requesterFragmentCountyId: Long) {
