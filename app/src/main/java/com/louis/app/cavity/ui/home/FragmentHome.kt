@@ -90,7 +90,8 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         setListeners()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
+            // Was CREATED
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     homeViewModel.event.collect {
                         when (it) {
@@ -214,7 +215,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         }
     }
 
-    private fun FragmentHomeBinding.update(state: HomeState) {
+    private fun FragmentHomeBinding.update(state: HomeUiState) {
         state.observedCounty?.let {
             with(countyDetails) {
                 price.text = it.bottlePrice.join()
@@ -227,6 +228,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
 
         val counties = state.nonEmptyCounties
         emptyState.setVisible(counties.isEmpty())
+
         if (counties.isNotEmpty() && tabAdapter?.itemCount != counties.size) {
             tab.adapter = tabAdapter
             viewPager.adapter =
@@ -235,7 +237,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
             tab.setupWithViewPager(viewPager)
         }
 
-        updateToolbarTitle(state.toolbarTitle ?: getString(R.string.app_name))
+        updateToolbarTitle(state.storageLocation ?: getString(R.string.app_name))
 
         val clearText = getString(R.string.all)
         val locations = listOf(clearText) + state.storageLocations

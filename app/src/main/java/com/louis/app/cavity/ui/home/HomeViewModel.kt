@@ -3,6 +3,7 @@ package com.louis.app.cavity.ui.home
 import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -45,13 +46,12 @@ data class ObservedCounty(
     val vintagesCount: List<BaseStat>
 )
 
-data class HomeState(
+data class HomeUiState(
     val observedCounty: ObservedCounty? = null,
     val lastWineChange: LastWineChange? = null,
     val nonEmptyCounties: List<County> = emptyList(),
     val storageLocations: List<String> = emptyList(),
     val storageLocation: String? = null,
-    val toolbarTitle: String? = null,
     val showStorageDialog: Boolean = false,
     val transitionReady: Boolean = false
 )
@@ -60,20 +60,17 @@ class HomeViewModel(
     app: Application,
     private val countyRepository: CountyRepository,
     private val wineRepository: WineRepository,
-    private val bottleRepository: BottleRepository,
+    bottleRepository: BottleRepository,
     private val statsRepository: StatsRepository,
     private val prefsRepository: PrefsRepository,
     private val errorReporter: ErrorReporter,
     savedStateHandle: SavedStateHandle
 ) :
-    BaseViewModel<HomeState, HomeEvent>(app, HomeState()) {
+    BaseViewModel<HomeUiState, HomeEvent>(app, HomeUiState()) {
 
     private val _storageLocation = MutableStateFlow<String?>(null)
-
     private val _observedCountyId = MutableStateFlow<Long?>(null)
-
     private val _lastWineChange = MutableStateFlow<LastWineChange?>(null)
-
     private var countyIdBeforeStorageLocationChange: Long? = null
 
     /**
@@ -84,12 +81,12 @@ class HomeViewModel(
     var savedSharedElementCountyId: Long? by savedStateHandle save "sourceCountyId"
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val nonEmptyCountiesFlow = _storageLocation
+    private val nonEmptyCounties = _storageLocation
         .map { location -> if (prefsRepository.getEnableBottleStorageLocation()) location else null }
         .flatMapLatest { location -> countyRepository.getNonEmptyCountiesFlow(location) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val observedCountyFlow = combine(_observedCountyId, _storageLocation) { id, location ->
+    private val observedCounty = combine(_observedCountyId, _storageLocation) { id, location ->
         id to location
     }
         .distinctUntilChanged()
@@ -113,7 +110,7 @@ class HomeViewModel(
             }
         }
 
-    private val storageLocationsFlow =
+    private val storageLocations =
         bottleRepository.getAllStorageLocationsFlow()
             .takeIf { prefsRepository.getEnableBottleStorageLocation() }
             ?: flowOf(emptyList())
@@ -121,14 +118,13 @@ class HomeViewModel(
     init {
         combine(
             _storageLocation,
-            nonEmptyCountiesFlow.onEach { checkRememberedCountyBeforeStorageChange(it) },
-            observedCountyFlow,
-            storageLocationsFlow,
+            nonEmptyCounties.onEach { checkRememberedCountyBeforeStorageChange(it) },
+            observedCounty,
+            storageLocations,
             _lastWineChange
         ) { location, counties, observedCounty, locations, lastWineChange ->
-            HomeState(
+            HomeUiState(
                 storageLocation = location,
-                toolbarTitle = location,
                 nonEmptyCounties = counties,
                 observedCounty = observedCounty,
                 storageLocations = locations,
