@@ -229,7 +229,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         val counties = state.nonEmptyCounties
         emptyState.setVisible(counties.isEmpty())
 
-        if (counties.isNotEmpty() && tabAdapter?.itemCount != counties.size) {
+        if (counties.isNotEmpty() && counties != (viewPager.adapter as? WinesPagerAdapter)?.counties) {
             tab.adapter = tabAdapter
             viewPager.adapter =
                 WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, counties)

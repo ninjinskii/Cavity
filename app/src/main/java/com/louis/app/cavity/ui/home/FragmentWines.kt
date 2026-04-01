@@ -21,11 +21,14 @@ import com.louis.app.cavity.ui.navigation.navigator
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
     private val binding get() = _binding!!
+    private var wineAdapter: WineRecyclerAdapter? = null
     private val homeViewModel: HomeViewModel by viewModels(
         ownerProducer = { fragmentWinesParent },
         factoryProducer = { HomeViewModel.Factory }
@@ -46,7 +49,8 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         applyInsets()
         initRecyclerView()
-        setListeners()
+        setupListeners()
+        observeViewModel()
     }
 
     private fun applyInsets() {
@@ -105,29 +109,10 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         }
 
         prePopulateRecyclerViewPool()
-
-        homeViewModel.getWinesWithBottlesByCounty(countyId).let { winesFlow ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    winesFlow.collectLatest { wines ->
-                        binding.emptyState.setVisible(wines.isEmpty())
-                        binding.wineList.post {
-                            // Sets back the item animator after shared element transition occurred
-                            // When scrolling really quickly, binding can be null when post happens
-                            _binding?.wineList?.itemAnimator = DefaultItemAnimator()
-                        }
-
-                        wineAdapter.submitList(wines) {
-                            homeViewModel.notifyWineObservingStarted(countyId)
-                            scrollToWine(wineAdapter, homeViewModel.viewState.lastWineChange)
-                        }
-                    }
-                }
-            }
-        }
     }
 
-    private fun scrollToWine(adapter: WineRecyclerAdapter, lastWineChange: LastWineChange?) {
+    private fun scrollToWine(lastWineChange: LastWineChange?) {
+        val adapter = wineAdapter ?: return
         val (wineId, countyId) = lastWineChange ?: return
 
         if (countyId != this.countyId || wineId == -1L) {
@@ -161,7 +146,40 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
         }
     }
 
-    private fun setListeners() {
+    private fun observeViewModel() {
+        val winesFlow = homeViewModel.getWinesWithBottlesByCounty(countyId)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    winesFlow.collectLatest { wines ->
+                        binding.emptyState.setVisible(wines.isEmpty())
+                        binding.wineList.post {
+                            // Sets back the item animator after shared element transition occurred
+                            // When scrolling really quickly, binding can be null when post happens
+                            _binding?.wineList?.itemAnimator = DefaultItemAnimator()
+                        }
+
+                        wineAdapter?.submitList(wines) {
+                            homeViewModel.notifyWineObservingStarted(countyId)
+                        }
+                    }
+                }
+
+                // Observe lastWineChange reactively so we don't miss it if the fragment
+                // becomes visible after the list was already committed (e.g. the ViewPager
+                // scrolled to this county after the DB emission already fired).
+                launch {
+                    homeViewModel.state
+                        .distinctUntilChangedBy { it.lastWineChange }
+                        .filter { it.lastWineChange?.countyId == countyId }
+                        .collect { scrollToWine(it.lastWineChange) }
+                }
+            }
+        }
+    }
+
+    private fun setupListeners() {
         binding.emptyState.setOnActionClickListener {
             navigator.navigate(HomeRoute.AddWine(countyId), requireParentFragment())
         }
@@ -170,6 +188,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
     override fun onDestroyView() {
         super.onDestroyView()
         binding.wineList.adapter = null
+        wineAdapter = null
         _binding = null
     }
 

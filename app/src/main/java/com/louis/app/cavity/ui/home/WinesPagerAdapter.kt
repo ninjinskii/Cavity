@@ -8,7 +8,7 @@ import com.louis.app.cavity.model.County
 class WinesPagerAdapter(
     fragment: FragmentManager,
     lifecycle: Lifecycle,
-    private val counties: List<County>
+    val counties: List<County>
 ) :
     FragmentStateAdapter(fragment, lifecycle) {
 
