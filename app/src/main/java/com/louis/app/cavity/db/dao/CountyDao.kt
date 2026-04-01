@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CountyDao {
@@ -34,6 +35,28 @@ interface CountyDao {
     @Query("SELECT * FROM county WHERE EXISTS(SELECT * FROM wine WHERE wine.county_id = county.id AND wine.hidden = 0) ORDER BY pref_order")
     fun getNonEmptyCounties(): LiveData<List<County>>
 
+    @Query("SELECT * FROM county WHERE EXISTS(SELECT * FROM wine WHERE wine.county_id = county.id AND wine.hidden = 0) ORDER BY pref_order")
+    fun getNonEmptyCountiesFlow(): Flow<List<County>>
+
+    @Query(
+        """
+            SELECT * FROM county
+            WHERE EXISTS (
+                SELECT 1 FROM wine
+                WHERE wine.county_id = county.id
+                  AND wine.hidden = 0
+                  AND (:storageLocation IS NULL OR EXISTS (
+                      SELECT 1 FROM bottle
+                      WHERE bottle.wine_id = wine.id
+                        AND bottle.storage_location = :storageLocation
+                        AND bottle.consumed = 0
+                  ))
+            )
+            ORDER BY pref_order
+        """
+    )
+    fun getNonEmptyCountiesFlow(storageLocation: String?): Flow<List<County>>
+
     @Query(
         """
             SELECT * FROM county 
@@ -52,6 +75,25 @@ interface CountyDao {
         """
     )
     fun getNonEmptyCountiesForStorageLocation(storageLocation: String): LiveData<List<County>>
+
+    @Query(
+        """
+            SELECT * FROM county 
+            WHERE EXISTS (
+                SELECT 1 FROM wine 
+                WHERE wine.county_id = county.id 
+                  AND wine.hidden = 0
+                  AND EXISTS (
+                      SELECT 1 FROM bottle 
+                      WHERE bottle.wine_id = wine.id 
+                        AND bottle.storage_location =:storageLocation
+                        AND bottle.consumed = 0
+                  )
+            )
+            ORDER BY pref_order
+        """
+    )
+    fun getNonEmptyCountiesForStorageLocationFlow(storageLocation: String): Flow<List<County>>
 
     @Query("SELECT * FROM county ORDER BY pref_order")
     suspend fun getAllCountiesNotLive(): List<County>

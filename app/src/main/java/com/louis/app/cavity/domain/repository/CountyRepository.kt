@@ -52,8 +52,15 @@ class CountyRepository private constructor(app: Application) : Repository(app) {
 
     fun getNonEmptyCounties() = countyDao.getNonEmptyCounties()
 
+    fun getNonEmptyCountiesFlow() = countyDao.getNonEmptyCountiesFlow()
+
+    fun getNonEmptyCountiesFlow(storageLocation: String?) = countyDao.getNonEmptyCountiesFlow(storageLocation)
+
     fun getNonEmptyCountiesForStorageLocation(storageLocation: String) =
         countyDao.getNonEmptyCountiesForStorageLocation(storageLocation)
+
+    fun getNonEmptyCountiesForStorageLocationFlow(storageLocation: String) =
+        countyDao.getNonEmptyCountiesForStorageLocationFlow(storageLocation)
 
     fun getCountiesWithWines() = countyDao.getCountiesWithWines()
 

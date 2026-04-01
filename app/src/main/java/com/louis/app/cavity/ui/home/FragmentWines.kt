@@ -10,6 +10,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentWinesBinding
@@ -17,6 +20,8 @@ import com.louis.app.cavity.ui.navigation.HomeRoute
 import com.louis.app.cavity.ui.navigation.navigator
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class FragmentWines : Fragment(R.layout.fragment_wines) {
     private var _binding: FragmentWinesBinding? = null
@@ -101,23 +106,41 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         prePopulateRecyclerViewPool()
 
-        homeViewModel.getWinesWithBottlesByCounty(countyId).observe(viewLifecycleOwner) {
-            binding.emptyState.setVisible(it.isEmpty())
-            binding.wineList.post {
-                // Sets back the item animator after shared element transition occurred
-                // When scrolling really quickly, binding can be null when post happens
-                _binding?.wineList?.itemAnimator = DefaultItemAnimator()
-            }
+        homeViewModel.getWinesWithBottlesByCounty(countyId).let { winesFlow ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    winesFlow.collectLatest { wines ->
+                        binding.emptyState.setVisible(wines.isEmpty())
+                        binding.wineList.post {
+                            // Sets back the item animator after shared element transition occurred
+                            // When scrolling really quickly, binding can be null when post happens
+                            _binding?.wineList?.itemAnimator = DefaultItemAnimator()
+                        }
 
-            wineAdapter.submitList(it) {
-                homeViewModel.notifyWineObservingStarted(countyId)
-                scrollToWine(wineAdapter)
+                        wineAdapter.submitList(wines) {
+                            homeViewModel.notifyWineObservingStarted(countyId)
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.state.collect { state ->
+                    state.lastWineChange?.let { change ->
+                        if (change.countyId == countyId) {
+                            scrollToWine(wineAdapter, change)
+                            homeViewModel.acknowledgeWineChange()
+                        }
+                    }
+                }
             }
         }
     }
 
-    private fun scrollToWine(adapter: WineRecyclerAdapter) {
-        val (wineId, countyId) = homeViewModel.viewState.lastWineChange ?: return
+    private fun scrollToWine(adapter: WineRecyclerAdapter, lastWineChange: LastWineChange?) {
+        val (wineId, countyId) = lastWineChange ?: return
 
         if (countyId != this.countyId || wineId == -1L) {
             return

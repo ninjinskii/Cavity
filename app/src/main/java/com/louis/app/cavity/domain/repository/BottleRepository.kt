@@ -71,5 +71,7 @@ class BottleRepository private constructor(app: Application) : Repository(app) {
 
     fun getAllStorageLocations() = bottleDao.getAllStorageLocations()
 
+    fun getAllStorageLocationsFlow() = bottleDao.getAllStorageLocationsFlow()
+
     suspend fun deleteAllBottles() = bottleDao.deleteAll()
 }

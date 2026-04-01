@@ -63,6 +63,24 @@ interface WineDao {
     """)
     fun getWinesWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
 
+    @Transaction
+    @Query("""
+        SELECT w.*, 
+               (SELECT COUNT(*) 
+                FROM bottle b 
+                WHERE b.wine_id = w.id AND b.consumed = 0) AS remainingBottles
+        FROM wine w
+        WHERE w.county_id = :countyId
+        AND w.hidden != 1
+        ORDER BY CASE w.color
+            WHEN 'RED' THEN 0
+            WHEN 'WHITE' THEN 1
+            WHEN 'SWEET' THEN 2
+            WHEN 'ROSE' THEN 3
+        END, w.naming
+    """)
+    fun getWinesWithBottlesByCountyFlow(countyId: Long): Flow<List<WineWithBottles>>
+
     @Query("DELETE FROM wine")
     suspend fun deleteAll()
 }

@@ -69,6 +69,9 @@ interface BottleDao {
     @Query("SELECT DISTINCT storage_location FROM bottle WHERE length(storage_location) > 0")
     fun getAllStorageLocations(): LiveData<List<String>>
 
+    @Query("SELECT DISTINCT storage_location FROM bottle WHERE length(storage_location) > 0")
+    fun getAllStorageLocationsFlow(): Flow<List<String>>
+
     @Transaction
     @Query("SELECT * FROM bottle")
     fun getBoundedBottles(): LiveData<List<BoundedBottle>>

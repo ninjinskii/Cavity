@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
-import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.core.view.marginRight
 import androidx.core.view.updateMargins
@@ -16,7 +15,6 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -89,7 +87,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         listenToAddWineResult()
         setupScrollableTab()
         setViewPagerOrientation()
-        observe()
         setListeners()
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -103,6 +100,9 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
                                 // layout pass to trigger animation. So, actually, calling this when
                                 // data is observed is the right moment
                                 startPostponedEnterTransition()
+                            }
+                            is HomeEvent.ScrollToCounty -> {
+                                binding.viewPager.currentItem = it.index
                             }
                         }
                     }
@@ -171,12 +171,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         }
     }
 
-    private fun checkScrollRequest() {
-        homeViewModel.viewState.lastWineChange?.let {
-            setCurrentCounty(it.countyId)
-        }
-    }
-
     private fun setupScrollableTab() {
         tabAdapter = ScrollableTabAdapter(
             onTabClick = { _, position ->
@@ -189,25 +183,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
                 county.id to county
             }
         )
-
-        homeViewModel.nonEmptyCounties.observe(viewLifecycleOwner) {
-            binding.emptyState.setVisible(it.isEmpty())
-
-            with(binding) {
-                if (tabAdapter?.itemCount != it.size) {
-                    tab.adapter = tabAdapter
-                    viewPager.adapter =
-                        WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, it)
-                }
-
-                tabAdapter?.submitList(it)
-                tab.setupWithViewPager(viewPager)
-
-                (view?.parent as? ViewGroup)?.doOnPreDraw { _ ->
-                    homeViewModel.checkRememberedCountyBeforeStorageChange(it) // TODO: Not sure why this is on pre draw listener
-                }
-            }
-        }
     }
 
     private fun setViewPagerOrientation() {
@@ -216,41 +191,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
             if (flat) ViewPager2.ORIENTATION_VERTICAL else ViewPager2.ORIENTATION_HORIZONTAL
 
         binding.viewPager.orientation = orientation
-    }
-
-    private fun observe() {
-        // TODO: use BaseViewModelState and move logic to view model
-        homeViewModel.storageLocation.asLiveData().observe(viewLifecycleOwner) { location ->
-            if (location == null) {
-                updateToolbarTitle(getString(R.string.app_name))
-                return@observe
-            }
-
-            val noLocationActive = location == getString(R.string.all)
-
-            if (noLocationActive) {
-                homeViewModel.setStorageLocation(null, null)
-            }
-
-
-            val title = if (noLocationActive) getString(R.string.app_name) else location
-            updateToolbarTitle(title)
-        }
-
-        val clearText = getString(R.string.all)
-        homeViewModel.getAllStorageLocations(clearText).observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                binding.appBar.toolbar.setOnTitleClickListener { _ ->
-                    showStorageLocationDialog(it)
-                }
-            }
-        }
-
-        homeViewModel.scrollToCountyEvent.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let { index ->
-                binding.viewPager.currentItem = index
-            }
-        }
     }
 
     private fun setListeners() {
@@ -283,6 +223,24 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
                     resources.getQuantityString(R.plurals.bottles, it.bottleCount, it.bottleCount)
             }
         }
+
+        val counties = state.nonEmptyCounties
+        emptyState.setVisible(counties.isEmpty())
+        if (tabAdapter?.itemCount != counties.size) {
+            tab.adapter = tabAdapter
+            viewPager.adapter =
+                WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, counties)
+        }
+        tabAdapter?.submitList(counties)
+        tab.setupWithViewPager(viewPager)
+
+        updateToolbarTitle(state.toolbarTitle ?: getString(R.string.app_name))
+
+        val clearText = getString(R.string.all)
+        val locations = listOf(clearText) + state.storageLocations
+        if (state.showStorageDialog) {
+            appBar.toolbar.setOnTitleClickListener { showStorageLocationDialog(locations) }
+        }
     }
 
     private fun showStorageLocationDialog(items: List<String>) {
@@ -290,7 +248,8 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
             .setTitle(R.string.storage_location)
             .setItems(items.toTypedArray()) { _, selectedPosition ->
                 val countyId = binding.viewPager.adapter?.getItemId(binding.viewPager.currentItem)
-                homeViewModel.setStorageLocation(items[selectedPosition], countyId)
+                val selection = items[selectedPosition].takeUnless { selectedPosition == 0 }
+                homeViewModel.setStorageLocation(selection, countyId)
             }
             .show()
     }
