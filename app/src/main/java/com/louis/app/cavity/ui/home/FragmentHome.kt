@@ -37,12 +37,6 @@ import com.louis.app.cavity.util.*
 import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
-    companion object {
-        const val VIEW_POOL_SIZE = 25
-        const val ADD_WINE_RESULT_KEY =
-            "com.louis.app.cavity.ui.home.FragmentHome.ADD_WINE_RESULT_KEY"
-    }
-
     private var tabAdapter: ScrollableTabAdapter<County>? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -102,6 +96,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
                 }
 
                 launch {
+                    // Not using collectLatest, lastWineChange is kind of an event
                     homeViewModel.state.collect {
                         if (it.transitionReady) {
                             startPostponedEnterTransition()
@@ -229,6 +224,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         val counties = state.nonEmptyCounties
         emptyState.setVisible(counties.isEmpty())
 
+        // TODO: check si la condition est nécessaire. améliorer si possible
         if (counties.isNotEmpty() && counties != (viewPager.adapter as? WinesPagerAdapter)?.counties) {
             tab.adapter = tabAdapter
             viewPager.adapter =
@@ -346,5 +342,11 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         super.onDestroyView()
         tabAdapter = null
         _binding = null
+    }
+
+    companion object {
+        const val VIEW_POOL_SIZE = 25
+        const val ADD_WINE_RESULT_KEY =
+            "com.louis.app.cavity.ui.home.FragmentHome.ADD_WINE_RESULT_KEY"
     }
 }

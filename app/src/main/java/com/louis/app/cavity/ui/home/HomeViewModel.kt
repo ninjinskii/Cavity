@@ -27,6 +27,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -153,12 +155,10 @@ class HomeViewModel(
         _storageLocation.value = bottleStorage
     }
 
-    private fun checkRememberedCountyBeforeStorageChange(counties: List<County>) {
-        val targetId = countyIdBeforeStorageLocationChange ?: return
-        if (counties.any { it.id == targetId }) {
-            countyIdBeforeStorageLocationChange = null
-            emitEvent(HomeEvent.ScrollToCounty(targetId))
-        }
+    fun stateDistinctByLastWineChange(countyId: Long): Flow<HomeUiState> {
+        return state
+            .distinctUntilChangedBy { it.lastWineChange }
+            .filter { it.lastWineChange?.countyId == countyId }
     }
 
     fun getWinesWithBottlesByCounty(countyId: Long): Flow<List<WineWithBottles>> {
@@ -207,6 +207,14 @@ class HomeViewModel(
         val storageLocationActive = _storageLocation.value != null
         val route = HomeRoute.WineOptions(wineWithBottles.wine, storageLocationActive)
         emitEvent(HomeEvent.Navigation(route))
+    }
+
+    private fun checkRememberedCountyBeforeStorageChange(counties: List<County>) {
+        val targetId = countyIdBeforeStorageLocationChange ?: return
+        if (counties.any { it.id == targetId }) {
+            countyIdBeforeStorageLocationChange = null
+            emitEvent(HomeEvent.ScrollToCounty(targetId))
+        }
     }
 
     private fun checkCounty(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
