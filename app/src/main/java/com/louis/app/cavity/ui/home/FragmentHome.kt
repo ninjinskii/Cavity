@@ -195,7 +195,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         var currentCounty = 0L
 
         binding.tab.setOnPageChangeListener {
-            currentCounty = tabAdapter?.getItem(it)?.getItemId() ?: 0
+            currentCounty = binding.viewPager.adapter?.getItemId(it) ?: 0
         }
 
         binding.emptyState.setOnActionClickListener {
@@ -224,13 +224,13 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
 
         val counties = state.nonEmptyCounties
         emptyState.setVisible(counties.isEmpty())
-        if (viewPager.adapter == null || tabAdapter?.itemCount != counties.size) {
+        if (counties.isNotEmpty() && tabAdapter?.itemCount != counties.size) {
             tab.adapter = tabAdapter
             viewPager.adapter =
                 WinesPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle, counties)
+            tabAdapter?.submitList(counties)
+            tab.setupWithViewPager(viewPager)
         }
-        tabAdapter?.submitList(counties)
-        tab.setupWithViewPager(viewPager)
 
         updateToolbarTitle(state.toolbarTitle ?: getString(R.string.app_name))
 
