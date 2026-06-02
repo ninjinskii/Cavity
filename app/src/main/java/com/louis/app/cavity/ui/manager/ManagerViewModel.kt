@@ -2,9 +2,7 @@ package com.louis.app.cavity.ui.manager
 
 import android.app.Application
 import android.database.sqlite.SQLiteConstraintException
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.repository.CountyRepository
@@ -16,20 +14,21 @@ import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.ui.BaseViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class ManagerViewModel(app: Application) : AndroidViewModel(app) {
+sealed interface ManagerEvent {
+    data class UserFeedback(@StringRes val resId: Int) : ManagerEvent
+}
+
+data class ManagerUiState(val placeholder: Unit = Unit)
+
+class ManagerViewModel(app: Application) : BaseViewModel<ManagerUiState, ManagerEvent>(app, ManagerUiState()) {
     private val countyRepository = CountyRepository.getInstance(app)
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
-
-    private val _userFeedback = MutableLiveData<Event<Int>>()
-    val userFeedback: LiveData<Event<Int>>
-        get() = _userFeedback
 
     var friendPickingImage: Friend? = null
 
@@ -51,7 +50,7 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
                 else -> R.string.base_error
             }
 
-            _userFeedback.postOnce(message)
+            emitEvent(ManagerEvent.UserFeedback(message))
         }
     }
 
@@ -69,7 +68,7 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     fun deleteCounty(countyId: Long) {
         viewModelScope.launch(IO) {
             countyRepository.deleteCounty(countyId)
-            _userFeedback.postOnce(R.string.county_deleted)
+            emitEvent(ManagerEvent.UserFeedback(R.string.county_deleted))
         }
     }
 
@@ -83,14 +82,14 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
                 else -> R.string.base_error
             }
 
-            _userFeedback.postOnce(message)
+            emitEvent(ManagerEvent.UserFeedback(message))
         }
     }
 
     fun deleteGrape(grape: Grape) {
         viewModelScope.launch(IO) {
             grapeRepository.deleteGrape(grape)
-            _userFeedback.postOnce(R.string.grape_deleted)
+            emitEvent(ManagerEvent.UserFeedback(R.string.grape_deleted))
         }
     }
 
@@ -98,11 +97,11 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             try {
                 reviewRepository.updateReview(review)
-                _userFeedback.postOnce(R.string.review_renamed)
+                emitEvent(ManagerEvent.UserFeedback(R.string.review_renamed))
             } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_contest_name)
+                emitEvent(ManagerEvent.UserFeedback(R.string.empty_contest_name))
             } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.contest_name_already_exists)
+                emitEvent(ManagerEvent.UserFeedback(R.string.contest_name_already_exists))
             }
         }
     }
@@ -110,7 +109,7 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     fun deleteReview(review: Review) {
         viewModelScope.launch(IO) {
             reviewRepository.deleteReview(review)
-            _userFeedback.postOnce(R.string.review_deleted)
+            emitEvent(ManagerEvent.UserFeedback(R.string.review_deleted))
         }
     }
 
@@ -119,11 +118,11 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 val newFriend = friend.copy(name = newName)
                 friendRepository.updateFriend(newFriend)
-                _userFeedback.postOnce(R.string.friend_renamed)
+                emitEvent(ManagerEvent.UserFeedback(R.string.friend_renamed))
             } catch (e: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.input_error)
+                emitEvent(ManagerEvent.UserFeedback(R.string.input_error))
             } catch (e: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.friend_already_exists)
+                emitEvent(ManagerEvent.UserFeedback(R.string.friend_already_exists))
             }
         }
     }
@@ -131,7 +130,7 @@ class ManagerViewModel(app: Application) : AndroidViewModel(app) {
     fun deleteFriend(friend: Friend) {
         viewModelScope.launch(IO) {
             friendRepository.deleteFriend(friend)
-            _userFeedback.postOnce(R.string.friend_deleted)
+            emitEvent(ManagerEvent.UserFeedback(R.string.friend_deleted))
         }
     }
 

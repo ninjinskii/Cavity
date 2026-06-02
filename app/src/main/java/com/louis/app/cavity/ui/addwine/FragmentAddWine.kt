@@ -120,24 +120,28 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     }
 
     private fun inflateChips() {
-        addWineViewModel.getAllCounties().observe(viewLifecycleOwner) {
-            binding.buttonAddCountyIfEmpty.setVisible(it.isEmpty())
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addWineViewModel.getAllCounties().collect {
+                    binding.buttonAddCountyIfEmpty.setVisible(it.isEmpty())
 
-            val newCountyAdded = binding.countyChipGroup.childCount == it.size - 1
-            val newCountyId = if (newCountyAdded) it.last().id else 0
+                    val newCountyAdded = binding.countyChipGroup.childCount == it.size - 1
+                    val newCountyId = if (newCountyAdded) it.last().id else 0
 
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .load(it)
-                .into(binding.countyChipGroup)
-                .preselect(if (newCountyAdded) newCountyId else args.countyId)
-                .doOnClick { v -> setCounty(v) }
-                .build()
-                .go()
+                    ChipLoader.Builder()
+                        .with(lifecycleScope)
+                        .useInflater(layoutInflater)
+                        .load(it)
+                        .into(binding.countyChipGroup)
+                        .preselect(if (newCountyAdded) newCountyId else args.countyId)
+                        .doOnClick { v -> setCounty(v) }
+                        .build()
+                        .go()
 
-            if (newCountyAdded) {
-                addWineViewModel.setCountyId(newCountyId)
+                    if (newCountyAdded) {
+                        addWineViewModel.setCountyId(newCountyId)
+                    }
+                }
             }
         }
     }
@@ -147,9 +151,13 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
 
         binding.naming.setAdapter(adapter)
 
-        addWineViewModel.namings.observe(viewLifecycleOwner) {
-            adapter.clear()
-            adapter.addAll(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addWineViewModel.getNamings().collect {
+                    adapter.clear()
+                    adapter.addAll(it)
+                }
+            }
         }
     }
 
@@ -216,18 +224,21 @@ class FragmentAddWine : Fragment(R.layout.fragment_add_wine) {
     }
 
     private fun observe() {
-        addWineViewModel.updatedWine.observe(viewLifecycleOwner) {
-            with(binding) {
-                naming.setText(it.naming)
-                name.setText(it.name)
-                cuvee.setText(it.cuvee)
-                (colorChipGroup.getChildAt(it.color.ordinal) as Chip).isChecked = true
-                organicWine.isChecked = it.isOrganic.toBoolean()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addWineViewModel.state.collect { state ->
+                    state.updatedWine?.let { wine ->
+                        with(binding) {
+                            naming.setText(wine.naming)
+                            name.setText(wine.name)
+                            cuvee.setText(wine.cuvee)
+                            (colorChipGroup.getChildAt(wine.color.ordinal) as Chip).isChecked = true
+                            organicWine.isChecked = wine.isOrganic.toBoolean()
+                        }
+                    }
+                    loadImage(state.image)
+                }
             }
-        }
-
-        addWineViewModel.image.observe(viewLifecycleOwner) {
-            loadImage(it)
         }
     }
 

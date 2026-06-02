@@ -10,6 +10,10 @@ import androidx.core.view.children
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
 import com.louis.app.cavity.BuildConfig
@@ -56,14 +60,22 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
     }
 
     private fun observe() {
-        settingsViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    settingsViewModel.event.collect { event ->
+                        when (event) {
+                            is SettingsEvent.UserFeedback -> binding.coordinator.showSnackbar(event.resId)
+                            is SettingsEvent.WindowFocusChanged -> Unit // handled in FragmentCamera
+                        }
+                    }
+                }
+                launch {
+                    settingsViewModel.state.collect { state ->
+                        binding.progressBar.setVisible(state.isLoading)
+                    }
+                }
             }
-        }
-
-        settingsViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.progressBar.setVisible(it)
         }
     }
 

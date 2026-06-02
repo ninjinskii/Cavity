@@ -43,11 +43,15 @@ import com.louis.app.cavity.ui.tasting.SpaceItemDecoration
 import com.louis.app.cavity.util.*
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.db.dao.BottleWithHistoryEntries
 import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
+import com.louis.app.cavity.ui.manager.AddItemEvent
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.navigation.BottleDetailsRoute
 import com.louis.app.cavity.ui.navigation.navigate
@@ -228,18 +232,22 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
 
         var firstTime = true
 
-        bottleDetailsViewModel.getBottlesForWine(args.wineId).observe(viewLifecycleOwner) {
-            val (bottles, showTasingLog) = it
-            val checkedBottleId = bottleDetailsViewModel.getBottleId()
-            val id = bottleAdapter.submitListWithPreselection(bottles, checkedBottleId ?: -1L)
-            bottleDetailsViewModel.setBottleId(id)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                bottleDetailsViewModel.getBottlesForWine(args.wineId).collect {
+                    val (bottles, showTasingLog) = it
+                    val checkedBottleId = bottleDetailsViewModel.getBottleId()
+                    val id = bottleAdapter.submitListWithPreselection(bottles, checkedBottleId ?: -1L)
+                    bottleDetailsViewModel.setBottleId(id)
 
-            binding.buttonTastingLog.setVisible(showTasingLog)
+                    binding.buttonTastingLog.setVisible(showTasingLog)
 
-            // Avoid weird DiffUtil animations conflict
-            if (firstTime) {
-                smoothScrollToCheckedChip(id, bottles)
-                firstTime = false
+                    // Avoid weird DiffUtil animations conflict
+                    if (firstTime) {
+                        smoothScrollToCheckedChip(id, bottles)
+                        firstTime = false
+                    }
+                }
             }
         }
 
@@ -252,10 +260,14 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
             adapter = reviewAdapter
         }
 
-        bottleDetailsViewModel.reviews.observe(viewLifecycleOwner) {
-            binding.divider3.setVisible(it.isNotEmpty())
-            binding.reviewList.setVisible(it.isNotEmpty())
-            reviewAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                bottleDetailsViewModel.reviews.collect {
+                    binding.divider3.setVisible(it.isNotEmpty())
+                    binding.reviewList.setVisible(it.isNotEmpty())
+                    reviewAdapter.submitList(it)
+                }
+            }
         }
     }
 
@@ -263,131 +275,132 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         var firstRun = true
         var lastBottleId = -1L
 
-        bottleDetailsViewModel.bottle.observe(viewLifecycleOwner) {
-            if (it != null) {
-                updateUI(it, lastBottleId)
-                lastBottleId = it.id
-            }
-        }
-
-        bottleDetailsViewModel.grapes.observe(viewLifecycleOwner) {
-            binding.divider2.setVisible(it.isNotEmpty())
-            binding.grapeBar.apply {
-                setVisible(it.isNotEmpty())
-                setSlices(it, anim = false)
-
-                if (!firstRun) {
-                    triggerAnimation()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    bottleDetailsViewModel.bottle.collect {
+                        if (it != null) {
+                            updateUI(it, lastBottleId)
+                            lastBottleId = it.id
+                        }
+                    }
                 }
+                launch {
+                    bottleDetailsViewModel.grapes.collect {
+                        binding.divider2.setVisible(it.isNotEmpty())
+                        binding.grapeBar.apply {
+                            setVisible(it.isNotEmpty())
+                            setSlices(it, anim = false)
 
-                firstRun = false
-            }
-        }
+                            if (!firstRun) {
+                                triggerAnimation()
+                            }
 
-        bottleDetailsViewModel.replenishmentEntry.observe(viewLifecycleOwner) {
-            val isAGift = it?.friends?.isNotEmpty() == true
+                            firstRun = false
+                        }
+                    }
+                }
+                launch {
+                    bottleDetailsViewModel.replenishmentEntry.collect {
+                        val isAGift = it?.friends?.isNotEmpty() == true
 
-            binding.givenBy.apply {
-                setVisible(isAGift)
-                val friend = it?.friends?.joinToString { friend -> friend.name } ?: return@apply
-                setData(friend)
+                        binding.givenBy.apply {
+                            setVisible(isAGift)
+                            val friend = it?.friends?.joinToString { friend -> friend.name } ?: return@apply
+                            setData(friend)
 
-                val firstPicture =
-                    it.friends.firstOrNull { f -> f.imgPath.isNotEmpty() } ?: return@apply
+                            val firstPicture =
+                                it.friends.firstOrNull { f -> f.imgPath.isNotEmpty() } ?: return@apply
 
-                val imgPath = firstPicture.imgPath
-                AvatarLoader.requestAvatar(requireContext(), imgPath) { avatarBitmap ->
-                    avatarBitmap?.let { drawable ->
-                        setIcon(drawable)
+                            val imgPath = firstPicture.imgPath
+                            AvatarLoader.requestAvatar(requireContext(), imgPath) { avatarBitmap ->
+                                avatarBitmap?.let { drawable ->
+                                    setIcon(drawable)
+                                }
+                            }
+                        }
+                    }
+                }
+                launch {
+                    bottleDetailsViewModel.getWineById(args.wineId).collect {
+                        it ?: return@collect
+                        with(binding) {
+                            bottleName.text = it.name
+                            cuvee.setVisible(it.cuvee.isNotBlank())
+                            cuvee.setData(it.cuvee)
+                        }
+
+                        showImage(it.imgPath.toUri())
+                    }
+                }
+                launch {
+                    bottleDetailsViewModel.tags.collect {
+                        if (it == null) {
+                            return@collect
+                        }
+
+                        binding.tagsScrollView.setVisible(!it.tags.isEmpty())
+
+                        ChipLoader.Builder()
+                            .with(lifecycleScope)
+                            .useInflater(layoutInflater)
+                            .toInflate(R.layout.chip_tag)
+                            .load(it.tags)
+                            .into(binding.tagsChipGroup)
+                            .doOnLongClick { view ->
+                                true.also { showUpdateTagDialog(view.getTag(R.string.tag_chip_id) as Tag) }
+                            }
+                            .closable { tag -> bottleDetailsViewModel.removeTag(tag as Tag) }
+                            .selectable(false)
+                            .build()
+                            .go()
+                    }
+                }
+                launch {
+                    bottleDetailsViewModel.event.collect { event ->
+                        when (event) {
+                            is BottleDetailsEvent.OpenPdf -> showPdf(event.uri)
+                            is BottleDetailsEvent.UserFeedback ->
+                                binding.coordinator.showSnackbar(event.resId)
+                            is BottleDetailsEvent.RevertConsumption -> {
+                                binding.coordinator.showSnackbar(R.string.back_in_stock, R.string.cancel) {
+                                    consumeGiftBottleViewModel.consumeBottle(event.boundedBottle)
+                                }
+                            }
+                            is BottleDetailsEvent.RemoveFromTasting -> {
+                                binding.coordinator.showSnackbar(
+                                    R.string.bottle_removed_from_tasting,
+                                    R.string.cancel
+                                ) {
+                                    bottleDetailsViewModel.cancelRemoveBottleFromTasting(
+                                        bottleId = event.bottleId,
+                                        tastingId = event.tastingId
+                                    )
+                                }
+                            }
+                            is BottleDetailsEvent.RemoveTag -> {
+                                binding.coordinator.showSnackbar(
+                                    R.string.tag_removed_from_bottle,
+                                    R.string.cancel
+                                ) {
+                                    bottleDetailsViewModel.cancelRemoveTag(
+                                        tagId = event.tagId,
+                                        bottleId = event.bottleId
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                launch {
+                    addItemViewModel.event.collect { event ->
+                        when (event) {
+                            is AddItemEvent.UserFeedback ->
+                                binding.coordinator.showSnackbar(event.resId)
+                        }
                     }
                 }
             }
-        }
-
-        bottleDetailsViewModel.getWineById(args.wineId).observe(viewLifecycleOwner) {
-            with(binding) {
-                bottleName.text = it.name
-                cuvee.setVisible(it.cuvee.isNotBlank())
-                cuvee.setData(it.cuvee)
-            }
-
-            showImage(it.imgPath.toUri())
-        }
-
-        bottleDetailsViewModel.pdfEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { uri ->
-                showPdf(uri)
-            }
-        }
-
-        bottleDetailsViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
-            }
-        }
-
-        addItemViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
-            }
-        }
-
-        bottleDetailsViewModel.revertConsumptionEvent.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let { boundedBottle ->
-                binding.coordinator.showSnackbar(R.string.back_in_stock, R.string.cancel) {
-                    consumeGiftBottleViewModel.consumeBottle(boundedBottle)
-                }
-            }
-        }
-
-        bottleDetailsViewModel.removeFromTastingEvent.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let { bottleToTasting ->
-                binding.coordinator.showSnackbar(
-                    R.string.bottle_removed_from_tasting,
-                    R.string.cancel
-                ) {
-                    bottleDetailsViewModel.cancelRemoveBottleFromTasting(
-                        bottleId = bottleToTasting.first,
-                        tastingId = bottleToTasting.second
-                    )
-                }
-            }
-        }
-
-        bottleDetailsViewModel.removeTagEvent.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let { tagToBottle ->
-                binding.coordinator.showSnackbar(
-                    R.string.tag_removed_from_bottle,
-                    R.string.cancel
-                ) {
-                    bottleDetailsViewModel.cancelRemoveTag(
-                        tagId = tagToBottle.first,
-                        bottleId = tagToBottle.second
-                    )
-                }
-            }
-        }
-
-        bottleDetailsViewModel.tags.observe(viewLifecycleOwner) {
-            if (it == null) {
-                return@observe
-            }
-
-            binding.tagsScrollView.setVisible(!it.tags.isEmpty())
-
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .toInflate(R.layout.chip_tag)
-                .load(it.tags)
-                .into(binding.tagsChipGroup)
-                .doOnLongClick { view ->
-                    true.also { showUpdateTagDialog(view.getTag(R.string.tag_chip_id) as Tag) }
-                }
-                .closable { tag -> bottleDetailsViewModel.removeTag(tag as Tag) }
-                .selectable(false)
-                .build()
-                .go()
         }
     }
 

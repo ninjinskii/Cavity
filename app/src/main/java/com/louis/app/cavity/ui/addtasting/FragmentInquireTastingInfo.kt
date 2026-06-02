@@ -11,8 +11,13 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireTastingInfoBinding
+import com.louis.app.cavity.ui.addtasting.AddTastingEvent
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
@@ -107,18 +112,24 @@ class FragmentInquireTastingInfo : Step(R.layout.fragment_inquire_tasting_info) 
     }
 
     private fun observe() {
-        addTastingViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    addTastingViewModel.event.collect { event ->
+                        when (event) {
+                            is AddTastingEvent.UserFeedback ->
+                                snackbarProvider.onShowSnackbarRequested(event.resId)
+                            else -> Unit
+                        }
+                    }
+                }
+                launch {
+                    friendPickerViewModel.state.collect { state ->
+                        binding.friendPicker.setFriends(state.pickableFriends.map { it.friend })
+                        binding.friendPicker.setSelectedFriends(state.selectedFriends.toMutableList())
+                    }
+                }
             }
-        }
-
-        friendPickerViewModel.getAllFriends().observe(viewLifecycleOwner) {
-            binding.friendPicker.setFriends(it)
-        }
-
-        friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {
-            binding.friendPicker.setSelectedFriends(it)
         }
     }
 

@@ -24,7 +24,9 @@ import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.ActivityMainBinding
+import com.louis.app.cavity.ui.account.LoginEvent
 import com.louis.app.cavity.ui.account.LoginViewModel
+import com.louis.app.cavity.ui.manager.AddItemEvent
 import com.louis.app.cavity.ui.manager.AddItemViewModel
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.ui.tasting.TastingViewModel
@@ -217,26 +219,30 @@ class ActivityMain : AppCompatActivity(), SnackbarProvider, NavigationProvider {
     }
 
     private fun observe() {
-        addItemViewModel.userFeedback.observe(this) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                onShowSnackbarRequested(stringRes)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    addItemViewModel.event.collect { event ->
+                        when (event) {
+                            is AddItemEvent.UserFeedback -> onShowSnackbarRequested(event.resId)
+                        }
+                    }
+                }
+                launch {
+                    loginViewModel.event.collect { event ->
+                        when (event) {
+                            is LoginEvent.UserFeedback -> onShowSnackbarRequested(event.resId)
+                            is LoginEvent.UserFeedbackString -> binding.main.coordinator.showSnackbar(event.message)
+                            else -> Unit
+                        }
+                    }
+                }
+                launch {
+                    tastingViewModel.state.collect { state ->
+                        showTastingIndicator(state.hasTastingToday)
+                    }
+                }
             }
-        }
-
-        loginViewModel.userFeedback.observe(this) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                onShowSnackbarRequested(stringRes)
-            }
-        }
-
-        loginViewModel.userFeedbackString.observe(this) {
-            it.getContentIfNotHandled()?.let { string ->
-                binding.main.coordinator.showSnackbar(string)
-            }
-        }
-
-        tastingViewModel.hasTastingToday.observe(this) { hasTastingToday ->
-            showTastingIndicator(hasTastingToday)
         }
     }
 

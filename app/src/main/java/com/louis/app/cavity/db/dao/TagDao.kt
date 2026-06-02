@@ -1,6 +1,5 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Embedded
@@ -37,7 +36,7 @@ interface TagDao {
 
     @Transaction
     @Query("SELECT * FROM bottle WHERE id=:bottleId")
-    fun getTagsForBottle(bottleId: Long): LiveData<BottleWithTags>
+    fun getTagsForBottle(bottleId: Long): Flow<BottleWithTags>
 
     @Transaction
     @Query("SELECT * FROM bottle WHERE id=:bottleId")

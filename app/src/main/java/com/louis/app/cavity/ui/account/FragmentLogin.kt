@@ -11,6 +11,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentLoginBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
@@ -67,20 +71,25 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
     }
 
     private fun observe() {
-        loginViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.progressBar.setVisible(it, invisible = true)
-        }
-
-        loginViewModel.navigateToConfirm.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                navigate(LoginRoute.ConfirmAccount)
-            }
-        }
-
-        loginViewModel.account.observe(viewLifecycleOwner) {
-            if (it != null) {
-                loginViewModel.saveLoginResult(loginSuccessful = true)
-                popBackStack()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    loginViewModel.state.collect { state ->
+                        binding.progressBar.setVisible(state.isLoading, invisible = true)
+                        if (state.account != null) {
+                            loginViewModel.saveLoginResult(loginSuccessful = true)
+                            popBackStack()
+                        }
+                    }
+                }
+                launch {
+                    loginViewModel.event.collect { event ->
+                        when (event) {
+                            is LoginEvent.NavigateToConfirm -> navigate(LoginRoute.ConfirmAccount)
+                            else -> Unit
+                        }
+                    }
+                }
             }
         }
     }

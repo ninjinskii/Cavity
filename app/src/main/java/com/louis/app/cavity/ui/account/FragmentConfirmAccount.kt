@@ -7,6 +7,10 @@ import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentConfirmAccountBinding
 import com.louis.app.cavity.ui.navigation.popBackStack
@@ -38,14 +42,22 @@ class FragmentConfirmAccount : Fragment(R.layout.fragment_confirm_account) {
     }
 
     private fun observe() {
-        loginViewModel.confirmedEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                popBackStack()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    loginViewModel.event.collect { event ->
+                        when (event) {
+                            is LoginEvent.Confirmed -> popBackStack()
+                            else -> Unit
+                        }
+                    }
+                }
+                launch {
+                    loginViewModel.state.collect { state ->
+                        binding.progressBar.setVisible(state.isLoading, invisible = true)
+                    }
+                }
             }
-        }
-
-        loginViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.progressBar.setVisible(it, invisible = true)
         }
     }
 

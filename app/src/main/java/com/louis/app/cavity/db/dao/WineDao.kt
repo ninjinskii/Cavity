@@ -1,6 +1,5 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Wine
@@ -28,10 +27,10 @@ interface WineDao {
     suspend fun deleteWineById(wineId: Long)
 
     @Query("SELECT * FROM wine WHERE id =:wineId")
-    fun getWineById(wineId: Long): LiveData<Wine>
+    fun getWineById(wineId: Long): Flow<Wine?>
 
     @Query("SELECT DISTINCT naming FROM wine WHERE county_id =:countyId ORDER BY naming")
-    fun getNamingsForCounty(countyId: Long): LiveData<List<String>>
+    fun getNamingsForCounty(countyId: Long): Flow<List<String>>
 
     @Query("SELECT * FROM wine WHERE color =:color AND is_organic =:isOrganic AND cuvee =:cuvee")
     suspend fun getWineByAttributes(color: WineColor, isOrganic: Int, cuvee: String): List<Wine>
@@ -61,7 +60,7 @@ interface WineDao {
             WHEN 'ROSE' THEN 3
         END, w.naming
     """)
-    fun getWinesWithBottlesByCounty(countyId: Long): LiveData<List<WineWithBottles>>
+    fun getWinesWithBottlesByCounty(countyId: Long): Flow<List<WineWithBottles>>
 
     @Transaction
     @Query("""

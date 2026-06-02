@@ -13,7 +13,11 @@ import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.work.WorkInfo
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentAccountBinding
 import com.louis.app.cavity.ui.SimpleInputDialog
@@ -90,11 +94,15 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
         setListeners()
         setupToolbar()
 
-        loginViewModel.loginResultLiveData().observe(viewLifecycleOwner) {
-            if (it ?: true) {
-                startPostponedEnterTransition()
-            } else {
-                popUpTo(R.id.home_dest, inclusive = false)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loginViewModel.loginResultFlow().collect {
+                    if (it ?: true) {
+                        startPostponedEnterTransition()
+                    } else {
+                        popUpTo(R.id.home_dest, inclusive = false)
+                    }
+                }
             }
         }
     }
@@ -112,75 +120,89 @@ class FragmentAccount : Fragment(R.layout.fragment_account) {
     }
 
     private fun observe() {
-        loginViewModel.account.observe(viewLifecycleOwner) {
-            if (it != null) {
-                binding.email.text = it.email
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    loginViewModel.state.collect { state ->
+                        val account = state.account
+                        if (account != null) {
+                            binding.email.text = account.email
 
-                val date = DateFormatter.formatDate(it.lastUpdateTime, "dd MMMM yyyy, HH:mm")
-                binding.lastBackupDate.text = date
-                startPostponedEnterTransition()
-            } else {
-                navigate(AccountRoute.Login)
-            }
-        }
-
-        loginViewModel.deletedEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                importExportViewModel.cleanAccountDatabase()
-                loginViewModel.logout()
-            }
-        }
-
-        importExportViewModel.workProgress.observe(viewLifecycleOwner) {
-            if (it != null) {
-                when (it.state) {
-                    WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
-                        binding.progressBar.setVisible(true)
-                    }
-
-                    WorkInfo.State.FAILED -> {
-                        binding.progressBar.setVisible(false)
-                    }
-
-                    WorkInfo.State.SUCCEEDED -> {
-                        binding.progressBar.setVisible(false)
-
-                        if (it.tags.contains(UploadWorker.WORK_TAG)) {
-                            loginViewModel.updateAccountLastUpdateLocally()
-                            updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_SUCCESS)
-                        }
-
-                        if (it.tags.contains(PruneWorker.WORK_TAG)) {
-                            loginViewModel.logout()
+                            val date = DateFormatter.formatDate(account.lastUpdateTime, "dd MMMM yyyy, HH:mm")
+                            binding.lastBackupDate.text = date
+                            startPostponedEnterTransition()
+                        } else {
+                            navigate(AccountRoute.Login)
                         }
                     }
-
-                    else -> Unit
                 }
-            } else {
-                binding.progressBar.setVisible(false)
-            }
-        }
-
-        importExportViewModel.autoBackupWorkProgress.observe(viewLifecycleOwner) {
-            if (it !== null && it.state == WorkInfo.State.RUNNING) {
-                val healthState =
-                    it.progress.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
-
-                updateAutoBackupStatus(healthState)
-
-                if (healthState == AutoUploadWorker.HEALTH_STATE_SUCCESS) {
-                    loginViewModel.updateAccountLastUpdateLocally()
+                launch {
+                    loginViewModel.event.collect { event ->
+                        when (event) {
+                            is LoginEvent.Deleted -> {
+                                importExportViewModel.cleanAccountDatabase()
+                                loginViewModel.logout()
+                            }
+                            else -> Unit
+                        }
+                    }
                 }
-            }
-        }
+                launch {
+                    importExportViewModel.workProgress.collect {
+                        if (it != null) {
+                            when (it.state) {
+                                WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
+                                    binding.progressBar.setVisible(true)
+                                }
 
-        importExportViewModel.healthCheckWorkProgress.observe(viewLifecycleOwner) {
-            if (it !== null && it.state.isFinished && settingsViewModel.getAutoBackup()) {
-                val healthState =
-                    it.outputData.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
+                                WorkInfo.State.FAILED -> {
+                                    binding.progressBar.setVisible(false)
+                                }
 
-                updateAutoBackupStatus(healthState)
+                                WorkInfo.State.SUCCEEDED -> {
+                                    binding.progressBar.setVisible(false)
+
+                                    if (it.tags.contains(UploadWorker.WORK_TAG)) {
+                                        loginViewModel.updateAccountLastUpdateLocally()
+                                        updateAutoBackupStatus(AutoUploadWorker.HEALTH_STATE_SUCCESS)
+                                    }
+
+                                    if (it.tags.contains(PruneWorker.WORK_TAG)) {
+                                        loginViewModel.logout()
+                                    }
+                                }
+
+                                else -> Unit
+                            }
+                        } else {
+                            binding.progressBar.setVisible(false)
+                        }
+                    }
+                }
+                launch {
+                    importExportViewModel.autoBackupWorkProgress.collect {
+                        if (it !== null && it.state == WorkInfo.State.RUNNING) {
+                            val healthState =
+                                it.progress.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
+
+                            updateAutoBackupStatus(healthState)
+
+                            if (healthState == AutoUploadWorker.HEALTH_STATE_SUCCESS) {
+                                loginViewModel.updateAccountLastUpdateLocally()
+                            }
+                        }
+                    }
+                }
+                launch {
+                    importExportViewModel.healthCheckWorkProgress.collect {
+                        if (it !== null && it.state.isFinished && settingsViewModel.getAutoBackup()) {
+                            val healthState =
+                                it.outputData.getInt(AutoUploadWorker.WORK_DATA_HEALTH_STATE_KEY, -1)
+
+                            updateAutoBackupStatus(healthState)
+                        }
+                    }
+                }
             }
         }
     }

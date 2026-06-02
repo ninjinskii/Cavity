@@ -2,7 +2,7 @@ package com.louis.app.cavity.ui.addwine
 
 import android.app.Application
 import androidx.annotation.StringRes
-import androidx.lifecycle.*
+import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.repository.CountyRepository
 import com.louis.app.cavity.domain.repository.WineRepository
@@ -12,9 +12,14 @@ import com.louis.app.cavity.model.WineColor
 import com.louis.app.cavity.ui.BaseViewModel
 import com.louis.app.cavity.ui.UiEvent
 import com.louis.app.cavity.ui.UiEventManager
-import com.louis.app.cavity.util.*
+import com.louis.app.cavity.util.toBoolean
+import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -22,7 +27,11 @@ sealed interface AddWineEvent {
     data class WineChange(val wine: Wine) : AddWineEvent
 }
 
-class AddWineState
+data class AddWineState(
+    val updatedWine: Wine? = null,
+    val image: String = "",
+    val namings: List<String> = emptyList()
+)
 
 class AddWineViewModel(app: Application) :
     BaseViewModel<AddWineState, AddWineEvent>(app, AddWineState()) {
@@ -30,26 +39,25 @@ class AddWineViewModel(app: Application) :
     private val countyRepository = CountyRepository.getInstance(app)
     private val wineRepository = WineRepository.getInstance(app)
 
-    private val _userFeedback = MutableLiveData<Event<Int>>()
-    val userFeedback: LiveData<Event<Int>>
-        get() = _userFeedback
-
-    private val _updatedWine = MutableLiveData<Wine>()
-    val updatedWine: LiveData<Wine>
-        get() = _updatedWine
-
-    private val _image = MutableLiveData<String>()
-    val image: LiveData<String>
-        get() = _image
-
-    private val _countyId = MutableLiveData<Long>()
+    private val _countyId = MutableStateFlow<Long?>(null)
 
     private val isEditMode: Boolean
         get() = wineId != 0L
 
-    val namings = _countyId.switchMap { wineRepository.getNamingsForCounty(it) }
-
     private var wineId = 0L
+
+    init {
+        viewModelScope.launch {
+            _countyId
+                .filterNotNull()
+                .flatMapLatest { wineRepository.getNamingsForCounty(it) }
+                .collect { viewState = viewState.copy(namings = it) }
+        }
+    }
+
+    fun getNamings(): Flow<List<String>> = _countyId
+        .filterNotNull()
+        .flatMapLatest { wineRepository.getNamingsForCounty(it) }
 
     fun start(wineId: Long) {
         this.wineId = wineId
@@ -58,9 +66,8 @@ class AddWineViewModel(app: Application) :
             viewModelScope.launch(IO) {
                 val wine = wineRepository.getWineByIdNotLive(wineId)
 
-                _countyId.postValue(wine.countyId)
-                _updatedWine.postValue(wine)
-                _image.postValue(wine.imgPath)
+                _countyId.value = wine.countyId
+                viewState = viewState.copy(updatedWine = wine, image = wine.imgPath)
             }
         }
     }
@@ -76,7 +83,7 @@ class AddWineViewModel(app: Application) :
         county: County?
     ) {
         if (county == null) {
-            _userFeedback.postOnce(R.string.no_county)
+            UiEventManager.send(UiEvent.Snackbar(R.string.no_county))
             return
         }
 
@@ -94,7 +101,7 @@ class AddWineViewModel(app: Application) :
             color,
             cuvee,
             isOrganic,
-            _image.value ?: "",
+            viewState.image,
             county.id
         )
 
@@ -131,12 +138,12 @@ class AddWineViewModel(app: Application) :
     }
 
     fun setImage(imagePath: String) {
-        _image.postValue(imagePath)
+        viewState = viewState.copy(image = imagePath)
     }
 
     fun setCountyId(countyId: Long?) {
         countyId?.let {
-            _countyId.postValue(it)
+            _countyId.value = it
         }
     }
 
@@ -205,6 +212,6 @@ class AddWineViewModel(app: Application) :
     }
 
     companion object {
-        private const val WINE_DUPLICATE_THRESHOLD = 3
+        private const val WINE_DUPLICATE_THRESHOLD = 2
     }
 }

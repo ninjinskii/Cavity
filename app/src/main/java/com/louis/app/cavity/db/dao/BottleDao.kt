@@ -1,6 +1,5 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.model.*
@@ -24,7 +23,7 @@ interface BottleDao {
     suspend fun deleteBottles(bottle: List<Bottle>)
 
     @Query("SELECT * FROM bottle WHERE id=:bottleId")
-    fun getBottleById(bottleId: Long): LiveData<Bottle>
+    fun getBottleById(bottleId: Long): Flow<Bottle>
 
     @Query("SELECT * FROM bottle WHERE id=:bottleId")
     suspend fun getBottleByIdNotLive(bottleId: Long): Bottle
@@ -64,17 +63,17 @@ interface BottleDao {
     suspend fun boundBottlesToTasting(tastingId: Long, bottles: List<Long>)
 
     @Query("SELECT DISTINCT buy_location FROM bottle WHERE length(buy_location) > 0")
-    fun getAllBuyLocations(): LiveData<List<String>>
+    fun getAllBuyLocations(): Flow<List<String>>
 
     @Query("SELECT DISTINCT storage_location FROM bottle WHERE length(storage_location) > 0")
-    fun getAllStorageLocations(): LiveData<List<String>>
+    fun getAllStorageLocations(): Flow<List<String>>
 
     @Query("SELECT DISTINCT storage_location FROM bottle WHERE length(storage_location) > 0")
     fun getAllStorageLocationsFlow(): Flow<List<String>>
 
     @Transaction
     @Query("SELECT * FROM bottle")
-    fun getBoundedBottles(): LiveData<List<BoundedBottle>>
+    fun getBoundedBottles(): Flow<List<BoundedBottle>>
 
     @Transaction
     @Query("SELECT * FROM bottle WHERE id=:bottleId")

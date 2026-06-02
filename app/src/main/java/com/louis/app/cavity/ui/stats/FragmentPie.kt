@@ -7,7 +7,9 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
 import com.louis.app.cavity.db.dao.Stat
@@ -75,45 +77,48 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     private fun observe() {
-        statsViewModel.currentItemPosition.observe(viewLifecycleOwner) {
-            if (it == viewPagerPosition) {
-                maybeShowYearPicker()
-            }
-        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    statsViewModel.state.collect { state ->
+                        if (state.currentItemPosition == viewPagerPosition) {
+                            maybeShowYearPicker()
+                        }
 
-        statsViewModel.results[viewPagerPosition].observe(viewLifecycleOwner) {
-            updatePieData(binding.pieView, it)
-        }
+                        with(binding) {
+                            comparisonPieView.setVisible(state.comparison)
+                            comparisonText.setVisible(state.comparison)
+                            buttonGroupSwitchStat.setVisible(!state.comparison)
+                        }
 
-        statsViewModel.comparison.observe(viewLifecycleOwner) {
-            with(binding) {
-                comparisonPieView.setVisible(it)
-                comparisonText.setVisible(it)
-                buttonGroupSwitchStat.setVisible(!it)
-            }
-        }
+                        binding.toggleGivenBottle.setVisible(state.showYearSpanOptions)
+                        binding.givenBottle.setVisible(state.showYearSpanOptions)
+                    }
+                }
+                launch {
+                    statsViewModel.getResults(viewPagerPosition).collect { stats ->
+                        updatePieData(binding.pieView, stats)
 
-        statsViewModel.comparisonDetails.observe(viewLifecycleOwner) {
-            updatePieData(binding.comparisonPieView, it)
-        }
+                        lifecycleScope.launch(Default) {
+                            val total = stats.sumOf { it.count }
 
-        statsViewModel.comparisonText.observe(viewLifecycleOwner) {
-            binding.comparisonText.text = it
-        }
-
-        statsViewModel.details.observe(viewLifecycleOwner) { stats ->
-            lifecycleScope.launch(Default) {
-                val total = stats.sumOf { it.count }
-
-                withContext(Main) {
-                    binding.total.text = resources.getString(R.string.total, total)
+                            withContext(Main) {
+                                binding.total.text = resources.getString(R.string.total, total)
+                            }
+                        }
+                    }
+                }
+                launch {
+                    statsViewModel.getComparisons(viewPagerPosition).collect {
+                        updatePieData(binding.comparisonPieView, it)
+                    }
+                }
+                launch {
+                    statsViewModel.comparisonText.collect {
+                        binding.comparisonText.text = it
+                    }
                 }
             }
-        }
-
-        statsViewModel.showYearSpanOptions.observe(viewLifecycleOwner) {
-            binding.toggleGivenBottle.setVisible(it)
-            binding.givenBottle.setVisible(it)
         }
     }
 

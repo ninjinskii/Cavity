@@ -2,9 +2,7 @@ package com.louis.app.cavity.ui.manager
 
 import android.app.Application
 import android.database.sqlite.SQLiteConstraintException
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.repository.CountyRepository
@@ -18,32 +16,29 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.Tag
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.ui.BaseViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-/**
- * This ViewModel is used to insert simple items, since we can do that from multiple screens across
- * the app.
- */
-class AddItemViewModel(app: Application) : AndroidViewModel(app) {
+sealed interface AddItemEvent {
+    data class UserFeedback(@StringRes val resId: Int) : AddItemEvent
+}
+
+data class AddItemUiState(val placeholder: Unit = Unit)
+
+class AddItemViewModel(app: Application) : BaseViewModel<AddItemUiState, AddItemEvent>(app, AddItemUiState()) {
     private val countyRepository = CountyRepository.getInstance(app)
     private val grapeRepository = GrapeRepository.getInstance(app)
     private val reviewRepository = ReviewRepository.getInstance(app)
     private val friendRepository = FriendRepository.getInstance(app)
     private val tagRepository = TagRepository.getInstance(app)
 
-    private val _userFeedback = MutableLiveData<Event<Int>>()
-    val userFeedback: LiveData<Event<Int>>
-        get() = _userFeedback
-
     fun insertCounty(countyName: String) {
         viewModelScope.launch(IO) {
             val counties = countyRepository.getAllCountiesNotLive()
 
             if (checkCountyAlredyExists(counties, countyName)) {
-                _userFeedback.postOnce(R.string.county_already_exists)
+                emitEvent(AddItemEvent.UserFeedback(R.string.county_already_exists))
                 return@launch
             }
 
@@ -56,7 +51,7 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
                 else -> R.string.base_error
             }
 
-            _userFeedback.postOnce(message)
+            emitEvent(AddItemEvent.UserFeedback(message))
         }
     }
 
@@ -70,7 +65,7 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
                 else -> R.string.base_error
             }
 
-            _userFeedback.postOnce(message)
+            emitEvent(AddItemEvent.UserFeedback(message))
         }
     }
 
@@ -78,11 +73,11 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             try {
                 reviewRepository.insertReview(Review(0, contestName, type))
-                _userFeedback.postOnce(R.string.review_added)
+                emitEvent(AddItemEvent.UserFeedback(R.string.review_added))
             } catch (_: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_contest_name)
+                emitEvent(AddItemEvent.UserFeedback(R.string.empty_contest_name))
             } catch (_: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.contest_name_already_exists)
+                emitEvent(AddItemEvent.UserFeedback(R.string.contest_name_already_exists))
             }
         }
     }
@@ -91,11 +86,11 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(IO) {
             try {
                 friendRepository.insertFriend(Friend(0, nameLastName, ""))
-                _userFeedback.postOnce(R.string.friend_added)
+                emitEvent(AddItemEvent.UserFeedback(R.string.friend_added))
             } catch (_: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.input_error)
+                emitEvent(AddItemEvent.UserFeedback(R.string.input_error))
             } catch (_: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.friend_already_exists)
+                emitEvent(AddItemEvent.UserFeedback(R.string.friend_already_exists))
             }
         }
     }
@@ -105,9 +100,9 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 tagRepository.insertTag(Tag(0, tagName))
             } catch (_: IllegalArgumentException) {
-                _userFeedback.postOnce(R.string.empty_tag_name)
+                emitEvent(AddItemEvent.UserFeedback(R.string.empty_tag_name))
             } catch (_: SQLiteConstraintException) {
-                _userFeedback.postOnce(R.string.tag_already_exists)
+                emitEvent(AddItemEvent.UserFeedback(R.string.tag_already_exists))
             }
         }
     }
@@ -115,7 +110,7 @@ class AddItemViewModel(app: Application) : AndroidViewModel(app) {
     fun updateTag(tag: Tag) {
         viewModelScope.launch(IO) {
             tagRepository.updateTag(tag)
-            _userFeedback.postOnce(R.string.tag_updated)
+            emitEvent(AddItemEvent.UserFeedback(R.string.tag_updated))
         }
     }
 

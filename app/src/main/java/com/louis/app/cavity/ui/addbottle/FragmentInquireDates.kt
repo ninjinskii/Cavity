@@ -7,6 +7,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireDatesBinding
 import com.louis.app.cavity.model.Bottle
@@ -92,9 +96,13 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
 
         binding.buyLocation.setAdapter(adapter)
 
-        addBottleViewModel.buyLocations.observe(viewLifecycleOwner) {
-            adapter.clear()
-            adapter.addAll(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addBottleViewModel.buyLocations.collect {
+                    adapter.clear()
+                    adapter.addAll(it)
+                }
+            }
         }
     }
 
@@ -122,8 +130,12 @@ class FragmentInquireDates : Step(R.layout.fragment_inquire_dates) {
     }
 
     private fun observe() {
-        addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
-            if (it != null) updateFields(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addBottleViewModel.state.collect { state ->
+                    if (state.editedBottle != null) updateFields(state.editedBottle)
+                }
+            }
         }
     }
 

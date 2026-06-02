@@ -12,36 +12,34 @@ import com.louis.app.cavity.domain.history.isConsumption
 import com.louis.app.cavity.domain.history.isReplenishment
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.model.HistoryEntry
+import com.louis.app.cavity.ui.BaseViewModel
 import com.louis.app.cavity.util.DateFormatter
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.postOnce
 import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HistoryViewModel(app: Application) : AndroidViewModel(app) {
+sealed interface HistoryEvent {
+    data class ScrollTo(val position: Int) : HistoryEvent
+    data class ShowDatePicker(val oldestEntryDate: Long) : HistoryEvent
+}
+
+data class HistoryUiState(
+    val selectedEntry: BoundedHistoryEntry? = null,
+    val filter: HistoryFilter = HistoryFilter.NoFilter
+)
+
+class HistoryViewModel(app: Application) : BaseViewModel<HistoryUiState, HistoryEvent>(app, HistoryUiState()) {
     private val historyRepository = HistoryRepository.getInstance(app)
 
-    private val _scrollTo = MutableLiveData<Event<Int>>()
-    val scrollTo: LiveData<Event<Int>>
-        get() = _scrollTo
-
-    private val _selectedEntry = MutableLiveData<BoundedHistoryEntry?>(null)
-    val selectedEntry: LiveData<BoundedHistoryEntry?>
-        get() = _selectedEntry
-
     private val _filter = MutableStateFlow<HistoryFilter>(HistoryFilter.NoFilter)
-    val filter: LiveData<HistoryFilter>
-        get() = _filter.asLiveData()
-
-    private val _showDatePicker = MutableLiveData<Event<Long>>(null)
-    val showDatePicker: LiveData<Event<Long>>
-        get() = _showDatePicker
+    val filterFlow: StateFlow<HistoryFilter> = _filter.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val entries = _filter.flatMapLatest {
@@ -82,14 +80,13 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
 
                     if (day <= timestamp) {
                         dateFounded = true
-                        _scrollTo.postOnce(position + headerCount - offset)
+                        emitEvent(HistoryEvent.ScrollTo(position + headerCount - offset))
                         break
                     }
-
                 }
 
                 if (!dateFounded) {
-                    _scrollTo.postOnce(entries.size + headerCount)
+                    emitEvent(HistoryEvent.ScrollTo(entries.size + headerCount))
                 }
             }
         }
@@ -106,20 +103,21 @@ class HistoryViewModel(app: Application) : AndroidViewModel(app) {
             }
 
             val oldestEntryDate = filtered.last().date
-            _showDatePicker.postOnce(oldestEntryDate)
+            emitEvent(HistoryEvent.ShowDatePicker(oldestEntryDate))
         }
     }
 
     fun setFilter(filter: HistoryFilter) {
-        if (_selectedEntry.value != null) {
-            _selectedEntry.postValue(null)
+        if (viewState.selectedEntry != null) {
+            viewState = viewState.copy(selectedEntry = null)
         }
 
         this._filter.value = filter
+        viewState = viewState.copy(filter = filter)
     }
 
     fun setSelectedHistoryEntry(entry: BoundedHistoryEntry?) {
-        _selectedEntry.postValue(entry)
+        viewState = viewState.copy(selectedEntry = entry)
     }
 
     fun updateHistoryEntry(entry: HistoryEntry) {

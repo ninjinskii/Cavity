@@ -6,7 +6,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
+import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.R
@@ -67,9 +71,13 @@ class FragmentManageCounty : Fragment(R.layout.fragment_manage_base) {
             adapter = countyAdapter
         }
 
-        managerViewModel.getCountiesWithWines().observe(viewLifecycleOwner) {
-            binding.emptyState.setVisible(it.isEmpty())
-            countyAdapter.setCounties(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                managerViewModel.getCountiesWithWines().collect {
+                    binding.emptyState.setVisible(it.isEmpty())
+                    countyAdapter.setCounties(it)
+                }
+            }
         }
 
         val callback = CountyItemTouchHelperCallback(countyAdapter)

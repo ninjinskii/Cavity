@@ -1,6 +1,5 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.Wine
@@ -30,10 +29,10 @@ interface CountyDao {
     suspend fun getCountyByIdNotLive(countyId: Long): County?
 
     @Query("SELECT * FROM county ORDER BY pref_order")
-    fun getAllCounties(): LiveData<List<County>>
+    fun getAllCounties(): Flow<List<County>>
 
     @Query("SELECT * FROM county WHERE EXISTS(SELECT * FROM wine WHERE wine.county_id = county.id AND wine.hidden = 0) ORDER BY pref_order")
-    fun getNonEmptyCounties(): LiveData<List<County>>
+    fun getNonEmptyCounties(): Flow<List<County>>
 
     @Query("SELECT * FROM county WHERE EXISTS(SELECT * FROM wine WHERE wine.county_id = county.id AND wine.hidden = 0) ORDER BY pref_order")
     fun getNonEmptyCountiesFlow(): Flow<List<County>>
@@ -74,7 +73,7 @@ interface CountyDao {
             ORDER BY pref_order
         """
     )
-    fun getNonEmptyCountiesForStorageLocation(storageLocation: String): LiveData<List<County>>
+    fun getNonEmptyCountiesForStorageLocation(storageLocation: String): Flow<List<County>>
 
     @Query(
         """
@@ -100,7 +99,7 @@ interface CountyDao {
 
     @Transaction
     @Query("SELECT * FROM county ORDER BY pref_order")
-    fun getCountiesWithWines(): LiveData<List<CountyWithWines>>
+    fun getCountiesWithWines(): Flow<List<CountyWithWines>>
 
     @Query("DELETE FROM county")
     suspend fun deleteAll()

@@ -1,9 +1,9 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.QGrape
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GrapeDao {
@@ -20,14 +20,14 @@ interface GrapeDao {
     suspend fun deleteGrape(grape: Grape)
 
     @Query("SELECT * FROM grape ORDER BY name")
-    fun getAllGrapes(): LiveData<List<Grape>>
+    fun getAllGrapes(): Flow<List<Grape>>
 
     @Query("SELECT * FROM grape ORDER BY name")
     suspend fun getAllGrapesNotLive(): List<Grape>
 
     @Transaction
     @Query("SELECT * FROM grape")
-    fun getGrapeWithQuantifiedGrapes(): LiveData<List<GrapeWithQGrapes>>
+    fun getGrapeWithQuantifiedGrapes(): Flow<List<GrapeWithQGrapes>>
 
     @Query("DELETE FROM grape")
     suspend fun deleteAll()

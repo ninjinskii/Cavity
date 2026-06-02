@@ -7,7 +7,11 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.launch
 import androidx.navigation.fragment.navArgs
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentGiftBottleBinding
@@ -71,12 +75,13 @@ class FragmentGiftBottle : Fragment(R.layout.fragment_gift_bottle) {
     }
 
     private fun observe() {
-        friendPickerViewModel.getAllFriends().observe(viewLifecycleOwner) {
-            binding.friendPicker.setFriends(it)
-        }
-
-        friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {
-            binding.friendPicker.setSelectedFriends(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                friendPickerViewModel.state.collect { state ->
+                    binding.friendPicker.setFriends(state.pickableFriends.map { it.friend })
+                    binding.friendPicker.setSelectedFriends(state.selectedFriends.toMutableList())
+                }
+            }
         }
     }
 

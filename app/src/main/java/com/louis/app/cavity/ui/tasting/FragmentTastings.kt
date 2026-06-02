@@ -9,8 +9,12 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentTastingsBinding
 import com.louis.app.cavity.ui.navigation.TastingRoute
@@ -25,6 +29,7 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
     private var _binding: FragmentTastingsBinding? = null
     private val binding get() = _binding!!
     private val tastingViewModel: TastingViewModel by activityViewModels()
+    private lateinit var tastingAdapter: TastingRecyclerAdapter
     private val friendViewPool = RecyclerView.RecycledViewPool().apply {
         setMaxRecycledViews(R.layout.chip_friend, 8)
     }
@@ -68,7 +73,7 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
     }
 
     private fun initRecyclerView() {
-        val tastingAdapter = TastingRecyclerAdapter(
+        tastingAdapter = TastingRecyclerAdapter(
             friendViewPool,
             onItemClickListener = { tasting, sharedView ->
                 navigate(TastingRoute.TastingDetails(tasting.id, tasting.opportunity), sharedView)
@@ -80,13 +85,17 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
             setHasFixedSize(true)
         }
 
-        tastingViewModel.undoneTastings.observe(viewLifecycleOwner) {
-            binding.emptyState.setVisible(it.isEmpty())
-            tastingAdapter.submitList(it)
-            TastingAlarmScheduler.setIsBootCompletedReceiverEnabled(
-                requireContext(),
-                it.isNotEmpty()
-            )
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tastingViewModel.state.collect { state ->
+                    binding.emptyState.setVisible(state.undoneTastings.isEmpty())
+                    tastingAdapter.submitList(state.undoneTastings)
+                    TastingAlarmScheduler.setIsBootCompletedReceiverEnabled(
+                        requireContext(),
+                        state.undoneTastings.isNotEmpty()
+                    )
+                }
+            }
         }
     }
 

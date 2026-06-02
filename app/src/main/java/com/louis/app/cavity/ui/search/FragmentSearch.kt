@@ -29,8 +29,11 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
@@ -298,93 +301,103 @@ class FragmentSearch : Step(R.layout.fragment_search) {
     }
 
     private fun observe() {
-        searchViewModel.getAllCounties().observe(viewLifecycleOwner) { counties ->
-            val chipGroupId = filtersBinding.countyChipGroup.id
-            val preselectedCounties = searchViewModel.selectedCounties.map { it.id }
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .load(counties)
-                .into(filtersBinding.countyChipGroup)
-                .preselect(preselectedCounties)
-                .doOnClick { searchViewModel.submitFilter(chipGroupId, getCountyFilter()) }
-                .emptyText(getString(R.string.empty_county))
-                .build()
-                .go()
-        }
-
-        searchViewModel.getAllGrapes().observe(viewLifecycleOwner) { grapes ->
-            val chipGroupId = filtersBinding.grapeChipGroup.id
-            val preselectedGrapes = searchViewModel.selectedGrapes.map { it.id }
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .load(grapes)
-                .into(filtersBinding.grapeChipGroup)
-                .preselect(preselectedGrapes)
-                .doOnClick { searchViewModel.submitFilter(chipGroupId, getGrapeFilter()) }
-                .emptyText(getString(R.string.empty_grape))
-                .build()
-                .go()
-
-        }
-
-        searchViewModel.getAllReviews().observe(viewLifecycleOwner) { reviews ->
-            val chipGroupId = filtersBinding.reviewChipGroup.id
-            val preselectedReviews = searchViewModel.selectedReviews.map { it.id }
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .load(reviews)
-                .into(filtersBinding.reviewChipGroup)
-                .preselect(preselectedReviews)
-                .doOnClick { searchViewModel.submitFilter(chipGroupId, getReviewFilter()) }
-                .emptyText(getString(R.string.empty_review))
-                .build()
-                .go()
-        }
-
-        searchViewModel.getAllFriends().observe(viewLifecycleOwner) { friends ->
-            val preselectedFriends = searchViewModel.selectedFriends.map { it.id }
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .toInflate(R.layout.chip_friend)
-                .load(friends)
-                .into(filtersBinding.friendChipGroup)
-                .useAvatar(true)
-                .selectable(true) // friend chips are not selectablea by default
-                .preselect(preselectedFriends)
-                .doOnClick { submitFriendFilter() }
-                .emptyText(getString(R.string.empty_friend))
-                .build()
-                .go()
-        }
-
-        searchViewModel.getAllTags().observe(viewLifecycleOwner) { tags ->
-            val chipGroupId = filtersBinding.tagChipGroup.id
-            val preselectedTags = searchViewModel.selectedTags.map { it.id }
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .toInflate(R.layout.chip_tag)
-                .load(tags)
-                .into(filtersBinding.tagChipGroup)
-                .preselect(preselectedTags)
-                .doOnClick { searchViewModel.submitFilter(chipGroupId, getTagFilter()) }
-                .doOnLongClick { view ->
-                    true.also { showUpdateTagDialog(view.getTag(R.string.tag_chip_id) as Tag) }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    searchViewModel.getAllCounties().collect { counties ->
+                        val chipGroupId = filtersBinding.countyChipGroup.id
+                        val preselectedCounties = searchViewModel.selectedCounties.map { it.id }
+                        ChipLoader.Builder()
+                            .with(lifecycleScope)
+                            .useInflater(layoutInflater)
+                            .load(counties)
+                            .into(filtersBinding.countyChipGroup)
+                            .preselect(preselectedCounties)
+                            .doOnClick { searchViewModel.submitFilter(chipGroupId, getCountyFilter()) }
+                            .emptyText(getString(R.string.empty_county))
+                            .build()
+                            .go()
+                    }
                 }
-                .emptyText(getString(R.string.empty_tag))
-                .build()
-                .go()
-        }
-
-        if (isPickMode) {
-            addTastingViewModel.selectedBottles.observe(viewLifecycleOwner) {
-                this@FragmentSearch.binding.buttonSubmit.isEnabled = it.isNotEmpty()
-                filtersBinding.chipSelected.text =
-                    resources.getString(R.string.selected_bottles, it.size)
+                launch {
+                    searchViewModel.getAllGrapes().collect { grapes ->
+                        val chipGroupId = filtersBinding.grapeChipGroup.id
+                        val preselectedGrapes = searchViewModel.selectedGrapes.map { it.id }
+                        ChipLoader.Builder()
+                            .with(lifecycleScope)
+                            .useInflater(layoutInflater)
+                            .load(grapes)
+                            .into(filtersBinding.grapeChipGroup)
+                            .preselect(preselectedGrapes)
+                            .doOnClick { searchViewModel.submitFilter(chipGroupId, getGrapeFilter()) }
+                            .emptyText(getString(R.string.empty_grape))
+                            .build()
+                            .go()
+                    }
+                }
+                launch {
+                    searchViewModel.getAllReviews().collect { reviews ->
+                        val chipGroupId = filtersBinding.reviewChipGroup.id
+                        val preselectedReviews = searchViewModel.selectedReviews.map { it.id }
+                        ChipLoader.Builder()
+                            .with(lifecycleScope)
+                            .useInflater(layoutInflater)
+                            .load(reviews)
+                            .into(filtersBinding.reviewChipGroup)
+                            .preselect(preselectedReviews)
+                            .doOnClick { searchViewModel.submitFilter(chipGroupId, getReviewFilter()) }
+                            .emptyText(getString(R.string.empty_review))
+                            .build()
+                            .go()
+                    }
+                }
+                launch {
+                    searchViewModel.getAllFriends().collect { friends ->
+                        val preselectedFriends = searchViewModel.selectedFriends.map { it.id }
+                        ChipLoader.Builder()
+                            .with(lifecycleScope)
+                            .useInflater(layoutInflater)
+                            .toInflate(R.layout.chip_friend)
+                            .load(friends)
+                            .into(filtersBinding.friendChipGroup)
+                            .useAvatar(true)
+                            .selectable(true)
+                            .preselect(preselectedFriends)
+                            .doOnClick { submitFriendFilter() }
+                            .emptyText(getString(R.string.empty_friend))
+                            .build()
+                            .go()
+                    }
+                }
+                launch {
+                    searchViewModel.getAllTags().collect { tags ->
+                        val chipGroupId = filtersBinding.tagChipGroup.id
+                        val preselectedTags = searchViewModel.selectedTags.map { it.id }
+                        ChipLoader.Builder()
+                            .with(lifecycleScope)
+                            .useInflater(layoutInflater)
+                            .toInflate(R.layout.chip_tag)
+                            .load(tags)
+                            .into(filtersBinding.tagChipGroup)
+                            .preselect(preselectedTags)
+                            .doOnClick { searchViewModel.submitFilter(chipGroupId, getTagFilter()) }
+                            .doOnLongClick { view ->
+                                true.also { showUpdateTagDialog(view.getTag(R.string.tag_chip_id) as Tag) }
+                            }
+                            .emptyText(getString(R.string.empty_tag))
+                            .build()
+                            .go()
+                    }
+                }
+                if (isPickMode) {
+                    launch {
+                        addTastingViewModel.state.collect { state ->
+                            this@FragmentSearch.binding.buttonSubmit.isEnabled = state.selectedBottles.isNotEmpty()
+                            filtersBinding.chipSelected.text =
+                                resources.getString(R.string.selected_bottles, state.selectedBottles.size)
+                        }
+                    }
+                }
             }
         }
     }
@@ -662,21 +675,26 @@ class FragmentSearch : Step(R.layout.fragment_search) {
 
         var sortChanged = false
 
-        searchViewModel.results.observe(viewLifecycleOwner) {
-            binding.emptyState.setVisible(it.isEmpty())
-            binding.matchingWines.text =
-                resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
-            bottlesAdapter?.submitList(it) {
-                if (sortChanged) {
-                    binding.bottleList.scrollToPosition(0)
-                    sortChanged = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    searchViewModel.results.collect {
+                        binding.emptyState.setVisible(it.isEmpty())
+                        binding.matchingWines.text =
+                            resources.getQuantityString(R.plurals.matching_wines, it.size, it.size)
+                        bottlesAdapter?.submitList(it) {
+                            if (sortChanged) {
+                                binding.bottleList.scrollToPosition(0)
+                                sortChanged = false
+                            }
+                        }
+                    }
                 }
-            }
-        }
-
-        searchViewModel.sort.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let {
-                sortChanged = true
+                launch {
+                    searchViewModel.sortFlow.collect {
+                        sortChanged = true
+                    }
+                }
             }
         }
     }
@@ -855,9 +873,13 @@ class FragmentSearch : Step(R.layout.fragment_search) {
             }
         }
 
-        searchViewModel.getAllStorageLocations(clearText).observe(viewLifecycleOwner) {
-            adapter.clear()
-            adapter.addAll(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                searchViewModel.getAllStorageLocations(clearText).collect {
+                    adapter.clear()
+                    adapter.addAll(it)
+                }
+            }
         }
     }
 

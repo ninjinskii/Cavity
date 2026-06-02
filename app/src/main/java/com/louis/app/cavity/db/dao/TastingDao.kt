@@ -1,11 +1,11 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Tasting
 import com.louis.app.cavity.model.TastingXFriend
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TastingDao {
@@ -25,7 +25,7 @@ interface TastingDao {
     suspend fun deleteTastings(tastings: List<Tasting>)
 
     @Query("SELECT * FROM tasting WHERE date < julianday(\"now\") ORDER BY date DESC LIMIT 1")
-    fun getLastTasting(): LiveData<Tasting>
+    fun getLastTasting(): Flow<Tasting?>
 
     @Query("SELECT * FROM tasting")
     suspend fun getAllTastingsNotLive(): List<Tasting>
@@ -42,11 +42,11 @@ interface TastingDao {
 
     @Transaction
     @Query("SELECT * FROM tasting WHERE done = 0")
-    fun getUndoneTastings(): LiveData<List<BoundedTasting>>
+    fun getUndoneTastings(): Flow<List<BoundedTasting>>
 
     @Transaction
     @Query("SELECT * FROM bottle WHERE bottle.tasting_id=:tastingId AND consumed = 0")
-    fun getBottlesWithTastingActionsForTasting(tastingId: Long): LiveData<List<BottleWithTastingActions>>
+    fun getBottlesWithTastingActionsForTasting(tastingId: Long): Flow<List<BottleWithTastingActions>>
 
     @Transaction
     @Query("SELECT * FROM bottle WHERE bottle.tasting_id=:tastingId")

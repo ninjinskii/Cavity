@@ -5,6 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.louis.app.cavity.databinding.BottomSheetStatsBinding
 import com.louis.app.cavity.util.join
@@ -28,16 +32,24 @@ class StatsBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        statsViewModel.getTotalPriceByCurrency().observe(viewLifecycleOwner) {
-            binding.price.text = it.join()
-        }
-
-        statsViewModel.getTotalConsumed().observe(viewLifecycleOwner) {
-            binding.consumed.text = it.toString()
-        }
-
-        statsViewModel.getTotalStock().observe(viewLifecycleOwner) {
-            binding.stock.text = it.toString()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    statsViewModel.getTotalPriceByCurrency().collect {
+                        binding.price.text = it.join()
+                    }
+                }
+                launch {
+                    statsViewModel.getTotalConsumed().collect {
+                        binding.consumed.text = it.toString()
+                    }
+                }
+                launch {
+                    statsViewModel.getTotalStock().collect {
+                        binding.stock.text = it.toString()
+                    }
+                }
+            }
         }
     }
 

@@ -14,7 +14,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireOtherInfoBinding
 import com.louis.app.cavity.model.Bottle
@@ -127,55 +130,63 @@ class FragmentInquireOtherInfo : Step(R.layout.fragment_inquire_other_info) {
         val adapter = ArrayAdapter<String>(requireContext(), R.layout.item_naming)
         binding.storageLocation.setAdapter(adapter)
 
-        addBottleViewModel.getAllStorageLocations().observe(viewLifecycleOwner) {
-            adapter.clear()
-            adapter.addAll(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addBottleViewModel.getAllStorageLocations().collect {
+                    adapter.clear()
+                    adapter.addAll(it)
+                }
+            }
         }
     }
 
     private fun observe() {
-        addBottleViewModel.editedBottle.observe(viewLifecycleOwner) {
-            if (it != null) {
-                updateFields(it)
-            }
-        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    addBottleViewModel.state.collect { state ->
+                        if (state.editedBottle != null) updateFields(state.editedBottle)
+                    }
+                }
+                launch {
+                    addBottleViewModel.editedBottleHistoryEntry.collect { entry ->
+                        with(binding) {
+                            entry?.let {
+                                val isAGift = entry.friends.isNotEmpty()
+                                silentGivenBySetChecked(isAGift)
+                                buttonAddFriend.setVisible(isAGift)
+                                friendPicker.setVisible(isAGift)
+                            }
+                        }
 
-        addBottleViewModel.editedBottleHistoryEntry.observe(viewLifecycleOwner) { entry ->
-            with(binding) {
-                entry?.let {
-                    val isAGift = entry.friends.isNotEmpty()
-                    silentGivenBySetChecked(isAGift)
-                    buttonAddFriend.setVisible(isAGift)
-                    friendPicker.setVisible(isAGift)
+                        lockBottomSheet = false
+                    }
+                }
+                launch {
+                    addBottleViewModel.otherInfoManager.getAllTagsWithSelection().collect {
+                        ChipLoader.Builder()
+                            .with(lifecycleScope)
+                            .useInflater(layoutInflater)
+                            .toInflate(R.layout.chip_tag)
+                            .load(it)
+                            .into(binding.tagChipGroup)
+                            .selectable(true)
+                            .doOnLongClick { view ->
+                                true.also { showUpdateTagDialog(view.getTag(R.string.tag_chip_id) as Tag) }
+                            }
+                            .emptyText(getString(R.string.empty_tag))
+                            .build()
+                            .go()
+                    }
+                }
+                launch {
+                    friendPickerViewModel.state.collect { state ->
+                        binding.friendPicker.setFriends(state.pickableFriends.map { it.friend })
+                        binding.friendPicker.setSelectedFriends(state.selectedFriends.toMutableList())
+                        lockBottomSheet = false
+                    }
                 }
             }
-
-            lockBottomSheet = false
-        }
-
-        addBottleViewModel.otherInfoManager.getAllTagsWithSelection().observe(viewLifecycleOwner) {
-            ChipLoader.Builder()
-                .with(lifecycleScope)
-                .useInflater(layoutInflater)
-                .toInflate(R.layout.chip_tag)
-                .load(it)
-                .into(binding.tagChipGroup)
-                .selectable(true)
-                .doOnLongClick { view ->
-                    true.also { showUpdateTagDialog(view.getTag(R.string.tag_chip_id) as Tag) }
-                }
-                .emptyText(getString(R.string.empty_tag))
-                .build()
-                .go()
-        }
-
-        friendPickerViewModel.getAllFriends().observe(viewLifecycleOwner) {
-            binding.friendPicker.setFriends(it)
-            lockBottomSheet = false
-        }
-
-        friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {
-            binding.friendPicker.setSelectedFriends(it)
         }
     }
 

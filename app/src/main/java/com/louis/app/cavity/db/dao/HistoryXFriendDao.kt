@@ -1,9 +1,9 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.HistoryXFriend
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HistoryXFriendDao {
@@ -32,7 +32,7 @@ interface HistoryXFriendDao {
         ORDER BY count DESC
     """
     )
-    fun getFriendSortedByFrequence(): LiveData<List<Friend>>
+    fun getFriendSortedByFrequence(): Flow<List<Friend>>
 
     @Query("DELETE FROM friend_history_entry_xref")
     suspend fun deleteAll()

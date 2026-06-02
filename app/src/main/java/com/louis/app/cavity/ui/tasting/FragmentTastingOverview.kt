@@ -10,7 +10,11 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.louis.app.cavity.R
@@ -27,6 +31,7 @@ import com.louis.app.cavity.util.showSnackbar
 
 class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
     private lateinit var snackbarProvider: SnackbarProvider
+    private lateinit var tastingOverviewAdapter: BottleActionAdapter
     private var _binding: FragmentTastingOverviewBinding? = null
     private val binding get() = _binding!!
     private val tastingOverviewViewModel: TastingOverviewViewModel by viewModels()
@@ -73,7 +78,7 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
 
     private fun initRecyclerView() {
         val space = requireContext().resources.getDimension(R.dimen.small_margin)
-        val tastingOverviewAdapter = BottleActionAdapter(
+        tastingOverviewAdapter = BottleActionAdapter(
             onActionCheckedChange = { tastingAction, isChecked ->
                 if (isChecked) {
                     NotificationBuilder.cancelNotification(
@@ -113,21 +118,30 @@ class FragmentTastingOverview : Fragment(R.layout.fragment_tasting_overview) {
             addItemDecoration(SpaceGridItemDecoration(space.toInt()))
         }
 
-        tastingOverviewViewModel.bottles.observe(viewLifecycleOwner) {
-            binding.emptyState.setVisible(it.isEmpty())
-            tastingOverviewAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tastingOverviewViewModel.state.collect {
+                    binding.emptyState.setVisible(it.bottles.isEmpty())
+                    tastingOverviewAdapter.submitList(it.bottles)
+                }
+            }
         }
     }
 
     private fun observe() {
-        tastingOverviewViewModel.tastingConfirmed.observe(viewLifecycleOwner) {
-            // Item is deleted, avoid weird back animation
-            returnTransition = MaterialFadeThrough()
-            sharedElementReturnTransition = null
-
-            snackbarProvider.onShowSnackbarRequested(R.string.tasting_confirmed)
-
-            popBackStack()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                tastingOverviewViewModel.event.collect { event ->
+                    when (event) {
+                        TastingOverviewEvent.TastingConfirmed -> {
+                            returnTransition = MaterialFadeThrough()
+                            sharedElementReturnTransition = null
+                            snackbarProvider.onShowSnackbarRequested(R.string.tasting_confirmed)
+                            popBackStack()
+                        }
+                    }
+                }
+            }
         }
     }
 

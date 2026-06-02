@@ -9,8 +9,12 @@ import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import androidx.work.WorkInfo
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportExportBinding
 import com.louis.app.cavity.domain.Environment
@@ -104,99 +108,97 @@ class FragmentImportExport : Fragment(R.layout.fragment_import_export) {
     }
 
     private fun observe() {
-        loginViewModel.account.observe(viewLifecycleOwner) {
-            if (it == null) {
-                navigate(ImportExportRoute.Login)
-                return@observe
-            }
-
-            val fallback = getString(R.string.unknown)
-            binding.backup.text = getString(R.string.backup_device_name, it.lastUser ?: fallback)
-
-            val date = DateFormatter.formatDate(it.lastUpdateTime, "dd MMMM yyyy, HH:mm")
-            binding.lastAction.text = getString(R.string.last_action, date)
-        }
-
-        importExportViewModel.health.observe(viewLifecycleOwner) { stringRes ->
-            changeWarningVisibility(stringRes)
-        }
-
-        importExportViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.progressBar.setVisible(it, invisible = true)
-        }
-
-        importExportViewModel.navigateToLogin.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                navigate(ImportExportRoute.Login)
-            }
-        }
-
-        importExportViewModel.distantBottleCount.observe(viewLifecycleOwner) {
-            val text = resources.getQuantityString(R.plurals.bottles, it, it)
-            binding.bottles.text = text
-        }
-
-        importExportViewModel.localBottleCount.observe(viewLifecycleOwner) {
-            val text = resources.getQuantityString(R.plurals.bottles, it, it)
-            binding.deviceBottles.text = text
-        }
-
-        importExportViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
-            }
-        }
-
-        importExportViewModel.userFeedbackString.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { string ->
-                binding.coordinator.showSnackbar(string)
-            }
-        }
-
-        importExportViewModel.workProgress.observe(viewLifecycleOwner) {
-            if (it != null) {
-                when (it.state) {
-                    WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
-                        binding.progressBar.setVisible(true)
-                    }
-
-                    WorkInfo.State.FAILED -> {
-                        binding.progressBar.setVisible(false)
-                        binding.coordinator.showSnackbar(R.string.base_error)
-                        importExportViewModel.pruneWorks()
-                    }
-
-                    WorkInfo.State.SUCCEEDED -> {
-                        val message: Int
-                        val isUpload = it.tags.contains(UploadWorker.WORK_TAG)
-
-                        importExportViewModel.preventHealthCheckSpam = false
-
-                        message = if (isUpload) {
-                            loginViewModel.updateAccountLastUpdateLocally()
-                            R.string.export_done
-                        } else {
-                            R.string.import_done
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    loginViewModel.state.collect { loginState ->
+                        val account = loginState.account
+                        if (account == null) {
+                            navigate(ImportExportRoute.Login)
+                            return@collect
                         }
 
-                        binding.progressBar.setVisible(false)
-                        binding.coordinator.showSnackbar(message)
+                        val fallback = getString(R.string.unknown)
+                        binding.backup.text = getString(R.string.backup_device_name, account.lastUser ?: fallback)
 
-                        with(importExportViewModel) {
-                            fetchLocalBottleCount()
-                            fetchDistantBottleCount()
-                            pruneWorks()
-                        }
+                        val date = DateFormatter.formatDate(account.lastUpdateTime, "dd MMMM yyyy, HH:mm")
+                        binding.lastAction.text = getString(R.string.last_action, date)
                     }
-
-                    WorkInfo.State.CANCELLED -> {
-                        importExportViewModel.pruneWorks()
-                    }
-
-                    else -> Unit
                 }
-            } else {
-                binding.progressBar.setVisible(false)
+                launch {
+                    importExportViewModel.state.collect { state ->
+                        changeWarningVisibility(state.health)
+                        binding.progressBar.setVisible(state.isLoading, invisible = true)
+                        state.distantBottleCount?.let {
+                            val text = resources.getQuantityString(R.plurals.bottles, it, it)
+                            binding.bottles.text = text
+                        }
+                        state.localBottleCount?.let {
+                            val text = resources.getQuantityString(R.plurals.bottles, it, it)
+                            binding.deviceBottles.text = text
+                        }
+                    }
+                }
+                launch {
+                    importExportViewModel.event.collect { event ->
+                        when (event) {
+                            is ImportExportEvent.UserFeedback ->
+                                binding.coordinator.showSnackbar(event.resId)
+                            is ImportExportEvent.UserFeedbackString ->
+                                binding.coordinator.showSnackbar(event.message)
+                            is ImportExportEvent.NavigateToLogin ->
+                                navigate(ImportExportRoute.Login)
+                        }
+                    }
+                }
+                launch {
+                    importExportViewModel.workProgress.collect {
+                        if (it != null) {
+                            when (it.state) {
+                                WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
+                                    binding.progressBar.setVisible(true)
+                                }
+
+                                WorkInfo.State.FAILED -> {
+                                    binding.progressBar.setVisible(false)
+                                    binding.coordinator.showSnackbar(R.string.base_error)
+                                    importExportViewModel.pruneWorks()
+                                }
+
+                                WorkInfo.State.SUCCEEDED -> {
+                                    val message: Int
+                                    val isUpload = it.tags.contains(UploadWorker.WORK_TAG)
+
+                                    importExportViewModel.preventHealthCheckSpam = false
+
+                                    message = if (isUpload) {
+                                        loginViewModel.updateAccountLastUpdateLocally()
+                                        R.string.export_done
+                                    } else {
+                                        R.string.import_done
+                                    }
+
+                                    binding.progressBar.setVisible(false)
+                                    binding.coordinator.showSnackbar(message)
+
+                                    with(importExportViewModel) {
+                                        fetchLocalBottleCount()
+                                        fetchDistantBottleCount()
+                                        pruneWorks()
+                                    }
+                                }
+
+                                WorkInfo.State.CANCELLED -> {
+                                    importExportViewModel.pruneWorks()
+                                }
+
+                                else -> Unit
+                            }
+                        } else {
+                            binding.progressBar.setVisible(false)
+                        }
+                    }
+                }
             }
         }
     }

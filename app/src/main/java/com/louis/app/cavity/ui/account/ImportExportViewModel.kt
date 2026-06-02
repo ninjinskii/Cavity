@@ -1,13 +1,15 @@
 package com.louis.app.cavity.ui.account
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.annotation.StringRes
+import androidx.lifecycle.viewModelScope
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.repository.AccountRepository
@@ -20,15 +22,32 @@ import com.louis.app.cavity.domain.worker.AutoUploadWorker.Companion.WORK_DATA_H
 import com.louis.app.cavity.domain.worker.DownloadWorker
 import com.louis.app.cavity.domain.worker.PruneWorker
 import com.louis.app.cavity.domain.worker.UploadWorker
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.ui.BaseViewModel
 import com.louis.app.cavity.util.toBoolean
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
+sealed interface ImportExportEvent {
+    data class UserFeedback(@StringRes val resId: Int) : ImportExportEvent
+    data class UserFeedbackString(val message: String) : ImportExportEvent
+    data object NavigateToLogin : ImportExportEvent
+}
+
+data class ImportExportUiState(
+    val isLoading: Boolean = false,
+    val health: Int? = null,
+    val distantBottleCount: Int? = null,
+    val localBottleCount: Int? = null
+)
+
+class ImportExportViewModel(app: Application) : BaseViewModel<ImportExportUiState, ImportExportEvent>(app, ImportExportUiState()) {
 
     companion object {
         private const val MIN_BACKOFF_SECONDS = 10L
@@ -42,48 +61,23 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     private val workManager = WorkManager.getInstance(app)
     private val backupBuilder = BackupBuilder(app)
 
-    private val workRequestId = MutableLiveData<UUID>()
-    val workProgress = workRequestId.switchMap {
-        workManager.getWorkInfoByIdLiveData(it)
+    private val _workRequestId = MutableStateFlow<UUID?>(null)
+    val workProgress: Flow<WorkInfo?> = _workRequestId.flatMapLatest { id ->
+        if (id != null) workManager.getWorkInfoByIdFlow(id)
+        else kotlinx.coroutines.flow.flowOf(null)
     }
 
-    private val autoBackupWorkRequestId = MutableLiveData<UUID>()
-    val autoBackupWorkProgress = autoBackupWorkRequestId.switchMap {
-        workManager.getWorkInfoByIdLiveData(it)
+    private val _autoBackupWorkRequestId = MutableStateFlow<UUID?>(null)
+    val autoBackupWorkProgress: Flow<WorkInfo?> = _autoBackupWorkRequestId.flatMapLatest { id ->
+        if (id != null) workManager.getWorkInfoByIdFlow(id)
+        else kotlinx.coroutines.flow.flowOf(null)
     }
 
-    private val healthCheckWorkRequestId = MutableLiveData<UUID>()
-    val healthCheckWorkProgress = healthCheckWorkRequestId.switchMap {
-        workManager.getWorkInfoByIdLiveData(it)
+    private val _healthCheckWorkRequestId = MutableStateFlow<UUID?>(null)
+    val healthCheckWorkProgress: Flow<WorkInfo?> = _healthCheckWorkRequestId.flatMapLatest { id ->
+        if (id != null) workManager.getWorkInfoByIdFlow(id)
+        else kotlinx.coroutines.flow.flowOf(null)
     }
-
-    private val _health = MutableLiveData<Int?>()
-    val health: LiveData<Int?>
-        get() = _health
-
-    private val _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean>
-        get() = _isLoading
-
-    private val _distantBottleCount = MutableLiveData<Int>()
-    val distantBottleCount: LiveData<Int>
-        get() = _distantBottleCount
-
-    private val _localBottleCount = MutableLiveData<Int>()
-    val localBottleCount: LiveData<Int>
-        get() = _localBottleCount
-
-    private val _navigateToLogin = MutableLiveData<Event<Unit>>()
-    val navigateToLogin: LiveData<Event<Unit>>
-        get() = _navigateToLogin
-
-    private val _userFeedback = MutableLiveData<Event<Int>>()
-    val userFeedback: LiveData<Event<Int>>
-        get() = _userFeedback
-
-    private val _userFeedbackString = MutableLiveData<Event<String>>()
-    val userFeedbackString: LiveData<Event<String>>
-        get() = _userFeedbackString
 
     var preventHealthCheckSpam = false
         get() = field.also { field = true }
@@ -91,7 +85,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     fun fetchHealth(isImport: Boolean) {
         val isExport = !isImport
 
-        _isLoading.value = true
+        viewState = viewState.copy(isLoading = true)
 
         viewModelScope.launch(IO) {
             try {
@@ -104,39 +98,39 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
                             val source = if (isExport) localEntries else distantEntries
                             val health = backupBuilder.checkHealth(source, target)
                             val stringRes = backupBuilder.getTextForHealthResult(health, isExport)
-                            _health.postValue(stringRes)
+                            viewState = viewState.copy(health = stringRes)
                         }
 
-                        is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
-                        is ApiResponse.UnknownError -> _userFeedback.postOnce(R.string.base_error)
-                        is ApiResponse.UnauthorizedError -> _navigateToLogin.postOnce(Unit)
+                        is ApiResponse.Failure -> emitEvent(ImportExportEvent.UserFeedbackString(response.message))
+                        is ApiResponse.UnknownError -> emitEvent(ImportExportEvent.UserFeedback(R.string.base_error))
+                        is ApiResponse.UnauthorizedError -> emitEvent(ImportExportEvent.NavigateToLogin)
                         is ApiResponse.UnregisteredError -> Unit
                     }
                 }
             } finally {
-                _isLoading.postValue(false)
+                viewState = viewState.copy(isLoading = false)
             }
         }
     }
 
     fun fetchDistantBottleCount() {
-        _isLoading.postValue(true)
+        viewState = viewState.copy(isLoading = true)
 
         viewModelScope.launch(IO) {
             try {
                 when (val response = accountRepository.getBottles()) {
                     is ApiResponse.Success -> {
                         val count = response.value.count { !it.consumed.toBoolean() }
-                        _distantBottleCount.postValue(count)
+                        viewState = viewState.copy(distantBottleCount = count)
                     }
 
-                    is ApiResponse.Failure -> _userFeedbackString.postOnce(response.message)
-                    is ApiResponse.UnknownError -> _userFeedback.postOnce(R.string.base_error)
-                    is ApiResponse.UnauthorizedError -> _navigateToLogin.postOnce(Unit)
+                    is ApiResponse.Failure -> emitEvent(ImportExportEvent.UserFeedbackString(response.message))
+                    is ApiResponse.UnknownError -> emitEvent(ImportExportEvent.UserFeedback(R.string.base_error))
+                    is ApiResponse.UnauthorizedError -> emitEvent(ImportExportEvent.NavigateToLogin)
                     is ApiResponse.UnregisteredError -> Unit
                 }
             } finally {
-                _isLoading.postValue(false)
+                viewState = viewState.copy(isLoading = false)
             }
         }
     }
@@ -144,14 +138,12 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
     fun fetchLocalBottleCount() {
         viewModelScope.launch(IO) {
             val count = bottleRepository.getAllBottlesNotLive().count { !it.consumed.toBoolean() }
-            _localBottleCount.postValue(count)
+            viewState = viewState.copy(localBottleCount = count)
         }
     }
 
     fun export() {
-        if (_isLoading.value == true) {
-            return
-        }
+        if (viewState.isLoading) return
 
         workManager.cancelAllWorkByTag(UploadWorker.WORK_TAG)
 
@@ -159,15 +151,13 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
             .addTag(UploadWorker.WORK_TAG)
             .setBackoffCriteria(BackoffPolicy.LINEAR, MIN_BACKOFF_SECONDS, TimeUnit.SECONDS)
             .build().also {
-                workRequestId.value = it.id
+                _workRequestId.value = it.id
                 workManager.enqueue(it)
             }
     }
 
     fun import() {
-        if (_isLoading.value == true) {
-            return
-        }
+        if (viewState.isLoading) return
 
         workManager.cancelAllWorkByTag(DownloadWorker.WORK_TAG)
 
@@ -175,7 +165,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
             .addTag(DownloadWorker.WORK_TAG)
             .setBackoffCriteria(BackoffPolicy.LINEAR, MIN_BACKOFF_SECONDS, TimeUnit.SECONDS)
             .build().also {
-                workRequestId.value = it.id
+                _workRequestId.value = it.id
                 workManager.enqueue(it)
             }
     }
@@ -189,7 +179,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
             .addTag(AutoUploadWorker.WORK_TAG_HEALTHCHECK)
             .setInputData(Data.Builder().putBoolean(WORK_DATA_HEALTHCHECK_ONLY, true).build())
             .build().also {
-                healthCheckWorkRequestId.value = it.id
+                _healthCheckWorkRequestId.value = it.id
                 workManager.enqueue(it)
             }
     }
@@ -206,7 +196,7 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
             .setInitialDelay(AUTO_BACKUP_INITIAL_DELAY_IN_HOURS, TimeUnit.HOURS)
             .setConstraints(constraints)
             .build().also {
-                autoBackupWorkRequestId.value = it.id
+                _autoBackupWorkRequestId.value = it.id
                 workManager.enqueue(it)
             }
     }
@@ -222,8 +212,9 @@ class ImportExportViewModel(app: Application) : AndroidViewModel(app) {
             .addTag(PruneWorker.WORK_TAG)
             .setBackoffCriteria(BackoffPolicy.LINEAR, MIN_BACKOFF_SECONDS, TimeUnit.SECONDS)
             .build().also {
-                workRequestId.value = it.id
+                _workRequestId.value = it.id
                 workManager.enqueue(it)
             }
     }
 }
+

@@ -1,6 +1,5 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Ignore
 import androidx.room.Query
@@ -67,7 +66,7 @@ interface StatsDao {
                 WHERE bottle.consumed = 0
                 GROUP BY county.name ORDER BY percentage DESC, county.name"""
     )
-    fun getStockByCounty(): LiveData<List<BaseStat>>
+    fun getStockByCounty(): Flow<List<BaseStat>>
 
     @Query(
         """SELECT wine.color AS wcolor, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
@@ -79,7 +78,7 @@ interface StatsDao {
                 WHERE bottle.consumed = 0
                 GROUP BY wine.color ORDER BY percentage DESC, wine.color"""
     )
-    fun getStockByColor(): LiveData<List<WineColorStat>>
+    fun getStockByColor(): Flow<List<WineColorStat>>
 
     @Query(
         """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
@@ -90,7 +89,7 @@ interface StatsDao {
                 WHERE bottle.consumed = 0
                 GROUP BY bottle.vintage ORDER BY percentage DESC, bottle.vintage"""
     )
-    fun getStockByVintage(): LiveData<List<BaseStat>>
+    fun getStockByVintage(): Flow<List<BaseStat>>
 
     @Query(
         """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
@@ -102,24 +101,24 @@ interface StatsDao {
                 WHERE bottle.consumed = 0
                 GROUP BY wine.naming ORDER BY percentage DESC, wine.naming"""
     )
-    fun getStockByNaming(): LiveData<List<BaseStat>>
+    fun getStockByNaming(): Flow<List<BaseStat>>
 
     @Query("""SELECT SUM(price) as sum, currency FROM bottle WHERE price != -1  GROUP BY currency""")
-    fun getTotalPriceByCurrency(): LiveData<List<PriceByCurrency>>
+    fun getTotalPriceByCurrency(): Flow<List<PriceByCurrency>>
 
     @Query("""SELECT COUNT(*) FROM bottle WHERE consumed = 1""")
-    fun getTotalConsumedBottles(): LiveData<Int>
+    fun getTotalConsumedBottles(): Flow<Int>
 
     @Query("""SELECT COUNT(*) FROM bottle WHERE consumed = 0""")
-    fun getTotalStockBottles(): LiveData<Int>
+    fun getTotalStockBottles(): Flow<Int>
 
     @Transaction
     @Query("""SELECT * FROM bottle WHERE id IN (:ids)""")
-    fun getBottlesByIds(ids: List<Long>): LiveData<List<BoundedBottle>>
+    fun getBottlesByIds(ids: List<Long>): Flow<List<BoundedBottle>>
 
     @Transaction
     @RawQuery(observedEntities = [HistoryEntry::class, Bottle::class, Wine::class, County::class])
-    fun getStatsRaw(query: SupportSQLiteQuery): LiveData<List<BaseStat>>
+    fun getStatsRaw(query: SupportSQLiteQuery): Flow<List<BaseStat>>
 }
 
 interface Stat {

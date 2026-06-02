@@ -7,7 +7,9 @@ import android.widget.FrameLayout
 import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -71,10 +73,14 @@ class FriendPickerBottomSheet : BottomSheetDialogFragment(R.layout.bottom_sheet_
     }
 
     private fun observe() {
-        friendPickerViewModel.getPickableFriends().observe(viewLifecycleOwner) {
-            adapter.submitList(it) {
-                (dialog as BottomSheetDialog).behavior.peekHeight =
-                    requireContext().dpToPx(500f).toInt()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                friendPickerViewModel.getPickableFriends().collect {
+                    adapter.submitList(it) {
+                        (dialog as BottomSheetDialog).behavior.peekHeight =
+                            requireContext().dpToPx(500f).toInt()
+                    }
+                }
             }
         }
     }

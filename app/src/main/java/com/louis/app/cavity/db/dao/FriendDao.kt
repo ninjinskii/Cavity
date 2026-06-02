@@ -1,8 +1,8 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Friend
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FriendDao {
@@ -19,7 +19,7 @@ interface FriendDao {
     suspend fun deleteFriend(friend: Friend)
 
     @Query("SELECT * FROM friend ORDER BY name")
-    fun getAllFriends(): LiveData<List<Friend>>
+    fun getAllFriends(): Flow<List<Friend>>
 
     @Query("SELECT * FROM friend WHERE id=:friendId")
     suspend fun getFriendByIdNotLive(friendId: Long): Friend

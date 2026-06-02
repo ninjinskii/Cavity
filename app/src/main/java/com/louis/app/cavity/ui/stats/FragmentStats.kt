@@ -10,7 +10,11 @@ import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
@@ -78,8 +82,12 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             }
         )
 
-        statsViewModel.years.observe(viewLifecycleOwner) {
-            tabAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                statsViewModel.years.collect {
+                    tabAdapter.submitList(it)
+                }
+            }
         }
 
         with(binding.years) {
@@ -131,20 +139,20 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             adapter = statsAdapter
             layoutManager = LinearLayoutManager(context)
         }
-
-        statsViewModel.details.observe(viewLifecycleOwner) {
-            statsAdapter.submitList(it)
-        }
     }
 
     private fun observe() {
-        statsViewModel.showYearSpanOptions.observe(viewLifecycleOwner) {
-            binding.years.apply {
-                setVisible(it, invisible = true)
-                post { binding.years.requestLayout() }
-            }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                statsViewModel.state.collect { state ->
+                    binding.years.apply {
+                        setVisible(state.showYearSpanOptions, invisible = true)
+                        post { binding.years.requestLayout() }
+                    }
 
-            updateStatDetailsListInset()
+                    updateStatDetailsListInset()
+                }
+            }
         }
     }
 

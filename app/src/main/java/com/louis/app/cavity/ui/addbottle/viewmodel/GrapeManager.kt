@@ -3,12 +3,12 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.domain.grape.QuantifiedGrapeHelper
 import com.louis.app.cavity.domain.repository.GrapeRepository
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.*
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Grape
-import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.minusAssign
 import com.louis.app.cavity.util.plusAssign
 import com.louis.app.cavity.util.postOnce
@@ -22,7 +22,7 @@ class GrapeManager(
     private val viewModelScope: CoroutineScope,
     private val repository: GrapeRepository,
     private val editedBottle: Bottle?,
-    private val _userFeedback: MutableLiveData<Event<Int>>
+    private val onFeedback: (Int) -> Unit
 ) {
     private val qGrapeHelper = QuantifiedGrapeHelper()
 
@@ -54,9 +54,9 @@ class GrapeManager(
             withContext(Main) {
                 when (result) {
                     is Success -> _qGrapes += QGrapeUiModel(result.value, grapeName, defaultValue)
-                    is AlreadyExists -> _userFeedback.postOnce(R.string.grape_already_exists)
-                    is InvalidName -> _userFeedback.postOnce(R.string.empty_grape_name)
-                    else -> _userFeedback.postOnce(R.string.base_error)
+                    is AlreadyExists -> onFeedback(R.string.grape_already_exists)
+                    is InvalidName -> onFeedback(R.string.empty_grape_name)
+                    else -> onFeedback(R.string.base_error)
                 }
             }
         }

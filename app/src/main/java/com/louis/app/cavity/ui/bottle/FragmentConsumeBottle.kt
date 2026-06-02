@@ -7,10 +7,15 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentConsumeBottleBinding
+import com.louis.app.cavity.ui.bottle.ConsumeGiftBottleEvent
 import com.louis.app.cavity.ui.DatePicker
 import com.louis.app.cavity.ui.SimpleInputDialog
 import com.louis.app.cavity.ui.SnackbarProvider
@@ -71,16 +76,23 @@ class FragmentConsumeBottle : Fragment(R.layout.fragment_consume_bottle) {
     }
 
     private fun observe() {
-        friendPickerViewModel.getAllFriends().observe(viewLifecycleOwner) {
-            binding.friendPicker.setFriends(it)
-        }
-
-        friendPickerViewModel.selectedFriends.observe(viewLifecycleOwner) {
-            binding.friendPicker.setSelectedFriends(it)
-        }
-
-        consumeGiftBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
-            snackbarProvider.onShowSnackbarRequested(R.string.no_friend)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    friendPickerViewModel.state.collect { state ->
+                        binding.friendPicker.setFriends(state.pickableFriends.map { it.friend })
+                        binding.friendPicker.setSelectedFriends(state.selectedFriends.toMutableList())
+                    }
+                }
+                launch {
+                    consumeGiftBottleViewModel.event.collect { event ->
+                        when (event) {
+                            is ConsumeGiftBottleEvent.UserFeedback ->
+                                snackbarProvider.onShowSnackbarRequested(event.resId)
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -1,10 +1,6 @@
 package com.louis.app.cavity.ui.stats
 
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.BaseStat
 import com.louis.app.cavity.db.dao.Stat
@@ -14,65 +10,54 @@ import com.louis.app.cavity.domain.history.HistoryEntryType
 import com.louis.app.cavity.domain.history.toInt
 import com.louis.app.cavity.domain.repository.StatsRepository
 import com.louis.app.cavity.model.WineColor
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 
-class LiveDataStatsFactory(
+class FlowStatsFactory(
     private val repository: StatsRepository,
-    private val year: MutableLiveData<Year>,
-    private val comparisonYear: MutableLiveData<Year>
+    private val year: MutableStateFlow<Year>,
+    private val comparisonYear: MutableStateFlow<Year>
 ) {
     private val statRequests = MutableList(4) {
-        MutableLiveData(StatRequest(StatType.STOCK, false))
+        MutableStateFlow(StatRequest(StatType.STOCK, false))
     }
 
-    private val _comparisons: MutableList<LiveData<List<Stat>>> = MutableList(4) {
-        createComparisonLiveStat(it)
-    }
-    val comparisons: List<LiveData<List<Stat>>>
-        get() = _comparisons
+    fun getResults(position: Int): Flow<List<Stat>> = createFlowStat(position)
 
-    private val _results: MutableList<LiveData<List<Stat>>> = MutableList(4) {
-        createLiveStat(it)
-    }
-    val results: List<LiveData<List<Stat>>>
-        get() = _results
+    fun getComparisons(position: Int): Flow<List<Stat>> = createComparisonFlowStat(position)
 
     @StringRes
     fun getStatTypeLabel(position: Int): Int {
-        return when (statRequests[position].value?.statType) {
+        return when (statRequests[position].value.statType) {
             StatType.STOCK -> R.string.stock
             StatType.REPLENISHMENTS -> R.string.replenishments
             StatType.CONSUMPTIONS -> R.string.consumptions
-            else -> -1
         }
     }
 
     fun applyStatType(position: Int, statType: StatType) {
-        statRequests[position].value = statRequests[position].value?.copy(statType = statType)
+        statRequests[position].value = statRequests[position].value.copy(statType = statType)
     }
 
     fun applyIncludeGifts(position: Int, includeGifts: Boolean) {
-        statRequests[position].value =
-            statRequests[position].value?.copy(includeGifts = includeGifts)
+        statRequests[position].value = statRequests[position].value.copy(includeGifts = includeGifts)
     }
 
-    private fun createLiveStat(position: Int) = year.switchMap { year ->
-        statRequests[position].switchMap { statRequest ->
-            getStat(position, year, statRequest.statType, statRequest.includeGifts)
-        }
-    }
+    private fun createFlowStat(position: Int) = combine(year, statRequests[position]) { y, req -> y to req }
+        .flatMapLatest { (y, req) -> getStat(position, y, req.statType, req.includeGifts) }
 
-    private fun createComparisonLiveStat(position: Int) = comparisonYear.switchMap { comparisonY ->
-        statRequests[position].switchMap { statRequest ->
-            getStat(position, comparisonY, statRequest.statType, statRequest.includeGifts)
-        }
-    }
+    private fun createComparisonFlowStat(position: Int) = combine(comparisonYear, statRequests[position]) { y, req -> y to req }
+        .flatMapLatest { (y, req) -> getStat(position, y, req.statType, req.includeGifts) }
 
     private fun getStat(
         position: Int,
         year: Year,
         statType: StatType,
         includeGifts: Boolean
-    ): LiveData<List<Stat>> {
+    ): Flow<List<Stat>> {
         val start = year.yearStart
         val end = year.yearEnd
         val types = when (statType) {
@@ -80,7 +65,6 @@ class LiveDataStatsFactory(
             StatType.REPLENISHMENTS -> mutableListOf(HistoryEntryType.ADD.toInt()).also {
                 if (includeGifts) it.add(HistoryEntryType.GIVEN_BY.toInt())
             }
-
             StatType.CONSUMPTIONS -> mutableListOf(
                 HistoryEntryType.REMOVE.toInt(),
                 HistoryEntryType.TASTING.toInt()
@@ -104,14 +88,13 @@ class LiveDataStatsFactory(
             { repository.getStockByNaming() }
         )
 
+        @Suppress("UNCHECKED_CAST")
         return when (statType) {
-            StatType.STOCK -> stockFunctions.getOrElse(position) { stockFunctions.last() }.invoke()
-            StatType.REPLENISHMENTS -> repository.getStatsByHistoryEntry(start, end, types, groupBy)
-                .map { if (mapToWineColor) mapToWineColor(it) else it }
-
-            StatType.CONSUMPTIONS -> repository.getStatsByHistoryEntry(start, end, types, groupBy)
-                .map { if (mapToWineColor) mapToWineColor(it) else it }
-        } as LiveData<List<Stat>>
+            StatType.STOCK -> stockFunctions.getOrElse(position) { stockFunctions.last() }.invoke() as Flow<List<Stat>>
+            StatType.REPLENISHMENTS, StatType.CONSUMPTIONS ->
+                repository.getStatsByHistoryEntry(start, end, types, groupBy)
+                    .map { if (mapToWineColor) mapToWineColor(it) else it as List<Stat> }
+        }
     }
 
     private fun mapToWineColor(stats: List<BaseStat>): List<Stat> {

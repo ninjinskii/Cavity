@@ -1,6 +1,5 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -33,7 +32,7 @@ interface TagXBottleDao {
     fun getTagIdsForBottle(bottleId: Long): Flow<List<Long>>
 
     @Query("SELECT * FROM tag_bottle_xref WHERE tag_id=:tagId")
-    fun getBottlesForTag(tagId: Long): LiveData<List<TagXBottle>>
+    fun getBottlesForTag(tagId: Long): Flow<List<TagXBottle>>
 
     @Query("DELETE FROM tag_bottle_xref WHERE bottle_id=:bottleId")
     suspend fun clearTagsForBottleId(bottleId: Long)

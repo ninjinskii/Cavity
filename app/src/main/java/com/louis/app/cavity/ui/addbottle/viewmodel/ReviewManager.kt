@@ -3,13 +3,13 @@ package com.louis.app.cavity.ui.addbottle.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.louis.app.cavity.R
+import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.AlreadyExists
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.InvalidName
 import com.louis.app.cavity.domain.repository.RepositoryUpsertResult.Success
 import com.louis.app.cavity.domain.repository.ReviewRepository
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.Review
-import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.minusAssign
 import com.louis.app.cavity.util.plusAssign
 import com.louis.app.cavity.util.postOnce
@@ -23,7 +23,7 @@ class ReviewManager(
     private val viewModelScope: CoroutineScope,
     private val repository: ReviewRepository,
     private val editedBottle: Bottle?,
-    private val _userFeedback: MutableLiveData<Event<Int>>
+    private val onFeedback: (Int) -> Unit
 ) {
     private val _reviewDialogEvent = MutableLiveData<Event<List<ReviewUiModel>>>()
     val reviewDialogEvent: LiveData<Event<List<ReviewUiModel>>>
@@ -58,9 +58,9 @@ class ReviewManager(
                         defaultValue
                     )
 
-                    is AlreadyExists -> _userFeedback.postOnce(R.string.contest_name_already_exists)
-                    is InvalidName -> _userFeedback.postOnce(R.string.empty_contest_name)
-                    else -> _userFeedback.postOnce(R.string.base_error)
+                    is AlreadyExists -> onFeedback(R.string.contest_name_already_exists)
+                    is InvalidName -> onFeedback(R.string.empty_contest_name)
+                    else -> onFeedback(R.string.base_error)
                 }
             }
         }

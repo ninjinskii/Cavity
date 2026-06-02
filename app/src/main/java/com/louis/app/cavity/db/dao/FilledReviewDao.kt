@@ -1,9 +1,9 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.Review
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FilledReviewDao {
@@ -21,7 +21,7 @@ interface FilledReviewDao {
 
     @Transaction
     @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId")
-    fun getFReviewAndReviewForBottle(bottleId: Long): LiveData<List<FReviewAndReview>>
+    fun getFReviewAndReviewForBottle(bottleId: Long): Flow<List<FReviewAndReview>>
 
     @Transaction
     @Query("SELECT * FROM f_review WHERE bottle_id=:bottleId")

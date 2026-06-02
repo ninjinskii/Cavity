@@ -2,12 +2,6 @@ package com.louis.app.cavity.ui.search
 
 import android.app.Application
 import android.os.Bundle
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.BoundedBottle
@@ -22,14 +16,25 @@ import com.louis.app.cavity.model.Friend
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.Review
 import com.louis.app.cavity.model.Tag
+import com.louis.app.cavity.ui.BaseViewModel
 import com.louis.app.cavity.ui.search.filters.*
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.combineAsync
-import com.louis.app.cavity.util.postOnce
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
-class SearchViewModel(app: Application) : AndroidViewModel(app) {
+data class SearchUiState(
+    val sort: Sort = Sort(SortCriteria.NONE),
+    val results: List<BoundedBottle> = emptyList()
+)
+
+class SearchViewModel(app: Application) : BaseViewModel<SearchUiState, Nothing>(app, SearchUiState()) {
     private val countyRepository = CountyRepository.getInstance(app)
     private val bottleRepository = BottleRepository.getInstance(app)
     private val grapeRepository = GrapeRepository.getInstance(app)
@@ -37,11 +42,10 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val friendRepository = FriendRepository.getInstance(app)
     private val tagRepository = TagRepository.getInstance(app)
 
-    private val _sort = MutableLiveData(Event(Sort(SortCriteria.NONE)))
-    val sort: LiveData<Event<Sort>>
-        get() = _sort
+    private val _sort = MutableStateFlow(Sort(SortCriteria.NONE))
+    val sortFlow: StateFlow<Sort> = _sort.asStateFlow()
 
-    private val globalFilter = MutableLiveData<WineFilter>(FilterConsumed(false))
+    private val _globalFilter = MutableStateFlow<WineFilter>(FilterConsumed(false))
     private val searchControllerMap = mutableMapOf(
         R.id.searchView to NoFilter,
         R.id.chipSelected to NoFilter,
@@ -61,13 +65,15 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
         R.id.rbGroupSize to NoFilter
     )
 
-    val results: LiveData<List<BoundedBottle>> = _sort.switchMap {
-        bottleRepository
-            .getBoundedBottles()
-            .combineAsync(globalFilter) { receiver, bottles, filter ->
-                filterAndSort(receiver, bottles, filter, it.peekContent())
-            }
+    val results: StateFlow<List<BoundedBottle>> = combine(_sort, _globalFilter) { sort, filter ->
+        sort to filter
+    }.flatMapLatest { (sort, filter) ->
+        bottleRepository.getBoundedBottles().map { bottles ->
+            filterAndSort(bottles, filter, sort)
+        }
     }
+        .flowOn(Default)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     var selectedCounties = emptyList<County>()
     var selectedGrapes = emptyList<Grape>()
@@ -91,7 +97,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAllFriends() = friendRepository.getAllFriends()
 
-    fun getAllTags() = tagRepository.getAllTags().asLiveData()
+    fun getAllTags() = tagRepository.getAllTags()
 
     fun getAllStorageLocations(clearText: String) = bottleRepository.getAllStorageLocations().map {
         listOf(clearText) + it
@@ -107,7 +113,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     fun submitFilter(viewControllerId: Int, wineFilter: WineFilter) {
         searchControllerMap[viewControllerId] = wineFilter
-        globalFilter.value =
+        _globalFilter.value =
             searchControllerMap.values.reduce { acc, wFilter -> acc.andCombine(wFilter) }
     }
 
@@ -116,33 +122,26 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
             searchControllerMap[viewControllerId] = wineFilter
         }
 
-        globalFilter.value =
+        _globalFilter.value =
             searchControllerMap.values.reduce { acc, wFilter -> acc.andCombine(wFilter) }
     }
 
     fun submitSortOrder(sort: Sort) {
-        this._sort.postOnce(sort)
+        _sort.value = sort
     }
 
     private fun filterAndSort(
-        receiver: MutableLiveData<List<BoundedBottle>>,
         bottles: List<BoundedBottle>,
         filter: WineFilter,
         sort: Sort
-    ) {
-        viewModelScope.launch(Default) {
-            var filtered = filter.meetFilters(bottles)
+    ): List<BoundedBottle> {
+        var filtered = filter.meetFilters(bottles)
 
-            if (sort.criteria != SortCriteria.NONE) {
-                filtered = sortWithNullLast(
-                    filtered,
-                    sort.reversed,
-                    sort.criteria.selector
-                )
-            }
-
-            receiver.postValue(filtered)
+        if (sort.criteria != SortCriteria.NONE) {
+            filtered = sortWithNullLast(filtered, sort.reversed, sort.criteria.selector)
         }
+
+        return filtered
     }
 
     private fun sortWithNullLast(

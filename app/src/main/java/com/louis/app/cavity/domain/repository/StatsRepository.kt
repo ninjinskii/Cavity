@@ -1,9 +1,9 @@
 package com.louis.app.cavity.domain.repository
 
 import android.app.Application
-import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.louis.app.cavity.db.dao.BaseStat
+import kotlinx.coroutines.flow.Flow
 
 class StatsRepository private constructor(app: Application) : Repository(app) {
     companion object {
@@ -45,7 +45,7 @@ class StatsRepository private constructor(app: Application) : Repository(app) {
         end: Long,
         types: List<Int>,
         groupByColumn: String
-    ): LiveData<List<BaseStat>> {
+    ): Flow<List<BaseStat>> {
         val typesList = types.joinToString(",")
         val sql = """
         SELECT $groupByColumn AS label,

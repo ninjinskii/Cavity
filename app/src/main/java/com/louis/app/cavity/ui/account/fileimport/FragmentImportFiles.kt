@@ -9,6 +9,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportFilesBinding
 import com.louis.app.cavity.ui.ActivityMain
@@ -50,11 +54,16 @@ class FragmentImportFiles : Fragment(R.layout.fragment_import_files) {
     }
 
     private fun observe() {
-        fileImportViewModel.fileImportedEvent.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let { values ->
-                binding.coordinator.showSnackbar(
-                    getString(R.string.file_imported, values.first, values.second)
-                )
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                fileImportViewModel.event.collect { event ->
+                    when (event) {
+                        is FileImportEvent.FileImported ->
+                            binding.coordinator.showSnackbar(
+                                getString(R.string.file_imported, event.binded, event.total)
+                            )
+                    }
+                }
             }
         }
     }

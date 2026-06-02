@@ -1,9 +1,9 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
 import com.louis.app.cavity.model.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HistoryDao {
@@ -39,7 +39,7 @@ interface HistoryDao {
                 FROM history_entry 
                 ORDER BY date ASC"""
     )
-    fun getYears(): LiveData<List<Year>>
+    fun getYears(): Flow<List<Year>>
 
     @Transaction
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
@@ -68,11 +68,11 @@ interface HistoryDao {
 
     @Transaction
     @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId AND (type = 1 OR type = 3) LIMIT 1")
-    fun getReplenishmentForBottleNotPaged(bottleId: Long): LiveData<HistoryEntryWithFriends?>
+    fun getReplenishmentForBottleNotPaged(bottleId: Long): Flow<HistoryEntryWithFriends?>
 
     @Transaction
     @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId AND (type = 0 OR type = 2 OR type = 4) LIMIT 1")
-    fun getConsumptionForBottleNotPaged(bottleId: Long): LiveData<HistoryEntryWithFriends?>
+    fun getConsumptionForBottleNotPaged(bottleId: Long): Flow<HistoryEntryWithFriends?>
 
     @Transaction
     @Query("SELECT * FROM history_entry WHERE bottle_id=:bottleId AND (type = 1 OR type = 3) LIMIT 1")
@@ -88,7 +88,7 @@ interface HistoryDao {
 
     @Transaction
     @Query("SELECT * FROM history_entry WHERE date BETWEEN :start AND :end ORDER BY date DESC")
-    fun getBoundedEntriesBetween(start: Long, end: Long): LiveData<List<BoundedHistoryEntry>>
+    fun getBoundedEntriesBetween(start: Long, end: Long): Flow<List<BoundedHistoryEntry>>
 
     @Query("DELETE FROM history_entry")
     suspend fun deleteAll()

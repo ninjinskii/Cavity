@@ -2,29 +2,43 @@ package com.louis.app.cavity.ui.stats
 
 import android.app.Application
 import androidx.annotation.StringRes
-import androidx.lifecycle.*
+import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.db.dao.Year
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.domain.repository.StatsRepository
-import com.louis.app.cavity.util.combine
+import com.louis.app.cavity.ui.BaseViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 
-class StatsViewModel(app: Application) : AndroidViewModel(app) {
+data class StatsUiState(
+    val currentItemPosition: Int = 0,
+    val showYearSpanOptions: Boolean = false,
+    val comparison: Boolean = false
+)
+
+class StatsViewModel(app: Application) : BaseViewModel<StatsUiState, Nothing>(app, StatsUiState()) {
     private val statsRepository = StatsRepository.getInstance(app)
     private val historyRepository = HistoryRepository.getInstance(app)
 
     private val groupedYears = Year("Combiner", 0L, System.currentTimeMillis())
-    private val year = MutableLiveData(groupedYears)
-    private val comparisonYear = MutableLiveData(groupedYears)
+    private val _year = MutableStateFlow(groupedYears)
+    private val _comparisonYear = MutableStateFlow(groupedYears)
 
-    private val statFactory = LiveDataStatsFactory(statsRepository, year, comparisonYear)
+    private val statFactory = FlowStatsFactory(statsRepository, _year, _comparisonYear)
 
-    val comparisonText = year.combine(comparisonYear) { year, cYear ->
+    val comparisonText = combine(_year, _comparisonYear) { year, cYear ->
         "$year <> $cYear"
     }
 
-    val results = statFactory.results
-
-    val years: LiveData<List<Year>> = historyRepository.getYears().map {
+    val years: Flow<List<Year>> = historyRepository.getYears().map {
         it.toMutableList().apply {
             reverse()
             add(0, groupedYears)
@@ -32,23 +46,11 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private val _currentItemPosition = MutableLiveData<Int>()
-    val currentItemPosition: LiveData<Int>
-        get() = _currentItemPosition
+    fun getResults(position: Int): Flow<List<com.louis.app.cavity.db.dao.Stat>> =
+        statFactory.getResults(position)
 
-    val details = currentItemPosition.switchMap { results[it] }
-
-    val comparisonDetails by lazy {
-        currentItemPosition.switchMap { statFactory.comparisons[it] }
-    }
-
-    private val _showYearSpanOptions = MutableLiveData(false)
-    val showYearSpanOptions: LiveData<Boolean>
-        get() = _showYearSpanOptions
-
-    private val _comparison = MutableLiveData(false)
-    val comparison: LiveData<Boolean>
-        get() = _comparison
+    fun getComparisons(position: Int): Flow<List<com.louis.app.cavity.db.dao.Stat>> =
+        statFactory.getComparisons(position)
 
     fun getTotalPriceByCurrency() = statsRepository.getTotalPriceByCurrency()
 
@@ -65,43 +67,33 @@ class StatsViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun notifyPageChanged(position: Int) {
-        _currentItemPosition.value = position
+        viewState = viewState.copy(currentItemPosition = position)
     }
 
     fun setYear(year: Year) {
-        val currentYear = this.year.value!!
-
-        if (year != currentYear) {
-            this.year.value = year
+        if (year != _year.value) {
+            _year.value = year
         }
     }
 
     fun setComparisonYear(year: Year) {
-        this._comparison.value = true
-        this.comparisonYear.value = year
+        viewState = viewState.copy(comparison = true)
+        _comparisonYear.value = year
     }
 
     fun setShouldShowYearPicker(show: Boolean) {
-        val currentValue = _showYearSpanOptions.value!!
-
-        if (show != currentValue) {
-            _showYearSpanOptions.value = show
+        if (show != viewState.showYearSpanOptions) {
+            viewState = viewState.copy(showYearSpanOptions = show)
 
             if (!show) {
-                stopComparison()
+                viewState = viewState.copy(comparison = false)
             }
         }
     }
 
     @StringRes
     fun getStatTypeLabel(): Int {
-        return currentItemPosition.value?.let {
-            statFactory.getStatTypeLabel(it)
-        } ?: -1
-    }
-
-    private fun stopComparison() {
-        _comparison.value = false
+        return statFactory.getStatTypeLabel(viewState.currentItemPosition)
     }
 }
 

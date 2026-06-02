@@ -1,7 +1,6 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import androidx.annotation.IdRes
-import androidx.lifecycle.asLiveData
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.repository.TagRepository
 import com.louis.app.cavity.model.Bottle
@@ -34,7 +33,6 @@ class OtherInfoManager(
     ) { tags, selectedIds ->
         tags.also { tags -> tags.forEach { it.selected = it.id in selectedIds } }
     }
-        .asLiveData()
 
     fun setPdfPath(path: String) {
         pdfPath = path

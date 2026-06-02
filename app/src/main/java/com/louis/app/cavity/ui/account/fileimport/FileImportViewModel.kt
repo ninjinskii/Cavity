@@ -4,26 +4,24 @@ import android.app.Application
 import android.content.ContentResolver
 import android.net.Uri
 import android.provider.OpenableColumns
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.fileimport.BottleBinder
 import com.louis.app.cavity.domain.fileimport.FileBinder
 import com.louis.app.cavity.domain.fileimport.FriendBinder
 import com.louis.app.cavity.domain.fileimport.WineBinder
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.ui.BaseViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 
-class FileImportViewModel(private val app: Application) : AndroidViewModel(app) {
-    private val errorReporter = SentryErrorReporter.getInstance(app)
+sealed interface FileImportEvent {
+    data class FileImported(val binded: Int, val total: Int) : FileImportEvent
+}
 
-    private val _fileImportedEvent = MutableLiveData<Event<Pair<Int, Int>>>()
-    val fileImportedEvent: LiveData<Event<Pair<Int, Int>>>
-        get() = _fileImportedEvent
+data class FileImportUiState(val placeholder: Unit = Unit)
+
+class FileImportViewModel(private val app: Application) : BaseViewModel<FileImportUiState, FileImportEvent>(app, FileImportUiState()) {
+    private val errorReporter = SentryErrorReporter.getInstance(app)
 
     fun bindFiles(uris: List<Uri>, contentResolver: ContentResolver) {
         val total = uris.size
@@ -50,7 +48,7 @@ class FileImportViewModel(private val app: Application) : AndroidViewModel(app) 
                 }
             }
 
-            _fileImportedEvent.postOnce(binded to total)
+            emitEvent(FileImportEvent.FileImported(binded, total))
         }
     }
 

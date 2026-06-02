@@ -12,8 +12,11 @@ import androidx.core.view.marginStart
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.launch
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,8 +41,6 @@ import com.louis.app.cavity.util.*
 import kotlin.math.max
 import kotlin.math.min
 import androidx.core.net.toUri
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -164,34 +165,37 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
     }
 
     private fun observe() {
-        historyViewModel.scrollTo.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { pos ->
-                val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 5)
-                scroller.targetPosition = pos
-                binding.historyEntryList.layoutManager?.startSmoothScroll(scroller)
-            }
-        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    historyViewModel.event.collect { event ->
+                        when (event) {
+                            is HistoryEvent.ScrollTo -> {
+                                val scroller = JumpSmoothScroller(requireContext(), jumpThreshold = 5)
+                                scroller.targetPosition = event.position
+                                binding.historyEntryList.layoutManager?.startSmoothScroll(scroller)
+                            }
+                            is HistoryEvent.ShowDatePicker -> showDatePicker(event.oldestEntryDate)
+                        }
+                    }
+                }
+                launch {
+                    historyViewModel.state.collect { state ->
+                        bindBottomSheet(state.selectedEntry)
 
-        historyViewModel.selectedEntry.observe(viewLifecycleOwner) {
-            bindBottomSheet(it)
-        }
+                        val filter = state.filter
+                        val externalFilterEnabled =
+                            filter !is HistoryFilter.NoFilter && filter !is HistoryFilter.TypeFilter
 
-        historyViewModel.showDatePicker.observe(viewLifecycleOwner) {
-            it?.getContentIfNotHandled()?.let { oldestEntryDate ->
-                showDatePicker(oldestEntryDate)
-            }
-        }
-
-        historyViewModel.filter.observe(viewLifecycleOwner) {
-            val externalFilterEnabled =
-                it !is HistoryFilter.NoFilter && it !is HistoryFilter.TypeFilter
-
-            with(binding) {
-                externalFilter.text = getText(it.getDisplayTextResId())
-                filterScrollView.isScrollEnabled = !externalFilterEnabled
-                filterChipGroup.setVisible(!externalFilterEnabled, invisible = true)
-                externalFilter.setVisible(externalFilterEnabled)
-                externalFilterIcon.setVisible(externalFilterEnabled)
+                        with(binding) {
+                            externalFilter.text = getText(filter.getDisplayTextResId())
+                            filterScrollView.isScrollEnabled = !externalFilterEnabled
+                            filterChipGroup.setVisible(!externalFilterEnabled, invisible = true)
+                            externalFilter.setVisible(externalFilterEnabled)
+                            externalFilterIcon.setVisible(externalFilterEnabled)
+                        }
+                    }
+                }
             }
         }
     }
@@ -213,7 +217,7 @@ class FragmentHistory : Fragment(R.layout.fragment_history) {
         }
 
         binding.bottleDetails.buttonShowBottle.setOnClickListener {
-            historyViewModel.selectedEntry.value?.let {
+            historyViewModel.state.value.selectedEntry?.let {
                 val (bottle, wine) = it.bottleAndWine
                 val action = FragmentHistoryDirections.historyToBottle(wine.id, bottle.id)
 

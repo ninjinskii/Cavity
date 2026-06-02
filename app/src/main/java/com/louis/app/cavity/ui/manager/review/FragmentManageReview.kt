@@ -6,7 +6,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentManageBaseBinding
 import com.louis.app.cavity.model.Review
@@ -60,9 +64,13 @@ class FragmentManageReview : Fragment(R.layout.fragment_manage_base) {
             layoutManager = LinearLayoutManager(context)
         }
 
-        managerViewModel.getReviewWithFilledReviews().observe(viewLifecycleOwner) {
-            binding.emptyState.setVisible(it.isEmpty())
-            reviewAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                managerViewModel.getReviewWithFilledReviews().collect {
+                    binding.emptyState.setVisible(it.isEmpty())
+                    reviewAdapter.submitList(it)
+                }
+            }
         }
     }
 

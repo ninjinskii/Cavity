@@ -1,9 +1,9 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.model.Review
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ReviewDao {
@@ -20,14 +20,14 @@ interface ReviewDao {
     suspend fun deleteReview(review: Review)
 
     @Query("SELECT * FROM review ORDER BY contest_name")
-    fun getAllReviews(): LiveData<List<Review>>
+    fun getAllReviews(): Flow<List<Review>>
 
     @Query("SELECT * FROM review ORDER BY contest_name")
     suspend fun getAllReviewsNotLive(): List<Review>
 
     @Transaction
     @Query("SELECT * FROM review")
-    fun getReviewWithFilledReviews(): LiveData<List<ReviewWithFReviews>>
+    fun getReviewWithFilledReviews(): Flow<List<ReviewWithFReviews>>
 
     @Query("DELETE FROM review")
     suspend fun deleteAll()

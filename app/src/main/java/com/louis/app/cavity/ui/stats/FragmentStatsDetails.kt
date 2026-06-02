@@ -7,8 +7,12 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentSheetListBinding
 import com.louis.app.cavity.ui.navigation.StatDetailsRoute
@@ -19,6 +23,7 @@ import com.louis.app.cavity.util.prepareWindowInsets
 
 class FragmentStatsDetails : Fragment(R.layout.fragment_sheet_list) {
     private val statsDetailsViewModel: StatsDetailsViewModel by viewModels()
+    private lateinit var bottlesAdapter: BottleRecyclerAdapter
     private var _binding: FragmentSheetListBinding? = null
     private val binding get() = _binding!!
     private val args: FragmentStatsDetailsArgs by navArgs()
@@ -53,7 +58,7 @@ class FragmentStatsDetails : Fragment(R.layout.fragment_sheet_list) {
     }
 
     private fun initRecyclerView() {
-        val bottlesAdapter = BottleRecyclerAdapter(
+        bottlesAdapter = BottleRecyclerAdapter(
             onItemClicked = { itemView: View, boundedBottle ->
                 val (bottle, wine) = boundedBottle
                 navigate(StatDetailsRoute.BottleDetails(wine.id, bottle.id), itemView)
@@ -68,8 +73,12 @@ class FragmentStatsDetails : Fragment(R.layout.fragment_sheet_list) {
             setHasFixedSize(true)
         }
 
-        statsDetailsViewModel.bottles.observe(viewLifecycleOwner) {
-            bottlesAdapter.submitList(it.toMutableList())
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                statsDetailsViewModel.state.collect { state ->
+                    bottlesAdapter.submitList(state.bottles.toMutableList())
+                }
+            }
         }
     }
 

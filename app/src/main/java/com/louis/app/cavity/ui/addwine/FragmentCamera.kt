@@ -20,6 +20,10 @@ import androidx.core.view.postDelayed
 import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentCameraBinding
@@ -27,6 +31,7 @@ import com.louis.app.cavity.domain.error.ErrorReporter
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.addwine.FragmentAddWine.Companion.CAMERA_RESULT_KEY
+import com.louis.app.cavity.ui.settings.SettingsEvent
 import com.louis.app.cavity.ui.settings.SettingsViewModel
 import com.louis.app.cavity.util.PermissionChecker
 import com.louis.app.cavity.util.prepareWindowInsets
@@ -64,7 +69,6 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        settingsViewModel.clearWindowFocusChangedEvent()
         errorReporter = SentryErrorReporter.getInstance(requireContext())
 
         permissionChecker = object : PermissionChecker(this, REQUIRED_PERMISSIONS) {
@@ -206,12 +210,15 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     }
 
     private fun observe() {
-        settingsViewModel.windowFocusChangedEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { windowHasFocus ->
-                if (windowHasFocus) {
-                    startCamera()
-                } else {
-                    stopCamera()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                settingsViewModel.event.collect { event ->
+                    when (event) {
+                        is SettingsEvent.WindowFocusChanged -> {
+                            if (event.hasFocus) startCamera() else stopCamera()
+                        }
+                        else -> Unit
+                    }
                 }
             }
         }

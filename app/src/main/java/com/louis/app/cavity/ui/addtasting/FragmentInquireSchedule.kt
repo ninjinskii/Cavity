@@ -5,10 +5,15 @@ import android.view.View
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.GridLayoutManager
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentInquireScheduleBinding
+import com.louis.app.cavity.ui.addtasting.AddTastingEvent
 import com.louis.app.cavity.ui.LifecycleMaterialDialogBuilder
 import com.louis.app.cavity.ui.SnackbarProvider
 import com.louis.app.cavity.ui.stepper.Step
@@ -62,30 +67,33 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
             addItemDecoration(SpaceGridItemDecoration(space.toInt()))
         }
 
-        addTastingViewModel.tastingBottles.observe(viewLifecycleOwner) {
-            tastingBottleAdapter.submitList(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addTastingViewModel.state.collect { state ->
+                    tastingBottleAdapter.submitList(state.tastingBottles)
+                }
+            }
         }
     }
 
     private fun observe() {
-        addTastingViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                snackbarProvider.onShowSnackbarRequested(stringRes)
-            }
-        }
-
-        addTastingViewModel.tastingSaved.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { tasting ->
-                TastingAlarmScheduler.scheduleTastingAlarm(requireContext(), tasting)
-                snackbarProvider.onShowSnackbarRequested(R.string.tasting_created)
-                findNavController().popBackStack()
-            }
-        }
-
-        addTastingViewModel.cancelTastingAlarms.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { tastingsToCancel ->
-                tastingsToCancel.forEach { tasting ->
-                    TastingAlarmScheduler.cancelTastingAlarm(requireContext(), tasting)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addTastingViewModel.event.collect { event ->
+                    when (event) {
+                        is AddTastingEvent.UserFeedback ->
+                            snackbarProvider.onShowSnackbarRequested(event.resId)
+                        is AddTastingEvent.TastingSaved -> {
+                            TastingAlarmScheduler.scheduleTastingAlarm(requireContext(), event.tasting)
+                            snackbarProvider.onShowSnackbarRequested(R.string.tasting_created)
+                            findNavController().popBackStack()
+                        }
+                        is AddTastingEvent.CancelTastingAlarms -> {
+                            event.tastings.forEach { tasting ->
+                                TastingAlarmScheduler.cancelTastingAlarm(requireContext(), tasting)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -126,7 +134,7 @@ class FragmentInquireSchedule : Step(R.layout.fragment_inquire_schedule) {
     }
 
     private fun needConfirmDialog(): Boolean {
-        return addTastingViewModel.tastingBottles.value?.any { it.showOccupiedWarning } == true
+        return addTastingViewModel.state.value.tastingBottles.any { it.showOccupiedWarning }
     }
 
     override fun onDestroyView() {

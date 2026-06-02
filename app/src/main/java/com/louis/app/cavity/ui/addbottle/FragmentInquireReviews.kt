@@ -17,6 +17,7 @@ import com.louis.app.cavity.ui.addbottle.viewmodel.ReviewManager
 import com.louis.app.cavity.ui.stepper.Step
 import com.louis.app.cavity.util.ColorUtil
 import com.louis.app.cavity.util.hideKeyboard
+import com.louis.app.cavity.util.Event
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.showKeyboard

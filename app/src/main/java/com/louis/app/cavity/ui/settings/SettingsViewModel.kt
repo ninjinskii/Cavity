@@ -1,27 +1,19 @@
 package com.louis.app.cavity.ui.settings
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.annotation.StringRes
 import com.louis.app.cavity.domain.repository.PrefsRepository
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.ui.BaseViewModel
 
-class SettingsViewModel(app: Application) : AndroidViewModel(app) {
+sealed interface SettingsEvent {
+    data class UserFeedback(@StringRes val resId: Int) : SettingsEvent
+    data class WindowFocusChanged(val hasFocus: Boolean) : SettingsEvent
+}
+
+data class SettingsUiState(val isLoading: Boolean = false)
+
+class SettingsViewModel(app: Application) : BaseViewModel<SettingsUiState, SettingsEvent>(app, SettingsUiState()) {
     private val prefsRepository = PrefsRepository.getInstance(app)
-
-    private val _userFeedback = MutableLiveData<Event<Int>>()
-    val userFeedback: LiveData<Event<Int>>
-        get() = _userFeedback
-
-    private val _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean>
-        get() = _isLoading
-
-    private val _windowFocusChangedEvent = MutableLiveData<Event<Boolean>>()
-    val windowFocusChangedEvent: LiveData<Event<Boolean>>
-        get() = _windowFocusChangedEvent
 
     fun setSkewBottle(skew: Boolean) {
         prefsRepository.setSkewBottle(skew)
@@ -66,10 +58,6 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
     fun getEnableBottleStorageLocation() = prefsRepository.getEnableBottleStorageLocation()
 
     fun notifyWindowFocusChanged(hasFocus: Boolean) {
-        _windowFocusChangedEvent.postOnce(hasFocus)
-    }
-
-    fun clearWindowFocusChangedEvent() {
-        _windowFocusChangedEvent.value?.getContentIfNotHandled()
+        emitEvent(SettingsEvent.WindowFocusChanged(hasFocus))
     }
 }

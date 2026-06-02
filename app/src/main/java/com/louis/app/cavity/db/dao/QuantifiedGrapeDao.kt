@@ -1,10 +1,10 @@
 package com.louis.app.cavity.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.louis.app.cavity.model.Grape
 import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.util.ColorUtil
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface QuantifiedGrapeDao {
@@ -29,7 +29,7 @@ interface QuantifiedGrapeDao {
 
     @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId ORDER BY percentage DESC")
-    fun getQGrapesAndGrapeForBottle(bottleId: Long): LiveData<List<QGrapeAndGrape>>
+    fun getQGrapesAndGrapeForBottle(bottleId: Long): Flow<List<QGrapeAndGrape>>
 
     @Transaction
     @Query("SELECT * FROM q_grape WHERE bottle_id=:bottleId")

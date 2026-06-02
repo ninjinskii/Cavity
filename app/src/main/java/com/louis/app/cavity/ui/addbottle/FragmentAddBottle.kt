@@ -4,9 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.launch
 import androidx.navigation.fragment.navArgs
 import com.louis.app.cavity.ui.SnackbarProvider
+import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleEvent
 import com.louis.app.cavity.ui.addbottle.viewmodel.AddBottleViewModel
 import com.louis.app.cavity.ui.stepper.Stepper
 import com.louis.app.cavity.ui.widget.friendpicker.FriendPickerViewModel
@@ -44,17 +49,18 @@ class FragmentAddBottle : Stepper() {
     }
 
     private fun observe() {
-        addBottleViewModel.userFeedback.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                binding.coordinator.showSnackbar(stringRes)
-            }
-        }
-
-        addBottleViewModel.completedEvent.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { stringRes ->
-                findNavController().popBackStack()
-                // Using snackbar provider since we are quitting this fragment
-                snackbarProvider.onShowSnackbarRequested(stringRes)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addBottleViewModel.event.collect { event ->
+                    when (event) {
+                        is AddBottleEvent.UserFeedback ->
+                            binding.coordinator.showSnackbar(event.resId)
+                        is AddBottleEvent.Completed -> {
+                            findNavController().popBackStack()
+                            snackbarProvider.onShowSnackbarRequested(event.resId)
+                        }
+                    }
+                }
             }
         }
     }

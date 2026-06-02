@@ -1,7 +1,8 @@
 package com.louis.app.cavity.ui.addbottle.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.annotation.StringRes
+import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.history.HistoryEntryType
@@ -17,13 +18,29 @@ import com.louis.app.cavity.model.HistoryXFriend
 import com.louis.app.cavity.model.QGrape
 import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.model.TagXBottle
-import com.louis.app.cavity.util.Event
-import com.louis.app.cavity.util.postOnce
+import com.louis.app.cavity.ui.BaseViewModel
+import com.louis.app.cavity.ui.UiEvent
+import com.louis.app.cavity.ui.UiEventManager
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
+sealed interface AddBottleEvent {
+    data class Completed(@StringRes val resId: Int) : AddBottleEvent
+    data class UserFeedback(@StringRes val resId: Int) : AddBottleEvent
+}
+
+data class AddBottleUiState(
+    val editedBottle: Bottle? = null
+)
+
+class AddBottleViewModel(app: Application) : BaseViewModel<AddBottleUiState, AddBottleEvent>(app, AddBottleUiState()) {
     lateinit var dateManager: DateManager
     lateinit var grapeManager: GrapeManager
     lateinit var reviewManager: ReviewManager
@@ -37,25 +54,18 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
 
     private val errorReporter = SentryErrorReporter.getInstance(app)
 
-    private val _userFeedback = MutableLiveData<Event<Int>>()
-    val userFeedback: LiveData<Event<Int>>
-        get() = _userFeedback
+    private val _bottleId = MutableStateFlow(0L)
 
-    private val _editedBottle = MutableLiveData<Bottle>()
-    val editedBottle: LiveData<Bottle>
-        get() = _editedBottle
-
-    private val _completedEvent = MutableLiveData<Event<Int>>()
-    val completedEvent: LiveData<Event<Int>>
-        get() = _completedEvent
-
-    val editedBottleHistoryEntry = _editedBottle.switchMap {
-        historyRepository.getReplenishmentForBottleNotPaged(it?.id ?: 0)
-    }
+    val editedBottleHistoryEntry = _bottleId
+        .flatMapLatest { historyRepository.getReplenishmentForBottleNotPaged(it) }
 
     val buyLocations = bottleRepository.getAllBuyLocations()
 
     private var wineId = 0L
+
+    private fun onFeedback(@StringRes resId: Int) {
+        emitEvent(AddBottleEvent.UserFeedback(resId))
+    }
 
     fun start(wineId: Long, bottleId: Long) {
         // Already started
@@ -68,18 +78,18 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         if (bottleId > 0L) {
             viewModelScope.launch(IO) {
                 val bottle = bottleRepository.getBottleByIdNotLive(bottleId)
-                _editedBottle.postValue(bottle)
+                viewState = viewState.copy(editedBottle = bottle)
+                _bottleId.value = bottleId
 
                 dateManager = DateManager(bottle)
-                grapeManager = GrapeManager(viewModelScope, grapeRepository, bottle, _userFeedback)
-                reviewManager =
-                    ReviewManager(viewModelScope, reviewRepository, bottle, _userFeedback)
+                grapeManager = GrapeManager(viewModelScope, grapeRepository, bottle, ::onFeedback)
+                reviewManager = ReviewManager(viewModelScope, reviewRepository, bottle, ::onFeedback)
                 otherInfoManager = OtherInfoManager(bottle, tagRepository)
             }
         } else {
             dateManager = DateManager(null)
-            grapeManager = GrapeManager(viewModelScope, grapeRepository, null, _userFeedback)
-            reviewManager = ReviewManager(viewModelScope, reviewRepository, null, _userFeedback)
+            grapeManager = GrapeManager(viewModelScope, grapeRepository, null, ::onFeedback)
+            reviewManager = ReviewManager(viewModelScope, reviewRepository, null, ::onFeedback)
             otherInfoManager = OtherInfoManager(null, tagRepository)
         }
     }
@@ -92,11 +102,11 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
         val bottle = mergeStep1And4Bottles(step1Bottle, step4Bottle)
 
         if (bottle == null || step1Bottle == null) {
-            _userFeedback.postOnce(R.string.base_error)
+            emitEvent(AddBottleEvent.UserFeedback(R.string.base_error))
             return
         }
 
-        val isEdit = _editedBottle.value != null
+        val isEdit = viewState.editedBottle != null
         val uiQGrapes = grapeManager.qGrapes.value ?: emptyList()
         val uiFReviews = reviewManager.fReviews.value ?: emptyList()
         val giftedBy = step4Bottle?.giftedBy ?: emptyList()
@@ -111,7 +121,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
             }
         } catch (e: Exception) {
             errorReporter.captureException(e)
-            _userFeedback.postOnce(R.string.base_error)
+            emitEvent(AddBottleEvent.UserFeedback(R.string.base_error))
         }
     }
 
@@ -134,7 +144,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 }
             }
 
-            _completedEvent.postOnce(message)
+            emitEvent(AddBottleEvent.Completed(message))
         }
     }
 
@@ -153,7 +163,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 insertBottleMetadata(bottle.id, bottle.buyDate, uiQGrapes, uiFReviews, givenBy, tags)
             }
 
-            _completedEvent.postOnce(message)
+            emitEvent(AddBottleEvent.Completed(message))
         }
     }
 
@@ -193,7 +203,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
     ): Bottle? {
         return if (step1 != null && step4 != null) {
             Bottle(
-                id = _editedBottle.value?.id ?: 0,
+                id = viewState.editedBottle?.id ?: 0,
                 wineId,
                 step1.vintage,
                 step1.apogee,
@@ -208,7 +218,7 @@ class AddBottleViewModel(app: Application) : AndroidViewModel(app) {
                 step4.pdfPath,
                 step4.storageLocation,
                 step4.alcohol,
-                consumed = editedBottle.value?.consumed ?: false.toInt()
+                consumed = viewState.editedBottle?.consumed ?: false.toInt()
             )
         } else null
     }
