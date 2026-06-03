@@ -155,12 +155,6 @@ class HomeViewModel(
         _storageLocation.value = bottleStorage
     }
 
-    fun stateDistinctByLastWineChange(countyId: Long): Flow<HomeUiState> {
-        return state
-            .distinctUntilChangedBy { it.lastWineChange }
-            .filter { it.lastWineChange?.countyId == countyId }
-    }
-
     fun getWinesWithBottlesByCounty(countyId: Long): Flow<List<WineWithBottles>> {
         if (countyId < 1) {
             errorReporter.captureMessage("Illegal county id: $countyId")

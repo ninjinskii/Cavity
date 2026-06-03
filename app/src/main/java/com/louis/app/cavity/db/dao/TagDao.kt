@@ -36,7 +36,7 @@ interface TagDao {
 
     @Transaction
     @Query("SELECT * FROM bottle WHERE id=:bottleId")
-    fun getTagsForBottle(bottleId: Long): Flow<BottleWithTags>
+    fun getTagsForBottle(bottleId: Long): Flow<BottleWithTags?>
 
     @Transaction
     @Query("SELECT * FROM bottle WHERE id=:bottleId")

@@ -23,7 +23,7 @@ interface BottleDao {
     suspend fun deleteBottles(bottle: List<Bottle>)
 
     @Query("SELECT * FROM bottle WHERE id=:bottleId")
-    fun getBottleById(bottleId: Long): Flow<Bottle>
+    fun getBottleById(bottleId: Long): Flow<Bottle?>
 
     @Query("SELECT * FROM bottle WHERE id=:bottleId")
     suspend fun getBottleByIdNotLive(bottleId: Long): Bottle

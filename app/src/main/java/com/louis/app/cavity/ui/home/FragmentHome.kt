@@ -84,7 +84,6 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
         setListeners()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            // Was CREATED
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     homeViewModel.event.collect {

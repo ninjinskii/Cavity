@@ -53,27 +53,21 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    winesFlow.collectLatest { wines ->
-                        binding.emptyState.setVisible(wines.isEmpty())
-                        binding.wineList.post {
-                            // Sets back the item animator after shared element transition occurred
-                            // When scrolling really quickly, binding can be null when post happens
-                            _binding?.wineList?.itemAnimator = DefaultItemAnimator()
-                        }
-
-                        wineAdapter?.submitList(wines) {
-                            homeViewModel.notifyWineObservingStarted(countyId)
-                        }
+                winesFlow.collectLatest { wines ->
+                    binding.emptyState.setVisible(wines.isEmpty())
+                    binding.wineList.post {
+                        // Sets back the item animator after shared element transition occurred
+                        // When scrolling really quickly, binding can be null when post happens
+                        _binding?.wineList?.itemAnimator = DefaultItemAnimator()
                     }
-                }
 
-                // Observe lastWineChange reactively so we don't miss it if the fragment
-                // becomes visible after the list was already committed (e.g. the ViewPager
-                // scrolled to this county after the DB emission already fired).
-                launch {
-                    homeViewModel.stateDistinctByLastWineChange(countyId).collect {
-                        scrollToWine(it.lastWineChange)
+                    wineAdapter?.submitList(wines) {
+                        homeViewModel.notifyWineObservingStarted(countyId)
+                        homeViewModel.viewState.lastWineChange?.let {
+                            binding.wineList.post {
+                                scrollToWine(it)
+                            }
+                        }
                     }
                 }
             }
@@ -102,7 +96,7 @@ class FragmentWines : Fragment(R.layout.fragment_wines) {
             else -> true
         }
 
-        val wineAdapter = WineRecyclerAdapter(
+        wineAdapter = WineRecyclerAdapter(
             icons,
             isLightTheme,
             onItemClick = { wineWithBottles, itemView ->
