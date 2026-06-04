@@ -212,9 +212,9 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
     private fun FragmentHomeBinding.update(state: HomeUiState) {
         state.observedCounty?.let {
             with(countyDetails) {
-                price.text = it.bottlePrice.join()
-                namings.setSlices(it.namingCount, anim = true)
-                vintages.setSlices(it.vintagesCount, anim = true)
+                price.text = it.bottlePrices.join()
+                namings.setSlices(it.namings, anim = true)
+                vintages.setSlices(it.vintages, anim = true)
                 bottles.text =
                     resources.getQuantityString(R.plurals.bottles, it.bottleCount, it.bottleCount)
             }

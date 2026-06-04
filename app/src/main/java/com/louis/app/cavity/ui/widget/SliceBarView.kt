@@ -17,7 +17,7 @@ import androidx.core.graphics.withTranslation
 import androidx.core.widget.TextViewCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.dao.Stat
+import com.louis.app.cavity.domain.stats.Stat
 import com.louis.app.cavity.util.dpToPx
 import com.louis.app.cavity.util.spToPx
 import com.louis.app.cavity.util.themeColor

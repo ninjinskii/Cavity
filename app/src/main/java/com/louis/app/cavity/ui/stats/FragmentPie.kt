@@ -12,7 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
-import com.louis.app.cavity.db.dao.Stat
+import com.louis.app.cavity.domain.stats.Stat
+import com.louis.app.cavity.domain.stats.StatSlot
+import com.louis.app.cavity.domain.stats.fromButtonId
 import com.louis.app.cavity.ui.stats.widget.PieView
 import com.louis.app.cavity.util.setVisible
 import kotlinx.coroutines.Dispatchers.Default
@@ -24,20 +26,23 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     private var _binding: FragmentPieBinding? = null
     private val binding get() = _binding!!
     private val statsViewModel: StatsViewModel by viewModels(
-        ownerProducer = { requireParentFragment() }
+        ownerProducer = { requireParentFragment() },
+        factoryProducer = { StatsViewModel.Factory }
     )
-    private var viewPagerPosition: Int = 0
+
+    // Support android api < 33
+    @Suppress("DEPRECATION")
+    private val statSlot by lazy {
+        requireArguments().getSerializable(STAT_SLOT)!! as StatSlot
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentPieBinding.bind(view)
-
-        viewPagerPosition = requireArguments().getInt(VIEW_PAGER_POSITION)
         binding.title.text = requireContext().getString(requireArguments().getInt(TITLE_RES))
 
         setListeners()
         observe()
-        maybeShowYearPicker()
     }
 
     private fun setListeners() {
@@ -48,15 +53,8 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
                 return@addOnButtonCheckedListener
             }
 
-            statsViewModel.setShouldShowYearPicker(checkedId != R.id.buttonStock)
-
-            val stockType = when (checkedId) {
-                R.id.buttonReplenishments -> StatType.REPLENISHMENTS
-                R.id.buttonConsumptions -> StatType.CONSUMPTIONS
-                else /* R.id.buttonStock */ -> StatType.STOCK
-            }
-
-            statsViewModel.setStatType(viewPagerPosition, stockType)
+//            statsViewModel.setShouldShowYearPicker(checkedId != R.id.buttonStock)
+            statsViewModel.setStatType(statSlot, fromButtonId(checkedId))
         }
 
         binding.toggleGivenBottle.apply {
@@ -67,7 +65,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
             )
 
             setOnCheckedChangeListener { _, isChecked ->
-                statsViewModel.setIncludeGifts(viewPagerPosition, isChecked)
+                statsViewModel.setIncludeGifts(statSlot, isChecked)
             }
         }
 
@@ -81,9 +79,9 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     statsViewModel.state.collect { state ->
-                        if (state.currentItemPosition == viewPagerPosition) {
+                        /*if (state.currentStatSlot == statSlot) {
                             maybeShowYearPicker()
-                        }
+                        }*/
 
                         with(binding) {
                             comparisonPieView.setVisible(state.comparison)
@@ -96,7 +94,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
                     }
                 }
                 launch {
-                    statsViewModel.getResults(viewPagerPosition).collect { stats ->
+                    statsViewModel.getResults(statSlot).collect { stats ->
                         updatePieData(binding.pieView, stats)
 
                         lifecycleScope.launch(Default) {
@@ -109,7 +107,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
                     }
                 }
                 launch {
-                    statsViewModel.getComparisons(viewPagerPosition).collect {
+                    statsViewModel.getComparisons(statSlot).collect {
                         updatePieData(binding.comparisonPieView, it)
                     }
                 }
@@ -122,12 +120,6 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         }
     }
 
-    private fun maybeShowYearPicker() {
-        statsViewModel.setShouldShowYearPicker(
-            binding.buttonGroupSwitchStat.checkedButtonId != R.id.buttonStock
-        )
-    }
-
     private fun updatePieData(pieView: PieView, stats: List<Stat>) {
         pieView.setPieSlices(stats, anim = true)
     }
@@ -138,15 +130,14 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     companion object {
-        private const val TITLE_RES = "com.louis.app.cavity.ui.home.FragmentWines.TITLE_RES"
-        private const val VIEW_PAGER_POSITION =
-            "com.louis.app.cavity.ui.home.FragmentWines.VIEW_PAGER_POSITION"
+        private const val TITLE_RES = "com.louis.app.cavity.ui.home.FragmentPie.TITLE_RES"
+        private const val STAT_SLOT = "com.louis.app.cavity.ui.home.FragmentPie.STAT_SLOT"
 
         // Used by StatsPagerAdapter
-        fun newInstance(pagerPosition: Int, @StringRes titleRes: Int): FragmentPie {
+        fun newInstance(statSlot: StatSlot, @StringRes titleRes: Int): FragmentPie {
             return FragmentPie().apply {
                 arguments = bundleOf(
-                    VIEW_PAGER_POSITION to pagerPosition,
+                    STAT_SLOT to statSlot,
                     TITLE_RES to titleRes
                 )
             }

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.louis.app.cavity.databinding.ItemStatBinding
-import com.louis.app.cavity.db.dao.Stat
+import com.louis.app.cavity.domain.stats.Stat
 
 class StatsRecyclerAdapter(
     private val onItemClicked: (itemBottlesIds: List<Long>, label: String) -> Unit

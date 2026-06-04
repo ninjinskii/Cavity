@@ -2,8 +2,8 @@ package com.louis.app.cavity.ui.stats
 
 import androidx.recyclerview.widget.RecyclerView
 import com.louis.app.cavity.databinding.ItemStatBinding
-import com.louis.app.cavity.db.dao.Stat
-import com.louis.app.cavity.db.dao.WineColorStat
+import com.louis.app.cavity.domain.stats.Stat
+import com.louis.app.cavity.domain.stats.WineColorStat
 
 class StatViewHolder(
     private val binding: ItemStatBinding,

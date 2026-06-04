@@ -1,6 +1,6 @@
 package com.louis.app.cavity.domain.grape
 
-import com.louis.app.cavity.db.dao.QGrapeAndGrape
+import com.louis.app.cavity.domain.stats.QGrapeAndGrape
 import com.louis.app.cavity.ui.addbottle.viewmodel.QGrapeUiModel
 
 class QuantifiedGrapeHelper {

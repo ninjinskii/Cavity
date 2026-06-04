@@ -29,7 +29,7 @@ import com.louis.app.cavity.util.setupNavigation
 class FragmentStats : Fragment(R.layout.fragment_stats) {
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
-    private val statsViewModel: StatsViewModel by viewModels()
+    private val statsViewModel: StatsViewModel by viewModels { StatsViewModel.Factory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,7 +41,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         setupScrollableTab()
         setupViewPager()
         setupToolbar()
-        initRecyclerViews()
+        initRecyclerView()
         observe()
         hintViewPagerSlide()
     }
@@ -106,7 +106,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             adapter = statsPagerAdapter
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    statsViewModel.notifyPageChanged(position)
+                    val position = statsPagerAdapter.getSlotAt(position)
+                    statsViewModel.setStatSlot(position)
                 }
             })
         }
@@ -126,7 +127,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         }
     }
 
-    private fun initRecyclerViews() {
+    private fun initRecyclerView() {
         val statsAdapter = StatsRecyclerAdapter(
             onItemClicked = { itemBottlesIds, label ->
                 val statType = getString(statsViewModel.getStatTypeLabel())
@@ -139,6 +140,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             adapter = statsAdapter
             layoutManager = LinearLayoutManager(context)
         }
+
+
     }
 
     private fun observe() {

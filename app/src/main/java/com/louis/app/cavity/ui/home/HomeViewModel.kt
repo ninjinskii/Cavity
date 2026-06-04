@@ -7,9 +7,8 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.louis.app.cavity.db.dao.BaseStat
-import com.louis.app.cavity.db.dao.PriceByCurrency
 import com.louis.app.cavity.db.dao.WineWithBottles
+import com.louis.app.cavity.domain.delegates.GetCountyDetails
 import com.louis.app.cavity.domain.error.ErrorReporter
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.repository.BottleRepository
@@ -17,7 +16,10 @@ import com.louis.app.cavity.domain.repository.CountyRepository
 import com.louis.app.cavity.domain.repository.PrefsRepository
 import com.louis.app.cavity.domain.repository.StatsRepository
 import com.louis.app.cavity.domain.repository.WineRepository
+import com.louis.app.cavity.domain.stats.RoomStatsQueries
+import com.louis.app.cavity.domain.stats.StatsQueries
 import com.louis.app.cavity.model.County
+import com.louis.app.cavity.model.CountyDetails
 import com.louis.app.cavity.ui.BaseViewModel
 import com.louis.app.cavity.ui.navigation.AppRoute
 import com.louis.app.cavity.ui.navigation.HomeRoute
@@ -27,8 +29,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -41,15 +41,9 @@ sealed interface HomeEvent {
 }
 
 data class LastWineChange(val wineId: Long, val countyId: Long)
-data class ObservedCounty(
-    val bottleCount: Int,
-    val bottlePrice: List<PriceByCurrency>,
-    val namingCount: List<BaseStat>,
-    val vintagesCount: List<BaseStat>
-)
 
 data class HomeUiState(
-    val observedCounty: ObservedCounty? = null,
+    val observedCounty: CountyDetails? = null,
     val lastWineChange: LastWineChange? = null,
     val nonEmptyCounties: List<County> = emptyList(),
     val storageLocations: List<String> = emptyList(),
@@ -63,8 +57,8 @@ class HomeViewModel(
     private val countyRepository: CountyRepository,
     private val wineRepository: WineRepository,
     bottleRepository: BottleRepository,
-    private val statsRepository: StatsRepository,
     private val prefsRepository: PrefsRepository,
+    private val getCountyDetails: GetCountyDetails,
     private val errorReporter: ErrorReporter,
     savedStateHandle: SavedStateHandle
 ) :
@@ -73,7 +67,7 @@ class HomeViewModel(
     private val _storageLocation = MutableStateFlow<String?>(null)
     private val _observedCountyId = MutableStateFlow<Long?>(null)
     private val _lastWineChange = MutableStateFlow<LastWineChange?>(null)
-    private var countyIdBeforeStorageLocationChange: Long? = null
+    private val _pendingScrollCountyId = MutableStateFlow<Long?>(null)
 
     /**
      * countyId from the arguments of the fragment that initiated a navigation shared element
@@ -83,58 +77,70 @@ class HomeViewModel(
     var savedSharedElementCountyId: Long? by savedStateHandle save "sourceCountyId"
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val nonEmptyCounties = _storageLocation
-        .map { location -> if (prefsRepository.getEnableBottleStorageLocation()) location else null }
-        .flatMapLatest { location -> countyRepository.getNonEmptyCountiesFlow(location) }
+    private val nonEmptyCounties =
+        _storageLocation
+            .map { location ->
+                if (prefsRepository.getEnableBottleStorageLocation()) location else null
+            }
+            .flatMapLatest { location ->
+                countyRepository.getNonEmptyCountiesFlow(location)
+            }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val observedCounty = combine(_observedCountyId, _storageLocation) { id, location ->
-        id to location
-    }
-        .distinctUntilChanged()
-        .flatMapLatest { (countyId, location) ->
-            if (countyId == null) {
-                return@flatMapLatest flowOf(null)
-            }
-
-            combine(
-                statsRepository.getBottleCountForCounty(countyId, location),
-                statsRepository.getPriceByCurrencyForCounty(countyId, location),
-                statsRepository.getNamingsStatsForCounty(countyId, location),
-                statsRepository.getVintagesStatsForCounty(countyId, location)
-            ) { bottleCount, bottlePrice, namingCount, vintagesCount ->
-                ObservedCounty(
-                    bottleCount = bottleCount,
-                    bottlePrice = bottlePrice,
-                    namingCount = namingCount,
-                    vintagesCount = vintagesCount
-                )
-            }
+    private val observedCounty =
+        combine(_observedCountyId, _storageLocation) { id, location ->
+            id to location
         }
+            .distinctUntilChanged()
+            .flatMapLatest { (countyId, location) ->
+                countyId?.let {
+                    getCountyDetails(it, location)
+                } ?: flowOf(null)
+            }
 
     private val storageLocations =
         bottleRepository.getAllStorageLocationsFlow()
             .takeIf { prefsRepository.getEnableBottleStorageLocation() }
             ?: flowOf(emptyList())
 
+    private val uiStateFlow = combine(
+        _storageLocation,
+        nonEmptyCounties,
+        observedCounty,
+        storageLocations,
+        _lastWineChange
+    ) { location, counties, observedCounty, locations, lastWineChange ->
+        HomeUiState(
+            storageLocation = location,
+            nonEmptyCounties = counties,
+            observedCounty = observedCounty,
+            storageLocations = locations,
+            showStorageDialog = locations.isNotEmpty(),
+            lastWineChange = lastWineChange
+        )
+    }
+
     init {
-        combine(
-            _storageLocation,
-            nonEmptyCounties.onEach { checkRememberedCountyBeforeStorageChange(it) },
-            observedCounty,
-            storageLocations,
-            _lastWineChange
-        ) { location, counties, observedCounty, locations, lastWineChange ->
-            HomeUiState(
-                storageLocation = location,
-                nonEmptyCounties = counties,
-                observedCounty = observedCounty,
-                storageLocations = locations,
-                showStorageDialog = locations.isNotEmpty(),
-                lastWineChange = lastWineChange
-            )
-        }
+        nonEmptyCounties
+            .onEach(::handleCountyChange)
+            .launchIn(viewModelScope)
+
+        uiStateFlow
             .onEach { viewState = it }
+            .launchIn(viewModelScope)
+
+        combine(
+            _pendingScrollCountyId,
+            nonEmptyCounties
+        ) { pendingId: Long?, counties: List<County> -> pendingId to counties }
+            .onEach { (pendingId, counties) ->
+                val targetId = pendingId ?: return@onEach
+
+                if (counties.any { it.id == targetId }) {
+                    _pendingScrollCountyId.value = null
+                    emitEvent(HomeEvent.ScrollToCounty(targetId))
+                }
+            }
             .launchIn(viewModelScope)
     }
 
@@ -151,8 +157,17 @@ class HomeViewModel(
     }
 
     fun setStorageLocation(bottleStorage: String?, currentCountyId: Long?) {
-        countyIdBeforeStorageLocationChange = currentCountyId
+        _pendingScrollCountyId.value = currentCountyId
         _storageLocation.value = bottleStorage
+    }
+
+    private fun handleCountyChange(counties: List<County>) {
+        val targetId = _pendingScrollCountyId.value ?: return
+
+        if (counties.any { it.id == targetId }) {
+            _pendingScrollCountyId.value = null
+            emitEvent(HomeEvent.ScrollToCounty(targetId))
+        }
     }
 
     fun getWinesWithBottlesByCounty(countyId: Long): Flow<List<WineWithBottles>> {
@@ -165,7 +180,7 @@ class HomeViewModel(
                 if (location == null) winesWithBottles
                 else winesWithBottles.filter { wineWithBottles ->
                     wineWithBottles.remainingBottles > 0 &&
-                        wineWithBottles.bottles.any { it.storageLocation == location }
+                            wineWithBottles.bottles.any { it.storageLocation == location }
                 }
             }
     }
@@ -203,14 +218,6 @@ class HomeViewModel(
         emitEvent(HomeEvent.Navigation(route))
     }
 
-    private fun checkRememberedCountyBeforeStorageChange(counties: List<County>) {
-        val targetId = countyIdBeforeStorageLocationChange ?: return
-        if (counties.any { it.id == targetId }) {
-            countyIdBeforeStorageLocationChange = null
-            emitEvent(HomeEvent.ScrollToCounty(targetId))
-        }
-    }
-
     private fun checkCounty(wineWithBottles: WineWithBottles, fragmentCountyId: Long) {
         if (wineWithBottles.wine.countyId != fragmentCountyId) {
             throw IllegalStateException("Wine view holder listener has wrong FragmentWines context")
@@ -230,8 +237,9 @@ class HomeViewModel(
                 val countyRepository = CountyRepository.getInstance(app)
                 val wineRepository = WineRepository.getInstance(app)
                 val bottleRepository = BottleRepository.getInstance(app)
-                val statsRepository = StatsRepository.getInstance(app)
                 val prefsRepository = PrefsRepository.getInstance(app)
+                val statQueries = RoomStatsQueries(app)
+                val getCountyDetails = GetCountyDetails(statQueries)
                 val errorReporter = SentryErrorReporter.getInstance(app)
                 val savedState = createSavedStateHandle()
 
@@ -240,8 +248,8 @@ class HomeViewModel(
                     countyRepository,
                     wineRepository,
                     bottleRepository,
-                    statsRepository,
                     prefsRepository,
+                    getCountyDetails,
                     errorReporter,
                     savedState
                 )

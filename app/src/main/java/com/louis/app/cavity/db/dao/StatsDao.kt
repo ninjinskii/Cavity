@@ -1,59 +1,44 @@
 package com.louis.app.cavity.db.dao
 
 import androidx.room.Dao
-import androidx.room.Ignore
 import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Transaction
-import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.louis.app.cavity.db.StatsBottleIdsTypeConverter
+import com.louis.app.cavity.domain.stats.BaseStat
+import com.louis.app.cavity.domain.stats.BottleStatRow
+import com.louis.app.cavity.domain.stats.PriceByCurrency
+import com.louis.app.cavity.domain.stats.WineColorStat
 import com.louis.app.cavity.model.Bottle
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.Wine
-import com.louis.app.cavity.model.WineColor
-import com.louis.app.cavity.util.ColorUtil
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StatsDao {
-    @Query("SELECT COUNT(*) FROM bottle INNER JOIN wine ON wine_id = wine.id WHERE county_id=:countyId AND consumed != 1 AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL)")
-    fun getBottleCountForCounty(countyId: Long, storageLocation: String?): Flow<Int>
-
-    @Query("""SELECT SUM(price) as sum, currency FROM bottle INNER JOIN wine ON wine_id = wine.id WHERE price != -1 AND county_id=:countyId AND consumed != 1 AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL) GROUP BY currency""")
-    fun getPriceByCurrencyForCounty(
+    @Query(
+        """
+    SELECT
+        bottle.id AS bottleId,
+        wine.naming AS naming,
+        bottle.vintage AS vintage,
+        bottle.price AS price,
+        bottle.currency AS currency
+    FROM bottle
+    INNER JOIN wine ON bottle.wine_id = wine.id
+    WHERE wine.county_id = :countyId
+        AND bottle.consumed = 0
+        AND (
+            bottle.storage_location = :storageLocation
+            OR :storageLocation IS NULL
+        )
+        """
+    )
+    fun getBottleStatsForCounty(
         countyId: Long,
         storageLocation: String?
-    ): Flow<List<PriceByCurrency>>
-
-    @Query(
-        """SELECT wine.naming AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
-                    (SELECT COUNT(*) 
-                    FROM bottle INNER JOIN wine ON wine_id = wine.id 
-                    WHERE wine.county_id=:countyId AND bottle.consumed = 0 AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL)) * 100
-                    AS percentage,
-                    GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
-                FROM bottle
-                INNER JOIN wine ON wine_id = wine.id
-                WHERE bottle.consumed = 0 AND wine.county_id=:countyId AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL)
-                GROUP BY naming ORDER BY percentage"""
-    )
-    fun getNamingsForCounty(countyId: Long, storageLocation: String?): Flow<List<BaseStat>>
-
-    @Query(
-        """SELECT bottle.vintage AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
-                    (SELECT COUNT(*) 
-                    FROM bottle INNER JOIN wine ON wine_id = wine.id 
-                    WHERE wine.county_id=:countyId AND bottle.consumed = 0 AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL)) * 100
-                    AS percentage,
-                    GROUP_CONCAT(DISTINCT bottle.id) AS bottleIds
-                FROM bottle
-                INNER JOIN wine ON wine_id = wine.id
-                WHERE bottle.consumed = 0 AND wine.county_id=:countyId AND (bottle.storage_location = :storageLocation OR :storageLocation IS NULL)
-                GROUP BY vintage ORDER BY percentage, label"""
-    )
-    fun getVintagesForCounty(countyId: Long, storageLocation: String?): Flow<List<BaseStat>>
+    ): Flow<List<BottleStatRow>>
 
     @Query(
         """SELECT county.name AS label, COUNT(*) AS count, (cast( COUNT (*) AS REAL)) / 
@@ -119,45 +104,5 @@ interface StatsDao {
     @Transaction
     @RawQuery(observedEntities = [HistoryEntry::class, Bottle::class, Wine::class, County::class])
     fun getStatsRaw(query: SupportSQLiteQuery): Flow<List<BaseStat>>
-}
-
-interface Stat {
-    val label: String
-    val count: Int
-    val percentage: Float
-    val color: Int
-    val bottleIds: List<Long>
-}
-
-data class BaseStat(
-    override val label: String,
-    override val count: Int,
-    override val percentage: Float,
-    @field:TypeConverters(StatsBottleIdsTypeConverter::class) override val bottleIds: List<Long>
-) : Stat {
-    @Ignore
-    override val color = ColorUtil.next()
-}
-
-data class WineColorStat(
-    val wcolor: WineColor,
-    override val count: Int,
-    override val percentage: Float,
-    @field:TypeConverters(StatsBottleIdsTypeConverter::class) override val bottleIds: List<Long>
-) : Stat {
-    @Ignore
-    override val label = wcolor.name
-
-    @Ignore
-    override val color = ColorUtil.getColorResForWineColor(wcolor.ordinal)
-}
-
-data class PriceByCurrency(
-    val sum: Long,
-    val currency: String
-) {
-    override fun toString(): String {
-        return "$sum $currency"
-    }
 }
 

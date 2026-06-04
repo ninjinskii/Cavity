@@ -38,7 +38,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.dao.PriceByCurrency
+import com.louis.app.cavity.domain.stats.PriceByCurrency
 import com.louis.app.cavity.ui.ActivityMain
 import kotlin.math.max
 import kotlin.properties.ReadWriteProperty

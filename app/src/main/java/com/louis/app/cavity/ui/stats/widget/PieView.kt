@@ -14,8 +14,8 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.widget.TextViewCompat
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.louis.app.cavity.R
-import com.louis.app.cavity.db.dao.Stat
-import com.louis.app.cavity.db.dao.WineColorStat
+import com.louis.app.cavity.domain.stats.Stat
+import com.louis.app.cavity.domain.stats.WineColorStat
 import kotlin.math.PI
 import kotlin.math.min
 

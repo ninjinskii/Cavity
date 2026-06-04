@@ -4,16 +4,24 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.louis.app.cavity.R
+import com.louis.app.cavity.domain.stats.StatSlot
 
-class StatsPagerAdapter(fragment: Fragment, lifecyclOwner: LifecycleOwner) :
-    FragmentStateAdapter(fragment.childFragmentManager, lifecyclOwner.lifecycle) {
+class StatsPagerAdapter(fragment: Fragment, lifecycleOwner: LifecycleOwner) :
+    FragmentStateAdapter(fragment.childFragmentManager, lifecycleOwner.lifecycle) {
+
+    private val pages = listOf(
+        StatSlot.COUNTY to R.string.pie_title_county,
+        StatSlot.COLOR to R.string.pie_title_color,
+        StatSlot.VINTAGE to R.string.pie_title_vintage,
+        StatSlot.NAMING to R.string.pie_title_naming
+    )
 
     override fun getItemCount() = 4
 
-    override fun createFragment(position: Int) = when (position) {
-        0 -> FragmentPie.newInstance(position, R.string.pie_title_county)
-        1 -> FragmentPie.newInstance(position, R.string.pie_title_color)
-        2 -> FragmentPie.newInstance(position, R.string.pie_title_vintage)
-        else -> FragmentPie.newInstance(position, R.string.pie_title_naming)
+    override fun createFragment(position: Int): Fragment {
+        val (statSlot, title) = pages[position]
+        return FragmentPie.newInstance(statSlot, title)
     }
+
+    fun getSlotAt(position: Int) = pages[position].first
 }
