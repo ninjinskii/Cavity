@@ -11,7 +11,6 @@ import androidx.room.withTransaction
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.domain.history.isConsumption
-import com.louis.app.cavity.domain.history.isReplenishment
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.model.HistoryXFriend
 import com.louis.app.cavity.ui.history.HistoryFilter
@@ -155,7 +154,7 @@ class HistoryRepository private constructor(app: Application) : Repository(app) 
 
     private suspend fun ensureEntryTypeUnicityForBottle(entry: HistoryEntry) {
         when {
-            entry.type.isReplenishment() ->
+            entry.type.isReplenishment ->
                 historyDao.clearReplenishmentsForBottle(entry.bottleId)
 
             entry.type.isConsumption() ->

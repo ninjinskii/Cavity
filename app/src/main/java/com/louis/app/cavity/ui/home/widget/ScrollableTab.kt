@@ -200,7 +200,7 @@ class ScrollableTab @JvmOverloads constructor(
     private fun colorView(child: View, scaleValue: Float) {
         val percent = (scaleValue - 1) / 1f
         val color = ArgbEvaluator().evaluate(percent, unSelectedColor, selectedColor) as Int
-        child.findViewById<TextView>(R.id.county)
+        child.findViewById<TextView>(R.id.tabAdapterItemName)
             .setTextColor(color)
     }
 

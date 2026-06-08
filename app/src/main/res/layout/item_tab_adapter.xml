@@ -9,7 +9,7 @@
     android:focusable="true">
 
     <TextView
-        android:id="@+id/county"
+        android:id="@+id/tabAdapterItemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"

@@ -1,4 +1,4 @@
-package com.louis.app.cavity.domain.worker
+package com.louis.app.cavity.worker
 
 import android.app.Application
 import android.content.Context

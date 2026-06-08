@@ -74,6 +74,8 @@ class PieView @JvmOverloads constructor(
         }
 
     fun setPieSlices(slices: List<Stat>, anim: Boolean) {
+        val sameData = pieSlices == slices
+
         if (anim) {
             if (pieSlices.isNotEmpty()) {
                 replaceData(slices) // Will take care of updating pieData

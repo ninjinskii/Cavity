@@ -11,13 +11,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.louis.app.cavity.databinding.BottomSheetStatsBinding
-import com.louis.app.cavity.util.join
 
 class StatsBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetStatsBinding? = null
     private val binding get() = _binding!!
-    private val statsViewModel: StatsViewModel by viewModels(
-        ownerProducer = { requireParentFragment() }
+    private val cellarStatsViewModel: CellarStatsViewModel by viewModels(
+        ownerProducer = { requireParentFragment() },
+        factoryProducer = { CellarStatsViewModel.Factory }
     )
 
     override fun onCreateView(
@@ -34,23 +34,17 @@ class StatsBottomSheet : BottomSheetDialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    statsViewModel.getTotalPriceByCurrency().collect {
-                        binding.price.text = it.join()
-                    }
-                }
-                launch {
-                    statsViewModel.getTotalConsumed().collect {
-                        binding.consumed.text = it.toString()
-                    }
-                }
-                launch {
-                    statsViewModel.getTotalStock().collect {
-                        binding.stock.text = it.toString()
-                    }
+                cellarStatsViewModel.state.collect {
+                    binding.update(it)
                 }
             }
         }
+    }
+
+    private fun BottomSheetStatsBinding.update(state: CellarStatsUiState) {
+        stock.text = state.remainingBottles.toString()
+        consumed.text = state.totalConsumedBottles.toString()
+        price.text = state.totalPriceByCurrency
     }
 
     override fun onDestroyView() {

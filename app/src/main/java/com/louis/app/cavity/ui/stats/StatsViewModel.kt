@@ -2,128 +2,207 @@ package com.louis.app.cavity.ui.stats
 
 import android.app.Application
 import androidx.annotation.StringRes
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.louis.app.cavity.db.dao.Year
-import com.louis.app.cavity.domain.delegates.GetCountyDetails
-import com.louis.app.cavity.domain.error.SentryErrorReporter
-import com.louis.app.cavity.domain.repository.BottleRepository
-import com.louis.app.cavity.domain.repository.CountyRepository
+import com.louis.app.cavity.domain.stats.StatsYearTimeSpan
 import com.louis.app.cavity.domain.repository.HistoryRepository
-import com.louis.app.cavity.domain.repository.PrefsRepository
-import com.louis.app.cavity.domain.repository.StatsRepository
-import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.domain.stats.RoomStatsQueries
 import com.louis.app.cavity.domain.stats.Stat
-import com.louis.app.cavity.domain.stats.StatSlot
-import com.louis.app.cavity.domain.stats.StatType
+import com.louis.app.cavity.domain.stats.StatGroupBy
+import com.louis.app.cavity.domain.stats.InventoryStatFilter
 import com.louis.app.cavity.domain.stats.StatsQueries
 import com.louis.app.cavity.ui.BaseViewModel
-import com.louis.app.cavity.ui.home.HomeViewModel
-import com.louis.app.cavity.util.save
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 
 data class StatsUiState(
-    val currentStatSlot: StatSlot = StatSlot.COUNTY,
-    val currentStatType: StatType = StatType.STOCK,
-    val comparison: Boolean = false
+    val statGroupBy: StatGroupBy = StatGroupBy.COUNTY,
+    val inventoryStatFilter: InventoryStatFilter = InventoryStatFilter.Stock,
+    val comparison: Boolean = false,
+    val statsTimeSpans: List<StatsYearTimeSpan> = emptyList(),
+    val comparisonText: String = ""
 ) {
     val showYearSpanOptions: Boolean
-        get() = currentStatType != StatType.STOCK
+        get() = inventoryStatFilter.supportsYearFiltering
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class StatsViewModel(
-    app: Application, statQueries: StatsQueries
+    app: Application,
+    statQueries: StatsQueries,
+    historyRepository: HistoryRepository
 ) :
     BaseViewModel<StatsUiState, Nothing>(app, StatsUiState()) {
 
-    private val statsRepository = StatsRepository.getInstance(app)
-    private val historyRepository = HistoryRepository.getInstance(app)
+    private val allYears = StatsYearTimeSpan(0, 0L, System.currentTimeMillis())
+    private val statFactory = FlowStatsFactory(statQueries)
 
-    private val groupedYears = Year("Combiner", 0L, System.currentTimeMillis())
-    private val _year = MutableStateFlow(groupedYears)
-    private val _comparisonYear = MutableStateFlow(groupedYears)
+    private val statFilters =
+        MutableStateFlow(
+            StatFilters(
+                statGroupBy = StatGroupBy.COUNTY,
+                statsTimeSpan = allYears,
+                comparisonStatsTimeSpan = allYears,
+                statRequests = StatGroupBy.entries.associateWith {
+                    StatRequest(
+                        inventoryStatFilter = InventoryStatFilter.Stock,
+                        includeGifts = false
+                    )
+                }
+            )
+        )
 
-    private val statFactory = FlowStatsFactory(statQueries, _year, _comparisonYear)
+    private val years: Flow<List<StatsYearTimeSpan>> =
+        historyRepository.getYears().map {
+            it.toMutableList().apply {
+                reverse()
+                add(0, allYears)
+                add(allYears)
+            }
+        }
 
-    val comparisonText = combine(_year, _comparisonYear) { year, cYear ->
-        "$year <> $cYear"
+    val uiStateFlow: Flow<StatsUiState> =
+        combine(
+            statFilters,
+            years
+        ) { filters, years ->
+            StatsUiState(
+                statGroupBy = filters.statGroupBy,
+                inventoryStatFilter = filters.statRequests.getValue(filters.statGroupBy).inventoryStatFilter,
+                comparison = filters.comparisonStatsTimeSpan != allYears,
+                statsTimeSpans = years,
+                comparisonText = "${filters.statsTimeSpan} <> ${filters.comparisonStatsTimeSpan}"
+            )
+        }
+
+    init {
+        uiStateFlow
+            .onEach { viewState = it }
+            .launchIn(viewModelScope)
     }
 
-    val years: Flow<List<Year>> = historyRepository.getYears().map {
-        it.toMutableList().apply {
-            reverse()
-            add(0, groupedYears)
-            add(groupedYears)
+    private fun statRequest(statGroupBy: StatGroupBy): Flow<StatRequest> =
+        statFilters.map { it.statRequests.getValue(statGroupBy) }
+
+    fun pieResults(statGroupBy: StatGroupBy): Flow<Pair<List<Stat>, Boolean>> =
+        combine(statFilters, statRequest(statGroupBy)) { filters, request ->
+            (filters to request)
+        }
+            .flatMapLatest { (filters, request) ->
+                statFactory.getResults(
+                    statGroupBy = statGroupBy,
+                    timeSpan = filters.statsTimeSpan,
+                    inventoryStatFilter = request.inventoryStatFilter,
+                    includeGifts = request.includeGifts
+                )
+                    .map { stats ->
+                        println("emit ${request.includeGifts}")
+                        stats to request.includeGifts
+                    }
+            }
+            .distinctUntilChanged()
+
+    fun pieComparisons(statGroupBy: StatGroupBy): Flow<List<Stat>> =
+        combine(statFilters, statRequest(statGroupBy)) { filters, request ->
+            filters to request
+        }
+            .flatMapLatest { (filters, request) ->
+                statFactory.getComparisons(
+                    statGroupBy = statGroupBy,
+                    comparisonStatsTimeSpan = filters.comparisonStatsTimeSpan,
+                    inventoryStatFilter = request.inventoryStatFilter,
+                    includeGifts = request.includeGifts
+                )
+            }
+            .distinctUntilChanged()
+
+    fun setStatFilter(statGroupBy: StatGroupBy, inventoryStatFilter: InventoryStatFilter) {
+        statFilters.update { current ->
+            current.copy(
+                statRequests = current.statRequests.toMutableMap().apply {
+                    this[statGroupBy] =
+                        getValue(statGroupBy).copy(
+                            inventoryStatFilter = inventoryStatFilter
+                        )
+                }
+            )
         }
     }
 
-    fun getResults(statSlot: StatSlot): Flow<List<Stat>> = statFactory.getResults(statSlot)
-
-    fun getComparisons(statSlot: StatSlot): Flow<List<Stat>> = statFactory.getComparisons(statSlot)
-
-    fun getTotalPriceByCurrency() = statsRepository.getTotalPriceByCurrency()
-
-    fun getTotalConsumed() = statsRepository.getTotalConsumedBottles()
-
-    fun getTotalStock() = statsRepository.getTotalStockBottles()
-
-    fun setStatType(statSlot: StatSlot, statType: StatType) {
-        statFactory.applyStatType(statSlot, statType)
-        viewState = viewState.copy(
-            currentStatType = statType,
-            currentStatSlot = statSlot,
-            comparison = if (statType == StatType.STOCK) false else viewState.comparison
-        )
-    }
-
-    fun setIncludeGifts(statSlot: StatSlot, includeGifts: Boolean) {
-        statFactory.applyIncludeGifts(statSlot, includeGifts)
-    }
-
-    fun setStatSlot(statSlot: StatSlot) {
-        viewState = viewState.copy(currentStatSlot = statSlot)
-
-        val currentType = statFactory.getStatType(statSlot)
-
-        viewState = viewState.copy(
-            currentStatType = currentType,
-            comparison = if (currentType == StatType.STOCK) false else viewState.comparison
-        )
-    }
-
-    fun setYear(year: Year) {
-        if (year != _year.value) {
-            _year.value = year
+    fun setIncludeGifts(statGroupBy: StatGroupBy, includeGifts: Boolean) {
+        println("setIncludeGifts $statGroupBy -> $includeGifts")
+        statFilters.update { current ->
+            current.copy(
+                statRequests = current.statRequests + (
+                        statGroupBy to current.statRequests
+                            .getValue(statGroupBy)
+                            .copy(includeGifts = includeGifts)
+                        )
+            )
         }
     }
 
-    fun setComparisonYear(year: Year) {
-        viewState = viewState.copy(comparison = true)
-        _comparisonYear.value = year
+    fun setStatSlot(statGroupBy: StatGroupBy) {
+        statFilters.update {
+            it.copy(statGroupBy = statGroupBy)
+        }
     }
 
+    fun setYear(statsTimeSpan: StatsYearTimeSpan) {
+        statFilters.update {
+            it.copy(statsTimeSpan = statsTimeSpan)
+        }
+    }
+
+    fun setComparisonYear(statsTimeSpan: StatsYearTimeSpan) {
+        statFilters.update {
+            it.copy(comparisonStatsTimeSpan = statsTimeSpan)
+        }
+    }
+
+    // TODO: make this work again
     @StringRes
     fun getStatTypeLabel(): Int {
-        return statFactory.getStatTypeLabel(viewState.currentStatSlot)
+        /*val slot = uiStateFlow.value.statGroupBy
+        return when (statFilters.value.statRequests.getValue(slot).inventoryStatFilter) {
+            InventoryStatFilter.STOCK -> R.string.stock
+            InventoryStatFilter.REPLENISHMENTS -> R.string.replenishments
+            InventoryStatFilter.CONSUMPTIONS -> R.string.consumptions
+        }*/
+        return -1
     }
+
+    private data class StatFilters(
+        val statGroupBy: StatGroupBy,
+        val statsTimeSpan: StatsYearTimeSpan,
+        val comparisonStatsTimeSpan: StatsYearTimeSpan,
+        val statRequests: Map<StatGroupBy, StatRequest>
+    )
+
+    private data class StatRequest(
+        val inventoryStatFilter: InventoryStatFilter,
+        val includeGifts: Boolean
+    )
 
     companion object {
         val Factory = viewModelFactory {
             initializer {
                 val app = checkNotNull(this[APPLICATION_KEY])
                 val statQueries = RoomStatsQueries(app)
+                val historyRepository = HistoryRepository.getInstance(app)
 
-                StatsViewModel(app, statQueries)
+                StatsViewModel(app, statQueries, historyRepository)
             }
         }
     }
 }
-
-

@@ -3,7 +3,7 @@ package com.louis.app.cavity.domain.stats
 import com.louis.app.cavity.model.WineColor
 import kotlinx.coroutines.flow.Flow
 
-enum class StatSlot(
+enum class StatGroupBy(
     val groupBy: String,
     val stockQuery: (StatsQueries) -> Flow<List<Stat>>,
     val postProcess: (List<BaseStat>) -> List<Stat> = { it }

@@ -175,8 +175,11 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
             onLongTabClick = { county, position ->
                 showCountyDetails(position, county)
             },
-            idToContent = { county ->
-                county.id to county
+            itemId = { county ->
+                county.id
+            },
+            displayText = { county ->
+                county.name
             }
         )
     }
@@ -255,7 +258,7 @@ class FragmentHome : Fragment(R.layout.fragment_home), FragmentWinesParent {
     private fun showCountyDetails(itemPosition: Int, county: County) {
         with(binding) {
             viewPager.currentItem = itemPosition
-            countyDetails.county.text = county.name
+            countyDetails.tabAdapterItemName.text = county.name
             countyDetails.namings.triggerAnimation()
             countyDetails.vintages.triggerAnimation()
         }

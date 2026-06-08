@@ -9,7 +9,6 @@ import com.louis.app.cavity.R
 import com.louis.app.cavity.db.dao.BoundedHistoryEntry
 import com.louis.app.cavity.domain.history.HistoryEntryType
 import com.louis.app.cavity.domain.history.isConsumption
-import com.louis.app.cavity.domain.history.isReplenishment
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.ui.BaseViewModel
@@ -132,7 +131,7 @@ class HistoryViewModel(app: Application) : BaseViewModel<HistoryUiState, History
     private fun rawFilter(source: List<HistoryEntry>, filter: HistoryFilter): List<HistoryEntry> {
         return when (filter) {
             is HistoryFilter.TypeFilter -> when (filter.chipId) {
-                R.id.chipReplenishments -> source.filter { it.type.isReplenishment() }
+                R.id.chipReplenishments -> source.filter { it.type.isReplenishment }
                 R.id.chipComsumptions -> source.filter { it.type.isConsumption() }
                 R.id.chipTastings -> source.filter { it.type == HistoryEntryType.TASTING }
                 R.id.chipGiftedTo -> source.filter { it.type == HistoryEntryType.GIFTED_TO }

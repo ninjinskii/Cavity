@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import androidx.viewpager2.widget.ViewPager2
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentStatsBinding
-import com.louis.app.cavity.db.dao.Year
+import com.louis.app.cavity.domain.stats.StatsYearTimeSpan
 import com.louis.app.cavity.ui.home.widget.ScrollableTabAdapter
 import com.louis.app.cavity.ui.navigation.StatRoute
 import com.louis.app.cavity.ui.navigation.navigate
@@ -30,6 +30,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
     private val statsViewModel: StatsViewModel by viewModels { StatsViewModel.Factory }
+    private lateinit var tabAdapter: ScrollableTabAdapter<StatsYearTimeSpan>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,8 +43,15 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         setupViewPager()
         setupToolbar()
         initRecyclerView()
-        observe()
         hintViewPagerSlide()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                statsViewModel.uiStateFlow.collect { state ->
+                    binding.update(state)
+                }
+            }
+        }
     }
 
     private fun applyInsets() {
@@ -70,25 +78,23 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     }
 
     private fun setupScrollableTab() {
-        val tabAdapter = ScrollableTabAdapter<Year>(
+        tabAdapter = ScrollableTabAdapter(
             onTabClick = { view, _ ->
                 binding.years.moveToView(view)
             },
             onLongTabClick = { year, _ ->
                 statsViewModel.setComparisonYear(year)
             },
-            idToContent = { year ->
-                year.year to year
+            itemId = { timeSpan ->
+                timeSpan.year
+            },
+            displayText = { timeSpan ->
+                if (timeSpan.year != 0)
+                    timeSpan.year.toString()
+                else
+                    requireContext().getString(R.string.combined)
             }
         )
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                statsViewModel.years.collect {
-                    tabAdapter.submitList(it)
-                }
-            }
-        }
 
         with(binding.years) {
             background = null // Remove background for elegant disappear animation
@@ -130,7 +136,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     private fun initRecyclerView() {
         val statsAdapter = StatsRecyclerAdapter(
             onItemClicked = { itemBottlesIds, label ->
-                val statType = getString(statsViewModel.getStatTypeLabel())
+                val statType = "" //getString(statsViewModel.getStatTypeLabel())
                 val title = "$statType - $label"
                 navigate(StatRoute.StatDetails(title, itemBottlesIds))
             }
@@ -139,23 +145,6 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         binding.statDetailsList.apply {
             adapter = statsAdapter
             layoutManager = LinearLayoutManager(context)
-        }
-
-
-    }
-
-    private fun observe() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                statsViewModel.state.collect { state ->
-                    binding.years.apply {
-                        setVisible(state.showYearSpanOptions, invisible = true)
-                        post { binding.years.requestLayout() }
-                    }
-
-                    updateStatDetailsListInset()
-                }
-            }
         }
     }
 
@@ -170,6 +159,15 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 
     private fun updateStatDetailsListInset() {
         binding.statDetailsList.requestApplyInsets()
+    }
+
+    private fun FragmentStatsBinding.update(state: StatsUiState) {
+        tabAdapter.submitList(state.statsTimeSpans)
+        years.apply {
+            setVisible(state.showYearSpanOptions, invisible = true)
+            post { binding.years.requestLayout() }
+        }
+        updateStatDetailsListInset()
     }
 
     override fun onDestroyView() {

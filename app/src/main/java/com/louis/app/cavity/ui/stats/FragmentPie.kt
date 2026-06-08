@@ -12,15 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentPieBinding
-import com.louis.app.cavity.domain.stats.Stat
-import com.louis.app.cavity.domain.stats.StatSlot
-import com.louis.app.cavity.domain.stats.fromButtonId
-import com.louis.app.cavity.ui.stats.widget.PieView
+import com.louis.app.cavity.domain.stats.InventoryStatFilter
+import com.louis.app.cavity.domain.stats.StatGroupBy
 import com.louis.app.cavity.util.setVisible
-import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FragmentPie : Fragment(R.layout.fragment_pie) {
     private var _binding: FragmentPieBinding? = null
@@ -32,8 +28,8 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
 
     // Support android api < 33
     @Suppress("DEPRECATION")
-    private val statSlot by lazy {
-        requireArguments().getSerializable(STAT_SLOT)!! as StatSlot
+    private val statGroupBy by lazy {
+        requireArguments().getSerializable(STAT_SLOT)!! as StatGroupBy
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +38,32 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         binding.title.text = requireContext().getString(requireArguments().getInt(TITLE_RES))
 
         setListeners()
-        observe()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    statsViewModel.uiStateFlow.collectLatest { state ->
+                        binding.update(state)
+                    }
+                }
+
+                launch {
+                    statsViewModel.pieResults(statGroupBy).collectLatest {
+                        with(binding) {
+                            pieView.setPieSlices(it.first, anim = true)
+                            toggleGivenBottle.setVisible(it.second)
+                            givenBottle.setVisible(it.second)
+                        }
+                    }
+                }
+
+                launch {
+                    statsViewModel.pieComparisons(statGroupBy).collectLatest {
+                        binding.comparisonPieView.setPieSlices(it, anim = true)
+                    }
+                }
+            }
+        }
     }
 
     private fun setListeners() {
@@ -53,8 +74,8 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
                 return@addOnButtonCheckedListener
             }
 
-//            statsViewModel.setShouldShowYearPicker(checkedId != R.id.buttonStock)
-            statsViewModel.setStatType(statSlot, fromButtonId(checkedId))
+            val statFilter = InventoryStatFilter.fromButtonId(checkedId)
+            statsViewModel.setStatFilter(statGroupBy, statFilter)
         }
 
         binding.toggleGivenBottle.apply {
@@ -65,7 +86,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
             )
 
             setOnCheckedChangeListener { _, isChecked ->
-                statsViewModel.setIncludeGifts(statSlot, isChecked)
+                statsViewModel.setIncludeGifts(statGroupBy, isChecked)
             }
         }
 
@@ -74,54 +95,12 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         }
     }
 
-    private fun observe() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    statsViewModel.state.collect { state ->
-                        /*if (state.currentStatSlot == statSlot) {
-                            maybeShowYearPicker()
-                        }*/
-
-                        with(binding) {
-                            comparisonPieView.setVisible(state.comparison)
-                            comparisonText.setVisible(state.comparison)
-                            buttonGroupSwitchStat.setVisible(!state.comparison)
-                        }
-
-                        binding.toggleGivenBottle.setVisible(state.showYearSpanOptions)
-                        binding.givenBottle.setVisible(state.showYearSpanOptions)
-                    }
-                }
-                launch {
-                    statsViewModel.getResults(statSlot).collect { stats ->
-                        updatePieData(binding.pieView, stats)
-
-                        lifecycleScope.launch(Default) {
-                            val total = stats.sumOf { it.count }
-
-                            withContext(Main) {
-                                binding.total.text = resources.getString(R.string.total, total)
-                            }
-                        }
-                    }
-                }
-                launch {
-                    statsViewModel.getComparisons(statSlot).collect {
-                        updatePieData(binding.comparisonPieView, it)
-                    }
-                }
-                launch {
-                    statsViewModel.comparisonText.collect {
-                        binding.comparisonText.text = it
-                    }
-                }
-            }
-        }
-    }
-
-    private fun updatePieData(pieView: PieView, stats: List<Stat>) {
-        pieView.setPieSlices(stats, anim = true)
+    private fun FragmentPieBinding.update(state: StatsUiState) {
+        total.text = resources.getString(R.string.total, -1) // TODO: make viewmodel compute total
+        comparisonText.text = state.comparisonText
+        comparisonPieView.setVisible(state.comparison)
+        comparisonText.setVisible(state.comparison)
+        buttonGroupSwitchStat.setVisible(!state.comparison)
     }
 
     override fun onDestroyView() {
@@ -134,10 +113,10 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         private const val STAT_SLOT = "com.louis.app.cavity.ui.home.FragmentPie.STAT_SLOT"
 
         // Used by StatsPagerAdapter
-        fun newInstance(statSlot: StatSlot, @StringRes titleRes: Int): FragmentPie {
+        fun newInstance(statGroupBy: StatGroupBy, @StringRes titleRes: Int): FragmentPie {
             return FragmentPie().apply {
                 arguments = bundleOf(
-                    STAT_SLOT to statSlot,
+                    STAT_SLOT to statGroupBy,
                     TITLE_RES to titleRes
                 )
             }

@@ -2,6 +2,7 @@ package com.louis.app.cavity.db.dao
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import com.louis.app.cavity.domain.stats.StatsYearTimeSpan
 import com.louis.app.cavity.model.*
 import kotlinx.coroutines.flow.Flow
 
@@ -39,7 +40,7 @@ interface HistoryDao {
                 FROM history_entry 
                 ORDER BY date ASC"""
     )
-    fun getYears(): Flow<List<Year>>
+    fun getYears(): Flow<List<StatsYearTimeSpan>>
 
     @Transaction
     @Query("SELECT * FROM history_entry ORDER BY date DESC")
@@ -92,10 +93,6 @@ interface HistoryDao {
 
     @Query("DELETE FROM history_entry")
     suspend fun deleteAll()
-}
-
-data class Year(val year: String, val yearStart: Long, val yearEnd: Long) {
-    override fun toString() = year
 }
 
 data class BoundedHistoryEntry(

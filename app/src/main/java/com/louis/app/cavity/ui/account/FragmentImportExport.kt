@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import com.louis.app.cavity.R
 import com.louis.app.cavity.databinding.FragmentImportExportBinding
 import com.louis.app.cavity.domain.Environment
-import com.louis.app.cavity.domain.worker.UploadWorker
+import com.louis.app.cavity.worker.UploadWorker
 import com.louis.app.cavity.ui.navigation.ImportExportRoute
 import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.DateFormatter

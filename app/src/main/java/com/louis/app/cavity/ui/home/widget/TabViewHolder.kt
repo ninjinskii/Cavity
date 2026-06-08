@@ -1,5 +1,6 @@
 package com.louis.app.cavity.ui.home.widget
 
+import android.content.Context
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -9,10 +10,11 @@ class TabViewHolder<T>(
     val view: View,
     private val onTabClick: (View, Int) -> Unit,
     private val onLongTabClick: (T, Int) -> Unit,
+    private val displayText: (T) -> String,
 ) :
     RecyclerView.ViewHolder(view) {
 
-    private val textView: TextView = view.findViewById(R.id.county)
+    private val textView: TextView = view.findViewById(R.id.tabAdapterItemName)
 
     init {
         view.setOnClickListener {
@@ -21,7 +23,7 @@ class TabViewHolder<T>(
     }
 
     fun bind(item: T) {
-        textView.text = item.toString()
+        textView.text = displayText(item)
 
         view.setOnLongClickListener {
             onLongTabClick(item, bindingAdapterPosition)

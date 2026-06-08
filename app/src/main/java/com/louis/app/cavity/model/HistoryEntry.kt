@@ -11,7 +11,6 @@ import androidx.room.TypeConverters
 import com.louis.app.cavity.R
 import com.louis.app.cavity.db.HistoryEntryTypeConverter
 import com.louis.app.cavity.domain.history.HistoryEntryType
-import com.louis.app.cavity.domain.history.toInt
 
 @Entity(
     tableName = "history_entry",
@@ -33,7 +32,7 @@ data class HistoryEntry(
     val type: HistoryEntryType,
     val favorite: Int,
 ) {
-    fun getResources() = when (type.toInt()) {
+    fun getResources() = when (type.intValue) {
         0 -> HistoryEntryResources(
             R.color.cavity_red,
             R.drawable.ic_glass,
@@ -102,16 +101,16 @@ data class HistoryEntry(
         result = 31 * result + bottleId.hashCode()
         result = 31 * result + (tastingId?.hashCode() ?: 0)
         result = 31 * result + comment.hashCode()
-        result = 31 * result + type.toInt()
+        result = 31 * result + type.intValue
         return result
     }
 }
 
 data class HistoryEntryResources(
-    @ColorRes val color: Int,
-    @DrawableRes val icon: Int,
-    @StringRes val label: Int,
-    @StringRes val detailsLabel: Int,
+    @param:ColorRes val color: Int,
+    @param:DrawableRes val icon: Int,
+    @param:StringRes val label: Int,
+    @param:StringRes val detailsLabel: Int,
     val showFriends: Boolean,
     val rawType: Int
 )

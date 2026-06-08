@@ -3,6 +3,7 @@ package com.louis.app.cavity.domain.error
 import android.app.Application
 import android.content.Context
 import com.louis.app.cavity.BuildConfig
+import com.louis.app.cavity.domain.Environment
 import com.louis.app.cavity.domain.repository.PrefsRepository
 import io.sentry.Sentry
 import io.sentry.SentryLevel
@@ -19,7 +20,7 @@ class SentryErrorReporter private constructor(context: Context) : ErrorReporter 
             val prefsRepository =
                 PrefsRepository.getInstance(context.applicationContext as Application)
 
-            if (!prefsRepository.getErrorReportingConsent() || BuildConfig.DEBUG) {
+            if (!prefsRepository.getErrorReportingConsent() || Environment.isDebugMode()) {
                 return LoggerErrorReporter()
             }
 
@@ -37,7 +38,7 @@ class SentryErrorReporter private constructor(context: Context) : ErrorReporter 
         }
     }
 
-    override fun stopEvents() = BuildConfig.DEBUG
+    override fun stopEvents() = Environment.isDebugMode()
 
     override fun captureException(throwable: Throwable) {
         Sentry.captureException(throwable)

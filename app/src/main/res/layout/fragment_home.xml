@@ -37,7 +37,7 @@
             app:selectedColor="?attr/colorPrimary"
             app:tabTextAppearance="?attr/textAppearanceButton"
             app:unSelectedColor="@color/unselected_tab"
-            tools:listitem="@layout/item_county" />
+            tools:listitem="@layout/item_tab_adapter" />
 
         <com.louis.app.cavity.ui.widget.EmptyStateView
             android:id="@+id/emptyState"

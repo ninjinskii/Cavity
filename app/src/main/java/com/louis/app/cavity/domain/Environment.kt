@@ -1,6 +1,7 @@
 package com.louis.app.cavity.domain
 
 import android.os.Build
+import com.louis.app.cavity.BuildConfig
 
 object Environment {
     fun getDeviceName(): String {
@@ -9,4 +10,6 @@ object Environment {
 
         return "$manufacturer - $deviceName"
     }
+
+    fun isDebugMode() = BuildConfig.DEBUG
 }

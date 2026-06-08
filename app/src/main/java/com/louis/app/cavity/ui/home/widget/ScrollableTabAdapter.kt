@@ -1,6 +1,7 @@
 package com.louis.app.cavity.ui.home.widget
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +13,15 @@ import com.louis.app.cavity.R
 class ScrollableTabAdapter<T : Any>(
     private val onTabClick: (View, Int) -> Unit,
     private val onLongTabClick: (T, Int) -> Unit,
-    idToContent: (T) -> Pair<Any, Any>
+    private val displayText: (T) -> String,
+    itemId: (T) -> Any
 ) :
-    ListAdapter<T, TabViewHolder<T>>(ScrollableItemDiffCallback<T>(idToContent)) {
+    ListAdapter<T, TabViewHolder<T>>(ScrollableItemDiffCallback<T>(itemId)) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabViewHolder<T> {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_county, parent, false)
-        return TabViewHolder(view, onTabClick, onLongTabClick)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_tab_adapter, parent, false)
+        return TabViewHolder(view, onTabClick, onLongTabClick, displayText)
     }
 
     override fun onBindViewHolder(holder: TabViewHolder<T>, position: Int) {
@@ -36,17 +39,17 @@ class ScrollableTabAdapter<T : Any>(
     public override fun getItem(position: Int): T = super.getItem(position)
 
     class ScrollableItemDiffCallback<T>(
-        private val idToContentComparator: (T) -> Pair<Any, Any>
+        private val itemId: (T) -> Any
     ) :
         DiffUtil.ItemCallback<T>() {
 
         override fun areItemsTheSame(oldItem: T & Any, newItem: T & Any) =
-            idToContentComparator(oldItem).first == idToContentComparator(newItem).first
+            itemId(oldItem) == itemId(newItem)
 
         // Responsibility of consumers
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: T & Any, newItem: T & Any) =
-            idToContentComparator(oldItem).second == idToContentComparator(newItem).second
+            oldItem == newItem
     }
 }
 

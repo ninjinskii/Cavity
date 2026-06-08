@@ -259,6 +259,7 @@
     <string name="total">Total: %1$d</string>
     <string name="stock">Stock</string>
     <string name="include_gifts">Inclure les bouteilles offertes</string>
+    <string name="combined">Combiner</string>
 
     <!-- Tasting -->
     <string name="add_tasting">Créer une dégustation</string>

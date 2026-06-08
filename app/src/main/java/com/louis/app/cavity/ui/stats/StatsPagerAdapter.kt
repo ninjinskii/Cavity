@@ -4,16 +4,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.louis.app.cavity.R
-import com.louis.app.cavity.domain.stats.StatSlot
+import com.louis.app.cavity.domain.stats.StatGroupBy
 
 class StatsPagerAdapter(fragment: Fragment, lifecycleOwner: LifecycleOwner) :
     FragmentStateAdapter(fragment.childFragmentManager, lifecycleOwner.lifecycle) {
 
     private val pages = listOf(
-        StatSlot.COUNTY to R.string.pie_title_county,
-        StatSlot.COLOR to R.string.pie_title_color,
-        StatSlot.VINTAGE to R.string.pie_title_vintage,
-        StatSlot.NAMING to R.string.pie_title_naming
+        StatGroupBy.COUNTY to R.string.pie_title_county,
+        StatGroupBy.COLOR to R.string.pie_title_color,
+        StatGroupBy.VINTAGE to R.string.pie_title_vintage,
+        StatGroupBy.NAMING to R.string.pie_title_naming
     )
 
     override fun getItemCount() = 4
