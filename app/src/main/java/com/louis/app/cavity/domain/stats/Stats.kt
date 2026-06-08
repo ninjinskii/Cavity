@@ -25,7 +25,7 @@ data class BaseStat(
     @field:TypeConverters(StatsBottleIdsTypeConverter::class) override val bottleIds: List<Long>
 ) : Stat {
     @Ignore
-    override val color = ColorUtil.next()
+    override val color = ColorUtil.colorForLabel(label)
 }
 
 data class WineColorStat(
@@ -62,7 +62,7 @@ data class QGrapeAndGrape(
     override val label = grapeName
 
     @Ignore
-    override val color = ColorUtil.next()
+    override val color = ColorUtil.colorForLabel(label)
 
     @Ignore
     override val bottleIds = emptyList<Long>()

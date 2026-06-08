@@ -16,11 +16,11 @@ class StatsPagerAdapter(fragment: Fragment, lifecycleOwner: LifecycleOwner) :
         StatGroupBy.NAMING to R.string.pie_title_naming
     )
 
-    override fun getItemCount() = 4
+    override fun getItemCount() = pages.size
 
     override fun createFragment(position: Int): Fragment {
-        val (statSlot, title) = pages[position]
-        return FragmentPie.newInstance(statSlot, title)
+        val (statGroupBy, title) = pages[position]
+        return FragmentPie.newInstance(statGroupBy, title)
     }
 
     fun getSlotAt(position: Int) = pages[position].first

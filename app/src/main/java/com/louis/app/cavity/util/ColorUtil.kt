@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import com.louis.app.cavity.R
 import com.louis.app.cavity.model.FReview
 import com.louis.app.cavity.ui.addbottle.viewmodel.FReviewUiModel
+import kotlin.math.abs
 
 class ColorUtil(context: Context) {
     enum class ColorCategory {
@@ -26,10 +27,7 @@ class ColorUtil(context: Context) {
             R.color.cavity_yellow
         ).shuffled()
 
-        var index = 0
-
-        @ColorRes
-        fun next() = colorsRes[index++ % colorsRes.size]
+        fun colorForLabel(label: String): Int = colorsRes[abs(label.hashCode()) % colorsRes.size]
 
         @ColorRes
         fun getColorResForWineColor(wineColor: Int) = when (wineColor) {
@@ -76,14 +74,14 @@ class ColorUtil(context: Context) {
     @ColorInt
     fun getMedalColor(fReview: FReviewUiModel) = try {
         medalColors.map { it.second }[fReview.value]
-    } catch (e: IndexOutOfBoundsException) {
+    } catch (_: IndexOutOfBoundsException) {
         colorPrimary
     }
 
     @ColorInt
     fun getMedalColor(fReview: FReview) = try {
         medalColors.map { it.second }[fReview.value]
-    } catch (e: IndexOutOfBoundsException) {
+    } catch (_: IndexOutOfBoundsException) {
         colorPrimary
     }
 

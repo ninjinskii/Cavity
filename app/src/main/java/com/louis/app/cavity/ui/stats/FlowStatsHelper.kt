@@ -8,7 +8,7 @@ import com.louis.app.cavity.domain.stats.StatsQueries
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class FlowStatsFactory(private val statQueries: StatsQueries) {
+class FlowStatsHelper(private val statQueries: StatsQueries) {
     fun getResults(
         statGroupBy: StatGroupBy,
         timeSpan: StatsYearTimeSpan,
@@ -52,7 +52,7 @@ class FlowStatsFactory(private val statQueries: StatsQueries) {
                     .getStatsByHistoryEntry(
                         start,
                         end,
-                        inventoryStatFilter.retainHistoryEntryTypes(includeGifts),
+                        inventoryStatFilter.getHistoryEntryTypes(includeGifts),
                         statGroupBy.groupBy
                     )
                     .map(statGroupBy.postProcess)

@@ -29,7 +29,7 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     // Support android api < 33
     @Suppress("DEPRECATION")
     private val statGroupBy by lazy {
-        requireArguments().getSerializable(STAT_SLOT)!! as StatGroupBy
+        requireArguments().getSerializable(STAT_GROUP_BY)!! as StatGroupBy
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,24 +42,26 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    statsViewModel.uiStateFlow.collectLatest { state ->
+                    statsViewModel.screenState.collectLatest { state ->
                         binding.update(state)
                     }
                 }
 
                 launch {
                     statsViewModel.pieResults(statGroupBy).collectLatest {
-                        with(binding) {
-                            pieView.setPieSlices(it.first, anim = true)
-                            toggleGivenBottle.setVisible(it.second)
-                            givenBottle.setVisible(it.second)
-                        }
+                        binding.pieView.setPieSlices(it, anim = true)
                     }
                 }
 
                 launch {
                     statsViewModel.pieComparisons(statGroupBy).collectLatest {
                         binding.comparisonPieView.setPieSlices(it, anim = true)
+                    }
+                }
+
+                launch {
+                    statsViewModel.totalBottlesCount(statGroupBy).collectLatest {
+                        binding.total.text = resources.getString(R.string.total, it)
                     }
                 }
             }
@@ -95,12 +97,13 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         }
     }
 
-    private fun FragmentPieBinding.update(state: StatsUiState) {
-        total.text = resources.getString(R.string.total, -1) // TODO: make viewmodel compute total
+    private fun FragmentPieBinding.update(state: StatsScreenUiState) {
         comparisonText.text = state.comparisonText
-        comparisonPieView.setVisible(state.comparison)
-        comparisonText.setVisible(state.comparison)
-        buttonGroupSwitchStat.setVisible(!state.comparison)
+        comparisonPieView.setVisible(state.comparisonEnabled)
+        comparisonText.setVisible(state.comparisonEnabled)
+        toggleGivenBottle.setVisible(state.showIncludeGivenBottlesOption)
+        givenBottle.setVisible(state.showIncludeGivenBottlesOption)
+        buttonGroupSwitchStat.setVisible(!state.comparisonEnabled)
     }
 
     override fun onDestroyView() {
@@ -110,13 +113,13 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
 
     companion object {
         private const val TITLE_RES = "com.louis.app.cavity.ui.home.FragmentPie.TITLE_RES"
-        private const val STAT_SLOT = "com.louis.app.cavity.ui.home.FragmentPie.STAT_SLOT"
+        private const val STAT_GROUP_BY = "com.louis.app.cavity.ui.home.FragmentPie.STAT_GROUP_BY"
 
         // Used by StatsPagerAdapter
         fun newInstance(statGroupBy: StatGroupBy, @StringRes titleRes: Int): FragmentPie {
             return FragmentPie().apply {
                 arguments = bundleOf(
-                    STAT_SLOT to statGroupBy,
+                    STAT_GROUP_BY to statGroupBy,
                     TITLE_RES to titleRes
                 )
             }

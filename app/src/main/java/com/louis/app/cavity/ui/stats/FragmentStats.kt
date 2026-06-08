@@ -25,12 +25,14 @@ import com.louis.app.cavity.ui.navigation.navigate
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
+import kotlinx.coroutines.flow.collectLatest
 
 class FragmentStats : Fragment(R.layout.fragment_stats) {
     private var _binding: FragmentStatsBinding? = null
     private val binding get() = _binding!!
     private val statsViewModel: StatsViewModel by viewModels { StatsViewModel.Factory }
     private lateinit var tabAdapter: ScrollableTabAdapter<StatsYearTimeSpan>
+    private lateinit var statsAdapter: StatsRecyclerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,8 +49,16 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                statsViewModel.uiStateFlow.collect { state ->
-                    binding.update(state)
+                launch {
+                    statsViewModel.screenState.collectLatest { state ->
+                        binding.update(state)
+                    }
+                }
+
+                launch {
+                    statsViewModel.pieResultsFlow.collectLatest {
+                        statsAdapter.submitList(it)
+                    }
                 }
             }
         }
@@ -112,8 +122,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
             adapter = statsPagerAdapter
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    val position = statsPagerAdapter.getSlotAt(position)
-                    statsViewModel.setStatSlot(position)
+                    val groupBy = statsPagerAdapter.getSlotAt(position)
+                    statsViewModel.setSelectedGroupBy(groupBy)
                 }
             })
         }
@@ -134,7 +144,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     }
 
     private fun initRecyclerView() {
-        val statsAdapter = StatsRecyclerAdapter(
+        statsAdapter = StatsRecyclerAdapter(
             onItemClicked = { itemBottlesIds, label ->
                 val statType = "" //getString(statsViewModel.getStatTypeLabel())
                 val title = "$statType - $label"
@@ -161,8 +171,8 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
         binding.statDetailsList.requestApplyInsets()
     }
 
-    private fun FragmentStatsBinding.update(state: StatsUiState) {
-        tabAdapter.submitList(state.statsTimeSpans)
+    private fun FragmentStatsBinding.update(state: StatsScreenUiState) {
+        tabAdapter.submitList(state.years)
         years.apply {
             setVisible(state.showYearSpanOptions, invisible = true)
             post { binding.years.requestLayout() }
