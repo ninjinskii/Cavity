@@ -38,11 +38,21 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         binding.title.text = requireContext().getString(requireArguments().getInt(TITLE_RES))
 
         setListeners()
+        disableParentLayoutAnimations()
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     statsViewModel.screenState.collectLatest { state ->
+                        with(binding) {
+                            toggleGivenBottle.setVisible(state.showIncludeGivenBottlesOption)
+                            givenBottle.setVisible(state.showIncludeGivenBottlesOption)
+                        }
+                    }
+                }
+
+                launch {
+                    statsViewModel.pageState(statGroupBy).collectLatest { state ->
                         binding.update(state)
                     }
                 }
@@ -97,19 +107,25 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
         }
     }
 
-    private fun FragmentPieBinding.update(state: StatsScreenUiState) {
-        val comparisonStart = if (state.comparisonYears.first != 0)
-            state.comparisonYears.first.toString()
+    /**
+     * Prevents ViewPager exception when both view pager and a view are doing animations
+     * at the same time
+     */
+    private fun disableParentLayoutAnimations() {
+        binding.root.layoutTransition?.setAnimateParentHierarchy(false)
+    }
+
+    private fun FragmentPieBinding.update(state: StatPageUiState) {
+        val comparisonStart = if (state.statsTimeSpan.year != 0)
+            state.statsTimeSpan.year.toString()
         else
             requireContext().getString(R.string.combined)
 
         comparisonText.text = getString(
-            R.string.comparison, comparisonStart, state.comparisonYears.second.toString()
+            R.string.comparison, comparisonStart, state.comparisonTimeSpan.year.toString()
         )
         comparisonPieView.setVisible(state.comparisonEnabled)
         comparisonText.setVisible(state.comparisonEnabled)
-        toggleGivenBottle.setVisible(state.showIncludeGivenBottlesOption)
-        givenBottle.setVisible(state.showIncludeGivenBottlesOption)
         buttonGroupSwitchStat.setVisible(!state.comparisonEnabled)
     }
 

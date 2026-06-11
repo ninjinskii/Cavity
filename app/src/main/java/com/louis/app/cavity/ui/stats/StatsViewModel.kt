@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.louis.app.cavity.domain.stats.StatsYearTimeSpan
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.domain.stats.RoomStatsQueries
 import com.louis.app.cavity.domain.stats.Stat
 import com.louis.app.cavity.domain.stats.StatGroupBy
 import com.louis.app.cavity.domain.stats.InventoryStatFilter
 import com.louis.app.cavity.domain.stats.StatsQueries
+import com.louis.app.cavity.domain.stats.StatsYearTimeSpan
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +24,6 @@ import kotlinx.coroutines.flow.update
 data class StatsScreenUiState(
     val selectedGroupBy: StatGroupBy,
     val selectedPage: StatPageUiState,
-    val comparisonEnabled: Boolean,
-    val comparisonYears: Pair<Int, Int>,
     val years: List<StatsYearTimeSpan>
 ) {
     val showYearSpanOptions: Boolean
@@ -37,30 +35,28 @@ data class StatsScreenUiState(
 
 data class StatPageUiState(
     val inventoryStatFilter: InventoryStatFilter = InventoryStatFilter.Stock,
+    val statsTimeSpan: StatsYearTimeSpan = StatsYearTimeSpan.ALL_YEARS,
+    val comparisonTimeSpan: StatsYearTimeSpan = StatsYearTimeSpan.ALL_YEARS,
     val includeGifts: Boolean = false
-)
+) {
+    val comparisonEnabled: Boolean
+        get() = comparisonTimeSpan != StatsYearTimeSpan.ALL_YEARS
+}
 
 data class GlobalStatsUiState(
     val selectedGroupBy: StatGroupBy = StatGroupBy.COUNTY,
-    val statsTimeSpan: StatsYearTimeSpan,
-    val comparisonTimeSpan: StatsYearTimeSpan
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class StatsViewModel(statQueries: StatsQueries, historyRepository: HistoryRepository) :
+class StatsViewModel(
+    statQueries: StatsQueries,
+    historyRepository: HistoryRepository
+) :
     ViewModel() {
-
-    private val allYears = StatsYearTimeSpan(
-        0,
-        0L,
-        System.currentTimeMillis()
-    )
 
     private val statFactory = FlowStatsHelper(statQueries)
 
-    private val globalState = MutableStateFlow(
-        GlobalStatsUiState(statsTimeSpan = allYears, comparisonTimeSpan = allYears)
-    )
+    private val globalState = MutableStateFlow(GlobalStatsUiState())
 
     private val pages = MutableStateFlow(
         StatGroupBy.entries.associateWith { StatPageUiState() }
@@ -71,8 +67,8 @@ class StatsViewModel(statQueries: StatsQueries, historyRepository: HistoryReposi
             .map {
                 it.toMutableList().apply {
                     reverse()
-                    add(0, allYears)
-                    add(allYears)
+                    add(0, StatsYearTimeSpan.ALL_YEARS)
+                    add(StatsYearTimeSpan.ALL_YEARS)
                 }
             }
 
@@ -88,8 +84,6 @@ class StatsViewModel(statQueries: StatsQueries, historyRepository: HistoryReposi
             StatsScreenUiState(
                 selectedGroupBy = global.selectedGroupBy,
                 selectedPage = selectedPage,
-                comparisonEnabled = global.comparisonTimeSpan != allYears,
-                comparisonYears = global.statsTimeSpan.year to global.comparisonTimeSpan.year,
                 years = years
             )
         }
@@ -107,53 +101,34 @@ class StatsViewModel(statQueries: StatsQueries, historyRepository: HistoryReposi
             .map { it.getValue(statGroupBy) }
             .distinctUntilChanged()
 
-    private fun resultsFlow(statGroupBy: StatGroupBy): Flow<List<Stat>> =
-        combine(
-            globalState,
-            pageState(statGroupBy)
-        ) { global, page ->
-            global to page
+    fun pieResults(statGroupBy: StatGroupBy): Flow<List<Stat>> =
+        pageState(statGroupBy).flatMapLatest { page ->
+            statFactory.getResults(
+                statGroupBy = statGroupBy,
+                timeSpan = page.statsTimeSpan,
+                inventoryStatFilter = page.inventoryStatFilter,
+                includeGifts = page.includeGifts
+            )
         }
-            .flatMapLatest { (global, page) ->
-                statFactory.getResults(
-                    statGroupBy = statGroupBy,
-                    timeSpan = global.statsTimeSpan,
-                    inventoryStatFilter = page.inventoryStatFilter,
-                    includeGifts = page.includeGifts
-                )
-            }
             .distinctUntilChanged()
 
     fun totalBottlesCount(statGroupBy: StatGroupBy): Flow<Int> =
-        resultsFlow(statGroupBy).map { stats ->
+        pieResults(statGroupBy).map { stats ->
             stats.sumOf { it.count }
         }
 
-    fun pieResults(statGroupBy: StatGroupBy): Flow<List<Stat>> = resultsFlow(statGroupBy)
-
-    fun pieComparisons(
-        statGroupBy: StatGroupBy
-    ): Flow<List<Stat>> =
-        combine(
-            globalState,
-            pageState(statGroupBy)
-        ) { global, page ->
-            global to page
+    fun pieComparisons(statGroupBy: StatGroupBy): Flow<List<Stat>> =
+        pageState(statGroupBy).flatMapLatest { page ->
+            statFactory.getComparisons(
+                statGroupBy = statGroupBy,
+                comparisonStatsTimeSpan = page.comparisonTimeSpan,
+                inventoryStatFilter = page.inventoryStatFilter,
+                includeGifts = page.includeGifts
+            )
         }
-            .flatMapLatest { (global, page) ->
-                statFactory.getComparisons(
-                    statGroupBy = statGroupBy,
-                    comparisonStatsTimeSpan = global.comparisonTimeSpan,
-                    inventoryStatFilter = page.inventoryStatFilter,
-                    includeGifts = page.includeGifts
-                )
-            }
             .distinctUntilChanged()
 
-    fun setStatFilter(
-        statGroupBy: StatGroupBy,
-        filter: InventoryStatFilter
-    ) {
+    fun setStatFilter(statGroupBy: StatGroupBy, filter: InventoryStatFilter) {
         pages.update { current ->
             current.toMutableMap().apply {
                 this[statGroupBy] =
@@ -164,10 +139,7 @@ class StatsViewModel(statQueries: StatsQueries, historyRepository: HistoryReposi
         }
     }
 
-    fun setIncludeGifts(
-        statGroupBy: StatGroupBy,
-        includeGifts: Boolean
-    ) {
+    fun setIncludeGifts(statGroupBy: StatGroupBy, includeGifts: Boolean) {
         pages.update { current ->
             current.toMutableMap().apply {
                 this[statGroupBy] =
@@ -178,9 +150,7 @@ class StatsViewModel(statQueries: StatsQueries, historyRepository: HistoryReposi
         }
     }
 
-    fun setSelectedGroupBy(
-        statGroupBy: StatGroupBy
-    ) {
+    fun setSelectedGroupBy(statGroupBy: StatGroupBy) {
         globalState.update {
             it.copy(
                 selectedGroupBy = statGroupBy
@@ -188,23 +158,29 @@ class StatsViewModel(statQueries: StatsQueries, historyRepository: HistoryReposi
         }
     }
 
-    fun setYear(
-        statsTimeSpan: StatsYearTimeSpan
-    ) {
-        globalState.update {
-            it.copy(
-                statsTimeSpan = statsTimeSpan
-            )
+    fun setYear(statsTimeSpan: StatsYearTimeSpan) {
+        val currentStatGroupBy = globalState.value.selectedGroupBy
+
+        pages.update { current ->
+            current.toMutableMap().apply {
+                this[currentStatGroupBy] =
+                    getValue(currentStatGroupBy).copy(
+                        statsTimeSpan = statsTimeSpan
+                    )
+            }
         }
     }
 
-    fun setComparisonYear(
-        statsTimeSpan: StatsYearTimeSpan
-    ) {
-        globalState.update {
-            it.copy(
-                comparisonTimeSpan = statsTimeSpan
-            )
+    fun setComparisonYear(statsTimeSpan: StatsYearTimeSpan) {
+        val currentStatGroupBy = globalState.value.selectedGroupBy
+
+        pages.update { current ->
+            current.toMutableMap().apply {
+                this[currentStatGroupBy] =
+                    getValue(currentStatGroupBy).copy(
+                        comparisonTimeSpan = statsTimeSpan
+                    )
+            }
         }
     }
 
