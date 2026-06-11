@@ -261,6 +261,7 @@
     <string name="stock">Stock</string>
     <string name="include_gifts">Include given bottles</string>
     <string name="combined">Combined</string>
+    <string name="comparison" translatable="false">%1$s - %2$s</string>
 
     <!-- Tasting -->
     <string name="add_tasting">Add tasting</string>

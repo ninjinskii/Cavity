@@ -98,7 +98,14 @@ class FragmentPie : Fragment(R.layout.fragment_pie) {
     }
 
     private fun FragmentPieBinding.update(state: StatsScreenUiState) {
-        comparisonText.text = state.comparisonText
+        val comparisonStart = if (state.comparisonYears.first != 0)
+            state.comparisonYears.first.toString()
+        else
+            requireContext().getString(R.string.combined)
+
+        comparisonText.text = getString(
+            R.string.comparison, comparisonStart, state.comparisonYears.second.toString()
+        )
         comparisonPieView.setVisible(state.comparisonEnabled)
         comparisonText.setVisible(state.comparisonEnabled)
         toggleGivenBottle.setVisible(state.showIncludeGivenBottlesOption)

@@ -25,7 +25,7 @@ data class StatsScreenUiState(
     val selectedGroupBy: StatGroupBy,
     val selectedPage: StatPageUiState,
     val comparisonEnabled: Boolean,
-    val comparisonText: String,
+    val comparisonYears: Pair<Int, Int>,
     val years: List<StatsYearTimeSpan>
 ) {
     val showYearSpanOptions: Boolean
@@ -89,7 +89,7 @@ class StatsViewModel(statQueries: StatsQueries, historyRepository: HistoryReposi
                 selectedGroupBy = global.selectedGroupBy,
                 selectedPage = selectedPage,
                 comparisonEnabled = global.comparisonTimeSpan != allYears,
-                comparisonText = "${global.statsTimeSpan} <> ${global.comparisonTimeSpan}",
+                comparisonYears = global.statsTimeSpan.year to global.comparisonTimeSpan.year,
                 years = years
             )
         }
