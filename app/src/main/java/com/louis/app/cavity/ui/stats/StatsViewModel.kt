@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.domain.stats.RoomStatsQueries
 import com.louis.app.cavity.domain.stats.Stat
@@ -184,16 +185,16 @@ class StatsViewModel(
         }
     }
 
-    // TODO: make this work again
     @StringRes
-    fun getStatTypeLabel(): Int {
-        /*val slot = uiStateFlow.value.statGroupBy
-        return when (statFilters.value.statRequests.getValue(slot).inventoryStatFilter) {
-            InventoryStatFilter.STOCK -> R.string.stock
-            InventoryStatFilter.REPLENISHMENTS -> R.string.replenishments
-            InventoryStatFilter.CONSUMPTIONS -> R.string.consumptions
-        }*/
-        return -1
+    fun getCurrentStatTypeLabel(): Int {
+        val groupBy = globalState.value.selectedGroupBy
+
+        return when (pages.value[groupBy]?.inventoryStatFilter) {
+            InventoryStatFilter.Stock -> R.string.stock
+            InventoryStatFilter.Replenishments -> R.string.replenishments
+            InventoryStatFilter.Consumptions -> R.string.consumptions
+            else -> R.string.unknown
+        }
     }
 
     companion object {

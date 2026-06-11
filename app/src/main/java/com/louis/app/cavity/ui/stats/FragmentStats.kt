@@ -146,7 +146,7 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
     private fun initRecyclerView() {
         statsAdapter = StatsRecyclerAdapter(
             onItemClicked = { itemBottlesIds, label ->
-                val statType = "" //getString(statsViewModel.getStatTypeLabel())
+                val statType = getString(statsViewModel.getCurrentStatTypeLabel())
                 val title = "$statType - $label"
                 navigate(StatRoute.StatDetails(title, itemBottlesIds))
             }
