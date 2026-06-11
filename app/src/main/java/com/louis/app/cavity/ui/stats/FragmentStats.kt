@@ -182,8 +182,13 @@ class FragmentStats : Fragment(R.layout.fragment_stats) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.viewPager.adapter = null
-        binding.years.adapter = null
+
+        with(binding) {
+            viewPager.adapter = null
+            years.adapter = null
+            statDetailsList.adapter = null
+        }
+
         _binding = null
     }
 

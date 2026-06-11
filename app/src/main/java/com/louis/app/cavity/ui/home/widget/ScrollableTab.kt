@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.louis.app.cavity.R
+import java.lang.IllegalStateException
 import kotlin.math.pow
 
 class ScrollableTab @JvmOverloads constructor(
@@ -34,6 +35,46 @@ class ScrollableTab @JvmOverloads constructor(
     private var selectedColor = Color.WHITE
     private var unSelectedColor = Color.GRAY
     private var position = 0
+    private var lengthRatio = 1f
+
+    private val adapterObserver = object : AdapterDataObserver() {
+        override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+            forceViewColorUpdate()
+        }
+
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            forceViewColorUpdate()
+        }
+    }
+
+    private var pagerObserver = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageScrollStateChanged(state: Int) {
+            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                isRVScrolling = false
+                pagerInitiatedScroll = true
+            }
+        }
+
+        override fun onPageScrolled(
+            position: Int,
+            positionOffset: Float,
+            positionOffsetPixels: Int
+        ) {
+            if (!isRVScrolling) {
+                layoutManager.scrollToPositionWithOffset(
+                    position,
+                    ((-positionOffsetPixels * lengthRatio) / 2).toInt()
+                )
+            }
+        }
+
+        override fun onPageSelected(position: Int) {
+            isRVScrolling = !pagerInitiatedScroll
+            pagerInitiatedScroll = false
+            smoothScrollToPosition(position)
+            pageChangeListener?.invoke(position)
+        }
+    }
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.ScrollableTab).use {
@@ -92,16 +133,7 @@ class ScrollableTab @JvmOverloads constructor(
 
     override fun setAdapter(adapter: Adapter<*>?) {
         super.setAdapter(adapter)
-
-        adapter?.registerAdapterDataObserver(object : AdapterDataObserver() {
-            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-                forceViewColorUpdate()
-            }
-
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                forceViewColorUpdate()
-            }
-        })
+        adapter?.registerAdapterDataObserver(adapterObserver)
     }
 
     override fun setElevation(elevation: Float) {
@@ -150,7 +182,6 @@ class ScrollableTab @JvmOverloads constructor(
 
         this.viewPager = viewPager
 
-        var lengthRatio = 1f
 
         // Some adjustments need to be done if ViewPage scrolling distance is not the same as ScrollableTab width
         if (viewPager.orientation == ViewPager2.ORIENTATION_VERTICAL) {
@@ -159,34 +190,7 @@ class ScrollableTab @JvmOverloads constructor(
             lengthRatio = tabWidth / viewPagerHeight
         }
 
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrollStateChanged(state: Int) {
-                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                    isRVScrolling = false
-                    pagerInitiatedScroll = true
-                }
-            }
-
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                if (!isRVScrolling) {
-                    layoutManager.scrollToPositionWithOffset(
-                        position,
-                        ((-positionOffsetPixels * lengthRatio) / 2).toInt()
-                    )
-                }
-            }
-
-            override fun onPageSelected(position: Int) {
-                isRVScrolling = !pagerInitiatedScroll
-                pagerInitiatedScroll = false
-                smoothScrollToPosition(position)
-                pageChangeListener?.invoke(position)
-            }
-        })
+        viewPager.registerOnPageChangeCallback(pagerObserver)
     }
 
     fun moveToView(view: View) {
@@ -222,7 +226,13 @@ class ScrollableTab @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        this.pageChangeListener = null
+        viewPager?.unregisterOnPageChangeCallback(pagerObserver)
+        try {
+            adapter?.unregisterAdapterDataObserver(adapterObserver)
+        } catch (_: IllegalStateException) {
+            // Do nothing
+        }
+        pageChangeListener = null
         viewPager = null
     }
 }
