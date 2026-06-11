@@ -111,6 +111,7 @@ class FragmentTastings : Fragment(R.layout.fragment_tastings) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.tastingList.adapter = null
         _binding = null
     }
 }
