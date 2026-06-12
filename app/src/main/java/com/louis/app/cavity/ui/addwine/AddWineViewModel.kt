@@ -16,6 +16,7 @@ import com.louis.app.cavity.util.toBoolean
 import com.louis.app.cavity.util.toInt
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -33,6 +34,7 @@ data class AddWineState(
     val namings: List<String> = emptyList()
 )
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class AddWineViewModel(app: Application) :
     BaseViewModel<AddWineState, AddWineEvent>(app, AddWineState()) {
 

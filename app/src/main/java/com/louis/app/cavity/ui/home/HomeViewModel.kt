@@ -14,10 +14,8 @@ import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.CountyRepository
 import com.louis.app.cavity.domain.repository.PrefsRepository
-import com.louis.app.cavity.domain.repository.StatsRepository
 import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.domain.stats.RoomStatsQueries
-import com.louis.app.cavity.domain.stats.StatsQueries
 import com.louis.app.cavity.model.County
 import com.louis.app.cavity.model.CountyDetails
 import com.louis.app.cavity.ui.BaseViewModel
@@ -52,6 +50,7 @@ data class HomeUiState(
     val transitionReady: Boolean = false
 )
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModel(
     app: Application,
     private val countyRepository: CountyRepository,
@@ -76,7 +75,6 @@ class HomeViewModel(
      */
     var savedSharedElementCountyId: Long? by savedStateHandle save "sourceCountyId"
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val nonEmptyCounties =
         _storageLocation
             .map { location ->
@@ -86,7 +84,6 @@ class HomeViewModel(
                 countyRepository.getNonEmptyCountiesFlow(location)
             }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val observedCounty =
         combine(_observedCountyId, _storageLocation) { id, location ->
             id to location
