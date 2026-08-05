@@ -6,6 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface CavityApi {
     @POST("account")
@@ -70,6 +71,9 @@ interface CavityApi {
 
     @POST("tag-x-bottle")
     suspend fun postBottleTagsXRef(@Body tagXBottle: List<TagXBottle>)
+
+    @PUT("sync")
+    suspend fun putSync(@Body payload: SyncAccountContent)
 
     @GET("account")
     suspend fun getAccount(): LoginResponse

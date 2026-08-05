@@ -17,6 +17,7 @@ import com.louis.app.cavity.model.HistoryEntry
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.domain.Environment
 import com.louis.app.cavity.domain.repository.TagRepository
+import com.louis.app.cavity.model.SyncAccountContent
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -69,26 +70,28 @@ class BackupBuilder(private val context: Context) {
                     // Get wines & bottles first, copy them to external dir
                     backupFilesToExternalDir(wines + bottles + friends)
 
-                    listOf(
-                        postCounties(countyRepository.getAllCountiesNotLive()),
-                        postWines(wines),
-                        postBottles(bottles),
-                        postFriends(friends),
-                        postTags(tagRepository.getAllTagsNotLive()),
-                        postGrapes(grapeRepository.getAllGrapesNotLive()),
-                        postReviews(reviewRepository.getAllReviewsNotLive()),
-                        postHistoryEntries(historyRepository.getAllEntriesNotPagedNotLive()),
-                        postTastings(tastingRepository.getAllTastingsNotLive()),
-                        postTastingActions(tastingRepository.getAllTastingActionsNotLive()),
-                        postFReviews(reviewRepository.getAllFReviewsNotLive()),
-                        postQGrapes(grapeRepository.getAllQGrapesNotLive()),
-                        postTastingFriendsXRefs(tastingRepository.getAllTastingXFriendsNotLive()),
-                        postHistoryFriendsXRefs(historyRepository.getAllHistoryXFriendsNotLive()),
-                        postBottleTagsXRefs(tagRepository.getAllTagBottleXRefsNotLive())
-                    ).forEach {
-                        if (it !is ApiResponse.Success) {
-                            throw UncompleteExportException()
-                        }
+                    val payload = SyncAccountContent(
+                        county = countyRepository.getAllCountiesNotLive(),
+                        wine = wines,
+                        bottle = bottles,
+                        friend = friends,
+                        tag = tagRepository.getAllTagsNotLive(),
+                        grape = grapeRepository.getAllGrapesNotLive(),
+                        review = reviewRepository.getAllReviewsNotLive(),
+                        history_entry = historyRepository.getAllEntriesNotPagedNotLive(),
+                        tasting = tastingRepository.getAllTastingsNotLive(),
+                        tasting_action = tastingRepository.getAllTastingActionsNotLive(),
+                        f_review = reviewRepository.getAllFReviewsNotLive(),
+                        q_grape = grapeRepository.getAllQGrapesNotLive(),
+                        tasting_x_friend = tastingRepository.getAllTastingXFriendsNotLive(),
+                        history_x_friend = historyRepository.getAllHistoryXFriendsNotLive(),
+                        tag_x_bottle = tagRepository.getAllTagBottleXRefsNotLive()
+                    )
+
+                    val response = putSync(payload)
+
+                    if (response !is ApiResponse.Success) {
+                        throw UncompleteExportException()
                     }
 
                     postAccountLastUser(Environment.getDeviceName())

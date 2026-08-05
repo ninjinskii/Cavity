@@ -138,6 +138,10 @@ class AccountRepository private constructor(private val app: Application) {
         return doApiCall { cavityApi.postBottleTagsXRef(bottleTagXRefs) }
     }
 
+    suspend fun putSync(payload: SyncAccountContent): ApiResponse<Unit> {
+        return doApiCall { cavityApi.putSync(payload) }
+    }
+
     suspend fun getAccount(): ApiResponse<LoginResponse> {
         return doApiCall { cavityApi.getAccount() }
     }
