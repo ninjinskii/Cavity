@@ -64,7 +64,7 @@ object NotificationBuilder {
         wine: Wine,
         tastingAction: TastingAction
     ): NotificationWithId {
-        val errorReporter = SentryErrorReporter.getInstance(context)
+        val errorReporter = ErrorReporterFactory.create(context)
 
         val pendingIntent = NavDeepLinkBuilder(context).run {
             setGraph(R.navigation.nav_graph)

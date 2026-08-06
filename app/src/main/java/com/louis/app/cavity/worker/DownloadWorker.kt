@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.louis.app.cavity.domain.error.ErrorReporterFactory
 import com.louis.app.cavity.domain.repository.AccountRepository
 import com.louis.app.cavity.domain.repository.WineRepository
 import com.louis.app.cavity.domain.error.SentryErrorReporter
@@ -33,7 +34,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
     private val tastingRepository = TastingRepository.getInstance(app)
     private val accountRepository = AccountRepository.getInstance(app)
     private val tagRepository = TagRepository.getInstance(app)
-    private val errorReporter = SentryErrorReporter.getInstance(context)
+    private val errorReporter = ErrorReporterFactory.create(context)
 
     override suspend fun doWork(): Result {
         return try {

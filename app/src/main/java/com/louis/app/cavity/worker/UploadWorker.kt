@@ -11,7 +11,7 @@ import com.louis.app.cavity.domain.error.SentryErrorReporter
 class UploadWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     private val accountRepository = AccountRepository.getInstance(context as Application)
     private val backupBuilder = BackupBuilder(context)
-    private val errorReporter = SentryErrorReporter.getInstance(context)
+    private val errorReporter = ErrorReporterFactory.create(context)
 
     override suspend fun doWork(): Result {
         return try {

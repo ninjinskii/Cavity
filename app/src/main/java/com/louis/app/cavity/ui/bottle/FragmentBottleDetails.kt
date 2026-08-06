@@ -48,6 +48,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import com.louis.app.cavity.db.dao.BottleWithHistoryEntries
+import com.louis.app.cavity.domain.error.ErrorReporterFactory
 import com.louis.app.cavity.model.Tag
 import com.louis.app.cavity.ui.ChipLoader
 import com.louis.app.cavity.ui.SimpleInputDialog
@@ -81,7 +82,7 @@ class FragmentBottleDetails : Fragment(R.layout.fragment_bottle_details) {
         ViewCompat.setTransitionName(view, transition)
         postponeEnterTransition()
 
-        errorReporter = SentryErrorReporter.getInstance(requireContext())
+        errorReporter = ErrorReporterFactory.create(requireContext())
         _binding = FragmentBottleDetailsBinding.bind(view)
 
         applyInsets()

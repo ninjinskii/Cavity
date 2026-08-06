@@ -26,6 +26,7 @@ import com.louis.app.cavity.ui.widget.Rule
 import com.louis.app.cavity.util.prepareWindowInsets
 import com.louis.app.cavity.util.setVisible
 import com.louis.app.cavity.util.setupNavigation
+import kotlinx.coroutines.flow.collectLatest
 
 class FragmentLogin : Fragment(R.layout.fragment_login) {
     private var _binding: FragmentLoginBinding? = null
@@ -55,7 +56,7 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         initFields()
         setListeners()
 
-        loginViewModel.tryConnectWithSavedToken()
+        loginViewModel.silentLogin()
     }
 
     private fun applyInsets() {
@@ -75,17 +76,15 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     loginViewModel.state.collect { state ->
-                        binding.progressBar.setVisible(state.isLoading, invisible = true)
-                        if (state.account != null) {
-                            loginViewModel.saveLoginResult(loginSuccessful = true)
-                            popBackStack()
-                        }
+                        binding.update(state)
                     }
                 }
+
                 launch {
                     loginViewModel.event.collect { event ->
                         when (event) {
                             is LoginEvent.NavigateToConfirm -> navigate(LoginRoute.ConfirmAccount)
+                            is LoginEvent.PrefillLastLogin -> binding.login.text = event.login
                             else -> Unit
                         }
                     }
@@ -98,13 +97,6 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
         binding.loginLayout.addRules(Rule(R.string.invalid_email) {
             Patterns.EMAIL_ADDRESS.matcher(it).matches()
         })
-
-        val lastLogin = loginViewModel.getLastLogin()
-        binding.login.setText(lastLogin)
-
-        if (lastLogin.isNotBlank()) {
-            binding.login.requestFocus()
-        }
 
         binding.passwordLayout.addRules(Rule(R.string.weak_pwd) {
             val passwordMatcher = Regex("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,}$")
@@ -145,6 +137,20 @@ class FragmentLogin : Fragment(R.layout.fragment_login) {
             }
 
             SimpleInputDialog(requireContext(), layoutInflater, viewLifecycleOwner).show(resource)
+        }
+    }
+
+    private fun FragmentLoginBinding.update(state: LoginUiState) {
+        binding.progressBar.setVisible(state.isLoading, invisible = true)
+        if (state.account != null) {
+            loginViewModel.saveLoginResult(loginSuccessful = true)
+            popBackStack()
+        }
+
+        binding.login.setText(state.lastLogin)
+
+        if (state.lastLogin.isNotBlank()) {
+            binding.login.requestFocus()
         }
     }
 

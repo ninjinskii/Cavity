@@ -5,6 +5,7 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.lifecycle.viewModelScope
+import com.louis.app.cavity.domain.error.ErrorReporterFactory
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.fileimport.BottleBinder
 import com.louis.app.cavity.domain.fileimport.FileBinder
@@ -21,7 +22,7 @@ sealed interface FileImportEvent {
 data class FileImportUiState(val placeholder: Unit = Unit)
 
 class FileImportViewModel(private val app: Application) : BaseViewModel<FileImportUiState, FileImportEvent>(app, FileImportUiState()) {
-    private val errorReporter = SentryErrorReporter.getInstance(app)
+    private val errorReporter = ErrorReporterFactory.create(app)
 
     fun bindFiles(uris: List<Uri>, contentResolver: ContentResolver) {
         val total = uris.size

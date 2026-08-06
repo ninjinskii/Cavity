@@ -3,6 +3,7 @@ package com.louis.app.cavity.domain.repository
 import android.app.Application
 import com.louis.app.cavity.R
 import com.louis.app.cavity.domain.error.ErrorReporter
+import com.louis.app.cavity.domain.error.ErrorReporterFactory
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.model.*
 import com.louis.app.cavity.network.CavityApiClient
@@ -26,7 +27,7 @@ class AccountRepository private constructor(private val app: Application) {
             }
     }
 
-    private val errorReporter = SentryErrorReporter.getInstance(app)
+    private val errorReporter = ErrorReporterFactory.create(app)
 
     private val cavityApi by lazy {
         val locale = app.getString(R.string.locale)

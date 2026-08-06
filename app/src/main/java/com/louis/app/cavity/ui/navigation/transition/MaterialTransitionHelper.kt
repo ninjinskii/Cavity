@@ -129,7 +129,7 @@ class MaterialTransitionHelper(private val fragment: Fragment) {
                 // Then, try to resolve as a color attribute
                 context.requireThemeColor(resId)
             } catch (e: IllegalArgumentException) {
-                SentryErrorReporter.getInstance(context).run {
+                ErrorReporterFactory.create(context).run {
                     captureMessage(
                         "Failed to resolve color or attr $resId for material container" +
                                 " transform. Defaulting to Color.TRANSPARENT"

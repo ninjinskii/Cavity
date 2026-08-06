@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.R
+import com.louis.app.cavity.domain.error.ErrorReporterFactory
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.history.HistoryEntryType
 import com.louis.app.cavity.domain.repository.BottleRepository
@@ -52,7 +53,7 @@ class AddBottleViewModel(app: Application) : BaseViewModel<AddBottleUiState, Add
     private val historyRepository = HistoryRepository.getInstance(app)
     private val tagRepository = TagRepository.getInstance(app)
 
-    private val errorReporter = SentryErrorReporter.getInstance(app)
+    private val errorReporter = ErrorReporterFactory.create(app)
 
     private val _bottleId = MutableStateFlow(0L)
 

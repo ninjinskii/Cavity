@@ -134,6 +134,9 @@ dependencies {
     // Work Manager
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
+    // Data Store
+    implementation "androidx.datastore:datastore-preferences:1.2.1"
+
     // Sentry
     implementation "io.sentry:sentry-android:8.23.0"
 }

@@ -43,6 +43,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import androidx.core.graphics.drawable.toDrawable
+import com.louis.app.cavity.domain.error.ErrorReporterFactory
 import com.louis.app.cavity.ui.navigation.navigateUp
 import com.louis.app.cavity.ui.navigation.putFragmentResult
 import kotlinx.parcelize.Parcelize
@@ -69,7 +70,7 @@ class FragmentCamera : Fragment(R.layout.fragment_camera) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        errorReporter = SentryErrorReporter.getInstance(requireContext())
+        errorReporter = ErrorReporterFactory.create(requireContext())
 
         permissionChecker = object : PermissionChecker(this, REQUIRED_PERMISSIONS) {
             override fun onPermissionsAccepted() {

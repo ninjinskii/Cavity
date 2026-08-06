@@ -13,21 +13,20 @@ import com.louis.app.cavity.domain.Environment
 import com.louis.app.cavity.domain.repository.AccountRepository
 import com.louis.app.cavity.domain.repository.PrefsRepository
 import com.louis.app.cavity.domain.error.ErrorReporter
-import com.louis.app.cavity.domain.error.SentryErrorReporter
+import com.louis.app.cavity.domain.error.ErrorReporterFactory
 import com.louis.app.cavity.network.response.ApiResponse
 import com.louis.app.cavity.network.response.LoginResponse
 import com.louis.app.cavity.ui.BaseViewModel
 import com.louis.app.cavity.util.save
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 sealed interface LoginEvent {
-    data class UserFeedback(@StringRes val resId: Int) : LoginEvent
+    data class UserFeedback(@param:StringRes val resId: Int) : LoginEvent
     data class UserFeedbackString(val message: String) : LoginEvent
+    data class PrefillLastLogin(val login: String) : LoginEvent
     data object NavigateToConfirm : LoginEvent
     data object Confirmed : LoginEvent
     data object Deleted : LoginEvent
@@ -41,11 +40,12 @@ data class LoginUiState(
 class LoginViewModel(
     app: Application,
     private val savedStateHandle: SavedStateHandle
-) : BaseViewModel<LoginUiState, LoginEvent>(app, LoginUiState()) {
+) :
+    BaseViewModel<LoginUiState, LoginEvent>(app, LoginUiState()) {
 
     private val prefsRepository = PrefsRepository.getInstance(app)
     private val accountRepository = AccountRepository.getInstance(app)
-    private val errorReporter = SentryErrorReporter.getInstance(app)
+    private val errorReporter = ErrorReporterFactory.create(app)
 
     private var savedLoginResult: Boolean? by savedStateHandle save "login-result"
     private var inConfirmationUser: String? = null
@@ -57,10 +57,12 @@ class LoginViewModel(
         doApiCall(
             call = { accountRepository.login(email, password) },
             onSuccess = {
-                prefsRepository.setApiToken(it.value.token)
-                prefsRepository.setLastLogin(email)
-                errorReporter.setScopeTag(ErrorReporter.USERNAME_ERROR_TAG, email)
-                viewState = viewState.copy(account = it.value)
+                viewModelScope.launch {
+                    prefsRepository.setApiToken(it.value.token)
+                    prefsRepository.setLastLogin(email)
+                    errorReporter.setScopeTag(ErrorReporter.USERNAME_ERROR_TAG, email)
+                    viewState = viewState.copy(account = it.value)
+                }
             }
         )
     }
@@ -87,25 +89,30 @@ class LoginViewModel(
         doApiCall(
             call = { accountRepository.confirmAccount(email, registrationCode) },
             onSuccess = {
-                prefsRepository.setLastLogin(inConfirmationUser ?: "")
-                inConfirmationUser = null
-                prefsRepository.setApiToken(it.value.token)
-                emitEvent(LoginEvent.Confirmed)
-                viewState = viewState.copy(account = it.value)
+                viewModelScope.launch {
+                    prefsRepository.setLastLogin(inConfirmationUser ?: "")
+                    prefsRepository.setApiToken(it.value.token)
+                    inConfirmationUser = null
+                    emitEvent(LoginEvent.Confirmed)
+                    viewState = viewState.copy(account = it.value)
+                }
             }
         )
     }
 
-    fun tryConnectWithSavedToken() {
-        val token = prefsRepository.getApiToken()
-
-        if (token.isBlank() || sneakyTryCount >= 1) {
+    fun silentLogin() {
+        if (sneakyTryCount >= 1) {
             return
         }
 
-        sneakyTryCount++
-
         viewModelScope.launch(IO) {
+            val token = prefsRepository.apiToken.first()
+
+            if (token.isBlank()) {
+                return@launch
+            }
+
+            sneakyTryCount++
             val response = accountRepository.getAccount()
 
             if (response is ApiResponse.Success) {
@@ -117,12 +124,20 @@ class LoginViewModel(
         }
     }
 
-    fun getLastLogin() = prefsRepository.getLastLogin()
+    fun loadLastLogin() {
+        viewModelScope.launch {
+            val login = prefsRepository.lastLogin.first()
+            emitEvent(LoginEvent.PrefillLastLogin(login))
+        }
+    }
 
     fun logout() {
         viewState = viewState.copy(account = null)
-        prefsRepository.setApiToken("")
-        errorReporter.removeScopeTag(ErrorReporter.USERNAME_ERROR_TAG)
+
+        viewModelScope.launch {
+            prefsRepository.setApiToken("")
+            errorReporter.removeScopeTag(ErrorReporter.USERNAME_ERROR_TAG)
+        }
     }
 
     fun declareLostPassword(email: String) {
@@ -138,10 +153,13 @@ class LoginViewModel(
                 call = { accountRepository.deleteAccount(account.email, password) },
                 onSuccess = {
                     inConfirmationUser = null
-                    prefsRepository.setLastLogin("")
-                    prefsRepository.setApiToken("")
-                    errorReporter.removeScopeTag(ErrorReporter.USERNAME_ERROR_TAG)
-                    emitEvent(LoginEvent.Deleted)
+
+                    viewModelScope.launch {
+                        prefsRepository.setLastLogin("")
+                        prefsRepository.setApiToken("")
+                        errorReporter.removeScopeTag(ErrorReporter.USERNAME_ERROR_TAG)
+                        emitEvent(LoginEvent.Deleted)
+                    }
                 }
             )
         }

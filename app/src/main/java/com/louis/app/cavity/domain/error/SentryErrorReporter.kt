@@ -16,18 +16,11 @@ class SentryErrorReporter private constructor(context: Context) : ErrorReporter 
         @Volatile
         private var instance: ErrorReporter? = null
 
-        fun getInstance(context: Context): ErrorReporter {
-            val prefsRepository =
-                PrefsRepository.getInstance(context.applicationContext as Application)
-
-            if (!prefsRepository.getErrorReportingConsent() || Environment.isDebugMode()) {
-                return LoggerErrorReporter()
-            }
-
+        /*fun getInstance(context: Context): ErrorReporter {
             return instance ?: synchronized(this) {
                 instance ?: SentryErrorReporter(context).also { instance = it }
             }
-        }
+        }*/
     }
 
     init {

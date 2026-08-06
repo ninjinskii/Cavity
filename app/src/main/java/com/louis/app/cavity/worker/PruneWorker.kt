@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 
 class PruneWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     private val accountRepository = AccountRepository.getInstance(context as Application)
-    private val errorReporter = SentryErrorReporter.getInstance(context)
+    private val errorReporter = ErrorReporterFactory.create(context)
 
     override suspend fun doWork(): Result {
         return try {

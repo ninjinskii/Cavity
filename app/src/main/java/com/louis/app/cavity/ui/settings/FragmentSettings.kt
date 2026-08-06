@@ -153,7 +153,7 @@ class FragmentSettings : Fragment(R.layout.fragment_settings) {
                     activity.window.clearFlags(secureFlag)
                 }
 
-                settingsViewModel.setPreventScrenshots(isChecked)
+                settingsViewModel.setPreventScreenshots(isChecked)
             }
         }
 

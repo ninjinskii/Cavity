@@ -16,7 +16,7 @@ object UiEventManager {
 
         if (!success) {
             app?.let {
-                SentryErrorReporter.getInstance(it).captureMessage(
+                ErrorReporterFactory.create(it).captureMessage(
                     "UiEventManager missed an event due to shared flow buffer overflow"
                 )
             }

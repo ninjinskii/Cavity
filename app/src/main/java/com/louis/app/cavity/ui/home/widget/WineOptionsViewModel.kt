@@ -76,7 +76,7 @@ class WineOptionsViewModel(
             initializer {
                 // We may be able to discard app usage if repositories are not singleton anymore
                 val app = checkNotNull(this[APPLICATION_KEY])
-                val errorReporter = SentryErrorReporter.getInstance(app)
+                val errorReporter = ErrorReporterFactory.create(app)
                 val bottleRepository = BottleRepository.getInstance(app)
                 val wineRepository = WineRepository.getInstance(app)
                 val wineRemover = RemoveWine(wineRepository, bottleRepository, errorReporter)

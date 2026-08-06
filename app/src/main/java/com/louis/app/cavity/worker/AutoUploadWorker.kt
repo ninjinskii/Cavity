@@ -11,6 +11,7 @@ import com.louis.app.cavity.domain.repository.AccountRepository
 import com.louis.app.cavity.domain.repository.PrefsRepository
 import com.louis.app.cavity.domain.backup.AutoBackup
 import com.louis.app.cavity.domain.backup.BackupFinishedListener
+import com.louis.app.cavity.domain.error.ErrorReporterFactory
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.repository.HistoryRepository
 import com.louis.app.cavity.ui.notifications.NotificationBuilder
@@ -26,7 +27,7 @@ class AutoUploadWorker(private val context: Context, params: WorkerParameters) :
     private val accountRepository = AccountRepository.getInstance(app)
     private val prefsRepository = PrefsRepository.getInstance(app)
     private val healthCheckOnly = inputData.getBoolean(WORK_DATA_HEALTHCHECK_ONLY, false)
-    private val errorReporter = SentryErrorReporter.getInstance(context)
+    private val errorReporter = ErrorReporterFactory.create(context)
 
     override suspend fun doWork(): Result {
         val listener = object : BackupFinishedListener<Data> {

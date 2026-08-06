@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.louis.app.cavity.db.dao.WineWithBottles
 import com.louis.app.cavity.domain.delegates.GetCountyDetails
 import com.louis.app.cavity.domain.error.ErrorReporter
+import com.louis.app.cavity.domain.error.ErrorReporterFactory
 import com.louis.app.cavity.domain.error.SentryErrorReporter
 import com.louis.app.cavity.domain.repository.BottleRepository
 import com.louis.app.cavity.domain.repository.CountyRepository
@@ -56,7 +57,7 @@ class HomeViewModel(
     private val countyRepository: CountyRepository,
     private val wineRepository: WineRepository,
     bottleRepository: BottleRepository,
-    private val prefsRepository: PrefsRepository,
+    prefsRepository: PrefsRepository,
     private val getCountyDetails: GetCountyDetails,
     private val errorReporter: ErrorReporter,
     savedStateHandle: SavedStateHandle
@@ -76,13 +77,14 @@ class HomeViewModel(
     var savedSharedElementCountyId: Long? by savedStateHandle save "sourceCountyId"
 
     private val nonEmptyCounties =
-        _storageLocation
-            .map { location ->
-                if (prefsRepository.getEnableBottleStorageLocation()) location else null
-            }
-            .flatMapLatest { location ->
-                countyRepository.getNonEmptyCountiesFlow(location)
-            }
+        combine(
+            _storageLocation,
+            prefsRepository.enableBottleStorageLocation
+        ) { location, enabled ->
+            location.takeIf { enabled }
+        }.flatMapLatest { location ->
+            countyRepository.getNonEmptyCountiesFlow(location)
+        }
 
     private val observedCounty =
         combine(_observedCountyId, _storageLocation) { id, location ->
@@ -95,10 +97,14 @@ class HomeViewModel(
                 } ?: flowOf(null)
             }
 
-    private val storageLocations =
-        bottleRepository.getAllStorageLocationsFlow()
-            .takeIf { prefsRepository.getEnableBottleStorageLocation() }
-            ?: flowOf(emptyList())
+    private val storageLocations = prefsRepository.enableBottleStorageLocation
+        .flatMapLatest { enabled ->
+            if (enabled) {
+                bottleRepository.getAllStorageLocationsFlow()
+            } else {
+                flowOf(emptyList())
+            }
+        }
 
     private val uiStateFlow = combine(
         _storageLocation,
@@ -237,7 +243,7 @@ class HomeViewModel(
                 val prefsRepository = PrefsRepository.getInstance(app)
                 val statQueries = RoomStatsQueries(app)
                 val getCountyDetails = GetCountyDetails(statQueries)
-                val errorReporter = SentryErrorReporter.getInstance(app)
+                val errorReporter = ErrorReporterFactory.create(app)
                 val savedState = createSavedStateHandle()
 
                 HomeViewModel(

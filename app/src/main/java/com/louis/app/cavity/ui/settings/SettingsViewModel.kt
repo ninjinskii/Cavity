@@ -2,60 +2,91 @@ package com.louis.app.cavity.ui.settings
 
 import android.app.Application
 import androidx.annotation.StringRes
+import androidx.lifecycle.viewModelScope
 import com.louis.app.cavity.domain.repository.PrefsRepository
 import com.louis.app.cavity.ui.BaseViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 sealed interface SettingsEvent {
-    data class UserFeedback(@StringRes val resId: Int) : SettingsEvent
+    data class UserFeedback(@param:StringRes val resId: Int) : SettingsEvent
     data class WindowFocusChanged(val hasFocus: Boolean) : SettingsEvent
 }
 
-data class SettingsUiState(val isLoading: Boolean = false)
+data class SettingsState(
+    val skewBottle: Boolean = false,
+    val defaultCurrency: String = "€",
+    val templateSize: Float = 1f
+)
 
-class SettingsViewModel(app: Application) : BaseViewModel<SettingsUiState, SettingsEvent>(app, SettingsUiState()) {
-    private val prefsRepository = PrefsRepository.getInstance(app)
+class SettingsViewModel(
+    app: Application,
+    private val prefsRepository: PrefsRepository
+) :
+    BaseViewModel<SettingsState, SettingsEvent>(app, SettingsState()) {
+
+    val skewBottle = prefsRepository.skewBottle
+    val defaultCurrency = prefsRepository.defaultCurrency
+    val templateSize = prefsRepository.templateSize
+    val autoBackup = prefsRepository.autoBackup
+    val errorReportingConsent = prefsRepository.errorReportingConsent
+    val preventScreenshots = prefsRepository.preventScreenshots
+    val enableBottleStorageLocation = prefsRepository.enableBottleStorageLocation
+
+    /**
+     * An error reporting version that gets the firs value immediatly, avoiding the nned for a
+     * coroutine when getting instances of ErrorReporter
+     */
+    val errorReportingConsentSync = errorReportingConsent
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            false
+        )
 
     fun setSkewBottle(skew: Boolean) {
-        prefsRepository.setSkewBottle(skew)
+        viewModelScope.launch {
+            prefsRepository.setSkewBottle(skew)
+        }
     }
 
     fun setDefaultCurrency(currency: String) {
-        prefsRepository.setDefaultCurrency(currency)
+        viewModelScope.launch {
+            prefsRepository.setDefaultCurrency(currency)
+        }
     }
 
     fun setTemplateSize(templateSize: Float) {
-        prefsRepository.setTemplateSize(templateSize)
+        viewModelScope.launch {
+            prefsRepository.setTemplateSize(templateSize)
+        }
     }
 
     fun setAutoBackup(autoBackup: Boolean) {
-        prefsRepository.setAutoBackup(autoBackup)
+        viewModelScope.launch {
+            prefsRepository.setAutoBackup(autoBackup)
+        }
     }
 
     fun setErrorReportingConsent(consent: Boolean) {
-        prefsRepository.setErrorReportingConsent(consent)
+        viewModelScope.launch {
+            prefsRepository.setErrorReportingConsent(consent)
+        }
     }
 
-    fun setPreventScrenshots(preventScreenshots: Boolean) {
-        prefsRepository.setPreventScreenshots(preventScreenshots)
+    fun setPreventScreenshots(preventScreenshots: Boolean) {
+        viewModelScope.launch {
+            prefsRepository.setPreventScreenshots(preventScreenshots)
+
+        }
     }
 
     fun setEnableBottleStorageLocation(enableStorageLocation: Boolean) {
-        prefsRepository.setEnableBottleStorageLocation(enableStorageLocation)
+        viewModelScope.launch {
+            prefsRepository.setEnableBottleStorageLocation(enableStorageLocation)
+        }
     }
-
-    fun getSkewBottle() = prefsRepository.getSkewBottle()
-
-    fun getDefaultCurrency() = prefsRepository.getDefaultCurrency()
-
-    fun getTemplateSize() = prefsRepository.getTemplateSize()
-
-    fun getAutoBackup() = prefsRepository.getAutoBackup()
-
-    fun getErrorReportingConsent() = prefsRepository.getErrorReportingConsent()
-
-    fun getPreventScreenshots() = prefsRepository.getPreventScreenshots()
-
-    fun getEnableBottleStorageLocation() = prefsRepository.getEnableBottleStorageLocation()
 
     fun notifyWindowFocusChanged(hasFocus: Boolean) {
         emitEvent(SettingsEvent.WindowFocusChanged(hasFocus))
